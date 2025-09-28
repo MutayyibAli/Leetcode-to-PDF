@@ -1,0 +1,130 @@
+query questionData($titleSlug: String!) {
+  question(titleSlug: $titleSlug) {
+    questionId
+    questionFrontendId
+    boundTopicId
+    title
+    titleSlug
+    content
+    translatedTitle
+    translatedContent
+    isPaidOnly
+    difficulty
+    likes
+    dislikes
+    isLiked
+    similarQuestions
+    exampleTestcases
+    contributors {
+      username
+      profileUrl
+      avatarUrl
+      __typename
+    }
+    topicTags {
+      name
+      slug
+      translatedName
+      __typename
+    }
+    companyTagStats
+    codeSnippets {
+      lang
+      langSlug
+      code
+      __typename
+    }
+    stats
+    hints
+    solution {
+      id
+      canSeeDetail
+      paidOnly
+      hasVideoSolution
+      paidOnlyVideo
+      __typename
+    }
+    status
+    sampleTestCase
+    metaData
+    judgerAvailable
+    judgeType
+    mysqlSchemas
+    enableRunCode
+    enableTestMode
+    enableDebugger
+    envInfo
+    libraryUrl
+    adminUrl
+    __typename
+  }
+}
+
+query solutions(
+  $questionSlug: String!
+  $skip: Int!
+  $first: Int!
+  $query: String
+  $orderBy: TopicSortingOption
+  $languageTags: [String!]
+  $topicTags: [String!]
+) {
+  questionSolutions(
+    filters: {
+      questionSlug: $questionSlug
+      skip: $skip
+      first: $first
+      query: $query
+      orderBy: $orderBy
+      languageTags: $languageTags
+      topicTags: $topicTags
+    }
+  ) {
+    hasDirectResults
+    totalNum
+    solutions {
+      id
+      title
+      commentCount
+      topLevelCommentCount
+      viewCount
+      pinned
+      isFavorite
+      solutionTags {
+        name
+        slug
+      }
+      post {
+        id
+        status
+        voteCount
+        creationDate
+        isHidden
+        author {
+          username
+          isActive
+          nameColor
+          activeBadge {
+            displayName
+            icon
+          }
+          profile {
+            userAvatar
+            reputation
+          }
+        }
+      }
+      searchMeta {
+        content
+        contentType
+        commentAuthor {
+          username
+        }
+        replyAuthor {
+          username
+        }
+        highlights
+      }
+    }
+  }
+}
