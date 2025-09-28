@@ -67,11 +67,13 @@ def fetch_post(postId):
     }
 
     result = requests.get(endpoint, json=base)
-    return json.loads(result.text, object_hook=lambda d: SimpleNamespace(**d)).data.post
+    post = json.loads(result.text, object_hook=lambda d: SimpleNamespace(**d)).data.post
+    post.content = bytes(post.content, "utf-8").decode("unicode_escape")
+
+    return post
 
 
 def format_solution(post, slug):
-    post = bytes(post, "utf-8").decode("unicode_escape")
     post = re.sub(
         r"^```(\w+)",
         lambda m: f"```{m.group(1)}\nLanguage: {m.group(1)}",
@@ -98,7 +100,7 @@ def format_solution(post, slug):
 
 def get_ai_solution(question, cpp_solution, py_solution):
     prompt = (
-        "Do not say 'here is' at the beginning or at the end, only provide the output as html code without styles and wrapped in div tag.\n"
+        "Do not say 'here is' at the beginning or at the end, only provide the output as markdown.\n"
         + "You are an expert programmer and educator. Given a coding problem and solutions, your task is to provide a clear and concise solution.\n"
         + "Output should be as follows:\n"
         + "Explanation of all the different approaches to solution used in above and give time and space complexity of each approach.\n"
@@ -127,14 +129,23 @@ def fetch_data(question, use_ai):
         solutionsC = fetch_solutions(question.titleSlug, ["cpp"])
         postIdC = solutionsC[0].post.id
         postC = fetch_post(postIdC)
-        postC = bytes(postC.content, "utf-8").decode("unicode_escape")
 
         solutionsPy = fetch_solutions(question.titleSlug, ["python", "python3"])
         postIdPy = solutionsPy[0].post.id
         postPy = fetch_post(postIdPy)
-        postPy = bytes(postPy.content, "utf-8").decode("unicode_escape")
 
-        result = get_ai_solution(question.content, postC, postPy)
+        result = get_ai_solution(question.content, postC.content, postPy.content)
+
+        result = mdformat.text(result)
+        result = markdown.markdown(
+            result,
+            extensions=["fenced_code", "codehilite", "tables", "nl2br", "sane_lists"],
+        )
+        result = re.sub(
+            r"<h([1-5])>(.*?)</h\1>",
+            lambda m: f"<h{str(int(m.group(1)) + 1)}>{m.group(2)}</h{str(int(m.group(1)) + 1)}>",
+            result,
+        )
 
         solution = "<h2>Solution [AI]</h2>"
         solution += result
@@ -190,8 +201,12 @@ def cache_question(question, use_ai):
     htmlStr += "</div>"
     htmlStr += '<p style="page-break-before: always" ></p>'
 
-    with open(f"questions_cache/{question}.html", "w", encoding="utf-8") as f:
-        f.write(htmlStr)
+    if use_ai:
+        with open(f"questions_cache/{question}~ai.html", "w", encoding="utf-8") as f:
+            f.write(htmlStr)
+    else:
+        with open(f"questions_cache/{question}~sol.html", "w", encoding="utf-8") as f:
+            f.write(htmlStr)
 
     # For debugging: write a test HTML file
     # test_output(htmlStr)
@@ -260,9 +275,14 @@ def main():
         if line.startswith("https://leetcode.com/problems/")
     ]
 
-    cachedQuestions = [
-        f[:-5] for f in os.listdir("questions_cache") if f.endswith(".html")
-    ]
+    if args.ai:
+        cachedQuestions = [
+            f[:-8] for f in os.listdir("questions_cache") if f.endswith("~ai.html")
+        ]
+    else:
+        cachedQuestions = [
+            f[:-9] for f in os.listdir("questions_cache") if f.endswith("~sol.html")
+        ]
 
     print_summary(questions, cachedQuestions)
 
