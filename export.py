@@ -2,6 +2,7 @@ import sys
 import os
 import re
 import argparse
+from joblib import Memory
 import requests
 import json
 from types import SimpleNamespace
@@ -10,10 +11,18 @@ import mdformat
 import weasyprint
 from google import genai
 
-endpoint = "https://leetcode.com/graphql"
-questionGQL = open("graphql/question.gql").read()
-solutionGQL = open("graphql/solution.gql").read()
-postGQL = open("graphql/post.gql").read()
+endpoint = open("assets/endpoint.txt").read().strip()
+questionGQL = open("assets/graphql/question.gql").read()
+solutionGQL = open("assets/graphql/solution.gql").read()
+postGQL = open("assets/graphql/post.gql").read()
+styles = open("assets/styles.css").read()
+
+# Create necessary directories if they don't exist
+os.makedirs("questions_cache", exist_ok=True)
+os.makedirs(".cache", exist_ok=True)
+
+# Initialize joblib memory for caching
+memory = Memory(".cache", verbose=0)
 
 
 def print_summary(questions, cachedQuestions):
@@ -26,6 +35,7 @@ def print_summary(questions, cachedQuestions):
     print("--------------------------------")
 
 
+@memory.cache
 def fetch_question(slug):
     base = {
         "operationName": "questionData",
@@ -39,6 +49,7 @@ def fetch_question(slug):
     ).data.question
 
 
+@memory.cache
 def fetch_solutions(slug, languageTags):
     base = {
         "operationName": "solutions",
@@ -59,6 +70,7 @@ def fetch_solutions(slug, languageTags):
     ).data.questionSolutions.solutions
 
 
+@memory.cache
 def fetch_post(postId):
     base = {
         "operationName": "getPost",
@@ -306,9 +318,7 @@ def main():
 
     # Make the final HTML
     htmlContent = "<!DOCTYPE html><html><style>STYLES</style><body>BODY</body></html>"
-    with open("assets/styles.css") as f:
-        styles = f.read()
-        htmlContent = htmlContent.replace("STYLES", styles)
+    htmlContent = htmlContent.replace("STYLES", styles)
 
     # Process each line in the file
     for line in lines:
