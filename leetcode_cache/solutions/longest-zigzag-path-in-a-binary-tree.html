@@ -1,0 +1,140 @@
+<div class='cpp-solution'><h2>Image Explanation🏆- [Easy & Complete Intuition] - C++/Java/Python -- Votes: 95</h2><h2>Video Solution (<code>Aryan Mittal</code>) - Link in LeetCode Profile</h2>
+<p><code>Longest ZigZag Path in a Binary Tree</code> by <code>Aryan Mittal</code><br />
+</p>
+<h2>Approach &amp; Intution</h2>
+<p><br />
+<br />
+<br />
+<br />
+<br />
+</p>
+<h2>Code</h2>
+<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">C</span><span class="o">++</span><span class="w"> </span>
+<span class="n">class</span><span class="w"> </span><span class="n">Solution</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">public</span><span class="o">:</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">maxLength</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>
+
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">solve</span><span class="p">(</span><span class="n">TreeNode</span><span class="o">*</span><span class="w"> </span><span class="n">root</span><span class="p">,</span><span class="kt">int</span><span class="w"> </span><span class="n">dir</span><span class="p">,</span><span class="kt">int</span><span class="w"> </span><span class="n">currLength</span><span class="p">){</span>
+<span class="w">        </span><span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">root</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="p">;</span>
+<span class="w">        </span><span class="n">maxLength</span><span class="o">=</span><span class="n">max</span><span class="p">(</span><span class="n">maxLength</span><span class="p">,</span><span class="n">currLength</span><span class="p">);</span>
+<span class="w">        </span><span class="n">solve</span><span class="p">(</span><span class="n">root</span><span class="o">-&gt;</span><span class="n">left</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="n">dir</span><span class="o">?</span><span class="n">currLength</span><span class="o">+</span><span class="mi">1</span><span class="o">:</span><span class="mi">1</span><span class="p">);</span>
+<span class="w">        </span><span class="n">solve</span><span class="p">(</span><span class="n">root</span><span class="o">-&gt;</span><span class="n">right</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="n">dir</span><span class="o">?</span><span class="mi">1</span><span class="o">:</span><span class="n">currLength</span><span class="o">+</span><span class="mi">1</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="nf">longestZigZag</span><span class="p">(</span><span class="n">TreeNode</span><span class="o">*</span><span class="w"> </span><span class="n">root</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">solve</span><span class="p">(</span><span class="n">root</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">);</span>
+<span class="w">        </span><span class="n">solve</span><span class="p">(</span><span class="n">root</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">);</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">maxLength</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">};</span>
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">Java</span><span class="w"> </span>
+<span class="kd">class</span> <span class="nc">Solution</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">maxLength</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">solve</span><span class="p">(</span><span class="n">TreeNode</span><span class="w"> </span><span class="n">root</span><span class="p">,</span><span class="kt">int</span><span class="w"> </span><span class="n">dir</span><span class="p">,</span><span class="kt">int</span><span class="w"> </span><span class="n">currLength</span><span class="p">){</span>
+<span class="w">        </span><span class="k">if</span><span class="p">(</span><span class="n">root</span><span class="o">==</span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="p">;</span>
+<span class="w">        </span><span class="n">maxLength</span><span class="o">=</span><span class="n">Math</span><span class="p">.</span><span class="na">max</span><span class="p">(</span><span class="n">maxLength</span><span class="p">,</span><span class="n">currLength</span><span class="p">);</span>
+<span class="w">        </span><span class="k">if</span><span class="p">(</span><span class="n">dir</span><span class="o">==</span><span class="mi">1</span><span class="p">){</span>
+<span class="w">            </span><span class="n">solve</span><span class="p">(</span><span class="n">root</span><span class="p">.</span><span class="na">left</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="n">currLength</span><span class="o">+</span><span class="mi">1</span><span class="p">);</span>
+<span class="w">            </span><span class="n">solve</span><span class="p">(</span><span class="n">root</span><span class="p">.</span><span class="na">right</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">else</span><span class="p">{</span>
+<span class="w">            </span><span class="n">solve</span><span class="p">(</span><span class="n">root</span><span class="p">.</span><span class="na">right</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="n">currLength</span><span class="o">+</span><span class="mi">1</span><span class="p">);</span>
+<span class="w">            </span><span class="n">solve</span><span class="p">(</span><span class="n">root</span><span class="p">.</span><span class="na">left</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="nf">longestZigZag</span><span class="p">(</span><span class="n">TreeNode</span><span class="w"> </span><span class="n">root</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">solve</span><span class="p">(</span><span class="n">root</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">);</span>
+<span class="w">        </span><span class="n">solve</span><span class="p">(</span><span class="n">root</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">);</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">maxLength</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code><span class="n">Language</span><span class="p">:</span> <span class="n">Python</span> 
+<span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">longestZigZag</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">root</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">TreeNode</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">maxLength</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">solve</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">deep</span><span class="p">,</span> <span class="nb">dir</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">maxLength</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">maxLength</span><span class="p">,</span> <span class="n">deep</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">left</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">solve</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">left</span><span class="p">,</span> <span class="n">deep</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="s1">&#39;left&#39;</span><span class="p">)</span> <span class="k">if</span> <span class="nb">dir</span> <span class="o">!=</span> <span class="s1">&#39;left&#39;</span> <span class="k">else</span> <span class="n">solve</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">left</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;left&#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">right</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">solve</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">right</span><span class="p">,</span> <span class="n">deep</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;right&#39;</span><span class="p">)</span> <span class="k">if</span> <span class="nb">dir</span> <span class="o">!=</span> <span class="s1">&#39;right&#39;</span> <span class="k">else</span> <span class="n">solve</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">right</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;right&#39;</span><span class="p">)</span>
+        <span class="n">solve</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">maxLength</span>
+</code></pre></div></div>
+
+
+<div class='python-solution'><h2>Image Explanation🏆- [Easy & Complete Intuition] - C++/Java/Python -- Votes: 95</h2><h2>Video Solution (<code>Aryan Mittal</code>) - Link in LeetCode Profile</h2>
+<p><code>Longest ZigZag Path in a Binary Tree</code> by <code>Aryan Mittal</code><br />
+</p>
+<h2>Approach &amp; Intution</h2>
+<p><br />
+<br />
+<br />
+<br />
+<br />
+</p>
+<h2>Code</h2>
+<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">C</span><span class="o">++</span><span class="w"> </span>
+<span class="n">class</span><span class="w"> </span><span class="n">Solution</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">public</span><span class="o">:</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">maxLength</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>
+
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">solve</span><span class="p">(</span><span class="n">TreeNode</span><span class="o">*</span><span class="w"> </span><span class="n">root</span><span class="p">,</span><span class="kt">int</span><span class="w"> </span><span class="n">dir</span><span class="p">,</span><span class="kt">int</span><span class="w"> </span><span class="n">currLength</span><span class="p">){</span>
+<span class="w">        </span><span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">root</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="p">;</span>
+<span class="w">        </span><span class="n">maxLength</span><span class="o">=</span><span class="n">max</span><span class="p">(</span><span class="n">maxLength</span><span class="p">,</span><span class="n">currLength</span><span class="p">);</span>
+<span class="w">        </span><span class="n">solve</span><span class="p">(</span><span class="n">root</span><span class="o">-&gt;</span><span class="n">left</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="n">dir</span><span class="o">?</span><span class="n">currLength</span><span class="o">+</span><span class="mi">1</span><span class="o">:</span><span class="mi">1</span><span class="p">);</span>
+<span class="w">        </span><span class="n">solve</span><span class="p">(</span><span class="n">root</span><span class="o">-&gt;</span><span class="n">right</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="n">dir</span><span class="o">?</span><span class="mi">1</span><span class="o">:</span><span class="n">currLength</span><span class="o">+</span><span class="mi">1</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="nf">longestZigZag</span><span class="p">(</span><span class="n">TreeNode</span><span class="o">*</span><span class="w"> </span><span class="n">root</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">solve</span><span class="p">(</span><span class="n">root</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">);</span>
+<span class="w">        </span><span class="n">solve</span><span class="p">(</span><span class="n">root</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">);</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">maxLength</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">};</span>
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">Java</span><span class="w"> </span>
+<span class="kd">class</span> <span class="nc">Solution</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">maxLength</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">solve</span><span class="p">(</span><span class="n">TreeNode</span><span class="w"> </span><span class="n">root</span><span class="p">,</span><span class="kt">int</span><span class="w"> </span><span class="n">dir</span><span class="p">,</span><span class="kt">int</span><span class="w"> </span><span class="n">currLength</span><span class="p">){</span>
+<span class="w">        </span><span class="k">if</span><span class="p">(</span><span class="n">root</span><span class="o">==</span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="p">;</span>
+<span class="w">        </span><span class="n">maxLength</span><span class="o">=</span><span class="n">Math</span><span class="p">.</span><span class="na">max</span><span class="p">(</span><span class="n">maxLength</span><span class="p">,</span><span class="n">currLength</span><span class="p">);</span>
+<span class="w">        </span><span class="k">if</span><span class="p">(</span><span class="n">dir</span><span class="o">==</span><span class="mi">1</span><span class="p">){</span>
+<span class="w">            </span><span class="n">solve</span><span class="p">(</span><span class="n">root</span><span class="p">.</span><span class="na">left</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="n">currLength</span><span class="o">+</span><span class="mi">1</span><span class="p">);</span>
+<span class="w">            </span><span class="n">solve</span><span class="p">(</span><span class="n">root</span><span class="p">.</span><span class="na">right</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">else</span><span class="p">{</span>
+<span class="w">            </span><span class="n">solve</span><span class="p">(</span><span class="n">root</span><span class="p">.</span><span class="na">right</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="n">currLength</span><span class="o">+</span><span class="mi">1</span><span class="p">);</span>
+<span class="w">            </span><span class="n">solve</span><span class="p">(</span><span class="n">root</span><span class="p">.</span><span class="na">left</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="nf">longestZigZag</span><span class="p">(</span><span class="n">TreeNode</span><span class="w"> </span><span class="n">root</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">solve</span><span class="p">(</span><span class="n">root</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">);</span>
+<span class="w">        </span><span class="n">solve</span><span class="p">(</span><span class="n">root</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">);</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">maxLength</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code><span class="n">Language</span><span class="p">:</span> <span class="n">Python</span> 
+<span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">longestZigZag</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">root</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">TreeNode</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">maxLength</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">solve</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">deep</span><span class="p">,</span> <span class="nb">dir</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">maxLength</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">maxLength</span><span class="p">,</span> <span class="n">deep</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">left</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">solve</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">left</span><span class="p">,</span> <span class="n">deep</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="s1">&#39;left&#39;</span><span class="p">)</span> <span class="k">if</span> <span class="nb">dir</span> <span class="o">!=</span> <span class="s1">&#39;left&#39;</span> <span class="k">else</span> <span class="n">solve</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">left</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;left&#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">right</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">solve</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">right</span><span class="p">,</span> <span class="n">deep</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;right&#39;</span><span class="p">)</span> <span class="k">if</span> <span class="nb">dir</span> <span class="o">!=</span> <span class="s1">&#39;right&#39;</span> <span class="k">else</span> <span class="n">solve</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">right</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;right&#39;</span><span class="p">)</span>
+        <span class="n">solve</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">maxLength</span>
+</code></pre></div></div><p style="page-break-before: always" ></p>

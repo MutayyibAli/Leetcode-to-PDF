@@ -1,0 +1,111 @@
+<div class='cpp-solution'><h2>Share my AC C++ solution, around 50ms, O(N*N), with explanation and comments -- Votes: 1376</h2><p>the key idea is the same as the <code>TwoSum</code> problem. When we fix the <code>1st</code> number, the <code>2nd</code> and <code>3rd</code> number can be found following the same reasoning as <code>TwoSum</code>.</p>
+<p>The only difference is that, the <code>TwoSum</code> problem of LEETCODE has a unique solution. However, in <code>ThreeSum</code>, we have multiple duplicate solutions that can be found. Most of the OLE errors happened here because you could've ended up with a solution with so many duplicates.</p>
+<p>The naive solution for the duplicates will be using the STL methods like below :</p>
+<div class="codehilite"><pre><span></span><code><span class="nt">std</span><span class="p">::</span><span class="nd">sort</span><span class="o">(</span><span class="nt">res</span><span class="p">.</span><span class="nc">begin</span><span class="o">(),</span><span class="w"> </span><span class="nt">res</span><span class="p">.</span><span class="nc">end</span><span class="o">());</span>
+<span class="nt">res</span><span class="p">.</span><span class="nc">erase</span><span class="o">(</span><span class="nt">unique</span><span class="o">(</span><span class="nt">res</span><span class="p">.</span><span class="nc">begin</span><span class="o">(),</span><span class="w"> </span><span class="nt">res</span><span class="p">.</span><span class="nc">end</span><span class="o">()),</span><span class="w"> </span><span class="nt">res</span><span class="p">.</span><span class="nc">end</span><span class="o">());</span>
+</code></pre></div>
+
+<p>But according to my submissions, this way will cause you double your time consuming almostly.</p>
+<p>A better approach is that, to jump over the number which has been scanned, no matter it is part of some solution or not.</p>
+<p>If the three numbers formed a solution, we can safely ignore all the duplicates of them.</p>
+<p>We can do this to all the three numbers such that we can remove the duplicates.</p>
+<p>Here's my AC C++ Code:</p>
+<div class="codehilite"><pre><span></span><code><span class="n">vector</span><span class="o">&lt;</span><span class="n">vector</span><span class="o">&lt;</span><span class="nc">int</span><span class="o">&gt;</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">threeSum</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="nc">int</span><span class="o">&gt;</span><span class="w"> </span><span class="o">&amp;</span><span class="n">num</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
+
+<span class="w">    </span><span class="n">vector</span><span class="o">&lt;</span><span class="n">vector</span><span class="o">&lt;</span><span class="nc">int</span><span class="o">&gt;</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">res</span><span class="p">;</span>
+
+<span class="w">    </span><span class="nl">std</span><span class="p">:</span><span class="err">:</span><span class="n">sort</span><span class="p">(</span><span class="n">num</span><span class="p">.</span><span class="k">begin</span><span class="p">(),</span><span class="w"> </span><span class="n">num</span><span class="p">.</span><span class="k">end</span><span class="p">());</span>
+
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="nc">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">num</span><span class="p">.</span><span class="k">size</span><span class="p">();</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
+
+<span class="w">        </span><span class="nc">int</span><span class="w"> </span><span class="n">target</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">-</span><span class="n">num</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="p">;</span>
+<span class="w">        </span><span class="nc">int</span><span class="w"> </span><span class="n">front</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="w">        </span><span class="nc">int</span><span class="w"> </span><span class="n">back</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">num</span><span class="p">.</span><span class="k">size</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+
+<span class="w">        </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">front</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">back</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
+
+<span class="w">            </span><span class="nc">int</span><span class="w"> </span><span class="nf">sum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">num</span><span class="o">[</span><span class="n">front</span><span class="o">]</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">num</span><span class="o">[</span><span class="n">back</span><span class="o">]</span><span class="p">;</span>
+
+<span class="w">            </span><span class="o">//</span><span class="w"> </span><span class="n">Finding</span><span class="w"> </span><span class="n">answer</span><span class="w"> </span><span class="n">which</span><span class="w"> </span><span class="k">start</span><span class="w"> </span><span class="k">from</span><span class="w"> </span><span class="n">number</span><span class="w"> </span><span class="n">num</span><span class="o">[</span><span class="n">i</span><span class="o">]</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nf">sum</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">target</span><span class="p">)</span>
+<span class="w">                </span><span class="n">front</span><span class="o">++</span><span class="p">;</span>
+
+<span class="w">            </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nf">sum</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">target</span><span class="p">)</span>
+<span class="w">                </span><span class="n">back</span><span class="c1">--;</span>
+
+<span class="w">            </span><span class="k">else</span><span class="w"> </span><span class="err">{</span>
+<span class="w">                </span><span class="n">vector</span><span class="o">&lt;</span><span class="nc">int</span><span class="o">&gt;</span><span class="w"> </span><span class="n">triplet</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">{</span><span class="n">num</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="p">,</span><span class="w"> </span><span class="n">num</span><span class="o">[</span><span class="n">front</span><span class="o">]</span><span class="p">,</span><span class="w"> </span><span class="n">num</span><span class="o">[</span><span class="n">back</span><span class="o">]</span><span class="err">}</span><span class="p">;</span>
+<span class="w">                </span><span class="n">res</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">triplet</span><span class="p">);</span>
+
+<span class="w">                </span><span class="o">//</span><span class="w"> </span><span class="n">Processing</span><span class="w"> </span><span class="n">duplicates</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">Number</span><span class="w"> </span><span class="mi">2</span>
+<span class="w">                </span><span class="o">//</span><span class="w"> </span><span class="n">Rolling</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">front</span><span class="w"> </span><span class="n">pointer</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="k">next</span><span class="w"> </span><span class="n">different</span><span class="w"> </span><span class="n">number</span><span class="w"> </span><span class="n">forwards</span>
+<span class="w">                </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">front</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">back</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">num</span><span class="o">[</span><span class="n">front</span><span class="o">]</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">triplet</span><span class="o">[</span><span class="n">1</span><span class="o">]</span><span class="p">)</span><span class="w"> </span><span class="n">front</span><span class="o">++</span><span class="p">;</span>
+
+<span class="w">                </span><span class="o">//</span><span class="w"> </span><span class="n">Processing</span><span class="w"> </span><span class="n">duplicates</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">Number</span><span class="w"> </span><span class="mi">3</span>
+<span class="w">                </span><span class="o">//</span><span class="w"> </span><span class="n">Rolling</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">back</span><span class="w"> </span><span class="n">pointer</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="k">next</span><span class="w"> </span><span class="n">different</span><span class="w"> </span><span class="n">number</span><span class="w"> </span><span class="n">backwards</span>
+<span class="w">                </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">front</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">back</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">num</span><span class="o">[</span><span class="n">back</span><span class="o">]</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">triplet</span><span class="o">[</span><span class="n">2</span><span class="o">]</span><span class="p">)</span><span class="w"> </span><span class="n">back</span><span class="c1">--;</span>
+<span class="w">            </span><span class="err">}</span>
+
+<span class="w">        </span><span class="err">}</span>
+
+<span class="w">        </span><span class="o">//</span><span class="w"> </span><span class="n">Processing</span><span class="w"> </span><span class="n">duplicates</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">Number</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">        </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">num</span><span class="p">.</span><span class="k">size</span><span class="p">()</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">num</span><span class="o">[</span><span class="n">i + 1</span><span class="o">]</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">num</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="p">)</span><span class="w"> </span>
+<span class="w">            </span><span class="n">i</span><span class="o">++</span><span class="p">;</span>
+
+<span class="w">    </span><span class="err">}</span>
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">res</span><span class="p">;</span>
+
+<span class="err">}</span>
+</code></pre></div></div>
+
+
+<div class='python-solution'><h2>[Python] 5 Easy Steps - Beats 97.4% - Annotated -- Votes: 1084</h2><div class="codehilite"><pre><span></span><code><span class="n">Language</span><span class="p">:</span> <span class="n">python</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">threeSum</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nums</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]]:</span>
+
+    <span class="n">res</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+
+    <span class="c1">#1. Split nums into three lists: negative numbers, positive numbers, and zeros</span>
+    <span class="n">n</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">z</span> <span class="o">=</span> <span class="p">,</span> <span class="p">,</span> 
+    <span class="k">for</span> <span class="n">num</span> <span class="ow">in</span> <span class="n">nums</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">num</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">p</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">num</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">num</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span> 
+            <span class="n">n</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">num</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">z</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">num</span><span class="p">)</span>
+
+    <span class="c1">#2. Create a separate set for negatives and positives for O(1) look-up times</span>
+    <span class="n">N</span><span class="p">,</span> <span class="n">P</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">n</span><span class="p">),</span> <span class="nb">set</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+
+    <span class="c1">#3. If there is at least 1 zero in the list, add all cases where -num exists in N and num exists in P</span>
+    <span class="c1">#   i.e. (-3, 0, 3) = 0</span>
+    <span class="k">if</span> <span class="n">z</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">num</span> <span class="ow">in</span> <span class="n">P</span><span class="p">:</span>
+            <span class="k">if</span> <span class="o">-</span><span class="mi">1</span><span class="o">*</span><span class="n">num</span> <span class="ow">in</span> <span class="n">N</span><span class="p">:</span>
+                <span class="n">res</span><span class="o">.</span><span class="n">add</span><span class="p">((</span><span class="o">-</span><span class="mi">1</span><span class="o">*</span><span class="n">num</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">num</span><span class="p">))</span>
+
+    <span class="c1">#3. If there are at least 3 zeros in the list then also include (0, 0, 0) = 0</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">z</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">3</span><span class="p">:</span>
+        <span class="n">res</span><span class="o">.</span><span class="n">add</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">))</span>
+
+    <span class="c1">#4. For all pairs of negative numbers (-3, -1), check to see if their complement (4)</span>
+    <span class="c1">#   exists in the positive number set</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">n</span><span class="p">)):</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">n</span><span class="p">)):</span>
+            <span class="n">target</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="o">*</span><span class="p">(</span><span class="n">n</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">+</span><span class="n">n</span><span class="p">[</span><span class="n">j</span><span class="p">])</span>
+            <span class="k">if</span> <span class="n">target</span> <span class="ow">in</span> <span class="n">P</span><span class="p">:</span>
+                <span class="n">res</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="nb">tuple</span><span class="p">(</span><span class="nb">sorted</span><span class="p">([</span><span class="n">n</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="n">n</span><span class="p">[</span><span class="n">j</span><span class="p">],</span><span class="n">target</span><span class="p">])))</span>
+
+    <span class="c1">#5. For all pairs of positive numbers (1, 1), check to see if their complement (-2)</span>
+    <span class="c1">#   exists in the negative number set</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">p</span><span class="p">)):</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">p</span><span class="p">)):</span>
+            <span class="n">target</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="o">*</span><span class="p">(</span><span class="n">p</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">+</span><span class="n">p</span><span class="p">[</span><span class="n">j</span><span class="p">])</span>
+            <span class="k">if</span> <span class="n">target</span> <span class="ow">in</span> <span class="n">N</span><span class="p">:</span>
+                <span class="n">res</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="nb">tuple</span><span class="p">(</span><span class="nb">sorted</span><span class="p">([</span><span class="n">p</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="n">p</span><span class="p">[</span><span class="n">j</span><span class="p">],</span><span class="n">target</span><span class="p">])))</span>
+
+    <span class="k">return</span> <span class="n">res</span>
+</code></pre></div>
+
+<p></p></div><p style="page-break-before: always" ></p>

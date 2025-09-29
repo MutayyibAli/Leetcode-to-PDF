@@ -1,0 +1,427 @@
+<div class='cpp-solution'><h2>✅ 99.68% Two-Pointer & Hash Table -- Votes: 302</h2><h2>Interview Guide - Detecting Cycles in a Linked List: A Dual-Approach Analysis</h2>
+<h3>Introduction &amp; Problem Understanding</h3>
+<p>Detecting cycles in a linked list is a classic problem that tests a developer's ability to understand and manipulate data structures. In this problem, you are given the head of a singly-linked list. The objective is to determine whether the list contains a cycle. A cycle exists if a node in the list can be visited more than once by following the <code>next</code> pointers continuously.</p>
+<h4>Key Concepts and Constraints</h4>
+<ol>
+<li>
+<p><strong>Node Anatomy</strong>:\<br />
+   Each node in the list contains an integer value and a <code>next</code> pointer that points to the subsequent node in the list.</p>
+</li>
+<li>
+<p><strong>Cycle Detection</strong>:\<br />
+   The primary task is to identify whether a cycle exists within the list. If a cycle is detected, the function should return <code>True</code>. Otherwise, it should return <code>False</code>.</p>
+</li>
+<li>
+<p><strong>Memory Efficiency</strong>:\<br />
+   The question poses an implicit challenge: Can you solve it using $$ O(1) $$ memory, meaning constant extra space?</p>
+</li>
+</ol>
+<h3>Strategies to Tackle the Problem</h3>
+<ol>
+<li>
+<p><strong>Hash Table Method</strong>:\<br />
+   This approach involves storing visited nodes in a hash table. During traversal, if a node is encountered that already exists in the hash table, a cycle is confirmed.</p>
+</li>
+<li>
+<p><strong>Two-Pointers Method (Floyd's Cycle-Finding Algorithm)</strong>:\<br />
+   Also known as the "hare and tortoise" algorithm, this method employs two pointers that move at different speeds. If there is a cycle, the fast pointer will eventually catch up to the slow pointer, confirming the cycle's existence.</p>
+</li>
+</ol>
+<hr />
+<h2>Live Coding 2 Solution &amp; More</h2>
+<p>https://youtu.be/ew-E3mHOBT0?si=DTvrijJplAk7XV1w</p>
+<h3>Solution #1: Hash Table Method</h3>
+<h4>Intuition and Logic Behind the Solution</h4>
+<p>The basic idea here is to traverse the list and keep a record of the nodes we've visited so far. If at any point we encounter a node that we've already visited, we can conclude that there is a cycle in the list.</p>
+<h4>Step-by-step Explanation</h4>
+<ol>
+<li><strong>Initialization</strong>:</li>
+</ol>
+<ul>
+<li>Create an empty set, <code>visited_nodes</code>, to keep track of the nodes that have been visited.</li>
+</ul>
+<ol>
+<li><strong>Traversal and Verification</strong>:</li>
+</ol>
+<ul>
+<li>Traverse the list starting from the head node.</li>
+<li>At each node, check whether it already exists in <code>visited_nodes</code>.</li>
+<li>If it does, return <code>True</code> as a cycle is detected.</li>
+<li>Otherwise, add the node to <code>visited_nodes</code>.</li>
+</ul>
+<h4>Complexity Analysis</h4>
+<ul>
+<li><strong>Time Complexity</strong>: $$ O(n) $$ — Each node is visited once.</li>
+<li><strong>Space Complexity</strong>: $$ O(n) $$ — To store visited nodes.</li>
+</ul>
+<hr />
+<h3>Solution #2: Two-Pointer Method (Floyd's Cycle-Finding Algorithm)</h3>
+<h4>Intuition and Logic Behind the Solution</h4>
+<p>Also known as the "hare and tortoise" algorithm, this method uses two pointers that traverse the list at different speeds. The slow pointer moves one step at a time, while the fast pointer moves two steps. If there is a cycle, the fast pointer will eventually catch up to the slow pointer.</p>
+<h4>Step-by-step Explanation</h4>
+<ol>
+<li><strong>Initialization</strong>:</li>
+</ol>
+<ul>
+<li>Initialize two pointers, <code>slow_pointer</code> and <code>fast_pointer</code>, both pointing to the head node initially.</li>
+</ul>
+<ol>
+<li><strong>Cycle Detection</strong>:</li>
+</ol>
+<ul>
+<li>Traverse the list until the <code>fast_pointer</code> or its <code>next</code> becomes <code>None</code>.</li>
+<li>Update <code>slow_pointer</code> and <code>fast_pointer</code> as follows:<ul>
+<li><code>slow_pointer = slow_pointer.next</code></li>
+<li><code>fast_pointer = fast_pointer.next.next</code></li>
+</ul>
+</li>
+<li>If <code>slow_pointer</code> and <code>fast_pointer</code> meet at some point, return <code>True</code>.</li>
+</ul>
+<h4>Complexity Analysis</h4>
+<ul>
+<li><strong>Time Complexity</strong>: $$ O(n) $$ — In the worst-case scenario, each node is visited once.</li>
+<li><strong>Space Complexity</strong>: $$ O(1) $$ — Constant space is used.</li>
+</ul>
+<hr />
+<h2>Performance</h2>
+<h4>Two-Pointers</h4>
+<table>
+<thead>
+<tr>
+<th>Language</th>
+<th>Execution Time (ms)</th>
+<th>Memory Usage (MB)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Java</td>
+<td>0</td>
+<td>44</td>
+</tr>
+<tr>
+<td>Go</td>
+<td>8</td>
+<td>4.4</td>
+</tr>
+<tr>
+<td>PHP</td>
+<td>10</td>
+<td>22.7</td>
+</tr>
+<tr>
+<td>C++</td>
+<td>11</td>
+<td>8.2</td>
+</tr>
+<tr>
+<td>Python3</td>
+<td>41</td>
+<td>20.6</td>
+</tr>
+<tr>
+<td>JavaScript</td>
+<td>65</td>
+<td>45</td>
+</tr>
+<tr>
+<td>C#</td>
+<td>84</td>
+<td>43</td>
+</tr>
+</tbody>
+</table>
+<p></p>
+<h4>Hash Table</h4>
+<table>
+<thead>
+<tr>
+<th>Language</th>
+<th>Execution Time (ms)</th>
+<th>Memory Usage (MB)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Java</td>
+<td>4</td>
+<td>43.7</td>
+</tr>
+<tr>
+<td>Go</td>
+<td>10</td>
+<td>6.2</td>
+</tr>
+<tr>
+<td>C++</td>
+<td>18</td>
+<td>10.5</td>
+</tr>
+<tr>
+<td>Python3</td>
+<td>49</td>
+<td>20.7</td>
+</tr>
+<tr>
+<td>C#</td>
+<td>82</td>
+<td>44.9</td>
+</tr>
+<tr>
+<td>JavaScript</td>
+<td>69</td>
+<td>45.9</td>
+</tr>
+<tr>
+<td>PHP</td>
+<td>432</td>
+<td>22.8</td>
+</tr>
+</tbody>
+</table>
+<p></p>
+<h2>Code Two-Pointer</h2>
+<div class="codehilite"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">hasCycle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">head</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">ListNode</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="n">slow_pointer</span> <span class="o">=</span> <span class="n">head</span>
+        <span class="n">fast_pointer</span> <span class="o">=</span> <span class="n">head</span>
+        <span class="k">while</span> <span class="n">fast_pointer</span> <span class="ow">and</span> <span class="n">fast_pointer</span><span class="o">.</span><span class="n">next</span><span class="p">:</span>
+            <span class="n">slow_pointer</span> <span class="o">=</span> <span class="n">slow_pointer</span><span class="o">.</span><span class="n">next</span>
+            <span class="n">fast_pointer</span> <span class="o">=</span> <span class="n">fast_pointer</span><span class="o">.</span><span class="n">next</span><span class="o">.</span><span class="n">next</span>
+            <span class="k">if</span> <span class="n">slow_pointer</span> <span class="o">==</span> <span class="n">fast_pointer</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">return</span> <span class="kc">False</span>
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="w"> </span><span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+<span class="w">    </span><span class="kt">bool</span><span class="w"> </span><span class="n">hasCycle</span><span class="p">(</span><span class="n">ListNode</span><span class="w"> </span><span class="o">*</span><span class="n">head</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">ListNode</span><span class="w"> </span><span class="o">*</span><span class="n">slow_pointer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">head</span><span class="p">,</span><span class="w"> </span><span class="o">*</span><span class="n">fast_pointer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">head</span><span class="p">;</span>
+<span class="w">        </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">fast_pointer</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="k">nullptr</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">fast_pointer</span><span class="o">-&gt;</span><span class="n">next</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="k">nullptr</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">slow_pointer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">slow_pointer</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">;</span>
+<span class="w">            </span><span class="n">fast_pointer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">fast_pointer</span><span class="o">-&gt;</span><span class="n">next</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">;</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">slow_pointer</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">fast_pointer</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">};</span>
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code><span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">Solution</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">boolean</span><span class="w"> </span><span class="nf">hasCycle</span><span class="p">(</span><span class="n">ListNode</span><span class="w"> </span><span class="n">head</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">ListNode</span><span class="w"> </span><span class="n">slow_pointer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">head</span><span class="p">,</span><span class="w"> </span><span class="n">fast_pointer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">head</span><span class="p">;</span>
+<span class="w">        </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">fast_pointer</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">fast_pointer</span><span class="p">.</span><span class="na">next</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">slow_pointer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">slow_pointer</span><span class="p">.</span><span class="na">next</span><span class="p">;</span>
+<span class="w">            </span><span class="n">fast_pointer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">fast_pointer</span><span class="p">.</span><span class="na">next</span><span class="p">.</span><span class="na">next</span><span class="p">;</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">slow_pointer</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">fast_pointer</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="kc">true</span><span class="p">;</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="kc">false</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code><span class="k">public</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="nf">HasCycle</span><span class="p">(</span><span class="n">ListNode</span><span class="w"> </span><span class="n">head</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">ListNode</span><span class="w"> </span><span class="n">slow_pointer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">head</span><span class="p">,</span><span class="w"> </span><span class="n">fast_pointer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">head</span><span class="p">;</span>
+<span class="w">        </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">fast_pointer</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="k">null</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">fast_pointer</span><span class="p">.</span><span class="n">next</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="k">null</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">slow_pointer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">slow_pointer</span><span class="p">.</span><span class="n">next</span><span class="p">;</span>
+<span class="w">            </span><span class="n">fast_pointer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">fast_pointer</span><span class="p">.</span><span class="n">next</span><span class="p">.</span><span class="n">next</span><span class="p">;</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">slow_pointer</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">fast_pointer</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="k">false</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code><span class="kd">func</span><span class="w"> </span><span class="nx">hasCycle</span><span class="p">(</span><span class="nx">head</span><span class="w"> </span><span class="o">*</span><span class="nx">ListNode</span><span class="p">)</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">slow_pointer</span><span class="p">,</span><span class="w"> </span><span class="nx">fast_pointer</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">head</span><span class="p">,</span><span class="w"> </span><span class="nx">head</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="nx">fast_pointer</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nx">fast_pointer</span><span class="p">.</span><span class="nx">Next</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nx">slow_pointer</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">slow_pointer</span><span class="p">.</span><span class="nx">Next</span>
+<span class="w">        </span><span class="nx">fast_pointer</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">fast_pointer</span><span class="p">.</span><span class="nx">Next</span><span class="p">.</span><span class="nx">Next</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="nx">slow_pointer</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nx">fast_pointer</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="kc">false</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code><span class="cm">/**</span>
+<span class="cm"> * @param {ListNode} head</span>
+<span class="cm"> * @return {boolean}</span>
+<span class="cm"> */</span>
+<span class="kd">var</span><span class="w"> </span><span class="nx">hasCycle</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kd">function</span><span class="p">(</span><span class="nx">head</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="nx">slow_pointer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">head</span><span class="p">,</span><span class="w"> </span><span class="nx">fast_pointer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">head</span><span class="p">;</span>
+<span class="w">    </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="nx">fast_pointer</span><span class="w"> </span><span class="o">!==</span><span class="w"> </span><span class="kc">null</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nx">fast_pointer</span><span class="p">.</span><span class="nx">next</span><span class="w"> </span><span class="o">!==</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nx">slow_pointer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">slow_pointer</span><span class="p">.</span><span class="nx">next</span><span class="p">;</span>
+<span class="w">        </span><span class="nx">fast_pointer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">fast_pointer</span><span class="p">.</span><span class="nx">next</span><span class="p">.</span><span class="nx">next</span><span class="p">;</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">slow_pointer</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="nx">fast_pointer</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="kc">true</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="kc">false</span><span class="p">;</span>
+<span class="p">};</span>
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code><span class="x">class Solution {</span>
+<span class="x">    function hasCycle($head) {</span>
+<span class="x">        $slow_pointer = $head;</span>
+<span class="x">        $fast_pointer = $head;</span>
+<span class="x">        while ($fast_pointer !== null &amp;&amp; $fast_pointer-&gt;next !== null) {</span>
+<span class="x">            $slow_pointer = $slow_pointer-&gt;next;</span>
+<span class="x">            $fast_pointer = $fast_pointer-&gt;next-&gt;next;</span>
+<span class="x">            if ($slow_pointer === $fast_pointer) {</span>
+<span class="x">                return true;</span>
+<span class="x">            }</span>
+<span class="x">        }</span>
+<span class="x">        return false;</span>
+<span class="x">    }</span>
+<span class="x">}</span>
+</code></pre></div>
+
+<h2>Code Hash Table</h2>
+<div class="codehilite"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">hasCycle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">head</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">ListNode</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="n">visited_nodes</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="n">current_node</span> <span class="o">=</span> <span class="n">head</span>
+        <span class="k">while</span> <span class="n">current_node</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">current_node</span> <span class="ow">in</span> <span class="n">visited_nodes</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">True</span>
+            <span class="n">visited_nodes</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">current_node</span><span class="p">)</span>
+            <span class="n">current_node</span> <span class="o">=</span> <span class="n">current_node</span><span class="o">.</span><span class="n">next</span>
+        <span class="k">return</span> <span class="kc">False</span>                                                                 
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code><span class="kd">func</span><span class="w"> </span><span class="nx">hasCycle</span><span class="p">(</span><span class="nx">head</span><span class="w"> </span><span class="o">*</span><span class="nx">ListNode</span><span class="p">)</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">visited_nodes</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nb">make</span><span class="p">(</span><span class="kd">map</span><span class="p">[</span><span class="o">*</span><span class="nx">ListNode</span><span class="p">]</span><span class="kt">bool</span><span class="p">)</span>
+<span class="w">    </span><span class="nx">current_node</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">head</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="nx">current_node</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="nx">visited_nodes</span><span class="p">[</span><span class="nx">current_node</span><span class="p">]</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="nx">visited_nodes</span><span class="p">[</span><span class="nx">current_node</span><span class="p">]</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">        </span><span class="nx">current_node</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">current_node</span><span class="p">.</span><span class="nx">Next</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="kc">false</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="w"> </span><span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+<span class="w">    </span><span class="kt">bool</span><span class="w"> </span><span class="n">hasCycle</span><span class="p">(</span><span class="n">ListNode</span><span class="w"> </span><span class="o">*</span><span class="n">head</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">unordered_set</span><span class="o">&lt;</span><span class="n">ListNode</span><span class="o">*&gt;</span><span class="w"> </span><span class="n">visited_nodes</span><span class="p">;</span>
+<span class="w">        </span><span class="n">ListNode</span><span class="w"> </span><span class="o">*</span><span class="n">current_node</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">head</span><span class="p">;</span>
+<span class="w">        </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">current_node</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="k">nullptr</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">visited_nodes</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="n">current_node</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">visited_nodes</span><span class="p">.</span><span class="n">end</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="n">visited_nodes</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">current_node</span><span class="p">);</span>
+<span class="w">            </span><span class="n">current_node</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">current_node</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">};</span>
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code><span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">Solution</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">boolean</span><span class="w"> </span><span class="nf">hasCycle</span><span class="p">(</span><span class="n">ListNode</span><span class="w"> </span><span class="n">head</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">HashSet</span><span class="o">&lt;</span><span class="n">ListNode</span><span class="o">&gt;</span><span class="w"> </span><span class="n">visited_nodes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">HashSet</span><span class="o">&lt;&gt;</span><span class="p">();</span>
+<span class="w">        </span><span class="n">ListNode</span><span class="w"> </span><span class="n">current_node</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">head</span><span class="p">;</span>
+<span class="w">        </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">current_node</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">visited_nodes</span><span class="p">.</span><span class="na">contains</span><span class="p">(</span><span class="n">current_node</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="kc">true</span><span class="p">;</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="n">visited_nodes</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="n">current_node</span><span class="p">);</span>
+<span class="w">            </span><span class="n">current_node</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">current_node</span><span class="p">.</span><span class="na">next</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="kc">false</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code><span class="k">public</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="nf">HasCycle</span><span class="p">(</span><span class="n">ListNode</span><span class="w"> </span><span class="n">head</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">HashSet</span><span class="o">&lt;</span><span class="n">ListNode</span><span class="o">&gt;</span><span class="w"> </span><span class="n">visited_nodes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">HashSet</span><span class="o">&lt;</span><span class="n">ListNode</span><span class="o">&gt;</span><span class="p">();</span>
+<span class="w">        </span><span class="n">ListNode</span><span class="w"> </span><span class="n">current_node</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">head</span><span class="p">;</span>
+<span class="w">        </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">current_node</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="k">null</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">visited_nodes</span><span class="p">.</span><span class="n">Contains</span><span class="p">(</span><span class="n">current_node</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="n">visited_nodes</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">current_node</span><span class="p">);</span>
+<span class="w">            </span><span class="n">current_node</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">current_node</span><span class="p">.</span><span class="n">next</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="k">false</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code><span class="x">class Solution {</span>
+<span class="x">    function hasCycle($head) {</span>
+<span class="x">        $visited_nodes = ;</span>
+<span class="x">        $current_node = $head;</span>
+<span class="x">        while ($current_node !== null) {</span>
+<span class="x">            if (in_array($current_node, $visited_nodes, true)) {</span>
+<span class="x">                return true;</span>
+<span class="x">            }</span>
+<span class="x">            $visited_nodes = $current_node;</span>
+<span class="x">            $current_node = $current_node-&gt;next;</span>
+<span class="x">        }</span>
+<span class="x">        return false;</span>
+<span class="x">    }</span>
+<span class="x">}</span>
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code><span class="cm">/**</span>
+<span class="cm"> * @param {ListNode} head</span>
+<span class="cm"> * @return {boolean}</span>
+<span class="cm"> */</span>
+<span class="kd">var</span><span class="w"> </span><span class="nx">hasCycle</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kd">function</span><span class="p">(</span><span class="nx">head</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="nx">visited_nodes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nb">Set</span><span class="p">();</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="nx">current_node</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">head</span><span class="p">;</span>
+<span class="w">    </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="nx">current_node</span><span class="w"> </span><span class="o">!==</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">visited_nodes</span><span class="p">.</span><span class="nx">has</span><span class="p">(</span><span class="nx">current_node</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="kc">true</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="nx">visited_nodes</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">current_node</span><span class="p">);</span>
+<span class="w">        </span><span class="nx">current_node</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">current_node</span><span class="p">.</span><span class="nx">next</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="kc">false</span><span class="p">;</span>
+<span class="p">};</span>
+</code></pre></div>
+
+<h2>Live Coding with Comments</h2>
+<p>https://youtu.be/aGbOOAKkhNo?si=IoPNL49uVessMpCv</p>
+<h2>Reflections on Cycle Detection</h2>
+<p>Both the Hash Table and Two-Pointers methods offer compelling strategies for detecting cycles in linked lists.</p>
+<ol>
+<li>
+<p><strong>Hash Table Method</strong>:\<br />
+   Intuitive and adaptable, though potentially memory-intensive.</p>
+</li>
+<li>
+<p><strong>Two-Pointers Method</strong>:\<br />
+   A marvel of memory efficiency, but perhaps less straightforward to the uninitiated.</p>
+</li>
+</ol>
+<p>Navigating this problem is a dive into data structure nuances and algorithmic elegance. Whether you appreciate the directness of the Hash Table or the finesse of Two-Pointers, each method champions a facet of computational acumen. This isn't just a problem; it's a step in honing algorithmic artistry. Embrace the challenge!</p></div>
+
+
+<div class='python-solution'><h2>Except-ionally fast Python -- Votes: 872</h2><p>Took 88 ms and the "Accepted Solutions Runtime Distribution" doesn't show any faster Python submissions. The "trick" is to not check all the time whether we have reached the end but to handle it via an exception. <a href="https://docs.python.org/3/glossary.html#term-eafp">"Easier to ask for forgiveness than permission."</a></p>
+<p>The algorithm is of course <a href="https://en.wikipedia.org/wiki/Cycle_detection#Tortoise_and_hare">Tortoise and hare</a>.</p>
+<div class="codehilite"><pre><span></span><code><span class="nv">def</span><span class="w"> </span><span class="nv">hasCycle</span><span class="ss">(</span><span class="nv">self</span>,<span class="w"> </span><span class="nv">head</span><span class="ss">)</span>:
+<span class="w">    </span><span class="nv">try</span>:
+<span class="w">        </span><span class="nv">slow</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">head</span>
+<span class="w">        </span><span class="nv">fast</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">head</span>.<span class="k">next</span>
+<span class="w">        </span><span class="k">while</span><span class="w"> </span><span class="nv">slow</span><span class="w"> </span><span class="nv">is</span><span class="w"> </span><span class="nv">not</span><span class="w"> </span><span class="nv">fast</span>:
+<span class="w">            </span><span class="nv">slow</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">slow</span>.<span class="k">next</span>
+<span class="w">            </span><span class="nv">fast</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">fast</span>.<span class="k">next</span>.<span class="k">next</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="nv">True</span>
+<span class="w">    </span><span class="nv">except</span>:
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="nv">False</span>
+</code></pre></div></div><p style="page-break-before: always" ></p>

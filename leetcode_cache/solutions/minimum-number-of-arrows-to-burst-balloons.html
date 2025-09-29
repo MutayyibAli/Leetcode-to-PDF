@@ -1,0 +1,94 @@
+<div class='cpp-solution'><h2>✅C++||SHORT AND EASY CODE||EXPLAINED✅ -- Votes: 200</h2><h2>Approach</h2>
+<p><strong>Greedy algorithm</strong><br />
+1.An arrow shoots through multiple intervals, all of which are coincident. We try to stack the overlapping intervals together and give a jump.<br />
+2.To facilitate identifying coincidence in a single traversal, we sort in ascending order on the right</p>
+<h2>Complexity</h2>
+<ul>
+<li>
+<p>Time complexity:O(NlogN)</p>
+</li>
+<li>
+<p>Space complexity:O(1)</p>
+</li>
+</ul>
+<h2>Code</h2>
+<div class="codehilite"><pre><span></span><code><span class="nt">class</span><span class="w"> </span><span class="nt">Solution</span><span class="w"> </span><span class="p">{</span>
+<span class="n">public</span><span class="p">:</span>
+<span class="w">    </span><span class="n">int</span><span class="w"> </span><span class="nf">findMinArrowShots</span><span class="p">(</span><span class="n">vector</span><span class="err">&lt;</span><span class="n">vector</span><span class="err">&lt;</span><span class="n">int</span><span class="err">&gt;&gt;&amp;</span><span class="w"> </span><span class="n">p</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
+<span class="w">        </span><span class="nf">sort</span><span class="p">(</span><span class="n">p</span><span class="err">.</span><span class="nf">begin</span><span class="p">(),</span><span class="w"> </span><span class="n">p</span><span class="err">.</span><span class="kc">end</span><span class="err">(</span><span class="p">));</span>
+<span class="w">        </span><span class="err">int</span><span class="w"> </span><span class="err">lastpoint</span><span class="w"> </span><span class="err">=</span><span class="w"> </span><span class="err">p</span><span class="cp">[</span><span class="mi">0</span><span class="cp">][</span><span class="mi">1</span><span class="cp">]</span><span class="p">;</span>
+<span class="w">        </span><span class="err">int</span><span class="w"> </span><span class="err">ans</span><span class="w"> </span><span class="err">=</span><span class="w"> </span><span class="err">1</span><span class="p">;</span>
+<span class="w">        </span><span class="err">for(auto</span><span class="w"> </span><span class="n">point</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">p</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
+<span class="w">            </span><span class="nf">if</span><span class="p">(</span><span class="n">point</span><span class="cp">[</span><span class="mi">0</span><span class="cp">]</span><span class="w"> </span><span class="err">&gt;</span><span class="w"> </span><span class="n">lastpoint</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
+<span class="w">                </span><span class="n">ans</span><span class="o">++</span><span class="p">;</span>
+<span class="w">                </span><span class="err">lastpoint</span><span class="w"> </span><span class="err">=</span><span class="w"> </span><span class="err">point</span><span class="cp">[</span><span class="mi">1</span><span class="cp">]</span><span class="p">;</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="nt">lastpoint</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nt">min</span><span class="o">(</span><span class="nt">point</span><span class="cp">[</span><span class="mi">1</span><span class="cp">]</span><span class="o">,</span><span class="nt">lastpoint</span><span class="o">);</span>
+<span class="w">        </span><span class="err">}</span>
+<span class="w">        </span><span class="nt">return</span><span class="w"> </span><span class="nt">ans</span><span class="o">;</span>
+<span class="w">    </span><span class="err">}</span>
+<span class="err">}</span><span class="o">;</span>
+</code></pre></div>
+
+<p><strong><em>IF YOU LIKE THE SOLUTION PLEASE UPVOTE.</em></strong><br />
+let's connnect <a href="https://www.linkedin.com/in/mahesh-vishnoi-a4a47a193/">Linkdin</a> AND <a href="https://t.me/mahesh_vishnoi29">Telegram</a></p></div>
+
+
+<div class='python-solution'><h2>✅ [C++/Java/Python] 6 Lines || Sort and Greedy || Image Explanation -- Votes: 332</h2><p><strong>PLEASE UPVOTE if you like</strong> <strong>If you have any question, feel free to ask.</strong></p>
+<ul>
+<li>Problem Understanding</li>
+<li>There is some <strong>misleading</strong> in the description of the problem, <strong><code>points</code> are not points but line segments, so I just modify <code>points</code> to <code>segments</code>.</strong></li>
+<li>There are several <code>segments</code> on the one-dimensional coordinate axis, find out the minimum number of <code>arrows</code> which are orthogonal to the coordinate axis so that each <code>segment</code> can be shot through by at least one <code>arrow</code>.</li>
+<li>Approch</li>
+<li>Sort the <code>segments</code> by the end</li>
+<li>put an arrow at the end of the 1-st <code>segment</code></li>
+<li>from the 2-nd <code>segment</code>, we check whether the current arrow pass through the current <code>segment</code>, if not add an arrow, put it at the end of the current <code>segment</code></li>
+</ul>
+<p></p>
+<p><strong>Python</strong></p>
+<div class="codehilite"><pre><span></span><code><span class="n">Language</span><span class="p">:</span> <span class="n">py</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">findMinArrowShots</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">segments</span><span class="p">):</span>
+        <span class="n">segments</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">p</span><span class="p">:</span> <span class="n">p</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">ans</span><span class="p">,</span> <span class="n">arrow</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="p">[</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">]</span> <span class="ow">in</span> <span class="n">segments</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">ans</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">start</span> <span class="o">&gt;</span> <span class="n">arrow</span><span class="p">:</span>
+                <span class="n">ans</span><span class="p">,</span> <span class="n">arrow</span> <span class="o">=</span> <span class="n">ans</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">end</span>
+        <span class="k">return</span> <span class="n">ans</span>
+</code></pre></div>
+
+<p><strong>C++</strong></p>
+<div class="codehilite"><pre><span></span><code><span class="n">bool</span><span class="w"> </span><span class="n">cmp</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="nc">int</span><span class="o">&gt;&amp;</span><span class="w"> </span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">vector</span><span class="o">&lt;</span><span class="nc">int</span><span class="o">&gt;&amp;</span><span class="w"> </span><span class="n">b</span><span class="p">)</span><span class="w"> </span><span class="err">{</span><span class="k">return</span><span class="w"> </span><span class="n">a</span><span class="o">[</span><span class="n">1</span><span class="o">]</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">b</span><span class="o">[</span><span class="n">1</span><span class="o">]</span><span class="p">;</span><span class="err">}</span>
+<span class="k">class</span><span class="w"> </span><span class="n">Solution</span><span class="w"> </span><span class="err">{</span>
+<span class="k">public</span><span class="err">:</span><span class="w">  </span>
+<span class="w">    </span><span class="nc">int</span><span class="w"> </span><span class="n">findMinArrowShots</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">vector</span><span class="o">&lt;</span><span class="nc">int</span><span class="o">&gt;&gt;&amp;</span><span class="w"> </span><span class="n">segments</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
+<span class="w">        </span><span class="n">sort</span><span class="p">(</span><span class="n">segments</span><span class="p">.</span><span class="k">begin</span><span class="p">(),</span><span class="w"> </span><span class="n">segments</span><span class="p">.</span><span class="k">end</span><span class="p">(),</span><span class="w"> </span><span class="n">cmp</span><span class="p">);</span>
+<span class="w">        </span><span class="nc">int</span><span class="w"> </span><span class="n">ans</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">arrow</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="nc">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">segments</span><span class="p">.</span><span class="k">size</span><span class="p">();</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">ans</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">segments</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="n">0</span><span class="o">]</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">arrow</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
+<span class="w">                </span><span class="n">ans</span><span class="w"> </span><span class="o">++</span><span class="p">;</span>
+<span class="w">                </span><span class="n">arrow</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">segments</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="n">1</span><span class="o">]</span><span class="p">;</span>
+<span class="w">            </span><span class="err">}</span>
+<span class="w">        </span><span class="err">}</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">ans</span><span class="p">;</span>
+<span class="w">    </span><span class="err">}</span>
+<span class="err">}</span><span class="p">;</span>
+</code></pre></div>
+
+<p><strong>Java</strong></p>
+<div class="codehilite"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="n">Solution</span><span class="w"> </span><span class="err">{</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="nc">int</span><span class="w"> </span><span class="n">findMinArrowShots</span><span class="p">(</span><span class="nc">int</span><span class="w"> </span><span class="n">segments</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
+<span class="w">        </span><span class="n">Arrays</span><span class="p">.</span><span class="n">sort</span><span class="p">(</span><span class="n">segments</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="k">Integer</span><span class="p">.</span><span class="n">compare</span><span class="p">(</span><span class="n">a</span><span class="o">[</span><span class="n">1</span><span class="o">]</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="o">[</span><span class="n">1</span><span class="o">]</span><span class="p">));</span>
+<span class="w">        </span><span class="nc">int</span><span class="w"> </span><span class="n">ans</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">arrow</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="nc">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">segments</span><span class="p">.</span><span class="n">length</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">ans</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">segments</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="n">0</span><span class="o">]</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">arrow</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
+<span class="w">                </span><span class="n">ans</span><span class="w"> </span><span class="o">++</span><span class="p">;</span>
+<span class="w">                </span><span class="n">arrow</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">segments</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="n">1</span><span class="o">]</span><span class="p">;</span>
+<span class="w">            </span><span class="err">}</span>
+<span class="w">        </span><span class="err">}</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">ans</span><span class="p">;</span>
+<span class="w">    </span><span class="err">}</span>
+<span class="err">}</span>
+</code></pre></div>
+
+<p><strong>PLEASE UPVOTE if you like</strong> <strong>If you have any question, feel free to ask.</strong></p></div><p style="page-break-before: always" ></p>

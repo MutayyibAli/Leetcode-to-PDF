@@ -1,0 +1,282 @@
+<div class='cpp-solution'><h2>C++ Brute-Force and KMP -- Votes: 483</h2><p>Traverse all the possible starting points of <code>haystack</code> (from <code>0</code> to <code>haystack.length() - needle.length()</code>) and see if the following characters in <code>haystack</code> match those of <code>needle</code>.</p>
+<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">cpp</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="w"> </span><span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">strStr</span><span class="p">(</span><span class="n">string</span><span class="w"> </span><span class="n">haystack</span><span class="p">,</span><span class="w"> </span><span class="n">string</span><span class="w"> </span><span class="n">needle</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">m</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">haystack</span><span class="p">.</span><span class="n">size</span><span class="p">(),</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">needle</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">m</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">n</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="kt">int</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">            </span><span class="k">for</span><span class="w"> </span><span class="p">(;</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">n</span><span class="p">;</span><span class="w"> </span><span class="n">j</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">haystack</span><span class="p">[</span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">j</span><span class="p">]</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">needle</span><span class="p">[</span><span class="n">j</span><span class="p">])</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="k">break</span><span class="p">;</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">j</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">n</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="n">i</span><span class="p">;</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="mi">-1</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">};</span>
+</code></pre></div>
+
+<p>The following is another implementation, shorter but harder to understand.</p>
+<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">cpp</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="w"> </span><span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">strStr</span><span class="p">(</span><span class="n">string</span><span class="w"> </span><span class="n">haystack</span><span class="p">,</span><span class="w"> </span><span class="n">string</span><span class="w"> </span><span class="n">needle</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">m</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">haystack</span><span class="p">.</span><span class="n">size</span><span class="p">(),</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">needle</span><span class="p">.</span><span class="n">size</span><span class="p">(),</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">        </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">p</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">m</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">haystack</span><span class="p">.</span><span class="n">substr</span><span class="p">(</span><span class="n">p</span><span class="p">,</span><span class="w"> </span><span class="n">n</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">needle</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="n">p</span><span class="p">;</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">p</span><span class="o">++</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">m</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">haystack</span><span class="p">[</span><span class="n">p</span><span class="p">]</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">needle</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="mi">-1</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">};</span>
+</code></pre></div>
+
+<p>Finally comes the KMP algorithm. You may refer to <a href="http://jakeboxer.com/blog/2009/12/13/the-knuth-morris-pratt-algorithm-in-my-own-words/">KMP on jBoxer's blog</a> and <a href="http://www.geeksforgeeks.org/searching-for-patterns-set-2-kmp-algorithm/">KMP on geeksforgeeks</a> for some explanations. I rewrote the code from the second link.</p>
+<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">cpp</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="w"> </span><span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">strStr</span><span class="p">(</span><span class="n">string</span><span class="w"> </span><span class="n">haystack</span><span class="p">,</span><span class="w"> </span><span class="n">string</span><span class="w"> </span><span class="n">needle</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">m</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">haystack</span><span class="p">.</span><span class="n">size</span><span class="p">(),</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">needle</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">n</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="w"> </span><span class="n">lps</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">kmpProcess</span><span class="p">(</span><span class="n">needle</span><span class="p">);</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">m</span><span class="p">;)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">haystack</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">needle</span><span class="p">[</span><span class="n">j</span><span class="p">])</span><span class="w"> </span><span class="p">{</span><span class="w"> </span>
+<span class="w">                </span><span class="n">i</span><span class="o">++</span><span class="p">,</span><span class="w"> </span><span class="n">j</span><span class="o">++</span><span class="p">;</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">j</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">n</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">j</span><span class="p">;</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">m</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">haystack</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">needle</span><span class="p">[</span><span class="n">j</span><span class="p">])</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">j</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">lps</span><span class="p">[</span><span class="n">j</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">]</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">;</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="mi">-1</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="k">private</span><span class="o">:</span>
+<span class="w">    </span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="w"> </span><span class="n">kmpProcess</span><span class="p">(</span><span class="n">string</span><span class="w"> </span><span class="n">needle</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">needle</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>
+<span class="w">        </span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="w"> </span><span class="n">lps</span><span class="p">(</span><span class="n">n</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">len</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">n</span><span class="p">;)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">needle</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">needle</span><span class="p">[</span><span class="n">len</span><span class="p">])</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">lps</span><span class="p">[</span><span class="n">i</span><span class="o">++</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">++</span><span class="n">len</span><span class="p">;</span>
+<span class="w">            </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">len</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">len</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">lps</span><span class="p">[</span><span class="n">len</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">];</span>
+<span class="w">            </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">lps</span><span class="p">[</span><span class="n">i</span><span class="o">++</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">lps</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+
+<div class='python-solution'><h2>【Video】Slicing approach -- Votes: 435</h2><h2>Intuition</h2>
+<p>Slice a string of haystack.</p>
+<hr />
+<h2>Solution Video</h2>
+<p>https://youtu.be/lnTAVa8A7XI</p>
+<h4>⭐️⭐️ Don't forget to subscribe to my channel! ⭐️⭐️</h4>
+<p><strong>■ Subscribe URL</strong><br />
+http://www.youtube.com/channel/UC9RMNwYTL3SXCP6ShLWVFww?sub_confirmation=1</p>
+<p>Subscribers: 5,241<br />
+Thank you for your support!</p>
+<hr />
+<h2>Approach</h2>
+<p>Problem here is that we don't know where to start. That's why we iterate through all characters one by one.</p>
+<div class="codehilite"><pre><span></span><code>haystack = &quot;abcxyz&quot;, needle = &quot;xyz&quot;
+</code></pre></div>
+
+<p>We start from index <code>0</code>.</p>
+<div class="codehilite"><pre><span></span><code>&quot;abcxyz&quot;
+ i
+</code></pre></div>
+
+<p>My strategy is to check a part of string. Formula for the part is</p>
+<hr />
+<p>⭐️ Points</p>
+<div class="codehilite"><pre><span></span><code>sliced string = haystack[i: i+ length of needle] 
+</code></pre></div>
+
+<p>Why?</p>
+<p>That's because we need to find a part of string which is length <code>3</code>, since length of needle is <code>3</code>.</p>
+<p>One more important thing is that in Python ending number is not included. If current index is <code>0</code>, slicing range should be from index <code>0</code> to index <code>2</code> in this case.</p>
+<hr />
+<p>Let's see how it works!</p>
+<div class="codehilite"><pre><span></span><code><span class="w"> </span><span class="mi">012345</span><span class="w"> </span>→<span class="w"> </span><span class="nv">index</span>
+<span class="s2">&quot;abcxyz&quot;</span>
+<span class="w"> </span><span class="nv">i</span>
+
+<span class="nv">slicing</span><span class="w"> </span><span class="nv">string</span>:<span class="w"> </span><span class="nv">haystack</span>[<span class="mi">0</span>:<span class="mi">3</span>]<span class="w"> </span>→<span class="w"> </span><span class="s2">&quot;abc&quot;</span>
+
+<span class="k">if</span><span class="w"> </span><span class="s2">&quot;abc&quot;</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">&quot;xyz&quot;</span><span class="w"> </span>→<span class="w"> </span><span class="nv">False</span>,<span class="w"> </span><span class="nv">move</span><span class="w"> </span><span class="k">next</span>
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code><span class="w"> </span><span class="mi">012345</span><span class="w"> </span>→<span class="w"> </span><span class="nv">index</span>
+<span class="s2">&quot;abcxyz&quot;</span>
+<span class="w">  </span><span class="nv">i</span>
+
+<span class="nv">slicing</span><span class="w"> </span><span class="nv">string</span>:<span class="w"> </span><span class="nv">haystack</span>[<span class="mi">1</span>:<span class="mi">4</span>]<span class="w"> </span>→<span class="w"> </span><span class="s2">&quot;bcx&quot;</span>
+
+<span class="k">if</span><span class="w"> </span><span class="s2">&quot;bcx&quot;</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">&quot;xyz&quot;</span><span class="w"> </span>→<span class="w"> </span><span class="nv">False</span>,<span class="w"> </span><span class="nv">move</span><span class="w"> </span><span class="k">next</span>
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code><span class="w"> </span><span class="mi">012345</span><span class="w"> </span>→<span class="w"> </span><span class="nv">index</span>
+<span class="s2">&quot;abcxyz&quot;</span>
+<span class="w">   </span><span class="nv">i</span>
+
+<span class="nv">slicing</span><span class="w"> </span><span class="nv">string</span>:<span class="w"> </span><span class="nv">haystack</span>[<span class="mi">2</span>:<span class="mi">5</span>]<span class="w"> </span>→<span class="w"> </span><span class="s2">&quot;cxy&quot;</span>
+
+<span class="k">if</span><span class="w"> </span><span class="s2">&quot;cxy&quot;</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">&quot;xyz&quot;</span><span class="w"> </span>→<span class="w"> </span><span class="nv">False</span>,<span class="w"> </span><span class="nv">move</span><span class="w"> </span><span class="k">next</span>
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code><span class="w"> </span><span class="mi">012345</span><span class="w"> </span>→<span class="w"> </span><span class="nv">index</span>
+<span class="s2">&quot;abcxyz&quot;</span>
+<span class="w">    </span><span class="nv">i</span>
+
+<span class="nv">slicing</span><span class="w"> </span><span class="nv">string</span>:<span class="w"> </span><span class="nv">haystack</span>[<span class="mi">3</span>:<span class="mi">6</span>]<span class="w"> </span>→<span class="w"> </span><span class="s2">&quot;xyz&quot;</span>
+
+<span class="k">if</span><span class="w"> </span><span class="s2">&quot;xyz&quot;</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">&quot;xyz&quot;</span><span class="w"> </span>→<span class="w"> </span><span class="nv">True</span>
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code><span class="k">return</span><span class="w"> </span><span class="mi">3</span>
+</code></pre></div>
+
+<p>Easy!<br />
+Let's see solution codes and step by step algorithm!</p>
+<hr />
+<h2>Complexity</h2>
+<ul>
+<li>Time complexity: $$O(n * m)$$</li>
+</ul>
+<!-- Add your time complexity here, e.g. $$O(n)$$ -->
+
+<ul>
+<li>Space complexity: $$O(1)$$</li>
+</ul>
+<!-- Add your space complexity here, e.g. $$O(n)$$ -->
+
+<div class="codehilite"><pre><span></span><code><span class="n">Language</span><span class="p">:</span> <span class="n">python</span> 
+<span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">strStr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">haystack</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">needle</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">haystack</span><span class="p">)</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">needle</span><span class="p">):</span>
+            <span class="k">return</span> <span class="o">-</span><span class="mi">1</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">haystack</span><span class="p">)):</span>
+            <span class="k">if</span> <span class="n">haystack</span><span class="p">[</span><span class="n">i</span><span class="p">:</span><span class="n">i</span><span class="o">+</span><span class="nb">len</span><span class="p">(</span><span class="n">needle</span><span class="p">)]</span> <span class="o">==</span> <span class="n">needle</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">i</span>
+
+        <span class="k">return</span> <span class="o">-</span><span class="mi">1</span> 
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code><span class="nx">Language</span><span class="o">:</span><span class="w"> </span><span class="nx">javascript</span><span class="w"> </span>
+<span class="kd">var</span><span class="w"> </span><span class="nx">strStr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kd">function</span><span class="p">(</span><span class="nx">haystack</span><span class="p">,</span><span class="w"> </span><span class="nx">needle</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">haystack</span><span class="p">.</span><span class="nx">length</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="nx">needle</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="o">-</span><span class="mf">1</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kd">let</span><span class="w"> </span><span class="nx">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0</span><span class="p">;</span><span class="w"> </span><span class="nx">i</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="nx">haystack</span><span class="p">.</span><span class="nx">length</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nx">needle</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span><span class="w"> </span><span class="nx">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">haystack</span><span class="p">.</span><span class="nx">substring</span><span class="p">(</span><span class="nx">i</span><span class="p">,</span><span class="w"> </span><span class="nx">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nx">needle</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="nx">needle</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="nx">i</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="o">-</span><span class="mf">1</span><span class="p">;</span><span class="w">    </span>
+<span class="p">};</span>
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">java</span><span class="w"> </span>
+<span class="kd">class</span> <span class="nc">Solution</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="nf">strStr</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">haystack</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">needle</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">haystack</span><span class="p">.</span><span class="na">length</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">needle</span><span class="p">.</span><span class="na">length</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">haystack</span><span class="p">.</span><span class="na">length</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">needle</span><span class="p">.</span><span class="na">length</span><span class="p">();</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">haystack</span><span class="p">.</span><span class="na">substring</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">needle</span><span class="p">.</span><span class="na">length</span><span class="p">()).</span><span class="na">equals</span><span class="p">(</span><span class="n">needle</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="n">i</span><span class="p">;</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="o">-</span><span class="mi">1</span><span class="p">;</span><span class="w">        </span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">C</span><span class="o">++</span><span class="w"> </span>
+<span class="n">class</span><span class="w"> </span><span class="n">Solution</span><span class="w"> </span><span class="p">{</span>
+<span class="n">public</span><span class="o">:</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">strStr</span><span class="p">(</span><span class="n">string</span><span class="w"> </span><span class="n">haystack</span><span class="p">,</span><span class="w"> </span><span class="n">string</span><span class="w"> </span><span class="n">needle</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">haystack</span><span class="p">.</span><span class="n">length</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">needle</span><span class="p">.</span><span class="n">length</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="mi">-1</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">haystack</span><span class="p">.</span><span class="n">length</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">needle</span><span class="p">.</span><span class="n">length</span><span class="p">();</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">haystack</span><span class="p">.</span><span class="n">substr</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">needle</span><span class="p">.</span><span class="n">length</span><span class="p">())</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">needle</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="n">i</span><span class="p">;</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="mi">-1</span><span class="p">;</span><span class="w">        </span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">};</span>
+</code></pre></div>
+
+<h2>Step by Step Algorithm</h2>
+<ol>
+<li><strong>Check Lengths</strong>:</li>
+</ol>
+<ul>
+<li>Before proceeding with the search, the function checks if the length of <code>haystack</code> is less than the length of <code>needle</code>.</li>
+<li>If <code>haystack</code> is shorter, it's impossible for <code>needle</code> to be found within <code>haystack</code>, so the function returns <code>-1</code> immediately.</li>
+</ul>
+<p><code>python
+   if len(haystack) &lt; len(needle):
+       return -1</code></p>
+<ol>
+<li><strong>Loop Through <code>haystack</code></strong>:</li>
+</ol>
+<ul>
+<li>The function uses a <code>for</code> loop to iterate through <code>haystack</code>.</li>
+<li>The loop runs from the beginning of <code>haystack</code> to the point where the remaining substring is at least as long as <code>needle</code>.</li>
+<li>This is achieved by setting the loop condition to <code>range(len(haystack) - len(needle) + 1)</code>, ensuring that we do not run out of characters to compare.</li>
+</ul>
+<p><code>python
+   for i in range(len(haystack) - len(needle) + 1):</code></p>
+<ol>
+<li><strong>Compare Substrings</strong>:</li>
+</ol>
+<ul>
+<li>Inside the loop, a substring of <code>haystack</code> starting at the current index <code>i</code> and of length equal to <code>needle</code> is extracted and compared to <code>needle</code>.</li>
+<li>If they match, the function returns the current index <code>i</code>, which is the starting position of the first occurrence of <code>needle</code> in <code>haystack</code>.</li>
+</ul>
+<p><code>python
+   if haystack[i:i+len(needle)] == needle:
+       return i</code></p>
+<ol>
+<li><strong>Return -1 if Not Found</strong>:</li>
+</ol>
+<ul>
+<li>If the loop completes without finding a match, the function returns <code>-1</code>.</li>
+<li>This indicates that <code>needle</code> was not found in <code>haystack</code>.</li>
+</ul>
+<p><code>python
+   return -1</code></p>
+<hr />
+<p>Thank you for reading my post.</p>
+<h4>⭐️ Subscribe URL</h4>
+<p>http://www.youtube.com/channel/UC9RMNwYTL3SXCP6ShLWVFww?sub_confirmation=1</p>
+<h4>⭐️ Twitter</h4>
+<p>https://twitter.com/CodingNinjaAZ</p>
+<h4>⭐️ My previous video</h4>
+<p>Remove Duplicates from Sorted List #83</p>
+<p>https://youtu.be/uyd5vc0TZmA</p></div><p style="page-break-before: always" ></p>

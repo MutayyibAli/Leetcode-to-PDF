@@ -1,0 +1,300 @@
+<div class='cpp-solution'><h2>✅Best Method || C++ || JAVA || PYTHON || Beginner Friendly🔥🔥🔥 -- Votes: 3075</h2><p><strong>Certainly! Let's break down the code and provide a clear intuition and explanation, using the examples "IX" and "XI" to demonstrate its functionality.</strong></p>
+<h2>Intuition:</h2>
+<p>The key intuition lies in the fact that in Roman numerals, when a smaller value appears before a larger value, it represents subtraction, while when a smaller value appears after or equal to a larger value, it represents addition.</p>
+<h2>Explanation:</h2>
+<ol>
+<li>
+<p>The unordered map <code>m</code> is created and initialized with mappings between Roman numeral characters and their corresponding integer values. For example, 'I' is mapped to 1, 'V' to 5, 'X' to 10, and so on.</p>
+</li>
+<li>
+<p>The variable <code>ans</code> is initialized to 0. This variable will accumulate the final integer value of the Roman numeral string.</p>
+</li>
+<li>
+<p>The for loop iterates over each character in the input string <code>s</code>.<br />
+<strong>For the example "IX":</strong></p>
+</li>
+</ol>
+<ul>
+<li>
+<p>When <code>i</code> is 0, the current character <code>s[i]</code> is 'I'. Since there is a next character ('X'), and the value of 'I' (1) is less than the value of 'X' (10), the condition <code>m[s[i]] &lt; m[s[i+1]]</code> is true. In this case, we subtract the value of the current character from <code>ans</code>.</p>
+<p><code>ans -= m[s[i]];</code><br />
+<code>ans -= m['I'];</code><br />
+<code>ans -= 1;</code><br />
+<code>ans</code> becomes -1.</p>
+</li>
+<li>
+<p>When <code>i</code> is 1, the current character <code>s[i]</code> is 'X'. This is the last character in the string, so there is no next character to compare. Since there is no next character, we don't need to evaluate the condition. In this case, we add the value of the current character to <code>ans</code>.</p>
+<p><code>ans += m[s[i]];</code><br />
+<code>ans += m['X'];</code><br />
+<code>ans += 10;</code><br />
+<code>ans</code> becomes 9.</p>
+</li>
+</ul>
+<p><strong>For the example "XI":</strong></p>
+<ul>
+<li>
+<p>When <code>i</code> is 0, the current character <code>s[i]</code> is 'X'. Since there is a next character ('I'), and the value of 'X' (10) is greater than the value of 'I' (1), the condition <code>m[s[i]] &lt; m[s[i+1]]</code> is false. In this case, we add the value of the current character to <code>ans</code>.</p>
+<p><code>ans += m[s[i]];</code><br />
+<code>ans += m['X'];</code><br />
+<code>ans += 10;</code><br />
+<code>ans</code> becomes 10.</p>
+</li>
+<li>
+<p>When <code>i</code> is 1, the current character <code>s[i]</code> is 'I'. This is the last character in the string, so there is no next character to compare. Since there is no next character, we don't need to evaluate the condition. In this case, we add the value of the current character to <code>ans</code>.</p>
+<p><code>ans += m[s[i]];</code><br />
+<code>ans += m['I'];</code><br />
+<code>ans += 1;</code><br />
+<code>ans</code> becomes 11.</p>
+</li>
+</ul>
+<ol>
+<li>After the for loop, the accumulated value in <code>ans</code> represents the integer conversion of the Roman numeral string, and it is returned as the result.</li>
+</ol>
+<h2>Code</h2>
+<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">C</span><span class="o">++</span><span class="w"> </span>
+<span class="n">class</span><span class="w"> </span><span class="n">Solution</span><span class="w"> </span><span class="p">{</span>
+<span class="n">public</span><span class="o">:</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">romanToInt</span><span class="p">(</span><span class="n">string</span><span class="w"> </span><span class="n">s</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">unordered_map</span><span class="o">&lt;</span><span class="kt">char</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="o">&gt;</span><span class="w"> </span><span class="n">m</span><span class="p">;</span>
+
+<span class="w">        </span><span class="n">m</span><span class="p">[</span><span class="sc">&#39;I&#39;</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="w">        </span><span class="n">m</span><span class="p">[</span><span class="sc">&#39;V&#39;</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">5</span><span class="p">;</span>
+<span class="w">        </span><span class="n">m</span><span class="p">[</span><span class="sc">&#39;X&#39;</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">10</span><span class="p">;</span>
+<span class="w">        </span><span class="n">m</span><span class="p">[</span><span class="sc">&#39;L&#39;</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">50</span><span class="p">;</span>
+<span class="w">        </span><span class="n">m</span><span class="p">[</span><span class="sc">&#39;C&#39;</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">100</span><span class="p">;</span>
+<span class="w">        </span><span class="n">m</span><span class="p">[</span><span class="sc">&#39;D&#39;</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">500</span><span class="p">;</span>
+<span class="w">        </span><span class="n">m</span><span class="p">[</span><span class="sc">&#39;M&#39;</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1000</span><span class="p">;</span>
+
+<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">ans</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+
+<span class="w">        </span><span class="k">for</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">s</span><span class="p">.</span><span class="n">length</span><span class="p">();</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">){</span>
+<span class="w">            </span><span class="k">if</span><span class="p">(</span><span class="n">m</span><span class="p">[</span><span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">m</span><span class="p">[</span><span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]]){</span>
+<span class="w">                </span><span class="n">ans</span><span class="w"> </span><span class="o">-=</span><span class="w"> </span><span class="n">m</span><span class="p">[</span><span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="p">]];</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">else</span><span class="p">{</span>
+<span class="w">                </span><span class="n">ans</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">m</span><span class="p">[</span><span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="p">]];</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">ans</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">};</span>
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">Java</span><span class="w"> </span>
+<span class="kd">class</span> <span class="nc">Solution</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="nf">romanToInt</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">s</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">Map</span><span class="o">&lt;</span><span class="n">Character</span><span class="p">,</span><span class="w"> </span><span class="n">Integer</span><span class="o">&gt;</span><span class="w"> </span><span class="n">m</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">HashMap</span><span class="o">&lt;&gt;</span><span class="p">();</span>
+
+<span class="w">        </span><span class="n">m</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="sc">&#39;I&#39;</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span>
+<span class="w">        </span><span class="n">m</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="sc">&#39;V&#39;</span><span class="p">,</span><span class="w"> </span><span class="mi">5</span><span class="p">);</span>
+<span class="w">        </span><span class="n">m</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="sc">&#39;X&#39;</span><span class="p">,</span><span class="w"> </span><span class="mi">10</span><span class="p">);</span>
+<span class="w">        </span><span class="n">m</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="sc">&#39;L&#39;</span><span class="p">,</span><span class="w"> </span><span class="mi">50</span><span class="p">);</span>
+<span class="w">        </span><span class="n">m</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="sc">&#39;C&#39;</span><span class="p">,</span><span class="w"> </span><span class="mi">100</span><span class="p">);</span>
+<span class="w">        </span><span class="n">m</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="sc">&#39;D&#39;</span><span class="p">,</span><span class="w"> </span><span class="mi">500</span><span class="p">);</span>
+<span class="w">        </span><span class="n">m</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="sc">&#39;M&#39;</span><span class="p">,</span><span class="w"> </span><span class="mi">1000</span><span class="p">);</span>
+
+<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">ans</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">s</span><span class="p">.</span><span class="na">length</span><span class="p">();</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">s</span><span class="p">.</span><span class="na">length</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">m</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">s</span><span class="p">.</span><span class="na">charAt</span><span class="p">(</span><span class="n">i</span><span class="p">))</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">m</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">s</span><span class="p">.</span><span class="na">charAt</span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">)))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">ans</span><span class="w"> </span><span class="o">-=</span><span class="w"> </span><span class="n">m</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">s</span><span class="p">.</span><span class="na">charAt</span><span class="p">(</span><span class="n">i</span><span class="p">));</span>
+<span class="w">            </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">ans</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">m</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">s</span><span class="p">.</span><span class="na">charAt</span><span class="p">(</span><span class="n">i</span><span class="p">));</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">ans</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code><span class="n">Language</span><span class="p">:</span> <span class="n">Python3</span> 
+<span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">romanToInt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">s</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="n">m</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;I&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="s1">&#39;V&#39;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
+            <span class="s1">&#39;X&#39;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
+            <span class="s1">&#39;L&#39;</span><span class="p">:</span> <span class="mi">50</span><span class="p">,</span>
+            <span class="s1">&#39;C&#39;</span><span class="p">:</span> <span class="mi">100</span><span class="p">,</span>
+            <span class="s1">&#39;D&#39;</span><span class="p">:</span> <span class="mi">500</span><span class="p">,</span>
+            <span class="s1">&#39;M&#39;</span><span class="p">:</span> <span class="mi">1000</span>
+        <span class="p">}</span>
+
+        <span class="n">ans</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">s</span><span class="p">)):</span>
+            <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">m</span><span class="p">[</span><span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span> <span class="o">&lt;</span> <span class="n">m</span><span class="p">[</span><span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]]:</span>
+                <span class="n">ans</span> <span class="o">-=</span> <span class="n">m</span><span class="p">[</span><span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">ans</span> <span class="o">+=</span> <span class="n">m</span><span class="p">[</span><span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span>
+
+        <span class="k">return</span> <span class="n">ans</span>
+</code></pre></div>
+
+<p></p>
+<p><strong>If you are a beginner solve these problems which makes concepts clear for future coding:</strong></p>
+<ol>
+<li><a href="https://leetcode.com/problems/two-sum/solutions/3619262/3-method-s-c-java-python-beginner-friendly/">Two Sum</a></li>
+<li><a href="https://leetcode.com/problems/roman-to-integer/solutions/3651672/best-method-c-java-python-beginner-friendly/">Roman to Integer</a></li>
+<li><a href="https://leetcode.com/problems/palindrome-number/solutions/3651712/2-method-s-c-java-python-beginner-friendly/">Palindrome Number</a></li>
+<li><a href="https://leetcode.com/problems/maximum-subarray/solutions/3666304/beats-100-c-java-python-beginner-friendly/">Maximum Subarray</a></li>
+<li><a href="https://leetcode.com/problems/remove-element/solutions/3670940/best-100-c-java-python-beginner-friendly/">Remove Element</a></li>
+<li><a href="https://leetcode.com/problems/contains-duplicate/solutions/3672475/4-method-s-c-java-python-beginner-friendly/">Contains Duplicate</a></li>
+<li><a href="https://leetcode.com/problems/add-two-numbers/solutions/3675747/beats-100-c-java-python-beginner-friendly/">Add Two Numbers</a></li>
+<li><a href="https://leetcode.com/problems/majority-element/solutions/3676530/3-methods-beats-100-c-java-python-beginner-friendly/">Majority Element</a></li>
+<li><a href="https://leetcode.com/problems/remove-duplicates-from-sorted-array/solutions/3676877/best-method-100-c-java-python-beginner-friendly/">Remove Duplicates from Sorted Array</a></li>
+<li><strong>Practice them in a row for better understanding and please Upvote for more questions.</strong></li>
+</ol>
+<p><strong>If you found my solution helpful, I would greatly appreciate your upvote, as it would motivate me to continue sharing more solutions.</strong></p></div>
+
+
+<div class='python-solution'><h2>✅Best Method || C++ || JAVA || PYTHON || Beginner Friendly🔥🔥🔥 -- Votes: 3075</h2><p><strong>Certainly! Let's break down the code and provide a clear intuition and explanation, using the examples "IX" and "XI" to demonstrate its functionality.</strong></p>
+<h2>Intuition:</h2>
+<p>The key intuition lies in the fact that in Roman numerals, when a smaller value appears before a larger value, it represents subtraction, while when a smaller value appears after or equal to a larger value, it represents addition.</p>
+<h2>Explanation:</h2>
+<ol>
+<li>
+<p>The unordered map <code>m</code> is created and initialized with mappings between Roman numeral characters and their corresponding integer values. For example, 'I' is mapped to 1, 'V' to 5, 'X' to 10, and so on.</p>
+</li>
+<li>
+<p>The variable <code>ans</code> is initialized to 0. This variable will accumulate the final integer value of the Roman numeral string.</p>
+</li>
+<li>
+<p>The for loop iterates over each character in the input string <code>s</code>.<br />
+<strong>For the example "IX":</strong></p>
+</li>
+</ol>
+<ul>
+<li>
+<p>When <code>i</code> is 0, the current character <code>s[i]</code> is 'I'. Since there is a next character ('X'), and the value of 'I' (1) is less than the value of 'X' (10), the condition <code>m[s[i]] &lt; m[s[i+1]]</code> is true. In this case, we subtract the value of the current character from <code>ans</code>.</p>
+<p><code>ans -= m[s[i]];</code><br />
+<code>ans -= m['I'];</code><br />
+<code>ans -= 1;</code><br />
+<code>ans</code> becomes -1.</p>
+</li>
+<li>
+<p>When <code>i</code> is 1, the current character <code>s[i]</code> is 'X'. This is the last character in the string, so there is no next character to compare. Since there is no next character, we don't need to evaluate the condition. In this case, we add the value of the current character to <code>ans</code>.</p>
+<p><code>ans += m[s[i]];</code><br />
+<code>ans += m['X'];</code><br />
+<code>ans += 10;</code><br />
+<code>ans</code> becomes 9.</p>
+</li>
+</ul>
+<p><strong>For the example "XI":</strong></p>
+<ul>
+<li>
+<p>When <code>i</code> is 0, the current character <code>s[i]</code> is 'X'. Since there is a next character ('I'), and the value of 'X' (10) is greater than the value of 'I' (1), the condition <code>m[s[i]] &lt; m[s[i+1]]</code> is false. In this case, we add the value of the current character to <code>ans</code>.</p>
+<p><code>ans += m[s[i]];</code><br />
+<code>ans += m['X'];</code><br />
+<code>ans += 10;</code><br />
+<code>ans</code> becomes 10.</p>
+</li>
+<li>
+<p>When <code>i</code> is 1, the current character <code>s[i]</code> is 'I'. This is the last character in the string, so there is no next character to compare. Since there is no next character, we don't need to evaluate the condition. In this case, we add the value of the current character to <code>ans</code>.</p>
+<p><code>ans += m[s[i]];</code><br />
+<code>ans += m['I'];</code><br />
+<code>ans += 1;</code><br />
+<code>ans</code> becomes 11.</p>
+</li>
+</ul>
+<ol>
+<li>After the for loop, the accumulated value in <code>ans</code> represents the integer conversion of the Roman numeral string, and it is returned as the result.</li>
+</ol>
+<h2>Code</h2>
+<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">C</span><span class="o">++</span><span class="w"> </span>
+<span class="n">class</span><span class="w"> </span><span class="n">Solution</span><span class="w"> </span><span class="p">{</span>
+<span class="n">public</span><span class="o">:</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">romanToInt</span><span class="p">(</span><span class="n">string</span><span class="w"> </span><span class="n">s</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">unordered_map</span><span class="o">&lt;</span><span class="kt">char</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="o">&gt;</span><span class="w"> </span><span class="n">m</span><span class="p">;</span>
+
+<span class="w">        </span><span class="n">m</span><span class="p">[</span><span class="sc">&#39;I&#39;</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="w">        </span><span class="n">m</span><span class="p">[</span><span class="sc">&#39;V&#39;</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">5</span><span class="p">;</span>
+<span class="w">        </span><span class="n">m</span><span class="p">[</span><span class="sc">&#39;X&#39;</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">10</span><span class="p">;</span>
+<span class="w">        </span><span class="n">m</span><span class="p">[</span><span class="sc">&#39;L&#39;</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">50</span><span class="p">;</span>
+<span class="w">        </span><span class="n">m</span><span class="p">[</span><span class="sc">&#39;C&#39;</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">100</span><span class="p">;</span>
+<span class="w">        </span><span class="n">m</span><span class="p">[</span><span class="sc">&#39;D&#39;</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">500</span><span class="p">;</span>
+<span class="w">        </span><span class="n">m</span><span class="p">[</span><span class="sc">&#39;M&#39;</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1000</span><span class="p">;</span>
+
+<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">ans</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+
+<span class="w">        </span><span class="k">for</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">s</span><span class="p">.</span><span class="n">length</span><span class="p">();</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">){</span>
+<span class="w">            </span><span class="k">if</span><span class="p">(</span><span class="n">m</span><span class="p">[</span><span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">m</span><span class="p">[</span><span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]]){</span>
+<span class="w">                </span><span class="n">ans</span><span class="w"> </span><span class="o">-=</span><span class="w"> </span><span class="n">m</span><span class="p">[</span><span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="p">]];</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">else</span><span class="p">{</span>
+<span class="w">                </span><span class="n">ans</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">m</span><span class="p">[</span><span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="p">]];</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">ans</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">};</span>
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">Java</span><span class="w"> </span>
+<span class="kd">class</span> <span class="nc">Solution</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="nf">romanToInt</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">s</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">Map</span><span class="o">&lt;</span><span class="n">Character</span><span class="p">,</span><span class="w"> </span><span class="n">Integer</span><span class="o">&gt;</span><span class="w"> </span><span class="n">m</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">HashMap</span><span class="o">&lt;&gt;</span><span class="p">();</span>
+
+<span class="w">        </span><span class="n">m</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="sc">&#39;I&#39;</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span>
+<span class="w">        </span><span class="n">m</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="sc">&#39;V&#39;</span><span class="p">,</span><span class="w"> </span><span class="mi">5</span><span class="p">);</span>
+<span class="w">        </span><span class="n">m</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="sc">&#39;X&#39;</span><span class="p">,</span><span class="w"> </span><span class="mi">10</span><span class="p">);</span>
+<span class="w">        </span><span class="n">m</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="sc">&#39;L&#39;</span><span class="p">,</span><span class="w"> </span><span class="mi">50</span><span class="p">);</span>
+<span class="w">        </span><span class="n">m</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="sc">&#39;C&#39;</span><span class="p">,</span><span class="w"> </span><span class="mi">100</span><span class="p">);</span>
+<span class="w">        </span><span class="n">m</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="sc">&#39;D&#39;</span><span class="p">,</span><span class="w"> </span><span class="mi">500</span><span class="p">);</span>
+<span class="w">        </span><span class="n">m</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="sc">&#39;M&#39;</span><span class="p">,</span><span class="w"> </span><span class="mi">1000</span><span class="p">);</span>
+
+<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">ans</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">s</span><span class="p">.</span><span class="na">length</span><span class="p">();</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">s</span><span class="p">.</span><span class="na">length</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">m</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">s</span><span class="p">.</span><span class="na">charAt</span><span class="p">(</span><span class="n">i</span><span class="p">))</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">m</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">s</span><span class="p">.</span><span class="na">charAt</span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">)))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">ans</span><span class="w"> </span><span class="o">-=</span><span class="w"> </span><span class="n">m</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">s</span><span class="p">.</span><span class="na">charAt</span><span class="p">(</span><span class="n">i</span><span class="p">));</span>
+<span class="w">            </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">ans</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">m</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">s</span><span class="p">.</span><span class="na">charAt</span><span class="p">(</span><span class="n">i</span><span class="p">));</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">ans</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code><span class="n">Language</span><span class="p">:</span> <span class="n">Python3</span> 
+<span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">romanToInt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">s</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="n">m</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;I&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="s1">&#39;V&#39;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
+            <span class="s1">&#39;X&#39;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
+            <span class="s1">&#39;L&#39;</span><span class="p">:</span> <span class="mi">50</span><span class="p">,</span>
+            <span class="s1">&#39;C&#39;</span><span class="p">:</span> <span class="mi">100</span><span class="p">,</span>
+            <span class="s1">&#39;D&#39;</span><span class="p">:</span> <span class="mi">500</span><span class="p">,</span>
+            <span class="s1">&#39;M&#39;</span><span class="p">:</span> <span class="mi">1000</span>
+        <span class="p">}</span>
+
+        <span class="n">ans</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">s</span><span class="p">)):</span>
+            <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">m</span><span class="p">[</span><span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span> <span class="o">&lt;</span> <span class="n">m</span><span class="p">[</span><span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]]:</span>
+                <span class="n">ans</span> <span class="o">-=</span> <span class="n">m</span><span class="p">[</span><span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">ans</span> <span class="o">+=</span> <span class="n">m</span><span class="p">[</span><span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span>
+
+        <span class="k">return</span> <span class="n">ans</span>
+</code></pre></div>
+
+<p></p>
+<p><strong>If you are a beginner solve these problems which makes concepts clear for future coding:</strong></p>
+<ol>
+<li><a href="https://leetcode.com/problems/two-sum/solutions/3619262/3-method-s-c-java-python-beginner-friendly/">Two Sum</a></li>
+<li><a href="https://leetcode.com/problems/roman-to-integer/solutions/3651672/best-method-c-java-python-beginner-friendly/">Roman to Integer</a></li>
+<li><a href="https://leetcode.com/problems/palindrome-number/solutions/3651712/2-method-s-c-java-python-beginner-friendly/">Palindrome Number</a></li>
+<li><a href="https://leetcode.com/problems/maximum-subarray/solutions/3666304/beats-100-c-java-python-beginner-friendly/">Maximum Subarray</a></li>
+<li><a href="https://leetcode.com/problems/remove-element/solutions/3670940/best-100-c-java-python-beginner-friendly/">Remove Element</a></li>
+<li><a href="https://leetcode.com/problems/contains-duplicate/solutions/3672475/4-method-s-c-java-python-beginner-friendly/">Contains Duplicate</a></li>
+<li><a href="https://leetcode.com/problems/add-two-numbers/solutions/3675747/beats-100-c-java-python-beginner-friendly/">Add Two Numbers</a></li>
+<li><a href="https://leetcode.com/problems/majority-element/solutions/3676530/3-methods-beats-100-c-java-python-beginner-friendly/">Majority Element</a></li>
+<li><a href="https://leetcode.com/problems/remove-duplicates-from-sorted-array/solutions/3676877/best-method-100-c-java-python-beginner-friendly/">Remove Duplicates from Sorted Array</a></li>
+<li><strong>Practice them in a row for better understanding and please Upvote for more questions.</strong></li>
+</ol>
+<p><strong>If you found my solution helpful, I would greatly appreciate your upvote, as it would motivate me to continue sharing more solutions.</strong></p></div><p style="page-break-before: always" ></p>

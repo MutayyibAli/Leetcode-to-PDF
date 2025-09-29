@@ -1,0 +1,90 @@
+<div class='cpp-solution'><h2>✔️[C++] Shortest Recursive Solution | Detailed Explanation with images -- Votes: 648</h2><p><strong>Firstly, thanks for refering to my solution in advance :)</strong><br />
+<strong>Please UPVOTE if you like it :)</strong></p>
+<p>When we delete a node from a Binary Search Tree(BST), the BST properties should remain the same.<br />
+Hence, we have 3 cases for deleting a node from a BST :</p>
+<ol>
+<li>
+<p><strong><em>The node is a leaf node</em></strong> - In this cases, we can just delete the node and return the root, since deleting any elaf node doesn't affect the remainig tree.<br />
+</p>
+</li>
+<li>
+<p><strong><em>The node has one child</em></strong> - In this case, replace the node with the child node and return the root.<br />
+</p>
+</li>
+<li>
+<p><strong><em>The node has 2 children</em></strong> - In this case, in order to conserve the BST properties, we need to replace the node with it's inorder successor (The next node that comes in the inorder traversal) i.e; we need to replace it with either :<br />
+   1. The greatest value node in it's left subtree (or)<br />
+   2. The smallest value node in it's right subtree<br />
+   and return the root.<br />
+</p>
+</li>
+</ol>
+<p><strong>Time Complexity :</strong> O(h) - h = height of the tree.<br />
+(Worst case Time Complexity : O(n) )</p>
+<p><strong>Code :</strong></p>
+<div class="codehilite"><pre><span></span><code><span class="nt">class</span><span class="w"> </span><span class="nt">Solution</span><span class="w"> </span><span class="p">{</span>
+<span class="n">public</span><span class="p">:</span>
+<span class="w">    </span><span class="n">TreeNode</span><span class="o">*</span><span class="w"> </span><span class="nf">deleteNode</span><span class="p">(</span><span class="n">TreeNode</span><span class="o">*</span><span class="w"> </span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="n">int</span><span class="w"> </span><span class="n">key</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
+<span class="w">        </span><span class="nf">if</span><span class="p">(</span><span class="n">root</span><span class="p">)</span><span class="w"> </span>
+<span class="w">            </span><span class="nf">if</span><span class="p">(</span><span class="n">key</span><span class="w"> </span><span class="err">&lt;</span><span class="w"> </span><span class="n">root</span><span class="o">-</span><span class="err">&gt;</span><span class="n">val</span><span class="p">)</span><span class="w"> </span><span class="n">root-</span><span class="o">&gt;</span><span class="kc">left</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">deleteNode</span><span class="p">(</span><span class="n">root</span><span class="o">-</span><span class="err">&gt;</span><span class="kc">left</span><span class="p">,</span><span class="w"> </span><span class="n">key</span><span class="p">);</span><span class="w">     </span><span class="err">//We</span><span class="w"> </span><span class="err">frecursively</span><span class="w"> </span><span class="err">call</span><span class="w"> </span><span class="err">the</span><span class="w"> </span><span class="err">function</span><span class="w"> </span><span class="err">until</span><span class="w"> </span><span class="err">we</span><span class="w"> </span><span class="err">find</span><span class="w"> </span><span class="err">the</span><span class="w"> </span><span class="err">target</span><span class="w"> </span><span class="err">node</span>
+<span class="w">            </span><span class="err">else</span><span class="w"> </span><span class="err">if(key</span><span class="w"> </span><span class="err">&gt;</span><span class="w"> </span><span class="err">root-&gt;val)</span><span class="w"> </span><span class="err">root-&gt;right</span><span class="w"> </span><span class="err">=</span><span class="w"> </span><span class="err">deleteNode(root-&gt;right,</span><span class="w"> </span><span class="err">key)</span><span class="p">;</span><span class="w">       </span>
+<span class="w">            </span><span class="err">else{</span>
+<span class="w">                </span><span class="err">if(!root-&gt;left</span><span class="w"> </span><span class="err">&amp;&amp;</span><span class="w"> </span><span class="err">!root-&gt;right)</span><span class="w"> </span><span class="err">return</span><span class="w"> </span><span class="err">NULL</span><span class="p">;</span><span class="w">          </span><span class="err">//No</span><span class="w"> </span><span class="err">child</span><span class="w"> </span><span class="err">condition</span>
+<span class="w">                </span><span class="err">if</span><span class="w"> </span><span class="err">(!root-&gt;left</span><span class="w"> </span><span class="err">||</span><span class="w"> </span><span class="err">!root-&gt;right)</span>
+<span class="w">                    </span><span class="err">return</span><span class="w"> </span><span class="err">root-&gt;left</span><span class="w"> </span><span class="err">?</span><span class="w"> </span><span class="err">root-&gt;</span><span class="k">left</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">root-</span><span class="o">&gt;</span><span class="kc">right</span><span class="p">;</span><span class="w">    </span><span class="err">//One</span><span class="w"> </span><span class="err">child</span><span class="w"> </span><span class="err">contion</span><span class="w"> </span><span class="err">-&gt;</span><span class="w"> </span><span class="err">replace</span><span class="w"> </span><span class="err">the</span><span class="w"> </span><span class="err">node</span><span class="w"> </span><span class="err">with</span><span class="w"> </span><span class="err">it&#39;s</span><span class="w"> </span><span class="err">child</span>
+<span class="w">                                                                    </span><span class="err">//Two</span><span class="w"> </span><span class="err">child</span><span class="w"> </span><span class="err">condition</span><span class="w">   </span>
+<span class="w">                </span><span class="err">TreeNode*</span><span class="w"> </span><span class="err">temp</span><span class="w"> </span><span class="err">=</span><span class="w"> </span><span class="err">root-&gt;left</span><span class="p">;</span><span class="w">                        </span><span class="err">//(or)</span><span class="w"> </span><span class="err">TreeNode</span><span class="w"> </span><span class="err">*temp</span><span class="w"> </span><span class="err">=</span><span class="w"> </span><span class="err">root-&gt;right</span><span class="p">;</span>
+<span class="w">                </span><span class="err">while(temp-&gt;right</span><span class="w"> </span><span class="err">!=</span><span class="w"> </span><span class="err">NULL)</span><span class="w"> </span><span class="err">temp</span><span class="w"> </span><span class="err">=</span><span class="w"> </span><span class="err">temp-&gt;right</span><span class="p">;</span><span class="w">     </span><span class="err">//</span><span class="w">      </span><span class="err">while(temp-&gt;left</span><span class="w"> </span><span class="err">!=</span><span class="w"> </span><span class="err">NULL)</span><span class="w"> </span><span class="err">temp</span><span class="w"> </span><span class="err">=</span><span class="w"> </span><span class="err">temp-&gt;left</span><span class="p">;</span>
+<span class="w">                </span><span class="err">root-&gt;val</span><span class="w"> </span><span class="err">=</span><span class="w"> </span><span class="err">temp-&gt;val</span><span class="p">;</span><span class="w">                            </span><span class="err">//</span><span class="w">       </span><span class="err">root-&gt;val</span><span class="w"> </span><span class="err">=</span><span class="w"> </span><span class="err">temp-&gt;val</span><span class="p">;</span>
+<span class="w">                </span><span class="err">root-&gt;left</span><span class="w"> </span><span class="err">=</span><span class="w"> </span><span class="err">deleteNode(root-&gt;left,</span><span class="w"> </span><span class="err">temp-&gt;val)</span><span class="p">;</span><span class="w">  </span><span class="err">//</span><span class="w">        </span><span class="err">root-&gt;right</span><span class="w"> </span><span class="err">=</span><span class="w"> </span><span class="err">deleteNode(root-&gt;right,</span><span class="w"> </span><span class="err">temp)</span><span class="p">;</span><span class="w">     </span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="nt">return</span><span class="w"> </span><span class="nt">root</span><span class="o">;</span>
+<span class="w">    </span><span class="err">}</span><span class="w">   </span>
+<span class="err">}</span><span class="o">;</span>
+</code></pre></div>
+
+<p>If you like my solution and explanation, <strong>please UPVOTE!</strong></p></div>
+
+
+<div class='python-solution'><h2>Python 3 -> 97.55% faster. Explanation added -- Votes: 61</h2><p><strong>Suggestions to make it better are always welcomed.</strong></p>
+<p>Key Learnings for me:</p>
+<ol>
+<li>First find the node that we need to delete.</li>
+<li>After it's found, think about ways to keep the tree BST after deleting the node.</li>
+<li>If there's no left or right subtree, we found the leaf. Delete this node without any further traversing.</li>
+<li>If it's not a leaf node, what node we can use from the subtree that can replace the delete node and still maintain the BST property? We can either replace the delete node with the minimum from the right subtree (if right exists) or we can replace the delete node with the maximum from the left subtree (if left exists).</li>
+</ol>
+<div class="codehilite"><pre><span></span><code><span class="n">def</span><span class="w"> </span><span class="n">deleteNode</span><span class="p">(</span><span class="kr">self</span><span class="p">,</span><span class="w"> </span><span class="n">root</span><span class="o">:</span><span class="w"> </span><span class="n">TreeNode</span><span class="p">,</span><span class="w"> </span><span class="n">key</span><span class="o">:</span><span class="w"> </span><span class="n">int</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">TreeNode</span><span class="o">:</span>
+<span class="w">    </span><span class="nf">if</span><span class="w"> </span><span class="kr">not</span><span class="w"> </span><span class="n">root</span><span class="o">:</span>
+<span class="w">        </span><span class="kr">return</span><span class="w"> </span><span class="n">None</span>
+
+<span class="w">    </span><span class="nf">if</span><span class="w"> </span><span class="n">key</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">root</span><span class="p">.</span><span class="n">val</span><span class="o">:</span>
+<span class="w">        </span><span class="n">root</span><span class="p">.</span><span class="kr">right</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kr">self</span><span class="p">.</span><span class="n">deleteNode</span><span class="p">(</span><span class="n">root</span><span class="p">.</span><span class="kr">right</span><span class="p">,</span><span class="w"> </span><span class="n">key</span><span class="p">)</span>
+<span class="w">    </span><span class="n">elif</span><span class="w"> </span><span class="n">key</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">root</span><span class="p">.</span><span class="n">val</span><span class="o">:</span>
+<span class="w">        </span><span class="n">root</span><span class="p">.</span><span class="kr">left</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kr">self</span><span class="p">.</span><span class="n">deleteNode</span><span class="p">(</span><span class="n">root</span><span class="p">.</span><span class="kr">left</span><span class="p">,</span><span class="w"> </span><span class="n">key</span><span class="p">)</span>
+<span class="w">    </span><span class="n">else</span><span class="o">:</span>
+<span class="w">        </span><span class="nf">if</span><span class="w"> </span><span class="kr">not</span><span class="w"> </span><span class="n">root</span><span class="p">.</span><span class="kr">left</span><span class="w"> </span><span class="kr">and</span><span class="w"> </span><span class="kr">not</span><span class="w"> </span><span class="n">root</span><span class="p">.</span><span class="kr">right</span><span class="o">:</span>
+<span class="w">            </span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">None</span>
+<span class="w">        </span><span class="n">elif</span><span class="w"> </span><span class="n">root</span><span class="p">.</span><span class="kr">right</span><span class="o">:</span>
+<span class="w">            </span><span class="n">root</span><span class="p">.</span><span class="n">val</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kr">self</span><span class="p">.</span><span class="n">successor</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+<span class="w">            </span><span class="n">root</span><span class="p">.</span><span class="kr">right</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kr">self</span><span class="p">.</span><span class="n">deleteNode</span><span class="p">(</span><span class="n">root</span><span class="p">.</span><span class="kr">right</span><span class="p">,</span><span class="w"> </span><span class="n">root</span><span class="p">.</span><span class="n">val</span><span class="p">)</span>
+<span class="w">        </span><span class="n">else</span><span class="o">:</span>
+<span class="w">            </span><span class="n">root</span><span class="p">.</span><span class="n">val</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kr">self</span><span class="p">.</span><span class="n">predecessor</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+<span class="w">            </span><span class="n">root</span><span class="p">.</span><span class="kr">left</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kr">self</span><span class="p">.</span><span class="n">deleteNode</span><span class="p">(</span><span class="n">root</span><span class="p">.</span><span class="kr">left</span><span class="p">,</span><span class="w"> </span><span class="n">root</span><span class="p">.</span><span class="n">val</span><span class="p">)</span>
+<span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="n">root</span>
+
+<span class="n">def</span><span class="w"> </span><span class="n">successor</span><span class="p">(</span><span class="kr">self</span><span class="p">,</span><span class="w"> </span><span class="n">root</span><span class="o">:</span><span class="w"> </span><span class="n">TreeNode</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">TreeNode</span><span class="o">:</span>
+<span class="w">    </span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">root</span><span class="p">.</span><span class="kr">right</span>
+<span class="w">    </span><span class="n">while</span><span class="w"> </span><span class="n">root</span><span class="p">.</span><span class="kr">left</span><span class="o">:</span>
+<span class="w">        </span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">root</span><span class="p">.</span><span class="kr">left</span>
+<span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="n">root</span><span class="p">.</span><span class="n">val</span>
+
+<span class="n">def</span><span class="w"> </span><span class="n">predecessor</span><span class="p">(</span><span class="kr">self</span><span class="p">,</span><span class="w"> </span><span class="n">root</span><span class="o">:</span><span class="w"> </span><span class="n">TreeNode</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">TreeNode</span><span class="o">:</span>
+<span class="w">    </span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">root</span><span class="p">.</span><span class="kr">left</span>
+<span class="w">    </span><span class="n">while</span><span class="w"> </span><span class="n">root</span><span class="p">.</span><span class="kr">right</span><span class="o">:</span>
+<span class="w">        </span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">root</span><span class="p">.</span><span class="kr">right</span>
+<span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="n">root</span><span class="p">.</span><span class="n">val</span>
+</code></pre></div>
+
+<p><strong>I hope that you've found this useful.<br />
+In that case, please upvote. It only motivates me to write more such posts</strong></p></div><p style="page-break-before: always" ></p>

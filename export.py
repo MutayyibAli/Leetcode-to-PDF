@@ -1,28 +1,28 @@
-import sys
-import os
-import re
-import argparse
-from joblib import Memory
-import requests
-import json
-from types import SimpleNamespace
-import markdown
-import mdformat
-import weasyprint
-from google import genai
+# import sys
+# import os
+# import re
+# import argparse
+# from joblib import Memory
+# import requests
+# import json
+# from types import SimpleNamespace
+# import markdown
+# import mdformat
+# import weasyprint
+# from google import genai
 
-endpoint = open("assets/endpoint.txt").read().strip()
-questionGQL = open("assets/graphql/question.gql").read()
-solutionGQL = open("assets/graphql/solution.gql").read()
-postGQL = open("assets/graphql/post.gql").read()
-styles = open("assets/styles.css").read()
+# endpoint = open("assets/endpoint.txt").read().strip()
+# questionGQL = open("assets/graphql/question.gql").read()
+# solutionGQL = open("assets/graphql/solution.gql").read()
+# postGQL = open("assets/graphql/post.gql").read()
+# styles = open("assets/styles.css").read()
 
-# Create necessary directories if they don't exist
-os.makedirs("questions_cache", exist_ok=True)
-os.makedirs(".cache", exist_ok=True)
+# # Create necessary directories if they don't exist
+# os.makedirs("questions_cache", exist_ok=True)
+# os.makedirs(".cache", exist_ok=True)
 
-# Initialize joblib memory for caching
-memory = Memory(".cache", verbose=0)
+# # Initialize joblib memory for caching
+# memory = Memory(".cache", verbose=0)
 
 
 def print_summary(questions, cachedQuestions):
@@ -35,54 +35,54 @@ def print_summary(questions, cachedQuestions):
     print("--------------------------------")
 
 
-@memory.cache
-def fetch_question(slug):
-    base = {
-        "operationName": "questionData",
-        "variables": {"titleSlug": slug},
-        "query": questionGQL,
-    }
+# @memory.cache
+# def fetch_question(slug):
+#     base = {
+#         "operationName": "questionData",
+#         "variables": {"titleSlug": slug},
+#         "query": questionGQL,
+#     }
 
-    result = requests.get(endpoint, json=base)
-    return json.loads(
-        result.text, object_hook=lambda d: SimpleNamespace(**d)
-    ).data.question
-
-
-@memory.cache
-def fetch_solutions(slug, languageTags):
-    base = {
-        "operationName": "solutions",
-        "variables": {
-            "questionSlug": slug,
-            "skip": 0,
-            "first": 1,
-            "orderBy": "most_votes",
-            "languageTags": languageTags,
-        },
-        "query": solutionGQL,
-    }
-
-    result = requests.get(endpoint, json=base)
-
-    return json.loads(
-        result.text, object_hook=lambda d: SimpleNamespace(**d)
-    ).data.questionSolutions.solutions
+#     result = requests.get(endpoint, json=base)
+#     return json.loads(
+#         result.text, object_hook=lambda d: SimpleNamespace(**d)
+#     ).data.question
 
 
-@memory.cache
-def fetch_post(postId):
-    base = {
-        "operationName": "getPost",
-        "variables": {"postId": postId},
-        "query": postGQL,
-    }
+# @memory.cache
+# def fetch_solutions(slug, languageTags):
+#     base = {
+#         "operationName": "solutions",
+#         "variables": {
+#             "questionSlug": slug,
+#             "skip": 0,
+#             "first": 1,
+#             "orderBy": "most_votes",
+#             "languageTags": languageTags,
+#         },
+#         "query": solutionGQL,
+#     }
 
-    result = requests.get(endpoint, json=base)
-    post = json.loads(result.text, object_hook=lambda d: SimpleNamespace(**d)).data.post
-    post.content = bytes(post.content, "utf-8").decode("unicode_escape")
+#     result = requests.get(endpoint, json=base)
 
-    return post
+#     return json.loads(
+#         result.text, object_hook=lambda d: SimpleNamespace(**d)
+#     ).data.questionSolutions.solutions
+
+
+# @memory.cache
+# def fetch_post(postId):
+#     base = {
+#         "operationName": "getPost",
+#         "variables": {"postId": postId},
+#         "query": postGQL,
+#     }
+
+#     result = requests.get(endpoint, json=base)
+#     post = json.loads(result.text, object_hook=lambda d: SimpleNamespace(**d)).data.post
+#     post.content = bytes(post.content, "utf-8").decode("unicode_escape")
+
+#     return post
 
 
 def format_solution(post, slug):
@@ -227,59 +227,59 @@ def cache_question(question, use_ai):
 
 
 def main():
-    # Parse command-line arguments
-    parser = argparse.ArgumentParser(description="LeetCode to PDF Exporter")
-    parser.add_argument(
-        "--clear",
-        action="store_true",
-        help="Clear the cached questions before running",
-    )
-    parser.add_argument(
-        "--pdf",
-        action="store_true",
-        help="Only create PDF from cached questions",
-    )
-    parser.add_argument(
-        "--ai",
-        action="store_true",
-        help="Use AI to enhance the explanations in the questions",
-    )
-    args = parser.parse_args()
+    # # Parse command-line arguments
+    # parser = argparse.ArgumentParser(description="LeetCode to PDF Exporter")
+    # parser.add_argument(
+    #     "--clear",
+    #     action="store_true",
+    #     help="Clear the cached questions before running",
+    # )
+    # parser.add_argument(
+    #     "--pdf",
+    #     action="store_true",
+    #     help="Only create PDF from cached questions",
+    # )
+    # parser.add_argument(
+    #     "--ai",
+    #     action="store_true",
+    #     help="Use AI to enhance the explanations in the questions",
+    # )
+    # args = parser.parse_args()
 
     # Clear cache if --clear flag is set
-    if args.clear:
-        for file in os.listdir("questions_cache"):
-            os.remove(os.path.join("questions_cache", file))
+    # if args.clear:
+    #     for file in os.listdir("questions_cache"):
+    #         os.remove(os.path.join("questions_cache", file))
 
     # List all question files in the questions_lists directory
-    files = [f for f in os.listdir("questions_lists") if f.endswith(".txt")]
-    print(f"Found {len(files)} question files.")
-    for idx, filename in enumerate(files, start=1):
-        print(f"{idx}. {filename}")
+    # files = [f for f in os.listdir("questions_lists") if f.endswith(".txt")]
+    # print(f"Found {len(files)} question files.")
+    # for idx, filename in enumerate(files, start=1):
+    #     print(f"{idx}. {filename}")
 
-    # Ask user to select a file by serial number
-    while True:
-        try:
-            choice = int(
-                input("Enter the serial number of the file you want to select: ")
-            )
-            if 1 <= choice <= len(files):
-                file = files[choice - 1]
-                print(f"Selected file: {file}")
-                break
-            else:
-                print(f"Please enter a number between 1 and {len(files)}")
-        except ValueError:
-            print("Please enter a valid number.")
+    # # Ask user to select a file by serial number
+    # while True:
+    #     try:
+    #         choice = int(
+    #             input("Enter the serial number of the file you want to select: ")
+    #         )
+    #         if 1 <= choice <= len(files):
+    #             file = files[choice - 1]
+    #             print(f"Selected file: {file}")
+    #             break
+    #         else:
+    #             print(f"Please enter a number between 1 and {len(files)}")
+    #     except ValueError:
+    #         print("Please enter a valid number.")
 
-    # Read the selected file
-    try:
-        file_path = os.path.join("questions_lists", file)
-        with open(file_path) as f:
-            lines = f.read().strip().split("\n")
-    except FileNotFoundError:
-        print(f"Error: {file} not found.")
-        sys.exit(1)
+    # # Read the selected file
+    # try:
+    #     file_path = os.path.join("questions_lists", file)
+    #     with open(file_path) as f:
+    #         lines = f.read().strip().split("\n")
+    # except FileNotFoundError:
+    #     print(f"Error: {file} not found.")
+    #     sys.exit(1)
 
     questions = [
         line[len("https://leetcode.com/problems/") :].split("/")[0]
@@ -333,5 +333,5 @@ def main():
     htmlContent = htmlContent.replace("BODY", "combined_content")
 
 
-if __name__ == "__main__":
-    main()
+# if __name__ == "__main__":
+#     main()

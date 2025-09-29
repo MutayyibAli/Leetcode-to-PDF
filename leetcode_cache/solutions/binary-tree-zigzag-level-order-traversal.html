@@ -1,0 +1,151 @@
+<div class='cpp-solution'><h2>[c++] 5ms version: one queue and without reverse operation by using size of each level -- Votes: 490</h2><p>Assuming after traversing the 1st level, nodes in queue are {9, 20, 8}, And we are going to traverse 2nd level, which is even line and should print value from right to left [8, 20, 9].</p>
+<p>We know there are 3 nodes in current queue, so the vector for this level in final result should be of size 3.<br />
+Then, queue [i] -&gt; goes to -&gt; vector[queue.size() - 1 - i]<br />
+i.e. the ith node in current queue should be placed in (queue.size() - 1 - i) position in vector for that line.</p>
+<p>For example, for node(9), it's index in queue is 0, so its index in vector should be (3-1-0) = 2.</p>
+<div class="codehilite"><pre><span></span><code><span class="n">vector</span><span class="o">&lt;</span><span class="n">vector</span><span class="o">&lt;</span><span class="nc">int</span><span class="o">&gt;</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">zigzagLevelOrder</span><span class="p">(</span><span class="n">TreeNode</span><span class="o">*</span><span class="w"> </span><span class="n">root</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">root</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="k">NULL</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">vector</span><span class="o">&lt;</span><span class="n">vector</span><span class="o">&lt;</span><span class="nc">int</span><span class="o">&gt;</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="p">();</span>
+<span class="w">    </span><span class="err">}</span>
+<span class="w">    </span><span class="n">vector</span><span class="o">&lt;</span><span class="n">vector</span><span class="o">&lt;</span><span class="nc">int</span><span class="o">&gt;</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="k">result</span><span class="p">;</span>
+
+<span class="w">    </span><span class="n">queue</span><span class="o">&lt;</span><span class="n">TreeNode</span><span class="o">*&gt;</span><span class="w"> </span><span class="n">nodesQueue</span><span class="p">;</span>
+<span class="w">    </span><span class="n">nodesQueue</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="n">root</span><span class="p">);</span>
+<span class="w">    </span><span class="n">bool</span><span class="w"> </span><span class="n">leftToRight</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="err">!</span><span class="n">nodesQueue</span><span class="p">.</span><span class="n">empty</span><span class="p">())</span><span class="w"> </span><span class="err">{</span>
+<span class="w">        </span><span class="nc">int</span><span class="w"> </span><span class="k">size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">nodesQueue</span><span class="p">.</span><span class="k">size</span><span class="p">();</span>
+<span class="w">        </span><span class="n">vector</span><span class="o">&lt;</span><span class="nc">int</span><span class="o">&gt;</span><span class="w"> </span><span class="k">row</span><span class="p">(</span><span class="k">size</span><span class="p">);</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="nc">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="k">size</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
+<span class="w">            </span><span class="n">TreeNode</span><span class="o">*</span><span class="w"> </span><span class="n">node</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">nodesQueue</span><span class="p">.</span><span class="n">front</span><span class="p">();</span>
+<span class="w">            </span><span class="n">nodesQueue</span><span class="p">.</span><span class="n">pop</span><span class="p">();</span>
+
+<span class="w">            </span><span class="o">//</span><span class="w"> </span><span class="n">find</span><span class="w"> </span><span class="k">position</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="n">fill</span><span class="w"> </span><span class="n">node</span><span class="err">&#39;</span><span class="n">s</span><span class="w"> </span><span class="k">value</span>
+<span class="w">            </span><span class="nc">int</span><span class="w"> </span><span class="k">index</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">leftToRight</span><span class="p">)</span><span class="w"> </span><span class="vm">?</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="err">:</span><span class="w"> </span><span class="p">(</span><span class="k">size</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">i</span><span class="p">);</span>
+
+<span class="w">            </span><span class="k">row</span><span class="o">[</span><span class="n">index</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">node</span><span class="o">-&gt;</span><span class="n">val</span><span class="p">;</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">node</span><span class="o">-&gt;</span><span class="nf">left</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
+<span class="w">                </span><span class="n">nodesQueue</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="n">node</span><span class="o">-&gt;</span><span class="nf">left</span><span class="p">);</span>
+<span class="w">            </span><span class="err">}</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">node</span><span class="o">-&gt;</span><span class="nf">right</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
+<span class="w">                </span><span class="n">nodesQueue</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="n">node</span><span class="o">-&gt;</span><span class="nf">right</span><span class="p">);</span>
+<span class="w">            </span><span class="err">}</span>
+<span class="w">        </span><span class="err">}</span>
+<span class="w">        </span><span class="o">//</span><span class="w"> </span><span class="k">after</span><span class="w"> </span><span class="n">this</span><span class="w"> </span><span class="k">level</span>
+<span class="w">        </span><span class="n">leftToRight</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">!</span><span class="n">leftToRight</span><span class="p">;</span>
+<span class="w">        </span><span class="k">result</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="k">row</span><span class="p">);</span>
+<span class="w">    </span><span class="err">}</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="k">result</span><span class="p">;</span>
+<span class="err">}</span>
+</code></pre></div></div>
+
+
+<div class='python-solution'><h2>Four python solutions -- Votes: 70</h2><h5>Approach - 1</h5>
+<p>Using single ended queue and reverse. Although we are using <code>deque</code> we are utilizing only single ended queue functionality here.</p>
+<div class="codehilite"><pre><span></span><code><span class="n">Language</span><span class="p">:</span> <span class="n">python</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">zigzagLevelOrder</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">root</span><span class="p">:</span> <span class="n">TreeNode</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]]:</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">root</span><span class="p">:</span> <span class="k">return</span> 
+    <span class="n">queue</span> <span class="o">=</span> <span class="n">collections</span><span class="o">.</span><span class="n">deque</span><span class="p">([</span><span class="n">root</span><span class="p">])</span>
+    <span class="n">res</span> <span class="o">=</span> 
+    <span class="n">even_level</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">while</span> <span class="n">queue</span><span class="p">:</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">queue</span><span class="p">)</span>
+        <span class="n">level</span> <span class="o">=</span> 
+        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+            <span class="n">node</span> <span class="o">=</span> <span class="n">queue</span><span class="o">.</span><span class="n">popleft</span><span class="p">()</span>
+            <span class="n">level</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">val</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">left</span><span class="p">:</span>
+                <span class="n">queue</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">left</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">right</span><span class="p">:</span>
+                <span class="n">queue</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">right</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">even_level</span><span class="p">:</span>
+            <span class="n">res</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">level</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">res</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">level</span><span class="p">)</span>
+        <span class="n">even_level</span> <span class="o">=</span> <span class="ow">not</span> <span class="n">even_level</span>
+    <span class="k">return</span> <span class="n">res</span>
+</code></pre></div>
+
+<h5>Appraoch - 2</h5>
+<p>Using single ended queue and initializing array instead of reversing.</p>
+<div class="codehilite"><pre><span></span><code><span class="n">Language</span><span class="p">:</span> <span class="n">python</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">zigzagLevelOrder</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">root</span><span class="p">:</span> <span class="n">TreeNode</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]]:</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">root</span><span class="p">:</span> <span class="k">return</span> 
+    <span class="n">queue</span> <span class="o">=</span> <span class="n">collections</span><span class="o">.</span><span class="n">deque</span><span class="p">([</span><span class="n">root</span><span class="p">])</span>
+    <span class="n">res</span> <span class="o">=</span> 
+    <span class="n">even_level</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">while</span> <span class="n">queue</span><span class="p">:</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">queue</span><span class="p">)</span>
+        <span class="n">level</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">n</span> <span class="c1"># initalize the array since we know the length</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+            <span class="n">node</span> <span class="o">=</span> <span class="n">queue</span><span class="o">.</span><span class="n">popleft</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">left</span><span class="p">:</span>
+                <span class="n">queue</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">left</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">right</span><span class="p">:</span>
+                <span class="n">queue</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">right</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">even_level</span><span class="p">:</span>
+                <span class="n">level</span><span class="p">[</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="o">-</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">val</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">level</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">val</span>
+        <span class="n">res</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">level</span><span class="p">)</span>
+        <span class="n">even_level</span> <span class="o">=</span> <span class="ow">not</span> <span class="n">even_level</span>
+
+    <span class="k">return</span> <span class="n">res</span>
+</code></pre></div>
+
+<h5>Approach - 3</h5>
+<p>Using the double ended queue functionality. We pop from left in odd levels and pop from right in even levels. Trick is to flip the order of left and right when we are appending from left.</p>
+<div class="codehilite"><pre><span></span><code><span class="n">Language</span><span class="p">:</span> <span class="n">python</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">zigzagLevelOrder</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">root</span><span class="p">:</span> <span class="n">TreeNode</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]]:</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">root</span><span class="p">:</span> <span class="k">return</span> 
+    <span class="n">queue</span> <span class="o">=</span> <span class="n">collections</span><span class="o">.</span><span class="n">deque</span><span class="p">([</span><span class="n">root</span><span class="p">])</span>
+    <span class="n">res</span> <span class="o">=</span> 
+    <span class="n">even_level</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">while</span> <span class="n">queue</span><span class="p">:</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">queue</span><span class="p">)</span>
+        <span class="n">level</span> <span class="o">=</span> 
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">even_level</span><span class="p">:</span>
+                <span class="c1"># pop from right and append from left.</span>
+                <span class="n">node</span> <span class="o">=</span> <span class="n">queue</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+                <span class="c1"># to maintain the order of nodes in the format of [left, right, left, right] </span>
+                <span class="c1"># we push right first since we are appending from left</span>
+                <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">right</span><span class="p">:</span> <span class="n">queue</span><span class="o">.</span><span class="n">appendleft</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">right</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">left</span><span class="p">:</span> <span class="n">queue</span><span class="o">.</span><span class="n">appendleft</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">left</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># pop from left and append from right</span>
+                <span class="n">node</span> <span class="o">=</span> <span class="n">queue</span><span class="o">.</span><span class="n">popleft</span><span class="p">()</span>
+                <span class="c1"># here the order is maintained in the format [left, right, left, right] </span>
+                <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">left</span><span class="p">:</span> <span class="n">queue</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">left</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">right</span><span class="p">:</span> <span class="n">queue</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">right</span><span class="p">)</span>
+            <span class="n">level</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">val</span><span class="p">)</span>
+        <span class="n">res</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">level</span><span class="p">)</span>
+        <span class="n">even_level</span> <span class="o">=</span> <span class="ow">not</span> <span class="n">even_level</span>
+    <span class="k">return</span> <span class="n">res</span>
+</code></pre></div>
+
+<h5>Approach - 4</h5>
+<p>Using deque for each level instead of list.</p>
+<div class="codehilite"><pre><span></span><code><span class="n">Language</span><span class="p">:</span> <span class="n">python</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">zigzagLevelOrder</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">root</span><span class="p">:</span> <span class="n">TreeNode</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]]:</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">root</span><span class="p">:</span> <span class="k">return</span> 
+    <span class="n">res</span> <span class="o">=</span> 
+    <span class="n">queue</span> <span class="o">=</span> <span class="n">collections</span><span class="o">.</span><span class="n">deque</span><span class="p">([</span><span class="n">root</span><span class="p">])</span>
+    <span class="n">even_level</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">while</span> <span class="n">queue</span><span class="p">:</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">queue</span><span class="p">)</span>
+        <span class="n">level</span> <span class="o">=</span> <span class="n">collections</span><span class="o">.</span><span class="n">deque</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+            <span class="n">node</span> <span class="o">=</span> <span class="n">queue</span><span class="o">.</span><span class="n">popleft</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">even_level</span><span class="p">:</span>
+                <span class="n">level</span><span class="o">.</span><span class="n">appendleft</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">val</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">level</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">val</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">left</span><span class="p">:</span>
+                <span class="n">queue</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">left</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">right</span><span class="p">:</span>
+                <span class="n">queue</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">right</span><span class="p">)</span>
+        <span class="n">res</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">level</span><span class="p">))</span>
+        <span class="n">even_level</span> <span class="o">=</span> <span class="ow">not</span> <span class="n">even_level</span>
+    <span class="k">return</span> <span class="n">res</span>
+</code></pre></div></div><p style="page-break-before: always" ></p>

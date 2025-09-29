@@ -1,0 +1,154 @@
+<div class='cpp-solution'><h2>Py3 | Beginner friendly with details and explanation -- Votes: 182</h2><h2>Approach</h2>
+<p>This problem uses sliding window concept.<br />
+You can solve this problem using two loops in $O(n^2)$ time complexity. However, with sliding window approach, you can easily resolve this in O(n) time.</p>
+<p>Follow the images below to look at how this works:</p>
+<ol>
+<li>
+<p>Our given input<br />
+</p>
+</li>
+<li>
+<p>Initialization<br />
+</p>
+</li>
+<li>
+<p>Operations<br />
+</p>
+</li>
+<li>
+<p>Final operation<br />
+</p>
+</li>
+<li>
+<p>We now return the <code>maxSum / k</code> to return the max average.</p>
+</li>
+</ol>
+<h2>Complexity</h2>
+<p>Time: O(n)<br />
+Space: O(1)</p>
+<h2>Code</h2>
+<div class="codehilite"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">findMaxAverage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nums</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">k</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+
+        <span class="c1"># Initialize currSum and maxSum to the sum of the initial k elements</span>
+        <span class="n">currSum</span> <span class="o">=</span> <span class="n">maxSum</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">nums</span><span class="p">[:</span><span class="n">k</span><span class="p">])</span>
+
+        <span class="c1"># Start the loop from the kth element </span>
+        <span class="c1"># Iterate until you reach the end</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">nums</span><span class="p">)):</span>
+
+            <span class="c1"># Subtract the left element of the window</span>
+            <span class="c1"># Add the right element of the window</span>
+            <span class="n">currSum</span> <span class="o">+=</span> <span class="n">nums</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">nums</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="n">k</span><span class="p">]</span>
+
+            <span class="c1"># Update the max</span>
+            <span class="n">maxSum</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">maxSum</span><span class="p">,</span> <span class="n">currSum</span><span class="p">)</span>
+
+        <span class="c1"># Since the problem requires average, we return the average</span>
+        <span class="k">return</span> <span class="n">maxSum</span> <span class="o">/</span> <span class="n">k</span>
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="w"> </span><span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+<span class="w">    </span><span class="kt">double</span><span class="w"> </span><span class="n">findMaxAverage</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&amp;</span><span class="w"> </span><span class="n">nums</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">k</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kt">double</span><span class="w"> </span><span class="n">currSum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">maxSum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+
+<span class="w">        </span><span class="c1">// Initialize currSum and maxSum to the sum of the initial k elements</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">k</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span>
+<span class="w">            </span><span class="n">currSum</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">nums</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+<span class="w">        </span><span class="n">maxSum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">currSum</span><span class="p">;</span>
+
+<span class="w">        </span><span class="c1">// Start the loop from the kth element </span>
+<span class="w">        </span><span class="c1">// Iterate until you reach the end</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">k</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">nums</span><span class="p">.</span><span class="n">size</span><span class="p">();</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="c1">// Subtract the left element of the window</span>
+<span class="w">            </span><span class="c1">// Add the right element of the window</span>
+<span class="w">            </span><span class="n">currSum</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">nums</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">nums</span><span class="p">[</span><span class="n">i</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">k</span><span class="p">];</span>
+
+<span class="w">            </span><span class="c1">// Update the max</span>
+<span class="w">            </span><span class="n">maxSum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">max</span><span class="p">(</span><span class="n">maxSum</span><span class="p">,</span><span class="w"> </span><span class="n">currSum</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="c1">// Since the problem requires average, we return the average</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">maxSum</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">k</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+
+<div class='python-solution'><h2>Py3 | Beginner friendly with details and explanation -- Votes: 182</h2><h2>Approach</h2>
+<p>This problem uses sliding window concept.<br />
+You can solve this problem using two loops in $O(n^2)$ time complexity. However, with sliding window approach, you can easily resolve this in O(n) time.</p>
+<p>Follow the images below to look at how this works:</p>
+<ol>
+<li>
+<p>Our given input<br />
+</p>
+</li>
+<li>
+<p>Initialization<br />
+</p>
+</li>
+<li>
+<p>Operations<br />
+</p>
+</li>
+<li>
+<p>Final operation<br />
+</p>
+</li>
+<li>
+<p>We now return the <code>maxSum / k</code> to return the max average.</p>
+</li>
+</ol>
+<h2>Complexity</h2>
+<p>Time: O(n)<br />
+Space: O(1)</p>
+<h2>Code</h2>
+<div class="codehilite"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">findMaxAverage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nums</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">k</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+
+        <span class="c1"># Initialize currSum and maxSum to the sum of the initial k elements</span>
+        <span class="n">currSum</span> <span class="o">=</span> <span class="n">maxSum</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">nums</span><span class="p">[:</span><span class="n">k</span><span class="p">])</span>
+
+        <span class="c1"># Start the loop from the kth element </span>
+        <span class="c1"># Iterate until you reach the end</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">nums</span><span class="p">)):</span>
+
+            <span class="c1"># Subtract the left element of the window</span>
+            <span class="c1"># Add the right element of the window</span>
+            <span class="n">currSum</span> <span class="o">+=</span> <span class="n">nums</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">nums</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="n">k</span><span class="p">]</span>
+
+            <span class="c1"># Update the max</span>
+            <span class="n">maxSum</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">maxSum</span><span class="p">,</span> <span class="n">currSum</span><span class="p">)</span>
+
+        <span class="c1"># Since the problem requires average, we return the average</span>
+        <span class="k">return</span> <span class="n">maxSum</span> <span class="o">/</span> <span class="n">k</span>
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="w"> </span><span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+<span class="w">    </span><span class="kt">double</span><span class="w"> </span><span class="n">findMaxAverage</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&amp;</span><span class="w"> </span><span class="n">nums</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">k</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kt">double</span><span class="w"> </span><span class="n">currSum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">maxSum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+
+<span class="w">        </span><span class="c1">// Initialize currSum and maxSum to the sum of the initial k elements</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">k</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span>
+<span class="w">            </span><span class="n">currSum</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">nums</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+<span class="w">        </span><span class="n">maxSum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">currSum</span><span class="p">;</span>
+
+<span class="w">        </span><span class="c1">// Start the loop from the kth element </span>
+<span class="w">        </span><span class="c1">// Iterate until you reach the end</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">k</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">nums</span><span class="p">.</span><span class="n">size</span><span class="p">();</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="c1">// Subtract the left element of the window</span>
+<span class="w">            </span><span class="c1">// Add the right element of the window</span>
+<span class="w">            </span><span class="n">currSum</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">nums</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">nums</span><span class="p">[</span><span class="n">i</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">k</span><span class="p">];</span>
+
+<span class="w">            </span><span class="c1">// Update the max</span>
+<span class="w">            </span><span class="n">maxSum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">max</span><span class="p">(</span><span class="n">maxSum</span><span class="p">,</span><span class="w"> </span><span class="n">currSum</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="c1">// Since the problem requires average, we return the average</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">maxSum</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">k</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">};</span>
+</code></pre></div></div><p style="page-break-before: always" ></p>

@@ -1,0 +1,186 @@
+<div class='cpp-solution'><h2>✅99.39%🔥Easy Solution🔥With Explanation🔥 -- Votes: 65</h2><h2>Intuition</h2>
+<h5>To solve this problem, we need to compare the leaf values of two binary trees. The idea is to perform a depth-first traversal of each tree and collect the leaf values in order. Once we have the leaf values for both trees, we can compare the sequences to check if they are similar.</h5>
+<hr />
+<h2>Approach</h2>
+<h5>1. Define a <code>TreeNode</code> class to represent the nodes of the binary tree.</h5>
+<h5>2. Implement a <code>Solution</code> class with a <code>leafSimilar</code> method to check if the leaf sequences are similar.</h5>
+<h5>3. Define a recursive helper function <code>collect_leaf_values</code> that takes a tree node and a list to collect the leaf values.</h5>
+<h5>4. In the helper function, if the current node is a leaf (has no left or right child), add its value to the list.</h5>
+<h5>5. Recursively call the helper function for the left and right children of the current node.</h5>
+<h5>6. Create empty lists <code>leaf_values1</code> and <code>leaf_values2</code> to store the leaf values of the two trees.</h5>
+<h5>7. Use the helper function to collect leaf values for both trees.</h5>
+<h5>8. Compare the two lists to check if the leaf sequences are similar.</h5>
+<h5>9. Return the result.</h5>
+<hr />
+<h2>Complexity</h2>
+<ul>
+<li>
+<h3>Time complexity:</h3>
+</li>
+</ul>
+<h5>$$O(n)$$, where $$n$$ is the total number of nodes in both trees. We visit each node once during the depth-first traversal.</h5>
+<ul>
+<li>
+<h3>Space complexity:</h3>
+</li>
+</ul>
+<h5>$$O(h1+h2)$$, where $$h1$$ and $$h2$$ are the heights of the two trees. The space complexity is determined by the recursion stack during the depth-first traversal.</h5>
+<hr />
+<h2>Code</h2>
+<div class="codehilite"><pre><span></span><code><span class="n">Language</span><span class="p">:</span> <span class="n">python</span> 
+<span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">leafSimilar</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">root1</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">TreeNode</span><span class="p">],</span> <span class="n">root2</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">TreeNode</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">collect_leaf_values</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">leaf_values</span><span class="p">):</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">root</span><span class="p">:</span>
+                <span class="k">return</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">root</span><span class="o">.</span><span class="n">left</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">root</span><span class="o">.</span><span class="n">right</span><span class="p">:</span>
+                <span class="n">leaf_values</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">root</span><span class="o">.</span><span class="n">val</span><span class="p">)</span>
+            <span class="n">collect_leaf_values</span><span class="p">(</span><span class="n">root</span><span class="o">.</span><span class="n">left</span><span class="p">,</span> <span class="n">leaf_values</span><span class="p">)</span>
+            <span class="n">collect_leaf_values</span><span class="p">(</span><span class="n">root</span><span class="o">.</span><span class="n">right</span><span class="p">,</span> <span class="n">leaf_values</span><span class="p">)</span>
+
+        <span class="n">leaf_values1</span> <span class="o">=</span> 
+        <span class="n">leaf_values2</span> <span class="o">=</span> 
+
+        <span class="n">collect_leaf_values</span><span class="p">(</span><span class="n">root1</span><span class="p">,</span> <span class="n">leaf_values1</span><span class="p">)</span>
+        <span class="n">collect_leaf_values</span><span class="p">(</span><span class="n">root2</span><span class="p">,</span> <span class="n">leaf_values2</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">leaf_values1</span> <span class="o">==</span> <span class="n">leaf_values2</span>
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code><span class="nx">Language</span><span class="o">:</span><span class="w"> </span><span class="nx">javascript</span><span class="w"> </span>
+<span class="kd">var</span><span class="w"> </span><span class="nx">leafSimilar</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kd">function</span><span class="p">(</span><span class="nx">root1</span><span class="p">,</span><span class="w"> </span><span class="nx">root2</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">collectLeafValues</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="nx">root</span><span class="p">,</span><span class="w"> </span><span class="nx">leafValues</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nx">root</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">return</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nx">root</span><span class="p">.</span><span class="nx">left</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="o">!</span><span class="nx">root</span><span class="p">.</span><span class="nx">right</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="nx">leafValues</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">root</span><span class="p">.</span><span class="nx">val</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="nx">collectLeafValues</span><span class="p">(</span><span class="nx">root</span><span class="p">.</span><span class="nx">left</span><span class="p">,</span><span class="w"> </span><span class="nx">leafValues</span><span class="p">);</span>
+<span class="w">        </span><span class="nx">collectLeafValues</span><span class="p">(</span><span class="nx">root</span><span class="p">.</span><span class="nx">right</span><span class="p">,</span><span class="w"> </span><span class="nx">leafValues</span><span class="p">);</span>
+<span class="w">    </span><span class="p">};</span>
+
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">leafValues1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">;</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">leafValues2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">;</span>
+<span class="w">    </span><span class="nx">collectLeafValues</span><span class="p">(</span><span class="nx">root1</span><span class="p">,</span><span class="w"> </span><span class="nx">leafValues1</span><span class="p">);</span>
+<span class="w">    </span><span class="nx">collectLeafValues</span><span class="p">(</span><span class="nx">root2</span><span class="p">,</span><span class="w"> </span><span class="nx">leafValues2</span><span class="p">);</span>
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nb">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">leafValues1</span><span class="p">)</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="nb">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">leafValues2</span><span class="p">);</span>
+<span class="p">};</span>
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">C</span><span class="o">++</span><span class="w"> </span>
+<span class="n">class</span><span class="w"> </span><span class="n">Solution</span><span class="w"> </span><span class="p">{</span>
+<span class="n">public</span><span class="o">:</span>
+<span class="w">    </span><span class="kt">bool</span><span class="w"> </span><span class="n">leafSimilar</span><span class="p">(</span><span class="n">TreeNode</span><span class="o">*</span><span class="w"> </span><span class="n">root1</span><span class="p">,</span><span class="w"> </span><span class="n">TreeNode</span><span class="o">*</span><span class="w"> </span><span class="n">root2</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">function</span><span class="o">&lt;</span><span class="kt">void</span><span class="p">(</span><span class="n">TreeNode</span><span class="o">*</span><span class="p">,</span><span class="w"> </span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&amp;</span><span class="p">)</span><span class="o">&gt;</span><span class="w"> </span><span class="n">collectLeafValues</span><span class="w"> </span><span class="o">=</span>
+<span class="w">            </span><span class="p">[</span><span class="o">&amp;</span><span class="p">](</span><span class="n">TreeNode</span><span class="o">*</span><span class="w"> </span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&amp;</span><span class="w"> </span><span class="n">leafValues</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">root</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="k">return</span><span class="p">;</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">root</span><span class="o">-&gt;</span><span class="n">left</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="o">!</span><span class="n">root</span><span class="o">-&gt;</span><span class="n">right</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="n">leafValues</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">root</span><span class="o">-&gt;</span><span class="n">val</span><span class="p">);</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">                </span><span class="n">collectLeafValues</span><span class="p">(</span><span class="n">root</span><span class="o">-&gt;</span><span class="n">left</span><span class="p">,</span><span class="w"> </span><span class="n">leafValues</span><span class="p">);</span>
+<span class="w">                </span><span class="n">collectLeafValues</span><span class="p">(</span><span class="n">root</span><span class="o">-&gt;</span><span class="n">right</span><span class="p">,</span><span class="w"> </span><span class="n">leafValues</span><span class="p">);</span>
+<span class="w">            </span><span class="p">};</span>
+
+<span class="w">        </span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="w"> </span><span class="n">leafValues1</span><span class="p">,</span><span class="w"> </span><span class="n">leafValues2</span><span class="p">;</span>
+<span class="w">        </span><span class="n">collectLeafValues</span><span class="p">(</span><span class="n">root1</span><span class="p">,</span><span class="w"> </span><span class="n">leafValues1</span><span class="p">);</span>
+<span class="w">        </span><span class="n">collectLeafValues</span><span class="p">(</span><span class="n">root2</span><span class="p">,</span><span class="w"> </span><span class="n">leafValues2</span><span class="p">);</span>
+
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">leafValues1</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">leafValues2</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">};</span>
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">java</span><span class="w"> </span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">Solution</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">boolean</span><span class="w"> </span><span class="nf">leafSimilar</span><span class="p">(</span><span class="n">TreeNode</span><span class="w"> </span><span class="n">root1</span><span class="p">,</span><span class="w"> </span><span class="n">TreeNode</span><span class="w"> </span><span class="n">root2</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">List</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span><span class="w"> </span><span class="n">leafValues1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ArrayList</span><span class="o">&lt;&gt;</span><span class="p">();</span>
+<span class="w">        </span><span class="n">List</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span><span class="w"> </span><span class="n">leafValues2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ArrayList</span><span class="o">&lt;&gt;</span><span class="p">();</span>
+
+<span class="w">        </span><span class="n">collectLeafValues</span><span class="p">(</span><span class="n">root1</span><span class="p">,</span><span class="w"> </span><span class="n">leafValues1</span><span class="p">);</span>
+<span class="w">        </span><span class="n">collectLeafValues</span><span class="p">(</span><span class="n">root2</span><span class="p">,</span><span class="w"> </span><span class="n">leafValues2</span><span class="p">);</span>
+
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">leafValues1</span><span class="p">.</span><span class="na">equals</span><span class="p">(</span><span class="n">leafValues2</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">collectLeafValues</span><span class="p">(</span><span class="n">TreeNode</span><span class="w"> </span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span><span class="w"> </span><span class="n">leafValues</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">root</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">return</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">root</span><span class="p">.</span><span class="na">left</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kc">null</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">root</span><span class="p">.</span><span class="na">right</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">leafValues</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="n">root</span><span class="p">.</span><span class="na">val</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="n">collectLeafValues</span><span class="p">(</span><span class="n">root</span><span class="p">.</span><span class="na">left</span><span class="p">,</span><span class="w"> </span><span class="n">leafValues</span><span class="p">);</span>
+<span class="w">        </span><span class="n">collectLeafValues</span><span class="p">(</span><span class="n">root</span><span class="p">.</span><span class="na">right</span><span class="p">,</span><span class="w"> </span><span class="n">leafValues</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">C</span><span class="err">#</span><span class="w"> </span>
+<span class="n">public</span><span class="w"> </span><span class="n">class</span><span class="w"> </span><span class="n">Solution</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">public</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">LeafSimilar</span><span class="p">(</span><span class="n">TreeNode</span><span class="w"> </span><span class="n">root1</span><span class="p">,</span><span class="w"> </span><span class="n">TreeNode</span><span class="w"> </span><span class="n">root2</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kt">void</span><span class="w"> </span><span class="nf">CollectLeafValues</span><span class="p">(</span><span class="n">TreeNode</span><span class="w"> </span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="w"> </span><span class="n">leafValues</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">root</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">null</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="k">return</span><span class="p">;</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">root</span><span class="p">.</span><span class="n">left</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">null</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">root</span><span class="p">.</span><span class="n">right</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">null</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">leafValues</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">root</span><span class="p">.</span><span class="n">val</span><span class="p">);</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="n">CollectLeafValues</span><span class="p">(</span><span class="n">root</span><span class="p">.</span><span class="n">left</span><span class="p">,</span><span class="w"> </span><span class="n">leafValues</span><span class="p">);</span>
+<span class="w">            </span><span class="n">CollectLeafValues</span><span class="p">(</span><span class="n">root</span><span class="p">.</span><span class="n">right</span><span class="p">,</span><span class="w"> </span><span class="n">leafValues</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="n">List</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="w"> </span><span class="n">leafValues1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">new</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">();</span>
+<span class="w">        </span><span class="n">List</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="w"> </span><span class="n">leafValues2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">new</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">();</span>
+<span class="w">        </span><span class="n">CollectLeafValues</span><span class="p">(</span><span class="n">root1</span><span class="p">,</span><span class="w"> </span><span class="n">leafValues1</span><span class="p">);</span>
+<span class="w">        </span><span class="n">CollectLeafValues</span><span class="p">(</span><span class="n">root2</span><span class="p">,</span><span class="w"> </span><span class="n">leafValues2</span><span class="p">);</span>
+
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">Enumerable</span><span class="p">.</span><span class="n">SequenceEqual</span><span class="p">(</span><span class="n">leafValues1</span><span class="p">,</span><span class="w"> </span><span class="n">leafValues2</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<hr /></div>
+
+
+<div class='python-solution'><h2>Python 3   ||   5 lines, recursion,  w/ example   ||   T/S: 97% / 90% -- Votes: 77</h2><p>Here's the plan:</p>
+<ul>
+<li>For each tree, we traverse the tree left-to-right and record the values of the leaves into a list in the order encountered.</li>
+<li>Return whether the two lists are identical.</li>
+</ul>
+<div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="n">Solution:</span>
+    <span class="n">def</span> <span class="n">leafSimilar</span>(<span class="nb">self</span>, <span class="n">root1:</span> <span class="n">TreeNode</span>, <span class="n">root2:</span> <span class="n">TreeNode</span>) -&gt; <span class="n">bool:</span>
+
+        <span class="n">def</span> <span class="n">dfs</span>(<span class="n">root</span>):                              <span class="c1">#     Example: </span>
+                                                    <span class="c1">#         root1:         root2:</span>
+                                                    <span class="c1">#            ______3__             __3__</span>
+                                                    <span class="c1">#           /         \           /     \</span>
+                                                    <span class="c1">#          5__         1         5       1__</span>
+                                                    <span class="c1">#         /   \       / \       / \     /   \</span>
+                                                    <span class="c1">#       *6*    2    *9* *8*   *6* *7* *4*    2</span>
+                                                    <span class="c1">#             / \                           / \</span>
+                                                    <span class="c1">#           *7* *4*                       *9* *8*</span>
+                                                    <span class="c1">#   root1:</span>
+            <span class="k">if</span> <span class="nb">not</span> <span class="n">root:</span> <span class="k">return</span>                   <span class="c1">#       node      dfs(root.left)+dfs(root.right)</span>
+                                                    <span class="c1">#       ––––      ––––––––––––––––––––––––––––––</span>
+            <span class="k">if</span> <span class="nb">not</span> <span class="n">root</span>.<span class="n">left</span> <span class="o">and</span> <span class="nb">not</span> <span class="n">root</span>.<span class="n">right:</span>    <span class="c1">#        2              [7] + [4]   = [7,4]</span>
+                <span class="k">return</span> [<span class="n">root</span>.<span class="nb">val</span>]                   <span class="c1">#        5              [6] + [7,4] = [6,7,4]</span>
+                                                    <span class="c1">#        1              [9] + [8]   = [9,8]</span>
+            <span class="k">return</span> <span class="n">dfs</span>(<span class="n">root</span>.<span class="n">left</span>) + <span class="n">dfs</span>(<span class="n">root</span>.<span class="nb">right</span>) <span class="c1">#        3          [6,7,4] + [9,8] = [6,7,4,9,8] &lt;--</span>
+                                                    <span class="c1">#</span>
+        <span class="k">return</span> <span class="n">dfs</span>(<span class="n">root1</span>) == <span class="n">dfs</span>(<span class="n">root2</span>)             <span class="c1">#   root2:</span>
+                                                    <span class="c1">#       node      dfs(root.left)+dfs(root.right)</span>
+                                                    <span class="c1">#       ––––      ––––––––––––––––––––––––––––––</span>
+                                                    <span class="c1">#        5            [6] + [7]     = [6,7]</span>
+                                                    <span class="c1">#        2            [9] + [8]     = [9,8]</span>
+                                                    <span class="c1">#        1            [4] + [9,8]   = [4,9,8]</span>
+                                                    <span class="c1">#        3          [6,7] + [4,9,8] = [6,7,4,9,8] &lt;--</span>
+
+                                                    <span class="c1">#       Return True</span>
+</code></pre></div>
+
+<p><a href="https://leetcode.com/problems/leaf-similar-trees/submissions/1272780528/">https://leetcode.com/problems/leaf-similar-trees/submissions/1272780528/</a></p>
+<p>I could be wrong, but I think that time is, worst case, <em>O</em>(<em>N</em>) and space is <em>O</em>(<em>N</em>), in which <em>N</em> ~ <em>maxnodes</em>(<code>tree1</code>, <code>tree2</code>)</p></div><p style="page-break-before: always" ></p>

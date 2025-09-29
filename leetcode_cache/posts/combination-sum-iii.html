@@ -1,0 +1,53 @@
+Cpp Solution:
+**Explanation**
+The key to this question is backtracking, that is, generate possible combinations and see which one fulfills the conditions.
+We choose a number for 1,2..kth position in ascending order, and for each position, we only iterate through [current_number, 9].
+
+**Code**
+``` 
+class Solution {
+public:
+    vector<vector<int>> ans;
+    
+    void f(vector<int>& cur, int cnum, int k, int n) {
+        if(n < 0 || cur.size() > k) return;
+        if(n == 0 && cur.size() == k) {
+            ans.push_back(cur);
+            return;
+        }
+        
+        for(int i=cnum; i<=9; ++i) {
+            cur.push_back(i);
+            f(cur, i+1, k, n-i);
+            cur.pop_back();
+        }
+    }
+    
+    vector<vector<int>> combinationSum3(int k, int n) {
+        vector<int> cur;
+        f(cur, 1, k, n);
+        return ans;
+    }
+};
+``` 
+
+If you have any doubts, feel free to comment. If you like the solution and the explanation, please **Upvote** to help others!
+Have a great day!
+
+
+Python Solution:
+``` 
+class Solution(object):
+    def combinationSum3(self, k, n):
+        ret = 
+        self.dfs(list(range(1, 10)), k, n, , ret)
+        return ret
+    
+    def dfs(self, nums, k, n, path, ret):
+        if k < 0 or n < 0:
+            return 
+        if k == 0 and n == 0:
+            ret.append(path)
+        for i in range(len(nums)):
+            self.dfs(nums[i+1:], k-1, n-nums[i], path+[nums[i]], ret)
+``` 

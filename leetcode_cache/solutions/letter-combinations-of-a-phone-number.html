@@ -1,0 +1,594 @@
+<div class='cpp-solution'><h2>📞 100% Backtracking & Iterative [VIDEO]  Letter Combinations of a Phone Number -- Votes: 224</h2><h2>Intuition</h2>
+<p>Given a string containing digits from 2-9 inclusive, we need to return all possible letter combinations that the number could represent, just like on a telephone's buttons. To accomplish this, we present two different approaches:</p>
+<ol>
+<li>
+<p><strong>Backtracking Approach</strong>: This approach leverages recursion to explore all possible combinations. We create a recursive function that takes the current combination and the next digits to explore. For each digit, we iterate through its corresponding letters and recursively explore the remaining digits. We append the combination when no more digits are left to explore.</p>
+</li>
+<li>
+<p><strong>Iterative Approach</strong>: This approach builds the combinations iteratively without using recursion. We start with an empty combination and iteratively add letters for each digit in the input string. For each existing combination, we append each corresponding letter for the current digit, building new combinations.</p>
+</li>
+</ol>
+<p><strong>Differences</strong>:</p>
+<ul>
+<li>The backtracking approach relies on recursion to explore all possible combinations, whereas the iterative approach builds combinations step by step using loops.</li>
+<li>Both approaches have similar time complexity, but the iterative approach might save some function call overhead, leading to more efficient execution in some cases.</li>
+</ul>
+<p>Detailed explanations of both approaches, along with their corresponding code, are provided below. By presenting both methods, we offer a comprehensive view of how to tackle this problem, allowing for flexibility and understanding of different programming paradigms.</p>
+<p>https://youtu.be/Jobb9YUFUq0</p>
+<h2>Approach - Backtracking</h2>
+<ol>
+<li>
+<p><strong>Initialize a Mapping</strong>: Create a dictionary that maps each digit from 2 to 9 to their corresponding letters on a telephone's buttons. For example, the digit '2' maps to "abc," '3' maps to "def," and so on.</p>
+</li>
+<li>
+<p><strong>Base Case</strong>: Check if the input string <code>digits</code> is empty. If it is, return an empty list, as there are no combinations to generate.</p>
+</li>
+<li>
+<p><strong>Recursive Backtracking</strong>:</p>
+</li>
+</ol>
+<ul>
+<li><strong>Define Recursive Function</strong>: Create a recursive function, <code>backtrack</code>, that will be used to explore all possible combinations. It takes two parameters: <code>combination</code>, which holds the current combination of letters, and <code>next_digits</code>, which holds the remaining digits to be explored.</li>
+<li><strong>Termination Condition</strong>: If <code>next_digits</code> is empty, it means that all digits have been processed, so append the current <code>combination</code> to the result.</li>
+<li><strong>Exploration</strong>: If there are more digits to explore, take the first digit from <code>next_digits</code> and iterate over its corresponding letters in the mapping. For each letter, concatenate it to the current combination and recursively call the <code>backtrack</code> function with the new combination and the remaining digits.</li>
+<li><strong>Example</strong>: If the input is "23", the first recursive call explores all combinations starting with 'a', 'b', and 'c' (from '2'), and the next level of recursive calls explores combinations starting with 'd', 'e', 'f' (from '3'), building combinations like "ad," "ae," "af," "bd," "be," etc.</li>
+</ul>
+<ol>
+<li><strong>Result</strong>: Once the recursive exploration is complete, return the collected combinations as the final result. By using recursion, we ensure that all possible combinations are explored, and the result includes all valid letter combinations that the input digits can represent.</li>
+</ol>
+<h2>Complexity</h2>
+<ul>
+<li>Time complexity: ( O(4^n) ), where ( n ) is the length of the input string. In the worst case, each digit can represent 4 letters, so there will be 4 recursive calls for each digit.</li>
+<li>Space complexity: ( O(n) ), where ( n ) is the length of the input string. This accounts for the recursion stack space.</li>
+</ul>
+<h2>Code - Backtracking</h2>
+<div class="codehilite"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">letterCombinations</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">digits</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">digits</span><span class="p">:</span>
+            <span class="k">return</span> 
+
+        <span class="n">phone_map</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;2&#39;</span><span class="p">:</span> <span class="s1">&#39;abc&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;3&#39;</span><span class="p">:</span> <span class="s1">&#39;def&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;4&#39;</span><span class="p">:</span> <span class="s1">&#39;ghi&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;5&#39;</span><span class="p">:</span> <span class="s1">&#39;jkl&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;6&#39;</span><span class="p">:</span> <span class="s1">&#39;mno&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;7&#39;</span><span class="p">:</span> <span class="s1">&#39;pqrs&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;8&#39;</span><span class="p">:</span> <span class="s1">&#39;tuv&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;9&#39;</span><span class="p">:</span> <span class="s1">&#39;wxyz&#39;</span>
+        <span class="p">}</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">backtrack</span><span class="p">(</span><span class="n">combination</span><span class="p">,</span> <span class="n">next_digits</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">next_digits</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">output</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">combination</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">letter</span> <span class="ow">in</span> <span class="n">phone_map</span><span class="p">[</span><span class="n">next_digits</span><span class="p">[</span><span class="mi">0</span><span class="p">]]:</span>
+                    <span class="n">backtrack</span><span class="p">(</span><span class="n">combination</span> <span class="o">+</span> <span class="n">letter</span><span class="p">,</span> <span class="n">next_digits</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
+
+        <span class="n">output</span> <span class="o">=</span> 
+        <span class="n">backtrack</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">digits</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">output</span>
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="w"> </span><span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span><span class="w"> </span><span class="n">letterCombinations</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">digits</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">digits</span><span class="p">.</span><span class="n">empty</span><span class="p">())</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="p">{};</span>
+
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">phone_map</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="s">&quot;abc&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;def&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;ghi&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;jkl&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;mno&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;pqrs&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;tuv&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;wxyz&quot;</span><span class="p">};</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span><span class="w"> </span><span class="n">output</span><span class="p">;</span>
+<span class="w">        </span><span class="n">backtrack</span><span class="p">(</span><span class="s">&quot;&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">digits</span><span class="p">,</span><span class="w"> </span><span class="n">phone_map</span><span class="p">,</span><span class="w"> </span><span class="n">output</span><span class="p">);</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">output</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="k">private</span><span class="o">:</span>
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="n">backtrack</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">combination</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">next_digits</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">phone_map</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;&amp;</span><span class="w"> </span><span class="n">output</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">next_digits</span><span class="p">.</span><span class="n">empty</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">output</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">combination</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">letters</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">phone_map</span><span class="p">[</span><span class="n">next_digits</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="sc">&#39;2&#39;</span><span class="p">];</span>
+<span class="w">            </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">char</span><span class="w"> </span><span class="n">letter</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">letters</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">backtrack</span><span class="p">(</span><span class="n">combination</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">letter</span><span class="p">,</span><span class="w"> </span><span class="n">next_digits</span><span class="p">.</span><span class="n">substr</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span><span class="w"> </span><span class="n">phone_map</span><span class="p">,</span><span class="w"> </span><span class="n">output</span><span class="p">);</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">};</span>
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code><span class="kd">class</span> <span class="nc">Solution</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span><span class="w"> </span><span class="nf">letterCombinations</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">digits</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">digits</span><span class="p">.</span><span class="na">isEmpty</span><span class="p">())</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">Collections</span><span class="p">.</span><span class="na">emptyList</span><span class="p">();</span>
+
+<span class="w">        </span><span class="n">String</span><span class="w"> </span><span class="n">phone_map</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="s">&quot;abc&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;def&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;ghi&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;jkl&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;mno&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;pqrs&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;tuv&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;wxyz&quot;</span><span class="p">};</span>
+<span class="w">        </span><span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span><span class="w"> </span><span class="n">output</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ArrayList</span><span class="o">&lt;&gt;</span><span class="p">();</span>
+<span class="w">        </span><span class="n">backtrack</span><span class="p">(</span><span class="s">&quot;&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">digits</span><span class="p">,</span><span class="w"> </span><span class="n">phone_map</span><span class="p">,</span><span class="w"> </span><span class="n">output</span><span class="p">);</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">output</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">backtrack</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">combination</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">next_digits</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">phone_map</span><span class="p">,</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span><span class="w"> </span><span class="n">output</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">next_digits</span><span class="p">.</span><span class="na">isEmpty</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">output</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="n">combination</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">String</span><span class="w"> </span><span class="n">letters</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">phone_map</span><span class="o">[</span><span class="n">next_digits</span><span class="p">.</span><span class="na">charAt</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="sc">&#39;2&#39;</span><span class="o">]</span><span class="p">;</span>
+<span class="w">            </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">char</span><span class="w"> </span><span class="n">letter</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">letters</span><span class="p">.</span><span class="na">toCharArray</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">backtrack</span><span class="p">(</span><span class="n">combination</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">letter</span><span class="p">,</span><span class="w"> </span><span class="n">next_digits</span><span class="p">.</span><span class="na">substring</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span><span class="w"> </span><span class="n">phone_map</span><span class="p">,</span><span class="w"> </span><span class="n">output</span><span class="p">);</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code><span class="o">/**</span>
+<span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="err">@</span><span class="n">param</span><span class="w"> </span><span class="p">{</span><span class="n">string</span><span class="p">}</span><span class="w"> </span><span class="n">digits</span>
+<span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="err">@</span><span class="k">return</span><span class="w"> </span><span class="p">{</span><span class="n">string</span><span class="p">}</span>
+<span class="w"> </span><span class="o">*/</span>
+<span class="k">var</span><span class="w"> </span><span class="n">letterCombinations</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">function</span><span class="p">(</span><span class="n">digits</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">digits</span><span class="o">.</span><span class="n">length</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="n">phone_map</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;abc&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;def&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;ghi&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;jkl&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;mno&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;pqrs&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;tuv&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;wxyz&quot;</span><span class="p">];</span>
+<span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="n">output</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">;</span>
+<span class="w">    </span><span class="n">backtrack</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">digits</span><span class="p">,</span><span class="w"> </span><span class="n">phone_map</span><span class="p">,</span><span class="w"> </span><span class="n">output</span><span class="p">);</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">output</span><span class="p">;</span>
+
+<span class="w">    </span><span class="n">function</span><span class="w"> </span><span class="n">backtrack</span><span class="p">(</span><span class="n">combination</span><span class="p">,</span><span class="w"> </span><span class="n">next_digits</span><span class="p">,</span><span class="w"> </span><span class="n">phone_map</span><span class="p">,</span><span class="w"> </span><span class="n">output</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">next_digits</span><span class="o">.</span><span class="n">length</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">output</span><span class="o">.</span><span class="n">push</span><span class="p">(</span><span class="n">combination</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">const</span><span class="w"> </span><span class="n">letters</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">phone_map</span><span class="p">[</span><span class="n">next_digits</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="s1">&#39;2&#39;</span><span class="p">];</span>
+<span class="w">            </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">letter</span><span class="w"> </span><span class="n">of</span><span class="w"> </span><span class="n">letters</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">backtrack</span><span class="p">(</span><span class="n">combination</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">letter</span><span class="p">,</span><span class="w"> </span><span class="n">next_digits</span><span class="o">.</span><span class="n">slice</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span><span class="w"> </span><span class="n">phone_map</span><span class="p">,</span><span class="w"> </span><span class="n">output</span><span class="p">);</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">};</span>
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code><span class="k">public</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="n">IList</span><span class="o">&lt;</span><span class="kt">string</span><span class="o">&gt;</span><span class="w"> </span><span class="n">LetterCombinations</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">digits</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="kt">string</span><span class="p">.</span><span class="n">IsNullOrEmpty</span><span class="p">(</span><span class="n">digits</span><span class="p">))</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="kt">string</span><span class="o">&gt;</span><span class="p">();</span>
+
+<span class="w">        </span><span class="kt">string</span><span class="w"> </span><span class="n">phone_map</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="s">&quot;abc&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;def&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;ghi&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;jkl&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;mno&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;pqrs&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;tuv&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;wxyz&quot;</span><span class="p">};</span>
+<span class="w">        </span><span class="n">List</span><span class="o">&lt;</span><span class="kt">string</span><span class="o">&gt;</span><span class="w"> </span><span class="n">output</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="kt">string</span><span class="o">&gt;</span><span class="p">();</span>
+<span class="w">        </span><span class="n">Backtrack</span><span class="p">(</span><span class="s">&quot;&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">digits</span><span class="p">,</span><span class="w"> </span><span class="n">phone_map</span><span class="p">,</span><span class="w"> </span><span class="n">output</span><span class="p">);</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">output</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="k">private</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">Backtrack</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">combination</span><span class="p">,</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">next_digits</span><span class="p">,</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">phone_map</span><span class="p">,</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="kt">string</span><span class="o">&gt;</span><span class="w"> </span><span class="n">output</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">next_digits</span><span class="p">.</span><span class="n">Length</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">output</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">combination</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="kt">string</span><span class="w"> </span><span class="n">letters</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">phone_map</span><span class="p">[</span><span class="n">next_digits</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="sc">&#39;2&#39;</span><span class="p">];</span>
+<span class="w">            </span><span class="k">foreach</span><span class="w"> </span><span class="p">(</span><span class="kt">char</span><span class="w"> </span><span class="n">letter</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="n">letters</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">Backtrack</span><span class="p">(</span><span class="n">combination</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">letter</span><span class="p">,</span><span class="w"> </span><span class="n">next_digits</span><span class="p">.</span><span class="n">Substring</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span><span class="w"> </span><span class="n">phone_map</span><span class="p">,</span><span class="w"> </span><span class="n">output</span><span class="p">);</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code><span class="kd">func</span><span class="w"> </span><span class="nx">letterCombinations</span><span class="p">(</span><span class="nx">digits</span><span class="w"> </span><span class="kt">string</span><span class="p">)</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="nx">digits</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">&quot;&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="kt">string</span><span class="p">{}</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="nx">phoneMap</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="kt">string</span><span class="p">{</span><span class="s">&quot;abc&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;def&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;ghi&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;jkl&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;mno&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;pqrs&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;tuv&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;wxyz&quot;</span><span class="p">}</span>
+<span class="w">    </span><span class="kd">var</span><span class="w"> </span><span class="nx">output</span><span class="w"> </span><span class="kt">string</span>
+
+<span class="w">    </span><span class="kd">var</span><span class="w"> </span><span class="nx">backtrack</span><span class="w"> </span><span class="kd">func</span><span class="p">(</span><span class="nx">combination</span><span class="w"> </span><span class="kt">string</span><span class="p">,</span><span class="w"> </span><span class="nx">nextDigits</span><span class="w"> </span><span class="kt">string</span><span class="p">)</span>
+<span class="w">    </span><span class="nx">backtrack</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="kd">func</span><span class="p">(</span><span class="nx">combination</span><span class="w"> </span><span class="kt">string</span><span class="p">,</span><span class="w"> </span><span class="nx">nextDigits</span><span class="w"> </span><span class="kt">string</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="nx">nextDigits</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">&quot;&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="nx">output</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">append</span><span class="p">(</span><span class="nx">output</span><span class="p">,</span><span class="w"> </span><span class="nx">combination</span><span class="p">)</span>
+<span class="w">        </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="nx">letters</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">phoneMap</span><span class="p">[</span><span class="nx">nextDigits</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="sc">&#39;2&#39;</span><span class="p">]</span>
+<span class="w">            </span><span class="k">for</span><span class="w"> </span><span class="nx">_</span><span class="p">,</span><span class="w"> </span><span class="nx">letter</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="k">range</span><span class="w"> </span><span class="nx">letters</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="nx">backtrack</span><span class="p">(</span><span class="nx">combination</span><span class="o">+</span><span class="nb">string</span><span class="p">(</span><span class="nx">letter</span><span class="p">),</span><span class="w"> </span><span class="nx">nextDigits</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="nx">backtrack</span><span class="p">(</span><span class="s">&quot;&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">digits</span><span class="p">)</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">output</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code><span class="k">impl</span><span class="w"> </span><span class="n">Solution</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="k">fn</span><span class="w"> </span><span class="nf">letter_combinations</span><span class="p">(</span><span class="n">digits</span><span class="p">:</span><span class="w"> </span><span class="nb">String</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nb">Vec</span><span class="o">&lt;</span><span class="nb">String</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="n">digits</span><span class="p">.</span><span class="n">is_empty</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="fm">vec!</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">phone_map</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="fm">vec!</span><span class="p">[</span><span class="s">&quot;abc&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;def&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;ghi&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;jkl&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;mno&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;pqrs&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;tuv&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;wxyz&quot;</span><span class="p">];</span>
+<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="k">mut</span><span class="w"> </span><span class="n">output</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">Vec</span><span class="p">::</span><span class="n">new</span><span class="p">();</span>
+
+<span class="w">        </span><span class="k">fn</span><span class="w"> </span><span class="nf">backtrack</span><span class="p">(</span><span class="n">combination</span><span class="p">:</span><span class="w"> </span><span class="nb">String</span><span class="p">,</span><span class="w"> </span><span class="n">next_digits</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="kt">str</span><span class="p">,</span><span class="w"> </span><span class="n">phone_map</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="nb">Vec</span><span class="o">&lt;&amp;</span><span class="kt">str</span><span class="o">&gt;</span><span class="p">,</span><span class="w"> </span><span class="n">output</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="nc">mut</span><span class="w"> </span><span class="nb">Vec</span><span class="o">&lt;</span><span class="nb">String</span><span class="o">&gt;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="n">next_digits</span><span class="p">.</span><span class="n">is_empty</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">output</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="n">combination</span><span class="p">);</span>
+<span class="w">            </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="kd">let</span><span class="w"> </span><span class="n">letters</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">phone_map</span><span class="p">[</span><span class="n">next_digits</span><span class="p">.</span><span class="n">chars</span><span class="p">().</span><span class="n">nth</span><span class="p">(</span><span class="mi">0</span><span class="p">).</span><span class="n">unwrap</span><span class="p">()</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="kt">usize</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="sc">&#39;2&#39;</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="kt">usize</span><span class="p">];</span>
+<span class="w">                </span><span class="k">for</span><span class="w"> </span><span class="n">letter</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="n">letters</span><span class="p">.</span><span class="n">chars</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="kd">let</span><span class="w"> </span><span class="n">new_combination</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">combination</span><span class="p">.</span><span class="n">clone</span><span class="p">()</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="o">&amp;</span><span class="n">letter</span><span class="p">.</span><span class="n">to_string</span><span class="p">();</span>
+<span class="w">                    </span><span class="n">backtrack</span><span class="p">(</span><span class="n">new_combination</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">next_digits</span><span class="p">[</span><span class="mi">1</span><span class="o">..</span><span class="p">],</span><span class="w"> </span><span class="n">phone_map</span><span class="p">,</span><span class="w"> </span><span class="n">output</span><span class="p">);</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="n">backtrack</span><span class="p">(</span><span class="nb">String</span><span class="p">::</span><span class="n">new</span><span class="p">(),</span><span class="w"> </span><span class="o">&amp;</span><span class="n">digits</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">phone_map</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="k">mut</span><span class="w"> </span><span class="n">output</span><span class="p">);</span>
+<span class="w">        </span><span class="n">output</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>This code can handle any input string containing digits from 2 to 9 and will return the possible letter combinations in any order. The function <code>backtrack</code> is used to handle the recursive exploration of combinations, and <code>phone_map</code> contains the mapping between digits and letters.</p>
+<h3>Performance - Backtracking</h3>
+<table>
+<thead>
+<tr>
+<th>Language</th>
+<th>Runtime (ms)</th>
+<th>Beats (%)</th>
+<th>Memory (MB)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>C++</td>
+<td>0</td>
+<td>100.00</td>
+<td>6.4</td>
+</tr>
+<tr>
+<td>Go</td>
+<td>0</td>
+<td>100.00</td>
+<td>2.0</td>
+</tr>
+<tr>
+<td>Rust</td>
+<td>1</td>
+<td>82.50</td>
+<td>2.1</td>
+</tr>
+<tr>
+<td>Java</td>
+<td>5</td>
+<td>50.30</td>
+<td>41.6</td>
+</tr>
+<tr>
+<td>Swift</td>
+<td>2</td>
+<td>82.38</td>
+<td>14.0</td>
+</tr>
+<tr>
+<td>Python3</td>
+<td>34</td>
+<td>96.91</td>
+<td>16.3</td>
+</tr>
+<tr>
+<td>TypeScript</td>
+<td>49</td>
+<td>96.36</td>
+<td>44.3</td>
+</tr>
+<tr>
+<td>JavaScript</td>
+<td>58</td>
+<td>55.17</td>
+<td>42.2</td>
+</tr>
+<tr>
+<td>Ruby</td>
+<td>58</td>
+<td>97.98</td>
+<td>211.1</td>
+</tr>
+<tr>
+<td>C#</td>
+<td>136</td>
+<td>89.14</td>
+<td>43.9</td>
+</tr>
+</tbody>
+</table>
+<h2>Video Iterative</h2>
+<p>https://youtu.be/43x3sg_nND8</p>
+<h2>Approach - Iterative</h2>
+<ol>
+<li><strong>Initialize a Mapping</strong>: Create a dictionary that maps each digit from 2 to 9 to their corresponding letters on a telephone's buttons.</li>
+<li><strong>Base Case</strong>: If the input string <code>digits</code> is empty, return an empty list.</li>
+<li><strong>Iteratively Build Combinations</strong>: Start with an empty combination in a list and iteratively build the combinations by processing each digit in the input string.<br />
+   - For each existing combination, append each corresponding letter for the current digit, building new combinations.</li>
+<li><strong>Result</strong>: Return the generated combinations as the final result.</li>
+</ol>
+<h2>Complexity</h2>
+<ul>
+<li>Time complexity: ( O(4^n) ), where ( n ) is the length of the input string. In the worst case, each digit can represent 4 letters.</li>
+<li>Space complexity: ( O(n) ), where ( n ) is the length of the input string.</li>
+</ul>
+<h2>Code - Iterative</h2>
+<div class="codehilite"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">letterCombinations</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">digits</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">digits</span><span class="p">:</span>
+            <span class="k">return</span> 
+
+        <span class="n">phone_map</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;2&#39;</span><span class="p">:</span> <span class="s1">&#39;abc&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;3&#39;</span><span class="p">:</span> <span class="s1">&#39;def&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;4&#39;</span><span class="p">:</span> <span class="s1">&#39;ghi&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;5&#39;</span><span class="p">:</span> <span class="s1">&#39;jkl&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;6&#39;</span><span class="p">:</span> <span class="s1">&#39;mno&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;7&#39;</span><span class="p">:</span> <span class="s1">&#39;pqrs&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;8&#39;</span><span class="p">:</span> <span class="s1">&#39;tuv&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;9&#39;</span><span class="p">:</span> <span class="s1">&#39;wxyz&#39;</span>
+        <span class="p">}</span>
+        <span class="n">combinations</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;&quot;</span><span class="p">]</span>
+
+        <span class="k">for</span> <span class="n">digit</span> <span class="ow">in</span> <span class="n">digits</span><span class="p">:</span>
+            <span class="n">new_combinations</span> <span class="o">=</span> 
+            <span class="k">for</span> <span class="n">combination</span> <span class="ow">in</span> <span class="n">combinations</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">letter</span> <span class="ow">in</span> <span class="n">phone_map</span><span class="p">[</span><span class="n">digit</span><span class="p">]:</span>
+                    <span class="n">new_combinations</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">combination</span> <span class="o">+</span> <span class="n">letter</span><span class="p">)</span>
+            <span class="n">combinations</span> <span class="o">=</span> <span class="n">new_combinations</span>
+
+        <span class="k">return</span> <span class="n">combinations</span>
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code><span class="kd">function</span><span class="w"> </span><span class="nx">letterCombinations</span><span class="p">(</span><span class="nx">digits</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nx">digits</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">phoneMap</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="s1">&#39;2&#39;</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;abc&#39;</span><span class="p">,</span>
+<span class="w">    </span><span class="s1">&#39;3&#39;</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;def&#39;</span><span class="p">,</span>
+<span class="w">    </span><span class="s1">&#39;4&#39;</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;ghi&#39;</span><span class="p">,</span>
+<span class="w">    </span><span class="s1">&#39;5&#39;</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;jkl&#39;</span><span class="p">,</span>
+<span class="w">    </span><span class="s1">&#39;6&#39;</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;mno&#39;</span><span class="p">,</span>
+<span class="w">    </span><span class="s1">&#39;7&#39;</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;pqrs&#39;</span><span class="p">,</span>
+<span class="w">    </span><span class="s1">&#39;8&#39;</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;tuv&#39;</span><span class="p">,</span>
+<span class="w">    </span><span class="s1">&#39;9&#39;</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;wxyz&#39;</span>
+<span class="w">  </span><span class="p">};</span>
+
+<span class="w">  </span><span class="kd">let</span><span class="w"> </span><span class="nx">combinations</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s1">&#39;&#39;</span><span class="p">];</span>
+
+<span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kd">const</span><span class="w"> </span><span class="nx">digit</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="nx">digits</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">newCombinations</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">;</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kd">const</span><span class="w"> </span><span class="nx">combination</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="nx">combinations</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kd">const</span><span class="w"> </span><span class="nx">letter</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="nx">phoneMap</span><span class="p">[</span><span class="nx">digit</span><span class="p">])</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nx">newCombinations</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">combination</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nx">letter</span><span class="p">);</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="nx">combinations</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">newCombinations</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="nx">combinations</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="w"> </span><span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span><span class="w"> </span><span class="n">letterCombinations</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">digits</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">digits</span><span class="p">.</span><span class="n">empty</span><span class="p">())</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="p">{};</span>
+
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">phone_map</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="s">&quot;abc&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;def&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;ghi&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;jkl&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;mno&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;pqrs&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;tuv&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;wxyz&quot;</span><span class="p">};</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span><span class="w"> </span><span class="n">combinations</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="s">&quot;&quot;</span><span class="p">};</span>
+
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">char</span><span class="w"> </span><span class="n">digit</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">digits</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span><span class="w"> </span><span class="n">new_combinations</span><span class="p">;</span>
+<span class="w">            </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">combination</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">combinations</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">char</span><span class="w"> </span><span class="n">letter</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">phone_map</span><span class="p">[</span><span class="n">digit</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="sc">&#39;2&#39;</span><span class="p">])</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="n">new_combinations</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">combination</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">letter</span><span class="p">);</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="n">combinations</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">new_combinations</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">combinations</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">};</span>
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code><span class="kd">func</span><span class="w"> </span><span class="nx">letterCombinations</span><span class="p">(</span><span class="nx">digits</span><span class="w"> </span><span class="kt">string</span><span class="p">)</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="nx">digits</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">&quot;&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="kt">string</span><span class="p">{}</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="nx">phoneMap</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="kt">string</span><span class="p">{</span><span class="s">&quot;abc&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;def&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;ghi&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;jkl&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;mno&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;pqrs&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;tuv&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;wxyz&quot;</span><span class="p">}</span>
+<span class="w">    </span><span class="nx">combinations</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="kt">string</span><span class="p">{</span><span class="s">&quot;&quot;</span><span class="p">}</span>
+
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="nx">_</span><span class="p">,</span><span class="w"> </span><span class="nx">digit</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="k">range</span><span class="w"> </span><span class="nx">digits</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nx">newCombinations</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="kt">string</span><span class="p">{}</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="nx">_</span><span class="p">,</span><span class="w"> </span><span class="nx">combination</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="k">range</span><span class="w"> </span><span class="nx">combinations</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">for</span><span class="w"> </span><span class="nx">_</span><span class="p">,</span><span class="w"> </span><span class="nx">letter</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="k">range</span><span class="w"> </span><span class="nx">phoneMap</span><span class="p">[</span><span class="nx">digit</span><span class="o">-</span><span class="sc">&#39;2&#39;</span><span class="p">]</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="nx">newCombinations</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">append</span><span class="p">(</span><span class="nx">newCombinations</span><span class="p">,</span><span class="w"> </span><span class="nx">combination</span><span class="o">+</span><span class="nb">string</span><span class="p">(</span><span class="nx">letter</span><span class="p">))</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="nx">combinations</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">newCombinations</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">combinations</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>If you find the solution understandable and helpful, don't hesitate to give it an upvote. Engaging with the code across different languages might just lead you to discover new techniques and preferences! Happy coding!</p></div>
+
+
+<div class='python-solution'><h2>Backtracking Python problems+ solutions- interview prep -- Votes: 703</h2><p>This snippet is helpful while preparing for interviews as it groups together similar python Backtracking problems and solution. Feel free to let me know if you have found similar backtracking problems or have any suggestions, will add it to the post.</p>
+<p><strong>78. Subsets:</strong> Runtime: 16 ms, faster than 96.05%</p>
+<div class="codehilite"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="n">Solution</span><span class="p">(</span><span class="k">object</span><span class="p">)</span><span class="err">:</span>
+<span class="w">    </span><span class="n">def</span><span class="w"> </span><span class="n">subsets</span><span class="p">(</span><span class="n">self</span><span class="p">,</span><span class="w"> </span><span class="n">nums</span><span class="p">)</span><span class="err">:</span>
+<span class="w">        </span><span class="ss">&quot;&quot;&quot;</span>
+<span class="ss">        :type nums: List[int]</span>
+<span class="ss">        :rtype: List[List[int]]</span>
+<span class="ss">        &quot;&quot;&quot;</span>
+<span class="w">        </span><span class="n">res</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>
+<span class="w">        </span><span class="n">self</span><span class="p">.</span><span class="n">dfs</span><span class="p">(</span><span class="n">nums</span><span class="p">,</span><span class="w"> </span><span class="p">,</span><span class="w"> </span><span class="n">res</span><span class="p">)</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">res</span>
+
+<span class="w">    </span><span class="n">def</span><span class="w"> </span><span class="n">dfs</span><span class="p">(</span><span class="n">self</span><span class="p">,</span><span class="w"> </span><span class="n">nums</span><span class="p">,</span><span class="w"> </span><span class="k">path</span><span class="p">,</span><span class="w"> </span><span class="n">res</span><span class="p">)</span><span class="err">:</span>
+<span class="w">        </span><span class="n">res</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="k">path</span><span class="p">)</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="k">range</span><span class="p">(</span><span class="nf">len</span><span class="p">(</span><span class="n">nums</span><span class="p">))</span><span class="err">:</span>
+<span class="w">            </span><span class="n">self</span><span class="p">.</span><span class="n">dfs</span><span class="p">(</span><span class="n">nums</span><span class="o">[</span><span class="n">i+1:</span><span class="o">]</span><span class="p">,</span><span class="w"> </span><span class="k">path</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="o">[</span><span class="n">nums[i</span><span class="o">]</span><span class="err">]</span><span class="p">,</span><span class="w"> </span><span class="n">res</span><span class="p">)</span><span class="w">     </span>
+</code></pre></div>
+
+<p><strong>90. Subsets II:</strong> Runtime: 20 ms, faster than 96.23%</p>
+<div class="codehilite"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="n">Solution</span><span class="p">(</span><span class="k">object</span><span class="p">)</span><span class="err">:</span>
+<span class="w">    </span><span class="n">def</span><span class="w"> </span><span class="n">subsetsWithDup</span><span class="p">(</span><span class="n">self</span><span class="p">,</span><span class="w"> </span><span class="n">nums</span><span class="p">)</span><span class="err">:</span>
+<span class="w">        </span><span class="ss">&quot;&quot;&quot;</span>
+<span class="ss">        :type nums: List[int]</span>
+<span class="ss">        :rtype: List[List[int]]</span>
+<span class="ss">        &quot;&quot;&quot;</span>
+<span class="w">        </span><span class="n">res</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>
+<span class="w">        </span><span class="n">nums</span><span class="p">.</span><span class="n">sort</span><span class="p">()</span>
+<span class="w">        </span><span class="n">self</span><span class="p">.</span><span class="n">dfs</span><span class="p">(</span><span class="n">nums</span><span class="p">,</span><span class="w"> </span><span class="p">,</span><span class="w"> </span><span class="n">res</span><span class="p">)</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">res</span>
+
+<span class="w">    </span><span class="n">def</span><span class="w"> </span><span class="n">dfs</span><span class="p">(</span><span class="n">self</span><span class="p">,</span><span class="w"> </span><span class="n">nums</span><span class="p">,</span><span class="w"> </span><span class="k">path</span><span class="p">,</span><span class="w"> </span><span class="n">res</span><span class="p">)</span><span class="err">:</span>
+<span class="w">        </span><span class="n">res</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="k">path</span><span class="p">)</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="k">range</span><span class="p">(</span><span class="nf">len</span><span class="p">(</span><span class="n">nums</span><span class="p">))</span><span class="err">:</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="n">nums</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">nums</span><span class="o">[</span><span class="n">i-1</span><span class="o">]</span><span class="err">:</span>
+<span class="w">                </span><span class="k">continue</span>
+<span class="w">            </span><span class="n">self</span><span class="p">.</span><span class="n">dfs</span><span class="p">(</span><span class="n">nums</span><span class="o">[</span><span class="n">i+1:</span><span class="o">]</span><span class="p">,</span><span class="w"> </span><span class="k">path</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="o">[</span><span class="n">nums[i</span><span class="o">]</span><span class="err">]</span><span class="p">,</span><span class="w"> </span><span class="n">res</span><span class="p">)</span>
+</code></pre></div>
+
+<p><strong>77. Combinations</strong>: Runtime: 676 ms, faster than 42.96%</p>
+<div class="codehilite"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="n">Solution</span><span class="p">(</span><span class="k">object</span><span class="p">)</span><span class="err">:</span>
+<span class="w">    </span><span class="n">def</span><span class="w"> </span><span class="n">combine</span><span class="p">(</span><span class="n">self</span><span class="p">,</span><span class="w"> </span><span class="n">n</span><span class="p">,</span><span class="w"> </span><span class="n">k</span><span class="p">)</span><span class="err">:</span>
+<span class="w">        </span><span class="ss">&quot;&quot;&quot;</span>
+<span class="ss">        :type n: int</span>
+<span class="ss">        :type k: int</span>
+<span class="ss">        :rtype: List[List[int]]</span>
+<span class="ss">        &quot;&quot;&quot;</span>
+<span class="w">        </span><span class="n">res</span><span class="o">=</span>
+<span class="w">        </span><span class="n">self</span><span class="p">.</span><span class="n">dfs</span><span class="p">(</span><span class="k">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">),</span><span class="w"> </span><span class="n">k</span><span class="p">,</span><span class="w"> </span><span class="p">,</span><span class="w"> </span><span class="n">res</span><span class="p">)</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">res</span>
+
+<span class="w">    </span><span class="n">def</span><span class="w"> </span><span class="n">dfs</span><span class="p">(</span><span class="n">self</span><span class="p">,</span><span class="w"> </span><span class="n">nums</span><span class="p">,</span><span class="w"> </span><span class="n">k</span><span class="p">,</span><span class="w"> </span><span class="k">path</span><span class="p">,</span><span class="w"> </span><span class="n">res</span><span class="p">)</span><span class="err">:</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="nf">len</span><span class="p">(</span><span class="k">path</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nl">k</span><span class="p">:</span>
+<span class="w">            </span><span class="n">res</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="k">path</span><span class="p">)</span>
+<span class="w">            </span><span class="k">return</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="k">range</span><span class="p">(</span><span class="nf">len</span><span class="p">(</span><span class="n">nums</span><span class="p">))</span><span class="err">:</span>
+<span class="w">            </span><span class="n">self</span><span class="p">.</span><span class="n">dfs</span><span class="p">(</span><span class="n">nums</span><span class="o">[</span><span class="n">i+1:</span><span class="o">]</span><span class="p">,</span><span class="w"> </span><span class="n">k</span><span class="p">,</span><span class="w"> </span><span class="k">path</span><span class="o">+</span><span class="w"> </span><span class="o">[</span><span class="n">nums[i</span><span class="o">]</span><span class="err">]</span><span class="p">,</span><span class="w"> </span><span class="n">res</span><span class="p">)</span>
+</code></pre></div>
+
+<p><strong>39. Combination Sum</strong>: Runtime: 124 ms, faster than 30.77%</p>
+<div class="codehilite"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="n">Solution</span><span class="p">(</span><span class="k">object</span><span class="p">)</span><span class="err">:</span>
+<span class="w">    </span><span class="n">def</span><span class="w"> </span><span class="n">combinationSum</span><span class="p">(</span><span class="n">self</span><span class="p">,</span><span class="w"> </span><span class="n">candidates</span><span class="p">,</span><span class="w"> </span><span class="n">target</span><span class="p">)</span><span class="err">:</span>
+<span class="w">        </span><span class="ss">&quot;&quot;&quot;</span>
+<span class="ss">        :type candidates: List[int]</span>
+<span class="ss">        :type target: int</span>
+<span class="ss">        :rtype: List[List[int]]</span>
+<span class="ss">        &quot;&quot;&quot;</span>
+<span class="w">        </span><span class="n">res</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>
+<span class="w">        </span><span class="n">candidates</span><span class="p">.</span><span class="n">sort</span><span class="p">()</span>
+<span class="w">        </span><span class="n">self</span><span class="p">.</span><span class="n">dfs</span><span class="p">(</span><span class="n">candidates</span><span class="p">,</span><span class="w"> </span><span class="n">target</span><span class="p">,</span><span class="w"> </span><span class="p">,</span><span class="w"> </span><span class="n">res</span><span class="p">)</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">res</span>
+
+<span class="w">    </span><span class="n">def</span><span class="w"> </span><span class="n">dfs</span><span class="p">(</span><span class="n">self</span><span class="p">,</span><span class="w"> </span><span class="n">candidates</span><span class="p">,</span><span class="w"> </span><span class="n">target</span><span class="p">,</span><span class="w"> </span><span class="k">path</span><span class="p">,</span><span class="w"> </span><span class="n">res</span><span class="p">)</span><span class="err">:</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="n">target</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">0</span><span class="err">:</span>
+<span class="w">            </span><span class="k">return</span><span class="w">   </span><span class="n">#backtracking</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="n">target</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="err">:</span>
+<span class="w">            </span><span class="n">res</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="k">path</span><span class="p">)</span>
+<span class="w">            </span><span class="k">return</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="k">range</span><span class="p">(</span><span class="nf">len</span><span class="p">(</span><span class="n">candidates</span><span class="p">))</span><span class="err">:</span>
+<span class="w">            </span><span class="n">self</span><span class="p">.</span><span class="n">dfs</span><span class="p">(</span><span class="n">candidates</span><span class="o">[</span><span class="n">i:</span><span class="o">]</span><span class="p">,</span><span class="w"> </span><span class="n">target</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">candidates</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="p">,</span><span class="w"> </span><span class="k">path</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="o">[</span><span class="n">candidates[i</span><span class="o">]</span><span class="err">]</span><span class="p">,</span><span class="w"> </span><span class="n">res</span><span class="p">)</span><span class="w">  </span>
+</code></pre></div>
+
+<p><strong>40. Combination Sum II</strong>: Runtime: 36 ms, faster than 91.77%</p>
+<div class="codehilite"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="n">Solution</span><span class="p">(</span><span class="k">object</span><span class="p">)</span><span class="err">:</span>
+<span class="w">    </span><span class="n">def</span><span class="w"> </span><span class="n">combinationSum2</span><span class="p">(</span><span class="n">self</span><span class="p">,</span><span class="w"> </span><span class="n">candidates</span><span class="p">,</span><span class="w"> </span><span class="n">target</span><span class="p">)</span><span class="err">:</span>
+<span class="w">        </span><span class="ss">&quot;&quot;&quot;</span>
+<span class="ss">        :type candidates: List[int]</span>
+<span class="ss">        :type target: int</span>
+<span class="ss">        :rtype: List[List[int]]</span>
+<span class="ss">        &quot;&quot;&quot;</span>
+<span class="w">        </span><span class="n">res</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>
+<span class="w">        </span><span class="n">candidates</span><span class="p">.</span><span class="n">sort</span><span class="p">()</span>
+<span class="w">        </span><span class="n">self</span><span class="p">.</span><span class="n">dfs</span><span class="p">(</span><span class="n">candidates</span><span class="p">,</span><span class="w"> </span><span class="n">target</span><span class="p">,</span><span class="w"> </span><span class="p">,</span><span class="w"> </span><span class="n">res</span><span class="p">)</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">res</span>
+
+<span class="w">    </span><span class="n">def</span><span class="w"> </span><span class="n">dfs</span><span class="p">(</span><span class="n">self</span><span class="p">,</span><span class="w"> </span><span class="n">candidates</span><span class="p">,</span><span class="w"> </span><span class="n">target</span><span class="p">,</span><span class="w"> </span><span class="k">path</span><span class="p">,</span><span class="w"> </span><span class="n">res</span><span class="p">)</span><span class="err">:</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="n">target</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">0</span><span class="err">:</span>
+<span class="w">            </span><span class="k">return</span>
+
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="n">target</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="err">:</span>
+<span class="w">            </span><span class="n">res</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="k">path</span><span class="p">)</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="k">range</span><span class="p">(</span><span class="nf">len</span><span class="p">(</span><span class="n">candidates</span><span class="p">))</span><span class="err">:</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="n">candidates</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">candidates</span><span class="o">[</span><span class="n">i-1</span><span class="o">]</span><span class="err">:</span>
+<span class="w">                </span><span class="k">continue</span>
+
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="n">candidates</span><span class="o">[</span><span class="n">i</span><span class="o">]&gt;</span><span class="w"> </span><span class="nl">target</span><span class="p">:</span>
+<span class="w">                </span><span class="k">break</span>
+
+<span class="w">            </span><span class="n">self</span><span class="p">.</span><span class="n">dfs</span><span class="p">(</span><span class="n">candidates</span><span class="o">[</span><span class="n">i+1:</span><span class="o">]</span><span class="p">,</span><span class="w"> </span><span class="n">target</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">candidates</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="p">,</span><span class="w"> </span><span class="k">path</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="o">[</span><span class="n">candidates[i</span><span class="o">]</span><span class="err">]</span><span class="p">,</span><span class="w"> </span><span class="n">res</span><span class="p">)</span>
+</code></pre></div>
+
+<p><strong>46. Permutations</strong>: Runtime: 28 ms, faster than 79.64%</p>
+<div class="codehilite"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="n">Solution</span><span class="p">(</span><span class="k">object</span><span class="p">)</span><span class="err">:</span>
+<span class="w">    </span><span class="n">def</span><span class="w"> </span><span class="n">permute</span><span class="p">(</span><span class="n">self</span><span class="p">,</span><span class="w"> </span><span class="n">nums</span><span class="p">)</span><span class="err">:</span>
+<span class="w">        </span><span class="ss">&quot;&quot;&quot;</span>
+<span class="ss">        :type nums: List[int]</span>
+<span class="ss">        :rtype: List[List[int]]</span>
+<span class="ss">        &quot;&quot;&quot;</span>
+<span class="w">        </span><span class="n">res</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>
+<span class="w">        </span><span class="n">self</span><span class="p">.</span><span class="n">dfs</span><span class="p">(</span><span class="n">nums</span><span class="p">,</span><span class="w"> </span><span class="p">,</span><span class="w"> </span><span class="n">res</span><span class="p">)</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">res</span>
+
+<span class="w">    </span><span class="n">def</span><span class="w"> </span><span class="n">dfs</span><span class="p">(</span><span class="n">self</span><span class="p">,</span><span class="w"> </span><span class="n">nums</span><span class="p">,</span><span class="w"> </span><span class="k">path</span><span class="p">,</span><span class="w"> </span><span class="n">res</span><span class="p">)</span><span class="err">:</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="nf">len</span><span class="p">(</span><span class="n">nums</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="err">:</span>
+<span class="w">            </span><span class="n">res</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="k">path</span><span class="p">)</span>
+<span class="w">            </span><span class="k">return</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="k">range</span><span class="p">(</span><span class="nf">len</span><span class="p">(</span><span class="n">nums</span><span class="p">))</span><span class="err">:</span>
+<span class="w">            </span><span class="n">self</span><span class="p">.</span><span class="n">dfs</span><span class="p">(</span><span class="n">nums</span><span class="o">[</span><span class="n">:i</span><span class="o">]</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">nums</span><span class="o">[</span><span class="n">i+1:</span><span class="o">]</span><span class="p">,</span><span class="w"> </span><span class="k">path</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="o">[</span><span class="n">nums[i</span><span class="o">]</span><span class="err">]</span><span class="p">,</span><span class="w"> </span><span class="n">res</span><span class="p">)</span><span class="w">   </span>
+</code></pre></div>
+
+<p><strong>47. Permutations II</strong>: Runtime: 40 ms, faster than 92.96%</p>
+<div class="codehilite"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="n">Solution</span><span class="p">(</span><span class="k">object</span><span class="p">)</span><span class="err">:</span>
+<span class="w">    </span><span class="n">def</span><span class="w"> </span><span class="n">permuteUnique</span><span class="p">(</span><span class="n">self</span><span class="p">,</span><span class="w"> </span><span class="n">nums</span><span class="p">)</span><span class="err">:</span>
+<span class="w">        </span><span class="ss">&quot;&quot;&quot;</span>
+<span class="ss">        :type nums: List[int]</span>
+<span class="ss">        :rtype: List[List[int]]</span>
+<span class="ss">        &quot;&quot;&quot;</span>
+<span class="w">        </span><span class="n">res</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>
+<span class="w">        </span><span class="n">nums</span><span class="p">.</span><span class="n">sort</span><span class="p">()</span>
+<span class="w">        </span><span class="n">self</span><span class="p">.</span><span class="n">dfs</span><span class="p">(</span><span class="n">nums</span><span class="p">,</span><span class="w"> </span><span class="p">,</span><span class="w"> </span><span class="n">res</span><span class="p">)</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">res</span>
+
+<span class="w">    </span><span class="n">def</span><span class="w"> </span><span class="n">dfs</span><span class="p">(</span><span class="n">self</span><span class="p">,</span><span class="w"> </span><span class="n">nums</span><span class="p">,</span><span class="w"> </span><span class="k">path</span><span class="p">,</span><span class="w"> </span><span class="n">res</span><span class="p">)</span><span class="err">:</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="nf">len</span><span class="p">(</span><span class="n">nums</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="err">:</span>
+<span class="w">            </span><span class="n">res</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="k">path</span><span class="p">)</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="k">range</span><span class="p">(</span><span class="nf">len</span><span class="p">(</span><span class="n">nums</span><span class="p">))</span><span class="err">:</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="n">nums</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">nums</span><span class="o">[</span><span class="n">i-1</span><span class="o">]</span><span class="err">:</span>
+<span class="w">                </span><span class="k">continue</span>
+<span class="w">            </span><span class="n">self</span><span class="p">.</span><span class="n">dfs</span><span class="p">(</span><span class="n">nums</span><span class="o">[</span><span class="n">:i</span><span class="o">]</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">nums</span><span class="o">[</span><span class="n">i+1:</span><span class="o">]</span><span class="p">,</span><span class="w"> </span><span class="k">path</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="o">[</span><span class="n">nums[i</span><span class="o">]</span><span class="err">]</span><span class="p">,</span><span class="w"> </span><span class="n">res</span><span class="p">)</span>
+</code></pre></div>
+
+<p><strong>17. Letter combination of a Phone Number:</strong>:Runtime: 24 ms, faster than 43.40%</p>
+<div class="codehilite"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="n">Solution</span><span class="p">(</span><span class="k">object</span><span class="p">)</span><span class="err">:</span>
+<span class="w">    </span><span class="n">def</span><span class="w"> </span><span class="n">letterCombinations</span><span class="p">(</span><span class="n">self</span><span class="p">,</span><span class="w"> </span><span class="n">digits</span><span class="p">)</span><span class="err">:</span>
+<span class="w">        </span><span class="ss">&quot;&quot;&quot;</span>
+<span class="ss">        :type digits: str</span>
+<span class="ss">        :rtype: List[str]</span>
+<span class="ss">        &quot;&quot;&quot;</span>
+<span class="w">        </span><span class="n">dic</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">{</span><span class="w"> </span><span class="ss">&quot;2&quot;</span><span class="err">:</span><span class="w"> </span><span class="ss">&quot;abc&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">&quot;3&quot;</span><span class="err">:</span><span class="w"> </span><span class="ss">&quot;def&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">&quot;4&quot;</span><span class="err">:</span><span class="ss">&quot;ghi&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">&quot;5&quot;</span><span class="err">:</span><span class="ss">&quot;jkl&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">&quot;6&quot;</span><span class="err">:</span><span class="ss">&quot;mno&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">&quot;7&quot;</span><span class="err">:</span><span class="ss">&quot;pqrs&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">&quot;8&quot;</span><span class="err">:</span><span class="ss">&quot;tuv&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">&quot;9&quot;</span><span class="err">:</span><span class="ss">&quot;wxyz&quot;</span><span class="err">}</span>
+
+<span class="w">        </span><span class="n">res</span><span class="o">=</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="nf">len</span><span class="p">(</span><span class="n">digits</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="mi">0</span><span class="err">:</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="n">res</span>
+
+<span class="w">        </span><span class="n">self</span><span class="p">.</span><span class="n">dfs</span><span class="p">(</span><span class="n">digits</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">dic</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">res</span><span class="p">)</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">res</span>
+
+<span class="w">    </span><span class="n">def</span><span class="w"> </span><span class="n">dfs</span><span class="p">(</span><span class="n">self</span><span class="p">,</span><span class="w"> </span><span class="n">nums</span><span class="p">,</span><span class="w"> </span><span class="k">index</span><span class="p">,</span><span class="w"> </span><span class="n">dic</span><span class="p">,</span><span class="w"> </span><span class="k">path</span><span class="p">,</span><span class="w"> </span><span class="n">res</span><span class="p">)</span><span class="err">:</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="k">index</span><span class="w"> </span><span class="o">&gt;=</span><span class="nf">len</span><span class="p">(</span><span class="n">nums</span><span class="p">)</span><span class="err">:</span>
+<span class="w">            </span><span class="n">res</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="k">path</span><span class="p">)</span>
+<span class="w">            </span><span class="k">return</span>
+<span class="w">        </span><span class="n">string1</span><span class="w"> </span><span class="o">=</span><span class="n">dic</span><span class="o">[</span><span class="n">nums[index</span><span class="o">]</span><span class="err">]</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="nl">string1</span><span class="p">:</span>
+<span class="w">            </span><span class="n">self</span><span class="p">.</span><span class="n">dfs</span><span class="p">(</span><span class="n">nums</span><span class="p">,</span><span class="w"> </span><span class="k">index</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">dic</span><span class="p">,</span><span class="w"> </span><span class="k">path</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">res</span><span class="p">)</span>
+</code></pre></div>
+
+<p>\==========================================================<br />
+I hope that you've found the solutions useful. Please do UPVOTE, it only motivates me to write more such posts. Thanks!</p></div><p style="page-break-before: always" ></p>

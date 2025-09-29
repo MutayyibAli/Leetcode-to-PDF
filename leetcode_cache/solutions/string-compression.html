@@ -1,0 +1,346 @@
+<div class='cpp-solution'><h2>Clean Codes🔥🔥|| Full Explanation✅|| Two Pointers✅|| C++|| Java|| Python3 -- Votes: 343</h2><h2>Intuition :</h2>
+<ul>
+<li>Given an array of characters, compress it in-place. The length after compression must always be smaller than or equal to the original array. Every element of the array should be a character (not int) of length 1.</li>
+<li>Example:</li>
+</ul>
+<div class="codehilite"><pre><span></span><code><span class="nv">Input</span>:
+[<span class="s2">&quot;a&quot;</span>,<span class="s2">&quot;a&quot;</span>,<span class="s2">&quot;b&quot;</span>,<span class="s2">&quot;b&quot;</span>,<span class="s2">&quot;c&quot;</span>,<span class="s2">&quot;c&quot;</span>,<span class="s2">&quot;c&quot;</span>]
+<span class="nv">Output</span>:
+<span class="k">Return</span><span class="w"> </span><span class="mi">6</span>,<span class="w"> </span><span class="nv">and</span><span class="w"> </span><span class="nv">the</span><span class="w"> </span><span class="nv">first</span><span class="w"> </span><span class="mi">6</span><span class="w"> </span><span class="nv">characters</span><span class="w"> </span><span class="nv">of</span><span class="w"> </span><span class="nv">the</span><span class="w"> </span><span class="nv">input</span><span class="w"> </span><span class="nv">array</span><span class="w"> </span><span class="nv">should</span><span class="w"> </span><span class="nv">be</span>:<span class="w"> </span>
+[<span class="s2">&quot;a&quot;</span>,<span class="s2">&quot;2&quot;</span>,<span class="s2">&quot;b&quot;</span>,<span class="s2">&quot;2&quot;</span>,<span class="s2">&quot;c&quot;</span>,<span class="s2">&quot;3&quot;</span>]
+<span class="nv">Explanation</span>:
+<span class="s2">&quot;aa&quot;</span><span class="w"> </span><span class="nv">is</span><span class="w"> </span><span class="nv">replaced</span><span class="w"> </span><span class="nv">by</span><span class="w"> </span><span class="s2">&quot;a2&quot;</span>.<span class="w"> </span><span class="s2">&quot;bb&quot;</span><span class="w"> </span><span class="nv">is</span><span class="w"> </span><span class="nv">replaced</span><span class="w"> </span><span class="nv">by</span><span class="w"> </span><span class="s2">&quot;b2&quot;</span>.<span class="w"> </span><span class="s2">&quot;ccc&quot;</span><span class="w"> </span><span class="nv">is</span><span class="w"> </span>
+<span class="nv">replaced</span><span class="w"> </span><span class="nv">by</span><span class="w"> </span><span class="s2">&quot;c3&quot;</span>.
+</code></pre></div>
+
+<!-- Describe your first thoughts on how to solve this problem. -->
+
+<h2>Detail Explanation to Approach :</h2>
+<ul>
+<li>Here we are using two pointers, one for iterating through the original character array and one for keeping track of the current position in the compressed array. The two pointer variables used are <code>i</code> and <code>ans</code>.</li>
+<li>Now also use a variable to keep track of the count of consecutive characters.</li>
+<li>First set the current letter to the first character in the array and initializes the count to 0.</li>
+<li>Then iterate through the array until you find a different character or reach the end of the array.</li>
+<li>For each iteration, increment the count and the index i.</li>
+</ul>
+<div class="codehilite"><pre><span></span><code><span class="o">//</span><span class="w"> </span><span class="k">iterate</span><span class="w"> </span><span class="n">through</span><span class="w"> </span><span class="k">input</span><span class="w"> </span><span class="k">array</span><span class="w"> </span><span class="k">using</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="n">pointer</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="nc">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">chars</span><span class="p">.</span><span class="n">length</span><span class="p">;)</span><span class="w"> </span><span class="err">{</span>
+<span class="w">      </span><span class="n">final</span><span class="w"> </span><span class="nc">char</span><span class="w"> </span><span class="n">letter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">chars</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="k">current</span><span class="w"> </span><span class="k">character</span><span class="w"> </span><span class="n">being</span><span class="w"> </span><span class="n">compressed</span>
+<span class="w">      </span><span class="nc">int</span><span class="w"> </span><span class="nf">count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="nf">count</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">consecutive</span><span class="w"> </span><span class="n">occurrences</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">letter</span>
+
+<span class="w">      </span><span class="o">//</span><span class="w"> </span><span class="nf">count</span><span class="w"> </span><span class="n">consecutive</span><span class="w"> </span><span class="n">occurrences</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">letter</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="k">input</span><span class="w"> </span><span class="k">array</span>
+<span class="w">      </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">chars</span><span class="p">.</span><span class="n">length</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">chars</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">letter</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
+<span class="w">        </span><span class="o">++</span><span class="nf">count</span><span class="p">;</span>
+<span class="w">        </span><span class="o">++</span><span class="n">i</span><span class="p">;</span>
+<span class="w">      </span><span class="err">}</span>
+</code></pre></div>
+
+<ul>
+<li>When you find a different character or reach the end of the array, write the current letter to the compressed array and, if the count is greater than 1, write the count as a string to the compressed array.</li>
+<li>Then reset the count to 0 and set the current letter to the new letter.</li>
+</ul>
+<div class="codehilite"><pre><span></span><code><span class="c1">// write letter to compressed array</span>
+<span class="w">      </span><span class="n">chars</span><span class="p">[</span><span class="n">ans</span><span class="o">++</span><span class="p">]</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">letter</span><span class="p">;</span>
+
+<span class="w">      </span><span class="c1">// if count is greater than 1, write count as string to compressed array</span>
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">count</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="c1">// convert count to string and iterate over each character in string</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">final</span><span class="w"> </span><span class="nb">char</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">String</span><span class="p">.</span><span class="n">valueOf</span><span class="p">(</span><span class="n">count</span><span class="p">).</span><span class="n">toCharArray</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="n">chars</span><span class="p">[</span><span class="n">ans</span><span class="o">++</span><span class="p">]</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">c</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">      </span><span class="p">}</span>
+</code></pre></div>
+
+<ul>
+<li>Finally, return the length of the compressed array, which is equal to the position of the last character in the compressed array plus one.</li>
+</ul>
+<div class="codehilite"><pre><span></span><code><span class="k">return</span><span class="w"> </span><span class="nv">ans</span><span class="c1">;//return length of compressed array</span>
+</code></pre></div>
+
+<!-- Describe your approach to solving the problem. -->
+
+<h2>Complexity :</h2>
+<ul>
+<li>Time complexity : O(n)</li>
+</ul>
+<!-- Add your time complexity here, e.g. $$O(n)$$ -->
+
+<ul>
+<li>Space complexity : O(1)</li>
+</ul>
+<!-- Add your space complexity here, e.g. $$O(n)$$ -->
+
+<h2>Please Upvote</h2>
+<div class="codehilite"><pre><span></span><code><span class="nv">Thanks</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="nv">visiting</span><span class="w"> </span><span class="nv">my</span><span class="w"> </span><span class="nv">solution</span>.
+</code></pre></div>
+
+<p><em>Let's Code it Up .<br />
+There may be minor syntax difference in C++ and Python</em></p>
+<h2>Codes [C++ |Java |Python3] : With Comments</h2>
+<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">C</span><span class="o">++</span><span class="w"> </span>
+<span class="n">class</span><span class="w"> </span><span class="n">Solution</span><span class="w"> </span><span class="p">{</span>
+<span class="n">public</span><span class="o">:</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">compress</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">char</span><span class="o">&gt;&amp;</span><span class="w"> </span><span class="n">chars</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">ans</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+
+<span class="w">        </span><span class="c1">// iterate through input vector using i pointer</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">chars</span><span class="p">.</span><span class="n">size</span><span class="p">();)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="n">letter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">chars</span><span class="p">[</span><span class="n">i</span><span class="p">];</span><span class="w"> </span><span class="c1">// current character being compressed</span>
+<span class="w">            </span><span class="kt">int</span><span class="w"> </span><span class="n">count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="c1">// count of consecutive occurrences of letter</span>
+
+<span class="w">            </span><span class="c1">// count consecutive occurrences of letter in input vector</span>
+<span class="w">            </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">chars</span><span class="p">.</span><span class="n">size</span><span class="p">()</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">chars</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">letter</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="o">++</span><span class="n">count</span><span class="p">;</span>
+<span class="w">                </span><span class="o">++</span><span class="n">i</span><span class="p">;</span>
+<span class="w">            </span><span class="p">}</span>
+
+<span class="w">            </span><span class="c1">// write letter to compressed vector</span>
+<span class="w">            </span><span class="n">chars</span><span class="p">[</span><span class="n">ans</span><span class="o">++</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">letter</span><span class="p">;</span>
+
+<span class="w">            </span><span class="c1">// if count is greater than 1, write count as string to compressed vector</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">count</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="c1">// convert count to string and iterate over each character in string</span>
+<span class="w">                </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">to_string</span><span class="p">(</span><span class="n">count</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="n">chars</span><span class="p">[</span><span class="n">ans</span><span class="o">++</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">c</span><span class="p">;</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="c1">// return length of compressed vector</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">ans</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">};</span>
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">Java</span><span class="w"> </span>
+<span class="kd">class</span> <span class="nc">Solution</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kd">public</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="nf">compress</span><span class="p">(</span><span class="kt">char</span><span class="w"> </span><span class="n">chars</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">ans</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="c1">// keep track of current position in compressed array</span>
+
+<span class="w">    </span><span class="c1">// iterate through input array using i pointer</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">chars</span><span class="p">.</span><span class="na">length</span><span class="p">;)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="kd">final</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="n">letter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">chars</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="c1">// current character being compressed</span>
+<span class="w">      </span><span class="kt">int</span><span class="w"> </span><span class="n">count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="c1">// count of consecutive occurrences of letter</span>
+
+<span class="w">      </span><span class="c1">// count consecutive occurrences of letter in input array</span>
+<span class="w">      </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">chars</span><span class="p">.</span><span class="na">length</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">chars</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">letter</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="o">++</span><span class="n">count</span><span class="p">;</span>
+<span class="w">        </span><span class="o">++</span><span class="n">i</span><span class="p">;</span>
+<span class="w">      </span><span class="p">}</span>
+
+<span class="w">      </span><span class="c1">// write letter to compressed array</span>
+<span class="w">      </span><span class="n">chars</span><span class="o">[</span><span class="n">ans</span><span class="o">++]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">letter</span><span class="p">;</span>
+
+<span class="w">      </span><span class="c1">// if count is greater than 1, write count as string to compressed array</span>
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">count</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="c1">// convert count to string and iterate over each character in string</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kd">final</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">String</span><span class="p">.</span><span class="na">valueOf</span><span class="p">(</span><span class="n">count</span><span class="p">).</span><span class="na">toCharArray</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="n">chars</span><span class="o">[</span><span class="n">ans</span><span class="o">++]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">c</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="c1">// return length of compressed array</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">ans</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code><span class="n">Language</span><span class="p">:</span> <span class="n">Python3</span> 
+<span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="p">:</span>
+  <span class="k">def</span><span class="w"> </span><span class="nf">compress</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">chars</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+    <span class="n">ans</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="k">while</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">chars</span><span class="p">):</span>
+      <span class="n">letter</span> <span class="o">=</span> <span class="n">chars</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+      <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
+      <span class="k">while</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">chars</span><span class="p">)</span> <span class="ow">and</span> <span class="n">chars</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="n">letter</span><span class="p">:</span>
+        <span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+      <span class="n">chars</span><span class="p">[</span><span class="n">ans</span><span class="p">]</span> <span class="o">=</span> <span class="n">letter</span>
+      <span class="n">ans</span> <span class="o">+=</span> <span class="mi">1</span>
+      <span class="k">if</span> <span class="n">count</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">str</span><span class="p">(</span><span class="n">count</span><span class="p">):</span>
+          <span class="n">chars</span><span class="p">[</span><span class="n">ans</span><span class="p">]</span> <span class="o">=</span> <span class="n">c</span>
+          <span class="n">ans</span> <span class="o">+=</span> <span class="mi">1</span>
+
+    <span class="k">return</span> <span class="n">ans</span>
+</code></pre></div>
+
+<h2>Please Upvote</h2>
+<p></p></div>
+
+
+<div class='python-solution'><h2>Clean Codes🔥🔥|| Full Explanation✅|| Two Pointers✅|| C++|| Java|| Python3 -- Votes: 343</h2><h2>Intuition :</h2>
+<ul>
+<li>Given an array of characters, compress it in-place. The length after compression must always be smaller than or equal to the original array. Every element of the array should be a character (not int) of length 1.</li>
+<li>Example:</li>
+</ul>
+<div class="codehilite"><pre><span></span><code><span class="nv">Input</span>:
+[<span class="s2">&quot;a&quot;</span>,<span class="s2">&quot;a&quot;</span>,<span class="s2">&quot;b&quot;</span>,<span class="s2">&quot;b&quot;</span>,<span class="s2">&quot;c&quot;</span>,<span class="s2">&quot;c&quot;</span>,<span class="s2">&quot;c&quot;</span>]
+<span class="nv">Output</span>:
+<span class="k">Return</span><span class="w"> </span><span class="mi">6</span>,<span class="w"> </span><span class="nv">and</span><span class="w"> </span><span class="nv">the</span><span class="w"> </span><span class="nv">first</span><span class="w"> </span><span class="mi">6</span><span class="w"> </span><span class="nv">characters</span><span class="w"> </span><span class="nv">of</span><span class="w"> </span><span class="nv">the</span><span class="w"> </span><span class="nv">input</span><span class="w"> </span><span class="nv">array</span><span class="w"> </span><span class="nv">should</span><span class="w"> </span><span class="nv">be</span>:<span class="w"> </span>
+[<span class="s2">&quot;a&quot;</span>,<span class="s2">&quot;2&quot;</span>,<span class="s2">&quot;b&quot;</span>,<span class="s2">&quot;2&quot;</span>,<span class="s2">&quot;c&quot;</span>,<span class="s2">&quot;3&quot;</span>]
+<span class="nv">Explanation</span>:
+<span class="s2">&quot;aa&quot;</span><span class="w"> </span><span class="nv">is</span><span class="w"> </span><span class="nv">replaced</span><span class="w"> </span><span class="nv">by</span><span class="w"> </span><span class="s2">&quot;a2&quot;</span>.<span class="w"> </span><span class="s2">&quot;bb&quot;</span><span class="w"> </span><span class="nv">is</span><span class="w"> </span><span class="nv">replaced</span><span class="w"> </span><span class="nv">by</span><span class="w"> </span><span class="s2">&quot;b2&quot;</span>.<span class="w"> </span><span class="s2">&quot;ccc&quot;</span><span class="w"> </span><span class="nv">is</span><span class="w"> </span>
+<span class="nv">replaced</span><span class="w"> </span><span class="nv">by</span><span class="w"> </span><span class="s2">&quot;c3&quot;</span>.
+</code></pre></div>
+
+<!-- Describe your first thoughts on how to solve this problem. -->
+
+<h2>Detail Explanation to Approach :</h2>
+<ul>
+<li>Here we are using two pointers, one for iterating through the original character array and one for keeping track of the current position in the compressed array. The two pointer variables used are <code>i</code> and <code>ans</code>.</li>
+<li>Now also use a variable to keep track of the count of consecutive characters.</li>
+<li>First set the current letter to the first character in the array and initializes the count to 0.</li>
+<li>Then iterate through the array until you find a different character or reach the end of the array.</li>
+<li>For each iteration, increment the count and the index i.</li>
+</ul>
+<div class="codehilite"><pre><span></span><code><span class="o">//</span><span class="w"> </span><span class="k">iterate</span><span class="w"> </span><span class="n">through</span><span class="w"> </span><span class="k">input</span><span class="w"> </span><span class="k">array</span><span class="w"> </span><span class="k">using</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="n">pointer</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="nc">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">chars</span><span class="p">.</span><span class="n">length</span><span class="p">;)</span><span class="w"> </span><span class="err">{</span>
+<span class="w">      </span><span class="n">final</span><span class="w"> </span><span class="nc">char</span><span class="w"> </span><span class="n">letter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">chars</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="k">current</span><span class="w"> </span><span class="k">character</span><span class="w"> </span><span class="n">being</span><span class="w"> </span><span class="n">compressed</span>
+<span class="w">      </span><span class="nc">int</span><span class="w"> </span><span class="nf">count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="nf">count</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">consecutive</span><span class="w"> </span><span class="n">occurrences</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">letter</span>
+
+<span class="w">      </span><span class="o">//</span><span class="w"> </span><span class="nf">count</span><span class="w"> </span><span class="n">consecutive</span><span class="w"> </span><span class="n">occurrences</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">letter</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="k">input</span><span class="w"> </span><span class="k">array</span>
+<span class="w">      </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">chars</span><span class="p">.</span><span class="n">length</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">chars</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">letter</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
+<span class="w">        </span><span class="o">++</span><span class="nf">count</span><span class="p">;</span>
+<span class="w">        </span><span class="o">++</span><span class="n">i</span><span class="p">;</span>
+<span class="w">      </span><span class="err">}</span>
+</code></pre></div>
+
+<ul>
+<li>When you find a different character or reach the end of the array, write the current letter to the compressed array and, if the count is greater than 1, write the count as a string to the compressed array.</li>
+<li>Then reset the count to 0 and set the current letter to the new letter.</li>
+</ul>
+<div class="codehilite"><pre><span></span><code><span class="c1">// write letter to compressed array</span>
+<span class="w">      </span><span class="n">chars</span><span class="p">[</span><span class="n">ans</span><span class="o">++</span><span class="p">]</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">letter</span><span class="p">;</span>
+
+<span class="w">      </span><span class="c1">// if count is greater than 1, write count as string to compressed array</span>
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">count</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="c1">// convert count to string and iterate over each character in string</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">final</span><span class="w"> </span><span class="nb">char</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">String</span><span class="p">.</span><span class="n">valueOf</span><span class="p">(</span><span class="n">count</span><span class="p">).</span><span class="n">toCharArray</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="n">chars</span><span class="p">[</span><span class="n">ans</span><span class="o">++</span><span class="p">]</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">c</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">      </span><span class="p">}</span>
+</code></pre></div>
+
+<ul>
+<li>Finally, return the length of the compressed array, which is equal to the position of the last character in the compressed array plus one.</li>
+</ul>
+<div class="codehilite"><pre><span></span><code><span class="k">return</span><span class="w"> </span><span class="nv">ans</span><span class="c1">;//return length of compressed array</span>
+</code></pre></div>
+
+<!-- Describe your approach to solving the problem. -->
+
+<h2>Complexity :</h2>
+<ul>
+<li>Time complexity : O(n)</li>
+</ul>
+<!-- Add your time complexity here, e.g. $$O(n)$$ -->
+
+<ul>
+<li>Space complexity : O(1)</li>
+</ul>
+<!-- Add your space complexity here, e.g. $$O(n)$$ -->
+
+<h2>Please Upvote</h2>
+<div class="codehilite"><pre><span></span><code><span class="nv">Thanks</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="nv">visiting</span><span class="w"> </span><span class="nv">my</span><span class="w"> </span><span class="nv">solution</span>.
+</code></pre></div>
+
+<p><em>Let's Code it Up .<br />
+There may be minor syntax difference in C++ and Python</em></p>
+<h2>Codes [C++ |Java |Python3] : With Comments</h2>
+<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">C</span><span class="o">++</span><span class="w"> </span>
+<span class="n">class</span><span class="w"> </span><span class="n">Solution</span><span class="w"> </span><span class="p">{</span>
+<span class="n">public</span><span class="o">:</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">compress</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">char</span><span class="o">&gt;&amp;</span><span class="w"> </span><span class="n">chars</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">ans</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+
+<span class="w">        </span><span class="c1">// iterate through input vector using i pointer</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">chars</span><span class="p">.</span><span class="n">size</span><span class="p">();)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="n">letter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">chars</span><span class="p">[</span><span class="n">i</span><span class="p">];</span><span class="w"> </span><span class="c1">// current character being compressed</span>
+<span class="w">            </span><span class="kt">int</span><span class="w"> </span><span class="n">count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="c1">// count of consecutive occurrences of letter</span>
+
+<span class="w">            </span><span class="c1">// count consecutive occurrences of letter in input vector</span>
+<span class="w">            </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">chars</span><span class="p">.</span><span class="n">size</span><span class="p">()</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">chars</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">letter</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="o">++</span><span class="n">count</span><span class="p">;</span>
+<span class="w">                </span><span class="o">++</span><span class="n">i</span><span class="p">;</span>
+<span class="w">            </span><span class="p">}</span>
+
+<span class="w">            </span><span class="c1">// write letter to compressed vector</span>
+<span class="w">            </span><span class="n">chars</span><span class="p">[</span><span class="n">ans</span><span class="o">++</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">letter</span><span class="p">;</span>
+
+<span class="w">            </span><span class="c1">// if count is greater than 1, write count as string to compressed vector</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">count</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="c1">// convert count to string and iterate over each character in string</span>
+<span class="w">                </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">to_string</span><span class="p">(</span><span class="n">count</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="n">chars</span><span class="p">[</span><span class="n">ans</span><span class="o">++</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">c</span><span class="p">;</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="c1">// return length of compressed vector</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">ans</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">};</span>
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">Java</span><span class="w"> </span>
+<span class="kd">class</span> <span class="nc">Solution</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kd">public</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="nf">compress</span><span class="p">(</span><span class="kt">char</span><span class="w"> </span><span class="n">chars</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">ans</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="c1">// keep track of current position in compressed array</span>
+
+<span class="w">    </span><span class="c1">// iterate through input array using i pointer</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">chars</span><span class="p">.</span><span class="na">length</span><span class="p">;)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="kd">final</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="n">letter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">chars</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="c1">// current character being compressed</span>
+<span class="w">      </span><span class="kt">int</span><span class="w"> </span><span class="n">count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="c1">// count of consecutive occurrences of letter</span>
+
+<span class="w">      </span><span class="c1">// count consecutive occurrences of letter in input array</span>
+<span class="w">      </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">chars</span><span class="p">.</span><span class="na">length</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">chars</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">letter</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="o">++</span><span class="n">count</span><span class="p">;</span>
+<span class="w">        </span><span class="o">++</span><span class="n">i</span><span class="p">;</span>
+<span class="w">      </span><span class="p">}</span>
+
+<span class="w">      </span><span class="c1">// write letter to compressed array</span>
+<span class="w">      </span><span class="n">chars</span><span class="o">[</span><span class="n">ans</span><span class="o">++]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">letter</span><span class="p">;</span>
+
+<span class="w">      </span><span class="c1">// if count is greater than 1, write count as string to compressed array</span>
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">count</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="c1">// convert count to string and iterate over each character in string</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kd">final</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">String</span><span class="p">.</span><span class="na">valueOf</span><span class="p">(</span><span class="n">count</span><span class="p">).</span><span class="na">toCharArray</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="n">chars</span><span class="o">[</span><span class="n">ans</span><span class="o">++]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">c</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="c1">// return length of compressed array</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">ans</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code><span class="n">Language</span><span class="p">:</span> <span class="n">Python3</span> 
+<span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="p">:</span>
+  <span class="k">def</span><span class="w"> </span><span class="nf">compress</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">chars</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+    <span class="n">ans</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="k">while</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">chars</span><span class="p">):</span>
+      <span class="n">letter</span> <span class="o">=</span> <span class="n">chars</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+      <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
+      <span class="k">while</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">chars</span><span class="p">)</span> <span class="ow">and</span> <span class="n">chars</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="n">letter</span><span class="p">:</span>
+        <span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+      <span class="n">chars</span><span class="p">[</span><span class="n">ans</span><span class="p">]</span> <span class="o">=</span> <span class="n">letter</span>
+      <span class="n">ans</span> <span class="o">+=</span> <span class="mi">1</span>
+      <span class="k">if</span> <span class="n">count</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">str</span><span class="p">(</span><span class="n">count</span><span class="p">):</span>
+          <span class="n">chars</span><span class="p">[</span><span class="n">ans</span><span class="p">]</span> <span class="o">=</span> <span class="n">c</span>
+          <span class="n">ans</span> <span class="o">+=</span> <span class="mi">1</span>
+
+    <span class="k">return</span> <span class="n">ans</span>
+</code></pre></div>
+
+<h2>Please Upvote</h2>
+<p></p></div><p style="page-break-before: always" ></p>

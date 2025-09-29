@@ -1,0 +1,125 @@
+<div class='cpp-solution'><h2>✅ [C++]Easy solution with explaination in O(n) time complexity (BEATS 97%) ✅ -- Votes: 490</h2><p>Exciting News! Join my Coding Journey! Subscribe Now!</p>
+<p>Link in the leetcode profile</p>
+<p>New coding channel alert! Subscribe to unlock amazing coding content and tutorials. Help me reach 1K subs to start posting more videos! Join now!</p>
+<p>Thanks for your support!</p>
+<h2>Intuition</h2>
+<p>Here we will apply greedy approach</p>
+<h2>Approach</h2>
+<p>In the question given that<br />
+<strong>If there exists a solution, it is guaranteed to be unique</strong><br />
+-This lines clearly tells us that we have unique or no solution exists</p>
+<p><em>Here two cases are possible</em></p>
+<ol>
+<li>if our <strong>total_gas is less than our total cost</strong> in that case we can't complete our journey ,so will return -1</li>
+<li>Now we have a unique solution that means single <strong>starting_point</strong> exists</li>
+<li>To find that point we will <strong>keep track of my current_gas+=gas[i]-cost[i]</strong></li>
+</ol>
+<ul>
+<li>lets suppose at any index our current gas became negative so we can clearly say that till that index all the gas station between ith and starting point are bad, starting point as well.<br />
+  So, this means we can start trying at next gas_station on the i+1 station</li>
+</ul>
+<h2>Complexity</h2>
+<ul>
+<li>Time complexity:O(N)</li>
+<li>Space complexity:O(1)</li>
+</ul>
+<h2>Code(C++)</h2>
+<div class="codehilite"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="n">Solution</span><span class="w"> </span><span class="err">{</span>
+<span class="k">public</span><span class="err">:</span>
+<span class="w">    </span><span class="nc">int</span><span class="w"> </span><span class="n">canCompleteCircuit</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="nc">int</span><span class="o">&gt;&amp;</span><span class="w"> </span><span class="n">gas</span><span class="p">,</span><span class="w"> </span><span class="n">vector</span><span class="o">&lt;</span><span class="nc">int</span><span class="o">&gt;&amp;</span><span class="w"> </span><span class="n">cost</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
+<span class="w">        </span><span class="nc">int</span><span class="w"> </span><span class="n">n</span><span class="o">=</span><span class="n">gas</span><span class="p">.</span><span class="k">size</span><span class="p">();</span>
+<span class="w">        </span><span class="nc">int</span><span class="w"> </span><span class="n">total_gas</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="n">total_cost</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>
+<span class="w">        </span><span class="nc">int</span><span class="w"> </span><span class="n">curr_gas</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">starting_point</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>
+<span class="w">        </span><span class="k">for</span><span class="p">(</span><span class="nc">int</span><span class="w"> </span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">n</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">)</span>
+<span class="w">        </span><span class="err">{</span>
+<span class="w">            </span><span class="o">//</span><span class="n">these</span><span class="w"> </span><span class="n">two</span><span class="w"> </span><span class="k">variable</span><span class="w"> </span><span class="k">are</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="k">check</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="k">no</span><span class="w"> </span><span class="k">case</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="n">possible</span>
+<span class="w">            </span><span class="n">total_gas</span><span class="o">+=</span><span class="n">gas</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="p">;</span>
+<span class="w">            </span><span class="n">total_cost</span><span class="o">+=</span><span class="n">cost</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="p">;</span>
+<span class="w">            </span><span class="o">//</span><span class="k">for</span><span class="w"> </span><span class="n">checking</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">total</span><span class="w"> </span><span class="n">present</span><span class="w"> </span><span class="n">gas</span><span class="w"> </span><span class="k">at</span><span class="w"> </span><span class="k">index</span><span class="w"> </span><span class="n">i</span>
+<span class="w">            </span><span class="n">curr_gas</span><span class="o">+=</span><span class="n">gas</span><span class="o">[</span><span class="n">i</span><span class="o">]-</span><span class="n">cost</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="p">;</span>
+<span class="w">            </span><span class="k">if</span><span class="p">(</span><span class="n">curr_gas</span><span class="o">&lt;</span><span class="mi">0</span><span class="p">)</span>
+<span class="w">            </span><span class="err">{</span>
+<span class="w">               </span><span class="o">//</span><span class="n">there</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">breakdown</span><span class="p">....</span><span class="n">so</span><span class="w"> </span><span class="n">we</span><span class="w"> </span><span class="n">will</span><span class="w"> </span><span class="k">start</span><span class="w"> </span><span class="k">from</span><span class="w"> </span><span class="k">next</span><span class="w"> </span><span class="n">point</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="k">index</span>
+<span class="w">                </span><span class="n">starting_point</span><span class="o">=</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">;</span>
+<span class="w">                </span><span class="o">//</span><span class="n">reset</span><span class="w"> </span><span class="n">our</span><span class="w"> </span><span class="n">fuel</span><span class="w"> </span>
+<span class="w">                </span><span class="n">curr_gas</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>
+<span class="w">            </span><span class="err">}</span>
+<span class="w">        </span><span class="err">}</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="p">(</span><span class="n">total_gas</span><span class="o">&lt;</span><span class="n">total_cost</span><span class="p">)</span><span class="vm">?</span><span class="o">-</span><span class="mi">1</span><span class="err">:</span><span class="n">starting_point</span><span class="p">;</span><span class="w">     </span>
+<span class="w">    </span><span class="err">}</span>
+<span class="err">}</span><span class="p">;</span>
+</code></pre></div>
+
+<p>If you really found my solution helpful <strong>please upvote it</strong>, as it motivates me to post such kind of codes.<br />
+Lets connect on <a href="https://www.linkedin.com/in/mahesh-vishnoi-a4a47a193/">Linkdin</a> Or <a href="https://t.me/mahesh_vishnoi29">Telegram</a></p></div>
+
+
+<div class='python-solution'><h2>Solution -- Votes: 220</h2><div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">C</span><span class="o">++</span><span class="w"> </span>
+<span class="n">class</span><span class="w"> </span><span class="n">Solution</span><span class="w"> </span><span class="p">{</span>
+<span class="n">public</span><span class="o">:</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">canCompleteCircuit</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&amp;</span><span class="w"> </span><span class="n">gas</span><span class="p">,</span><span class="w"> </span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&amp;</span><span class="w"> </span><span class="n">cost</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">ios_base</span><span class="o">::</span><span class="n">sync_with_stdio</span><span class="p">(</span><span class="nb">false</span><span class="p">);</span>
+<span class="w">        </span><span class="n">cin</span><span class="p">.</span><span class="n">tie</span><span class="p">(</span><span class="nb">NULL</span><span class="p">);</span>
+<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cost</span><span class="p">.</span><span class="n">size</span><span class="p">(),</span><span class="w"> </span><span class="n">bal</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">start</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">deficit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+
+<span class="w">        </span><span class="k">for</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">&lt;</span><span class="w"> </span><span class="n">n</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">){</span>
+<span class="w">            </span><span class="n">bal</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">gas</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">cost</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+
+<span class="w">            </span><span class="k">if</span><span class="p">(</span><span class="n">bal</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">0</span><span class="p">){</span>
+
+<span class="w">                </span><span class="n">deficit</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">bal</span><span class="p">;</span>
+<span class="w">                </span><span class="n">start</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">;</span>
+<span class="w">                </span><span class="n">bal</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">bal</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">deficit</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">start</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="mi">-1</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">};</span>
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code><span class="n">Language</span><span class="p">:</span> <span class="n">Python3</span> 
+<span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">canCompleteCircuit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gas</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">cost</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">sum</span><span class="p">(</span><span class="n">gas</span><span class="p">)</span> <span class="o">&lt;</span> <span class="nb">sum</span><span class="p">(</span><span class="n">cost</span><span class="p">):</span> <span class="k">return</span> <span class="o">-</span><span class="mi">1</span>
+        <span class="n">tank</span> <span class="o">=</span> <span class="n">idx</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">gas</span><span class="p">)):</span>
+            <span class="n">tank</span><span class="o">+=</span> <span class="n">gas</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">-</span><span class="n">cost</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> 
+            <span class="k">if</span> <span class="n">tank</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span> <span class="n">tank</span><span class="p">,</span> <span class="n">idx</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">i</span><span class="o">+</span><span class="mi">1</span>
+        <span class="k">return</span> <span class="n">idx</span> 
+
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;cost: </span><span class="si">{</span><span class="n">cost</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;gas: </span><span class="si">{</span><span class="n">gas</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">tank</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">cost</span><span class="p">)):</span>
+            <span class="c1"># find where we can start</span>
+            <span class="k">if</span> <span class="n">cost</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">gas</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">+</span><span class="n">tank</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="n">start</span> <span class="o">=</span> <span class="n">i</span>    
+            <span class="n">tank</span> <span class="o">+=</span> <span class="n">gas</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;tank&quot;</span><span class="p">,</span> <span class="n">tank</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">start</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">cost</span><span class="p">)):</span>
+                <span class="k">if</span> <span class="n">cost</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">gas</span><span class="p">[</span><span class="n">i</span><span class="p">]:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;inside&quot;</span><span class="p">,</span> <span class="n">j</span><span class="p">)</span>
+        <span class="k">return</span> <span class="o">-</span><span class="mi">1</span>
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">Java</span><span class="w"> </span>
+<span class="kd">class</span> <span class="nc">Solution</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="nf">canCompleteCircuit</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">gas</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">cost</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">sGas</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">sCost</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">res</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">total</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">gas</span><span class="p">.</span><span class="na">length</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">sGas</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">gas</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="p">;</span>
+<span class="w">            </span><span class="n">sCost</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">cost</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">sGas</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">sCost</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">gas</span><span class="p">.</span><span class="na">length</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">total</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">gas</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">cost</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="p">;</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">total</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">total</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">                </span><span class="n">res</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">res</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div><p style="page-break-before: always" ></p>

@@ -1,0 +1,50 @@
+<div class='cpp-solution'><h2>[C++] DFS clean solution [ T : 89%, M : 80% ] -- Votes: 263</h2><p><strong><em>Please upvote if you found the post helpful :)</em></strong><br />
+Shoutout to @prateeksharma.</p>
+<div class="codehilite"><pre><span></span><code><span class="nt">class</span><span class="w"> </span><span class="nt">Solution</span><span class="w"> </span><span class="p">{</span>
+<span class="n">public</span><span class="p">:</span>
+<span class="w">    </span><span class="n">int</span><span class="w"> </span><span class="n">ans</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>
+<span class="w">    </span><span class="err">int</span><span class="w"> </span><span class="err">pathSum(TreeNode*</span><span class="w"> </span><span class="err">root,</span><span class="w"> </span><span class="err">int</span><span class="w"> </span><span class="err">sum)</span><span class="w"> </span><span class="err">{</span>
+<span class="w">        </span><span class="err">if(root){</span>
+<span class="w">            </span><span class="err">dfs(root,sum)</span><span class="p">;</span>
+<span class="w">            </span><span class="err">pathSum(root-&gt;left,sum)</span><span class="p">;</span>
+<span class="w">            </span><span class="err">pathSum(root-&gt;right,sum)</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="nt">return</span><span class="w"> </span><span class="nt">ans</span><span class="o">;</span>
+<span class="w">    </span><span class="err">}</span>
+<span class="w">    </span><span class="nt">void</span><span class="w"> </span><span class="nt">dfs</span><span class="o">(</span><span class="nt">TreeNode</span><span class="o">*</span><span class="w"> </span><span class="nt">root</span><span class="o">,</span><span class="w"> </span><span class="nt">int</span><span class="w"> </span><span class="nt">sum</span><span class="o">)</span><span class="p">{</span>
+<span class="w">        </span><span class="err">if(!root)return</span><span class="p">;</span>
+<span class="w">        </span><span class="err">if(root-&gt;val==sum)ans++</span><span class="p">;</span>
+<span class="w">        </span><span class="err">dfs(root-&gt;left,sum-root-&gt;val)</span><span class="p">;</span>
+<span class="w">        </span><span class="err">dfs(root-&gt;right,sum-root-&gt;val)</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="err">}</span><span class="o">;</span>
+</code></pre></div></div>
+
+
+<div class='python-solution'><h2>[Python] One-pass DFS, faster than 99% -- Votes: 69</h2><p>Please feel free to give suggestions or ask questions. <strong>Upvote</strong> if you like the solution.<br />
+O(h) space if we delete zero-valued items from sums.</p>
+<p><strong>Idea</strong>: Maintain prefix sums while doing dfs from root to leaf. If currentSum-prefixSum=targetSum, then we've found a path that has a value of target. If we encountered prefixSum n times, then we've found n such paths.</p>
+<div class="codehilite"><pre><span></span><code><span class="n">def</span><span class="w"> </span><span class="n">pathSum</span><span class="p">(</span><span class="n">self</span><span class="p">,</span><span class="w"> </span><span class="nl">root</span><span class="p">:</span><span class="w"> </span><span class="n">Optional</span><span class="o">[</span><span class="n">TreeNode</span><span class="o">]</span><span class="p">,</span><span class="w"> </span><span class="nl">targetSum</span><span class="p">:</span><span class="w"> </span><span class="nc">int</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="nc">int</span><span class="err">:</span>
+
+<span class="w">    </span><span class="err">#</span><span class="w"> </span><span class="k">prefix</span><span class="w"> </span><span class="n">sums</span><span class="w"> </span><span class="n">encountered</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="k">current</span><span class="w"> </span><span class="k">path</span>
+<span class="w">    </span><span class="n">sums</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">defaultdict</span><span class="p">(</span><span class="nc">int</span><span class="p">)</span>
+<span class="w">    </span><span class="n">sums</span><span class="o">[</span><span class="n">0</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span>
+
+<span class="w">    </span><span class="n">def</span><span class="w"> </span><span class="n">dfs</span><span class="p">(</span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="n">total</span><span class="p">)</span><span class="err">:</span>
+<span class="w">        </span><span class="nf">count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="nl">root</span><span class="p">:</span>
+<span class="w">            </span><span class="n">total</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">root</span><span class="p">.</span><span class="n">val</span>
+<span class="w">            </span><span class="err">#</span><span class="w"> </span><span class="n">Can</span><span class="w"> </span><span class="n">remove</span><span class="w"> </span><span class="n">sums</span><span class="o">[</span><span class="n">currSum-targetSum</span><span class="o">]</span><span class="w"> </span><span class="n">prefixSums</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="n">target</span>
+<span class="w">            </span><span class="nf">count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sums</span><span class="o">[</span><span class="n">total-targetSum</span><span class="o">]</span>
+
+<span class="w">            </span><span class="err">#</span><span class="w"> </span><span class="k">Add</span><span class="w"> </span><span class="k">value</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">this</span><span class="w"> </span><span class="n">prefixSum</span>
+<span class="w">            </span><span class="n">sums</span><span class="o">[</span><span class="n">total</span><span class="o">]</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">            </span><span class="err">#</span><span class="w"> </span><span class="n">Explore</span><span class="w"> </span><span class="n">children</span>
+<span class="w">            </span><span class="nf">count</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">dfs</span><span class="p">(</span><span class="n">root</span><span class="p">.</span><span class="nf">left</span><span class="p">,</span><span class="w"> </span><span class="n">total</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">dfs</span><span class="p">(</span><span class="n">root</span><span class="p">.</span><span class="nf">right</span><span class="p">,</span><span class="w"> </span><span class="n">total</span><span class="p">)</span>
+<span class="w">            </span><span class="err">#</span><span class="w"> </span><span class="n">Remove</span><span class="w"> </span><span class="k">value</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">this</span><span class="w"> </span><span class="n">prefixSum</span><span class="w"> </span><span class="p">(</span><span class="k">path</span><span class="err">&#39;</span><span class="n">s</span><span class="w"> </span><span class="n">been</span><span class="w"> </span><span class="n">explored</span><span class="p">)</span>
+<span class="w">            </span><span class="n">sums</span><span class="o">[</span><span class="n">total</span><span class="o">]</span><span class="w"> </span><span class="o">-=</span><span class="w"> </span><span class="mi">1</span>
+
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="nf">count</span>
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">dfs</span><span class="p">(</span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+</code></pre></div></div><p style="page-break-before: always" ></p>

@@ -1,0 +1,126 @@
+<div class='cpp-solution'><h2>✅ 3 Line Code Very Easy C++ Solution ✅ -- Votes: 514</h2><h2>Intuition</h2>
+<!-- Describe your first thoughts on how to solve this problem. -->
+
+<h2>Approach</h2>
+<!-- Describe your approach to solving the problem. -->
+
+<h2>Complexity</h2>
+<ul>
+<li>Time complexity:</li>
+</ul>
+<!-- Add your time complexity here, e.g. $$O(n)$$ -->
+
+<ul>
+<li>Space complexity:</li>
+</ul>
+<!-- Add your space complexity here, e.g. $$O(n)$$ -->
+
+<h2>Code</h2>
+<div class="codehilite"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="n">Solution</span><span class="w"> </span><span class="err">{</span>
+<span class="k">public</span><span class="err">:</span>
+<span class="w">    </span><span class="nc">int</span><span class="w"> </span><span class="n">minCostClimbingStairs</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="nc">int</span><span class="o">&gt;&amp;</span><span class="w"> </span><span class="n">cost</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
+<span class="w">        </span><span class="nc">int</span><span class="w"> </span><span class="n">n</span><span class="o">=</span><span class="n">cost</span><span class="p">.</span><span class="k">size</span><span class="p">();</span>
+<span class="w">        </span><span class="k">for</span><span class="p">(</span><span class="nc">int</span><span class="w"> </span><span class="n">i</span><span class="o">=</span><span class="mi">2</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">n</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">)</span>
+<span class="w">        </span><span class="err">{</span>
+<span class="w">            </span><span class="n">cost</span><span class="o">[</span><span class="n">i</span><span class="o">]+=</span><span class="nf">min</span><span class="p">(</span><span class="n">cost</span><span class="o">[</span><span class="n">i-1</span><span class="o">]</span><span class="p">,</span><span class="n">cost</span><span class="o">[</span><span class="n">i-2</span><span class="o">]</span><span class="p">);</span>
+<span class="w">        </span><span class="err">}</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="nf">min</span><span class="p">(</span><span class="n">cost</span><span class="o">[</span><span class="n">n-1</span><span class="o">]</span><span class="p">,</span><span class="n">cost</span><span class="o">[</span><span class="n">n-2</span><span class="o">]</span><span class="p">);</span>
+<span class="w">    </span><span class="err">}</span>
+<span class="err">}</span><span class="p">;</span>
+</code></pre></div>
+
+<p></p></div>
+
+
+<div class='python-solution'><h2>A Beginner's Guide on DP validation & How to come up with a Recursive solution [Python 3] -- Votes: 493</h2><h4>Section 1: DP Validation</h4>
+<p>Our first question should be: <strong>Is Dynamic Programming (DP) suitable for this question?</strong></p>
+<p>In its essence, DP is just <strong>doing brute force recursion smartly</strong>, so we should first check if the question can be done <strong>recursively</strong> (whether we can break it down into <strong>smaller subproblems</strong>)</p>
+<p>Then, to check if we can apply DP, we look at 2 distinct properties of DP:</p>
+<ol>
+<li><strong>Overlapping subproblems</strong>: Does finding the solution require us to calculate the same subproblem multiple times?</li>
+<li><strong>Optimal Substructure Property</strong>: Can the optimal solution be constructed from the optimal solutions of its subproblems? (Are the subproblems independent from each other?</li>
+</ol>
+<p><strong>Thought Process</strong><br />
+We can use recursion to solve the problem because we can break it into smaller subproblems:</p>
+<ul>
+<li>If we want to know the <strong>min cost to reach stair #n</strong>, It will be tremendously helpful to know the <strong>min cost to reach step #n-1</strong> and <strong>step #n-2</strong> (because we can reach step #n in one step from them)</li>
+</ul>
+<p>Now that we know we can use recursion, should we use DP? Let's check if the question contains the two properties that I mentioned above</p>
+<ol>
+<li><strong>Overlapping Subproblems</strong>:</li>
+</ol>
+<ul>
+<li>minCost(n) will be the short form of min cost to reach stair #n</li>
+<li>We know that minCost(n) depends on minCost(n-1) and <strong>minCost(n-2)</strong>, then by the same logic minCost(n-1) depends on <strong>minCost(n-2)</strong> and minCost(n-3).</li>
+<li>Notice that we have the same expression twice (bolded), this shows that <strong>we have overlapping subproblems!</strong></li>
+</ul>
+<ol>
+<li><strong>Optimal Substructure Property</strong></li>
+</ol>
+<ul>
+<li>let's take cost = [4,2,3] for example, what's minCost(3)?</li>
+<li>To reach stair #3, we have to start from either stair #1 or #2, since we want to minimize cost so we choose stair #2 (2 &lt; 4) and climb one step to reach #3</li>
+<li>To reach stair #2, since we can choose to start at #2 (step with index 1), it's already the optimal solution.</li>
+<li>We see that the optimal solution of one subproblem leads up to the optimal solution of the problem, therefore <strong>this property is present!</strong></li>
+</ul>
+<p>After we have both properties fulfilled, we know that we can tackle this problem using DP with confidence!</p>
+<p>..............................................................</p>
+<h4>Section 2: How to come up with a recursive solution?</h4>
+<p>The key to solving any DP problem is to <strong>identify a recursive solution</strong>, then we can identify the overlapping subproblems and then apply <strong>memoization (top-down)</strong> or <strong>tabulation (bottom-up)</strong> methods to optimize based of the recursive solution</p>
+<p>Below is a strategy we can use to find a recursive solution</p>
+<ol>
+<li><strong>Identify what variable is changing between each subproblem</strong></li>
+<li><strong>Create the recursive function based on #1 and clearly defines its meaning</strong></li>
+<li><strong>State transition formula (Find a formula that connects a problem to its subproblems)</strong></li>
+<li><strong>Define the base cases of recursion</strong></li>
+</ol>
+<p><strong>Walkthrough</strong></p>
+<ol>
+<li><strong>Changing Variables:</strong><br />
+   - From the problem, we can see that there are 2 changing variables<br />
+   - index of the current stair (stair #n)<br />
+   - minimum cost to reach the current stair</li>
+<li><strong>Create function:</strong><br />
+   - We can associate the 2 variables together by creating a function minCost(n), where n is the index of the current stair, and minCost(n) represents the min cost to reach stair #n<br />
+   - This is the same function that we came up with in section 1 based on pure intuition</li>
+<li><strong>Get State transition formula:</strong><br />
+   - Get a formula to connect a problem to its subproblems, we first check what is moving the problem forward. By reading the problem, we see that the key info is that <strong>you can either climb one or two steps.</strong><br />
+   - Based of this info, we know that minCost(n) has strong relationship to minCost(n-1) and minCost(n-2), because you can reach n from both n-1 and n-2 stairs<br />
+   - Keep reading the question, we see that we should <strong>pay the cost at each stair</strong> and <strong>get minimum cost</strong>, so the relationship between them becomes clear as shown below<br />
+   - minCost(n) = cost[n] + min(minCost(n-1), minCost(n-2))</li>
+<li><strong>Define base cases:</strong><br />
+   - This part is easy, from the problem statement we know we can start from either stair index 0 or index 1<br />
+   - So base cases would be the first 2 stairs. minCost(0) = cost[0] and minCost(1) = cost[1]</li>
+</ol>
+<p>With all the above info, it's easy to construct a recursive solution as shown below:</p>
+<div class="codehilite"><pre><span></span><code><span class="w"> </span><span class="n">def</span><span class="w"> </span><span class="n">minCostClimbingStairs</span><span class="p">(</span><span class="n">self</span><span class="p">,</span><span class="w"> </span><span class="nl">cost</span><span class="p">:</span><span class="w"> </span><span class="n">List</span><span class="o">[</span><span class="n">int</span><span class="o">]</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="nc">int</span><span class="err">:</span>
+<span class="w">        </span><span class="err">#</span><span class="w"> </span><span class="n">identify</span><span class="w"> </span><span class="n">what</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="n">changing</span><span class="w"> </span><span class="k">from</span><span class="w"> </span><span class="n">subproblems</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="nl">subproblems</span><span class="p">:</span><span class="w"> </span>
+<span class="w">        </span><span class="err">#</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">step</span><span class="w"> </span><span class="n">#n</span><span class="w">    </span><span class="n">dp</span><span class="p">(</span><span class="n">n</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nf">min</span><span class="w"> </span><span class="n">cost</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="n">step</span><span class="w"> </span><span class="n">#n</span><span class="w"> </span>
+<span class="w">        </span><span class="n">def</span><span class="w"> </span><span class="n">dp</span><span class="p">(</span><span class="n">n</span><span class="p">)</span><span class="err">:</span><span class="w">  </span>
+<span class="w">            </span><span class="err">#</span><span class="w"> </span><span class="k">write</span><span class="w"> </span><span class="n">down</span><span class="w"> </span><span class="n">base</span><span class="w"> </span><span class="n">cases</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">2</span><span class="err">:</span><span class="w"> </span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="n">cost</span><span class="o">[</span><span class="n">n</span><span class="o">]</span><span class="w"> </span>
+<span class="w">            </span><span class="err">#</span><span class="w"> </span><span class="k">write</span><span class="w"> </span><span class="k">recursive</span><span class="w"> </span><span class="k">function</span><span class="w"> </span><span class="n">based</span><span class="w"> </span><span class="k">on</span><span class="w"> </span><span class="n">what</span><span class="w"> </span><span class="n">you</span><span class="w"> </span><span class="n">can</span><span class="w"> </span><span class="n">change</span><span class="w"> </span><span class="p">(</span><span class="n">climb</span><span class="w"> </span><span class="n">one</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="n">two</span><span class="w"> </span><span class="n">steps</span><span class="p">)</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="n">cost</span><span class="o">[</span><span class="n">n</span><span class="o">]</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nf">min</span><span class="p">(</span><span class="n">dp</span><span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span><span class="w"> </span><span class="n">dp</span><span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">2</span><span class="p">))</span>
+
+<span class="w">        </span><span class="err">#</span><span class="w"> </span><span class="n">since</span><span class="w"> </span><span class="n">we</span><span class="w"> </span><span class="n">want</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="n">know</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="nf">min</span><span class="w"> </span><span class="n">cost</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">final</span><span class="w"> </span><span class="n">step</span><span class="p">,</span><span class="w"> </span><span class="n">we</span><span class="w"> </span><span class="k">use</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">code</span><span class="w"> </span><span class="n">below</span><span class="w"> </span>
+<span class="w">        </span><span class="n">length</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">len</span><span class="p">(</span><span class="n">cost</span><span class="p">)</span><span class="w"> </span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="nf">min</span><span class="p">(</span><span class="n">dp</span><span class="p">(</span><span class="n">length</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span><span class="w"> </span><span class="n">dp</span><span class="p">(</span><span class="n">length</span><span class="o">-</span><span class="mi">2</span><span class="p">))</span>
+</code></pre></div>
+
+<p>..............................................................</p>
+<h4>Section 3: Extra</h4>
+<ul>
+<li>
+<p>To see how to use DP techniques (top-down, bottom-up) to make recursion more efficient, check out https://leetcode.com/problems/min-cost-climbing-stairs/discuss/476388/4-ways-or-Step-by-step-from-Recursion-greater-top-down-DP-greater-bottom-up-DP-greater-fine-tuning</p>
+</li>
+<li>
+<p>Please leave a comment to let me know any confusion or feedback :)</p>
+</li>
+<li>
+<p>This problem took me a while to understand, and I wish to share the thought process for the first few very important parts</p>
+</li>
+<li>
+<p>Thank you for reading, have a nice day!</p>
+</li>
+</ul></div><p style="page-break-before: always" ></p>

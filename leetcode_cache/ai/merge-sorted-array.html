@@ -1,0 +1,92 @@
+<div class='ai-explanation'><h3>Explanation of Approaches</h3>
+<p>The problem asks us to merge two sorted arrays, <code>nums2</code> into <code>nums1</code>, in-place. <code>nums1</code> has enough space allocated at its end to hold all elements from <code>nums2</code>. Two main approaches are presented in the solutions.</p>
+<h4>Approach 1: Copy and Sort</h4>
+<p>This is a simple and intuitive approach.
+1.  First, copy all the elements from <code>nums2</code> into the trailing zero-filled part of <code>nums1</code>.
+2.  Then, use a built-in sorting algorithm to sort the entire <code>nums1</code> array.</p>
+<ul>
+<li><strong>Time Complexity:</strong> <strong>O((m+n) log(m+n))</strong>
+    The copy operation takes O(n) time. The main cost is the sorting operation, which for an array of size <code>m+n</code>, is typically O((m+n) log(m+n)).</li>
+<li><strong>Space Complexity:</strong> <strong>O(1)</strong>
+    The merge is done in-place. The space used by the sorting algorithm is typically logarithmic (for the recursion stack) or constant, and is often considered O(1) auxiliary space in this context.</li>
+</ul>
+<p>This method is easy to implement but doesn't take advantage of the fact that the initial arrays are already sorted, leading to a suboptimal time complexity.</p>
+<h4>Approach 2: Two Pointers (from the end)</h4>
+<p>This is the optimal approach, as it leverages the sorted nature of the arrays and the available space at the end of <code>nums1</code>. A naive merge from the beginning would require shifting elements, which is inefficient. By filling <code>nums1</code> from the end, we avoid overwriting elements that we still need to read.</p>
+<ol>
+<li>Initialize three pointers:<ul>
+<li><code>i</code> points to the last valid element of <code>nums1</code> (<code>m-1</code>).</li>
+<li><code>j</code> points to the last element of <code>nums2</code> (<code>n-1</code>).</li>
+<li><code>k</code> points to the last position of the <code>nums1</code> array (<code>m+n-1</code>), which is where the largest element of the merged array will go.</li>
+</ul>
+</li>
+<li>Iterate backwards from the end of both arrays. In each step, compare <code>nums1[i]</code> and <code>nums2[j]</code>.</li>
+<li>Place the larger of the two elements at the <code>k</code>-th position in <code>nums1</code>.</li>
+<li>Decrement the pointer of the array from which the element was taken (<code>i</code> or <code>j</code>) and also decrement the write pointer <code>k</code>.</li>
+<li>
+<p>This process continues until all elements from <code>nums2</code> have been considered (<code>j</code> becomes less than 0). If there are still elements left in <code>nums1</code> (<code>i &gt;= 0</code>), they are already in their correct sorted positions at the beginning of the array, so no further action is needed.</p>
+</li>
+<li>
+<p><strong>Time Complexity:</strong> <strong>O(m + n)</strong>
+    We perform a single pass through the elements of both arrays.</p>
+</li>
+<li><strong>Space Complexity:</strong> <strong>O(1)</strong>
+    The operation is performed in-place using only three pointers, requiring no extra storage.</li>
+</ol>
+<p>This approach is the best solution due to its linear time complexity and constant space usage.</p>
+<h3>C++ Code for the Best Solution</h3>
+<p>```cpp</p>
+<h1>include <vector></h1>
+<p>class Solution {
+public:
+    void merge(std::vector<int>&amp; nums1, int m, std::vector<int>&amp; nums2, int n) {
+        // Pointer for the last element of the initial part of nums1
+        int i = m - 1; 
+        // Pointer for the last element of nums2
+        int j = n - 1; 
+        // Pointer for the last position in the merged nums1 array
+        int k = m + n - 1;</p>
+<pre><code>    // Merge in reverse order
+    while (j &gt;= 0) {
+        // If i is valid and nums1[i] is greater than nums2[j]
+        if (i &gt;= 0 &amp;&amp; nums1[i] &gt; nums2[j]) {
+            nums1[k] = nums1[i];
+            i--;
+        } else {
+            // Otherwise, take the element from nums2
+            nums1[k] = nums2[j];
+            j--;
+        }
+        k--;
+    }
+}
+</code></pre>
+<p>};
+```</p>
+<h3>Python Code for the Best Solution</h3>
+<p>```python
+from typing import List</p>
+<p>class Solution:
+    def merge(self, nums1: List[int], m: int, nums2: List[int], n: int) -&gt; None:
+        """
+        Do not return anything, modify nums1 in-place instead.
+        """
+        # Pointer for the last element of the initial part of nums1
+        p1 = m - 1
+        # Pointer for the last element of nums2
+        p2 = n - 1
+        # Pointer for the last position in the merged nums1 array
+        p = m + n - 1</p>
+<pre><code>    # Merge in reverse order
+    while p2 &gt;= 0:
+        # If p1 is valid and its element is greater than p2's element
+        if p1 &gt;= 0 and nums1[p1] &gt; nums2[p2]:
+            nums1[p] = nums1[p1]
+            p1 -= 1
+        else:
+            # Otherwise, take the element from nums2
+            nums1[p] = nums2[p2]
+            p2 -= 1
+        p -= 1
+</code></pre>
+<p>```</p></div><p style="page-break-before: always" ></p>

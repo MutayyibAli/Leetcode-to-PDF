@@ -1,0 +1,114 @@
+<div class='cpp-solution'><h2>✅ [C++]|one line|BEATS 100% Runtime||Explanation✅ -- Votes: 1658</h2><p>Let's Connect on <strong><em>*<a href="https://www.linkedin.com/in/mahesh-vishnoi-a4a47a193">LINKDIN</a></em></strong>*</p>
+<h2>Approach</h2>
+<ul>
+<li>str1+str2 == str2+str1 if and only if str1 and str2 have a gcd .</li>
+<li>E.g. str1=abcabc, str2=abc, then str1+str2 = abcabcabc = str2+str1<br />
+  This(str1+str2==str2+str1) is a requirement for the strings to <strong>have a gcd</strong>. If one of them is NOT a common part then gcd is "".It means we will return <strong>empty string</strong><br />
+<strong>Proof</strong>:-<code>str1 = mGCD, str2 = nGCD, str1 + str2 = (m + n)GCD = str2 + str1</code></li>
+<li>Both the strings are made of same substring added multiple times.</li>
+<li>Since they are multiples, next step is simply to find the gcd of the lengths of 2 strings e.g. gcd(6,3) = 3, (we can use gcd function to find that)and get the substring of length 3 from either str1 or str2.<br />
+  In c++ it will be <strong>str1.substr(0, gcd)</strong></li>
+</ul>
+<p></p>
+<h2>Code</h2>
+<div class="codehilite"><pre><span></span><code><span class="nt">class</span><span class="w"> </span><span class="nt">Solution</span><span class="w"> </span><span class="p">{</span>
+<span class="n">public</span><span class="p">:</span>
+<span class="w">    </span><span class="n">string</span><span class="w"> </span><span class="nf">gcdOfStrings</span><span class="p">(</span><span class="n">string</span><span class="w"> </span><span class="n">str1</span><span class="p">,</span><span class="w"> </span><span class="n">string</span><span class="w"> </span><span class="n">str2</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
+<span class="w">        </span><span class="n">return</span><span class="w"> </span><span class="p">(</span><span class="n">str1</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">str2</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">str2</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">str1</span><span class="p">)</span><span class="o">?</span><span class="w"> </span>
+<span class="w">        </span><span class="n">str1</span><span class="o">.</span><span class="nf">substr</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="nf">gcd</span><span class="p">(</span><span class="nf">size</span><span class="p">(</span><span class="n">str1</span><span class="p">),</span><span class="nf">size</span><span class="p">(</span><span class="n">str2</span><span class="p">)))</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;&quot;</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="err">}</span><span class="o">;</span>
+</code></pre></div>
+
+<p>If you really found my solution helpful <strong>please upvote it</strong>, as it motivates me to post such kind of codes.<br />
+<strong>Let me know in comment if i can do better.</strong><br />
+Let's Connect on <strong><a href="https://www.linkedin.com/in/mahesh-vishnoi-a4a47a193">LINKDIN</a></strong></p>
+<p></p></div>
+
+
+<div class='python-solution'><h2>🚀Super Easy Solution🚀||🔥Fully Explained🔥|| C++ || Python3 || Java -- Votes: 1038</h2><h2>Consider</h2>
+<div class="codehilite"><pre><span></span><code><span class="w">                    </span><span class="nv">Please</span><span class="w"> </span><span class="nv">Upvote</span><span class="w"> </span><span class="k">If</span><span class="w"> </span><span class="nv">You</span><span class="w"> </span><span class="nv">Find</span><span class="w"> </span><span class="nv">It</span><span class="w"> </span><span class="nv">Helpful</span>
+</code></pre></div>
+
+<h2>Intuition</h2>
+<!-- Describe your first thoughts on how to solve this problem. -->
+
+<div class="codehilite"><pre><span></span><code><span class="nv">First</span><span class="w"> </span><span class="nv">we</span><span class="w"> </span><span class="nv">check</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="nv">str1</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nv">str2</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nv">str2</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nv">str1</span>
+<span class="k">If</span><span class="w"> </span><span class="nv">it</span><span class="w"> </span><span class="nv">is</span><span class="w"> </span><span class="nv">equal</span><span class="w"> </span><span class="nv">than</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="nv">find</span><span class="w"> </span><span class="nv">the</span><span class="w"> </span><span class="nv">longest</span><span class="w"> </span><span class="nv">common</span><span class="w"> </span><span class="nv">substring</span>.
+<span class="nv">Otherwise</span><span class="w"> </span><span class="nv">we</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="s2">&quot;&quot;</span>.
+</code></pre></div>
+
+<h2>Approach</h2>
+<!-- Describe your approach to solving the problem. -->
+
+<div class="codehilite"><pre><span></span><code><span class="nv">Suppose</span><span class="w"> </span><span class="nv">str1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;ABCABC&quot;</span><span class="w"> </span><span class="nv">and</span><span class="w"> </span><span class="nv">str2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;ABC&quot;</span>
+<span class="nv">str1</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nv">str2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">ABCABCABC</span>
+<span class="nv">str2</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nv">str1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">ABCABCABC</span>
+<span class="nv">str1</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nv">str2</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nv">str2</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nv">str1</span>
+<span class="k">return</span><span class="w"> </span><span class="nv">str</span>.<span class="nv">substr</span><span class="ss">(</span><span class="mi">0</span>,<span class="w"> </span><span class="nv">gcd</span><span class="ss">(</span><span class="nv">size</span><span class="ss">(</span><span class="nv">str1</span><span class="ss">)</span>,<span class="w"> </span><span class="nv">gcd</span><span class="ss">(</span><span class="nv">size</span><span class="ss">(</span><span class="nv">str2</span><span class="ss">))))</span>
+<span class="nv">where</span><span class="w"> </span><span class="nv">gcd</span><span class="ss">(</span><span class="mi">3</span>,<span class="w"> </span><span class="mi">6</span><span class="ss">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">3</span>
+<span class="nv">So</span>,<span class="w"> </span><span class="nv">answer</span><span class="w"> </span><span class="nv">is</span><span class="w"> </span><span class="s2">&quot;ABC&quot;</span>
+
+<span class="nv">Also</span><span class="w"> </span><span class="nv">str1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;LEET&quot;</span>,<span class="w"> </span><span class="nv">str2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;CODE&quot;</span>
+<span class="nv">str1</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nv">str2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;LEETCODE&quot;</span>
+<span class="nv">str2</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nv">str1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;CODELEET&quot;</span>
+<span class="nv">So</span>,<span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
+</code></pre></div>
+
+<h2>Complexity</h2>
+<ul>
+<li>Time complexity: O(n)</li>
+</ul>
+<!-- Add your time complexity here, e.g. $$O(n)$$ -->
+
+<ul>
+<li>Space complexity: O(n)</li>
+</ul>
+<!-- Add your space complexity here, e.g. $$O(n)$$ -->
+
+<h2>Code</h2>
+<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">C</span><span class="o">++</span><span class="w"> </span>
+<span class="n">class</span><span class="w"> </span><span class="n">Solution</span><span class="w"> </span><span class="p">{</span>
+<span class="n">public</span><span class="o">:</span>
+<span class="w">    </span><span class="n">string</span><span class="w"> </span><span class="n">gcdOfStrings</span><span class="p">(</span><span class="n">string</span><span class="w"> </span><span class="n">str1</span><span class="p">,</span><span class="w"> </span><span class="n">string</span><span class="w"> </span><span class="n">str2</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="c1">// Check if concatenated strings are equal or not, if not return &quot;&quot;</span>
+<span class="w">        </span><span class="k">if</span><span class="p">(</span><span class="n">str1</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">str2</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">str2</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">str1</span><span class="p">)</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="s">&quot;&quot;</span><span class="p">;</span>
+<span class="w">        </span><span class="c1">// If strings are equal than return the substring from 0 to gcd of size(str1), size(str2)</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">str1</span><span class="p">.</span><span class="n">substr</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">gcd</span><span class="p">(</span><span class="n">str1</span><span class="p">.</span><span class="n">size</span><span class="p">(),</span><span class="w"> </span><span class="n">str2</span><span class="p">.</span><span class="n">size</span><span class="p">()));</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">};</span>
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code><span class="n">Language</span><span class="p">:</span> <span class="n">python</span> 
+<span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">gcdOfStrings</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">str1</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">str2</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="c1"># Check if concatenated strings are equal or not, if not return &quot;&quot;</span>
+        <span class="k">if</span> <span class="n">str1</span> <span class="o">+</span> <span class="n">str2</span> <span class="o">!=</span> <span class="n">str2</span> <span class="o">+</span> <span class="n">str1</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot;&quot;</span>
+        <span class="c1"># If strings are equal than return the substring from 0 to gcd of size(str1), size(str2)</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">math</span><span class="w"> </span><span class="kn">import</span> <span class="n">gcd</span>
+        <span class="k">return</span> <span class="n">str1</span><span class="p">[:</span><span class="n">gcd</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">str1</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">str2</span><span class="p">))]</span>
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">Java</span><span class="w"> </span>
+<span class="kd">class</span> <span class="nc">Solution</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="nf">gcdOfStrings</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">str1</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">str2</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="c1">// Check if concatenated strings are equal or not, if not return &quot;&quot;</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">str1</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">str2</span><span class="p">).</span><span class="na">equals</span><span class="p">(</span><span class="n">str2</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">str1</span><span class="p">))</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="s">&quot;&quot;</span><span class="p">;</span>
+<span class="w">        </span><span class="c1">// If strings are equal than return the substring from 0 to gcd of size(str1), size(str2)</span>
+<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">gcd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">gcd</span><span class="p">(</span><span class="n">str1</span><span class="p">.</span><span class="na">length</span><span class="p">(),</span><span class="w"> </span><span class="n">str2</span><span class="p">.</span><span class="na">length</span><span class="p">());</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">str1</span><span class="p">.</span><span class="na">substring</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">gcd</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="nf">gcd</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">b</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">gcd</span><span class="p">(</span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="n">b</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code>                            Give a . It motivates me alot
+</code></pre></div>
+
+<p>Let's Connect On <a href="https://www.linkedin.com/in/naman-agarwal-0551aa1aa/">Linkedin</a></p></div><p style="page-break-before: always" ></p>

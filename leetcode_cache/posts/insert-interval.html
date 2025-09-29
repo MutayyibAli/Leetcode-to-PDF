@@ -1,0 +1,93 @@
+Cpp Solution:
+Here 3 cases will arive:
+1) ***Non Overlapping intervals before given newInterval*** -> push into the ans vector 
+2) **Overlapping of intervals and newInterval** update new interval 
+   starting point of newInterval will be min of the interval starting point 
+   or starting point of newInterval
+   Ending point will be the max of interval ending point or newInterval          end point.
+3) **Non overlapping intervals after the newintervals have been merged** ->    push ito ans vector   
+   
+**Time complexity - O(N)** 
+**space complexity - O(1)**
+
+Also, please do not use sorting algo here because we have already provided with sorted list.
+
+``` 
+class Solution {
+public:
+   vector<vector<int>> insert(vector<vector<int>>& intervals, vector<int>& newInterval) {
+        int n = intervals.size(), i = 0;
+        vector<vector<int>> res;
+        //case 1: no overlapping case before the merge intervals
+		//compare ending point of intervals to starting point of newInterval
+        while(i < n && intervals[i][1] < newInterval[0]){
+            res.push_back(intervals[i]);
+            i++;
+        }                           
+		//case 2: overlapping case and merging of intervals
+        while(i < n && newInterval[1] >= intervals[i][0]){
+            newInterval[0] = min(newInterval[0], intervals[i][0]);
+            newInterval[1] = max(newInterval[1], intervals[i][1]);
+            i++;
+        }
+        res.push_back(newInterval);
+        // case 3: no overlapping of intervals after newinterval being merged
+        while(i < n){
+            res.push_back(intervals[i]);
+            i++;
+        }
+        return res;
+    }
+};
+``` 
+**Please upvote and comment if have doubt**
+
+
+Python Solution:
+**Solution 1:** (7 lines, 88 ms)
+
+Collect the intervals strictly left or right of the new interval, then merge the new one with the middle ones (if any) before inserting it between left and right ones.
+
+    def insert(self, intervals, newInterval):
+        s, e = newInterval.start, newInterval.end
+        left = [i for i in intervals if i.end < s]
+        right = [i for i in intervals if i.start > e]
+        if left + right != intervals:
+            s = min(s, intervals[len(left)].start)
+            e = max(e, intervals[~len(right)].end)
+        return left + [Interval(s, e)] + right
+
+---
+
+**Solution 2:** (8 lines, 84 ms)
+
+Same algorithm as solution 1, but different implementation with only one pass and explicitly collecting the to-be-merged intervals.
+
+    def insert(self, intervals, newInterval):
+        s, e = newInterval.start, newInterval.end
+        parts = merge, left, right = , , 
+        for i in intervals:
+            parts[(i.end < s) - (i.start > e)].append(i)
+        if merge:
+            s = min(s, merge[0].start)
+            e = max(e, merge[-1].end)
+        return left + [Interval(s, e)] + right
+
+---
+
+**Solution 3:** (11 lines, 80 ms)
+
+Same again, but collect and merge while going over the intervals once.
+
+    def insert(self, intervals, newInterval):
+        s, e = newInterval.start, newInterval.end
+        left, right = , 
+        for i in intervals:
+            if i.end < s:
+                left += i,
+            elif i.start > e:
+                right += i,
+            else:
+                s = min(s, i.start)
+                e = max(e, i.end)
+        return left + [Interval(s, e)] + right

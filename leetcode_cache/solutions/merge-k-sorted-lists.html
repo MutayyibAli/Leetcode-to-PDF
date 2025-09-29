@@ -1,0 +1,65 @@
+<div class='cpp-solution'><h2>Sharing my straightforward C++ solution without data structure other than vector -- Votes: 638</h2><div class="codehilite"><pre><span></span><code>ListNode <span class="gs">*mergeKLists(vector&lt;ListNode *</span>&gt; &amp;lists) {
+    if(lists.empty()){
+        return nullptr;
+    }
+    while(lists.size() &gt; 1){
+        lists.push_back(mergeTwoLists(lists[0], lists[1]));
+        lists.erase(lists.begin());
+        lists.erase(lists.begin());
+    }
+    return lists.front();
+}
+ListNode *mergeTwoLists(ListNode *l1, ListNode *l2) {
+    if(l1 == nullptr){
+        return l2;
+    }
+    if(l2 == nullptr){
+        return l1;
+    }
+    if(l1-&gt;val &lt;= l2-&gt;val){
+        l1-&gt;next = mergeTwoLists(l1-&gt;next, l2);
+        return l1;
+    }
+    else{
+        l2-&gt;next = mergeTwoLists(l1, l2-&gt;next);
+        return l2;
+    }
+}
+</code></pre></div>
+
+<p>The second function is from Merge Two Sorted Lists.</p>
+<p>The basic idea is really simple. We can merge first two lists and then push it back. Keep doing this until there is only one list left in vector. Actually, we can regard this as an iterative divide-and-conquer solution.</p></div>
+
+
+<div class='python-solution'><h2>Python easy to understand divide and conquer solution. -- Votes: 354</h2><div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="n">Solution</span>(<span class="n">object</span>):
+    <span class="n">def</span> <span class="n">mergeKLists</span>(<span class="nb">self</span>, <span class="n">lists</span>):
+        <span class="k">if</span> <span class="nb">not</span> <span class="n">lists:</span>
+            <span class="k">return</span> <span class="n">None</span>
+        <span class="k">if</span> <span class="n">len</span>(<span class="n">lists</span>) == <span class="mi">1</span>:
+            <span class="k">return</span> <span class="n">lists</span>[<span class="mi">0</span>]
+        <span class="n">mid</span> = <span class="n">len</span>(<span class="n">lists</span>) // <span class="mi">2</span>
+        <span class="nb">l</span>, <span class="nb">r</span> = <span class="nb">self</span>.<span class="n">mergeKLists</span>(<span class="n">lists</span>[:<span class="n">mid</span>]), <span class="nb">self</span>.<span class="n">mergeKLists</span>(<span class="n">lists</span>[<span class="n">mid:</span>])
+        <span class="k">return</span> <span class="nb">self</span>.<span class="nb">merge</span>(<span class="nb">l</span>, <span class="nb">r</span>)
+
+    <span class="n">def</span> <span class="nb">merge</span>(<span class="nb">self</span>, <span class="nb">l</span>, <span class="nb">r</span>):
+        <span class="n">dummy</span> = <span class="n">p</span> = <span class="n">ListNode</span>()
+        <span class="k">while</span> <span class="nb">l</span> <span class="o">and</span> <span class="n">r:</span>
+            <span class="k">if</span> <span class="nb">l</span>.<span class="nb">val</span> &lt; <span class="nb">r</span>.<span class="n">val:</span>
+                <span class="n">p</span>.<span class="nb">next</span> = <span class="nb">l</span>
+                <span class="nb">l</span> = <span class="nb">l</span>.<span class="nb">next</span>
+            <span class="n">else:</span>
+                <span class="n">p</span>.<span class="nb">next</span> = <span class="nb">r</span>
+                <span class="nb">r</span> = <span class="nb">r</span>.<span class="nb">next</span>
+            <span class="n">p</span> = <span class="n">p</span>.<span class="nb">next</span>
+        <span class="n">p</span>.<span class="nb">next</span> = <span class="nb">l</span> <span class="o">or</span> <span class="nb">r</span>
+        <span class="k">return</span> <span class="n">dummy</span>.<span class="nb">next</span>
+
+    <span class="n">def</span> <span class="n">merge1</span>(<span class="nb">self</span>, <span class="nb">l</span>, <span class="nb">r</span>):
+        <span class="k">if</span> <span class="nb">not</span> <span class="nb">l</span> <span class="o">or</span> <span class="nb">not</span> <span class="n">r:</span>
+            <span class="k">return</span> <span class="nb">l</span> <span class="o">or</span> <span class="nb">r</span>
+        <span class="k">if</span> <span class="nb">l</span>.<span class="nb">val</span>&lt; <span class="nb">r</span>.<span class="n">val:</span>
+            <span class="nb">l</span>.<span class="nb">next</span> = <span class="nb">self</span>.<span class="nb">merge</span>(<span class="nb">l</span>.<span class="nb">next</span>, <span class="nb">r</span>)
+            <span class="k">return</span> <span class="nb">l</span>
+        <span class="nb">r</span>.<span class="nb">next</span> = <span class="nb">self</span>.<span class="nb">merge</span>(<span class="nb">l</span>, <span class="nb">r</span>.<span class="nb">next</span>)
+        <span class="k">return</span> <span class="nb">r</span>
+</code></pre></div></div><p style="page-break-before: always" ></p>

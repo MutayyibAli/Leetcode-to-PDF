@@ -1,0 +1,269 @@
+<div class='cpp-solution'><h2>C++ solution beats 100% -- Votes: 119</h2><div class="codehilite"><pre><span></span><code><span class="nt">class</span><span class="w"> </span><span class="nt">Solution</span><span class="w"> </span><span class="p">{</span>
+<span class="n">public</span><span class="p">:</span>
+<span class="w">    </span><span class="n">void</span><span class="w"> </span><span class="nf">flatten</span><span class="p">(</span><span class="n">TreeNode</span><span class="o">*</span><span class="w"> </span><span class="n">root</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
+<span class="w">        </span><span class="nf">if</span><span class="p">(</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="p">)</span>
+<span class="w">        </span><span class="err">{</span>
+<span class="w">            </span><span class="c">/*Move the left node to the right node*/</span>
+<span class="w">            </span><span class="n">TreeNode</span><span class="o">*</span><span class="w"> </span><span class="n">temp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">root-</span><span class="o">&gt;</span><span class="kc">right</span><span class="p">;</span>
+<span class="w">            </span><span class="err">root-&gt;right</span><span class="w"> </span><span class="err">=</span><span class="w"> </span><span class="err">root-&gt;left</span><span class="p">;</span>
+<span class="w">            </span><span class="err">root-&gt;left</span><span class="w"> </span><span class="err">=</span><span class="w"> </span><span class="err">nullptr</span><span class="p">;</span>
+<span class="w">            </span><span class="err">TreeNode*</span><span class="w"> </span><span class="err">node</span><span class="w"> </span><span class="err">=</span><span class="w"> </span><span class="err">root</span><span class="p">;</span>
+
+<span class="w">            </span><span class="c">/*Move to the end of the prev left node which is the new right node*/</span>
+<span class="w">            </span><span class="err">while(</span><span class="w"> </span><span class="err">node-&gt;right</span><span class="w"> </span><span class="err">)</span>
+<span class="w">            </span><span class="err">{</span>
+<span class="w">                </span><span class="err">node</span><span class="w"> </span><span class="err">=</span><span class="w"> </span><span class="err">node-&gt;right</span><span class="p">;</span>
+<span class="w">            </span><span class="p">}</span>
+
+<span class="w">            </span><span class="c">/*Append the right node to its end*/</span>
+<span class="w">            </span><span class="nt">node-</span><span class="o">&gt;</span><span class="nt">right</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nt">temp</span><span class="o">;</span>
+<span class="w">            </span><span class="nt">flatten</span><span class="o">(</span><span class="w"> </span><span class="nt">root-</span><span class="o">&gt;</span><span class="nt">right</span><span class="w"> </span><span class="o">);</span><span class="w"> </span>
+<span class="w">        </span><span class="err">}</span><span class="w"> </span>
+<span class="w">        </span><span class="nt">return</span><span class="o">;</span>
+
+<span class="w">    </span><span class="err">}</span>
+<span class="err">}</span><span class="o">;</span>
+</code></pre></div></div>
+
+
+<div class='python-solution'><h2>JS, Python, Java, C++ | Simple O(1) Space & Recursive Solutions w/ Explanation -- Votes: 324</h2><p><em>(Note: This is part of a series of Leetcode solution explanations. If you like this solution or find it useful,</em> <strong><em>please upvote</em></strong> <em>this post.)</em></p>
+<hr />
+<h5><strong><em>Idea:</em></strong></h5>
+<p><strong><em>Morris Traversal (O(1) Space, O(N) Time) Approach:</em></strong></p>
+<p>There <em>is</em> actually a way to traverse a binary tree with a <strong>space complexity</strong> of <strong>O(1)</strong> while staying at a <strong>time complexity</strong> of <strong>O(N)</strong>, though it does require modifying the tree's structure. In this problem that's specifically being called for, so it's a valid approach, though it won't always be appropriate to modify the source binary tree in other situations.</p>
+<p>The approach is called the <strong>Morris traversal</strong>. At its heart, it takes advantage of the basic nature of ordered traversals to iterate through and unwind the tree. In a <strong>pre-order traversal</strong> of a binary tree, each vertex is processed in <strong>(node, left, right)</strong> order. This means that the entire left subtree could be placed between the node and its right subtree.</p>
+<p>To do this, however, we'll first have to locate the last node in the left subtree. This is easy enough, since we know that the last node of a pre-order tree can be found by moving right as many times as possible from its root.</p>
+<p>So we should be able to move through the binary tree, keeping track of the curent node (<strong>curr</strong>). Whenever we find a left subtree, we can dispatch a <strong>runner</strong> to find its last node, then stitch together both ends of the left subtree into the right path of <strong>curr</strong>, taking heed to sever the left connection at <strong>curr</strong>.</p>
+<p>Once that's done, we can continue to move <strong>curr</strong> to the right, looking for the next left subtree. When <strong>curr</strong> can no longer move right, the tree will be successfully flattened.</p>
+<p></p>
+<ul>
+<li><em><strong>Time Complexity: O(N)</strong> where <strong>N</strong> is the number of <strong>nodes</strong> in the binary tree</em></li>
+<li><em><strong>Space Complexity: O(1)</strong></em></li>
+</ul>
+<hr />
+<p><strong><em>O(1) Space Approach:</em></strong></p>
+<p>In order to properly connect the <strong>linked list</strong>, we'll need to start at the bottom and work up. This means that we'll need to move in <em>reverse</em> <strong>pre-order traversal</strong> order through the <strong>binary tree</strong>. Since pre-order traversal is normally <strong>"node, left, right"</strong>, we'll have to move in the reverse order of <strong>"right, left, node"</strong>.</p>
+<p>In order to complete this solution in <strong>O(1) space</strong>, we won't be able to conveniently backtrack via a <strong>stack</strong>, so the key to this solution will be to retreat all the way back up to the <strong>root</strong> each time we reach a leaf. This will push the <strong>time complexity</strong> to <strong>O(N^2)</strong>.</p>
+<p>We'll want to first set up <strong>head</strong> and <strong>curr</strong> to keep track of the head of the linked list we're building and the current node we're visiting. We'll know we're finished once <strong>head = root</strong>.</p>
+<p>To follow the reverse pre-order traversal order, we'll first attempt to go right and then left. Since we're backtracking to <strong>root</strong>, however, we'll eventually run back into the same node that we've set as <strong>head</strong> doing this. To prevent this, we'll stop <em>before</em> moving to the <strong>head</strong> node and sever the connection.</p>
+<p>Now that we can't run into already-completed territory, we can be confident that any leaf we move to must be the next value for <strong>head</strong>, so we should connect it to the old <strong>head</strong>, update <strong>head</strong>, and reset back to the <strong>root</strong>.</p>
+<p>As noted before, once <strong>head = root</strong>, we've finished our traversal and can exit the function.</p>
+<ul>
+<li><em><strong>Time Complexity: O(N^2)</strong> where <strong>N</strong> is the number of <strong>nodes</strong> in the binary tree, due to repeated backtracking to root</em></li>
+<li><em><strong>Space Complexity: O(1)</strong></em></li>
+</ul>
+<hr />
+<p><strong><em>Recursive Approach:</em></strong></p>
+<p>In order to properly connect the <strong>linked list</strong>, we'll need to start at the bottom and work up. This means that we'll need to move in <em>reverse</em> <strong>pre-order traversal</strong> order through the <strong>binary tree</strong>. Since pre-order traversal is normally <strong>"node, left, right"</strong>, we'll have to move in the reverse order of <strong>"right, left, node"</strong>.</p>
+<p>Binary tree traversal is prime ground for a <strong>recursive</strong> solution, so let's define a helper (<strong>revPreOrder</strong>) for the purpose. We'll also keep a global variable <strong>head</strong> to keep track of the head of the linked list as we work our way backwards.</p>
+<p>Per our reverse pre-order traversal approach, we want to recursively work down the right path first then the left path, if they exist. Once we've flattened the left and right paths recursively, <strong>head</strong> should at this point be equal to the next node after the current one, so we should set it as <strong>node.right</strong>. We shouldn't forget to set <strong>node.left</strong> to <strong>null</strong>, as well.</p>
+<p>Once we're done with the current node, we can update <strong>head</strong> to <strong>node</strong> and allow the recursion to complete and move back up to the next layer. Once the recursion stack is exhausted, <strong>head</strong> will be equal to <strong>root</strong> again.</p>
+<p>Lastly, we have to deal with an edge case of an empty <strong>root</strong>, so we can just make sure to only call the initial recursion on <strong>root</strong> if <strong>root</strong> actually is a node. There is no need for a <strong>return</strong> statement, because the test suite will evaluate <strong>root</strong> directly.</p>
+<ul>
+<li><em><strong>Time Complexity: O(N)</strong> where <strong>N</strong> is the number of <strong>nodes</strong> in the binary tree</em></li>
+<li><em><strong>Space Complexity: O(N)</strong> for the <strong>recursion stack</strong>, which is as long as the maximum depth of the binary tree, which can go up to <strong>N</strong></em></li>
+</ul>
+<hr />
+<h5><strong><em>Javascript Code:</em></strong></h5>
+<h6><strong><em>w/ Morris Traversal:</em></strong></h6>
+<p>The best result for the code below is <strong>84ms / 40.6MB</strong> (beats 96% / 66%).</p>
+<div class="codehilite"><pre><span></span><code><span class="nx">Language</span><span class="o">:</span><span class="w"> </span><span class="nx">javascript</span>
+<span class="kd">var</span><span class="w"> </span><span class="nx">flatten</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kd">function</span><span class="p">(</span><span class="nx">root</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="nx">curr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">root</span>
+<span class="w">    </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="nx">curr</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">curr</span><span class="p">.</span><span class="nx">left</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="kd">let</span><span class="w"> </span><span class="nx">runner</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">curr</span><span class="p">.</span><span class="nx">left</span>
+<span class="w">            </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="nx">runner</span><span class="p">.</span><span class="nx">right</span><span class="p">)</span><span class="w"> </span><span class="nx">runner</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">runner</span><span class="p">.</span><span class="nx">right</span>
+<span class="w">            </span><span class="nx">runner</span><span class="p">.</span><span class="nx">right</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">curr</span><span class="p">.</span><span class="nx">right</span><span class="p">,</span><span class="w"> </span><span class="nx">curr</span><span class="p">.</span><span class="nx">right</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">curr</span><span class="p">.</span><span class="nx">left</span><span class="p">,</span><span class="w"> </span><span class="nx">curr</span><span class="p">.</span><span class="nx">left</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">null</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="nx">curr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">curr</span><span class="p">.</span><span class="nx">right</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">};</span>
+</code></pre></div>
+
+<h6><strong><em>w/ O(1) Space:</em></strong></h6>
+<p>The best result for the code below is <strong>80ms / 40.6MB</strong> (beats 98% / 66%).</p>
+<div class="codehilite"><pre><span></span><code><span class="nx">Language</span><span class="o">:</span><span class="w"> </span><span class="nx">javascript</span>
+<span class="kd">var</span><span class="w"> </span><span class="nx">flatten</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kd">function</span><span class="p">(</span><span class="nx">root</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="nx">head</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w"> </span><span class="nx">curr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">root</span>
+<span class="w">    </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="nx">head</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="nx">root</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">curr</span><span class="p">.</span><span class="nx">right</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="nx">head</span><span class="p">)</span><span class="w"> </span><span class="nx">curr</span><span class="p">.</span><span class="nx">right</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">null</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">curr</span><span class="p">.</span><span class="nx">left</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="nx">head</span><span class="p">)</span><span class="w"> </span><span class="nx">curr</span><span class="p">.</span><span class="nx">left</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">null</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">curr</span><span class="p">.</span><span class="nx">right</span><span class="p">)</span><span class="w"> </span><span class="nx">curr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">curr</span><span class="p">.</span><span class="nx">right</span>
+<span class="w">        </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">curr</span><span class="p">.</span><span class="nx">left</span><span class="p">)</span><span class="w"> </span><span class="nx">curr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">curr</span><span class="p">.</span><span class="nx">left</span>
+<span class="w">        </span><span class="k">else</span><span class="w"> </span><span class="nx">curr</span><span class="p">.</span><span class="nx">right</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">head</span><span class="p">,</span><span class="w"> </span><span class="nx">head</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">curr</span><span class="p">,</span><span class="w"> </span><span class="nx">curr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">root</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">};</span>
+</code></pre></div>
+
+<h6><strong><em>w/ Recursion:</em></strong></h6>
+<p>The best result for the code below is <strong>84ms / 40.6MB</strong> (beats 96% / 66%).</p>
+<div class="codehilite"><pre><span></span><code><span class="nx">Language</span><span class="o">:</span><span class="w"> </span><span class="nx">javascript</span>
+<span class="kd">var</span><span class="w"> </span><span class="nx">flatten</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kd">function</span><span class="p">(</span><span class="nx">root</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="nx">head</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">null</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">revPreOrder</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">node</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">node</span><span class="p">.</span><span class="nx">right</span><span class="p">)</span><span class="w"> </span><span class="nx">revPreOrder</span><span class="p">(</span><span class="nx">node</span><span class="p">.</span><span class="nx">right</span><span class="p">)</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">node</span><span class="p">.</span><span class="nx">left</span><span class="p">)</span><span class="w"> </span><span class="nx">revPreOrder</span><span class="p">(</span><span class="nx">node</span><span class="p">.</span><span class="nx">left</span><span class="p">)</span>
+<span class="w">        </span><span class="nx">node</span><span class="p">.</span><span class="nx">left</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w"> </span><span class="nx">node</span><span class="p">.</span><span class="nx">right</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">head</span><span class="p">,</span><span class="w"> </span><span class="nx">head</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">node</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">root</span><span class="p">)</span><span class="w"> </span><span class="nx">revPreOrder</span><span class="p">(</span><span class="nx">root</span><span class="p">)</span>
+<span class="p">};</span>
+</code></pre></div>
+
+<hr />
+<h5><strong><em>Python Code:</em></strong></h5>
+<h6><strong><em>w/ Morris Traversal:</em></strong></h6>
+<p>The best result for the code below is <strong>32ms / 15.0MB</strong> (beats 92% / 91%).</p>
+<div class="codehilite"><pre><span></span><code><span class="n">Language</span><span class="p">:</span> <span class="n">python</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">flatten</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">root</span><span class="p">:</span> <span class="n">TreeNode</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">curr</span> <span class="o">=</span> <span class="n">root</span>
+        <span class="k">while</span> <span class="n">curr</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">curr</span><span class="o">.</span><span class="n">left</span><span class="p">:</span>
+                <span class="n">runner</span> <span class="o">=</span> <span class="n">curr</span><span class="o">.</span><span class="n">left</span>
+                <span class="k">while</span> <span class="n">runner</span><span class="o">.</span><span class="n">right</span><span class="p">:</span> <span class="n">runner</span> <span class="o">=</span> <span class="n">runner</span><span class="o">.</span><span class="n">right</span>
+                <span class="n">runner</span><span class="o">.</span><span class="n">right</span><span class="p">,</span> <span class="n">curr</span><span class="o">.</span><span class="n">right</span><span class="p">,</span> <span class="n">curr</span><span class="o">.</span><span class="n">left</span> <span class="o">=</span> <span class="n">curr</span><span class="o">.</span><span class="n">right</span><span class="p">,</span> <span class="n">curr</span><span class="o">.</span><span class="n">left</span><span class="p">,</span> <span class="kc">None</span>
+            <span class="n">curr</span> <span class="o">=</span> <span class="n">curr</span><span class="o">.</span><span class="n">right</span>
+</code></pre></div>
+
+<h6><strong><em>w/ O(1) Space:</em></strong></h6>
+<p>The best result for the code below is <strong>32ms / 15.0MB</strong> (beats 92% / 91%).</p>
+<div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="n">Solution:</span>
+    <span class="n">def</span> <span class="n">flatten</span>(<span class="nb">self</span>, <span class="n">root:</span> <span class="n">TreeNode</span>) -&gt; <span class="n">None:</span>
+        <span class="nb">head</span>, <span class="n">curr</span> = <span class="n">None</span>, <span class="n">root</span>
+        <span class="k">while</span> <span class="nb">head</span> != <span class="n">root:</span>
+            <span class="k">if</span> <span class="n">curr</span>.<span class="nb">right</span> == <span class="n">head:</span> <span class="n">curr</span>.<span class="nb">right</span> = <span class="n">None</span>
+            <span class="k">if</span> <span class="n">curr</span>.<span class="n">left</span> == <span class="n">head:</span> <span class="n">curr</span>.<span class="n">left</span> = <span class="n">None</span>
+            <span class="k">if</span> <span class="n">curr</span>.<span class="n">right:</span> <span class="n">curr</span> = <span class="n">curr</span>.<span class="nb">right</span>
+            <span class="n">elif</span> <span class="n">curr</span>.<span class="n">left:</span> <span class="n">curr</span> = <span class="n">curr</span>.<span class="n">left</span>
+            <span class="n">else:</span> <span class="n">curr</span>.<span class="nb">right</span>, <span class="nb">head</span>, <span class="n">curr</span> = <span class="nb">head</span>, <span class="n">curr</span>, <span class="n">root</span>
+</code></pre></div>
+
+<h6><strong><em>w/ Recursion:</em></strong></h6>
+<p>The best result for the code below is <strong>28ms / 14.9MB</strong> (beats 98% / 98%).</p>
+<div class="codehilite"><pre><span></span><code><span class="n">Language</span><span class="p">:</span> <span class="n">python</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="p">:</span>
+    <span class="n">head</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">flatten</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">root</span><span class="p">:</span> <span class="n">TreeNode</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">revPreOrder</span><span class="p">(</span><span class="n">node</span><span class="p">:</span> <span class="n">TreeNode</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">right</span><span class="p">:</span> <span class="n">revPreOrder</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">right</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">left</span><span class="p">:</span> <span class="n">revPreOrder</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">left</span><span class="p">)</span>
+            <span class="n">node</span><span class="o">.</span><span class="n">left</span><span class="p">,</span> <span class="n">node</span><span class="o">.</span><span class="n">right</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">head</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">head</span><span class="p">,</span> <span class="n">node</span>
+        <span class="k">if</span> <span class="n">root</span><span class="p">:</span> <span class="n">revPreOrder</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+</code></pre></div>
+
+<hr />
+<h5><strong><em>Java Code:</em></strong></h5>
+<h6><strong><em>w/ Morris Traversal:</em></strong></h6>
+<p>The best result for the code below is <strong>0ms / 37.9MB</strong> (beats 100% / 98%).</p>
+<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">java</span>
+<span class="kd">class</span> <span class="nc">Solution</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">flatten</span><span class="p">(</span><span class="n">TreeNode</span><span class="w"> </span><span class="n">root</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">TreeNode</span><span class="w"> </span><span class="n">curr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">root</span><span class="p">;</span>
+<span class="w">        </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">curr</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">curr</span><span class="p">.</span><span class="na">left</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">TreeNode</span><span class="w"> </span><span class="n">runner</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">curr</span><span class="p">.</span><span class="na">left</span><span class="p">;</span>
+<span class="w">                </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">runner</span><span class="p">.</span><span class="na">right</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="n">runner</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">runner</span><span class="p">.</span><span class="na">right</span><span class="p">;</span>
+<span class="w">                </span><span class="n">runner</span><span class="p">.</span><span class="na">right</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">curr</span><span class="p">.</span><span class="na">right</span><span class="p">;</span>
+<span class="w">                </span><span class="n">curr</span><span class="p">.</span><span class="na">right</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">curr</span><span class="p">.</span><span class="na">left</span><span class="p">;</span>
+<span class="w">                </span><span class="n">curr</span><span class="p">.</span><span class="na">left</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">null</span><span class="p">;</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="n">curr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">curr</span><span class="p">.</span><span class="na">right</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h6><strong><em>w/ O(1) Space:</em></strong></h6>
+<p>The best result for the code below is <strong>0ms / 37.9MB</strong> (beats 100% / 98%).</p>
+<div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="n">Solution</span> {
+    <span class="n">public</span> <span class="n">void</span> <span class="n">flatten</span>(<span class="n">TreeNode</span> <span class="n">root</span>) {
+        <span class="n">TreeNode</span> <span class="nb">head</span> = <span class="n">null</span>, <span class="n">curr</span> = <span class="n">root</span>;
+        <span class="k">while</span> (<span class="nb">head</span> != <span class="n">root</span>) {
+            <span class="k">if</span> (<span class="n">curr</span>.<span class="nb">right</span> == <span class="nb">head</span>) <span class="n">curr</span>.<span class="nb">right</span> = <span class="n">null</span>;
+            <span class="k">if</span> (<span class="n">curr</span>.<span class="n">left</span> == <span class="nb">head</span>) <span class="n">curr</span>.<span class="n">left</span> = <span class="n">null</span>;
+            <span class="k">if</span> (<span class="n">curr</span>.<span class="nb">right</span> != <span class="n">null</span>) <span class="n">curr</span> = <span class="n">curr</span>.<span class="nb">right</span>;
+            <span class="k">else</span> <span class="k">if</span> (<span class="n">curr</span>.<span class="n">left</span> != <span class="n">null</span>) <span class="n">curr</span> = <span class="n">curr</span>.<span class="n">left</span>;
+            <span class="k">else</span> {
+                <span class="n">curr</span>.<span class="nb">right</span> = <span class="nb">head</span>;
+                <span class="nb">head</span> = <span class="n">curr</span>;
+                <span class="n">curr</span> = <span class="n">root</span>;
+            }
+        }
+    }
+}
+</code></pre></div>
+
+<h6><strong><em>w/ Recursion:</em></strong></h6>
+<p>The best result for the code below is <strong>0ms / 38.0MB</strong> (beats 100% / 98%).</p>
+<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">java</span>
+<span class="kd">class</span> <span class="nc">Solution</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">TreeNode</span><span class="w"> </span><span class="n">head</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">null</span><span class="p">;</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">flatten</span><span class="p">(</span><span class="n">TreeNode</span><span class="w"> </span><span class="n">root</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">root</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="n">revPreOrder</span><span class="p">(</span><span class="n">root</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">revPreOrder</span><span class="p">(</span><span class="n">TreeNode</span><span class="w"> </span><span class="n">node</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">node</span><span class="p">.</span><span class="na">right</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="n">revPreOrder</span><span class="p">(</span><span class="n">node</span><span class="p">.</span><span class="na">right</span><span class="p">);</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">node</span><span class="p">.</span><span class="na">left</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="n">revPreOrder</span><span class="p">(</span><span class="n">node</span><span class="p">.</span><span class="na">left</span><span class="p">);</span>
+<span class="w">        </span><span class="n">node</span><span class="p">.</span><span class="na">left</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">null</span><span class="p">;</span>
+<span class="w">        </span><span class="n">node</span><span class="p">.</span><span class="na">right</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">head</span><span class="p">;</span>
+<span class="w">        </span><span class="n">head</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">node</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<hr />
+<h5><strong><em>C++ Code:</em></strong></h5>
+<h6><strong><em>w/ Morris Traversal:</em></strong></h6>
+<p>The best result for the code below is <strong>0ms / 12.6MB</strong> (beats 100% / 95%).</p>
+<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">c</span><span class="o">++</span>
+<span class="n">class</span><span class="w"> </span><span class="n">Solution</span><span class="w"> </span><span class="p">{</span>
+<span class="n">public</span><span class="o">:</span>
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="n">flatten</span><span class="p">(</span><span class="n">TreeNode</span><span class="o">*</span><span class="w"> </span><span class="n">root</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">TreeNode</span><span class="o">*</span><span class="w"> </span><span class="n">curr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">root</span><span class="p">;</span>
+<span class="w">        </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">curr</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">curr</span><span class="o">-&gt;</span><span class="n">left</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">TreeNode</span><span class="o">*</span><span class="w"> </span><span class="n">runner</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">curr</span><span class="o">-&gt;</span><span class="n">left</span><span class="p">;</span>
+<span class="w">                </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">runner</span><span class="o">-&gt;</span><span class="n">right</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">nullptr</span><span class="p">)</span><span class="w"> </span><span class="n">runner</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">runner</span><span class="o">-&gt;</span><span class="n">right</span><span class="p">;</span>
+<span class="w">                </span><span class="n">runner</span><span class="o">-&gt;</span><span class="n">right</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">curr</span><span class="o">-&gt;</span><span class="n">right</span><span class="p">,</span><span class="w"> </span><span class="n">curr</span><span class="o">-&gt;</span><span class="n">right</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">curr</span><span class="o">-&gt;</span><span class="n">left</span><span class="p">,</span><span class="w"> </span><span class="n">curr</span><span class="o">-&gt;</span><span class="n">left</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">nullptr</span><span class="p">;</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="n">curr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">curr</span><span class="o">-&gt;</span><span class="n">right</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">};</span>
+</code></pre></div>
+
+<h6><strong><em>w/ O(1) Space:</em></strong></h6>
+<p>The best result for the code below is <strong>0ms / 12.6MB</strong> (beats 100% / 95%).</p>
+<div class="codehilite"><pre><span></span><code><span class="nt">class</span><span class="w"> </span><span class="nt">Solution</span><span class="w"> </span><span class="p">{</span>
+<span class="n">public</span><span class="p">:</span>
+<span class="w">    </span><span class="n">void</span><span class="w"> </span><span class="nf">flatten</span><span class="p">(</span><span class="n">TreeNode</span><span class="o">*</span><span class="w"> </span><span class="n">root</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
+<span class="w">        </span><span class="n">TreeNode</span><span class="w"> </span><span class="o">*</span><span class="n">head</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">nullptr</span><span class="p">,</span><span class="w"> </span><span class="o">*</span><span class="n">curr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">root</span><span class="p">;</span>
+<span class="w">        </span><span class="err">while</span><span class="w"> </span><span class="err">(head</span><span class="w"> </span><span class="err">!=</span><span class="w"> </span><span class="err">root)</span><span class="w"> </span><span class="err">{</span>
+<span class="w">            </span><span class="err">if</span><span class="w"> </span><span class="err">(curr-&gt;right</span><span class="w"> </span><span class="err">==</span><span class="w"> </span><span class="err">head)</span><span class="w"> </span><span class="err">curr-&gt;right</span><span class="w"> </span><span class="err">=</span><span class="w"> </span><span class="err">nullptr</span><span class="p">;</span>
+<span class="w">            </span><span class="err">if</span><span class="w"> </span><span class="err">(curr-&gt;left</span><span class="w"> </span><span class="err">==</span><span class="w"> </span><span class="err">head)</span><span class="w"> </span><span class="err">curr-&gt;left</span><span class="w"> </span><span class="err">=</span><span class="w"> </span><span class="err">nullptr</span><span class="p">;</span>
+<span class="w">            </span><span class="err">if</span><span class="w"> </span><span class="err">(curr-&gt;right)</span><span class="w"> </span><span class="err">curr</span><span class="w"> </span><span class="err">=</span><span class="w"> </span><span class="err">curr-&gt;right</span><span class="p">;</span>
+<span class="w">            </span><span class="err">else</span><span class="w"> </span><span class="err">if</span><span class="w"> </span><span class="err">(curr-&gt;left)</span><span class="w"> </span><span class="err">curr</span><span class="w"> </span><span class="err">=</span><span class="w"> </span><span class="err">curr-&gt;left</span><span class="p">;</span>
+<span class="w">            </span><span class="err">else</span><span class="w"> </span><span class="err">curr-&gt;right</span><span class="w"> </span><span class="err">=</span><span class="w"> </span><span class="err">head,</span><span class="w"> </span><span class="err">head</span><span class="w"> </span><span class="err">=</span><span class="w"> </span><span class="err">curr,</span><span class="w"> </span><span class="err">curr</span><span class="w"> </span><span class="err">=</span><span class="w"> </span><span class="err">root</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="err">}</span>
+<span class="err">}</span><span class="o">;</span>
+</code></pre></div>
+
+<h6><strong><em>w/ Recursion:</em></strong></h6>
+<p>The best result for the code below is <strong>0ms / 12.6MB</strong> (beats 100% / 95%).</p>
+<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">c</span><span class="o">++</span>
+<span class="n">class</span><span class="w"> </span><span class="n">Solution</span><span class="w"> </span><span class="p">{</span>
+<span class="n">public</span><span class="o">:</span>
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="n">flatten</span><span class="p">(</span><span class="n">TreeNode</span><span class="o">*</span><span class="w"> </span><span class="n">root</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">root</span><span class="p">)</span><span class="w"> </span><span class="n">revPreOrder</span><span class="p">(</span><span class="n">root</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="n">private</span><span class="o">:</span>
+<span class="w">    </span><span class="n">TreeNode</span><span class="o">*</span><span class="w"> </span><span class="n">head</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">nullptr</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">revPreOrder</span><span class="p">(</span><span class="n">TreeNode</span><span class="o">*</span><span class="w"> </span><span class="n">node</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">node</span><span class="o">-&gt;</span><span class="n">right</span><span class="p">)</span><span class="w"> </span><span class="n">revPreOrder</span><span class="p">(</span><span class="n">node</span><span class="o">-&gt;</span><span class="n">right</span><span class="p">);</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">node</span><span class="o">-&gt;</span><span class="n">left</span><span class="p">)</span><span class="w"> </span><span class="n">revPreOrder</span><span class="p">(</span><span class="n">node</span><span class="o">-&gt;</span><span class="n">left</span><span class="p">);</span>
+<span class="w">        </span><span class="n">node</span><span class="o">-&gt;</span><span class="n">left</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">nullptr</span><span class="p">,</span><span class="w"> </span><span class="n">node</span><span class="o">-&gt;</span><span class="n">right</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">head</span><span class="p">,</span><span class="w"> </span><span class="n">head</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">node</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">};</span>
+</code></pre></div></div><p style="page-break-before: always" ></p>

@@ -1,0 +1,185 @@
+<div class='cpp-solution'><h2>Simple C++ Solution || Fully Explained at begineers level || Easy Understanding of UNION concept -- Votes: 109</h2><p><strong>TOPIC: UNION FIND<br />
+NOT A BIG TASK :), JUST GO LINE BY LINE</strong></p>
+<div class="codehilite"><pre><span></span><code>   In union we just make any element leader of any group and make other elements as a group member.
+</code></pre></div>
+
+<p><strong>Let's say 1 and 2 are friend , and 2 and 3 are also friend<br />
+Then indirectly 1 and 3 are also friends. We can say that 1,2,3 are in same group.</strong></p>
+<p>How we will deal with it in UNION:</p>
+<p>WE have given <strong>n * n matrix</strong> , then <strong>maximum number of group will be n</strong>, if nobody is friend of none.</p>
+<p>Lets Say n=5<br />
+Now we mark all of them initially with -1, because at starting all are alone, all are self leader.<br />
+<strong>At the end we will find -1 for those index which will be leader of any group</strong></p>
+<p>_INDEX : <strong>[ 1 , 2 ,3 ,4 , 5]</strong><br />
+VALUES: <strong>[-1,-1,-1,-1,-1]</strong></p>
+<p>Now <strong>1 is friend of 2</strong>, mark <strong>2</strong> as a leader , how can we do this, simple ,<strong>point index 2 from 1</strong><br />
+_INDEX : <strong>[ 1 , 2 ,3 ,4 , 5]</strong><br />
+VALUES: <strong>[ 2,-1,-1,-1, -1]</strong><br />
+Here how we will find leader ,start from index 1</p>
+<p><strong>1 is pointing 2 , 1-&gt;2<br />
+2 is pointing -1, 2 is leader of group</strong></p>
+<p>Now <strong>2 is friend of 3</strong>, Now <strong>point 2 at index 3</strong><br />
+_INDEX : <strong>[ 1 , 2 ,3 ,4 , 5]</strong><br />
+VALUES: <strong>[ 2 , 3,-1,-1, -1]</strong></p>
+<p><strong>1 is pointing 2 , 1-&gt;2<br />
+2 is pointing 3 , 2-&gt;3<br />
+3 is pointing -1 , 3 is leader of group</strong></p>
+<p>Now if we start finding <strong>leader of 1 and 2</strong> , then <strong>3</strong> is the leader (<strong>COMMON LEADER: SAME GROUP</strong>)</p>
+<p>Now <strong>4 is friend of 5</strong>, Now <strong>point 4 at index 5</strong><br />
+_INDEX : <strong>[ 1 , 2 ,3 ,4 , 5]</strong><br />
+VALUES: <strong>[ 2 , 3,-1, 5, -1]</strong></p>
+<p>At the end just count total number of parent nodes whose value is -1.<br />
+Now we have <strong>two</strong> groups <strong>{1,2,3}</strong> and <strong>{4,5}</strong> , NOW go to solution line by line :)</p>
+<div class="codehilite"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="n">Solution</span><span class="w"> </span><span class="err">{</span>
+<span class="k">public</span><span class="err">:</span>
+
+<span class="w">    </span><span class="o">//</span><span class="n">It</span><span class="w"> </span><span class="n">will</span><span class="w"> </span><span class="n">be</span><span class="w"> </span><span class="k">use</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="n">store</span><span class="w"> </span><span class="n">groups</span>
+<span class="w">    </span><span class="n">vector</span><span class="o">&lt;</span><span class="nc">int</span><span class="o">&gt;</span><span class="w"> </span><span class="n">v</span><span class="p">;</span>
+
+<span class="w">    </span><span class="o">//</span><span class="n">Find</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">leader</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="ow">any</span><span class="w"> </span><span class="k">group</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">which</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">lies</span>
+<span class="w">    </span><span class="o">//</span><span class="k">if</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="n">lie</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="ow">any</span><span class="w"> </span><span class="k">group</span><span class="w"> </span><span class="k">then</span><span class="w"> </span><span class="n">it</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="n">self</span><span class="w"> </span><span class="n">leader</span>
+<span class="w">    </span><span class="nc">int</span><span class="w"> </span><span class="n">parent</span><span class="p">(</span><span class="nc">int</span><span class="w"> </span><span class="n">x</span><span class="p">)</span>
+<span class="w">    </span><span class="err">{</span>
+<span class="w">        </span><span class="o">//</span><span class="n">self</span><span class="w"> </span><span class="n">leader</span>
+<span class="w">        </span><span class="k">if</span><span class="p">(</span><span class="n">v</span><span class="o">[</span><span class="n">x</span><span class="o">]==-</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">x</span><span class="p">;</span><span class="w"> </span>
+<span class="w">        </span><span class="o">//</span><span class="n">find</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">leader</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">self</span><span class="w"> </span><span class="n">parent</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">v</span><span class="o">[</span><span class="n">x</span><span class="o">]=</span><span class="n">parent</span><span class="p">(</span><span class="n">v</span><span class="o">[</span><span class="n">x</span><span class="o">]</span><span class="p">);</span>
+<span class="w">    </span><span class="err">}</span>
+
+<span class="w">    </span><span class="o">//</span><span class="n">Adding</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="n">friends</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="k">group</span>
+<span class="w">    </span><span class="n">void</span><span class="w"> </span><span class="n">_union</span><span class="p">(</span><span class="nc">int</span><span class="w"> </span><span class="n">a</span><span class="p">,</span><span class="nc">int</span><span class="w"> </span><span class="n">b</span><span class="p">)</span>
+<span class="w">    </span><span class="err">{</span>
+<span class="w">        </span><span class="o">//</span><span class="n">find</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">leader</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="k">both</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="n">b</span>
+<span class="w">        </span><span class="nc">int</span><span class="w"> </span><span class="n">p_a</span><span class="o">=</span><span class="n">parent</span><span class="p">(</span><span class="n">a</span><span class="p">),</span><span class="n">p_b</span><span class="o">=</span><span class="n">parent</span><span class="p">(</span><span class="n">b</span><span class="p">);</span>
+
+<span class="w">        </span><span class="o">//</span><span class="k">if</span><span class="w"> </span><span class="n">already</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">same</span><span class="w"> </span><span class="k">group</span><span class="p">,</span><span class="w"> </span><span class="n">i</span><span class="p">.</span><span class="n">e</span><span class="w"> </span><span class="n">leader</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="k">both</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">them</span><span class="w"> </span><span class="k">are</span><span class="w"> </span><span class="n">same</span><span class="w"> </span><span class="k">then</span><span class="w"> </span><span class="k">return</span>
+<span class="w">        </span><span class="k">if</span><span class="p">(</span><span class="n">p_a</span><span class="o">==</span><span class="n">p_b</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="p">;</span><span class="w"> </span>
+<span class="w">        </span><span class="cm">/*</span>
+<span class="cm">         if both of them are from different group then add both the groups </span>
+<span class="cm">         and make a single common group</span>
+<span class="cm">         We can do this by -&gt; leader of 1st group is member of 2nd group </span>
+<span class="cm">         and now main leader of whole group is leader of 2nd member</span>
+<span class="cm">        */</span><span class="w"> </span>
+<span class="w">        </span><span class="n">v</span><span class="o">[</span><span class="n">p_a</span><span class="o">]=</span><span class="n">p_b</span><span class="p">;</span><span class="w"> </span><span class="o">//</span><span class="n">v</span><span class="o">[</span><span class="n">p_a</span><span class="o">]</span><span class="w"> </span><span class="n">will</span><span class="w"> </span><span class="n">store</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="k">index</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">leader</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">whole</span><span class="w"> </span><span class="k">group</span>
+<span class="w">    </span><span class="err">}</span>
+
+<span class="w">    </span><span class="nc">int</span><span class="w"> </span><span class="n">findCircleNum</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">vector</span><span class="o">&lt;</span><span class="nc">int</span><span class="o">&gt;&gt;&amp;</span><span class="w"> </span><span class="n">M</span><span class="p">)</span><span class="w"> </span><span class="err">{</span><span class="w"> </span>
+<span class="w">        </span><span class="nc">int</span><span class="w"> </span><span class="n">n</span><span class="o">=</span><span class="n">M</span><span class="p">.</span><span class="k">size</span><span class="p">();</span>
+<span class="w">        </span><span class="n">v</span><span class="o">=</span><span class="n">vector</span><span class="o">&lt;</span><span class="nc">int</span><span class="o">&gt;</span><span class="w"> </span><span class="p">(</span><span class="n">n</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">);</span><span class="o">//</span><span class="n">there</span><span class="w"> </span><span class="n">will</span><span class="w"> </span><span class="n">be</span><span class="w"> </span><span class="n">maximum</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="k">group</span><span class="p">,</span><span class="w"> </span><span class="n">mark</span><span class="w"> </span><span class="ow">all</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">leader</span>
+
+<span class="w">        </span><span class="o">//</span><span class="n">making</span><span class="w"> </span><span class="k">group</span>
+<span class="w">        </span><span class="k">for</span><span class="p">(</span><span class="nc">int</span><span class="w"> </span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">n</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">)</span>
+<span class="w">        </span><span class="err">{</span>
+<span class="w">            </span><span class="k">for</span><span class="p">(</span><span class="nc">int</span><span class="w"> </span><span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">j</span><span class="o">&lt;</span><span class="n">n</span><span class="p">;</span><span class="n">j</span><span class="o">++</span><span class="p">)</span>
+<span class="w">            </span><span class="err">{</span>
+<span class="w">                </span><span class="k">if</span><span class="p">(</span><span class="n">M</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="n">j</span><span class="o">]</span><span class="p">)</span><span class="w">  </span><span class="o">//</span><span class="k">if</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="n">friend</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">j</span><span class="p">,</span><span class="w"> </span><span class="k">add</span><span class="w"> </span><span class="n">them</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="k">group</span>
+<span class="w">                </span><span class="err">{</span><span class="w"> </span>
+<span class="w">                    </span><span class="o">//</span><span class="k">if</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="ow">any</span><span class="w"> </span><span class="k">group</span><span class="w"> </span><span class="k">then</span><span class="w"> </span><span class="k">add</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">that</span><span class="w"> </span><span class="k">group</span>
+<span class="w">                    </span><span class="o">//</span><span class="ow">or</span><span class="w"> </span><span class="n">vice</span><span class="o">-</span><span class="n">versa</span>
+<span class="w">                    </span><span class="n">_union</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">);</span><span class="w">  </span><span class="o">//</span><span class="k">Add</span><span class="w"> </span><span class="n">them</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="k">group</span>
+<span class="w">                </span><span class="err">}</span>
+<span class="w">            </span><span class="err">}</span>
+<span class="w">        </span><span class="err">}</span>
+<span class="w">        </span><span class="nc">int</span><span class="w"> </span><span class="n">c</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="w"> </span>
+
+<span class="w">        </span><span class="o">//</span><span class="n">counting</span><span class="w"> </span><span class="k">group</span>
+<span class="w">        </span><span class="k">for</span><span class="p">(</span><span class="nc">int</span><span class="w"> </span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">n</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">)</span>
+<span class="w">        </span><span class="err">{</span>
+<span class="w">            </span><span class="k">if</span><span class="p">(</span><span class="n">v</span><span class="o">[</span><span class="n">i</span><span class="o">]==-</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="n">c</span><span class="o">++</span><span class="p">;</span><span class="w"> </span><span class="o">//</span><span class="n">counting</span><span class="w"> </span><span class="n">total</span><span class="w"> </span><span class="n">number</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">parents</span>
+<span class="w">        </span><span class="err">}</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">c</span><span class="p">;</span><span class="w"> </span>
+<span class="w">    </span><span class="err">}</span>
+<span class="err">}</span><span class="p">;</span>
+</code></pre></div>
+
+<p><strong><em>Time Complexity: O(N * N * log(N))<br />
+Space Complexity: O(N)</em></strong></p>
+<p><strong>We are traversing N * N size matrix and finding parent each time in vector of size N<br />
+Using a vector to store parent of size N</strong></p></div>
+
+
+<div class='python-solution'><h2>python, union find, dfs, bfs -- Votes: 68</h2><p>union find:</p>
+<div class="codehilite"><pre><span></span><code><span class="n">Language</span><span class="p">:</span> <span class="n">py</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">UnionFind</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">u</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">))</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">union</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+        <span class="n">ra</span><span class="p">,</span> <span class="n">rb</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">a</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">ra</span> <span class="o">!=</span> <span class="n">rb</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">u</span><span class="p">[</span><span class="n">ra</span><span class="p">]</span> <span class="o">=</span> <span class="n">rb</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">find</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">a</span><span class="p">):</span>
+        <span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">u</span><span class="p">[</span><span class="n">a</span><span class="p">]</span> <span class="o">!=</span> <span class="n">a</span><span class="p">:</span> <span class="n">a</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">u</span><span class="p">[</span><span class="n">a</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">a</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">findCircleNum</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">M</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :type M: List[List[int]]</span>
+<span class="sd">        :rtype: int</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">M</span><span class="p">:</span> <span class="k">return</span> <span class="mi">0</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">M</span><span class="p">)</span>
+
+        <span class="n">uf</span> <span class="o">=</span> <span class="n">UnionFind</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">r</span><span class="p">,</span><span class="n">s</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">M</span><span class="p">[</span><span class="n">r</span><span class="p">][</span><span class="n">c</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span> <span class="n">uf</span><span class="o">.</span><span class="n">union</span><span class="p">(</span><span class="n">r</span><span class="p">,</span><span class="n">c</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="nb">set</span><span class="p">([</span><span class="n">uf</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">s</span><span class="p">)]))</span>
+</code></pre></div>
+
+<p>DFS:</p>
+<div class="codehilite"><pre><span></span><code><span class="n">Language</span><span class="p">:</span> <span class="n">py</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">findCircleNum</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">M</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :type M: List[List[int]]</span>
+<span class="sd">        :rtype: int</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">M</span><span class="p">:</span> <span class="k">return</span> <span class="mi">0</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">M</span><span class="p">)</span>
+        <span class="n">seen</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">dfs</span><span class="p">(</span><span class="n">p</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">q</span><span class="p">,</span> <span class="n">adj</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">M</span><span class="p">[</span><span class="n">p</span><span class="p">]):</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">adj</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">q</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">seen</span><span class="p">):</span>
+                    <span class="n">seen</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">q</span><span class="p">)</span>
+                    <span class="n">dfs</span><span class="p">(</span><span class="n">q</span><span class="p">)</span>
+
+        <span class="n">cnt</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">i</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">seen</span><span class="p">:</span> 
+                <span class="n">dfs</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+                <span class="n">cnt</span> <span class="o">+=</span> <span class="mi">1</span>
+
+        <span class="k">return</span> <span class="n">cnt</span>
+</code></pre></div>
+
+<p>BFS:</p>
+<div class="codehilite"><pre><span></span><code><span class="n">Language</span><span class="p">:</span> <span class="n">py</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">findCircleNum</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">M</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :type M: List[List[int]]</span>
+<span class="sd">        :rtype: int</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">M</span><span class="p">:</span> <span class="k">return</span> <span class="mi">0</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">M</span><span class="p">)</span>
+        <span class="n">seen</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="n">cnt</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">i</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">seen</span><span class="p">:</span>
+                <span class="n">q</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                <span class="k">while</span> <span class="n">q</span><span class="p">:</span>
+                    <span class="n">p</span> <span class="o">=</span> <span class="n">q</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">p</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">seen</span><span class="p">:</span>
+                        <span class="n">seen</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+                        <span class="n">q</span> <span class="o">+=</span> <span class="p">[</span><span class="n">k</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span><span class="n">adj</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">M</span><span class="p">[</span><span class="n">p</span><span class="p">])</span> <span class="k">if</span> <span class="n">adj</span> <span class="ow">and</span> <span class="p">(</span><span class="n">k</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">seen</span><span class="p">)]</span>
+                <span class="n">cnt</span> <span class="o">+=</span> <span class="mi">1</span>
+
+        <span class="k">return</span> <span class="n">cnt</span>
+</code></pre></div></div><p style="page-break-before: always" ></p>

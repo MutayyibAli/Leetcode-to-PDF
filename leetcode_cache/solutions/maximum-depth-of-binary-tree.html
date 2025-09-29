@@ -1,0 +1,74 @@
+<div class='cpp-solution'><h2>🔥🚀Simplest Solution🚀|| DFS ||🔥Full Explanation||🔥C++🔥|| Python3 -- Votes: 63</h2><h2>Consider</h2>
+<div class="codehilite"><pre><span></span><code><span class="w">                    </span><span class="nv">Please</span><span class="w"> </span><span class="nv">Upvote</span><span class="w"> </span><span class="k">If</span><span class="w"> </span><span class="nv">You</span><span class="w"> </span><span class="nv">Find</span><span class="w"> </span><span class="nv">It</span><span class="w"> </span><span class="nv">Helpful</span>
+</code></pre></div>
+
+<h2>Intuition</h2>
+<p>As we have to find the <strong>Maximum Height of Tree</strong>.<br />
+So, first we find the height of <strong>Left Subtree and Right Subtree</strong> of root node.<br />
+And we return the <strong>maximum height</strong> from <strong>Left Subtree and Right Subtree</strong> <code>+</code> <code>1</code></p>
+<!-- Describe your first thoughts on how to solve this problem. -->
+
+<h2>Approach : DFS</h2>
+<div class="codehilite"><pre><span></span><code><span class="n">Example</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[</span><span class="mi">3</span><span class="o">,</span><span class="mi">9</span><span class="o">,</span><span class="mi">20</span><span class="o">,</span><span class="kc">null</span><span class="o">,</span><span class="mi">8</span><span class="o">,</span><span class="mi">15</span><span class="o">,</span><span class="mi">7</span><span class="o">,</span><span class="kc">null</span><span class="o">,</span><span class="kc">null</span><span class="o">,</span><span class="kc">null</span><span class="o">,</span><span class="kc">null</span><span class="o">,</span><span class="mi">10</span><span class="o">]</span>
+</code></pre></div>
+
+<p></p>
+<!-- Describe your approach to solving the problem. -->
+
+<h2>Complexity</h2>
+<ul>
+<li>Time complexity: O(n) : As we are traversing each node of tree.</li>
+</ul>
+<!-- Add your time complexity here, e.g. $$O(n)$$ -->
+
+<ul>
+<li>Space complexity: O(Height of tree) : Recursive stack space</li>
+</ul>
+<!-- Add your space complexity here, e.g. $$O(n)$$ -->
+
+<h2>Code</h2>
+<h2>C++</h2>
+<div class="codehilite"><pre><span></span><code><span class="nt">class</span><span class="w"> </span><span class="nt">Solution</span><span class="w"> </span><span class="p">{</span>
+<span class="n">public</span><span class="p">:</span>
+<span class="w">    </span><span class="n">int</span><span class="w"> </span><span class="nf">maxDepth</span><span class="p">(</span><span class="n">TreeNode</span><span class="o">*</span><span class="w"> </span><span class="n">root</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
+<span class="w">        </span><span class="nf">if</span><span class="p">(</span><span class="n">root</span><span class="w"> </span><span class="err">==</span><span class="w"> </span><span class="n">NULL</span><span class="p">)</span>
+<span class="w">            </span><span class="n">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">        </span><span class="err">int</span><span class="w"> </span><span class="err">lh</span><span class="w"> </span><span class="err">=</span><span class="w"> </span><span class="err">maxDepth(root-&gt;left)</span><span class="p">;</span>
+<span class="w">        </span><span class="err">int</span><span class="w"> </span><span class="err">rh</span><span class="w"> </span><span class="err">=</span><span class="w"> </span><span class="err">maxDepth(root-&gt;right)</span><span class="p">;</span>
+<span class="w">        </span><span class="err">return</span><span class="w"> </span><span class="err">max(lh,</span><span class="w"> </span><span class="err">rh)</span><span class="w"> </span><span class="err">+</span><span class="w"> </span><span class="err">1</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="err">}</span><span class="o">;</span>
+</code></pre></div>
+
+<h2>Python</h2>
+<div class="codehilite"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nl">Solution</span><span class="p">:</span>
+<span class="w">    </span><span class="n">def</span><span class="w"> </span><span class="n">maxDepth</span><span class="p">(</span><span class="n">self</span><span class="p">,</span><span class="w"> </span><span class="nl">root</span><span class="p">:</span><span class="w"> </span><span class="n">Optional</span><span class="o">[</span><span class="n">TreeNode</span><span class="o">]</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="nc">int</span><span class="err">:</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="nl">root</span><span class="p">:</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">        </span><span class="n">leftSubtree</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">self</span><span class="p">.</span><span class="n">maxDepth</span><span class="p">(</span><span class="n">root</span><span class="p">.</span><span class="nf">left</span><span class="p">)</span>
+<span class="w">        </span><span class="n">RightSubtree</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">self</span><span class="p">.</span><span class="n">maxDepth</span><span class="p">(</span><span class="n">root</span><span class="p">.</span><span class="nf">right</span><span class="p">)</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="nf">max</span><span class="p">(</span><span class="n">leftSubtree</span><span class="p">,</span><span class="w"> </span><span class="n">RightSubtree</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span>
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code>                            Give a . It motivates me alot
+</code></pre></div>
+
+<p>Let's Connect On <a href="https://www.linkedin.com/in/naman-agarwal-0551aa1aa/">Linkedin</a></p></div>
+
+
+<div class='python-solution'><h2>✔️ [Python3] RECURSIVE DFS ( •⌄• ू )✧, Explained -- Votes: 337</h2><p><strong>UPVOTE if you like (◠‿◠), If you have any question, feel free to ask.</strong></p>
+<p>To calculate the maximum depth we can use the Depth-First Search. We call a helper function recursively and return the maximum depth between left and right branches.</p>
+<p>Time: <strong>O(N)</strong> - for DFS<br />
+Space: <strong>O(N)</strong> - for the recursive stack</p>
+<p>Runtime: 40 ms, faster than <strong>89.54%</strong> of Python3 online submissions for Maximum Depth of Binary Tree.<br />
+Memory Usage: 16.3 MB, less than <strong>18.15%</strong> of Python3 online submissions for Maximum Depth of Binary Tree.</p>
+<div class="codehilite"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nl">Solution</span><span class="p">:</span>
+<span class="w">    </span><span class="n">def</span><span class="w"> </span><span class="n">maxDepth</span><span class="p">(</span><span class="n">self</span><span class="p">,</span><span class="w"> </span><span class="nl">root</span><span class="p">:</span><span class="w"> </span><span class="n">Optional</span><span class="o">[</span><span class="n">TreeNode</span><span class="o">]</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="nc">int</span><span class="err">:</span>
+<span class="w">        </span><span class="n">def</span><span class="w"> </span><span class="n">dfs</span><span class="p">(</span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="k">depth</span><span class="p">)</span><span class="err">:</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="nl">root</span><span class="p">:</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="k">depth</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="nf">max</span><span class="p">(</span><span class="n">dfs</span><span class="p">(</span><span class="n">root</span><span class="p">.</span><span class="nf">left</span><span class="p">,</span><span class="w"> </span><span class="k">depth</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">),</span><span class="w"> </span><span class="n">dfs</span><span class="p">(</span><span class="n">root</span><span class="p">.</span><span class="nf">right</span><span class="p">,</span><span class="w"> </span><span class="k">depth</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">))</span>
+
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">dfs</span><span class="p">(</span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+</code></pre></div>
+
+<p><strong>UPVOTE if you like (◠‿◠), If you have any question, feel free to ask.</strong></p></div><p style="page-break-before: always" ></p>

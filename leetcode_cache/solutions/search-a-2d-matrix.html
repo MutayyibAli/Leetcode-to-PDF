@@ -1,0 +1,296 @@
+<div class='cpp-solution'><h2>✅ 100% Binary Search [VIDEO] - Simple Solution -- Votes: 162</h2><h2>Problem Understanding</h2>
+<p>The task is to find a target integer in a 2D matrix with the following properties:</p>
+<ol>
+<li>Each row is sorted in non-decreasing order.</li>
+<li>The first integer of each row is greater than the last integer of the previous row.</li>
+</ol>
+<p>The challenge is to determine if the target integer exists within the matrix.</p>
+<h2>Approach</h2>
+<p>Given the problem, it may be tempting to perform a linear search through the entire matrix, but this would result in a time complexity of $$O(m \times n)$$, which is not acceptable given the problem's constraint of $$O(\log(m \times n))$$.</p>
+<p>Instead, we can leverage the fact that the matrix is sorted both row-wise and column-wise, and apply a binary search to find the target.</p>
+<h2>Live Coding &amp; Explenation</h2>
+<p>https://youtu.be/ePF8QegEy-8</p>
+<h3>Treating the Matrix as a 1-Dimensional Array</h3>
+<p>To apply binary search, we need a one-dimensional array. We can treat our 2-D matrix as a one-dimensional array because of the matrix's sorted property. The first integer of each row is greater than the last integer of the previous row, so we can think of the rows as being appended one after the other to form a single sorted array.</p>
+<h3>Binary Search</h3>
+<p>Binary search is a search algorithm that finds the position of a target value within a sorted array. It compares the target value to the middle element of the array. If they are not equal, the half in which the target cannot lie is eliminated, and the search continues on the remaining half until it is successful or the remaining half is empty.</p>
+<h3>Initialization</h3>
+<p>Before we start the binary search, we need to initialize two pointers:</p>
+<ol>
+<li><code>left</code> - This represents the start of the array. We set this to 0 (the index of the first element).</li>
+<li><code>right</code> - This represents the end of the array. We set this to <code>m * n - 1</code> (the index of the last element), where <code>m</code> and <code>n</code> are the number of rows and columns in the matrix, respectively.</li>
+</ol>
+<h3>Iterative Binary Search</h3>
+<p>We perform a binary search iteratively within a while loop until <code>left</code> exceeds <code>right</code>. In each iteration, we calculate the midpoint between <code>left</code> and <code>right</code>.</p>
+<p>To get the row and column of the midpoint in the matrix, we use the <code>divmod</code> function with <code>mid</code> and <code>n</code>. The <code>divmod</code> function takes two numbers and returns a pair of numbers (a tuple) consisting of their quotient and remainder.</p>
+<p>We then compare the value at the midpoint with the target:</p>
+<ol>
+<li>If the midpoint value is equal to the target, we have found the target in the matrix, and we return <code>True</code>.</li>
+<li>If the midpoint value is less than the target, this means the target must be in the right half of the array. So, we adjust <code>left</code> to be <code>mid + 1</code>.</li>
+<li>If the midpoint value is greater than the target, this means the target must be in the left half of the array. So, we adjust <code>right</code> to be <code>mid - 1</code>.</li>
+</ol>
+<p>If we exit the while loop, that means we did not find the target in the matrix, so we return <code>False</code>.</p>
+<h2>Complexity</h2>
+<h3>Time Complexity</h3>
+<p>The time complexity is $$O(\log(m \times n))$$, since we're effectively performing a binary search over the $$m \times n$$ elements of the matrix.</p>
+<h3>Space Complexity</h3>
+<p>The space complexity is $$O(1)$$ because we only use a constant amount of space to store our variables (<code>left</code>, <code>right</code>, <code>mid</code>, <code>mid_value</code>), regardless of the size of the input matrix.</p>
+<h2>Performance</h2>
+<p>The performance of this solution is optimal given the problem constraints. Since the matrix is sorted and the problem requires us to find an element, binary search is the best possible approach.</p>
+<p>Certainly, here's the table sorted by runtime (ms) and then by memory usage (MB):</p>
+<table>
+<thead>
+<tr>
+<th>Programming Language</th>
+<th>Runtime (ms)</th>
+<th>Beats (%)</th>
+<th>Memory (MB)</th>
+<th>Beats (%)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Rust</td>
+<td>0</td>
+<td>100</td>
+<td>2.2</td>
+<td>28.37</td>
+</tr>
+<tr>
+<td>Java</td>
+<td>0</td>
+<td>100</td>
+<td>41.6</td>
+<td>9.3</td>
+</tr>
+<tr>
+<td>C++</td>
+<td>3</td>
+<td>82.89</td>
+<td>9.5</td>
+<td>19.73</td>
+</tr>
+<tr>
+<td>Go</td>
+<td>3</td>
+<td>58.16</td>
+<td>2.7</td>
+<td>98.33</td>
+</tr>
+<tr>
+<td>JavaScript</td>
+<td>48</td>
+<td>92.89</td>
+<td>42.3</td>
+<td>28.19</td>
+</tr>
+<tr>
+<td>Python3</td>
+<td>49</td>
+<td>90.75</td>
+<td>16.8</td>
+<td>64.57</td>
+</tr>
+<tr>
+<td>C#</td>
+<td>82</td>
+<td>99.1</td>
+<td>40.9</td>
+<td>35.48</td>
+</tr>
+</tbody>
+</table>
+<p></p>
+<h2>Code</h2>
+<div class="codehilite"><pre><span></span><code><span class="n">Language</span><span class="p">:</span> <span class="n">Python</span> 
+<span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">searchMatrix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">matrix</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]],</span> <span class="n">target</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">matrix</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="n">m</span><span class="p">,</span> <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">matrix</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">matrix</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">left</span><span class="p">,</span> <span class="n">right</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">m</span> <span class="o">*</span> <span class="n">n</span> <span class="o">-</span> <span class="mi">1</span>
+
+        <span class="k">while</span> <span class="n">left</span> <span class="o">&lt;=</span> <span class="n">right</span><span class="p">:</span>
+            <span class="n">mid</span> <span class="o">=</span> <span class="p">(</span><span class="n">left</span> <span class="o">+</span> <span class="n">right</span><span class="p">)</span> <span class="o">//</span> <span class="mi">2</span>
+            <span class="n">mid_row</span><span class="p">,</span> <span class="n">mid_col</span> <span class="o">=</span> <span class="nb">divmod</span><span class="p">(</span><span class="n">mid</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">matrix</span><span class="p">[</span><span class="n">mid_row</span><span class="p">][</span><span class="n">mid_col</span><span class="p">]</span> <span class="o">==</span> <span class="n">target</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">True</span>
+            <span class="k">elif</span> <span class="n">matrix</span><span class="p">[</span><span class="n">mid_row</span><span class="p">][</span><span class="n">mid_col</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">target</span><span class="p">:</span>
+                <span class="n">left</span> <span class="o">=</span> <span class="n">mid</span> <span class="o">+</span> <span class="mi">1</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">right</span> <span class="o">=</span> <span class="n">mid</span> <span class="o">-</span> <span class="mi">1</span>
+
+        <span class="k">return</span> <span class="kc">False</span>
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="w"> </span><span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+<span class="w">    </span><span class="kt">bool</span><span class="w"> </span><span class="n">searchMatrix</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&gt;&amp;</span><span class="w"> </span><span class="n">matrix</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">target</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">m</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">matrix</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>
+<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">matrix</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="n">size</span><span class="p">();</span>
+<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">left</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">right</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+
+<span class="w">        </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">left</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">right</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="kt">int</span><span class="w"> </span><span class="n">mid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">left</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="p">(</span><span class="n">right</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">left</span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">2</span><span class="p">;</span>
+<span class="w">            </span><span class="kt">int</span><span class="w"> </span><span class="n">mid_val</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">matrix</span><span class="p">[</span><span class="n">mid</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">n</span><span class="p">][</span><span class="n">mid</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="n">n</span><span class="p">];</span>
+
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">mid_val</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">target</span><span class="p">)</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="w">            </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">mid_val</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">target</span><span class="p">)</span>
+<span class="w">                </span><span class="n">left</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mid</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="w">            </span><span class="k">else</span>
+<span class="w">                </span><span class="n">right</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mid</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">};</span>
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code><span class="kd">class</span> <span class="nc">Solution</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">boolean</span><span class="w"> </span><span class="nf">searchMatrix</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">matrix</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">target</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">m</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">matrix</span><span class="p">.</span><span class="na">length</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">matrix</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span><span class="p">.</span><span class="na">length</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">left</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">right</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+
+<span class="w">        </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">left</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">right</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="kt">int</span><span class="w"> </span><span class="n">mid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">left</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="p">(</span><span class="n">right</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">left</span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">2</span><span class="p">;</span>
+<span class="w">            </span><span class="kt">int</span><span class="w"> </span><span class="n">mid_val</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">matrix</span><span class="o">[</span><span class="n">mid</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">n</span><span class="o">][</span><span class="n">mid</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="n">n</span><span class="o">]</span><span class="p">;</span>
+
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">mid_val</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">target</span><span class="p">)</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="kc">true</span><span class="p">;</span>
+<span class="w">            </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">mid_val</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">target</span><span class="p">)</span>
+<span class="w">                </span><span class="n">left</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mid</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="w">            </span><span class="k">else</span>
+<span class="w">                </span><span class="n">right</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mid</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="kc">false</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code><span class="cm">/**</span>
+<span class="cm"> * @param {number} matrix</span>
+<span class="cm"> * @param {number} target</span>
+<span class="cm"> * @return {boolean}</span>
+<span class="cm"> */</span>
+<span class="kd">var</span><span class="w"> </span><span class="nx">searchMatrix</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kd">function</span><span class="p">(</span><span class="nx">matrix</span><span class="p">,</span><span class="w"> </span><span class="nx">target</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="nx">m</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">matrix</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="nx">n</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">matrix</span><span class="p">[</span><span class="mf">0</span><span class="p">].</span><span class="nx">length</span><span class="p">;</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="nx">left</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0</span><span class="p">,</span><span class="w"> </span><span class="nx">right</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">m</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="nx">n</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mf">1</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="nx">left</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="nx">right</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="nx">mid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">Math</span><span class="p">.</span><span class="nx">floor</span><span class="p">((</span><span class="nx">left</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nx">right</span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mf">2</span><span class="p">);</span>
+<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="nx">mid_val</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">matrix</span><span class="p">[</span><span class="nb">Math</span><span class="p">.</span><span class="nx">floor</span><span class="p">(</span><span class="nx">mid</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="nx">n</span><span class="p">)][</span><span class="nx">mid</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="nx">n</span><span class="p">];</span>
+
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">mid_val</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="nx">target</span><span class="p">)</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="kc">true</span><span class="p">;</span>
+<span class="w">        </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">mid_val</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="nx">target</span><span class="p">)</span>
+<span class="w">            </span><span class="nx">left</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">mid</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mf">1</span><span class="p">;</span>
+<span class="w">        </span><span class="k">else</span>
+<span class="w">            </span><span class="nx">right</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">mid</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mf">1</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="kc">false</span><span class="p">;</span>
+<span class="p">};</span>
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code><span class="k">public</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="nf">SearchMatrix</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">matrix</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">target</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">m</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">matrix</span><span class="p">.</span><span class="n">Length</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">matrix</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="n">Length</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">left</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">right</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+
+<span class="w">        </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">left</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">right</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="kt">int</span><span class="w"> </span><span class="n">mid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">left</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="p">(</span><span class="n">right</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">left</span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">2</span><span class="p">;</span>
+<span class="w">            </span><span class="kt">int</span><span class="w"> </span><span class="n">mid_val</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">matrix</span><span class="p">[</span><span class="n">mid</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">n</span><span class="p">][</span><span class="n">mid</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="n">n</span><span class="p">];</span>
+
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">mid_val</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">target</span><span class="p">)</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
+<span class="w">            </span><span class="k">else</span><span class="w"> </span><span class="nf">if</span><span class="w"> </span><span class="p">(</span><span class="n">mid_val</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">target</span><span class="p">)</span>
+<span class="w">                </span><span class="n">left</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mid</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="w">            </span><span class="k">else</span>
+<span class="w">                </span><span class="n">right</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mid</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="k">false</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code><span class="kd">func</span><span class="w"> </span><span class="nx">searchMatrix</span><span class="p">(</span><span class="nx">matrix</span><span class="w"> </span><span class="kt">int</span><span class="p">,</span><span class="w"> </span><span class="nx">target</span><span class="w"> </span><span class="kt">int</span><span class="p">)</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">m</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nb">len</span><span class="p">(</span><span class="nx">matrix</span><span class="p">)</span>
+<span class="w">    </span><span class="nx">n</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nb">len</span><span class="p">(</span><span class="nx">matrix</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="w">    </span><span class="nx">left</span><span class="p">,</span><span class="w"> </span><span class="nx">right</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="nx">m</span><span class="o">*</span><span class="nx">n</span><span class="o">-</span><span class="mi">1</span>
+
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="nx">left</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="nx">right</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nx">mid</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">left</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="p">(</span><span class="nx">right</span><span class="o">-</span><span class="nx">left</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span>
+<span class="w">        </span><span class="nx">mid_val</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">matrix</span><span class="p">[</span><span class="nx">mid</span><span class="o">/</span><span class="nx">n</span><span class="p">][</span><span class="nx">mid</span><span class="o">%</span><span class="nx">n</span><span class="p">]</span>
+
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="nx">mid_val</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nx">target</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">        </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="nx">mid_val</span><span class="w"> </span><span class="p">&lt;</span><span class="w"> </span><span class="nx">target</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="nx">left</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">mid</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">        </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="nx">right</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">mid</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="kc">false</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code><span class="k">impl</span><span class="w"> </span><span class="n">Solution</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="k">fn</span><span class="w"> </span><span class="nf">search_matrix</span><span class="p">(</span><span class="n">matrix</span><span class="p">:</span><span class="w"> </span><span class="nb">Vec</span><span class="o">&lt;</span><span class="nb">Vec</span><span class="o">&lt;</span><span class="kt">i32</span><span class="o">&gt;&gt;</span><span class="p">,</span><span class="w"> </span><span class="n">target</span><span class="p">:</span><span class="w"> </span><span class="kt">i32</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">rows</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">matrix</span><span class="p">.</span><span class="n">len</span><span class="p">()</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="kt">i32</span><span class="p">;</span>
+<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">cols</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">matrix</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="n">len</span><span class="p">()</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="kt">i32</span><span class="p">;</span>
+
+<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="k">mut</span><span class="w"> </span><span class="n">start</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="k">mut</span><span class="w"> </span><span class="n">end</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">rows</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">cols</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+
+<span class="w">        </span><span class="k">while</span><span class="w"> </span><span class="n">start</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">end</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="kd">let</span><span class="w"> </span><span class="n">mid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">start</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="p">(</span><span class="n">end</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">start</span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">2</span><span class="p">;</span>
+<span class="w">            </span><span class="kd">let</span><span class="w"> </span><span class="n">mid_value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">matrix</span><span class="p">[(</span><span class="n">mid</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">cols</span><span class="p">)</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="kt">usize</span><span class="p">][(</span><span class="n">mid</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="n">cols</span><span class="p">)</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="kt">usize</span><span class="p">];</span>
+
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="n">mid_value</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">target</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="kc">true</span><span class="p">;</span>
+<span class="w">            </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">mid_value</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">target</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">start</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mid</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="w">            </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">end</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mid</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="kc">false</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h2>Live Coding + Explenation in Go</h2>
+<p>https://youtu.be/edGrFBOtnc4</p>
+<p>I hope you find this solution helpful in understanding how to solve the "Search a 2D Matrix" problem. If you have any further questions or need additional clarifications, please don't hesitate to ask. If you understood the solution and found it beneficial, please consider giving it an upvote. Happy coding, and may your coding journey be filled with success and satisfaction! ‍‍</p></div>
+
+
+<div class='python-solution'><h2>A Python binary search solution - O(logn) -- Votes: 174</h2><p>It is basically an advanced version of the binary search</p>
+<div class="codehilite"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nl">Solution</span><span class="p">:</span>
+<span class="w">    </span><span class="err">#</span><span class="w"> </span><span class="nv">@param</span><span class="w"> </span><span class="n">matrix</span><span class="p">,</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">list</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">lists</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">integers</span>
+<span class="w">    </span><span class="err">#</span><span class="w"> </span><span class="nv">@param</span><span class="w"> </span><span class="n">target</span><span class="p">,</span><span class="w"> </span><span class="n">an</span><span class="w"> </span><span class="k">integer</span>
+<span class="w">    </span><span class="err">#</span><span class="w"> </span><span class="nv">@return</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="k">boolean</span>
+<span class="w">    </span><span class="err">#</span><span class="w"> </span><span class="mi">8</span><span class="err">:</span><span class="mi">21</span>
+<span class="w">    </span><span class="n">def</span><span class="w"> </span><span class="n">searchMatrix</span><span class="p">(</span><span class="n">self</span><span class="p">,</span><span class="w"> </span><span class="n">matrix</span><span class="p">,</span><span class="w"> </span><span class="n">target</span><span class="p">)</span><span class="err">:</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="n">matrix</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="n">target</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="k">None</span><span class="err">:</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="k">False</span>
+
+<span class="w">        </span><span class="k">rows</span><span class="p">,</span><span class="w"> </span><span class="n">cols</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">len</span><span class="p">(</span><span class="n">matrix</span><span class="p">),</span><span class="w"> </span><span class="nf">len</span><span class="p">(</span><span class="n">matrix</span><span class="o">[</span><span class="n">0</span><span class="o">]</span><span class="p">)</span>
+<span class="w">        </span><span class="n">low</span><span class="p">,</span><span class="w"> </span><span class="n">high</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="k">rows</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">cols</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span>
+
+<span class="w">        </span><span class="k">while</span><span class="w"> </span><span class="n">low</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="nl">high</span><span class="p">:</span>
+<span class="w">            </span><span class="n">mid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">low</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">high</span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">2</span>
+<span class="w">            </span><span class="n">num</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">matrix</span><span class="o">[</span><span class="n">mid / cols</span><span class="o">][</span><span class="n">mid % cols</span><span class="o">]</span>
+
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="n">num</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nl">target</span><span class="p">:</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="k">True</span>
+<span class="w">            </span><span class="n">elif</span><span class="w"> </span><span class="n">num</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="nl">target</span><span class="p">:</span>
+<span class="w">                </span><span class="n">low</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mid</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">            </span><span class="k">else</span><span class="err">:</span>
+<span class="w">                </span><span class="n">high</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mid</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span>
+
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="k">False</span>
+</code></pre></div></div><p style="page-break-before: always" ></p>

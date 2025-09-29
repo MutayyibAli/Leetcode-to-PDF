@@ -1,0 +1,219 @@
+<div class='cpp-solution'><h2>Easy Explained Solution - Beats 100% -- Votes: 1050</h2><h3><strong><em>Please Upvote my solution, if you find it helpful ;)</em></strong></h3>
+<h2>Intuition</h2>
+<p>We want to find the square root of a given non-negative integer x. Instead of using a traditional approach like repeatedly subtracting numbers until we reach 0 or using a library function, we'll use a smarter method called "Binary Search." Binary Search helps us quickly find the square root by repeatedly narrowing down the search range.</p>
+<h2>Approach</h2>
+<ol>
+<li>
+<p>We first check if x is 0 or 1. If it is, we know that the square root of 0 and 1 is 0 and 1 respectively, so we directly return x.</p>
+</li>
+<li>
+<p>For any other value of x, we set up a search range between 1 and x. We initialize two variables start and end to represent the range.</p>
+</li>
+<li>
+<p>Now comes the clever part: We use a while loop to repeatedly divide the search range in half (Binary Search) to find the square root.</p>
+</li>
+<li>
+<p>In each iteration of the loop, we calculate the middle value mid using the formula <strong>start + (end - start) / 2</strong>. This formula ensures that we don't encounter any integer overflow when dealing with large values of x.</p>
+</li>
+<li>
+<p>Next, we calculate the square of mid and compare it with x.</p>
+</li>
+<li>
+<p>If the square of mid is greater than x, we know the square root lies in the lower half of the search range. So, we move the end pointer to the left to narrow down the search range.</p>
+</li>
+<li>
+<p>If the square of mid is equal to x, we have found the square root! So, we return mid as the answer.</p>
+</li>
+<li>
+<p>If the square of mid is less than x, we know the square root lies in the upper half of the search range. So, we move the start pointer to the right to continue the search.</p>
+</li>
+<li>
+<p>We repeat steps 4 to 8 until the start pointer becomes greater than the end pointer. At this point, we have found the floor value of the square root, and end holds that value.</p>
+</li>
+<li>
+<p>To ensure that we return the correct floor value of the square root, we round down the value of end to the nearest integer using the Math.round() method.</p>
+</li>
+</ol>
+<h2>Complexity</h2>
+<ul>
+<li>
+<p>Time complexity:<br />
+  The time complexity of this approach is $$O(logN)$$. It's very efficient because Binary Search reduces the search range by half in each iteration, making the search faster.</p>
+</li>
+<li>
+<p>Space complexity:<br />
+  The space complexity is $$O(1)$$, which means the amount of extra memory used is constant, regardless of the input. We only use a few variables to store the search range and the middle value during the computation.</p>
+</li>
+</ul>
+<h2>Code</h2>
+<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">java</span><span class="w"> </span>
+<span class="kd">class</span> <span class="nc">Solution</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="nf">mySqrt</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="c1">// For special cases when x is 0 or 1, return x.</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">x</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="n">x</span><span class="p">;</span>
+
+<span class="w">        </span><span class="c1">// Initialize the search range for the square root.</span>
+<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">start</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">end</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">x</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">mid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+
+<span class="w">        </span><span class="c1">// Perform binary search to find the square root of x.</span>
+<span class="w">        </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">start</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">end</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="c1">// Calculate the middle point using &quot;start + (end - start) / 2&quot; to avoid integer overflow.</span>
+<span class="w">            </span><span class="n">mid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">start</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="p">(</span><span class="n">end</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">start</span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">2</span><span class="p">;</span>
+
+<span class="w">            </span><span class="c1">// If the square of the middle value is greater than x, move the &quot;end&quot; to the left (mid - 1).</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">((</span><span class="kt">long</span><span class="p">)</span><span class="w"> </span><span class="n">mid</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">mid</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="p">(</span><span class="kt">long</span><span class="p">)</span><span class="w"> </span><span class="n">x</span><span class="p">)</span>
+<span class="w">                </span><span class="n">end</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mid</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="w">            </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">mid</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">mid</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">x</span><span class="p">)</span>
+<span class="w">                </span><span class="c1">// If the square of the middle value is equal to x, we found the square root.</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="n">mid</span><span class="p">;</span>
+<span class="w">            </span><span class="k">else</span>
+<span class="w">                </span><span class="c1">// If the square of the middle value is less than x, move the &quot;start&quot; to the right (mid + 1).</span>
+<span class="w">                </span><span class="n">start</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mid</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="c1">// The loop ends when &quot;start&quot; becomes greater than &quot;end&quot;, and &quot;end&quot; is the integer value of the square root.</span>
+<span class="w">        </span><span class="c1">// However, since we might have been using integer division in the calculations,</span>
+<span class="w">        </span><span class="c1">// we round down the value of &quot;end&quot; to the nearest integer to get the correct square root.</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">Math</span><span class="p">.</span><span class="na">round</span><span class="p">(</span><span class="n">end</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">C</span><span class="o">++</span><span class="w"> </span>
+<span class="n">class</span><span class="w"> </span><span class="n">Solution</span><span class="w"> </span><span class="p">{</span>
+<span class="n">public</span><span class="o">:</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">mySqrt</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="c1">// For special cases when x is 0 or 1, return x.</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">x</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="n">x</span><span class="p">;</span>
+
+<span class="w">        </span><span class="c1">// Initialize the search range for the square root.</span>
+<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">start</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">end</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">x</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">mid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">-1</span><span class="p">;</span>
+
+<span class="w">        </span><span class="c1">// Perform binary search to find the square root of x.</span>
+<span class="w">        </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">start</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">end</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="c1">// Calculate the middle point using &quot;start + (end - start) / 2&quot; to avoid integer overflow.</span>
+<span class="w">            </span><span class="n">mid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">start</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="p">(</span><span class="n">end</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">start</span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">2</span><span class="p">;</span>
+
+<span class="w">            </span><span class="c1">// Convert mid to long to handle large values without overflow.</span>
+<span class="w">            </span><span class="kt">long</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">square</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">static_cast</span><span class="o">&lt;</span><span class="kt">long</span><span class="w"> </span><span class="kt">long</span><span class="o">&gt;</span><span class="p">(</span><span class="n">mid</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">mid</span><span class="p">;</span>
+
+<span class="w">            </span><span class="c1">// If the square of the middle value is greater than x, move the &quot;end&quot; to the left (mid - 1).</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">square</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">x</span><span class="p">)</span>
+<span class="w">                </span><span class="n">end</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mid</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="w">            </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">square</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">x</span><span class="p">)</span>
+<span class="w">                </span><span class="c1">// If the square of the middle value is equal to x, we found the square root.</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="n">mid</span><span class="p">;</span>
+<span class="w">            </span><span class="k">else</span>
+<span class="w">                </span><span class="c1">// If the square of the middle value is less than x, move the &quot;start&quot; to the right (mid + 1).</span>
+<span class="w">                </span><span class="n">start</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mid</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="c1">// The loop ends when &quot;start&quot; becomes greater than &quot;end&quot;, and &quot;end&quot; is the integer value of the square root.</span>
+<span class="w">        </span><span class="c1">// However, since we might have been using integer division in the calculations,</span>
+<span class="w">        </span><span class="c1">// we round down the value of &quot;end&quot; to the nearest integer to get the correct square root.</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">static_cast</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">round</span><span class="p">(</span><span class="n">end</span><span class="p">));</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">};</span>
+</code></pre></div>
+
+<h3><strong><em>Please Upvote my solution, if you find it helpful ;)</em></strong></h3>
+<p></p></div>
+
+
+<div class='python-solution'><h2>C++ || Binary Search || Easiest Beginner Friendly Sol -- Votes: 307</h2><h2>Intuition of this Problem:</h2>
+<!-- Describe your first thoughts on how to solve this problem. -->
+
+<p><strong>NOTE - PLEASE READ APPROACH FIRST THEN SEE THE CODE. YOU WILL DEFINITELY UNDERSTAND THE CODE LINE BY LINE AFTER SEEING THE APPROACH.</strong></p>
+<h2>Approach for this Problem:</h2>
+<ol>
+<li>If x is 0, return 0.</li>
+<li>Initialize first to 1 and last to x.</li>
+<li>While first is less than or equal to last, do the following:<br />
+   a. Compute mid as first + (last - first) / 2.<br />
+   b. If mid * mid equals x, return mid.<br />
+   c. If mid * mid is greater than x, update last to mid - 1.<br />
+   d. If mid * mid is less than x, update first to mid + 1.</li>
+<li>Return last.</li>
+</ol>
+<!-- Describe your approach to solving the problem. -->
+
+<h2>Code:</h2>
+<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">C</span><span class="o">++</span><span class="w"> </span>
+<span class="n">class</span><span class="w"> </span><span class="n">Solution</span><span class="w"> </span><span class="p">{</span>
+<span class="n">public</span><span class="o">:</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">mySqrt</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">x</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="n">x</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">first</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">last</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">x</span><span class="p">;</span>
+<span class="w">        </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">first</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">last</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="kt">int</span><span class="w"> </span><span class="n">mid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">first</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="p">(</span><span class="n">last</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">first</span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">2</span><span class="p">;</span>
+<span class="w">            </span><span class="c1">// mid * mid == x gives runtime error</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">mid</span><span class="w">  </span><span class="o">==</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">mid</span><span class="p">)</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="n">mid</span><span class="p">;</span>
+<span class="w">            </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">mid</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">mid</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">last</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mid</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">first</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mid</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">last</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">};</span>
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">Java</span><span class="w"> </span>
+<span class="kd">class</span> <span class="nc">Solution</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="nf">mySqrt</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">x</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">first</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">last</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">x</span><span class="p">;</span>
+<span class="w">        </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">first</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">last</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="kt">int</span><span class="w"> </span><span class="n">mid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">first</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="p">(</span><span class="n">last</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">first</span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">2</span><span class="p">;</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">mid</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">mid</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="n">mid</span><span class="p">;</span>
+<span class="w">            </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">mid</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">mid</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">last</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mid</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="w">            </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">first</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mid</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">last</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code><span class="n">Language</span><span class="p">:</span> <span class="n">Python</span> 
+<span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">mySqrt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">x</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mi">0</span>
+        <span class="n">first</span><span class="p">,</span> <span class="n">last</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">x</span>
+        <span class="k">while</span> <span class="n">first</span> <span class="o">&lt;=</span> <span class="n">last</span><span class="p">:</span>
+            <span class="n">mid</span> <span class="o">=</span> <span class="n">first</span> <span class="o">+</span> <span class="p">(</span><span class="n">last</span> <span class="o">-</span> <span class="n">first</span><span class="p">)</span> <span class="o">//</span> <span class="mi">2</span>
+            <span class="k">if</span> <span class="n">mid</span> <span class="o">==</span> <span class="n">x</span> <span class="o">//</span> <span class="n">mid</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">mid</span>
+            <span class="k">elif</span> <span class="n">mid</span> <span class="o">&gt;</span> <span class="n">x</span> <span class="o">//</span> <span class="n">mid</span><span class="p">:</span>
+                <span class="n">last</span> <span class="o">=</span> <span class="n">mid</span> <span class="o">-</span> <span class="mi">1</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">first</span> <span class="o">=</span> <span class="n">mid</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="n">last</span>
+</code></pre></div>
+
+<h2>Time Complexity and Space Complexity:</h2>
+<ul>
+<li>Time complexity: <strong>O(logn)</strong></li>
+</ul>
+<!-- Add your time complexity here, e.g. $$O(n)$$ -->
+
+<ul>
+<li>Space complexity: <strong>O(1)</strong></li>
+</ul>
+<!-- Add your space complexity here, e.g. $$O(n)$$ --></div><p style="page-break-before: always" ></p>

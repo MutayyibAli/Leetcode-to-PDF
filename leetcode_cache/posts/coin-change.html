@@ -1,0 +1,382 @@
+Cpp Solution:
+Okay, this is probably the second most famous classic problem introducing the concepts of dynamic programming, second only to Fibonacci numbers generation.
+
+And in order to proceed, we really need to lay down the result step by step.
+
+I opted to do so using an array instead of a vector and the differences in both speed and consumed memory were relevant, but I invite you to experiment with it and see with your own eyes how this works.
+
+That said, the core logic: let's assume we have a series of memory cells storing how many coins are needed as a minimum to get there, safely considering that for the first, matching the amount of `0`, we actually have `0` options, while the initial value of all the others is going to be `INT_MAX`. Since we want to compute up to `amount`, and we have a `0` value for simplicity `amount + 1` cells are how many we need.
+
+It is much easier to go with an example and I am confident most people will find it more understandable as they proceed reading.
+
+So, for our aforementioned example, let's assume having as coins `[1, 2, 5]` and wishing to get up to the amount of `6` with the required mininum numbers of coins, we will have this starting situation for our array:
+
+``` cpp
+Language: cpp
+{0, INT_MAX, INT_MAX, INT_MAX, INT_MAX, INT_MAX, INT_MAX}
+``` 
+
+And we move then with our loop to the second cell, with index `i == 1`, our first `INT_MAX` to parse: we loop through the coins and we see we can go back only with the first coin (`c == 1`, since in order to get there, we can make one move, plus what it took to get to `i - c` positions before. This is definitely less than `INT_MAX`, so we update our array, which now is:
+
+``` cpp
+Language: cpp
+{0, 1, INT_MAX, INT_MAX, INT_MAX, INT_MAX, INT_MAX}
+``` 
+
+Not too clear? Okay, let's move to index `i == 2` and things should possibly simplify a bit: this time we have two coins that are `<= i`, `1` and `2`: we know that to get to a total of two coins, we can take either what is needed to make one coin (the cell we just computed to have value `1` in the previous iteration) plus one with `c == 1` or what is needed to make zero coins (initially set to `0`) plus one with `c == 2`. Again, we will not use `c == 5` because, for now, we cannot go back 5 positions. Updated situation:
+
+``` cpp
+Language: cpp
+{0, 1, 1, INT_MAX, INT_MAX, INT_MAX, INT_MAX}
+``` 
+
+Now, what happens with `i == 3`? Well, whether we go back one cell or two, the value is the same and we add one (ie: we can make `3` either as `1 + 2` or `2 + 1`: it doesn't matter), so we have:
+
+``` cpp
+Language: cpp
+{0, 1, 1, 2, INT_MAX, INT_MAX, INT_MAX}
+``` 
+
+Now: `i == 4`: we can go back again only by one cell or two, and we quickly notice that going back by two is more conveient (ie: `2 + 2` uses less coins than `1 + 2 + 1`, the latter being an option if we went back by only one step):
+
+``` cpp
+Language: cpp
+{0, 1, 1, 2, 2, INT_MAX, INT_MAX}
+``` 
+
+Finally with `i == 5` we can also use the last and more "powerful" coin, going back up to five slots; if you followed me up to here, you will see probably soon that using this very coin is the most convenient option: to have a value of `5`, we just need one coin (with the same value) plus the coins we needed to have a value of `0` (zero coins, indeed); definitely better than having a coin more than the one necessary to get either a value of `3` or `4` (that would be `3` coins in both cases), so we have now:
+
+``` cpp
+Language: cpp
+{0, 1, 1, 2, 2, 1, INT_MAX}
+``` 
+
+Last step, with `i == 6`, we can quickly compute that while going back by two cells would cost us a grand total of `3` coins, either going back by one or five will cost us only two (ie: we can get to `6` either as `5 + 1` or `1 + 5`, respectively), so we have:
+
+``` cpp
+Language: cpp
+{0, 1, 1, 2, 2, 1, 2}
+``` 
+
+And we can return the value of the last cell as the correct result.
+
+My code below does the same with an extra bit of logic: when I backtrack and encounter a cell with value still equal to `INT_MAX` it means that the same cell was never reached before, so I skip it.
+
+If in the end my final cell has a value of `INT_MAX`, I replace it with `-1` as required in the specs, otherwise I return its properly computed value.
+
+The code:
+
+``` cpp
+Language: cpp
+class Solution {
+public:
+    int coinChange(vector<int>& coins, int n) {
+        // creating the base dp array, with first value set to 0
+        int dp[++n];
+        dp[0] = 0;
+        // more convenient to have the coins sorted
+        sort(begin(coins), end(coins));
+        // populating our dp array
+        for (int i = 1; i < n; i++) {
+            // setting dp[0] base value to 1, 0 for all the rest
+            dp[i] = INT_MAX;
+            for (int c: coins) {
+                if (i - c < 0) break;
+                // if it was a previously not reached cell, we do not add use it
+                if (dp[i - c] != INT_MAX) dp[i] = min(dp[i], 1 + dp[i - c]);
+            }
+        }
+        return dp[--n] == INT_MAX ? -1 : dp[n];
+    }
+};
+``` 
+
+
+Python Solution:
+# Intuition
+Keep minimum number of coins to make up each amount
+
+# Solution Video
+
+https://youtu.be/IrHPiwWUTKw
+
+### ⭐️⭐️ Don't forget to subscribe to my channel! ⭐️⭐️
+
+**■ Subscribe URL**
+http://www.youtube.com/channel/UC9RMNwYTL3SXCP6ShLWVFww?sub_confirmation=1
+
+Subscribers: 4,765
+Thank you for your support!
+
+---
+
+
+# Approach
+
+There are several ways to create amount with coins and we need to find minimum number of coins to make up amount. This is my rule of thumbs. When we have many ways to do something and find minimum(or maximum) number of something, there is possibility that the question is solved by Dynamic Programming.
+
+I'll explain how to solve this question by Dynamic Programming.
+``` 
+Input: coins = [1,2,5], amount = 11
+``` 
+First of all, I create array for Dynamic Programing.
+``` 
+ 0 ,1 ,2 ,3 ,4 ,5 ,6 ,7 ,8 ,9 ,10,11(= index)
+[0,12,12,12,12,12,12,12,12,12,12,12]
+``` 
+We use each index number as amount. index `1` means amount `1`. index `5` means amount `5`.
+
+**We will keep minimum number of coins to make up each amount.**
+
+We initialize each value with `12` which is `amount + 1`. You can put any number greater than `amount` or negative number such as `-1`(impossible number). In the end, if we still have `12`, **that means we didn't find combination to make up the target amount, so return `-1`.**
+
+At index `0`, I put `0` as a value, because to make up amount `0`, we don't need any coins, so we can start from index `1`(= amount `1`)
+
+Let's see one by one.
+
+At index `1`, we try to create amount `1` with the coins and check all possible combinations and find minimum number of coins.
+
+If we use `coin 1` to make up amount `1`, what amount should we have before we use **one coin 1**? It's `zero`.
+
+---
+
+⭐️ Points
+
+Formula is 
+``` 
+amount = current amount - current value of coin
+``` 
+---
+In this case,
+
+``` 
+1 - 1 = 0
+
+- first 1 is current amount
+- second 1 is current value of coin
+- 0 is amount we need if we use one coin 1
+to make up amount 1 this time
+``` 
+So, we should check index `0`, but no coin because we don't need to use any coins to make up amount `0`.
+
+That's why total of coins to make up `amount 1` this time is
+
+``` 
+number of coin added this time + number of coins to make up amount 0
+= amount 1
+
+1 + 0 = 1
+
+``` 
+We need `one coin 1` to make up `amount 1`. In the end,
+
+``` 
+12 vs 1
+``` 
+which is minimum number of coins? it's `1`, so update `index 1`.
+
+``` 
+ 0,1 ,2 ,3 ,4 ,5 ,6 ,7 ,8 ,9 ,10,11(= index)
+[0,1,12,12,12,12,12,12,12,12,12,12]
+``` 
+We have to check cases where we use `coin 2` and `coin 5` this time but obviously we cannot create `amount 1` with `coin 2` and `coin 5`, so skip them. That means we need to check this condition below before we update the array.
+``` 
+current amount - current value of coin >= 0
+``` 
+
+Let's think about `amount 2`. Every time we check all possible cases.
+
+If we use `coin 1` this time, we need
+
+``` 
+current amount - current value of coin >= 0
+= 2 - 1 >= 0 
+``` 
+So, it's time to update the array.
+
+We use `one coin 1` this time and we should have `amount 1` if we create `amount 2` with `one coin 1`.
+``` 
+2(current amount) - 1(value of coin) = 1 amount
+``` 
+We need `amount 1` **that means we need mininum number of coins to make up amount 1.** Check `index 1` and we have one coin as minimum number of coins to make up `amount 1`, then add `one coin 1` this time to make up `amount 2`. Total should be
+
+``` 
+1 + 1 = 2 coins
+``` 
+Update `index 2`
+``` 
+ 0,1,2 ,3 ,4 ,5 ,6 ,7 ,8 ,9 ,10,11(= index)
+[0,1,2,12,12,12,12,12,12,12,12,12]
+``` 
+The next coin is `coin 2`. If we use **one coin 2** this time, we need
+
+``` 
+2(current amount) - 2(current value of coin) = 0(amount)
+``` 
+Check `0 amount`. No coin to make up `amount 0` **that means we need only one coin 2 to make up amount 2.**
+``` 
+0 + 1 = 1
+``` 
+Check `index 2` and take minimum number of coins to make up `amount 2`.
+
+``` 
+2 vs 1 = 1
+``` 
+``` 
+ 0,1,2 ,3 ,4 ,5 ,6 ,7 ,8 ,9 ,10,11(= index)
+[0,1,1,12,12,12,12,12,12,12,12,12]
+``` 
+The next coin is `coin 5`, skip it because we cannot create `amount 2` with `coin 5`. We don't meet this condition.
+
+``` 
+current amount - current value of coin >= 0
+= 2 - 5 = -3
+``` 
+I hope you can understand how it works. I will stop my explanation because too long.
+
+In the end, target amount is `11` which is the last index. If the value of the last index is `12`, that means we didn't find combination to make up `amount 11`. If we have different number from `12`, that is minimum number of coins to make up `amount 11`.
+
+Easy!
+Let's see solution codes and step by step algorithm!
+
+---
+
+https://youtu.be/bU_dXCOWHls
+
+---
+
+# Complexity
+- Time complexity: $$O(a * c)$$
+`a` is number of amount and `c` is number of coins
+
+- Space complexity: $$O(a)$$
+
+``` python
+Language: python 
+class Solution:
+    def coinChange(self, coins: List[int], amount: int) -> int:
+        min_coins = [amount + 1] * (amount + 1)
+        min_coins[0] = 0
+
+        for i in range(1, amount + 1):
+            for c in coins:
+                if i - c >= 0:
+                    min_coins[i] = min(min_coins[i], 1 + min_coins[i - c])
+        
+        return min_coins[-1] if min_coins[-1] != amount + 1 else -1
+``` 
+``` javascript
+Language: javascript 
+var coinChange = function(coins, amount) {
+    let minCoins = new Array(amount + 1).fill(amount + 1);
+    minCoins[0] = 0;
+
+    for (let i = 1; i <= amount; i++) {
+        for (let j = 0; j < coins.length; j++) {
+            if (i - coins[j] >= 0) {
+                minCoins[i] = Math.min(minCoins[i], 1 + minCoins[i - coins[j]]);
+            }
+        }
+    }
+
+    return minCoins[amount] !== amount + 1 ? minCoins[amount] : -1;    
+};
+``` 
+``` java
+Language: java 
+class Solution {
+    public int coinChange(int coins, int amount) {
+        int minCoins = new int[amount + 1];
+        Arrays.fill(minCoins, amount + 1);
+        minCoins[0] = 0;
+
+        for (int i = 1; i <= amount; i++) {
+            for (int j = 0; j < coins.length; j++) {
+                if (i - coins[j] >= 0) {
+                    minCoins[i] = Math.min(minCoins[i], 1 + minCoins[i - coins[j]]);
+                }
+            }
+        }
+
+        return minCoins[amount] != amount + 1 ? minCoins[amount] : -1;        
+    }
+}
+``` 
+``` C
+Language: C++ 
+class Solution {
+public:
+    int coinChange(vector<int>& coins, int amount) {
+        vector<int> minCoins(amount + 1, amount + 1);
+        minCoins[0] = 0;
+
+        for (int i = 1; i <= amount; i++) {
+            for (int j = 0; j < coins.size(); j++) {
+                if (i - coins[j] >= 0) {
+                    minCoins[i] = min(minCoins[i], 1 + minCoins[i - coins[j]]);
+                }
+            }
+        }
+
+        return minCoins[amount] != amount + 1 ? minCoins[amount] : -1;        
+    }
+};
+``` 
+
+## Step by Step Algorithm
+
+1. **Initialize `min_coins` array**:
+   - Create an array `min_coins` of length `amount + 1`, initialized with each element set to `amount + 1`.
+   - Set `min_coins[0]` to `0`, as it takes zero coins to make up an amount of zero.
+
+``` python
+Language: python
+min_coins = [amount + 1] * (amount + 1)
+min_coins[0] = 0
+``` 
+
+2. **Iterate over each amount**:
+   - Start a loop from 1 to `amount` (inclusive) to represent each amount from 1 to `amount`.
+   - For each amount `i`, iterate over each coin denomination `c` in the `coins` list.
+
+``` python
+Language: python
+for i in range(1, amount + 1):
+    for c in coins:
+``` 
+
+3. **Calculate the minimum number of coins**:
+   - Check if the current amount `i` minus the coin denomination `c` is greater than or equal to 0.
+   - If it is, update `min_coins[i]` to the minimum of its current value and `1 + min_coins[i - c]`.
+     - `1 + min_coins[i - c]` represents taking one coin of denomination `c` and the minimum number of coins required to make up the remaining amount `i - c`.
+
+``` python
+Language: python
+if i - c >= 0:
+    min_coins[i] = min(min_coins[i], 1 + min_coins[i - c])
+``` 
+
+4. **Return the result**:
+   - After updating `min_coins` for all amounts from 1 to `amount`, return `min_coins[-1]` if it's not equal to `amount + 1`.
+   - If `min_coins[-1]` is still `amount + 1`, it means the amount cannot be made up by any combination of coins, so return `-1`.
+
+``` python
+Language: python
+return min_coins[-1] if min_coins[-1] != amount + 1 else -1
+``` 
+
+This algorithm uses dynamic programming to compute the minimum number of coins required to make up each amount from 1 to `amount`, ultimately providing the minimum number of coins required to make up the total amount.
+
+---
+
+Thank you for reading my post.
+
+## ⭐️ Subscribe URL
+http://www.youtube.com/channel/UC9RMNwYTL3SXCP6ShLWVFww?sub_confirmation=1
+
+## ⭐️ Twitter
+https://twitter.com/CodingNinjaAZ
+
+## ⭐️ My previous video
+https://youtu.be/CijisxopxqM
+

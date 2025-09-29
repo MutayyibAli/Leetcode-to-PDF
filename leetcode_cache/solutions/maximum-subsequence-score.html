@@ -1,0 +1,150 @@
+<div class='cpp-solution'><h2>C++ || Easiest Solution Using Priority Queue || With Explanation -- Votes: 82</h2><h2>Intuition</h2>
+<p>The idea is to consider for each element of array of nums2[i] as minimum once and check for maximum possible values available in nums1 keeping in mind nums2[i] as minimum .</p>
+<h2>Approach</h2>
+<ul>
+<li>
+<p>First we sort the nums2 array in decreasing order and as we need to know the mapping of nums2[i] to nums1[i] so for that we make their pairs and then we sort.</p>
+</li>
+<li>
+<p>Now we we will iterate through p array one by one and let p[i].first as the minimum for an instance then all the elements to left of p array can be considered for sum part.</p>
+</li>
+<li>
+<p>But we can make priority queue for knowing top k elements to left of p array</p>
+</li>
+<li>
+<p>And we will only keep k maximum elements at a time in priority queue and keep the tab of their sum .</p>
+</li>
+<li>
+<p>Now please read the code and you will understand it . Upvotes are appreciated</p>
+</li>
+</ul>
+<h2>Complexity</h2>
+<ul>
+<li>
+<p>Time complexity: O( N * Log(N) + (N-k) * Log(k) )</p>
+</li>
+<li>
+<p>Space complexity: O(N) + O(k) = O(N+K)</p>
+</li>
+</ul>
+<h2>Code</h2>
+<div class="codehilite"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="n">Solution</span><span class="w"> </span><span class="err">{</span>
+<span class="w">    </span><span class="k">public</span><span class="err">:</span>
+<span class="w">    </span><span class="n">long</span><span class="w"> </span><span class="n">long</span><span class="w"> </span><span class="n">maxScore</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="nc">int</span><span class="o">&gt;&amp;</span><span class="w"> </span><span class="n">nums1</span><span class="p">,</span><span class="w"> </span><span class="n">vector</span><span class="o">&lt;</span><span class="nc">int</span><span class="o">&gt;&amp;</span><span class="w"> </span><span class="n">nums2</span><span class="p">,</span><span class="w"> </span><span class="nc">int</span><span class="w"> </span><span class="n">k</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
+
+<span class="w">       </span><span class="n">vector</span><span class="o">&lt;</span><span class="n">pair</span><span class="o">&lt;</span><span class="nc">int</span><span class="p">,</span><span class="w"> </span><span class="nc">int</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="p">;</span>
+
+<span class="w">        </span><span class="k">for</span><span class="p">(</span><span class="nc">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">&lt;</span><span class="n">nums1</span><span class="p">.</span><span class="k">size</span><span class="p">()</span><span class="w"> </span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span>
+<span class="w">        </span><span class="err">{</span>
+<span class="w">            </span><span class="n">p</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="err">{</span><span class="n">nums2</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="w"> </span><span class="p">,</span><span class="w"> </span><span class="n">nums1</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="err">}</span><span class="p">);</span>
+<span class="w">        </span><span class="err">}</span>
+
+<span class="w">        </span><span class="n">sort</span><span class="p">(</span><span class="n">p</span><span class="p">.</span><span class="n">rbegin</span><span class="p">()</span><span class="w"> </span><span class="p">,</span><span class="w"> </span><span class="n">p</span><span class="p">.</span><span class="n">rend</span><span class="p">());</span>
+
+<span class="w">        </span><span class="n">long</span><span class="w"> </span><span class="n">long</span><span class="w"> </span><span class="n">ans</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">        </span><span class="n">long</span><span class="w"> </span><span class="n">long</span><span class="w"> </span><span class="nf">sum</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">        </span><span class="n">priority_queue</span><span class="o">&lt;</span><span class="nc">int</span><span class="o">&gt;</span><span class="w"> </span><span class="n">pq</span><span class="p">;</span>
+<span class="w">        </span><span class="k">for</span><span class="p">(</span><span class="nc">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">&lt;</span><span class="n">k</span><span class="o">-</span><span class="mi">1</span><span class="w"> </span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span>
+<span class="w">        </span><span class="err">{</span>
+<span class="w">            </span><span class="nf">sum</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">p</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="p">.</span><span class="k">second</span><span class="p">;</span>
+<span class="w">            </span><span class="n">pq</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="o">-</span><span class="n">p</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="p">.</span><span class="k">second</span><span class="p">);</span>
+<span class="w">        </span><span class="err">}</span>
+
+<span class="w">        </span><span class="k">for</span><span class="p">(</span><span class="nc">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">k</span><span class="o">-</span><span class="mi">1</span><span class="w"> </span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">&lt;</span><span class="n">nums1</span><span class="p">.</span><span class="k">size</span><span class="p">()</span><span class="w"> </span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span>
+<span class="w">        </span><span class="err">{</span>
+
+<span class="w">            </span><span class="nf">sum</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">p</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="p">.</span><span class="k">second</span><span class="p">;</span>
+<span class="w">            </span><span class="n">pq</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="o">-</span><span class="n">p</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="p">.</span><span class="k">second</span><span class="p">);</span>
+
+<span class="w">            </span><span class="n">ans</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">max</span><span class="p">(</span><span class="n">ans</span><span class="p">,</span><span class="w"> </span><span class="nf">sum</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">p</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="p">.</span><span class="k">first</span><span class="w"> </span><span class="p">);</span>
+
+<span class="w">            </span><span class="nf">sum</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">pq</span><span class="p">.</span><span class="k">top</span><span class="p">();</span>
+<span class="w">            </span><span class="n">pq</span><span class="p">.</span><span class="n">pop</span><span class="p">();</span>
+<span class="w">        </span><span class="err">}</span>
+
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">ans</span><span class="p">;</span>
+
+
+<span class="w">    </span><span class="err">}</span>
+<span class="err">}</span><span class="p">;</span>
+</code></pre></div></div>
+
+
+<div class='python-solution'><h2>[Java/C++/Python] Priority Queue -- Votes: 196</h2><h2><strong>Intuition</strong></h2>
+<p>Almost exactly same as<br />
+<a href="https://leetcode.com/problems/maximum-performance-of-a-team/discuss/539687/JavaC%2B%2BPython-Priority-Queue">1383. Maximum Performance of a Team</a>.<br />
+<br></p>
+<h2><strong>Explanation</strong></h2>
+<p>We iterate all pairs <code>(A[i], B[i])</code> with <code>B[i]</code> from big to small,<br />
+We keep the priority queue with maximum size of <code>k</code>.<br />
+Each time when we introduce a new pair of <code>(A[i], B[i])</code>,<br />
+the current minimum value on B is <code>B[i]</code><br />
+the current sum value on A is <code>sum(priority queue)</code></p>
+<p>If the size of queue &gt; k,<br />
+we pop the minimum <code>A[i]</code>.<br />
+also update total <code>sum -= A[i]</code></p>
+<p>If the size of queue == k,<br />
+we update <code>res = res = max(res, sum * B[i])</code><br />
+<br></p>
+<h2><strong>Complexity</strong></h2>
+<p>Time <code>O(nlogn)</code><br />
+Space <code>O(n)</code><br />
+<br></p>
+<p><strong>Java</strong></p>
+<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">java</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="nf">maxScore</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">speed</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">efficiency</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">k</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">speed</span><span class="p">.</span><span class="na">length</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">ess</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="kt">int</span><span class="o">[</span><span class="n">n</span><span class="o">][</span><span class="mi">2</span><span class="o">]</span><span class="p">;</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">n</span><span class="p">;</span><span class="w"> </span><span class="o">++</span><span class="n">i</span><span class="p">)</span>
+<span class="w">            </span><span class="n">ess</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="p">{</span><span class="n">efficiency</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="p">,</span><span class="w"> </span><span class="n">speed</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="p">};</span>
+<span class="w">        </span><span class="n">Arrays</span><span class="p">.</span><span class="na">sort</span><span class="p">(</span><span class="n">ess</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">b</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">a</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span><span class="p">);</span>
+<span class="w">        </span><span class="n">PriorityQueue</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span><span class="w"> </span><span class="n">pq</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">PriorityQueue</span><span class="o">&lt;&gt;</span><span class="p">(</span><span class="n">k</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">b</span><span class="p">);</span>
+<span class="w">        </span><span class="kt">long</span><span class="w"> </span><span class="n">res</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">sumS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">es</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">ess</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">pq</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="n">es</span><span class="o">[</span><span class="mi">1</span><span class="o">]</span><span class="p">);</span>
+<span class="w">            </span><span class="n">sumS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">sumS</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">es</span><span class="o">[</span><span class="mi">1</span><span class="o">]</span><span class="p">);</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">pq</span><span class="p">.</span><span class="na">size</span><span class="p">()</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">k</span><span class="p">)</span><span class="w"> </span><span class="n">sumS</span><span class="w"> </span><span class="o">-=</span><span class="w"> </span><span class="n">pq</span><span class="p">.</span><span class="na">poll</span><span class="p">();</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">pq</span><span class="p">.</span><span class="na">size</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">k</span><span class="p">)</span><span class="w"> </span><span class="n">res</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Math</span><span class="p">.</span><span class="na">max</span><span class="p">(</span><span class="n">res</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="n">sumS</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">es</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span><span class="p">));</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">res</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+</code></pre></div>
+
+<p><strong>C++</strong></p>
+<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">cpp</span>
+<span class="w">    </span><span class="kt">long</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">maxScore</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&amp;</span><span class="w"> </span><span class="n">speed</span><span class="p">,</span><span class="w"> </span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&amp;</span><span class="w"> </span><span class="n">efficiency</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">k</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">speed</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>
+<span class="w">        </span><span class="n">vector</span><span class="o">&lt;</span><span class="n">pair</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="n">ess</span><span class="p">(</span><span class="n">n</span><span class="p">);</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">n</span><span class="p">;</span><span class="w"> </span><span class="o">++</span><span class="n">i</span><span class="p">)</span>
+<span class="w">            </span><span class="n">ess</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="n">efficiency</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="w"> </span><span class="n">speed</span><span class="p">[</span><span class="n">i</span><span class="p">]};</span>
+<span class="w">        </span><span class="n">sort</span><span class="p">(</span><span class="n">rbegin</span><span class="p">(</span><span class="n">ess</span><span class="p">),</span><span class="w"> </span><span class="n">rend</span><span class="p">(</span><span class="n">ess</span><span class="p">));</span>
+<span class="w">        </span><span class="kt">long</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">sumS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">res</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">        </span><span class="n">priority_queue</span><span class="w"> </span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="w"> </span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">,</span><span class="w"> </span><span class="n">greater</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="n">pq</span><span class="p">;</span><span class="w"> </span><span class="c1">//min heap</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="o">&amp;</span><span class="w"> </span><span class="p">[</span><span class="n">e</span><span class="p">,</span><span class="w"> </span><span class="n">s</span><span class="p">]</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">ess</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">pq</span><span class="p">.</span><span class="n">emplace</span><span class="p">(</span><span class="n">s</span><span class="p">);</span>
+<span class="w">            </span><span class="n">sumS</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">s</span><span class="p">;</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">pq</span><span class="p">.</span><span class="n">size</span><span class="p">()</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">k</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">sumS</span><span class="w"> </span><span class="o">-=</span><span class="w"> </span><span class="n">pq</span><span class="p">.</span><span class="n">top</span><span class="p">();</span>
+<span class="w">                </span><span class="n">pq</span><span class="p">.</span><span class="n">pop</span><span class="p">();</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">pq</span><span class="p">.</span><span class="n">size</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">k</span><span class="p">)</span>
+<span class="w">                </span><span class="n">res</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">max</span><span class="p">(</span><span class="n">res</span><span class="p">,</span><span class="w"> </span><span class="n">sumS</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">e</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">res</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+</code></pre></div>
+
+<p><strong>Python</strong></p>
+<div class="codehilite"><pre><span></span><code><span class="n">Language</span><span class="p">:</span> <span class="n">py</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">maxScore</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="n">k</span><span class="p">):</span>
+        <span class="n">total</span> <span class="o">=</span> <span class="n">res</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">h</span> <span class="o">=</span> 
+        <span class="k">for</span> <span class="n">a</span><span class="p">,</span><span class="n">b</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">)),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">ab</span><span class="p">:</span> <span class="o">-</span><span class="n">ab</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
+            <span class="n">heappush</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span>
+            <span class="n">total</span> <span class="o">+=</span> <span class="n">a</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">h</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">k</span><span class="p">:</span>
+                <span class="n">total</span> <span class="o">-=</span> <span class="n">heappop</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">h</span><span class="p">)</span> <span class="o">==</span> <span class="n">k</span><span class="p">:</span>
+                <span class="n">res</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">total</span> <span class="o">*</span> <span class="n">b</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">res</span>
+</code></pre></div></div><p style="page-break-before: always" ></p>

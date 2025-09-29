@@ -1,0 +1,158 @@
+<div class='cpp-solution'><h2>Beats 100% ✅🔥(Both time and space) | Java, Python, C++ | Detailed Explanation -- Votes: 104</h2><p></p>
+<h2>Intuition</h2>
+<p>The goal of the RecentCounter class is to count the number of requests that occurred in the last <code>3000</code> milliseconds (ms). Each time a request is made (using the ping method), we record the time and maintain a count of all requests within the last <code>3000</code> ms. By efficiently tracking only the relevant requests, we can quickly compute the <code>result</code>.</p>
+<h2>Approach</h2>
+<ol>
+<li><code>Data Structure</code>: Use an array <code>records</code> to store timestamps of requests. The start and end indices mark the window of valid requests within the last <code>3000</code> ms.</li>
+<li><code>ping(int t)</code> Method:<br />
+   - <strong>Add Timestamp</strong>: Insert the current timestamp t at the position indicated by <code>end</code>.<br />
+   - <strong>Remove Outdated Requests</strong>: Increment the <code>start</code> index until the requests are within the <code>3000</code> ms window (<code>t - records[start] &lt;= 3000</code>).<br />
+   - <strong>Count Valid Requests</strong>: Return the count of requests within the window (<code>end - start</code>), which represents the number of valid requests in the last 3000 ms.</li>
+</ol>
+<h2>Complexity</h2>
+<ul>
+<li>
+<p>Time complexity: $$O(n)$$</p>
+</li>
+<li>
+<p>Space complexity: $$O(1)$$</p>
+</li>
+</ul>
+<h2>Code</h2>
+<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">java</span><span class="w"> </span>
+<span class="kd">class</span> <span class="nc">RecentCounter</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">records</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="kt">int</span><span class="o">[</span><span class="mi">10000</span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="c1">//</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">start</span><span class="p">;</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">end</span><span class="p">;</span>
+
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="nf">RecentCounter</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w">        </span>
+<span class="w">        </span><span class="n">start</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">        </span><span class="n">end</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="nf">ping</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">t</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">start</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">end</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="p">(</span><span class="n">t</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">records</span><span class="o">[</span><span class="n">start</span><span class="o">]</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">3000</span><span class="p">))</span><span class="w"> </span><span class="p">{</span><span class="w"> </span>
+<span class="w">            </span><span class="n">start</span><span class="o">++</span><span class="p">;</span><span class="w"> </span><span class="c1">// if the difference in time is greater than 3000ms, </span>
+<span class="w">            </span><span class="c1">// than increase the value of start unitl it&#39;s equal or less than 3000ms.</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="n">records</span><span class="o">[</span><span class="n">end</span><span class="o">++]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">t</span><span class="p">;</span><span class="w"> </span><span class="c1">// Inserting the current time at the end</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">end</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">start</span><span class="p">;</span><span class="w"> </span><span class="c1">// Returning the answer including the element added just now.</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code><span class="n">Language</span><span class="p">:</span> <span class="n">python</span> 
+<span class="k">class</span><span class="w"> </span><span class="nc">RecentCounter</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">records</span> <span class="o">=</span> 
+        <span class="bp">self</span><span class="o">.</span><span class="n">start</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">ping</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">records</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+        <span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">records</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">start</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">t</span> <span class="o">-</span> <span class="mi">3000</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">start</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">records</span><span class="p">)</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">start</span>
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">cpp</span><span class="w"> </span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;vector&gt;</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">RecentCounter</span><span class="w"> </span><span class="p">{</span>
+<span class="k">private</span><span class="o">:</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="w"> </span><span class="n">records</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">start</span><span class="p">;</span>
+
+<span class="k">public</span><span class="o">:</span>
+<span class="w">    </span><span class="n">RecentCounter</span><span class="p">()</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">start</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{}</span>
+
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">ping</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">t</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">records</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">t</span><span class="p">);</span>
+<span class="w">        </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">records</span><span class="p">[</span><span class="n">start</span><span class="p">]</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">t</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">3000</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">start</span><span class="o">++</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">records</span><span class="p">.</span><span class="n">size</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">start</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">};</span>
+</code></pre></div>
+
+<p></p></div>
+
+
+<div class='python-solution'><h2>Beats 100% ✅🔥(Both time and space) | Java, Python, C++ | Detailed Explanation -- Votes: 104</h2><p></p>
+<h2>Intuition</h2>
+<p>The goal of the RecentCounter class is to count the number of requests that occurred in the last <code>3000</code> milliseconds (ms). Each time a request is made (using the ping method), we record the time and maintain a count of all requests within the last <code>3000</code> ms. By efficiently tracking only the relevant requests, we can quickly compute the <code>result</code>.</p>
+<h2>Approach</h2>
+<ol>
+<li><code>Data Structure</code>: Use an array <code>records</code> to store timestamps of requests. The start and end indices mark the window of valid requests within the last <code>3000</code> ms.</li>
+<li><code>ping(int t)</code> Method:<br />
+   - <strong>Add Timestamp</strong>: Insert the current timestamp t at the position indicated by <code>end</code>.<br />
+   - <strong>Remove Outdated Requests</strong>: Increment the <code>start</code> index until the requests are within the <code>3000</code> ms window (<code>t - records[start] &lt;= 3000</code>).<br />
+   - <strong>Count Valid Requests</strong>: Return the count of requests within the window (<code>end - start</code>), which represents the number of valid requests in the last 3000 ms.</li>
+</ol>
+<h2>Complexity</h2>
+<ul>
+<li>
+<p>Time complexity: $$O(n)$$</p>
+</li>
+<li>
+<p>Space complexity: $$O(1)$$</p>
+</li>
+</ul>
+<h2>Code</h2>
+<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">java</span><span class="w"> </span>
+<span class="kd">class</span> <span class="nc">RecentCounter</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">records</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="kt">int</span><span class="o">[</span><span class="mi">10000</span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="c1">//</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">start</span><span class="p">;</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">end</span><span class="p">;</span>
+
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="nf">RecentCounter</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w">        </span>
+<span class="w">        </span><span class="n">start</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">        </span><span class="n">end</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="nf">ping</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">t</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">start</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">end</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="p">(</span><span class="n">t</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">records</span><span class="o">[</span><span class="n">start</span><span class="o">]</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">3000</span><span class="p">))</span><span class="w"> </span><span class="p">{</span><span class="w"> </span>
+<span class="w">            </span><span class="n">start</span><span class="o">++</span><span class="p">;</span><span class="w"> </span><span class="c1">// if the difference in time is greater than 3000ms, </span>
+<span class="w">            </span><span class="c1">// than increase the value of start unitl it&#39;s equal or less than 3000ms.</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="n">records</span><span class="o">[</span><span class="n">end</span><span class="o">++]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">t</span><span class="p">;</span><span class="w"> </span><span class="c1">// Inserting the current time at the end</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">end</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">start</span><span class="p">;</span><span class="w"> </span><span class="c1">// Returning the answer including the element added just now.</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code><span class="n">Language</span><span class="p">:</span> <span class="n">python</span> 
+<span class="k">class</span><span class="w"> </span><span class="nc">RecentCounter</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">records</span> <span class="o">=</span> 
+        <span class="bp">self</span><span class="o">.</span><span class="n">start</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">ping</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">records</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+        <span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">records</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">start</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">t</span> <span class="o">-</span> <span class="mi">3000</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">start</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">records</span><span class="p">)</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">start</span>
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">cpp</span><span class="w"> </span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;vector&gt;</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">RecentCounter</span><span class="w"> </span><span class="p">{</span>
+<span class="k">private</span><span class="o">:</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="w"> </span><span class="n">records</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">start</span><span class="p">;</span>
+
+<span class="k">public</span><span class="o">:</span>
+<span class="w">    </span><span class="n">RecentCounter</span><span class="p">()</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">start</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{}</span>
+
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">ping</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">t</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">records</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">t</span><span class="p">);</span>
+<span class="w">        </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">records</span><span class="p">[</span><span class="n">start</span><span class="p">]</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">t</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">3000</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">start</span><span class="o">++</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">records</span><span class="p">.</span><span class="n">size</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">start</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">};</span>
+</code></pre></div>
+
+<p></p></div><p style="page-break-before: always" ></p>

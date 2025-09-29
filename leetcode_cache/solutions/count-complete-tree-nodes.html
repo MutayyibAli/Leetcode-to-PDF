@@ -1,0 +1,114 @@
+<div class='cpp-solution'><h2>C++ | 4 Methods | One line solution | Easy-To-Understand | Clean Code -- Votes: 58</h2><p><strong><em>Method-1 : ( 1-Line )</em></strong></p>
+<div class="codehilite"><pre><span></span><code><span class="n">int</span><span class="w"> </span><span class="n">countNodes</span><span class="p">(</span><span class="n">TreeNode</span><span class="o">*</span><span class="w"> </span><span class="n">root</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kr">return</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">NULL</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">countNodes</span><span class="p">(</span><span class="n">root</span><span class="o">-&gt;</span><span class="kr">left</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">countNodes</span><span class="p">(</span><span class="n">root</span><span class="o">-&gt;</span><span class="kr">right</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">};</span>
+</code></pre></div>
+
+<p><strong><em>Method - 2 : ( Effecient Approach )</em></strong></p>
+<div class="codehilite"><pre><span></span><code><span class="nt">class</span><span class="w"> </span><span class="nt">Solution</span><span class="w"> </span><span class="p">{</span>
+<span class="n">public</span><span class="p">:</span>
+<span class="w">    </span><span class="n">int</span><span class="w"> </span><span class="nf">countNodes</span><span class="p">(</span><span class="n">TreeNode</span><span class="o">*</span><span class="w"> </span><span class="n">root</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
+<span class="w">        </span><span class="nf">if</span><span class="p">(</span><span class="err">!</span><span class="n">root</span><span class="p">)</span>
+<span class="w">            </span><span class="n">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">        </span><span class="err">int</span><span class="w"> </span><span class="err">lh</span><span class="w"> </span><span class="err">=</span><span class="w"> </span><span class="err">0,</span><span class="w"> </span><span class="err">rh</span><span class="w"> </span><span class="err">=</span><span class="w"> </span><span class="err">0</span><span class="p">;</span>
+<span class="w">        </span><span class="err">TreeNode*</span><span class="w"> </span><span class="err">l</span><span class="w"> </span><span class="err">=</span><span class="w"> </span><span class="err">root,</span><span class="w"> </span><span class="err">*r</span><span class="w"> </span><span class="err">=</span><span class="w"> </span><span class="err">root</span><span class="p">;</span>
+<span class="w">        </span><span class="err">while(l){</span>
+<span class="w">            </span><span class="err">lh++</span><span class="p">;</span>
+<span class="w">            </span><span class="err">l</span><span class="w"> </span><span class="err">=</span><span class="w"> </span><span class="err">l-&gt;left</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="nt">while</span><span class="o">(</span><span class="nt">r</span><span class="o">)</span><span class="p">{</span>
+<span class="w">            </span><span class="err">rh++</span><span class="p">;</span>
+<span class="w">            </span><span class="err">r</span><span class="w"> </span><span class="err">=</span><span class="w"> </span><span class="err">r-&gt;right</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="nt">if</span><span class="o">(</span><span class="nt">lh</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nt">rh</span><span class="o">)</span>
+<span class="w">            </span><span class="nt">return</span><span class="w"> </span><span class="nt">pow</span><span class="o">(</span><span class="nt">2</span><span class="o">,</span><span class="w"> </span><span class="nt">lh</span><span class="o">)</span><span class="w"> </span><span class="nt">-</span><span class="w"> </span><span class="nt">1</span><span class="o">;</span>
+
+<span class="w">        </span><span class="nt">return</span><span class="w"> </span><span class="nt">1</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nt">countNodes</span><span class="o">(</span><span class="nt">root-</span><span class="o">&gt;</span><span class="nt">left</span><span class="o">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nt">countNodes</span><span class="o">(</span><span class="nt">root-</span><span class="o">&gt;</span><span class="nt">right</span><span class="o">);</span>
+<span class="w">    </span><span class="err">}</span>
+<span class="err">}</span><span class="o">;</span>
+</code></pre></div>
+
+<p><em>Time Complexity : O( logN logN )</em></p>
+<p><strong><em>Method - 3 : ( Using queue )</em></strong></p>
+<div class="codehilite"><pre><span></span><code><span class="nt">class</span><span class="w"> </span><span class="nt">Solution</span><span class="w"> </span><span class="p">{</span>
+<span class="n">public</span><span class="p">:</span>
+<span class="w">    </span><span class="n">int</span><span class="w"> </span><span class="nf">countNodes</span><span class="p">(</span><span class="n">TreeNode</span><span class="o">*</span><span class="w"> </span><span class="n">root</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
+<span class="w">        </span><span class="nf">if</span><span class="p">(</span><span class="n">root</span><span class="w"> </span><span class="err">==</span><span class="w"> </span><span class="n">NULL</span><span class="p">)</span>
+<span class="w">        </span><span class="n">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+
+<span class="w">        </span><span class="err">int</span><span class="w"> </span><span class="err">res</span><span class="w"> </span><span class="err">=</span><span class="w"> </span><span class="err">0</span><span class="p">;</span>
+<span class="w">        </span><span class="err">queue&lt;TreeNode</span><span class="w"> </span><span class="err">*&gt;</span><span class="w"> </span><span class="err">q</span><span class="p">;</span>
+<span class="w">        </span><span class="err">q.push(root)</span><span class="p">;</span>
+<span class="w">        </span><span class="err">while(!q.empty())</span>
+<span class="w">        </span><span class="err">{</span>
+
+<span class="w">            </span><span class="err">for(int</span><span class="w"> </span><span class="err">i</span><span class="w"> </span><span class="err">=</span><span class="w"> </span><span class="err">0</span><span class="p">;</span><span class="w"> </span><span class="err">i</span><span class="w"> </span><span class="err">&lt;</span><span class="w"> </span><span class="err">q.size()</span><span class="p">;</span><span class="w"> </span><span class="err">++</span><span class="w"> </span><span class="err">i)</span>
+<span class="w">            </span><span class="err">{</span>
+<span class="w">                 </span><span class="err">++</span><span class="w"> </span><span class="err">res</span><span class="p">;</span>
+<span class="w">                </span><span class="err">TreeNode</span><span class="w"> </span><span class="err">*p</span><span class="w"> </span><span class="err">=</span><span class="w"> </span><span class="err">q.front()</span><span class="p">;</span>
+<span class="w">                </span><span class="err">q.pop()</span><span class="p">;</span>
+
+<span class="w">                </span><span class="err">if(p</span><span class="w"> </span><span class="err">-&gt;</span><span class="w"> </span><span class="err">left</span><span class="w"> </span><span class="err">!=</span><span class="w"> </span><span class="err">NULL)</span>
+<span class="w">                    </span><span class="err">q.push(p</span><span class="w"> </span><span class="err">-&gt;</span><span class="w"> </span><span class="err">left)</span><span class="p">;</span>
+<span class="w">                </span><span class="err">if(p</span><span class="w"> </span><span class="err">-&gt;</span><span class="w"> </span><span class="err">right</span><span class="w"> </span><span class="err">!=</span><span class="w"> </span><span class="err">NULL)</span>
+<span class="w">                    </span><span class="err">q.push(p</span><span class="w"> </span><span class="err">-&gt;</span><span class="w"> </span><span class="err">right)</span><span class="p">;</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="err">}</span>
+
+<span class="w">        </span><span class="nt">return</span><span class="w"> </span><span class="nt">res</span><span class="o">;</span>
+<span class="w">    </span><span class="err">}</span>
+<span class="err">}</span><span class="o">;</span>
+</code></pre></div>
+
+<p><strong><em>Method - 4 : ( 0(n) approach )</em></strong></p>
+<div class="codehilite"><pre><span></span><code><span class="nt">class</span><span class="w"> </span><span class="nt">Solution</span><span class="w"> </span><span class="p">{</span>
+<span class="n">public</span><span class="p">:</span>
+<span class="w">    </span><span class="n">int</span><span class="w"> </span><span class="n">count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">    </span><span class="err">void</span><span class="w"> </span><span class="err">helper(TreeNode*</span><span class="w"> </span><span class="err">root){</span>
+
+<span class="w">        </span><span class="err">if(root)</span>
+<span class="w">            </span><span class="err">count++</span><span class="p">;</span>
+
+<span class="w">        </span><span class="err">if(root-&gt;left)</span>
+<span class="w">        </span><span class="err">helper(root-&gt;left)</span><span class="p">;</span>
+<span class="w">        </span><span class="err">if(root-&gt;right)</span>
+<span class="w">        </span><span class="err">helper(root-&gt;right)</span><span class="p">;</span>
+
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="nt">int</span><span class="w"> </span><span class="nt">countNodes</span><span class="o">(</span><span class="nt">TreeNode</span><span class="o">*</span><span class="w"> </span><span class="nt">root</span><span class="o">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="err">if(!root)</span>
+<span class="w">            </span><span class="err">return</span><span class="w"> </span><span class="err">0</span><span class="p">;</span>
+<span class="w">       </span><span class="err">helper(root)</span><span class="p">;</span>
+<span class="w">        </span><span class="err">return</span><span class="w"> </span><span class="err">count</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="err">}</span><span class="o">;</span>
+</code></pre></div>
+
+<p><em>Time Complexity : O(n)</em></p>
+<p>Hope you liked it , kindly upvote !!</p>
+<p>Happy Coding</p></div>
+
+
+<div class='python-solution'><h2>My python solution in O(lgn * lgn) time -- Votes: 441</h2><p>compare the depth between left sub tree and right sub tree.<br />
+A, If it is equal, it means the left sub tree is a full binary tree<br />
+B, It it is not , it means the right sub tree is a full binary tree</p>
+<div class="codehilite"><pre><span></span><code><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nl">Solution</span><span class="p">:</span>
+<span class="w">        </span><span class="err">#</span><span class="w"> </span><span class="nv">@param</span><span class="w"> </span><span class="err">{</span><span class="n">TreeNode</span><span class="err">}</span><span class="w"> </span><span class="n">root</span>
+<span class="w">        </span><span class="err">#</span><span class="w"> </span><span class="nv">@return</span><span class="w"> </span><span class="err">{</span><span class="k">integer</span><span class="err">}</span>
+<span class="w">        </span><span class="n">def</span><span class="w"> </span><span class="n">countNodes</span><span class="p">(</span><span class="n">self</span><span class="p">,</span><span class="w"> </span><span class="n">root</span><span class="p">)</span><span class="err">:</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="nl">root</span><span class="p">:</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">            </span><span class="n">leftDepth</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">self</span><span class="p">.</span><span class="n">getDepth</span><span class="p">(</span><span class="n">root</span><span class="p">.</span><span class="nf">left</span><span class="p">)</span>
+<span class="w">            </span><span class="n">rightDepth</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">self</span><span class="p">.</span><span class="n">getDepth</span><span class="p">(</span><span class="n">root</span><span class="p">.</span><span class="nf">right</span><span class="p">)</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="n">leftDepth</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nl">rightDepth</span><span class="p">:</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="n">pow</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="n">leftDepth</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">self</span><span class="p">.</span><span class="n">countNodes</span><span class="p">(</span><span class="n">root</span><span class="p">.</span><span class="nf">right</span><span class="p">)</span>
+<span class="w">            </span><span class="k">else</span><span class="err">:</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="n">pow</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="n">rightDepth</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">self</span><span class="p">.</span><span class="n">countNodes</span><span class="p">(</span><span class="n">root</span><span class="p">.</span><span class="nf">left</span><span class="p">)</span>
+
+<span class="w">        </span><span class="n">def</span><span class="w"> </span><span class="n">getDepth</span><span class="p">(</span><span class="n">self</span><span class="p">,</span><span class="w"> </span><span class="n">root</span><span class="p">)</span><span class="err">:</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="nl">root</span><span class="p">:</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">self</span><span class="p">.</span><span class="n">getDepth</span><span class="p">(</span><span class="n">root</span><span class="p">.</span><span class="nf">left</span><span class="p">)</span>
+</code></pre></div></div><p style="page-break-before: always" ></p>

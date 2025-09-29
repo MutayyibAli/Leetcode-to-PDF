@@ -1,0 +1,97 @@
+<div class='cpp-solution'><h2>✅C++ | ✅DFS | ✅BFS | ✅Intuitive Approach -- Votes: 11</h2><h2>Intuition</h2>
+<p>We need to use BFS/DFS traversal technique to visit all rooms.</p>
+<h2>Approach</h2>
+<p>We define visited array and while visiting all rooms we mark visited rooms. At last we check whether all rooms are visited or not.</p>
+<h2>DFS</h2>
+<div class="codehilite"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="n">Solution</span><span class="w"> </span>
+<span class="err">{</span>
+<span class="k">public</span><span class="err">:</span>
+
+<span class="w">    </span><span class="n">void</span><span class="w"> </span><span class="n">dfs</span><span class="p">(</span><span class="nc">int</span><span class="w"> </span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">vector</span><span class="o">&lt;</span><span class="n">vector</span><span class="o">&lt;</span><span class="nc">int</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">rooms</span><span class="p">,</span><span class="w"> </span><span class="n">vector</span><span class="o">&lt;</span><span class="nc">int</span><span class="o">&gt;</span><span class="w"> </span><span class="o">&amp;</span><span class="n">vis</span><span class="p">)</span>
+<span class="w">    </span><span class="err">{</span>
+<span class="w">        </span><span class="n">vis</span><span class="o">[</span><span class="n">i</span><span class="o">]=</span><span class="mi">1</span><span class="p">;</span>
+<span class="w">        </span><span class="k">for</span><span class="p">(</span><span class="n">auto</span><span class="w"> </span><span class="k">key</span><span class="err">:</span><span class="w"> </span><span class="n">rooms</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="p">)</span>
+<span class="w">            </span><span class="k">if</span><span class="p">(</span><span class="err">!</span><span class="n">vis</span><span class="o">[</span><span class="n">key</span><span class="o">]</span><span class="p">)</span>
+<span class="w">                </span><span class="n">dfs</span><span class="p">(</span><span class="k">key</span><span class="p">,</span><span class="w"> </span><span class="n">rooms</span><span class="p">,</span><span class="w"> </span><span class="n">vis</span><span class="p">);</span>
+<span class="w">    </span><span class="err">}</span>
+
+<span class="w">    </span><span class="n">bool</span><span class="w"> </span><span class="n">canVisitAllRooms</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">vector</span><span class="o">&lt;</span><span class="nc">int</span><span class="o">&gt;&gt;&amp;</span><span class="w"> </span><span class="n">rooms</span><span class="p">)</span><span class="w"> </span>
+<span class="w">    </span><span class="err">{</span>
+<span class="w">        </span><span class="n">vector</span><span class="o">&lt;</span><span class="nc">int</span><span class="o">&gt;</span><span class="w"> </span><span class="n">vis</span><span class="p">(</span><span class="n">rooms</span><span class="p">.</span><span class="k">size</span><span class="p">(),</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
+
+<span class="w">        </span><span class="n">dfs</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">rooms</span><span class="p">,</span><span class="w"> </span><span class="n">vis</span><span class="p">);</span>
+
+<span class="w">        </span><span class="k">for</span><span class="p">(</span><span class="n">auto</span><span class="w"> </span><span class="nl">it</span><span class="p">:</span><span class="n">vis</span><span class="p">)</span>
+<span class="w">            </span><span class="k">if</span><span class="p">(</span><span class="err">!</span><span class="n">it</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="k">false</span><span class="p">;</span>
+
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
+
+<span class="w">    </span><span class="err">}</span>
+<span class="err">}</span><span class="p">;</span>
+</code></pre></div>
+
+<h3>Complexity</h3>
+<ul>
+<li>
+<p>Time complexity:<br />
+  O(n)</p>
+</li>
+<li>
+<p>Space complexity:<br />
+  O(2n) ~ O(n)</p>
+</li>
+</ul>
+<h2>BFS</h2>
+<div class="codehilite"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="n">Solution</span><span class="w"> </span>
+<span class="err">{</span>
+<span class="k">public</span><span class="err">:</span>
+
+<span class="w">    </span><span class="n">bool</span><span class="w"> </span><span class="n">canVisitAllRooms</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">vector</span><span class="o">&lt;</span><span class="nc">int</span><span class="o">&gt;&gt;&amp;</span><span class="w"> </span><span class="n">rooms</span><span class="p">)</span><span class="w"> </span>
+<span class="w">    </span><span class="err">{</span>
+<span class="w">        </span><span class="nc">int</span><span class="w"> </span><span class="n">n</span><span class="o">=</span><span class="n">rooms</span><span class="p">.</span><span class="k">size</span><span class="p">();</span>
+<span class="w">        </span><span class="n">vector</span><span class="o">&lt;</span><span class="nc">int</span><span class="o">&gt;</span><span class="w"> </span><span class="n">vis</span><span class="p">(</span><span class="n">n</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
+<span class="w">        </span><span class="n">queue</span><span class="o">&lt;</span><span class="nc">int</span><span class="o">&gt;</span><span class="w"> </span><span class="n">q</span><span class="p">;</span>
+<span class="w">        </span><span class="n">q</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+<span class="w">        </span><span class="k">while</span><span class="p">(</span><span class="err">!</span><span class="n">q</span><span class="p">.</span><span class="n">empty</span><span class="p">())</span>
+<span class="w">        </span><span class="err">{</span>
+<span class="w">            </span><span class="nc">int</span><span class="w"> </span><span class="n">curr_room</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">q</span><span class="p">.</span><span class="n">front</span><span class="p">();</span><span class="w"> </span><span class="n">q</span><span class="p">.</span><span class="n">pop</span><span class="p">();</span>
+<span class="w">            </span><span class="n">vis</span><span class="o">[</span><span class="n">curr_room</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="w">            </span><span class="k">for</span><span class="p">(</span><span class="n">auto</span><span class="w"> </span><span class="k">key</span><span class="err">:</span><span class="n">rooms</span><span class="o">[</span><span class="n">curr_room</span><span class="o">]</span><span class="p">)</span>
+<span class="w">                </span><span class="k">if</span><span class="p">(</span><span class="err">!</span><span class="n">vis</span><span class="o">[</span><span class="n">key</span><span class="o">]</span><span class="p">)</span>
+<span class="w">                    </span><span class="n">q</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="k">key</span><span class="p">);</span>
+<span class="w">        </span><span class="err">}</span>
+
+<span class="w">        </span><span class="k">for</span><span class="p">(</span><span class="nc">int</span><span class="w"> </span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">&lt;</span><span class="n">n</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span>
+<span class="w">            </span><span class="k">if</span><span class="p">(</span><span class="err">!</span><span class="n">vis</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="k">false</span><span class="p">;</span>
+
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
+<span class="w">    </span><span class="err">}</span>
+<span class="err">}</span><span class="p">;</span>
+</code></pre></div>
+
+<h3>Complexity</h3>
+<ul>
+<li>
+<p>Time complexity:<br />
+  O(n)</p>
+</li>
+<li>
+<p>Space complexity:<br />
+  O(2n) ~ O(n)</p>
+</li>
+</ul></div>
+
+
+<div class='python-solution'><h2>[Python3] Soln -> Keys and Rooms [stack implementation] -- Votes: 32</h2><div class="codehilite"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nl">Solution</span><span class="p">:</span>
+<span class="w">    </span><span class="n">def</span><span class="w"> </span><span class="n">canVisitAllRooms</span><span class="p">(</span><span class="n">self</span><span class="p">,</span><span class="w"> </span><span class="nl">rooms</span><span class="p">:</span><span class="w"> </span><span class="n">List</span><span class="o">[</span><span class="n">List[int</span><span class="o">]</span><span class="err">]</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="nl">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="n">visited_rooms</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">set</span><span class="p">()</span>
+<span class="w">        </span><span class="n">stack</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[</span><span class="n">0</span><span class="o">]</span><span class="w"> </span><span class="err">#</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">rooms</span><span class="w"> </span><span class="n">that</span><span class="w"> </span><span class="n">we</span><span class="w"> </span><span class="n">need</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="n">visit</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="n">we</span><span class="w"> </span><span class="k">start</span><span class="w"> </span><span class="k">from</span><span class="w"> </span><span class="n">room</span><span class="w"> </span><span class="o">[</span><span class="n">0</span><span class="o">]</span>
+
+<span class="w">        </span><span class="k">while</span><span class="w"> </span><span class="nl">stack</span><span class="p">:</span><span class="w"> </span>
+<span class="w">            </span><span class="n">room</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">stack</span><span class="p">.</span><span class="n">pop</span><span class="p">()</span><span class="w"> </span>
+<span class="w">            </span><span class="n">visited_rooms</span><span class="p">.</span><span class="k">add</span><span class="p">(</span><span class="n">room</span><span class="p">)</span>
+<span class="w">            </span><span class="k">for</span><span class="w"> </span><span class="k">key</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">rooms</span><span class="o">[</span><span class="n">room</span><span class="o">]</span><span class="err">:</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="k">key</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="nl">visited_rooms</span><span class="p">:</span>
+<span class="w">                    </span><span class="n">stack</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="k">key</span><span class="p">)</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="nf">len</span><span class="p">(</span><span class="n">visited_rooms</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nf">len</span><span class="p">(</span><span class="n">rooms</span><span class="p">)</span><span class="w">            </span>
+</code></pre></div></div><p style="page-break-before: always" ></p>

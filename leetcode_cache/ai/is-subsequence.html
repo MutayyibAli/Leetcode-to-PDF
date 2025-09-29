@@ -1,0 +1,78 @@
+<div class='ai-explanation'><h3>Explanation of Approaches</h3>
+<p>The problem asks whether a string <code>s</code> can be formed by deleting zero or more characters from another string <code>t</code>, without changing the order of the remaining characters. The provided solutions demonstrate a highly efficient greedy approach.</p>
+<h4>1. Two-Pointer Approach</h4>
+<p>This is a greedy and intuitive approach. We use two pointers, one for string <code>s</code> (let's call it <code>s_ptr</code>) and one for string <code>t</code> (let's call it <code>t_ptr</code>), both starting at index 0.</p>
+<ul>
+<li>We iterate through string <code>t</code> with <code>t_ptr</code>.</li>
+<li>At each character in <code>t</code>, we check if it matches the character <code>s</code> is currently looking for (i.e., <code>s[s_ptr]</code>).</li>
+<li>If <code>s[s_ptr] == t[t_ptr]</code>, it means we've found the next character of the subsequence. We then advance both pointers (<code>s_ptr++</code> and <code>t_ptr++</code>).</li>
+<li>If they don't match, it means <code>t[t_ptr]</code> is one of the characters we can "delete". We only advance the pointer for <code>t</code> (<code>t_ptr++</code>), continuing our search for the character <code>s[s_ptr]</code>.</li>
+<li>The process continues until we either exhaust string <code>t</code> (<code>t_ptr</code> reaches the end) or we find all characters of <code>s</code> (<code>s_ptr</code> reaches the end).</li>
+</ul>
+<p>If <code>s_ptr</code> successfully reaches the end of <code>s</code> (i.e., <code>s_ptr</code> equals the length of <code>s</code>), it means every character in <code>s</code> was found in <code>t</code> in the correct relative order. Otherwise, <code>s</code> is not a subsequence.</p>
+<ul>
+<li><strong>Time Complexity</strong>: <strong>O(N)</strong>, where N is the length of string <code>t</code>. In the worst case, we traverse the entire string <code>t</code> once.</li>
+<li><strong>Space Complexity</strong>: <strong>O(1)</strong>, as we only use a constant amount of extra space for the two pointers.</li>
+</ul>
+<p>This approach is the most optimal for a single check.</p>
+<h4>2. Follow-up: Pre-processing with Binary Search</h4>
+<p>For the follow-up scenario where we check many <code>s</code> strings against a single <code>t</code>, the two-pointer approach becomes O(K * N), where K is the number of <code>s</code> strings. We can optimize this by pre-processing <code>t</code>.</p>
+<ol>
+<li><strong>Pre-processing <code>t</code></strong>: Create a hash map (or an array of vectors) where keys are characters from 'a' to 'z' and values are sorted lists of indices where each character appears in <code>t</code>. This step takes O(N) time.</li>
+<li>
+<p><strong>Checking <code>s</code></strong>: For each <code>s</code>, iterate through its characters. For each character <code>c</code> in <code>s</code>, we need to find its next occurrence in <code>t</code> at an index greater than the index of the previously matched character. We can do this efficiently using a binary search (like <code>upper_bound</code> in C++ or <code>bisect_right</code> in Python) on the list of indices for <code>c</code>.</p>
+</li>
+<li>
+<p><strong>Time Complexity</strong>: <strong>O(N + K * M * log N)</strong>, where N is the length of <code>t</code>, K is the number of <code>s</code> strings, and M is the average length of an <code>s</code> string.</p>
+<ul>
+<li>O(N) for pre-processing <code>t</code>.</li>
+<li>For each of K strings, we do M binary searches, each taking O(log N) time.</li>
+</ul>
+</li>
+<li><strong>Space Complexity</strong>: <strong>O(N)</strong> to store the character indices map.</li>
+</ol>
+<p>This approach is more efficient than the two-pointer method when K is very large, as <code>M * log N</code> is often much smaller than <code>N</code>.</p>
+<hr />
+<p>The best solution for the base problem is the Two-Pointer approach due to its simplicity and optimal O(N) time and O(1) space complexity.</p>
+<h3>C++ Code for the Best Solution (Two-Pointers)</h3>
+<p>```cpp</p>
+<h1>include <string></h1>
+<p>class Solution {
+public:
+    bool isSubsequence(std::string s, std::string t) {
+        int s_ptr = 0; // Pointer for string s
+        int t_ptr = 0; // Pointer for string t</p>
+<pre><code>    // Iterate while both pointers are within their respective string bounds
+    while (s_ptr &lt; s.length() &amp;&amp; t_ptr &lt; t.length()) {
+        // If characters match, advance the pointer for s
+        if (s[s_ptr] == t[t_ptr]) {
+            s_ptr++;
+        }
+        // Always advance the pointer for t
+        t_ptr++;
+    }
+
+    // If s_ptr has reached the end of s, all its characters were found in order
+    return s_ptr == s.length();
+}
+</code></pre>
+<p>};
+```</p>
+<h3>Python Code for the Best Solution (Two-Pointers)</h3>
+<p>```python
+class Solution:
+    def isSubsequence(self, s: str, t: str) -&gt; bool:
+        s_ptr = 0  # Pointer for string s
+        t_ptr = 0  # Pointer for string t</p>
+<pre><code>    # Iterate while both pointers are within their respective string bounds
+    while s_ptr &lt; len(s) and t_ptr &lt; len(t):
+        # If characters match, advance the pointer for s
+        if s[s_ptr] == t[t_ptr]:
+            s_ptr += 1
+        # Always advance the pointer for t
+        t_ptr += 1
+
+    # If s_ptr has reached the end of s, all its characters were found in order
+    return s_ptr == len(s)
+</code></pre>
+<p>```</p></div><p style="page-break-before: always" ></p>

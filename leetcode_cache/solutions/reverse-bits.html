@@ -1,0 +1,60 @@
+<div class='cpp-solution'><h2>Beats 100% | Easy to Understand | ✅ -- Votes: 66</h2><h2>Intuition</h2>
+<p>The task is like flipping the order of 0s and 1s in a binary number. To do this, we'll examine each bit (0 or 1) in the input number and construct the reversed number step by step.</p>
+<h2>Approach</h2>
+<p>We start with an answer variable set to 0. Write a for loop that will run 32 times (once for each bit). In the loop we will:</p>
+<ul>
+<li>Move the answer's bits to the left.<br />
+<code>ans &lt;&lt;= 1;</code></li>
+<li>Check if the current bit is 1 and add it to the answer if it is.<br />
+<code>ans |= (n &amp; 1);</code></li>
+<li>Move to the next bit in the given number.<br />
+<code>n &gt;&gt;= 1;</code></li>
+</ul>
+<p>After this process, the answer will have the reversed bits.</p>
+<h2>Complexity</h2>
+<ul>
+<li>
+<p>Time complexity: $$O(1)$$</p>
+</li>
+<li>
+<p>Space complexity: $$O(1)$$</p>
+</li>
+</ul>
+<h2>Code</h2>
+<div class="codehilite"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="w"> </span><span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+<span class="w">    </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">reverseBits</span><span class="p">(</span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">n</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">ans</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">32</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">ans</span><span class="w"> </span><span class="o">&lt;&lt;=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="w">            </span><span class="n">ans</span><span class="w"> </span><span class="o">|=</span><span class="w"> </span><span class="p">(</span><span class="n">n</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span>
+<span class="w">            </span><span class="n">n</span><span class="w"> </span><span class="o">&gt;&gt;=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">ans</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">};</span>
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code><span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">Solution</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="c1">// you need treat n as an unsigned value</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="nf">reverseBits</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">n</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">ans</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">32</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">ans</span><span class="w"> </span><span class="o">&lt;&lt;=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="w">            </span><span class="n">ans</span><span class="w"> </span><span class="o">|=</span><span class="w"> </span><span class="p">(</span><span class="n">n</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span>
+<span class="w">            </span><span class="n">n</span><span class="w"> </span><span class="o">&gt;&gt;=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">ans</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+
+<div class='python-solution'><h2>Python AC with 63ms, 3lines -- Votes: 53</h2><div class="codehilite"><pre><span></span><code><span class="s s-Atom">class</span> <span class="nv">Solution</span><span class="o">:</span>
+    <span class="s s-Atom">#</span> <span class="s s-Atom">@param</span> <span class="s s-Atom">n</span><span class="p">,</span> <span class="s s-Atom">an</span> <span class="s s-Atom">integer</span>
+    <span class="s s-Atom">#</span> <span class="s s-Atom">@return</span> <span class="s s-Atom">an</span> <span class="s s-Atom">integer</span>
+    <span class="s s-Atom">def</span> <span class="nf">reverseBits</span><span class="p">(</span><span class="s s-Atom">self</span><span class="p">,</span> <span class="s s-Atom">n</span><span class="p">)</span><span class="o">:</span>
+        <span class="s s-Atom">oribin=&#39;{0:032b}&#39;</span><span class="p">.</span><span class="nf">format</span><span class="p">(</span><span class="s s-Atom">n</span><span class="p">)</span>
+        <span class="s s-Atom">reversebin</span><span class="o">=</span><span class="s s-Atom">oribin</span><span class="p">[</span><span class="o">::-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="s s-Atom">return</span> <span class="nf">int</span><span class="p">(</span><span class="s s-Atom">reversebin</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
+</code></pre></div></div><p style="page-break-before: always" ></p>

@@ -1,0 +1,35 @@
+<div class='cpp-solution'><h2>C++ Solution: n & (n - 1) -- Votes: 674</h2><div class="codehilite"><pre><span></span><code>int hammingWeight(uint32_t n) {
+    int count = 0;
+
+    while (n) {
+        n &amp;= (n - 1);
+        count++;
+    }
+
+    return count;
+}
+</code></pre></div>
+
+<p>n &amp; (n - 1) drops the lowest set bit. It's a neat little bit trick.</p>
+<p>Let's use n = 00101100 as an example. This binary representation has three 1s.</p>
+<p>If n = 00101100, then n - 1 = 00101011, so n &amp; (n - 1) = 00101100 &amp; 00101011 = 00101000. Count = 1.</p>
+<p>If n = 00101000, then n - 1 = 00100111, so n &amp; (n - 1) = 00101000 &amp; 00100111 = 00100000. Count = 2.</p>
+<p>If n = 00100000, then n - 1 = 00011111, so n &amp; (n - 1) = 00100000 &amp; 00011111 = 00000000. Count = 3.</p>
+<p>n is now zero, so the while loop ends, and the final count (the numbers of set bits) is returned.</p></div>
+
+
+<div class='python-solution'><h2>Easy to Understand | Faster than 98% | 2 solutions | Simple | Python -- Votes: 93</h2><div class="codehilite"><pre><span></span><code>    def using_inbuilt_counter(self, n):
+        counter = collections.Counter(bin(n)[2:])
+        return counter.get(&quot;1&quot;, 0)
+
+    def using_bit_manipulation(self, n):
+        count = 0
+        while n:
+            if n &amp; 1: count += 1
+            n = n &gt;&gt; 1
+        return count
+</code></pre></div>
+
+<p><strong>I hope that you've found the solution useful.</strong><br />
+<em>In that case, please do upvote and encourage me to on my quest to document all leetcode problems</em><br />
+PS: Search for <strong>mrmagician</strong> tag in the discussion, if I have solved it, You will find it there</p></div><p style="page-break-before: always" ></p>

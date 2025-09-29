@@ -1,0 +1,267 @@
+<div class='cpp-solution'><h2>【Video】Keep number we found and find duplicate -- Votes: 306</h2><h2>Intuition</h2>
+<p>Keep number we found and find duplicate.</p>
+<hr />
+<h2>Solution Video</h2>
+<p>https://youtu.be/RdakO1_niYE</p>
+<h4>⭐️⭐️ Don't forget to subscribe to my channel! ⭐️⭐️</h4>
+<p><strong>■ Subscribe URL</strong><br />
+http://www.youtube.com/channel/UC9RMNwYTL3SXCP6ShLWVFww?sub_confirmation=1</p>
+<p>Subscribers: 5,510</p>
+<hr />
+<h2>Approach</h2>
+<p>We can't have duplicate numbers at each row, column and box(3 * 3), so it's good idea to have data of each row, column and box whether we check current number is duplicate.</p>
+<p>For example,</p>
+<div class="codehilite"><pre><span></span><code>rows[0] - 5,7,8,9
+    [1] - 1,2
+    [2] - 4,8
+    .
+    .
+    .
+
+cols[0] - 1,2
+    [1] - 3,4
+    .
+    .
+    .
+</code></pre></div>
+
+<p>That means</p>
+<div class="codehilite"><pre><span></span><code>- We have `5,7,8,9` at row `0`.
+- We have `1`,`2` at row `1`.
+- We have `4`,`8` at row `2`.
+- We have `1`,`2` at column `0`.
+- We have `3`,`4` at column `1`. 
+</code></pre></div>
+
+<p>Let's say we have row 0 like this.</p>
+<div class="codehilite"><pre><span></span><code>      0 1 2 3 4 5 6 7 8 (column number)
+row0: 5,6,8,9,x,x,x,x,9
+row1: x,x,x,x,x,x,x,x,x,
+</code></pre></div>
+
+<p>At board[0][0], we have <code>5</code><br />
+At board[0][1], we have <code>6</code><br />
+At board[0][2], we have <code>8</code><br />
+At board[0][3], we have <code>9</code></p>
+<p>Now we have</p>
+<div class="codehilite"><pre><span></span><code>rows[0] - 5,7,8,9
+</code></pre></div>
+
+<p>Look at the <code>board[0][8]</code>. We have <code>9</code> at row <code>0</code>. That <code>9</code> is duplicate because we already have <code>9</code> at row <code>0</code>, so we should return <code>False</code>.</p>
+<p>We apply the same idea to column direction and box. But let me explain box position.</p>
+<p>We should have the same data for box whether we check current number is duplicate or not. But problem is size of one box is <code>3 * 3</code>, so we can't keep data like rows and columns. We are not allowed to have the same number in box which is size of <code>3 * 3</code>.</p>
+<p>How do you deal with the problem?</p>
+<p>My strategy is to use tuple as a key. For example, left top box should be from index <code>0</code> to index <code>2</code> of rows and columns.</p>
+<p>We know that size of one box is <code>3 * 3</code>, so if we divide index number by <code>3</code>, we can point to the target box.</p>
+<p>For example, if we are now at board[2][1] and find <code>7</code>, box should be</p>
+<div class="codehilite"><pre><span></span><code><span class="mf">2</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="mf">3</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0</span>
+<span class="mf">1</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="mf">3</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0</span>
+</code></pre></div>
+
+<p>so, the target box should be</p>
+<div class="codehilite"><pre><span></span><code>boxes[(0, 0)] - 7
+</code></pre></div>
+
+<p>if we are now at board[8][6] and find <code>5</code>,</p>
+<div class="codehilite"><pre><span></span><code><span class="mf">8</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="mf">3</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">2</span>
+<span class="mf">6</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="mf">3</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">2</span>
+</code></pre></div>
+
+<p>so, the target box should be</p>
+<div class="codehilite"><pre><span></span><code>boxes[(2, 2)] - 5
+</code></pre></div>
+
+<p>We have nine 3 * 3 boxes.</p>
+<div class="codehilite"><pre><span></span><code>     012  345  678 → column number
+012 (0,0)(0,1)(0,2)
+345 (1,0)(1,1)(1,2)
+678 (2,0)(2,1)(2,2)
+↓
+row number
+
+each box is 3 * 3
+We are not allowed to have duplicate number in each box.
+</code></pre></div>
+
+<p>Easy!<br />
+Let's see real algorithm!</p>
+<hr />
+<p>https://youtu.be/bU_dXCOWHls</p>
+<hr />
+<p><code>code</code></p>
+<h2>Complexity</h2>
+<ul>
+<li>
+<p>Time complexity: $$O(81)$$ → $$O(1)$$<br />
+  $$rows(9) * columns(9) = 81$$</p>
+</li>
+<li>
+<p>Space complexity: $$O(243)$$ → $$O(1)$$<br />
+  $$rows(81) + columns(81) + boxes(81) = 243$$</p>
+</li>
+</ul>
+<div class="codehilite"><pre><span></span><code><span class="n">Language</span><span class="p">:</span> <span class="n">python</span> 
+<span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">isValidSudoku</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">board</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="n">rows</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">set</span><span class="p">)</span>
+        <span class="n">cols</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">set</span><span class="p">)</span>
+        <span class="n">boxes</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">set</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">9</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">9</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">board</span><span class="p">[</span><span class="n">r</span><span class="p">][</span><span class="n">c</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;.&quot;</span><span class="p">:</span>
+                    <span class="k">continue</span>
+
+                <span class="k">if</span> <span class="n">board</span><span class="p">[</span><span class="n">r</span><span class="p">][</span><span class="n">c</span><span class="p">]</span> <span class="ow">in</span> <span class="n">rows</span><span class="p">[</span><span class="n">r</span><span class="p">]</span> <span class="ow">or</span> <span class="n">board</span><span class="p">[</span><span class="n">r</span><span class="p">][</span><span class="n">c</span><span class="p">]</span> <span class="ow">in</span> <span class="n">cols</span><span class="p">[</span><span class="n">c</span><span class="p">]</span> <span class="ow">or</span> <span class="n">board</span><span class="p">[</span><span class="n">r</span><span class="p">][</span><span class="n">c</span><span class="p">]</span> <span class="ow">in</span> <span class="n">boxes</span><span class="p">[(</span><span class="n">r</span> <span class="o">//</span> <span class="mi">3</span><span class="p">,</span> <span class="n">c</span> <span class="o">//</span> <span class="mi">3</span><span class="p">)]:</span>
+                    <span class="k">return</span> <span class="kc">False</span>
+
+                <span class="n">rows</span><span class="p">[</span><span class="n">r</span><span class="p">]</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">board</span><span class="p">[</span><span class="n">r</span><span class="p">][</span><span class="n">c</span><span class="p">])</span>
+                <span class="n">cols</span><span class="p">[</span><span class="n">c</span><span class="p">]</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">board</span><span class="p">[</span><span class="n">r</span><span class="p">][</span><span class="n">c</span><span class="p">])</span>
+                <span class="n">boxes</span><span class="p">[(</span><span class="n">r</span> <span class="o">//</span> <span class="mi">3</span><span class="p">,</span> <span class="n">c</span> <span class="o">//</span> <span class="mi">3</span><span class="p">)]</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">board</span><span class="p">[</span><span class="n">r</span><span class="p">][</span><span class="n">c</span><span class="p">])</span>
+
+        <span class="k">return</span> <span class="kc">True</span>
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code><span class="nx">Language</span><span class="o">:</span><span class="w"> </span><span class="nx">javascript</span><span class="w"> </span>
+<span class="kd">var</span><span class="w"> </span><span class="nx">isValidSudoku</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kd">function</span><span class="p">(</span><span class="nx">board</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="nx">rows</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">Array</span><span class="p">.</span><span class="kr">from</span><span class="p">({</span><span class="w"> </span><span class="nx">length</span><span class="o">:</span><span class="w"> </span><span class="mf">9</span><span class="w"> </span><span class="p">},</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nb">Set</span><span class="p">());</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="nx">cols</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">Array</span><span class="p">.</span><span class="kr">from</span><span class="p">({</span><span class="w"> </span><span class="nx">length</span><span class="o">:</span><span class="w"> </span><span class="mf">9</span><span class="w"> </span><span class="p">},</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nb">Set</span><span class="p">());</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="nx">boxes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">Array</span><span class="p">.</span><span class="kr">from</span><span class="p">({</span><span class="w"> </span><span class="nx">length</span><span class="o">:</span><span class="w"> </span><span class="mf">9</span><span class="w"> </span><span class="p">},</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nb">Set</span><span class="p">());</span>
+
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kd">let</span><span class="w"> </span><span class="nx">r</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0</span><span class="p">;</span><span class="w"> </span><span class="nx">r</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mf">9</span><span class="p">;</span><span class="w"> </span><span class="nx">r</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kd">let</span><span class="w"> </span><span class="nx">c</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0</span><span class="p">;</span><span class="w"> </span><span class="nx">c</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mf">9</span><span class="p">;</span><span class="w"> </span><span class="nx">c</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">board</span><span class="p">[</span><span class="nx">r</span><span class="p">][</span><span class="nx">c</span><span class="p">]</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">&#39;.&#39;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="k">continue</span><span class="p">;</span>
+<span class="w">            </span><span class="p">}</span>
+
+<span class="w">            </span><span class="kd">let</span><span class="w"> </span><span class="nx">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">board</span><span class="p">[</span><span class="nx">r</span><span class="p">][</span><span class="nx">c</span><span class="p">];</span>
+<span class="w">            </span><span class="kd">let</span><span class="w"> </span><span class="nx">boxIndex</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">Math</span><span class="p">.</span><span class="nx">floor</span><span class="p">(</span><span class="nx">r</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mf">3</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mf">3</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nb">Math</span><span class="p">.</span><span class="nx">floor</span><span class="p">(</span><span class="nx">c</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mf">3</span><span class="p">);</span>
+
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">rows</span><span class="p">[</span><span class="nx">r</span><span class="p">].</span><span class="nx">has</span><span class="p">(</span><span class="nx">value</span><span class="p">)</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nx">cols</span><span class="p">[</span><span class="nx">c</span><span class="p">].</span><span class="nx">has</span><span class="p">(</span><span class="nx">value</span><span class="p">)</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nx">boxes</span><span class="p">[</span><span class="nx">boxIndex</span><span class="p">].</span><span class="nx">has</span><span class="p">(</span><span class="nx">value</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="kc">false</span><span class="p">;</span>
+<span class="w">            </span><span class="p">}</span>
+
+<span class="w">            </span><span class="nx">rows</span><span class="p">[</span><span class="nx">r</span><span class="p">].</span><span class="nx">add</span><span class="p">(</span><span class="nx">value</span><span class="p">);</span>
+<span class="w">            </span><span class="nx">cols</span><span class="p">[</span><span class="nx">c</span><span class="p">].</span><span class="nx">add</span><span class="p">(</span><span class="nx">value</span><span class="p">);</span>
+<span class="w">            </span><span class="nx">boxes</span><span class="p">[</span><span class="nx">boxIndex</span><span class="p">].</span><span class="nx">add</span><span class="p">(</span><span class="nx">value</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="kc">true</span><span class="p">;</span><span class="w">    </span>
+<span class="p">};</span>
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">java</span><span class="w"> </span>
+<span class="kd">class</span> <span class="nc">Solution</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">boolean</span><span class="w"> </span><span class="nf">isValidSudoku</span><span class="p">(</span><span class="kt">char</span><span class="w"> </span><span class="n">board</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">HashSet</span><span class="o">&lt;</span><span class="n">Character</span><span class="o">&gt;</span><span class="w"> </span><span class="n">rows</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">HashSet</span><span class="o">[</span><span class="mi">9</span><span class="o">]</span><span class="p">;</span>
+<span class="w">        </span><span class="n">HashSet</span><span class="o">&lt;</span><span class="n">Character</span><span class="o">&gt;</span><span class="w"> </span><span class="n">cols</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">HashSet</span><span class="o">[</span><span class="mi">9</span><span class="o">]</span><span class="p">;</span>
+<span class="w">        </span><span class="n">HashSet</span><span class="o">&lt;</span><span class="n">Character</span><span class="o">&gt;</span><span class="w"> </span><span class="n">boxes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">HashSet</span><span class="o">[</span><span class="mi">9</span><span class="o">]</span><span class="p">;</span>
+
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">9</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">rows</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">HashSet</span><span class="o">&lt;&gt;</span><span class="p">();</span>
+<span class="w">            </span><span class="n">cols</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">HashSet</span><span class="o">&lt;&gt;</span><span class="p">();</span>
+<span class="w">            </span><span class="n">boxes</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">HashSet</span><span class="o">&lt;&gt;</span><span class="p">();</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">r</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">r</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">9</span><span class="p">;</span><span class="w"> </span><span class="n">r</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">9</span><span class="p">;</span><span class="w"> </span><span class="n">c</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">board</span><span class="o">[</span><span class="n">r</span><span class="o">][</span><span class="n">c</span><span class="o">]</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="sc">&#39;.&#39;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="k">continue</span><span class="p">;</span>
+<span class="w">                </span><span class="p">}</span>
+
+<span class="w">                </span><span class="kt">char</span><span class="w"> </span><span class="n">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">board</span><span class="o">[</span><span class="n">r</span><span class="o">][</span><span class="n">c</span><span class="o">]</span><span class="p">;</span>
+<span class="w">                </span><span class="kt">int</span><span class="w"> </span><span class="n">boxIndex</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">r</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">3</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="p">(</span><span class="n">c</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">3</span><span class="p">);</span>
+
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">rows</span><span class="o">[</span><span class="n">r</span><span class="o">]</span><span class="p">.</span><span class="na">contains</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">cols</span><span class="o">[</span><span class="n">c</span><span class="o">]</span><span class="p">.</span><span class="na">contains</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">boxes</span><span class="o">[</span><span class="n">boxIndex</span><span class="o">]</span><span class="p">.</span><span class="na">contains</span><span class="p">(</span><span class="n">value</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="k">return</span><span class="w"> </span><span class="kc">false</span><span class="p">;</span>
+<span class="w">                </span><span class="p">}</span>
+
+<span class="w">                </span><span class="n">rows</span><span class="o">[</span><span class="n">r</span><span class="o">]</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="n">value</span><span class="p">);</span>
+<span class="w">                </span><span class="n">cols</span><span class="o">[</span><span class="n">c</span><span class="o">]</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="n">value</span><span class="p">);</span>
+<span class="w">                </span><span class="n">boxes</span><span class="o">[</span><span class="n">boxIndex</span><span class="o">]</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="n">value</span><span class="p">);</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="kc">true</span><span class="p">;</span><span class="w">        </span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">C</span><span class="o">++</span><span class="w"> </span>
+<span class="n">class</span><span class="w"> </span><span class="n">Solution</span><span class="w"> </span><span class="p">{</span>
+<span class="n">public</span><span class="o">:</span>
+<span class="w">    </span><span class="kt">bool</span><span class="w"> </span><span class="n">isValidSudoku</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">char</span><span class="o">&gt;&gt;&amp;</span><span class="w"> </span><span class="n">board</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">unordered_set</span><span class="o">&lt;</span><span class="kt">char</span><span class="o">&gt;</span><span class="w"> </span><span class="n">rows</span><span class="p">[</span><span class="mi">9</span><span class="p">];</span>
+<span class="w">        </span><span class="n">unordered_set</span><span class="o">&lt;</span><span class="kt">char</span><span class="o">&gt;</span><span class="w"> </span><span class="n">cols</span><span class="p">[</span><span class="mi">9</span><span class="p">];</span>
+<span class="w">        </span><span class="n">unordered_set</span><span class="o">&lt;</span><span class="kt">char</span><span class="o">&gt;</span><span class="w"> </span><span class="n">boxes</span><span class="p">[</span><span class="mi">9</span><span class="p">];</span>
+
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">r</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">r</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">9</span><span class="p">;</span><span class="w"> </span><span class="o">++</span><span class="n">r</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">9</span><span class="p">;</span><span class="w"> </span><span class="o">++</span><span class="n">c</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">board</span><span class="p">[</span><span class="n">r</span><span class="p">][</span><span class="n">c</span><span class="p">]</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="sc">&#39;.&#39;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="k">continue</span><span class="p">;</span>
+<span class="w">                </span><span class="p">}</span>
+
+<span class="w">                </span><span class="kt">char</span><span class="w"> </span><span class="n">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">board</span><span class="p">[</span><span class="n">r</span><span class="p">][</span><span class="n">c</span><span class="p">];</span>
+<span class="w">                </span><span class="kt">int</span><span class="w"> </span><span class="n">boxIndex</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">r</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">3</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="p">(</span><span class="n">c</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">3</span><span class="p">);</span>
+
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">rows</span><span class="p">[</span><span class="n">r</span><span class="p">].</span><span class="n">count</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">cols</span><span class="p">[</span><span class="n">c</span><span class="p">].</span><span class="n">count</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">boxes</span><span class="p">[</span><span class="n">boxIndex</span><span class="p">].</span><span class="n">count</span><span class="p">(</span><span class="n">value</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="k">return</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="w">                </span><span class="p">}</span>
+
+<span class="w">                </span><span class="n">rows</span><span class="p">[</span><span class="n">r</span><span class="p">].</span><span class="n">insert</span><span class="p">(</span><span class="n">value</span><span class="p">);</span>
+<span class="w">                </span><span class="n">cols</span><span class="p">[</span><span class="n">c</span><span class="p">].</span><span class="n">insert</span><span class="p">(</span><span class="n">value</span><span class="p">);</span>
+<span class="w">                </span><span class="n">boxes</span><span class="p">[</span><span class="n">boxIndex</span><span class="p">].</span><span class="n">insert</span><span class="p">(</span><span class="n">value</span><span class="p">);</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span><span class="w">        </span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">};</span>
+</code></pre></div>
+
+<h2>Step by Step Algorithm</h2>
+<p>Please wait.</p>
+<hr />
+<p>Thank you for reading my post.<br />
+Please upvote it and don't forget to subscribe to my channel!</p>
+<h6>⭐️ Subscribe URL</h6>
+<p>http://www.youtube.com/channel/UC9RMNwYTL3SXCP6ShLWVFww?sub_confirmation=1</p>
+<h6>⭐️ Twitter</h6>
+<p>https://twitter.com/CodingNinjaAZ</p>
+<h6>⭐️ My previous post and video</h6>
+<h2>35 Search Insert Position</h2>
+<p>video<br />
+https://youtu.be/NermHA7VkEc</p></div>
+
+
+<div class='python-solution'><h2>A readable Python solution -- Votes: 869</h2><p>Apparently not the shortest solution but I think it's easy to follow the logic.</p>
+<div class="codehilite"><pre><span></span><code><span class="n">def</span><span class="w"> </span><span class="n">isValidSudoku</span><span class="p">(</span><span class="n">self</span><span class="p">,</span><span class="w"> </span><span class="n">board</span><span class="p">)</span><span class="err">:</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">is_row_valid</span><span class="p">(</span><span class="n">board</span><span class="p">)</span><span class="w"> </span><span class="ow">and</span>
+<span class="w">            </span><span class="n">self</span><span class="p">.</span><span class="n">is_col_valid</span><span class="p">(</span><span class="n">board</span><span class="p">)</span><span class="w"> </span><span class="ow">and</span>
+<span class="w">            </span><span class="n">self</span><span class="p">.</span><span class="n">is_square_valid</span><span class="p">(</span><span class="n">board</span><span class="p">))</span>
+
+<span class="n">def</span><span class="w"> </span><span class="n">is_row_valid</span><span class="p">(</span><span class="n">self</span><span class="p">,</span><span class="w"> </span><span class="n">board</span><span class="p">)</span><span class="err">:</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="k">row</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="nl">board</span><span class="p">:</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="n">self</span><span class="p">.</span><span class="n">is_unit_valid</span><span class="p">(</span><span class="k">row</span><span class="p">)</span><span class="err">:</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="k">False</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="k">True</span>
+
+<span class="n">def</span><span class="w"> </span><span class="n">is_col_valid</span><span class="p">(</span><span class="n">self</span><span class="p">,</span><span class="w"> </span><span class="n">board</span><span class="p">)</span><span class="err">:</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="n">col</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">zip</span><span class="p">(</span><span class="o">*</span><span class="n">board</span><span class="p">)</span><span class="err">:</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="n">self</span><span class="p">.</span><span class="n">is_unit_valid</span><span class="p">(</span><span class="n">col</span><span class="p">)</span><span class="err">:</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="k">False</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="k">True</span>
+
+<span class="n">def</span><span class="w"> </span><span class="n">is_square_valid</span><span class="p">(</span><span class="n">self</span><span class="p">,</span><span class="w"> </span><span class="n">board</span><span class="p">)</span><span class="err">:</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w"> </span><span class="mi">6</span><span class="p">)</span><span class="err">:</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w"> </span><span class="mi">6</span><span class="p">)</span><span class="err">:</span>
+<span class="w">            </span><span class="nf">square</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[</span><span class="n">board[x</span><span class="o">][</span><span class="n">y</span><span class="o">]</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="k">range</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">3</span><span class="p">)</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="k">range</span><span class="p">(</span><span class="n">j</span><span class="p">,</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">3</span><span class="p">)</span><span class="err">]</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="n">self</span><span class="p">.</span><span class="n">is_unit_valid</span><span class="p">(</span><span class="nf">square</span><span class="p">)</span><span class="err">:</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="k">False</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="k">True</span>
+
+<span class="n">def</span><span class="w"> </span><span class="n">is_unit_valid</span><span class="p">(</span><span class="n">self</span><span class="p">,</span><span class="w"> </span><span class="n">unit</span><span class="p">)</span><span class="err">:</span>
+<span class="w">    </span><span class="n">unit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[</span><span class="n">i for i in unit if i != &#39;.&#39;</span><span class="o">]</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nf">len</span><span class="p">(</span><span class="k">set</span><span class="p">(</span><span class="n">unit</span><span class="p">))</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nf">len</span><span class="p">(</span><span class="n">unit</span><span class="p">)</span>
+</code></pre></div></div><p style="page-break-before: always" ></p>

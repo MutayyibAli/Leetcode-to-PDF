@@ -1,0 +1,134 @@
+Cpp Solution:
+# Idea
+- **We will use a two queue approach.**
+- Recall, each senator has a position to exercise their right. 
+- The ones to the left have an earlier turn than the ones to the right. 
+- `rad` is queue that holds all positions of **active** senators in "Radiant"
+- `dir` is queue that holds all positions of **active** senators in "Dire".
+- **Active** being that they still have the right to vote. 
+- Our queue will be ordered so that the senators with earlier voting power come first (to the left of the queue). 
+- To goal is to have the earliest senator of each queue *fight* each other to see who gets to eliminate the other depending on their position. 
+- Obviously, the one with the earlier position will win. 
+- The loser is removed from the queue since they are no longer **active.**
+- The winner will go to the end of the queue for the next round. 
+- We keep doing this until one queue is empty which means there are no more senators on the team. 
+
+# Everything is easier with an example: 
+- `senate = "RDDDRDRRDR"`
+
+![1.jpg](https://assets.leetcode.com/users/images/c5361ad6-b1f4-480d-a6ca-a515f5c615bc_1683167194.103648.jpeg)
+
+![2.jpg](https://assets.leetcode.com/users/images/d23626fe-93b7-4c4e-a05e-f320c50f5f4a_1683167199.106047.jpeg)
+
+![3.jpg](https://assets.leetcode.com/users/images/104fd17d-4930-4fda-a13f-b76c8fe15f7d_1683167208.2531068.jpeg)
+
+![4.jpg](https://assets.leetcode.com/users/images/63781327-0609-4401-a41a-17ec0d52dab1_1683167222.9743638.jpeg)
+
+![5.jpg](https://assets.leetcode.com/users/images/12990ac3-e8e7-4623-a288-5df531af8c94_1683167228.5669239.jpeg)
+![6.jpg](https://assets.leetcode.com/users/images/4cbf8431-1ee4-47b2-a9b6-e40bac0140a9_1683167239.3575938.jpeg)
+
+# Code
+``` 
+class Solution {
+public:
+    string predictPartyVictory(string senate) {
+        queue<int> rad, dir;
+        int n = senate.length();
+        // Add all senators to respect queue with index
+        for (int i = 0; i < n; i++){
+            if (senate[i] == 'R'){
+                rad.push(i);
+            }
+            else {
+                dir.push(i);
+            }
+        }
+        // Use increasing n to keep track of position
+        while (!rad.empty() && !dir.empty()){
+            // Only "winner" stays in their queue
+            if (rad.front() < dir.front()){
+                rad.push(n++);
+            }
+            else {
+                dir.push(n++);
+            }
+            rad.pop(), dir.pop();
+        }
+        return (rad.empty()) ? ("Dire") : ("Radiant");
+    }
+};
+``` 
+### Why does the winner go to the end of the queue?
+- Since the voting is done such that both sides perform the most optimal strategy, the senators who have already voted will not be a problem to the other team for that round. 
+- So, instead of eliminating a senator who has already moved, the best move for each team is to eliminate the next senator who has the power to vote. 
+- This works perfectly with the queue approach since we can just place the senators who have voted at the end. 
+## If this helped, please leave an upvote! Much appreciated!
+##### edit: Thanks all for the kind comments; it definitely motivates me to make more of these diagram solutions!
+
+
+Python Solution:
+# Idea
+- **We will use a two queue approach.**
+- Recall, each senator has a position to exercise their right. 
+- The ones to the left have an earlier turn than the ones to the right. 
+- `rad` is queue that holds all positions of **active** senators in "Radiant"
+- `dir` is queue that holds all positions of **active** senators in "Dire".
+- **Active** being that they still have the right to vote. 
+- Our queue will be ordered so that the senators with earlier voting power come first (to the left of the queue). 
+- To goal is to have the earliest senator of each queue *fight* each other to see who gets to eliminate the other depending on their position. 
+- Obviously, the one with the earlier position will win. 
+- The loser is removed from the queue since they are no longer **active.**
+- The winner will go to the end of the queue for the next round. 
+- We keep doing this until one queue is empty which means there are no more senators on the team. 
+
+# Everything is easier with an example: 
+- `senate = "RDDDRDRRDR"`
+
+![1.jpg](https://assets.leetcode.com/users/images/c5361ad6-b1f4-480d-a6ca-a515f5c615bc_1683167194.103648.jpeg)
+
+![2.jpg](https://assets.leetcode.com/users/images/d23626fe-93b7-4c4e-a05e-f320c50f5f4a_1683167199.106047.jpeg)
+
+![3.jpg](https://assets.leetcode.com/users/images/104fd17d-4930-4fda-a13f-b76c8fe15f7d_1683167208.2531068.jpeg)
+
+![4.jpg](https://assets.leetcode.com/users/images/63781327-0609-4401-a41a-17ec0d52dab1_1683167222.9743638.jpeg)
+
+![5.jpg](https://assets.leetcode.com/users/images/12990ac3-e8e7-4623-a288-5df531af8c94_1683167228.5669239.jpeg)
+![6.jpg](https://assets.leetcode.com/users/images/4cbf8431-1ee4-47b2-a9b6-e40bac0140a9_1683167239.3575938.jpeg)
+
+# Code
+``` 
+class Solution {
+public:
+    string predictPartyVictory(string senate) {
+        queue<int> rad, dir;
+        int n = senate.length();
+        // Add all senators to respect queue with index
+        for (int i = 0; i < n; i++){
+            if (senate[i] == 'R'){
+                rad.push(i);
+            }
+            else {
+                dir.push(i);
+            }
+        }
+        // Use increasing n to keep track of position
+        while (!rad.empty() && !dir.empty()){
+            // Only "winner" stays in their queue
+            if (rad.front() < dir.front()){
+                rad.push(n++);
+            }
+            else {
+                dir.push(n++);
+            }
+            rad.pop(), dir.pop();
+        }
+        return (rad.empty()) ? ("Dire") : ("Radiant");
+    }
+};
+``` 
+### Why does the winner go to the end of the queue?
+- Since the voting is done such that both sides perform the most optimal strategy, the senators who have already voted will not be a problem to the other team for that round. 
+- So, instead of eliminating a senator who has already moved, the best move for each team is to eliminate the next senator who has the power to vote. 
+- This works perfectly with the queue approach since we can just place the senators who have voted at the end. 
+## If this helped, please leave an upvote! Much appreciated!
+##### edit: Thanks all for the kind comments; it definitely motivates me to make more of these diagram solutions!

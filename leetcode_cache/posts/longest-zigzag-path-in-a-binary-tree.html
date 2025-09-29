@@ -1,0 +1,153 @@
+Cpp Solution:
+# Video Solution (`Aryan Mittal`) - Link in LeetCode Profile
+`Longest ZigZag Path in a Binary Tree` by `Aryan Mittal`
+![Microsoft5.png](https://assets.leetcode.com/users/images/95f272ac-7e6c-4122-a4f2-eee277eae354_1681870513.1834931.png)
+
+
+# Approach & Intution
+![image.png](https://assets.leetcode.com/users/images/dc700053-7e28-4c89-9ccb-9b8eea23527b_1681866335.4239633.png)
+![image.png](https://assets.leetcode.com/users/images/8408a910-3d92-4f43-9ea9-93bad63ae219_1681866345.8971014.png)
+![image.png](https://assets.leetcode.com/users/images/4d52de15-84e1-4195-b926-a32a5a9a9263_1681866360.3134615.png)
+![image.png](https://assets.leetcode.com/users/images/cb3f3fb3-3880-4d9b-b53f-a17dcb8c4c69_1681866371.5972638.png)
+![image.png](https://assets.leetcode.com/users/images/3ae64e23-b322-4456-84fe-2ee3afc519bc_1681866383.361797.png)
+![image.png](https://assets.leetcode.com/users/images/ef889cfa-8a54-45d7-ab07-cce747455a6a_1681866390.8031855.png)
+
+
+# Code
+``` C
+Language: C++ 
+class Solution {
+    public:
+    int maxLength=0;
+
+    void solve(TreeNode* root,int dir,int currLength){
+        if(!root) return;
+        maxLength=max(maxLength,currLength);
+        solve(root->left,0,dir?currLength+1:1);
+        solve(root->right,1,dir?1:currLength+1);
+    }
+
+    int longestZigZag(TreeNode* root) {
+        solve(root,0,0);
+        solve(root,1,0);
+        return maxLength;
+    }
+};
+``` 
+``` Java
+Language: Java 
+class Solution {
+    public int maxLength=0;
+    public void solve(TreeNode root,int dir,int currLength){
+        if(root==null) return;
+        maxLength=Math.max(maxLength,currLength);
+        if(dir==1){
+            solve(root.left,0,currLength+1);
+            solve(root.right,1,1);
+        }
+        else{
+            solve(root.right,1,currLength+1);
+            solve(root.left,0,1);
+        }
+    }
+
+    public int longestZigZag(TreeNode root) {
+        solve(root,0,0);
+        solve(root,1,0);
+        return maxLength;
+    }
+}
+``` 
+``` Python
+Language: Python 
+class Solution:
+    def longestZigZag(self, root: Optional[TreeNode]) -> int:
+        self.maxLength = 0
+        def solve(node, deep, dir):
+            self.maxLength = max(self.maxLength, deep)
+
+            if node.left is not None:
+                solve(node.left, deep+1,'left') if dir != 'left' else solve(node.left, 1, 'left')
+            if node.right is not None:
+                solve(node.right, deep+1, 'right') if dir != 'right' else solve(node.right, 1, 'right')
+        solve(root, 0, '')
+        return self.maxLength
+``` 
+
+
+
+Python Solution:
+# Video Solution (`Aryan Mittal`) - Link in LeetCode Profile
+`Longest ZigZag Path in a Binary Tree` by `Aryan Mittal`
+![Microsoft5.png](https://assets.leetcode.com/users/images/95f272ac-7e6c-4122-a4f2-eee277eae354_1681870513.1834931.png)
+
+
+# Approach & Intution
+![image.png](https://assets.leetcode.com/users/images/dc700053-7e28-4c89-9ccb-9b8eea23527b_1681866335.4239633.png)
+![image.png](https://assets.leetcode.com/users/images/8408a910-3d92-4f43-9ea9-93bad63ae219_1681866345.8971014.png)
+![image.png](https://assets.leetcode.com/users/images/4d52de15-84e1-4195-b926-a32a5a9a9263_1681866360.3134615.png)
+![image.png](https://assets.leetcode.com/users/images/cb3f3fb3-3880-4d9b-b53f-a17dcb8c4c69_1681866371.5972638.png)
+![image.png](https://assets.leetcode.com/users/images/3ae64e23-b322-4456-84fe-2ee3afc519bc_1681866383.361797.png)
+![image.png](https://assets.leetcode.com/users/images/ef889cfa-8a54-45d7-ab07-cce747455a6a_1681866390.8031855.png)
+
+
+# Code
+``` C
+Language: C++ 
+class Solution {
+    public:
+    int maxLength=0;
+
+    void solve(TreeNode* root,int dir,int currLength){
+        if(!root) return;
+        maxLength=max(maxLength,currLength);
+        solve(root->left,0,dir?currLength+1:1);
+        solve(root->right,1,dir?1:currLength+1);
+    }
+
+    int longestZigZag(TreeNode* root) {
+        solve(root,0,0);
+        solve(root,1,0);
+        return maxLength;
+    }
+};
+``` 
+``` Java
+Language: Java 
+class Solution {
+    public int maxLength=0;
+    public void solve(TreeNode root,int dir,int currLength){
+        if(root==null) return;
+        maxLength=Math.max(maxLength,currLength);
+        if(dir==1){
+            solve(root.left,0,currLength+1);
+            solve(root.right,1,1);
+        }
+        else{
+            solve(root.right,1,currLength+1);
+            solve(root.left,0,1);
+        }
+    }
+
+    public int longestZigZag(TreeNode root) {
+        solve(root,0,0);
+        solve(root,1,0);
+        return maxLength;
+    }
+}
+``` 
+``` Python
+Language: Python 
+class Solution:
+    def longestZigZag(self, root: Optional[TreeNode]) -> int:
+        self.maxLength = 0
+        def solve(node, deep, dir):
+            self.maxLength = max(self.maxLength, deep)
+
+            if node.left is not None:
+                solve(node.left, deep+1,'left') if dir != 'left' else solve(node.left, 1, 'left')
+            if node.right is not None:
+                solve(node.right, deep+1, 'right') if dir != 'right' else solve(node.right, 1, 'right')
+        solve(root, 0, '')
+        return self.maxLength
+``` 

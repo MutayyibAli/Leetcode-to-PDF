@@ -1,0 +1,151 @@
+Cpp Solution:
+I think the following code is self-explanatory enough. We use an `unordered_map<string, int> counts` to record the expected times of each word and another `unordered_map<string, int> seen` to record the times we have seen. Then we check for every possible position of `i`. Once we meet an unexpected word or the times of some word is larger than its expected times, we stop the check. If we finish the check successfully, push `i` to the result `indexes`.
+
+* C++
+
+
+    class Solution {
+    public:
+        vector<int> findSubstring(string s, vector<string>& words) {
+            unordered_map<string, int> counts;
+            for (string word : words)
+                counts[word]++;
+            int n = s.length(), num = words.size(), len = words[0].length();
+            vector<int> indexes;
+            for (int i = 0; i < n - num * len + 1; i++) {
+                unordered_map<string, int> seen;
+                int j = 0;
+                for (; j < num; j++) {
+                    string word = s.substr(i + j * len, len);
+                    if (counts.find(word) != counts.end()) {
+                        seen[word]++;
+                        if (seen[word] > counts[word])
+                            break;
+                    } 
+                    else break;
+                }
+                if (j == num) indexes.push_back(i);
+            }
+            return indexes;
+        }
+    };
+
+* Java
+
+``` 
+class Solution {
+    public List<Integer> findSubstring(String s, String words) {
+        final Map<String, Integer> counts = new HashMap<>();
+        for (final String word : words) {
+            counts.put(word, counts.getOrDefault(word, 0) + 1);
+        }
+        final List<Integer> indexes = new ArrayList<>();
+        final int n = s.length(), num = words.length, len = words[0].length();
+        for (int i = 0; i < n - num * len + 1; i++) {
+            final Map<String, Integer> seen = new HashMap<>();
+            int j = 0;
+            while (j < num) {
+                final String word = s.substring(i + j * len, i + (j + 1) * len);
+                if (counts.containsKey(word)) {
+                    seen.put(word, seen.getOrDefault(word, 0) + 1);
+                    if (seen.get(word) > counts.getOrDefault(word, 0)) {
+                        break;
+                    }
+                } else {
+                    break;
+                }
+                j++;
+            }
+            if (j == num) {
+                indexes.add(i);
+            }
+        }
+        return indexes;
+    }
+}
+``` 
+
+
+Python Solution:
+Method: `Hash Table`
+
+First we can create a `dict` to store the occurrence times for each word in `words`.
+
+For example,
+If `s = "barfoofoobarthefoobarman"` and `words = ["bar","foo","the"]`, 
+the dict will be `word_count = {'bar': 1, 'foo': 1, 'the': 1}`,
+
+Since all the strings stored in `words` have the same length, the size of **sliding window** will be the word length of a single string. In the example above, the **sliding window** will be `3`
+
+![image](https://assets.leetcode.com/users/images/e6551130-deeb-49fe-a6a6-bf16815b413b_1660394841.6954787.png)
+``` 
+bar -> foo -> foo -> bar -> the -> foo -> bar -> man
+ignore b -> arf -> oof -> oob -> art -> hef -> oob -> arm -> ignore an
+ignore ba -> rfo -> ofo -> oba -> rth -> efo -> oba -> rma -> ignore n
+``` 
+Then, we can scan `s` in these 3 ways one by one
+
+Let the word in **sliding window** be `word`.
+Also, we will create a `queue` to store the scan history.
+``` 
+1) word_count.get(word, 0) >= 0 
+    -> word_count[word] -= 1 as it uses one of the string in words
+	-> queue.append(word)
+	
+2) word_count.get(word, 0) == 0 
+    -> while queue.pop()
+		-> queue.pop() == word
+			-> queue.append(queue.pop()) # Only the beginning word is dropped, the remaining words are still in use
+			-> break
+		-> queue.pop() != word
+			# Since the beginning word is dropped, the count of beginning word should be added 1.
+			-> word_dict[last_element] += 1
+				-> word_dict[last_element] exceeds its original value, reset the whole word_dict
+			-> continue
+``` 
+Code:
+``` 
+from collections import deque, defaultdict
+
+class Solution:
+    def findSubstring(self, s: str, words: List[str]) -> List[int]:
+        word_len = len(words[0])
+        ori_word_dict = defaultdict(int)
+		
+        for word in words:
+            ori_word_dict[word] += 1
+        
+        all_word_len = len(words) * word_len
+        result = 
+        for i in range(word_len):
+            queue = deque()
+            word_dict = ori_word_dict.copy()
+            for j in range(i, len(s) - word_len + 1, word_len):
+                word = s[j:j + word_len]
+                if word_dict.get(word, 0) != 0:
+                    word_dict[word] -= 1
+                    queue.append(word)
+                    if sum(word_dict.values()) == 0:
+                        result.append(j - all_word_len + word_len)
+                        last_element = queue.popleft()
+                        word_dict[last_element] = word_dict.get(last_element, 0) + 1
+                else:
+                    while len(queue):
+                        last_element = queue.popleft()
+                        if last_element == word:
+                            queue.append(word)
+                            break
+                        else:
+                            word_dict[last_element] = word_dict.get(last_element, 0) + 1
+                            if word_dict[last_element] > ori_word_dict[last_element]:
+                                word_dict = ori_word_dict.copy()
+
+        return result
+``` 
+
+Let `n` be the length of a word in `words`
+and `m` be the total number of words in `words`
+
+**Time complexity**: `O(n * m)`
+**Space complexity**: `O(n + m)`
+<br/>

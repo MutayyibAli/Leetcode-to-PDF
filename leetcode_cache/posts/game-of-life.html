@@ -1,0 +1,48 @@
+Cpp Solution:
+Since the board has ints but only the 1-bit is used, I use the 2-bit to store the new state. At the end, replace the old state with the new state by shifting all values one bit to the right.
+
+    void gameOfLife(vector<vector<int>>& board) {
+        int m = board.size(), n = m ? board[0].size() : 0;
+        for (int i=0; i<m; ++i) {
+            for (int j=0; j<n; ++j) {
+                int count = 0;
+                for (int I=max(i-1, 0); I<min(i+2, m); ++I)
+                    for (int J=max(j-1, 0); J<min(j+2, n); ++J)
+                        count += board[I][J] & 1;
+                if (count == 3 || count - board[i][j] == 3)
+                    board[i][j] |= 2;
+            }
+        }
+        for (int i=0; i<m; ++i)
+            for (int j=0; j<n; ++j)
+                board[i][j] >>= 1;
+    }
+
+Note that the above `count` counts the live ones among a cell's neighbors and the cell itself. Starting with `int count = -board[i][j]` counts only the live neighbors and allows the neat
+
+    if ((count | board[i][j]) == 3)
+
+test. Thanks to aileenbai for showing that one in the comments.
+
+
+Python Solution:
+For the second follow-up question, here's a solution for an infinite board. Instead of a two-dimensional array of ones and zeros, I represent the board as a set of live cell coordinates.
+
+    def gameOfLifeInfinite(self, live):
+        ctr = collections.Counter((I, J)
+                                  for i, j in live
+                                  for I in range(i-1, i+2)
+                                  for J in range(j-1, j+2)
+                                  if I != i or J != j)
+        return {ij
+                for ij in ctr
+                if ctr[ij] == 3 or ctr[ij] == 2 and ij in live}
+
+And here's a wrapper that uses the above infinite board solution to solve the problem we have here at the OJ (submitted together, this gets accepted):
+
+    def gameOfLife(self, board):
+        live = {(i, j) for i, row in enumerate(board) for j, live in enumerate(row) if live}
+        live = self.gameOfLifeInfinite(live)
+        for i, row in enumerate(board):
+            for j in range(len(row)):
+                row[j] = int((i, j) in live)

@@ -1,0 +1,73 @@
+<div class='cpp-solution'><h2>Simple & Clean C++ code with comments -- Votes: 67</h2><div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">cpp</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="w"> </span><span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+<span class="w">    </span><span class="n">ListNode</span><span class="o">*</span><span class="w"> </span><span class="n">rotateRight</span><span class="p">(</span><span class="n">ListNode</span><span class="o">*</span><span class="w"> </span><span class="n">head</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">k</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">head</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="k">nullptr</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">head</span><span class="o">-&gt;</span><span class="n">next</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="k">nullptr</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="n">head</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">auto</span><span class="w"> </span><span class="n">iter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">head</span><span class="p">;</span>
+<span class="w">        </span><span class="k">auto</span><span class="w"> </span><span class="n">len</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="w">        </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">iter</span><span class="o">-&gt;</span><span class="n">next</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="k">nullptr</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">iter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">iter</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">;</span><span class="w"> </span><span class="o">++</span><span class="n">len</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="c1">// close the list (create a ring)</span>
+<span class="w">        </span><span class="n">iter</span><span class="o">-&gt;</span><span class="n">next</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">head</span><span class="p">;</span>
+<span class="w">        </span><span class="n">iter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">head</span><span class="p">;</span>
+<span class="w">        </span><span class="c1">// find one element before the new head</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">len</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="p">(</span><span class="n">k</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="n">len</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span><span class="w"> </span><span class="o">++</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">iter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">iter</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="n">head</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">iter</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">;</span>
+<span class="w">        </span><span class="c1">// open the list (break the ring)</span>
+<span class="w">        </span><span class="n">iter</span><span class="o">-&gt;</span><span class="n">next</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">nullptr</span><span class="p">;</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">head</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+
+<div class='python-solution'><h2>[96% faster] Simple python solution with explanation -- Votes: 375</h2><p>Please upvote if you liked the solution</p>
+<div class="codehilite"><pre><span></span><code><span class="c1"># Definition for singly-linked list.</span>
+<span class="c1"># class ListNode:</span>
+<span class="c1">#     def __init__(self, x):</span>
+<span class="c1">#         self.val = x</span>
+<span class="c1">#         self.next = None</span>
+
+<span class="k">class</span> <span class="n">Solution:</span>
+    <span class="n">def</span> <span class="n">rotateRight</span>(<span class="nb">self</span>, <span class="n">head:</span> <span class="n">ListNode</span>, <span class="n">k:</span> <span class="n">int</span>) -&gt; <span class="n">ListNode:</span>
+
+        <span class="k">if</span> <span class="nb">not</span> <span class="n">head:</span>
+            <span class="k">return</span> <span class="n">None</span>
+
+        <span class="n">lastElement</span> = <span class="nb">head</span>
+        <span class="n">length</span> = <span class="mi">1</span>
+        <span class="c1"># get the length of the list and the last node in the list</span>
+        <span class="k">while</span> ( <span class="n">lastElement</span>.<span class="nb">next</span> ):
+            <span class="n">lastElement</span> = <span class="n">lastElement</span>.<span class="nb">next</span>
+            <span class="n">length</span> += <span class="mi">1</span>
+
+        <span class="c1"># If k is equal to the length of the list then k == 0</span>
+        <span class="c1"># ElIf k is greater than the length of the list then k = k % length</span>
+        <span class="n">k</span> = <span class="n">k</span> % <span class="n">length</span>
+
+        <span class="c1"># Set the last node to point to head node</span>
+        <span class="c1"># The list is now a circular linked list with last node pointing to first node</span>
+        <span class="n">lastElement</span>.<span class="nb">next</span> = <span class="nb">head</span>
+
+        <span class="c1"># Traverse the list to get to the node just before the ( length - k )th node.</span>
+        <span class="c1"># Example: In 1-&gt;2-&gt;3-&gt;4-&gt;5, and k = 2</span>
+        <span class="c1">#          we need to get to the Node(3)</span>
+        <span class="n">tempNode</span> = <span class="nb">head</span>
+        <span class="k">for</span> <span class="n">_</span> <span class="nb">in</span> <span class="nb">range</span>( <span class="n">length</span> - <span class="n">k</span> - <span class="mi">1</span> ):
+            <span class="n">tempNode</span> = <span class="n">tempNode</span>.<span class="nb">next</span>
+
+        <span class="c1"># Get the next node from the tempNode and then set the tempNode.next as None</span>
+        <span class="c1"># Example: In 1-&gt;2-&gt;3-&gt;4-&gt;5, and k = 2</span>
+        <span class="c1">#          tempNode = Node(3)</span>
+        <span class="c1">#          answer = Node(3).next =&gt; Node(4)</span>
+        <span class="c1">#          Node(3).next = None ( cut the linked list from here )</span>
+        <span class="n">answer</span> = <span class="n">tempNode</span>.<span class="nb">next</span>
+        <span class="n">tempNode</span>.<span class="nb">next</span> = <span class="n">None</span>
+
+        <span class="k">return</span> <span class="n">answer</span>
+</code></pre></div></div><p style="page-break-before: always" ></p>

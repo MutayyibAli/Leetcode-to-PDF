@@ -1,0 +1,288 @@
+<div class='cpp-solution'><h2>1ms (Beats 100%)🔥🔥|| Full Explanation✅|| Append & Reverse✅|| C++|| Java|| Python3 -- Votes: 967</h2><h2>Intuition :</h2>
+<ul>
+<li>We have to add two binary numbers (made up of 0's and 1's) and returns the result in binary.</li>
+</ul>
+<!-- Describe your first thoughts on how to solve this problem. -->
+
+<h2>Approach :</h2>
+<ul>
+<li>We start at the right end of each binary number, adding the digits and any carry-over value, and storing the result in a new string.</li>
+<li>Now we move to the next digit on the left and repeats the process until it has gone through all the digits in both binary numbers.</li>
+<li>If there is any carry-over value after adding all the digits, append it to the end of the new string.</li>
+<li>Finally, the new string is reversed and returned as the sum of the two binary numbers.</li>
+</ul>
+<!-- Describe your approach to solving the problem. -->
+
+<h2>Explanation to Approach :</h2>
+<ul>
+<li>Suppose we want to add two binary numbers - "1010" and "1101".</li>
+<li>To add these two numbers, we can use the given function as follows:</li>
+<li>First, we initialize a StringBuilder object to store the sum and two integer variables 'carry' and 'i' to keep track of the carry-over value and the current position in the first binary number (a), respectively.</li>
+<li>We also initialize another integer variable 'j' to keep track of the current position in the second binary number (b). Here is how the code initializes these variables:</li>
+</ul>
+<div class="codehilite"><pre><span></span><code>StringBuilder sb = new StringBuilder();
+int carry = 0;
+int i = a.length() - 1;
+int j = b.length() - 1;
+</code></pre></div>
+
+<ul>
+<li>Next, we enter a while loop that iterates until we have processed all digits in both binary numbers and there is no more carry-over value left. In each iteration, we add the digits from both numbers at the current position and the carry-over value (if any), and append the result to the StringBuilder object.</li>
+<li>We also update the carry-over value based on the sum of the digits. Here is the code for this step:</li>
+</ul>
+<div class="codehilite"><pre><span></span><code><span class="k">while</span><span class="w"> </span><span class="ss">(</span><span class="nv">i</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nv">j</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nv">carry</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">1</span><span class="ss">)</span><span class="w"> </span>{
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="ss">(</span><span class="nv">i</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">0</span><span class="ss">)</span><span class="w"> </span>{
+<span class="w">        </span><span class="nv">carry</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="nv">a</span>.<span class="nv">charAt</span><span class="ss">(</span><span class="nv">i</span><span class="o">--</span><span class="ss">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="s1">&#39;0&#39;</span><span class="c1">;</span>
+<span class="w">    </span>}
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="ss">(</span><span class="nv">j</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">0</span><span class="ss">)</span><span class="w"> </span>{
+<span class="w">        </span><span class="nv">carry</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="nv">b</span>.<span class="nv">charAt</span><span class="ss">(</span><span class="nv">j</span><span class="o">--</span><span class="ss">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="s1">&#39;0&#39;</span><span class="c1">;</span>
+<span class="w">    </span>}
+<span class="w">    </span><span class="nv">sb</span>.<span class="nv">append</span><span class="ss">(</span><span class="nv">carry</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="mi">2</span><span class="ss">)</span><span class="c1">;</span>
+<span class="w">    </span><span class="nv">carry</span><span class="w"> </span><span class="o">/=</span><span class="w"> </span><span class="mi">2</span><span class="c1">;</span>
+}
+</code></pre></div>
+
+<ul>
+<li>In each iteration, the current position in each binary number is moved one digit to the left (if there are any digits left to process) by decrementing the value of i and j.</li>
+<li>If there is a carry-over value from the previous iteration or the addition of the two digits produces a carry-over value, we set the value of 'carry' to 1; otherwise, we set it to 0.</li>
+<li>We also append the sum of the digits to the StringBuilder object by computing the remainder of 'carry' divided by 2 (which is either 0 or 1).</li>
+<li>Finally, we update the value of 'carry' by dividing it by 2 (which gives either 0 or 1) so that we can carry over any remaining value to the next iteration.</li>
+<li>After the while loop completes, we reverse the StringBuilder object and convert it to a string using the toString() method.</li>
+<li>This gives us the sum of the two binary numbers in binary format. Here is the final code:</li>
+</ul>
+<div class="codehilite"><pre><span></span><code><span class="k">return</span><span class="w"> </span><span class="nv">sb</span>.<span class="nv">reverse</span><span class="ss">()</span>.<span class="nv">toString</span><span class="ss">()</span><span class="c1">;</span>
+</code></pre></div>
+
+<h2>Example : the sum of "1010" and "1101</h2>
+<div class="codehilite"><pre><span></span><code>     1010
+    +1101
+    ______
+    10111
+</code></pre></div>
+
+<h2>Complexity</h2>
+<ul>
+<li>Time complexity : O(max|a|,|b|)</li>
+</ul>
+<!-- Add your time complexity here, e.g. $$O(n)$$ -->
+
+<ul>
+<li>Space complexity : O(max|a|,|b|)</li>
+</ul>
+<!-- Add your space complexity here, e.g. $$O(n)$$ -->
+
+<h2>Please Upvote</h2>
+<div class="codehilite"><pre><span></span><code><span class="nv">Thanks</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="nv">visiting</span><span class="w"> </span><span class="nv">my</span><span class="w"> </span><span class="nv">solution</span>.
+</code></pre></div>
+
+<h2>Codes [C++ |Java |Python3]</h2>
+<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">C</span><span class="o">++</span><span class="w"> </span>
+<span class="n">class</span><span class="w"> </span><span class="n">Solution</span><span class="w"> </span><span class="p">{</span>
+<span class="w"> </span><span class="n">public</span><span class="o">:</span>
+<span class="w">  </span><span class="n">string</span><span class="w"> </span><span class="n">addBinary</span><span class="p">(</span><span class="n">string</span><span class="w"> </span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">string</span><span class="w"> </span><span class="n">b</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">string</span><span class="w"> </span><span class="n">ans</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">carry</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">a</span><span class="p">.</span><span class="n">length</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">b</span><span class="p">.</span><span class="n">length</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">carry</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+<span class="w">        </span><span class="n">carry</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="o">--</span><span class="p">]</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="sc">&#39;0&#39;</span><span class="p">;</span>
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">j</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+<span class="w">        </span><span class="n">carry</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">b</span><span class="p">[</span><span class="n">j</span><span class="o">--</span><span class="p">]</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="sc">&#39;0&#39;</span><span class="p">;</span>
+<span class="w">      </span><span class="n">ans</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">carry</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="sc">&#39;0&#39;</span><span class="p">;</span>
+<span class="w">      </span><span class="n">carry</span><span class="w"> </span><span class="o">/=</span><span class="w"> </span><span class="mi">2</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="n">reverse</span><span class="p">(</span><span class="n">begin</span><span class="p">(</span><span class="n">ans</span><span class="p">),</span><span class="w"> </span><span class="n">end</span><span class="p">(</span><span class="n">ans</span><span class="p">));</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">ans</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">};</span>
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">Java</span><span class="w"> </span>
+<span class="kd">class</span> <span class="nc">Solution</span><span class="w"> </span>
+<span class="p">{</span>
+<span class="w">  </span><span class="kd">public</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="nf">addBinary</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">b</span><span class="p">)</span><span class="w"> </span>
+<span class="w">  </span><span class="p">{</span>
+<span class="w">    </span><span class="n">StringBuilder</span><span class="w"> </span><span class="n">sb</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">StringBuilder</span><span class="p">();</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">carry</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">a</span><span class="p">.</span><span class="na">length</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">b</span><span class="p">.</span><span class="na">length</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">carry</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="k">if</span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+<span class="w">        </span><span class="n">carry</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">a</span><span class="p">.</span><span class="na">charAt</span><span class="p">(</span><span class="n">i</span><span class="o">--</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="sc">&#39;0&#39;</span><span class="p">;</span>
+<span class="w">      </span><span class="k">if</span><span class="p">(</span><span class="n">j</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+<span class="w">        </span><span class="n">carry</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">b</span><span class="p">.</span><span class="na">charAt</span><span class="p">(</span><span class="n">j</span><span class="o">--</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="sc">&#39;0&#39;</span><span class="p">;</span>
+<span class="w">      </span><span class="n">sb</span><span class="p">.</span><span class="na">append</span><span class="p">(</span><span class="n">carry</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="mi">2</span><span class="p">);</span>
+<span class="w">      </span><span class="n">carry</span><span class="w"> </span><span class="o">/=</span><span class="w"> </span><span class="mi">2</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">sb</span><span class="p">.</span><span class="na">reverse</span><span class="p">().</span><span class="na">toString</span><span class="p">();</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code><span class="n">Language</span><span class="p">:</span> <span class="n">Python3</span> 
+<span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="p">:</span>
+  <span class="k">def</span><span class="w"> </span><span class="nf">addBinary</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">a</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="n">s</span> <span class="o">=</span> 
+    <span class="n">carry</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
+    <span class="n">j</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">b</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
+
+    <span class="k">while</span> <span class="n">i</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">j</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">carry</span><span class="p">:</span>
+      <span class="k">if</span> <span class="n">i</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">carry</span> <span class="o">+=</span> <span class="nb">int</span><span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+        <span class="n">i</span> <span class="o">-=</span> <span class="mi">1</span>
+      <span class="k">if</span> <span class="n">j</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">carry</span> <span class="o">+=</span> <span class="nb">int</span><span class="p">(</span><span class="n">b</span><span class="p">[</span><span class="n">j</span><span class="p">])</span>
+        <span class="n">j</span> <span class="o">-=</span> <span class="mi">1</span>
+      <span class="n">s</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">carry</span> <span class="o">%</span> <span class="mi">2</span><span class="p">))</span>
+      <span class="n">carry</span> <span class="o">//=</span> <span class="mi">2</span>
+
+    <span class="k">return</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">reversed</span><span class="p">(</span><span class="n">s</span><span class="p">))</span>
+</code></pre></div>
+
+<h2>Please Upvote</h2>
+<p></p></div>
+
+
+<div class='python-solution'><h2>🤯 Well Detailed Explaination [Java , C++, Python] || Easy for mind to Accept it -- Votes: 972</h2><div class="codehilite"><pre><span></span><code><span class="w">                                                    </span>#<span class="w"> </span><span class="nv">IMPORTANT</span><span class="w"> </span><span class="nv">INFO</span><span class="w"> </span><span class="k">FOR</span><span class="w"> </span><span class="nv">YOU</span>
+</code></pre></div>
+
+<ul>
+<li>If, you are preperaing for <code>FACEBOOK interview</code> or will prepare. Then according to <code>LeetCode premium</code> it is no.4 most asked Question by <strong>Facebook</strong> as per now.</li>
+</ul>
+<p><strong>So Ladies n Gentlemen without any further due let's start,</strong><br />
+<code>What question saying is, Given two binary strings a and b, return their sum as a binary string.</code></p>
+<p><strong>Approach Explained :</strong></p>
+<p><strong>Summary of Below Explanation :</strong></p>
+<p><em>The overall idea is to make up the short two strings with 00 to make the two strings have the same length, and then traverse and calculate from the end to get the final result.</em></p>
+<p>Let's understand with an <strong>example</strong> : Addition of <strong>1 and 1</strong> will lead to <strong>carry 1</strong> and <strong>print 0</strong> , Addition of <strong>1 and 0</strong> give us <strong>1 as carry</strong> will lead <strong>print 0</strong> , Addition of last remaning <strong>carry 1</strong> with no body will lead to <strong>print 1</strong> , So, we get something like <strong>"1 0 0"</strong> as answer<br />
+One <strong>key point</strong> total addition will be 3 then print 1 and carry will remain 1</p>
+<p><strong>Detailed Explaination :</strong></p>
+<p>So, first do we understand how do we perform <strong>binary addition</strong>. <strong>Take an example</strong>, given two numbers <strong>"11" + "1"</strong> where <strong>"11"</strong> is representing <strong>"3"</strong> &amp; <strong>"1"</strong> is <strong>"1"</strong>, in decimal form.<br />
+Now let's perform <strong>binary addition</strong> it's very <strong>similar to the decimal addition</strong> that we do. In decimal what we do we add 2 numbers &amp; if it goes beyond 9 we <strong>take a carry</strong>. And here also we have a <strong>number in range 0 - 1</strong>, <strong>2 values over here</strong> &amp; in <strong>Decimal range is 0 - 9</strong>, <strong>10 values</strong> are there. So, in binary what it means is if result more <strong>than 1</strong>, there <strong>is a carry</strong> otherwise <strong>no carry</strong>.<br />
+Let me show you in diagram:<br />
+</p>
+<ul>
+<li>So, what's going in diagram is <strong>intially carry is "0"</strong> we <strong>add 1 + 1</strong> we <strong>get 2</strong> which is more <strong>then 1</strong>, so there is a <strong>carry of 1</strong> and <strong>result is 0</strong>. Now we have <strong>carry of 1</strong>, <strong>again 1 + 1 is 0</strong>, and still left with <strong>carry of 1</strong>. And the <strong>last carry</strong> one will be <strong>return as it is</strong>.</li>
+<li>So, if you see this binary number it is <strong>[2^2 * 1 + 2^1 * 0 + 2^0 * 0]</strong> and this is the decimal coversion of <strong>[1 0 0]</strong> which <strong>is 4</strong>.</li>
+</ul>
+<p></p>
+<p>**Hope you got the point **</p>
+<p><em>Now, let's code it up:</em><br />
+<strong>code, each lne explained :</strong> <code>Similar for C++, Java, Python</code> <strong>{Only synatx difference}</strong> approach is same</p>
+<ul>
+<li>Step 1:</li>
+</ul>
+<div class="codehilite"><pre><span></span><code>{
+<span class="o">//</span><span class="w"> </span><span class="nv">First</span>,<span class="w"> </span><span class="nv">create</span><span class="w"> </span><span class="nb">result</span><span class="w"> </span><span class="nv">name</span><span class="w"> </span><span class="nv">string</span><span class="w"> </span><span class="nv">and</span><span class="w"> </span><span class="nv">intially</span><span class="w"> </span><span class="nv">it</span><span class="w"> </span><span class="nv">is</span><span class="w"> </span><span class="nv">empty</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="nv">in</span><span class="w"> </span><span class="nv">the</span><span class="w"> </span><span class="k">end</span><span class="w"> </span><span class="nv">we</span><span class="w"> </span><span class="nv">gonna</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="nv">it</span><span class="w"> </span><span class="nv">as</span><span class="w"> </span><span class="nv">our</span><span class="w"> </span><span class="nv">aswer</span>
+<span class="w">        </span><span class="nv">StringBuilder</span><span class="w"> </span><span class="nv">res</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">new</span><span class="w"> </span><span class="nv">StringBuilder</span><span class="ss">()</span><span class="c1">; </span>
+<span class="w">        </span><span class="nv">int</span><span class="w"> </span><span class="nv">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">a</span>.<span class="nv">length</span><span class="ss">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="c1">; // we crete i pointer for string a and we have to start adding from right to left </span>
+<span class="w">        </span><span class="nv">int</span><span class="w"> </span><span class="nv">j</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">b</span>.<span class="nv">length</span><span class="ss">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="c1">; // similar pointer j for string b</span>
+<span class="w">        </span><span class="nv">int</span><span class="w"> </span><span class="nv">carry</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="c1">; // we create a carry, as we have to consider it as well</span>
+</code></pre></div>
+
+<ul>
+<li>Step 2:</li>
+</ul>
+<div class="codehilite"><pre><span></span><code><span class="c1">// iterate over the loop until the both condition become false</span>
+<span class="w">        </span><span class="k">while</span><span class="p">(</span><span class="nx">i</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nx">j</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">0</span><span class="p">){</span><span class="w"> </span>
+<span class="w">            </span><span class="nx">int</span><span class="w"> </span><span class="nx">sum</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">carry</span><span class="p">;</span><span class="w"> </span><span class="c1">// intialise our sum with carry;</span>
+
+<span class="w">            </span><span class="c1">// Now, we subtract by &#39;0&#39; to convert the numbers from a char type into an int, so we can perform operations on the numbers</span>
+<span class="w">            </span><span class="k">if</span><span class="p">(</span><span class="nx">i</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="nx">sum</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="nx">a</span><span class="p">.</span><span class="nx">charAt</span><span class="p">(</span><span class="nx">i</span><span class="o">--</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="sc">&#39;0&#39;</span><span class="p">;</span>
+<span class="w">            </span><span class="k">if</span><span class="p">(</span><span class="nx">j</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="nx">sum</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="nx">b</span><span class="p">.</span><span class="nx">charAt</span><span class="p">(</span><span class="nx">j</span><span class="o">--</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="sc">&#39;0&#39;</span><span class="p">;</span>
+<span class="w">            </span><span class="c1">// taking carry;</span>
+<span class="w">            </span><span class="nx">carry</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">sum</span><span class="w"> </span><span class="p">&gt;</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="p">?</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="c1">// getting carry depend on the quotient we get by dividing sum / 2 that will be our carry. Carry could be either 1 or 0 </span>
+<span class="w">            </span><span class="c1">// if sum is 0 res is 1 &amp; then carry would be 0;</span>
+<span class="w">            </span><span class="c1">// if sum is 1 res is 1 &amp; carry would be 0</span>
+<span class="w">            </span><span class="c1">// if sum is 2 res is 0 &amp; carry would be 1</span>
+<span class="w">            </span><span class="c1">// if sum is 3 res is 1 &amp; carry would be 1</span>
+<span class="w">            </span><span class="nx">res</span><span class="p">.</span><span class="nx">append</span><span class="p">(</span><span class="nx">sum</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="mi">2</span><span class="p">);</span><span class="w"> </span><span class="c1">// just moduling the sum so, we can get remainder and add it into our result</span>
+<span class="w">        </span><span class="p">}</span>
+</code></pre></div>
+
+<ul>
+<li>Final Step:</li>
+</ul>
+<div class="codehilite"><pre><span></span><code><span class="k">if</span><span class="ss">(</span><span class="nv">carry</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="ss">)</span><span class="w"> </span><span class="nv">res</span>.<span class="nv">append</span><span class="ss">(</span><span class="nv">carry</span><span class="ss">)</span><span class="c1">; // we gonna add it into res until carry becomes 0;</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="nv">res</span>.<span class="nv">reverse</span><span class="ss">()</span>.<span class="nv">toString</span><span class="ss">()</span><span class="c1">; // revese the answer we get &amp; convt to string and return by the help of result;</span>
+</code></pre></div>
+
+<ul>
+<li>Let's combine each line of code</li>
+</ul>
+<p><strong>Java</strong></p>
+<div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="n">Solution</span> {
+    <span class="n">public</span> <span class="n">String</span> <span class="n">addBinary</span>(<span class="n">String</span> <span class="n">a</span>, <span class="n">String</span> <span class="n">b</span>) {
+        <span class="n">StringBuilder</span> <span class="n">res</span> = <span class="nb">new</span> <span class="n">StringBuilder</span>();
+        <span class="n">int</span> <span class="n">i</span> = <span class="n">a</span>.<span class="n">length</span>() - <span class="mi">1</span>;
+        <span class="n">int</span> <span class="n">j</span> = <span class="n">b</span>.<span class="n">length</span>() - <span class="mi">1</span>;
+        <span class="n">int</span> <span class="n">carry</span> = <span class="mi">0</span>;
+        <span class="k">while</span>(<span class="n">i</span> &gt;= <span class="mi">0</span> || <span class="n">j</span> &gt;= <span class="mi">0</span>){
+            <span class="n">int</span> <span class="nb">sum</span> = <span class="n">carry</span>;
+            <span class="k">if</span>(<span class="n">i</span> &gt;= <span class="mi">0</span>) <span class="nb">sum</span> += <span class="n">a</span>.<span class="n">charAt</span>(<span class="n">i--</span>) - <span class="s">&#39;0&#39;</span>;
+            <span class="k">if</span>(<span class="n">j</span> &gt;= <span class="mi">0</span>) <span class="nb">sum</span> += <span class="n">b</span>.<span class="n">charAt</span>(<span class="n">j--</span>) - <span class="s">&#39;0&#39;</span>;
+            <span class="n">carry</span> = <span class="nb">sum</span> &gt; <span class="mi">1</span> ? <span class="mi">1</span> : <span class="mi">0</span>;
+            <span class="n">res</span>.<span class="nb">append</span>(<span class="nb">sum</span> % <span class="mi">2</span>);
+        }
+        <span class="k">if</span>(<span class="n">carry</span> != <span class="mi">0</span>) <span class="n">res</span>.<span class="nb">append</span>(<span class="n">carry</span>);
+        <span class="k">return</span> <span class="n">res</span>.<span class="nb">reverse</span>().<span class="n">toString</span>();
+    }
+}
+</code></pre></div>
+
+<p><strong>C++</strong></p>
+<div class="codehilite"><pre><span></span><code><span class="nt">class</span><span class="w"> </span><span class="nt">Solution</span><span class="w"> </span><span class="p">{</span>
+<span class="n">public</span><span class="p">:</span>
+<span class="w">    </span><span class="n">string</span><span class="w"> </span><span class="nf">addBinary</span><span class="p">(</span><span class="n">string</span><span class="w"> </span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">string</span><span class="w"> </span><span class="n">b</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
+<span class="w">        </span><span class="n">string</span><span class="w"> </span><span class="n">res</span><span class="p">;</span>
+<span class="w">        </span><span class="err">int</span><span class="w"> </span><span class="err">i</span><span class="w"> </span><span class="err">=</span><span class="w"> </span><span class="err">a.length()</span><span class="w"> </span><span class="err">-</span><span class="w"> </span><span class="err">1</span><span class="p">;</span>
+<span class="w">        </span><span class="err">int</span><span class="w"> </span><span class="err">j</span><span class="w"> </span><span class="err">=</span><span class="w"> </span><span class="err">b.length()</span><span class="w"> </span><span class="err">-</span><span class="w"> </span><span class="err">1</span><span class="p">;</span>
+<span class="w">        </span><span class="err">int</span><span class="w"> </span><span class="err">carry</span><span class="w"> </span><span class="err">=</span><span class="w"> </span><span class="err">0</span><span class="p">;</span>
+<span class="w">        </span><span class="err">while(i</span><span class="w"> </span><span class="err">&gt;=</span><span class="w"> </span><span class="err">0</span><span class="w"> </span><span class="err">||</span><span class="w"> </span><span class="err">j</span><span class="w"> </span><span class="err">&gt;=</span><span class="w"> </span><span class="err">0){</span>
+<span class="w">            </span><span class="err">int</span><span class="w"> </span><span class="err">sum</span><span class="w"> </span><span class="err">=</span><span class="w"> </span><span class="err">carry</span><span class="p">;</span>
+<span class="w">            </span><span class="err">if(i</span><span class="w"> </span><span class="err">&gt;=</span><span class="w"> </span><span class="err">0)</span><span class="w"> </span><span class="err">sum</span><span class="w"> </span><span class="err">+=</span><span class="w"> </span><span class="err">a</span><span class="cp">[</span><span class="nx">i</span><span class="o">--</span><span class="cp">]</span><span class="w"> </span><span class="err">-</span><span class="w"> </span><span class="err">&#39;0&#39;</span><span class="p">;</span>
+<span class="w">            </span><span class="err">if(j</span><span class="w"> </span><span class="err">&gt;=</span><span class="w"> </span><span class="err">0)</span><span class="w"> </span><span class="err">sum</span><span class="w"> </span><span class="err">+=</span><span class="w"> </span><span class="err">b</span><span class="cp">[</span><span class="nx">j</span><span class="o">--</span><span class="cp">]</span><span class="w"> </span><span class="err">-</span><span class="w"> </span><span class="err">&#39;0&#39;</span><span class="p">;</span>
+<span class="w">            </span><span class="err">carry</span><span class="w"> </span><span class="err">=</span><span class="w"> </span><span class="err">sum</span><span class="w"> </span><span class="err">&gt;</span><span class="w"> </span><span class="err">1</span><span class="w"> </span><span class="err">?</span><span class="w"> </span><span class="err">1</span><span class="w"> </span><span class="err">:</span><span class="w"> </span><span class="err">0</span><span class="p">;</span>
+<span class="w">            </span><span class="err">res</span><span class="w"> </span><span class="err">+=</span><span class="w"> </span><span class="err">to_string(sum</span><span class="w"> </span><span class="err">%</span><span class="w"> </span><span class="err">2)</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="nt">if</span><span class="o">(</span><span class="nt">carry</span><span class="o">)</span><span class="w"> </span><span class="nt">res</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="nt">to_string</span><span class="o">(</span><span class="nt">carry</span><span class="o">);</span>
+<span class="w">        </span><span class="nt">reverse</span><span class="o">(</span><span class="nt">res</span><span class="p">.</span><span class="nc">begin</span><span class="o">(),</span><span class="w"> </span><span class="nt">res</span><span class="p">.</span><span class="nc">end</span><span class="o">());</span>
+<span class="w">        </span><span class="nt">return</span><span class="w"> </span><span class="nt">res</span><span class="o">;</span>
+<span class="w">    </span><span class="err">}</span>
+<span class="err">}</span><span class="o">;</span>
+</code></pre></div>
+
+<p><strong>Python</strong></p>
+<div class="codehilite"><pre><span></span><code><span class="s s-Atom">class</span> <span class="nv">Solution</span><span class="o">:</span>
+    <span class="s s-Atom">def</span> <span class="nf">addBinary</span><span class="p">(</span><span class="s s-Atom">self</span><span class="p">,</span> <span class="s s-Atom">a</span><span class="p">:</span> <span class="s s-Atom">str</span><span class="p">,</span> <span class="s s-Atom">b</span><span class="p">:</span> <span class="s s-Atom">str</span><span class="p">)</span> <span class="s s-Atom">-&gt;</span> <span class="s s-Atom">str</span><span class="p">:</span>
+        <span class="s s-Atom">res</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="s s-Atom">i</span><span class="p">,</span> <span class="s s-Atom">j</span><span class="p">,</span> <span class="s s-Atom">carry</span> <span class="o">=</span> <span class="nf">len</span><span class="p">(</span><span class="s s-Atom">a</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="nf">len</span><span class="p">(</span><span class="s s-Atom">b</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span>
+        <span class="s s-Atom">while</span> <span class="s s-Atom">i</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="s s-Atom">or</span> <span class="s s-Atom">j</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="o">:</span>
+            <span class="s s-Atom">sum</span> <span class="o">=</span> <span class="s s-Atom">carry</span><span class="p">;</span>
+            <span class="s s-Atom">if</span> <span class="s s-Atom">i</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="o">:</span> <span class="s s-Atom">sum</span> <span class="s s-Atom">+=</span> <span class="nf">ord</span><span class="p">(</span><span class="s s-Atom">a</span><span class="p">[</span><span class="s s-Atom">i</span><span class="p">])</span> <span class="o">-</span> <span class="nf">ord</span><span class="p">(</span><span class="s s-Atom">&#39;0&#39;</span><span class="p">)</span> <span class="s s-Atom">#</span> <span class="s s-Atom">ord</span> <span class="o">is</span> <span class="s s-Atom">use</span> <span class="s s-Atom">to</span> <span class="s s-Atom">get</span> <span class="nb">val</span><span class="s s-Atom">ue</span> <span class="s s-Atom">of</span> <span class="nv">ASCII</span> <span class="s s-Atom">character</span>
+            <span class="s s-Atom">if</span> <span class="s s-Atom">j</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="o">:</span> <span class="s s-Atom">sum</span> <span class="s s-Atom">+=</span> <span class="nf">ord</span><span class="p">(</span><span class="s s-Atom">b</span><span class="p">[</span><span class="s s-Atom">j</span><span class="p">])</span> <span class="o">-</span> <span class="nf">ord</span><span class="p">(</span><span class="s s-Atom">&#39;0&#39;</span><span class="p">)</span>
+            <span class="s s-Atom">i</span><span class="p">,</span> <span class="s s-Atom">j</span> <span class="o">=</span> <span class="s s-Atom">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="s s-Atom">j</span> <span class="o">-</span> <span class="mi">1</span>
+            <span class="s s-Atom">carry</span> <span class="o">=</span> <span class="mi">1</span> <span class="s s-Atom">if</span> <span class="s s-Atom">sum</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="s s-Atom">else</span> <span class="mi">0</span><span class="p">;</span>
+            <span class="s s-Atom">res</span> <span class="s s-Atom">+=</span> <span class="nf">str</span><span class="p">(</span><span class="s s-Atom">sum</span> <span class="c1">% 2)</span>
+
+        <span class="s s-Atom">if</span> <span class="s s-Atom">carry</span> <span class="p">!</span><span class="o">=</span> <span class="mi">0</span> <span class="o">:</span> <span class="s s-Atom">res</span> <span class="s s-Atom">+=</span> <span class="nf">str</span><span class="p">(</span><span class="s s-Atom">carry</span><span class="p">);</span>
+        <span class="s s-Atom">return</span> <span class="s s-Atom">res</span><span class="p">[</span><span class="o">::-</span><span class="mi">1</span><span class="p">]</span>
+</code></pre></div>
+
+<p>ANALYSIS :-</p>
+<ul>
+<li>
+<p><strong>Time Complexity :-</strong> BigO(max(M, N)), M &amp; N is the length of string a, b;</p>
+</li>
+<li>
+<p><strong>Space Complexity :-</strong> BigO(max(M, N)), which is the size of "res" object</p>
+</li>
+</ul>
+<p><strong>Guy's if you find this solution helpful , PLEASE do UPVOTE. By doing that it motivate's me to create more better post like this ✍️</strong><br />
+<code>If you have some  doubts feel free to bug me</code></p></div><p style="page-break-before: always" ></p>

@@ -1,0 +1,222 @@
+<div class='cpp-solution'><h2>Python/JS/C++ sol by monotonic stack [w/ Graph] -- Votes: 88</h2><p>Solution base on monotonic stack</p>
+<hr />
+<p><strong>Visualization</strong></p>
+<p></p>
+<hr />
+<p>Python:</p>
+<div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="n">StockSpanner:</span>
+
+    <span class="n">def</span> <span class="n">__init__</span>(<span class="nb">self</span>):
+
+        <span class="c1"># maintain a monotonic stack for stock entry</span>
+
+        <span class="c1">## definition of stock entry:</span>
+        <span class="c1"># first parameter is price quote</span>
+        <span class="c1"># second parameter is price span</span>
+        <span class="nb">self</span>.<span class="n">monotone_stack</span> = 
+
+
+
+    <span class="n">def</span> <span class="nb">next</span>(<span class="nb">self</span>, <span class="n">price:</span> <span class="n">int</span>) -&gt; <span class="n">int:</span>
+
+        <span class="n">stack</span> = <span class="nb">self</span>.<span class="n">monotone_stack</span>
+
+        <span class="n">cur_price_quote</span>, <span class="n">cur_price_span</span> = <span class="n">price</span>, <span class="mi">1</span>
+
+        <span class="c1"># Compute price span in stock data with monotonic stack</span>
+        <span class="k">while</span> <span class="n">stack</span> <span class="o">and</span> <span class="n">stack</span>[-<span class="mi">1</span>][<span class="mi">0</span>] &lt;= <span class="n">cur_price_quote:</span>
+
+            <span class="n">prev_price_quote</span>, <span class="n">prev_price_span</span> = <span class="n">stack</span>.<span class="nb">pop</span>()
+
+            <span class="c1"># update current price span with history data in stack</span>
+            <span class="n">cur_price_span</span> += <span class="n">prev_price_span</span>
+
+        <span class="c1"># Update latest price quote and price span</span>
+        <span class="n">stack</span>.<span class="nb">append</span>( (<span class="n">cur_price_quote</span>, <span class="n">cur_price_span</span>) )
+
+        <span class="k">return</span> <span class="n">cur_price_span</span>
+</code></pre></div>
+
+<hr />
+<p>Javascript:</p>
+<div class="codehilite"><pre><span></span><code><span class="k">var</span><span class="w"> </span><span class="n">StockSpanner</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">function</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="o">//</span><span class="w"> </span><span class="n">maintain</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">monotonic</span><span class="w"> </span><span class="n">stack</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">stock</span><span class="w"> </span><span class="n">entry</span>
+
+<span class="w">    </span><span class="o">//</span><span class="w"> </span><span class="n">definition</span><span class="w"> </span><span class="n">of</span><span class="w"> </span><span class="n">stock</span><span class="w"> </span><span class="n">entry</span><span class="p">:</span>
+<span class="w">    </span><span class="o">//</span><span class="w"> </span><span class="n">first</span><span class="w"> </span><span class="n">parameter</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="n">price</span><span class="w"> </span><span class="n">quote</span>
+<span class="w">    </span><span class="o">//</span><span class="w"> </span><span class="n">second</span><span class="w"> </span><span class="n">parameter</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="n">price</span><span class="w"> </span><span class="n">span</span>
+<span class="w">    </span><span class="n">this</span><span class="o">.</span><span class="n">stack</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">;</span><span class="w">  </span>
+<span class="p">};</span>
+
+
+<span class="n">StockSpanner</span><span class="o">.</span><span class="n">prototype</span><span class="o">.</span><span class="n">next</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">function</span><span class="p">(</span><span class="n">price</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="n">let</span><span class="w"> </span><span class="p">[</span><span class="n">curPrice</span><span class="p">,</span><span class="w"> </span><span class="n">curSpan</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="n">price</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">];</span>
+
+<span class="w">    </span><span class="o">//</span><span class="w"> </span><span class="n">Compute</span><span class="w"> </span><span class="n">price</span><span class="w"> </span><span class="n">span</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">stock</span><span class="w"> </span><span class="n">data</span><span class="w"> </span><span class="n">with</span><span class="w"> </span><span class="n">monotonic</span><span class="w"> </span><span class="n">stack</span>
+<span class="w">    </span><span class="k">while</span><span class="p">(</span><span class="w"> </span><span class="n">this</span><span class="o">.</span><span class="n">stack</span><span class="o">.</span><span class="n">length</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">this</span><span class="o">.</span><span class="n">stack</span><span class="p">[</span><span class="n">this</span><span class="o">.</span><span class="n">stack</span><span class="o">.</span><span class="n">length</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">price</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">curPrice</span><span class="w"> </span><span class="p">){</span>
+
+<span class="w">        </span><span class="n">prev</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="o">.</span><span class="n">stack</span><span class="o">.</span><span class="n">pop</span><span class="p">();</span>
+<span class="w">        </span><span class="n">let</span><span class="w"> </span><span class="p">[</span><span class="n">prevPrice</span><span class="p">,</span><span class="w"> </span><span class="n">prevSpan</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="n">prev</span><span class="o">.</span><span class="n">price</span><span class="p">,</span><span class="w"> </span><span class="n">prev</span><span class="o">.</span><span class="n">span</span><span class="p">];</span>
+
+<span class="w">        </span><span class="o">//</span><span class="w"> </span><span class="n">update</span><span class="w"> </span><span class="n">current</span><span class="w"> </span><span class="n">price</span><span class="w"> </span><span class="n">span</span><span class="w"> </span><span class="n">with</span><span class="w"> </span><span class="n">history</span><span class="w"> </span><span class="n">data</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">stack</span>
+<span class="w">        </span><span class="n">curSpan</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">prevSpan</span>
+<span class="w">    </span><span class="p">}</span><span class="w"> </span>
+<span class="w">    </span><span class="n">this</span><span class="o">.</span><span class="n">stack</span><span class="o">.</span><span class="n">push</span><span class="p">(</span><span class="w"> </span><span class="p">{</span><span class="n">price</span><span class="p">:</span><span class="w"> </span><span class="n">curPrice</span><span class="p">,</span><span class="w"> </span><span class="n">span</span><span class="p">:</span><span class="n">curSpan</span><span class="p">}</span><span class="w"> </span><span class="p">);</span>
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">curSpan</span><span class="p">;</span>
+<span class="p">};</span>
+</code></pre></div>
+
+<hr />
+<p>C++</p>
+<div class="codehilite"><pre><span></span><code><span class="nt">class</span><span class="w"> </span><span class="nt">StockSpanner</span><span class="w"> </span><span class="p">{</span>
+<span class="n">public</span><span class="p">:</span>
+<span class="w">    </span><span class="nf">StockSpanner</span><span class="p">()</span><span class="w"> </span><span class="err">{</span>
+<span class="w">        </span><span class="o">//</span><span class="w"> </span><span class="n">maintain</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">monotonic</span><span class="w"> </span><span class="n">stack</span><span class="w"> </span><span class="n">for</span><span class="w"> </span><span class="n">stock</span><span class="w"> </span><span class="n">entry</span>
+
+<span class="w">        </span><span class="o">//</span><span class="w"> </span><span class="n">definition</span><span class="w"> </span><span class="n">of</span><span class="w"> </span><span class="n">stock</span><span class="w"> </span><span class="n">entry</span><span class="o">:</span>
+<span class="w">        </span><span class="o">//</span><span class="w"> </span><span class="kc">first</span><span class="w"> </span><span class="n">parameter</span><span class="w"> </span><span class="n">is</span><span class="w"> </span><span class="n">price</span><span class="w"> </span><span class="n">quote</span>
+<span class="w">        </span><span class="o">//</span><span class="w"> </span><span class="n">second</span><span class="w"> </span><span class="n">parameter</span><span class="w"> </span><span class="n">is</span><span class="w"> </span><span class="n">price</span><span class="w"> </span><span class="n">span</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="nt">int</span><span class="w"> </span><span class="nt">next</span><span class="o">(</span><span class="nt">int</span><span class="w"> </span><span class="nt">price</span><span class="o">)</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">        </span><span class="err">int</span><span class="w"> </span><span class="err">curPrice</span><span class="w"> </span><span class="err">=</span><span class="w"> </span><span class="err">price</span><span class="p">;</span>
+<span class="w">        </span><span class="err">int</span><span class="w"> </span><span class="err">curSpan</span><span class="w"> </span><span class="err">=</span><span class="w"> </span><span class="err">1</span><span class="p">;</span>
+
+<span class="w">        </span><span class="err">//</span><span class="w"> </span><span class="err">Compute</span><span class="w"> </span><span class="err">price</span><span class="w"> </span><span class="err">span</span><span class="w"> </span><span class="err">in</span><span class="w"> </span><span class="err">stock</span><span class="w"> </span><span class="err">data</span><span class="w"> </span><span class="err">with</span><span class="w"> </span><span class="err">monotonic</span><span class="w"> </span><span class="err">stack</span>
+<span class="w">        </span><span class="err">while(</span><span class="w"> </span><span class="err">stack.size()</span><span class="w"> </span><span class="err">&amp;&amp;</span><span class="w"> </span><span class="err">stack.back().first</span><span class="w"> </span><span class="err">&lt;=</span><span class="w"> </span><span class="err">price</span><span class="w"> </span><span class="err">){</span>
+
+<span class="w">            </span><span class="err">auto</span><span class="w"> </span><span class="cp">[</span><span class="nx">prevPrice</span><span class="p">,</span><span class="w"> </span><span class="nx">prevSpan</span><span class="cp">]</span><span class="w"> </span><span class="err">=</span><span class="w"> </span><span class="err">stack.back()</span><span class="p">;</span>
+
+<span class="w">            </span><span class="err">stack.pop_back()</span><span class="p">;</span>
+
+<span class="w">            </span><span class="err">//</span><span class="w"> </span><span class="err">update</span><span class="w"> </span><span class="err">current</span><span class="w"> </span><span class="err">price</span><span class="w"> </span><span class="err">span</span><span class="w"> </span><span class="err">with</span><span class="w"> </span><span class="err">history</span><span class="w"> </span><span class="err">data</span><span class="w"> </span><span class="err">in</span><span class="w"> </span><span class="err">stack</span>
+<span class="w">            </span><span class="err">curSpan</span><span class="w"> </span><span class="err">+=</span><span class="w"> </span><span class="err">prevSpan</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="o">//</span><span class="w"> </span><span class="nt">update</span><span class="w"> </span><span class="nt">latest</span><span class="w"> </span><span class="nt">price</span><span class="w"> </span><span class="nt">quote</span><span class="w"> </span><span class="nt">and</span><span class="w"> </span><span class="nt">price</span><span class="w"> </span><span class="nt">span</span>
+<span class="w">        </span><span class="nt">stack</span><span class="p">.</span><span class="nc">push_back</span><span class="o">(</span><span class="w"> </span><span class="nt">pair</span><span class="o">&lt;</span><span class="nt">int</span><span class="o">,</span><span class="w"> </span><span class="nt">int</span><span class="o">&gt;</span><span class="p">{</span><span class="err">curPrice,</span><span class="w"> </span><span class="err">curSpan</span><span class="p">}</span><span class="w"> </span><span class="o">);</span>
+
+<span class="w">        </span><span class="nt">return</span><span class="w"> </span><span class="nt">curSpan</span><span class="o">;</span>
+<span class="w">    </span><span class="err">}</span>
+<span class="nt">private</span><span class="o">:</span>
+<span class="w">    </span><span class="nt">vector</span><span class="o">&lt;</span><span class="w"> </span><span class="nt">pair</span><span class="o">&lt;</span><span class="nt">int</span><span class="o">,</span><span class="w"> </span><span class="nt">int</span><span class="o">&gt;</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="nt">stack</span><span class="o">;</span>
+<span class="err">}</span><span class="o">;</span>
+</code></pre></div>
+
+<hr /></div>
+
+
+<div class='python-solution'><h2>Python/JS/C++ sol by monotonic stack [w/ Graph] -- Votes: 88</h2><p>Solution base on monotonic stack</p>
+<hr />
+<p><strong>Visualization</strong></p>
+<p></p>
+<hr />
+<p>Python:</p>
+<div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="n">StockSpanner:</span>
+
+    <span class="n">def</span> <span class="n">__init__</span>(<span class="nb">self</span>):
+
+        <span class="c1"># maintain a monotonic stack for stock entry</span>
+
+        <span class="c1">## definition of stock entry:</span>
+        <span class="c1"># first parameter is price quote</span>
+        <span class="c1"># second parameter is price span</span>
+        <span class="nb">self</span>.<span class="n">monotone_stack</span> = 
+
+
+
+    <span class="n">def</span> <span class="nb">next</span>(<span class="nb">self</span>, <span class="n">price:</span> <span class="n">int</span>) -&gt; <span class="n">int:</span>
+
+        <span class="n">stack</span> = <span class="nb">self</span>.<span class="n">monotone_stack</span>
+
+        <span class="n">cur_price_quote</span>, <span class="n">cur_price_span</span> = <span class="n">price</span>, <span class="mi">1</span>
+
+        <span class="c1"># Compute price span in stock data with monotonic stack</span>
+        <span class="k">while</span> <span class="n">stack</span> <span class="o">and</span> <span class="n">stack</span>[-<span class="mi">1</span>][<span class="mi">0</span>] &lt;= <span class="n">cur_price_quote:</span>
+
+            <span class="n">prev_price_quote</span>, <span class="n">prev_price_span</span> = <span class="n">stack</span>.<span class="nb">pop</span>()
+
+            <span class="c1"># update current price span with history data in stack</span>
+            <span class="n">cur_price_span</span> += <span class="n">prev_price_span</span>
+
+        <span class="c1"># Update latest price quote and price span</span>
+        <span class="n">stack</span>.<span class="nb">append</span>( (<span class="n">cur_price_quote</span>, <span class="n">cur_price_span</span>) )
+
+        <span class="k">return</span> <span class="n">cur_price_span</span>
+</code></pre></div>
+
+<hr />
+<p>Javascript:</p>
+<div class="codehilite"><pre><span></span><code><span class="k">var</span><span class="w"> </span><span class="n">StockSpanner</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">function</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="o">//</span><span class="w"> </span><span class="n">maintain</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">monotonic</span><span class="w"> </span><span class="n">stack</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">stock</span><span class="w"> </span><span class="n">entry</span>
+
+<span class="w">    </span><span class="o">//</span><span class="w"> </span><span class="n">definition</span><span class="w"> </span><span class="n">of</span><span class="w"> </span><span class="n">stock</span><span class="w"> </span><span class="n">entry</span><span class="p">:</span>
+<span class="w">    </span><span class="o">//</span><span class="w"> </span><span class="n">first</span><span class="w"> </span><span class="n">parameter</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="n">price</span><span class="w"> </span><span class="n">quote</span>
+<span class="w">    </span><span class="o">//</span><span class="w"> </span><span class="n">second</span><span class="w"> </span><span class="n">parameter</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="n">price</span><span class="w"> </span><span class="n">span</span>
+<span class="w">    </span><span class="n">this</span><span class="o">.</span><span class="n">stack</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">;</span><span class="w">  </span>
+<span class="p">};</span>
+
+
+<span class="n">StockSpanner</span><span class="o">.</span><span class="n">prototype</span><span class="o">.</span><span class="n">next</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">function</span><span class="p">(</span><span class="n">price</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="n">let</span><span class="w"> </span><span class="p">[</span><span class="n">curPrice</span><span class="p">,</span><span class="w"> </span><span class="n">curSpan</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="n">price</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">];</span>
+
+<span class="w">    </span><span class="o">//</span><span class="w"> </span><span class="n">Compute</span><span class="w"> </span><span class="n">price</span><span class="w"> </span><span class="n">span</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">stock</span><span class="w"> </span><span class="n">data</span><span class="w"> </span><span class="n">with</span><span class="w"> </span><span class="n">monotonic</span><span class="w"> </span><span class="n">stack</span>
+<span class="w">    </span><span class="k">while</span><span class="p">(</span><span class="w"> </span><span class="n">this</span><span class="o">.</span><span class="n">stack</span><span class="o">.</span><span class="n">length</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">this</span><span class="o">.</span><span class="n">stack</span><span class="p">[</span><span class="n">this</span><span class="o">.</span><span class="n">stack</span><span class="o">.</span><span class="n">length</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">price</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">curPrice</span><span class="w"> </span><span class="p">){</span>
+
+<span class="w">        </span><span class="n">prev</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="o">.</span><span class="n">stack</span><span class="o">.</span><span class="n">pop</span><span class="p">();</span>
+<span class="w">        </span><span class="n">let</span><span class="w"> </span><span class="p">[</span><span class="n">prevPrice</span><span class="p">,</span><span class="w"> </span><span class="n">prevSpan</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="n">prev</span><span class="o">.</span><span class="n">price</span><span class="p">,</span><span class="w"> </span><span class="n">prev</span><span class="o">.</span><span class="n">span</span><span class="p">];</span>
+
+<span class="w">        </span><span class="o">//</span><span class="w"> </span><span class="n">update</span><span class="w"> </span><span class="n">current</span><span class="w"> </span><span class="n">price</span><span class="w"> </span><span class="n">span</span><span class="w"> </span><span class="n">with</span><span class="w"> </span><span class="n">history</span><span class="w"> </span><span class="n">data</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">stack</span>
+<span class="w">        </span><span class="n">curSpan</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">prevSpan</span>
+<span class="w">    </span><span class="p">}</span><span class="w"> </span>
+<span class="w">    </span><span class="n">this</span><span class="o">.</span><span class="n">stack</span><span class="o">.</span><span class="n">push</span><span class="p">(</span><span class="w"> </span><span class="p">{</span><span class="n">price</span><span class="p">:</span><span class="w"> </span><span class="n">curPrice</span><span class="p">,</span><span class="w"> </span><span class="n">span</span><span class="p">:</span><span class="n">curSpan</span><span class="p">}</span><span class="w"> </span><span class="p">);</span>
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">curSpan</span><span class="p">;</span>
+<span class="p">};</span>
+</code></pre></div>
+
+<hr />
+<p>C++</p>
+<div class="codehilite"><pre><span></span><code><span class="nt">class</span><span class="w"> </span><span class="nt">StockSpanner</span><span class="w"> </span><span class="p">{</span>
+<span class="n">public</span><span class="p">:</span>
+<span class="w">    </span><span class="nf">StockSpanner</span><span class="p">()</span><span class="w"> </span><span class="err">{</span>
+<span class="w">        </span><span class="o">//</span><span class="w"> </span><span class="n">maintain</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">monotonic</span><span class="w"> </span><span class="n">stack</span><span class="w"> </span><span class="n">for</span><span class="w"> </span><span class="n">stock</span><span class="w"> </span><span class="n">entry</span>
+
+<span class="w">        </span><span class="o">//</span><span class="w"> </span><span class="n">definition</span><span class="w"> </span><span class="n">of</span><span class="w"> </span><span class="n">stock</span><span class="w"> </span><span class="n">entry</span><span class="o">:</span>
+<span class="w">        </span><span class="o">//</span><span class="w"> </span><span class="kc">first</span><span class="w"> </span><span class="n">parameter</span><span class="w"> </span><span class="n">is</span><span class="w"> </span><span class="n">price</span><span class="w"> </span><span class="n">quote</span>
+<span class="w">        </span><span class="o">//</span><span class="w"> </span><span class="n">second</span><span class="w"> </span><span class="n">parameter</span><span class="w"> </span><span class="n">is</span><span class="w"> </span><span class="n">price</span><span class="w"> </span><span class="n">span</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="nt">int</span><span class="w"> </span><span class="nt">next</span><span class="o">(</span><span class="nt">int</span><span class="w"> </span><span class="nt">price</span><span class="o">)</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">        </span><span class="err">int</span><span class="w"> </span><span class="err">curPrice</span><span class="w"> </span><span class="err">=</span><span class="w"> </span><span class="err">price</span><span class="p">;</span>
+<span class="w">        </span><span class="err">int</span><span class="w"> </span><span class="err">curSpan</span><span class="w"> </span><span class="err">=</span><span class="w"> </span><span class="err">1</span><span class="p">;</span>
+
+<span class="w">        </span><span class="err">//</span><span class="w"> </span><span class="err">Compute</span><span class="w"> </span><span class="err">price</span><span class="w"> </span><span class="err">span</span><span class="w"> </span><span class="err">in</span><span class="w"> </span><span class="err">stock</span><span class="w"> </span><span class="err">data</span><span class="w"> </span><span class="err">with</span><span class="w"> </span><span class="err">monotonic</span><span class="w"> </span><span class="err">stack</span>
+<span class="w">        </span><span class="err">while(</span><span class="w"> </span><span class="err">stack.size()</span><span class="w"> </span><span class="err">&amp;&amp;</span><span class="w"> </span><span class="err">stack.back().first</span><span class="w"> </span><span class="err">&lt;=</span><span class="w"> </span><span class="err">price</span><span class="w"> </span><span class="err">){</span>
+
+<span class="w">            </span><span class="err">auto</span><span class="w"> </span><span class="cp">[</span><span class="nx">prevPrice</span><span class="p">,</span><span class="w"> </span><span class="nx">prevSpan</span><span class="cp">]</span><span class="w"> </span><span class="err">=</span><span class="w"> </span><span class="err">stack.back()</span><span class="p">;</span>
+
+<span class="w">            </span><span class="err">stack.pop_back()</span><span class="p">;</span>
+
+<span class="w">            </span><span class="err">//</span><span class="w"> </span><span class="err">update</span><span class="w"> </span><span class="err">current</span><span class="w"> </span><span class="err">price</span><span class="w"> </span><span class="err">span</span><span class="w"> </span><span class="err">with</span><span class="w"> </span><span class="err">history</span><span class="w"> </span><span class="err">data</span><span class="w"> </span><span class="err">in</span><span class="w"> </span><span class="err">stack</span>
+<span class="w">            </span><span class="err">curSpan</span><span class="w"> </span><span class="err">+=</span><span class="w"> </span><span class="err">prevSpan</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="o">//</span><span class="w"> </span><span class="nt">update</span><span class="w"> </span><span class="nt">latest</span><span class="w"> </span><span class="nt">price</span><span class="w"> </span><span class="nt">quote</span><span class="w"> </span><span class="nt">and</span><span class="w"> </span><span class="nt">price</span><span class="w"> </span><span class="nt">span</span>
+<span class="w">        </span><span class="nt">stack</span><span class="p">.</span><span class="nc">push_back</span><span class="o">(</span><span class="w"> </span><span class="nt">pair</span><span class="o">&lt;</span><span class="nt">int</span><span class="o">,</span><span class="w"> </span><span class="nt">int</span><span class="o">&gt;</span><span class="p">{</span><span class="err">curPrice,</span><span class="w"> </span><span class="err">curSpan</span><span class="p">}</span><span class="w"> </span><span class="o">);</span>
+
+<span class="w">        </span><span class="nt">return</span><span class="w"> </span><span class="nt">curSpan</span><span class="o">;</span>
+<span class="w">    </span><span class="err">}</span>
+<span class="nt">private</span><span class="o">:</span>
+<span class="w">    </span><span class="nt">vector</span><span class="o">&lt;</span><span class="w"> </span><span class="nt">pair</span><span class="o">&lt;</span><span class="nt">int</span><span class="o">,</span><span class="w"> </span><span class="nt">int</span><span class="o">&gt;</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="nt">stack</span><span class="o">;</span>
+<span class="err">}</span><span class="o">;</span>
+</code></pre></div>
+
+<hr /></div><p style="page-break-before: always" ></p>

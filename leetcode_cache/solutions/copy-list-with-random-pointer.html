@@ -1,0 +1,910 @@
+<div class='cpp-solution'><h2>✅ 97.92% Hash Table & Linked List -- Votes: 458</h2><h2>Interview Guide - Copying a Linked List with Random Pointers: A Dual-Approach Analysis</h2>
+<h3>Introduction &amp; Problem Understanding</h3>
+<p>The problem at hand involves creating a deep copy of a given singly-linked list where each node has a <code>next</code> pointer and an additional <code>random</code> pointer. The <code>random</code> pointer could point to any node within the list or be <code>null</code>. The deep copy should have brand new nodes with the same <code>next</code> and <code>random</code> pointers as the original list.</p>
+<h4>Key Concepts and Constraints</h4>
+<ol>
+<li>
+<p><strong>Node Anatomy</strong>:\<br />
+   Each node in the list has an integer value, a <code>next</code> pointer pointing to the subsequent node, and a <code>random</code> pointer that could point to any node in the list or be <code>null</code>.</p>
+</li>
+<li>
+<p><strong>Deep Copy</strong>:\<br />
+   We are required to return a deep copy of the list, meaning that the new list should consist of entirely new nodes that don't refer to nodes in the original list.</p>
+</li>
+<li>
+<p><strong>Memory Efficiency</strong>:\<br />
+   While one approach uses $$ O(n) $$ additional memory, the other achieves the task without extra memory, using only $$ O(1) $$ extra space.</p>
+</li>
+</ol>
+<h3>Strategies to Tackle the Problem</h3>
+<ol>
+<li>
+<p><strong>Hash Map Method</strong>:\<br />
+   This approach leverages a hash map to store the mapping between each node in the original list and its corresponding node in the copied list.</p>
+</li>
+<li>
+<p><strong>Interweaving Nodes Method</strong>:\<br />
+   This approach cleverly interweaves the nodes of the copied list with the original list, using the structure to adjust the <code>random</code> pointers correctly, and then separates them.</p>
+</li>
+</ol>
+<hr />
+<h2>Live Coding Hash &amp; More:</h2>
+<p>https://youtu.be/eplAWtfkz5o?si=6OwomT_z5ClgyhUc</p>
+<h3>Solution #1: Hash Map Method</h3>
+<h4>Intuition and Logic Behind the Solution</h4>
+<p>The basic idea is to traverse the list twice. In the first pass, we create a new node for each node in the original list and store the mapping in a hash map. In the second pass, we set the <code>next</code> and <code>random</code> pointers for each new node based on the hash map.</p>
+<h4>Step-by-step Explanation</h4>
+<ol>
+<li><strong>Initialization</strong>:</li>
+</ol>
+<ul>
+<li>Create an empty hash map, <code>old_to_new</code>, to store the mapping from old nodes to new nodes.</li>
+</ul>
+<ol>
+<li><strong>First Pass - Node Creation</strong>:</li>
+</ol>
+<ul>
+<li>Traverse the original list and for each node, create a corresponding new node.</li>
+<li>Store the mapping in <code>old_to_new</code>.</li>
+</ul>
+<ol>
+<li><strong>Second Pass - Setting Pointers</strong>:</li>
+</ol>
+<ul>
+<li>Traverse the original list again.</li>
+<li>For each node, set its corresponding new node's <code>next</code> and <code>random</code> pointers based on the hash map.</li>
+</ul>
+<h4>Complexity Analysis</h4>
+<ul>
+<li><strong>Time Complexity</strong>: $$ O(n) $$ — Each node is visited twice.</li>
+<li><strong>Space Complexity</strong>: $$ O(n) $$ — To store the hash map.</li>
+</ul>
+<hr />
+<h3>Solution #2: Interweaving Nodes Method</h3>
+<h4>Intuition and Logic Behind the Solution</h4>
+<p>The crux of this method is to interweave the nodes of the original and copied lists. This interweaving allows us to set the <code>random</code> pointers for the new nodes without needing additional memory for mapping.</p>
+<h4>Step-by-step Explanation</h4>
+<ol>
+<li><strong>Initialization and Interweaving</strong>:</li>
+</ol>
+<ul>
+<li>Traverse the original list.</li>
+<li>For each node, create a corresponding new node and place it between the current node and the current node's <code>next</code>.</li>
+</ul>
+<ol>
+<li><strong>Setting Random Pointers</strong>:</li>
+</ol>
+<ul>
+<li>Traverse the interweaved list.</li>
+<li>For each old node, set its corresponding new node's <code>random</code> pointer.</li>
+</ul>
+<ol>
+<li><strong>Separating Lists</strong>:</li>
+</ol>
+<ul>
+<li>Traverse the interweaved list again to separate the old and new lists.</li>
+</ul>
+<h4>Complexity Analysis</h4>
+<ul>
+<li><strong>Time Complexity</strong>: $$ O(n) $$ — Each node is visited multiple times but it's still linear time.</li>
+<li><strong>Space Complexity</strong>: $$ O(1) $$ — No additional memory is used for mapping; we only allocate nodes for the new list.</li>
+</ul>
+<p>Both methods provide a deep copy of the original list but differ in their use of additional memory. The choice between them would depend on the specific requirements of your application.</p>
+<h2>Performance</h2>
+<table>
+<thead>
+<tr>
+<th>Language</th>
+<th>Time (ms)</th>
+<th>Memory (MB)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Java</td>
+<td>0 ms</td>
+<td>44 MB</td>
+</tr>
+<tr>
+<td>Go</td>
+<td>3 ms</td>
+<td>3.5 MB</td>
+</tr>
+<tr>
+<td>C++</td>
+<td>8 ms</td>
+<td>11.3 MB</td>
+</tr>
+<tr>
+<td>Python3 (Hash)</td>
+<td>33 ms</td>
+<td>17.3 MB</td>
+</tr>
+<tr>
+<td>JavaScript</td>
+<td>34 ms</td>
+<td>43.8 MB</td>
+</tr>
+<tr>
+<td>Python3 (Inter)</td>
+<td>39 ms</td>
+<td>17.3 MB</td>
+</tr>
+<tr>
+<td>C#</td>
+<td>87 ms</td>
+<td>39.9 MB</td>
+</tr>
+</tbody>
+</table>
+<p></p>
+<h2>Code #1 Hash Map</h2>
+<div class="codehilite"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">copyRandomList</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">head</span><span class="p">:</span> <span class="s1">&#39;Optional[Node]&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;Optional[Node]&#39;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">head</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="n">old_to_new</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="n">curr</span> <span class="o">=</span> <span class="n">head</span>
+        <span class="k">while</span> <span class="n">curr</span><span class="p">:</span>
+            <span class="n">old_to_new</span><span class="p">[</span><span class="n">curr</span><span class="p">]</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(</span><span class="n">curr</span><span class="o">.</span><span class="n">val</span><span class="p">)</span>
+            <span class="n">curr</span> <span class="o">=</span> <span class="n">curr</span><span class="o">.</span><span class="n">next</span>
+
+        <span class="n">curr</span> <span class="o">=</span> <span class="n">head</span>
+        <span class="k">while</span> <span class="n">curr</span><span class="p">:</span>
+            <span class="n">old_to_new</span><span class="p">[</span><span class="n">curr</span><span class="p">]</span><span class="o">.</span><span class="n">next</span> <span class="o">=</span> <span class="n">old_to_new</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">curr</span><span class="o">.</span><span class="n">next</span><span class="p">)</span>
+            <span class="n">old_to_new</span><span class="p">[</span><span class="n">curr</span><span class="p">]</span><span class="o">.</span><span class="n">random</span> <span class="o">=</span> <span class="n">old_to_new</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">curr</span><span class="o">.</span><span class="n">random</span><span class="p">)</span>
+            <span class="n">curr</span> <span class="o">=</span> <span class="n">curr</span><span class="o">.</span><span class="n">next</span>
+
+        <span class="k">return</span> <span class="n">old_to_new</span><span class="p">[</span><span class="n">head</span><span class="p">]</span>
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="w"> </span><span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+<span class="w">    </span><span class="n">Node</span><span class="o">*</span><span class="w"> </span><span class="n">copyRandomList</span><span class="p">(</span><span class="n">Node</span><span class="o">*</span><span class="w"> </span><span class="n">head</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">head</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="k">nullptr</span><span class="p">;</span>
+
+<span class="w">        </span><span class="n">unordered_map</span><span class="o">&lt;</span><span class="n">Node</span><span class="o">*</span><span class="p">,</span><span class="w"> </span><span class="n">Node</span><span class="o">*&gt;</span><span class="w"> </span><span class="n">old_to_new</span><span class="p">;</span>
+
+<span class="w">        </span><span class="n">Node</span><span class="o">*</span><span class="w"> </span><span class="n">curr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">head</span><span class="p">;</span>
+<span class="w">        </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">curr</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">old_to_new</span><span class="p">[</span><span class="n">curr</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Node</span><span class="p">(</span><span class="n">curr</span><span class="o">-&gt;</span><span class="n">val</span><span class="p">);</span>
+<span class="w">            </span><span class="n">curr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">curr</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="n">curr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">head</span><span class="p">;</span>
+<span class="w">        </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">curr</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">old_to_new</span><span class="p">[</span><span class="n">curr</span><span class="p">]</span><span class="o">-&gt;</span><span class="n">next</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">old_to_new</span><span class="p">[</span><span class="n">curr</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">];</span>
+<span class="w">            </span><span class="n">old_to_new</span><span class="p">[</span><span class="n">curr</span><span class="p">]</span><span class="o">-&gt;</span><span class="n">random</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">old_to_new</span><span class="p">[</span><span class="n">curr</span><span class="o">-&gt;</span><span class="n">random</span><span class="p">];</span>
+<span class="w">            </span><span class="n">curr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">curr</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">old_to_new</span><span class="p">[</span><span class="n">head</span><span class="p">];</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">};</span>
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code><span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">Solution</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">Node</span><span class="w"> </span><span class="nf">copyRandomList</span><span class="p">(</span><span class="n">Node</span><span class="w"> </span><span class="n">head</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">head</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="kc">null</span><span class="p">;</span>
+
+<span class="w">        </span><span class="n">HashMap</span><span class="o">&lt;</span><span class="n">Node</span><span class="p">,</span><span class="w"> </span><span class="n">Node</span><span class="o">&gt;</span><span class="w"> </span><span class="n">oldToNew</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">HashMap</span><span class="o">&lt;&gt;</span><span class="p">();</span>
+
+<span class="w">        </span><span class="n">Node</span><span class="w"> </span><span class="n">curr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">head</span><span class="p">;</span>
+<span class="w">        </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">curr</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">oldToNew</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="n">curr</span><span class="p">,</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Node</span><span class="p">(</span><span class="n">curr</span><span class="p">.</span><span class="na">val</span><span class="p">));</span>
+<span class="w">            </span><span class="n">curr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">curr</span><span class="p">.</span><span class="na">next</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="n">curr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">head</span><span class="p">;</span>
+<span class="w">        </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">curr</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">oldToNew</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">curr</span><span class="p">).</span><span class="na">next</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">oldToNew</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">curr</span><span class="p">.</span><span class="na">next</span><span class="p">);</span>
+<span class="w">            </span><span class="n">oldToNew</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">curr</span><span class="p">).</span><span class="na">random</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">oldToNew</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">curr</span><span class="p">.</span><span class="na">random</span><span class="p">);</span>
+<span class="w">            </span><span class="n">curr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">curr</span><span class="p">.</span><span class="na">next</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">oldToNew</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">head</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code><span class="cm">/**</span>
+<span class="cm"> * @param {Node} head</span>
+<span class="cm"> * @return {Node}</span>
+<span class="cm"> */</span>
+<span class="kd">var</span><span class="w"> </span><span class="nx">copyRandomList</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kd">function</span><span class="p">(</span><span class="nx">head</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nx">head</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="kc">null</span><span class="p">;</span>
+
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">oldToNew</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nb">Map</span><span class="p">();</span>
+
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="nx">curr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">head</span><span class="p">;</span>
+<span class="w">    </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="nx">curr</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nx">oldToNew</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="nx">curr</span><span class="p">,</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">Node</span><span class="p">(</span><span class="nx">curr</span><span class="p">.</span><span class="nx">val</span><span class="p">));</span>
+<span class="w">        </span><span class="nx">curr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">curr</span><span class="p">.</span><span class="nx">next</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="nx">curr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">head</span><span class="p">;</span>
+<span class="w">    </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="nx">curr</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nx">oldToNew</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">curr</span><span class="p">).</span><span class="nx">next</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">oldToNew</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">curr</span><span class="p">.</span><span class="nx">next</span><span class="p">)</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="kc">null</span><span class="p">;</span>
+<span class="w">        </span><span class="nx">oldToNew</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">curr</span><span class="p">).</span><span class="nx">random</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">oldToNew</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">curr</span><span class="p">.</span><span class="nx">random</span><span class="p">)</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="kc">null</span><span class="p">;</span>
+<span class="w">        </span><span class="nx">curr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">curr</span><span class="p">.</span><span class="nx">next</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">oldToNew</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">head</span><span class="p">);</span>
+<span class="p">};</span>
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code><span class="k">public</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="n">Node</span><span class="w"> </span><span class="nf">CopyRandomList</span><span class="p">(</span><span class="n">Node</span><span class="w"> </span><span class="n">head</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">head</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="k">null</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="k">null</span><span class="p">;</span>
+
+<span class="w">        </span><span class="n">Dictionary</span><span class="o">&lt;</span><span class="n">Node</span><span class="p">,</span><span class="w"> </span><span class="n">Node</span><span class="o">&gt;</span><span class="w"> </span><span class="n">oldToNew</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Dictionary</span><span class="o">&lt;</span><span class="n">Node</span><span class="p">,</span><span class="w"> </span><span class="n">Node</span><span class="o">&gt;</span><span class="p">();</span>
+
+<span class="w">        </span><span class="n">Node</span><span class="w"> </span><span class="n">curr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">head</span><span class="p">;</span>
+<span class="w">        </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">curr</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="k">null</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">oldToNew</span><span class="p">[</span><span class="n">curr</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Node</span><span class="p">(</span><span class="n">curr</span><span class="p">.</span><span class="n">val</span><span class="p">);</span>
+<span class="w">            </span><span class="n">curr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">curr</span><span class="p">.</span><span class="n">next</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="n">curr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">head</span><span class="p">;</span>
+<span class="w">        </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">curr</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="k">null</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">oldToNew</span><span class="p">[</span><span class="n">curr</span><span class="p">].</span><span class="n">next</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">curr</span><span class="p">.</span><span class="n">next</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="k">null</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">oldToNew</span><span class="p">[</span><span class="n">curr</span><span class="p">.</span><span class="n">next</span><span class="p">]</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="k">null</span><span class="p">;</span>
+<span class="w">            </span><span class="n">oldToNew</span><span class="p">[</span><span class="n">curr</span><span class="p">].</span><span class="n">random</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">curr</span><span class="p">.</span><span class="n">random</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="k">null</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">oldToNew</span><span class="p">[</span><span class="n">curr</span><span class="p">.</span><span class="n">random</span><span class="p">]</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="k">null</span><span class="p">;</span>
+<span class="w">            </span><span class="n">curr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">curr</span><span class="p">.</span><span class="n">next</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">oldToNew</span><span class="p">[</span><span class="n">head</span><span class="p">];</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code><span class="kd">func</span><span class="w"> </span><span class="nx">copyRandomList</span><span class="p">(</span><span class="nx">head</span><span class="w"> </span><span class="o">*</span><span class="nx">Node</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="nx">Node</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="nx">head</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="kc">nil</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="nx">oldToNew</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nb">make</span><span class="p">(</span><span class="kd">map</span><span class="p">[</span><span class="o">*</span><span class="nx">Node</span><span class="p">]</span><span class="o">*</span><span class="nx">Node</span><span class="p">)</span>
+
+<span class="w">    </span><span class="nx">curr</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">head</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="nx">curr</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nx">oldToNew</span><span class="p">[</span><span class="nx">curr</span><span class="p">]</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="o">&amp;</span><span class="nx">Node</span><span class="p">{</span><span class="nx">Val</span><span class="p">:</span><span class="w"> </span><span class="nx">curr</span><span class="p">.</span><span class="nx">Val</span><span class="p">}</span>
+<span class="w">        </span><span class="nx">curr</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">curr</span><span class="p">.</span><span class="nx">Next</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="nx">curr</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">head</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="nx">curr</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nx">oldToNew</span><span class="p">[</span><span class="nx">curr</span><span class="p">].</span><span class="nx">Next</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">oldToNew</span><span class="p">[</span><span class="nx">curr</span><span class="p">.</span><span class="nx">Next</span><span class="p">]</span>
+<span class="w">        </span><span class="nx">oldToNew</span><span class="p">[</span><span class="nx">curr</span><span class="p">].</span><span class="nx">Random</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">oldToNew</span><span class="p">[</span><span class="nx">curr</span><span class="p">.</span><span class="nx">Random</span><span class="p">]</span>
+<span class="w">        </span><span class="nx">curr</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">curr</span><span class="p">.</span><span class="nx">Next</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">oldToNew</span><span class="p">[</span><span class="nx">head</span><span class="p">]</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h2>Code #2 Interweaving Nodes</h2>
+<div class="codehilite"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">copyRandomList</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">head</span><span class="p">:</span> <span class="s1">&#39;Optional[Node]&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;Optional[Node]&#39;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">head</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+        <span class="n">curr</span> <span class="o">=</span> <span class="n">head</span>
+        <span class="k">while</span> <span class="n">curr</span><span class="p">:</span>
+            <span class="n">new_node</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(</span><span class="n">curr</span><span class="o">.</span><span class="n">val</span><span class="p">,</span> <span class="n">curr</span><span class="o">.</span><span class="n">next</span><span class="p">)</span>
+            <span class="n">curr</span><span class="o">.</span><span class="n">next</span> <span class="o">=</span> <span class="n">new_node</span>
+            <span class="n">curr</span> <span class="o">=</span> <span class="n">new_node</span><span class="o">.</span><span class="n">next</span>
+
+        <span class="n">curr</span> <span class="o">=</span> <span class="n">head</span>
+        <span class="k">while</span> <span class="n">curr</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">curr</span><span class="o">.</span><span class="n">random</span><span class="p">:</span>
+                <span class="n">curr</span><span class="o">.</span><span class="n">next</span><span class="o">.</span><span class="n">random</span> <span class="o">=</span> <span class="n">curr</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">next</span>
+            <span class="n">curr</span> <span class="o">=</span> <span class="n">curr</span><span class="o">.</span><span class="n">next</span><span class="o">.</span><span class="n">next</span>
+
+        <span class="n">old_head</span> <span class="o">=</span> <span class="n">head</span>
+        <span class="n">new_head</span> <span class="o">=</span> <span class="n">head</span><span class="o">.</span><span class="n">next</span>
+        <span class="n">curr_old</span> <span class="o">=</span> <span class="n">old_head</span>
+        <span class="n">curr_new</span> <span class="o">=</span> <span class="n">new_head</span>
+
+        <span class="k">while</span> <span class="n">curr_old</span><span class="p">:</span>
+            <span class="n">curr_old</span><span class="o">.</span><span class="n">next</span> <span class="o">=</span> <span class="n">curr_old</span><span class="o">.</span><span class="n">next</span><span class="o">.</span><span class="n">next</span>
+            <span class="n">curr_new</span><span class="o">.</span><span class="n">next</span> <span class="o">=</span> <span class="n">curr_new</span><span class="o">.</span><span class="n">next</span><span class="o">.</span><span class="n">next</span> <span class="k">if</span> <span class="n">curr_new</span><span class="o">.</span><span class="n">next</span> <span class="k">else</span> <span class="kc">None</span>
+            <span class="n">curr_old</span> <span class="o">=</span> <span class="n">curr_old</span><span class="o">.</span><span class="n">next</span>
+            <span class="n">curr_new</span> <span class="o">=</span> <span class="n">curr_new</span><span class="o">.</span><span class="n">next</span>
+
+        <span class="k">return</span> <span class="n">new_head</span>
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code><span class="kd">func</span><span class="w"> </span><span class="nx">copyRandomList</span><span class="p">(</span><span class="nx">head</span><span class="w"> </span><span class="o">*</span><span class="nx">Node</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="nx">Node</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="nx">head</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="kc">nil</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="nx">curr</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">head</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="nx">curr</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nx">new_node</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="o">&amp;</span><span class="nx">Node</span><span class="p">{</span><span class="nx">Val</span><span class="p">:</span><span class="w"> </span><span class="nx">curr</span><span class="p">.</span><span class="nx">Val</span><span class="p">,</span><span class="w"> </span><span class="nx">Next</span><span class="p">:</span><span class="w"> </span><span class="nx">curr</span><span class="p">.</span><span class="nx">Next</span><span class="p">}</span>
+<span class="w">        </span><span class="nx">curr</span><span class="p">.</span><span class="nx">Next</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">new_node</span>
+<span class="w">        </span><span class="nx">curr</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">new_node</span><span class="p">.</span><span class="nx">Next</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="nx">curr</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">head</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="nx">curr</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="nx">curr</span><span class="p">.</span><span class="nx">Random</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="nx">curr</span><span class="p">.</span><span class="nx">Next</span><span class="p">.</span><span class="nx">Random</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">curr</span><span class="p">.</span><span class="nx">Random</span><span class="p">.</span><span class="nx">Next</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="nx">curr</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">curr</span><span class="p">.</span><span class="nx">Next</span><span class="p">.</span><span class="nx">Next</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="nx">old_head</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">head</span>
+<span class="w">    </span><span class="nx">new_head</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">head</span><span class="p">.</span><span class="nx">Next</span>
+<span class="w">    </span><span class="nx">curr_old</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">old_head</span>
+<span class="w">    </span><span class="nx">curr_new</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">new_head</span>
+
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="nx">curr_old</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nx">curr_old</span><span class="p">.</span><span class="nx">Next</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">curr_old</span><span class="p">.</span><span class="nx">Next</span><span class="p">.</span><span class="nx">Next</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="nx">curr_new</span><span class="p">.</span><span class="nx">Next</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="nx">curr_new</span><span class="p">.</span><span class="nx">Next</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">curr_new</span><span class="p">.</span><span class="nx">Next</span><span class="p">.</span><span class="nx">Next</span>
+<span class="w">        </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="nx">curr_new</span><span class="p">.</span><span class="nx">Next</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="kc">nil</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="nx">curr_old</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">curr_old</span><span class="p">.</span><span class="nx">Next</span>
+<span class="w">        </span><span class="nx">curr_new</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">curr_new</span><span class="p">.</span><span class="nx">Next</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">new_head</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code><span class="cm">/*</span>
+<span class="cm">// Definition for a Node.</span>
+<span class="cm">class Node {</span>
+<span class="cm">public:</span>
+<span class="cm">    int val;</span>
+<span class="cm">    Node* next;</span>
+<span class="cm">    Node* random;</span>
+
+<span class="cm">    Node(int _val) {</span>
+<span class="cm">        val = _val;</span>
+<span class="cm">        next = NULL;</span>
+<span class="cm">        random = NULL;</span>
+<span class="cm">    }</span>
+<span class="cm">};</span>
+<span class="cm">*/</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="w"> </span><span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+<span class="w">    </span><span class="n">Node</span><span class="o">*</span><span class="w"> </span><span class="n">copyRandomList</span><span class="p">(</span><span class="n">Node</span><span class="o">*</span><span class="w"> </span><span class="n">head</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">head</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="k">nullptr</span><span class="p">;</span>
+
+<span class="w">        </span><span class="n">Node</span><span class="o">*</span><span class="w"> </span><span class="n">curr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">head</span><span class="p">;</span>
+<span class="w">        </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">curr</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">Node</span><span class="o">*</span><span class="w"> </span><span class="n">new_node</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Node</span><span class="p">(</span><span class="n">curr</span><span class="o">-&gt;</span><span class="n">val</span><span class="p">);</span>
+<span class="w">            </span><span class="n">new_node</span><span class="o">-&gt;</span><span class="n">next</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">curr</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">;</span>
+<span class="w">            </span><span class="n">curr</span><span class="o">-&gt;</span><span class="n">next</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">new_node</span><span class="p">;</span>
+<span class="w">            </span><span class="n">curr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">new_node</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="n">curr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">head</span><span class="p">;</span>
+<span class="w">        </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">curr</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">curr</span><span class="o">-&gt;</span><span class="n">random</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">curr</span><span class="o">-&gt;</span><span class="n">next</span><span class="o">-&gt;</span><span class="n">random</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">curr</span><span class="o">-&gt;</span><span class="n">random</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">;</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="n">curr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">curr</span><span class="o">-&gt;</span><span class="n">next</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="n">Node</span><span class="o">*</span><span class="w"> </span><span class="n">old_head</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">head</span><span class="p">;</span>
+<span class="w">        </span><span class="n">Node</span><span class="o">*</span><span class="w"> </span><span class="n">new_head</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">head</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">;</span>
+<span class="w">        </span><span class="n">Node</span><span class="o">*</span><span class="w"> </span><span class="n">curr_old</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">old_head</span><span class="p">;</span>
+<span class="w">        </span><span class="n">Node</span><span class="o">*</span><span class="w"> </span><span class="n">curr_new</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">new_head</span><span class="p">;</span>
+
+<span class="w">        </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">curr_old</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">curr_old</span><span class="o">-&gt;</span><span class="n">next</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">curr_old</span><span class="o">-&gt;</span><span class="n">next</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">;</span>
+<span class="w">            </span><span class="n">curr_new</span><span class="o">-&gt;</span><span class="n">next</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">curr_new</span><span class="o">-&gt;</span><span class="n">next</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">curr_new</span><span class="o">-&gt;</span><span class="n">next</span><span class="o">-&gt;</span><span class="n">next</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">nullptr</span><span class="p">;</span>
+<span class="w">            </span><span class="n">curr_old</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">curr_old</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">;</span>
+<span class="w">            </span><span class="n">curr_new</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">curr_new</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">new_head</span><span class="p">;</span><span class="w">       </span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">};</span>
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code><span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">Solution</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">Node</span><span class="w"> </span><span class="nf">copyRandomList</span><span class="p">(</span><span class="n">Node</span><span class="w"> </span><span class="n">head</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">head</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="kc">null</span><span class="p">;</span>
+
+<span class="w">        </span><span class="n">Node</span><span class="w"> </span><span class="n">curr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">head</span><span class="p">;</span>
+<span class="w">        </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">curr</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">Node</span><span class="w"> </span><span class="n">new_node</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Node</span><span class="p">(</span><span class="n">curr</span><span class="p">.</span><span class="na">val</span><span class="p">,</span><span class="w"> </span><span class="n">curr</span><span class="p">.</span><span class="na">next</span><span class="p">);</span>
+<span class="w">            </span><span class="n">curr</span><span class="p">.</span><span class="na">next</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">new_node</span><span class="p">;</span>
+<span class="w">            </span><span class="n">curr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">new_node</span><span class="p">.</span><span class="na">next</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="n">curr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">head</span><span class="p">;</span>
+<span class="w">        </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">curr</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">curr</span><span class="p">.</span><span class="na">random</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">curr</span><span class="p">.</span><span class="na">next</span><span class="p">.</span><span class="na">random</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">curr</span><span class="p">.</span><span class="na">random</span><span class="p">.</span><span class="na">next</span><span class="p">;</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="n">curr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">curr</span><span class="p">.</span><span class="na">next</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">curr</span><span class="p">.</span><span class="na">next</span><span class="p">.</span><span class="na">next</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="n">Node</span><span class="w"> </span><span class="n">old_head</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">head</span><span class="p">;</span>
+<span class="w">        </span><span class="n">Node</span><span class="w"> </span><span class="n">new_head</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">head</span><span class="p">.</span><span class="na">next</span><span class="p">;</span>
+<span class="w">        </span><span class="n">Node</span><span class="w"> </span><span class="n">curr_old</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">old_head</span><span class="p">;</span>
+<span class="w">        </span><span class="n">Node</span><span class="w"> </span><span class="n">curr_new</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">new_head</span><span class="p">;</span>
+
+<span class="w">        </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">curr_old</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">curr_old</span><span class="p">.</span><span class="na">next</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">curr_old</span><span class="p">.</span><span class="na">next</span><span class="p">.</span><span class="na">next</span><span class="p">;</span>
+<span class="w">            </span><span class="n">curr_new</span><span class="p">.</span><span class="na">next</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">curr_new</span><span class="p">.</span><span class="na">next</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">curr_new</span><span class="p">.</span><span class="na">next</span><span class="p">.</span><span class="na">next</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">;</span>
+<span class="w">            </span><span class="n">curr_old</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">curr_old</span><span class="p">.</span><span class="na">next</span><span class="p">;</span>
+<span class="w">            </span><span class="n">curr_new</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">curr_new</span><span class="p">.</span><span class="na">next</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">new_head</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h2>Live Coding Interweaving &amp; More</h2>
+<p>https://youtu.be/DH0HDU4ScYY?si=P-P1Er3P8q5XekTU</p>
+<h4>Reflections on Copying Lists with Random Pointers</h4>
+<h5>Hash Map Method:</h5>
+<p>Clear and simple, this method uses extra memory to map each node from the original to the copied list. It's straightforward but can be memory-inefficient.</p>
+<h5>Interweaving Nodes Method:</h5>
+<p>Sleek and space-efficient, this in-place method interweaves new nodes within the existing structure before making them their own list. It's elegant but requires careful attention.</p>
+<p>This problem isn't just coding; it's a deep dive into data structures and algorithms. Whether you prefer the clarity of Hash Map or the finesse of Interweaving Nodes, each sharpens your algorithmic skill set. Embrace the challenge!</p></div>
+
+
+<div class='python-solution'><h2>✅ 97.92% Hash Table & Linked List -- Votes: 458</h2><h2>Interview Guide - Copying a Linked List with Random Pointers: A Dual-Approach Analysis</h2>
+<h3>Introduction &amp; Problem Understanding</h3>
+<p>The problem at hand involves creating a deep copy of a given singly-linked list where each node has a <code>next</code> pointer and an additional <code>random</code> pointer. The <code>random</code> pointer could point to any node within the list or be <code>null</code>. The deep copy should have brand new nodes with the same <code>next</code> and <code>random</code> pointers as the original list.</p>
+<h4>Key Concepts and Constraints</h4>
+<ol>
+<li>
+<p><strong>Node Anatomy</strong>:\<br />
+   Each node in the list has an integer value, a <code>next</code> pointer pointing to the subsequent node, and a <code>random</code> pointer that could point to any node in the list or be <code>null</code>.</p>
+</li>
+<li>
+<p><strong>Deep Copy</strong>:\<br />
+   We are required to return a deep copy of the list, meaning that the new list should consist of entirely new nodes that don't refer to nodes in the original list.</p>
+</li>
+<li>
+<p><strong>Memory Efficiency</strong>:\<br />
+   While one approach uses $$ O(n) $$ additional memory, the other achieves the task without extra memory, using only $$ O(1) $$ extra space.</p>
+</li>
+</ol>
+<h3>Strategies to Tackle the Problem</h3>
+<ol>
+<li>
+<p><strong>Hash Map Method</strong>:\<br />
+   This approach leverages a hash map to store the mapping between each node in the original list and its corresponding node in the copied list.</p>
+</li>
+<li>
+<p><strong>Interweaving Nodes Method</strong>:\<br />
+   This approach cleverly interweaves the nodes of the copied list with the original list, using the structure to adjust the <code>random</code> pointers correctly, and then separates them.</p>
+</li>
+</ol>
+<hr />
+<h2>Live Coding Hash &amp; More:</h2>
+<p>https://youtu.be/eplAWtfkz5o?si=6OwomT_z5ClgyhUc</p>
+<h3>Solution #1: Hash Map Method</h3>
+<h4>Intuition and Logic Behind the Solution</h4>
+<p>The basic idea is to traverse the list twice. In the first pass, we create a new node for each node in the original list and store the mapping in a hash map. In the second pass, we set the <code>next</code> and <code>random</code> pointers for each new node based on the hash map.</p>
+<h4>Step-by-step Explanation</h4>
+<ol>
+<li><strong>Initialization</strong>:</li>
+</ol>
+<ul>
+<li>Create an empty hash map, <code>old_to_new</code>, to store the mapping from old nodes to new nodes.</li>
+</ul>
+<ol>
+<li><strong>First Pass - Node Creation</strong>:</li>
+</ol>
+<ul>
+<li>Traverse the original list and for each node, create a corresponding new node.</li>
+<li>Store the mapping in <code>old_to_new</code>.</li>
+</ul>
+<ol>
+<li><strong>Second Pass - Setting Pointers</strong>:</li>
+</ol>
+<ul>
+<li>Traverse the original list again.</li>
+<li>For each node, set its corresponding new node's <code>next</code> and <code>random</code> pointers based on the hash map.</li>
+</ul>
+<h4>Complexity Analysis</h4>
+<ul>
+<li><strong>Time Complexity</strong>: $$ O(n) $$ — Each node is visited twice.</li>
+<li><strong>Space Complexity</strong>: $$ O(n) $$ — To store the hash map.</li>
+</ul>
+<hr />
+<h3>Solution #2: Interweaving Nodes Method</h3>
+<h4>Intuition and Logic Behind the Solution</h4>
+<p>The crux of this method is to interweave the nodes of the original and copied lists. This interweaving allows us to set the <code>random</code> pointers for the new nodes without needing additional memory for mapping.</p>
+<h4>Step-by-step Explanation</h4>
+<ol>
+<li><strong>Initialization and Interweaving</strong>:</li>
+</ol>
+<ul>
+<li>Traverse the original list.</li>
+<li>For each node, create a corresponding new node and place it between the current node and the current node's <code>next</code>.</li>
+</ul>
+<ol>
+<li><strong>Setting Random Pointers</strong>:</li>
+</ol>
+<ul>
+<li>Traverse the interweaved list.</li>
+<li>For each old node, set its corresponding new node's <code>random</code> pointer.</li>
+</ul>
+<ol>
+<li><strong>Separating Lists</strong>:</li>
+</ol>
+<ul>
+<li>Traverse the interweaved list again to separate the old and new lists.</li>
+</ul>
+<h4>Complexity Analysis</h4>
+<ul>
+<li><strong>Time Complexity</strong>: $$ O(n) $$ — Each node is visited multiple times but it's still linear time.</li>
+<li><strong>Space Complexity</strong>: $$ O(1) $$ — No additional memory is used for mapping; we only allocate nodes for the new list.</li>
+</ul>
+<p>Both methods provide a deep copy of the original list but differ in their use of additional memory. The choice between them would depend on the specific requirements of your application.</p>
+<h2>Performance</h2>
+<table>
+<thead>
+<tr>
+<th>Language</th>
+<th>Time (ms)</th>
+<th>Memory (MB)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Java</td>
+<td>0 ms</td>
+<td>44 MB</td>
+</tr>
+<tr>
+<td>Go</td>
+<td>3 ms</td>
+<td>3.5 MB</td>
+</tr>
+<tr>
+<td>C++</td>
+<td>8 ms</td>
+<td>11.3 MB</td>
+</tr>
+<tr>
+<td>Python3 (Hash)</td>
+<td>33 ms</td>
+<td>17.3 MB</td>
+</tr>
+<tr>
+<td>JavaScript</td>
+<td>34 ms</td>
+<td>43.8 MB</td>
+</tr>
+<tr>
+<td>Python3 (Inter)</td>
+<td>39 ms</td>
+<td>17.3 MB</td>
+</tr>
+<tr>
+<td>C#</td>
+<td>87 ms</td>
+<td>39.9 MB</td>
+</tr>
+</tbody>
+</table>
+<p></p>
+<h2>Code #1 Hash Map</h2>
+<div class="codehilite"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">copyRandomList</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">head</span><span class="p">:</span> <span class="s1">&#39;Optional[Node]&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;Optional[Node]&#39;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">head</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="n">old_to_new</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="n">curr</span> <span class="o">=</span> <span class="n">head</span>
+        <span class="k">while</span> <span class="n">curr</span><span class="p">:</span>
+            <span class="n">old_to_new</span><span class="p">[</span><span class="n">curr</span><span class="p">]</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(</span><span class="n">curr</span><span class="o">.</span><span class="n">val</span><span class="p">)</span>
+            <span class="n">curr</span> <span class="o">=</span> <span class="n">curr</span><span class="o">.</span><span class="n">next</span>
+
+        <span class="n">curr</span> <span class="o">=</span> <span class="n">head</span>
+        <span class="k">while</span> <span class="n">curr</span><span class="p">:</span>
+            <span class="n">old_to_new</span><span class="p">[</span><span class="n">curr</span><span class="p">]</span><span class="o">.</span><span class="n">next</span> <span class="o">=</span> <span class="n">old_to_new</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">curr</span><span class="o">.</span><span class="n">next</span><span class="p">)</span>
+            <span class="n">old_to_new</span><span class="p">[</span><span class="n">curr</span><span class="p">]</span><span class="o">.</span><span class="n">random</span> <span class="o">=</span> <span class="n">old_to_new</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">curr</span><span class="o">.</span><span class="n">random</span><span class="p">)</span>
+            <span class="n">curr</span> <span class="o">=</span> <span class="n">curr</span><span class="o">.</span><span class="n">next</span>
+
+        <span class="k">return</span> <span class="n">old_to_new</span><span class="p">[</span><span class="n">head</span><span class="p">]</span>
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="w"> </span><span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+<span class="w">    </span><span class="n">Node</span><span class="o">*</span><span class="w"> </span><span class="n">copyRandomList</span><span class="p">(</span><span class="n">Node</span><span class="o">*</span><span class="w"> </span><span class="n">head</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">head</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="k">nullptr</span><span class="p">;</span>
+
+<span class="w">        </span><span class="n">unordered_map</span><span class="o">&lt;</span><span class="n">Node</span><span class="o">*</span><span class="p">,</span><span class="w"> </span><span class="n">Node</span><span class="o">*&gt;</span><span class="w"> </span><span class="n">old_to_new</span><span class="p">;</span>
+
+<span class="w">        </span><span class="n">Node</span><span class="o">*</span><span class="w"> </span><span class="n">curr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">head</span><span class="p">;</span>
+<span class="w">        </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">curr</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">old_to_new</span><span class="p">[</span><span class="n">curr</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Node</span><span class="p">(</span><span class="n">curr</span><span class="o">-&gt;</span><span class="n">val</span><span class="p">);</span>
+<span class="w">            </span><span class="n">curr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">curr</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="n">curr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">head</span><span class="p">;</span>
+<span class="w">        </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">curr</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">old_to_new</span><span class="p">[</span><span class="n">curr</span><span class="p">]</span><span class="o">-&gt;</span><span class="n">next</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">old_to_new</span><span class="p">[</span><span class="n">curr</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">];</span>
+<span class="w">            </span><span class="n">old_to_new</span><span class="p">[</span><span class="n">curr</span><span class="p">]</span><span class="o">-&gt;</span><span class="n">random</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">old_to_new</span><span class="p">[</span><span class="n">curr</span><span class="o">-&gt;</span><span class="n">random</span><span class="p">];</span>
+<span class="w">            </span><span class="n">curr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">curr</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">old_to_new</span><span class="p">[</span><span class="n">head</span><span class="p">];</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">};</span>
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code><span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">Solution</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">Node</span><span class="w"> </span><span class="nf">copyRandomList</span><span class="p">(</span><span class="n">Node</span><span class="w"> </span><span class="n">head</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">head</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="kc">null</span><span class="p">;</span>
+
+<span class="w">        </span><span class="n">HashMap</span><span class="o">&lt;</span><span class="n">Node</span><span class="p">,</span><span class="w"> </span><span class="n">Node</span><span class="o">&gt;</span><span class="w"> </span><span class="n">oldToNew</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">HashMap</span><span class="o">&lt;&gt;</span><span class="p">();</span>
+
+<span class="w">        </span><span class="n">Node</span><span class="w"> </span><span class="n">curr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">head</span><span class="p">;</span>
+<span class="w">        </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">curr</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">oldToNew</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="n">curr</span><span class="p">,</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Node</span><span class="p">(</span><span class="n">curr</span><span class="p">.</span><span class="na">val</span><span class="p">));</span>
+<span class="w">            </span><span class="n">curr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">curr</span><span class="p">.</span><span class="na">next</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="n">curr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">head</span><span class="p">;</span>
+<span class="w">        </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">curr</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">oldToNew</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">curr</span><span class="p">).</span><span class="na">next</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">oldToNew</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">curr</span><span class="p">.</span><span class="na">next</span><span class="p">);</span>
+<span class="w">            </span><span class="n">oldToNew</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">curr</span><span class="p">).</span><span class="na">random</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">oldToNew</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">curr</span><span class="p">.</span><span class="na">random</span><span class="p">);</span>
+<span class="w">            </span><span class="n">curr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">curr</span><span class="p">.</span><span class="na">next</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">oldToNew</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">head</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code><span class="cm">/**</span>
+<span class="cm"> * @param {Node} head</span>
+<span class="cm"> * @return {Node}</span>
+<span class="cm"> */</span>
+<span class="kd">var</span><span class="w"> </span><span class="nx">copyRandomList</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kd">function</span><span class="p">(</span><span class="nx">head</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nx">head</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="kc">null</span><span class="p">;</span>
+
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">oldToNew</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nb">Map</span><span class="p">();</span>
+
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="nx">curr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">head</span><span class="p">;</span>
+<span class="w">    </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="nx">curr</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nx">oldToNew</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="nx">curr</span><span class="p">,</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">Node</span><span class="p">(</span><span class="nx">curr</span><span class="p">.</span><span class="nx">val</span><span class="p">));</span>
+<span class="w">        </span><span class="nx">curr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">curr</span><span class="p">.</span><span class="nx">next</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="nx">curr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">head</span><span class="p">;</span>
+<span class="w">    </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="nx">curr</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nx">oldToNew</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">curr</span><span class="p">).</span><span class="nx">next</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">oldToNew</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">curr</span><span class="p">.</span><span class="nx">next</span><span class="p">)</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="kc">null</span><span class="p">;</span>
+<span class="w">        </span><span class="nx">oldToNew</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">curr</span><span class="p">).</span><span class="nx">random</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">oldToNew</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">curr</span><span class="p">.</span><span class="nx">random</span><span class="p">)</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="kc">null</span><span class="p">;</span>
+<span class="w">        </span><span class="nx">curr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">curr</span><span class="p">.</span><span class="nx">next</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">oldToNew</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">head</span><span class="p">);</span>
+<span class="p">};</span>
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code><span class="k">public</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="n">Node</span><span class="w"> </span><span class="nf">CopyRandomList</span><span class="p">(</span><span class="n">Node</span><span class="w"> </span><span class="n">head</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">head</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="k">null</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="k">null</span><span class="p">;</span>
+
+<span class="w">        </span><span class="n">Dictionary</span><span class="o">&lt;</span><span class="n">Node</span><span class="p">,</span><span class="w"> </span><span class="n">Node</span><span class="o">&gt;</span><span class="w"> </span><span class="n">oldToNew</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Dictionary</span><span class="o">&lt;</span><span class="n">Node</span><span class="p">,</span><span class="w"> </span><span class="n">Node</span><span class="o">&gt;</span><span class="p">();</span>
+
+<span class="w">        </span><span class="n">Node</span><span class="w"> </span><span class="n">curr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">head</span><span class="p">;</span>
+<span class="w">        </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">curr</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="k">null</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">oldToNew</span><span class="p">[</span><span class="n">curr</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Node</span><span class="p">(</span><span class="n">curr</span><span class="p">.</span><span class="n">val</span><span class="p">);</span>
+<span class="w">            </span><span class="n">curr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">curr</span><span class="p">.</span><span class="n">next</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="n">curr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">head</span><span class="p">;</span>
+<span class="w">        </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">curr</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="k">null</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">oldToNew</span><span class="p">[</span><span class="n">curr</span><span class="p">].</span><span class="n">next</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">curr</span><span class="p">.</span><span class="n">next</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="k">null</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">oldToNew</span><span class="p">[</span><span class="n">curr</span><span class="p">.</span><span class="n">next</span><span class="p">]</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="k">null</span><span class="p">;</span>
+<span class="w">            </span><span class="n">oldToNew</span><span class="p">[</span><span class="n">curr</span><span class="p">].</span><span class="n">random</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">curr</span><span class="p">.</span><span class="n">random</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="k">null</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">oldToNew</span><span class="p">[</span><span class="n">curr</span><span class="p">.</span><span class="n">random</span><span class="p">]</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="k">null</span><span class="p">;</span>
+<span class="w">            </span><span class="n">curr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">curr</span><span class="p">.</span><span class="n">next</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">oldToNew</span><span class="p">[</span><span class="n">head</span><span class="p">];</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code><span class="kd">func</span><span class="w"> </span><span class="nx">copyRandomList</span><span class="p">(</span><span class="nx">head</span><span class="w"> </span><span class="o">*</span><span class="nx">Node</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="nx">Node</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="nx">head</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="kc">nil</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="nx">oldToNew</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nb">make</span><span class="p">(</span><span class="kd">map</span><span class="p">[</span><span class="o">*</span><span class="nx">Node</span><span class="p">]</span><span class="o">*</span><span class="nx">Node</span><span class="p">)</span>
+
+<span class="w">    </span><span class="nx">curr</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">head</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="nx">curr</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nx">oldToNew</span><span class="p">[</span><span class="nx">curr</span><span class="p">]</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="o">&amp;</span><span class="nx">Node</span><span class="p">{</span><span class="nx">Val</span><span class="p">:</span><span class="w"> </span><span class="nx">curr</span><span class="p">.</span><span class="nx">Val</span><span class="p">}</span>
+<span class="w">        </span><span class="nx">curr</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">curr</span><span class="p">.</span><span class="nx">Next</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="nx">curr</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">head</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="nx">curr</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nx">oldToNew</span><span class="p">[</span><span class="nx">curr</span><span class="p">].</span><span class="nx">Next</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">oldToNew</span><span class="p">[</span><span class="nx">curr</span><span class="p">.</span><span class="nx">Next</span><span class="p">]</span>
+<span class="w">        </span><span class="nx">oldToNew</span><span class="p">[</span><span class="nx">curr</span><span class="p">].</span><span class="nx">Random</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">oldToNew</span><span class="p">[</span><span class="nx">curr</span><span class="p">.</span><span class="nx">Random</span><span class="p">]</span>
+<span class="w">        </span><span class="nx">curr</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">curr</span><span class="p">.</span><span class="nx">Next</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">oldToNew</span><span class="p">[</span><span class="nx">head</span><span class="p">]</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h2>Code #2 Interweaving Nodes</h2>
+<div class="codehilite"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">copyRandomList</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">head</span><span class="p">:</span> <span class="s1">&#39;Optional[Node]&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;Optional[Node]&#39;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">head</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+        <span class="n">curr</span> <span class="o">=</span> <span class="n">head</span>
+        <span class="k">while</span> <span class="n">curr</span><span class="p">:</span>
+            <span class="n">new_node</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(</span><span class="n">curr</span><span class="o">.</span><span class="n">val</span><span class="p">,</span> <span class="n">curr</span><span class="o">.</span><span class="n">next</span><span class="p">)</span>
+            <span class="n">curr</span><span class="o">.</span><span class="n">next</span> <span class="o">=</span> <span class="n">new_node</span>
+            <span class="n">curr</span> <span class="o">=</span> <span class="n">new_node</span><span class="o">.</span><span class="n">next</span>
+
+        <span class="n">curr</span> <span class="o">=</span> <span class="n">head</span>
+        <span class="k">while</span> <span class="n">curr</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">curr</span><span class="o">.</span><span class="n">random</span><span class="p">:</span>
+                <span class="n">curr</span><span class="o">.</span><span class="n">next</span><span class="o">.</span><span class="n">random</span> <span class="o">=</span> <span class="n">curr</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">next</span>
+            <span class="n">curr</span> <span class="o">=</span> <span class="n">curr</span><span class="o">.</span><span class="n">next</span><span class="o">.</span><span class="n">next</span>
+
+        <span class="n">old_head</span> <span class="o">=</span> <span class="n">head</span>
+        <span class="n">new_head</span> <span class="o">=</span> <span class="n">head</span><span class="o">.</span><span class="n">next</span>
+        <span class="n">curr_old</span> <span class="o">=</span> <span class="n">old_head</span>
+        <span class="n">curr_new</span> <span class="o">=</span> <span class="n">new_head</span>
+
+        <span class="k">while</span> <span class="n">curr_old</span><span class="p">:</span>
+            <span class="n">curr_old</span><span class="o">.</span><span class="n">next</span> <span class="o">=</span> <span class="n">curr_old</span><span class="o">.</span><span class="n">next</span><span class="o">.</span><span class="n">next</span>
+            <span class="n">curr_new</span><span class="o">.</span><span class="n">next</span> <span class="o">=</span> <span class="n">curr_new</span><span class="o">.</span><span class="n">next</span><span class="o">.</span><span class="n">next</span> <span class="k">if</span> <span class="n">curr_new</span><span class="o">.</span><span class="n">next</span> <span class="k">else</span> <span class="kc">None</span>
+            <span class="n">curr_old</span> <span class="o">=</span> <span class="n">curr_old</span><span class="o">.</span><span class="n">next</span>
+            <span class="n">curr_new</span> <span class="o">=</span> <span class="n">curr_new</span><span class="o">.</span><span class="n">next</span>
+
+        <span class="k">return</span> <span class="n">new_head</span>
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code><span class="kd">func</span><span class="w"> </span><span class="nx">copyRandomList</span><span class="p">(</span><span class="nx">head</span><span class="w"> </span><span class="o">*</span><span class="nx">Node</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="nx">Node</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="nx">head</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="kc">nil</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="nx">curr</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">head</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="nx">curr</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nx">new_node</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="o">&amp;</span><span class="nx">Node</span><span class="p">{</span><span class="nx">Val</span><span class="p">:</span><span class="w"> </span><span class="nx">curr</span><span class="p">.</span><span class="nx">Val</span><span class="p">,</span><span class="w"> </span><span class="nx">Next</span><span class="p">:</span><span class="w"> </span><span class="nx">curr</span><span class="p">.</span><span class="nx">Next</span><span class="p">}</span>
+<span class="w">        </span><span class="nx">curr</span><span class="p">.</span><span class="nx">Next</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">new_node</span>
+<span class="w">        </span><span class="nx">curr</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">new_node</span><span class="p">.</span><span class="nx">Next</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="nx">curr</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">head</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="nx">curr</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="nx">curr</span><span class="p">.</span><span class="nx">Random</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="nx">curr</span><span class="p">.</span><span class="nx">Next</span><span class="p">.</span><span class="nx">Random</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">curr</span><span class="p">.</span><span class="nx">Random</span><span class="p">.</span><span class="nx">Next</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="nx">curr</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">curr</span><span class="p">.</span><span class="nx">Next</span><span class="p">.</span><span class="nx">Next</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="nx">old_head</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">head</span>
+<span class="w">    </span><span class="nx">new_head</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">head</span><span class="p">.</span><span class="nx">Next</span>
+<span class="w">    </span><span class="nx">curr_old</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">old_head</span>
+<span class="w">    </span><span class="nx">curr_new</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">new_head</span>
+
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="nx">curr_old</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nx">curr_old</span><span class="p">.</span><span class="nx">Next</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">curr_old</span><span class="p">.</span><span class="nx">Next</span><span class="p">.</span><span class="nx">Next</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="nx">curr_new</span><span class="p">.</span><span class="nx">Next</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="nx">curr_new</span><span class="p">.</span><span class="nx">Next</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">curr_new</span><span class="p">.</span><span class="nx">Next</span><span class="p">.</span><span class="nx">Next</span>
+<span class="w">        </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="nx">curr_new</span><span class="p">.</span><span class="nx">Next</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="kc">nil</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="nx">curr_old</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">curr_old</span><span class="p">.</span><span class="nx">Next</span>
+<span class="w">        </span><span class="nx">curr_new</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">curr_new</span><span class="p">.</span><span class="nx">Next</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">new_head</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code><span class="cm">/*</span>
+<span class="cm">// Definition for a Node.</span>
+<span class="cm">class Node {</span>
+<span class="cm">public:</span>
+<span class="cm">    int val;</span>
+<span class="cm">    Node* next;</span>
+<span class="cm">    Node* random;</span>
+
+<span class="cm">    Node(int _val) {</span>
+<span class="cm">        val = _val;</span>
+<span class="cm">        next = NULL;</span>
+<span class="cm">        random = NULL;</span>
+<span class="cm">    }</span>
+<span class="cm">};</span>
+<span class="cm">*/</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="w"> </span><span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+<span class="w">    </span><span class="n">Node</span><span class="o">*</span><span class="w"> </span><span class="n">copyRandomList</span><span class="p">(</span><span class="n">Node</span><span class="o">*</span><span class="w"> </span><span class="n">head</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">head</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="k">nullptr</span><span class="p">;</span>
+
+<span class="w">        </span><span class="n">Node</span><span class="o">*</span><span class="w"> </span><span class="n">curr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">head</span><span class="p">;</span>
+<span class="w">        </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">curr</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">Node</span><span class="o">*</span><span class="w"> </span><span class="n">new_node</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Node</span><span class="p">(</span><span class="n">curr</span><span class="o">-&gt;</span><span class="n">val</span><span class="p">);</span>
+<span class="w">            </span><span class="n">new_node</span><span class="o">-&gt;</span><span class="n">next</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">curr</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">;</span>
+<span class="w">            </span><span class="n">curr</span><span class="o">-&gt;</span><span class="n">next</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">new_node</span><span class="p">;</span>
+<span class="w">            </span><span class="n">curr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">new_node</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="n">curr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">head</span><span class="p">;</span>
+<span class="w">        </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">curr</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">curr</span><span class="o">-&gt;</span><span class="n">random</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">curr</span><span class="o">-&gt;</span><span class="n">next</span><span class="o">-&gt;</span><span class="n">random</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">curr</span><span class="o">-&gt;</span><span class="n">random</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">;</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="n">curr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">curr</span><span class="o">-&gt;</span><span class="n">next</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="n">Node</span><span class="o">*</span><span class="w"> </span><span class="n">old_head</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">head</span><span class="p">;</span>
+<span class="w">        </span><span class="n">Node</span><span class="o">*</span><span class="w"> </span><span class="n">new_head</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">head</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">;</span>
+<span class="w">        </span><span class="n">Node</span><span class="o">*</span><span class="w"> </span><span class="n">curr_old</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">old_head</span><span class="p">;</span>
+<span class="w">        </span><span class="n">Node</span><span class="o">*</span><span class="w"> </span><span class="n">curr_new</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">new_head</span><span class="p">;</span>
+
+<span class="w">        </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">curr_old</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">curr_old</span><span class="o">-&gt;</span><span class="n">next</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">curr_old</span><span class="o">-&gt;</span><span class="n">next</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">;</span>
+<span class="w">            </span><span class="n">curr_new</span><span class="o">-&gt;</span><span class="n">next</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">curr_new</span><span class="o">-&gt;</span><span class="n">next</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">curr_new</span><span class="o">-&gt;</span><span class="n">next</span><span class="o">-&gt;</span><span class="n">next</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">nullptr</span><span class="p">;</span>
+<span class="w">            </span><span class="n">curr_old</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">curr_old</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">;</span>
+<span class="w">            </span><span class="n">curr_new</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">curr_new</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">new_head</span><span class="p">;</span><span class="w">       </span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">};</span>
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code><span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">Solution</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">Node</span><span class="w"> </span><span class="nf">copyRandomList</span><span class="p">(</span><span class="n">Node</span><span class="w"> </span><span class="n">head</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">head</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="kc">null</span><span class="p">;</span>
+
+<span class="w">        </span><span class="n">Node</span><span class="w"> </span><span class="n">curr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">head</span><span class="p">;</span>
+<span class="w">        </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">curr</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">Node</span><span class="w"> </span><span class="n">new_node</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Node</span><span class="p">(</span><span class="n">curr</span><span class="p">.</span><span class="na">val</span><span class="p">,</span><span class="w"> </span><span class="n">curr</span><span class="p">.</span><span class="na">next</span><span class="p">);</span>
+<span class="w">            </span><span class="n">curr</span><span class="p">.</span><span class="na">next</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">new_node</span><span class="p">;</span>
+<span class="w">            </span><span class="n">curr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">new_node</span><span class="p">.</span><span class="na">next</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="n">curr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">head</span><span class="p">;</span>
+<span class="w">        </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">curr</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">curr</span><span class="p">.</span><span class="na">random</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">curr</span><span class="p">.</span><span class="na">next</span><span class="p">.</span><span class="na">random</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">curr</span><span class="p">.</span><span class="na">random</span><span class="p">.</span><span class="na">next</span><span class="p">;</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="n">curr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">curr</span><span class="p">.</span><span class="na">next</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">curr</span><span class="p">.</span><span class="na">next</span><span class="p">.</span><span class="na">next</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="n">Node</span><span class="w"> </span><span class="n">old_head</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">head</span><span class="p">;</span>
+<span class="w">        </span><span class="n">Node</span><span class="w"> </span><span class="n">new_head</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">head</span><span class="p">.</span><span class="na">next</span><span class="p">;</span>
+<span class="w">        </span><span class="n">Node</span><span class="w"> </span><span class="n">curr_old</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">old_head</span><span class="p">;</span>
+<span class="w">        </span><span class="n">Node</span><span class="w"> </span><span class="n">curr_new</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">new_head</span><span class="p">;</span>
+
+<span class="w">        </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">curr_old</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">curr_old</span><span class="p">.</span><span class="na">next</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">curr_old</span><span class="p">.</span><span class="na">next</span><span class="p">.</span><span class="na">next</span><span class="p">;</span>
+<span class="w">            </span><span class="n">curr_new</span><span class="p">.</span><span class="na">next</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">curr_new</span><span class="p">.</span><span class="na">next</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">curr_new</span><span class="p">.</span><span class="na">next</span><span class="p">.</span><span class="na">next</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">;</span>
+<span class="w">            </span><span class="n">curr_old</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">curr_old</span><span class="p">.</span><span class="na">next</span><span class="p">;</span>
+<span class="w">            </span><span class="n">curr_new</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">curr_new</span><span class="p">.</span><span class="na">next</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">new_head</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h2>Live Coding Interweaving &amp; More</h2>
+<p>https://youtu.be/DH0HDU4ScYY?si=P-P1Er3P8q5XekTU</p>
+<h4>Reflections on Copying Lists with Random Pointers</h4>
+<h5>Hash Map Method:</h5>
+<p>Clear and simple, this method uses extra memory to map each node from the original to the copied list. It's straightforward but can be memory-inefficient.</p>
+<h5>Interweaving Nodes Method:</h5>
+<p>Sleek and space-efficient, this in-place method interweaves new nodes within the existing structure before making them their own list. It's elegant but requires careful attention.</p>
+<p>This problem isn't just coding; it's a deep dive into data structures and algorithms. Whether you prefer the clarity of Hash Map or the finesse of Interweaving Nodes, each sharpens your algorithmic skill set. Embrace the challenge!</p></div><p style="page-break-before: always" ></p>

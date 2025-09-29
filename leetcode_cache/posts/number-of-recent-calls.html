@@ -1,0 +1,161 @@
+Cpp Solution:
+![image.png](https://assets.leetcode.com/users/images/ae9f5dc0-1634-47f9-8c1d-d9e196321220_1719738823.6726809.png)
+
+# Intuition
+The goal of the RecentCounter class is to count the number of requests that occurred in the last `3000` milliseconds (ms). Each time a request is made (using the ping method), we record the time and maintain a count of all requests within the last `3000` ms. By efficiently tracking only the relevant requests, we can quickly compute the `result`.
+
+# Approach
+1. `Data Structure`: Use an array `records` to store timestamps of requests. The start and end indices mark the window of valid requests within the last `3000` ms.
+2. `ping(int t)` Method:
+    - **Add Timestamp**: Insert the current timestamp t at the position indicated by `end`.
+    - **Remove Outdated Requests**: Increment the `start` index until the requests are within the `3000` ms window (`t - records[start] <= 3000`).
+    - **Count Valid Requests**: Return the count of requests within the window (`end - start`), which represents the number of valid requests in the last 3000 ms.
+
+# Complexity
+- Time complexity: $$O(n)$$
+
+- Space complexity: $$O(1)$$
+
+# Code
+``` java
+Language: java 
+class RecentCounter {
+    private static final int records = new int[10000]; //
+    private int start;
+    private int end;
+
+    public RecentCounter() {        
+        start = 0;
+        end = 0;
+    }
+    
+    public int ping(int t) {
+        while (start < end && (t - records[start] > 3000)) { 
+            start++; // if the difference in time is greater than 3000ms, 
+            // than increase the value of start unitl it's equal or less than 3000ms.
+        }
+        records[end++] = t; // Inserting the current time at the end
+        return end - start; // Returning the answer including the element added just now.
+    }
+}
+
+``` 
+``` python
+Language: python 
+class RecentCounter:
+    def __init__(self):
+        self.records = 
+        self.start = 0
+
+    def ping(self, t: int) -> int:
+        self.records.append(t)
+        while self.records[self.start] < t - 3000:
+            self.start += 1
+        return len(self.records) - self.start
+
+``` 
+``` cpp
+Language: cpp 
+#include <vector>
+
+class RecentCounter {
+private:
+    std::vector<int> records;
+    int start;
+
+public:
+    RecentCounter() : start(0) {}
+
+    int ping(int t) {
+        records.push_back(t);
+        while (records[start] < t - 3000) {
+            start++;
+        }
+        return records.size() - start;
+    }
+};
+
+``` 
+![Upvote.jpg](https://assets.leetcode.com/users/images/6247f4cf-99e3-4232-a975-f25b40770bb4_1719738837.3176522.jpeg)
+
+
+
+Python Solution:
+![image.png](https://assets.leetcode.com/users/images/ae9f5dc0-1634-47f9-8c1d-d9e196321220_1719738823.6726809.png)
+
+# Intuition
+The goal of the RecentCounter class is to count the number of requests that occurred in the last `3000` milliseconds (ms). Each time a request is made (using the ping method), we record the time and maintain a count of all requests within the last `3000` ms. By efficiently tracking only the relevant requests, we can quickly compute the `result`.
+
+# Approach
+1. `Data Structure`: Use an array `records` to store timestamps of requests. The start and end indices mark the window of valid requests within the last `3000` ms.
+2. `ping(int t)` Method:
+    - **Add Timestamp**: Insert the current timestamp t at the position indicated by `end`.
+    - **Remove Outdated Requests**: Increment the `start` index until the requests are within the `3000` ms window (`t - records[start] <= 3000`).
+    - **Count Valid Requests**: Return the count of requests within the window (`end - start`), which represents the number of valid requests in the last 3000 ms.
+
+# Complexity
+- Time complexity: $$O(n)$$
+
+- Space complexity: $$O(1)$$
+
+# Code
+``` java
+Language: java 
+class RecentCounter {
+    private static final int records = new int[10000]; //
+    private int start;
+    private int end;
+
+    public RecentCounter() {        
+        start = 0;
+        end = 0;
+    }
+    
+    public int ping(int t) {
+        while (start < end && (t - records[start] > 3000)) { 
+            start++; // if the difference in time is greater than 3000ms, 
+            // than increase the value of start unitl it's equal or less than 3000ms.
+        }
+        records[end++] = t; // Inserting the current time at the end
+        return end - start; // Returning the answer including the element added just now.
+    }
+}
+
+``` 
+``` python
+Language: python 
+class RecentCounter:
+    def __init__(self):
+        self.records = 
+        self.start = 0
+
+    def ping(self, t: int) -> int:
+        self.records.append(t)
+        while self.records[self.start] < t - 3000:
+            self.start += 1
+        return len(self.records) - self.start
+
+``` 
+``` cpp
+Language: cpp 
+#include <vector>
+
+class RecentCounter {
+private:
+    std::vector<int> records;
+    int start;
+
+public:
+    RecentCounter() : start(0) {}
+
+    int ping(int t) {
+        records.push_back(t);
+        while (records[start] < t - 3000) {
+            start++;
+        }
+        return records.size() - start;
+    }
+};
+
+``` 
+![Upvote.jpg](https://assets.leetcode.com/users/images/6247f4cf-99e3-4232-a975-f25b40770bb4_1719738837.3176522.jpeg)

@@ -1,0 +1,122 @@
+<div class='cpp-solution'><h2>🔥0 ms🔥|🚀Simplest Solution🚀||🔥Full Explanation||🔥C++🔥|| Python3 -- Votes: 549</h2><h2>Consider</h2>
+<div class="codehilite"><pre><span></span><code><span class="w">                    </span><span class="nv">Please</span><span class="w"> </span><span class="nv">Upvote</span><span class="w"> </span><span class="k">If</span><span class="w"> </span><span class="nv">You</span><span class="w"> </span><span class="nv">Find</span><span class="w"> </span><span class="nv">It</span><span class="w"> </span><span class="nv">Helpful</span>
+</code></pre></div>
+
+<h2>Intuition</h2>
+<p>In this question we have to <strong>Invert the binary tree</strong>.<br />
+So we use <strong>Post Order Treversal</strong> in which first we go in <strong>Left subtree</strong> and then in <strong>Right subtree</strong> then we return back to <strong>Parent node</strong>.<br />
+When we come back to the parent node we <strong>swap</strong> it's <strong>Left subtree</strong> and <strong>Right subtree</strong>.</p>
+<!-- Describe your first thoughts on how to solve this problem. -->
+
+<h2>Approach</h2>
+<p></p>
+<!-- Describe your approach to solving the problem. -->
+
+<h2>Complexity</h2>
+<ul>
+<li>Time complexity: O(N)</li>
+</ul>
+<!-- Add your time complexity here, e.g. $$O(n)$$ -->
+
+<ul>
+<li>Space complexity: O(N) Recursive stack space</li>
+</ul>
+<!-- Add your space complexity here, e.g. $$O(n)$$ -->
+
+<h2>Code</h2>
+<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">C</span><span class="o">++</span><span class="w"> </span>
+<span class="n">class</span><span class="w"> </span><span class="n">Solution</span><span class="w"> </span><span class="p">{</span>
+<span class="n">public</span><span class="o">:</span>
+<span class="w">    </span><span class="n">TreeNode</span><span class="o">*</span><span class="w"> </span><span class="n">invertTree</span><span class="p">(</span><span class="n">TreeNode</span><span class="o">*</span><span class="w"> </span><span class="n">root</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="c1">// Base Case</span>
+<span class="w">        </span><span class="k">if</span><span class="p">(</span><span class="n">root</span><span class="o">==</span><span class="nb">NULL</span><span class="p">)</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="nb">NULL</span><span class="p">;</span>
+<span class="w">        </span><span class="n">invertTree</span><span class="p">(</span><span class="n">root</span><span class="o">-&gt;</span><span class="n">left</span><span class="p">);</span><span class="w"> </span><span class="c1">//Call the left substree</span>
+<span class="w">        </span><span class="n">invertTree</span><span class="p">(</span><span class="n">root</span><span class="o">-&gt;</span><span class="n">right</span><span class="p">);</span><span class="w"> </span><span class="c1">//Call the right substree</span>
+<span class="w">        </span><span class="c1">// Swap the nodes</span>
+<span class="w">        </span><span class="n">TreeNode</span><span class="o">*</span><span class="w"> </span><span class="n">temp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">root</span><span class="o">-&gt;</span><span class="n">left</span><span class="p">;</span>
+<span class="w">        </span><span class="n">root</span><span class="o">-&gt;</span><span class="n">left</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">root</span><span class="o">-&gt;</span><span class="n">right</span><span class="p">;</span>
+<span class="w">        </span><span class="n">root</span><span class="o">-&gt;</span><span class="n">right</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">temp</span><span class="p">;</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">root</span><span class="p">;</span><span class="w"> </span><span class="c1">// Return the root</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">};</span>
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code><span class="n">Language</span><span class="p">:</span> <span class="n">python</span> 
+<span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">invertTree</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">root</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">TreeNode</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">TreeNode</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">root</span><span class="p">:</span> <span class="c1">#Base Case</span>
+            <span class="k">return</span> <span class="n">root</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">invertTree</span><span class="p">(</span><span class="n">root</span><span class="o">.</span><span class="n">left</span><span class="p">)</span> <span class="c1">#Call the left substree</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">invertTree</span><span class="p">(</span><span class="n">root</span><span class="o">.</span><span class="n">right</span><span class="p">)</span>  <span class="c1">#Call the right substree</span>
+        <span class="c1"># Swap the nodes</span>
+        <span class="n">root</span><span class="o">.</span><span class="n">left</span><span class="p">,</span> <span class="n">root</span><span class="o">.</span><span class="n">right</span> <span class="o">=</span> <span class="n">root</span><span class="o">.</span><span class="n">right</span><span class="p">,</span> <span class="n">root</span><span class="o">.</span><span class="n">left</span>
+        <span class="k">return</span> <span class="n">root</span> <span class="c1"># Return the root</span>
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code>                        Give a . It motivates me alot
+</code></pre></div>
+
+<p>Let's Connect On <a href="https://www.linkedin.com/in/naman-agarwal-0551aa1aa/">Linkedin</a></p></div>
+
+
+<div class='python-solution'><h2>🔥0 ms🔥|🚀Simplest Solution🚀||🔥Full Explanation||🔥C++🔥|| Python3 -- Votes: 549</h2><h2>Consider</h2>
+<div class="codehilite"><pre><span></span><code><span class="w">                    </span><span class="nv">Please</span><span class="w"> </span><span class="nv">Upvote</span><span class="w"> </span><span class="k">If</span><span class="w"> </span><span class="nv">You</span><span class="w"> </span><span class="nv">Find</span><span class="w"> </span><span class="nv">It</span><span class="w"> </span><span class="nv">Helpful</span>
+</code></pre></div>
+
+<h2>Intuition</h2>
+<p>In this question we have to <strong>Invert the binary tree</strong>.<br />
+So we use <strong>Post Order Treversal</strong> in which first we go in <strong>Left subtree</strong> and then in <strong>Right subtree</strong> then we return back to <strong>Parent node</strong>.<br />
+When we come back to the parent node we <strong>swap</strong> it's <strong>Left subtree</strong> and <strong>Right subtree</strong>.</p>
+<!-- Describe your first thoughts on how to solve this problem. -->
+
+<h2>Approach</h2>
+<p></p>
+<!-- Describe your approach to solving the problem. -->
+
+<h2>Complexity</h2>
+<ul>
+<li>Time complexity: O(N)</li>
+</ul>
+<!-- Add your time complexity here, e.g. $$O(n)$$ -->
+
+<ul>
+<li>Space complexity: O(N) Recursive stack space</li>
+</ul>
+<!-- Add your space complexity here, e.g. $$O(n)$$ -->
+
+<h2>Code</h2>
+<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">C</span><span class="o">++</span><span class="w"> </span>
+<span class="n">class</span><span class="w"> </span><span class="n">Solution</span><span class="w"> </span><span class="p">{</span>
+<span class="n">public</span><span class="o">:</span>
+<span class="w">    </span><span class="n">TreeNode</span><span class="o">*</span><span class="w"> </span><span class="n">invertTree</span><span class="p">(</span><span class="n">TreeNode</span><span class="o">*</span><span class="w"> </span><span class="n">root</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="c1">// Base Case</span>
+<span class="w">        </span><span class="k">if</span><span class="p">(</span><span class="n">root</span><span class="o">==</span><span class="nb">NULL</span><span class="p">)</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="nb">NULL</span><span class="p">;</span>
+<span class="w">        </span><span class="n">invertTree</span><span class="p">(</span><span class="n">root</span><span class="o">-&gt;</span><span class="n">left</span><span class="p">);</span><span class="w"> </span><span class="c1">//Call the left substree</span>
+<span class="w">        </span><span class="n">invertTree</span><span class="p">(</span><span class="n">root</span><span class="o">-&gt;</span><span class="n">right</span><span class="p">);</span><span class="w"> </span><span class="c1">//Call the right substree</span>
+<span class="w">        </span><span class="c1">// Swap the nodes</span>
+<span class="w">        </span><span class="n">TreeNode</span><span class="o">*</span><span class="w"> </span><span class="n">temp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">root</span><span class="o">-&gt;</span><span class="n">left</span><span class="p">;</span>
+<span class="w">        </span><span class="n">root</span><span class="o">-&gt;</span><span class="n">left</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">root</span><span class="o">-&gt;</span><span class="n">right</span><span class="p">;</span>
+<span class="w">        </span><span class="n">root</span><span class="o">-&gt;</span><span class="n">right</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">temp</span><span class="p">;</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">root</span><span class="p">;</span><span class="w"> </span><span class="c1">// Return the root</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">};</span>
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code><span class="n">Language</span><span class="p">:</span> <span class="n">python</span> 
+<span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">invertTree</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">root</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">TreeNode</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">TreeNode</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">root</span><span class="p">:</span> <span class="c1">#Base Case</span>
+            <span class="k">return</span> <span class="n">root</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">invertTree</span><span class="p">(</span><span class="n">root</span><span class="o">.</span><span class="n">left</span><span class="p">)</span> <span class="c1">#Call the left substree</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">invertTree</span><span class="p">(</span><span class="n">root</span><span class="o">.</span><span class="n">right</span><span class="p">)</span>  <span class="c1">#Call the right substree</span>
+        <span class="c1"># Swap the nodes</span>
+        <span class="n">root</span><span class="o">.</span><span class="n">left</span><span class="p">,</span> <span class="n">root</span><span class="o">.</span><span class="n">right</span> <span class="o">=</span> <span class="n">root</span><span class="o">.</span><span class="n">right</span><span class="p">,</span> <span class="n">root</span><span class="o">.</span><span class="n">left</span>
+        <span class="k">return</span> <span class="n">root</span> <span class="c1"># Return the root</span>
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code>                        Give a . It motivates me alot
+</code></pre></div>
+
+<p>Let's Connect On <a href="https://www.linkedin.com/in/naman-agarwal-0551aa1aa/">Linkedin</a></p></div><p style="page-break-before: always" ></p>

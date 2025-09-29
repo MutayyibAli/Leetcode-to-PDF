@@ -1,0 +1,582 @@
+<div class='cpp-solution'><h2>Python/JS/Java/Go/C++ O(n) by DP // Greedy [+ Visualization & Thinking process] 有中文全系列解析專欄 -- Votes: 822</h2><p><a href="https://vocus.cc/article/65fd41d2fd897800015721f3">中文專欄:<br />
+從DP和FSM有限狀態機的角度，去解開Leetcode最佳股票買賣系列題。</a></p>
+<p><a href="https://vocus.cc/article/66616aeffd89780001cab1da">DP演算法框架 與 推薦的學習路徑 (透過相似題去強化對DP結構的認識與理解)<br />
+Common DP algorithm framework and recommended learning path</a></p>
+<p>Our goal:<br />
+Maximize trading profit with at most single long position(每個時刻最多持有一個多頭部位) on every moment.</p>
+<p>Method_#1<br />
+O(n) sol by DP + state machine</p>
+<p>Define "<strong>Hold</strong>" as the state of <strong>holding stock</strong>. (持有股票)<br />
+Define "<strong>NotHold</strong>" as the state of <strong>keep cash</strong>. (持有現金)</p>
+<p>General rule aka recursive relationship.</p>
+<div class="codehilite"><pre><span></span><code><span class="n">DP</span><span class="p">[</span><span class="n">Hold</span><span class="p">]</span><span class="w"> </span>
+<span class="o">=</span><span class="w"> </span><span class="n">max</span><span class="p">(</span><span class="n">keep</span><span class="w"> </span><span class="n">holding</span><span class="w"> </span><span class="n">stock</span><span class="p">,</span><span class="w"> </span><span class="n">or</span><span class="w"> </span><span class="n">just</span><span class="w"> </span><span class="n">buy</span><span class="w"> </span><span class="n">stock</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">hold</span><span class="w"> </span><span class="n">today</span><span class="p">)</span>
+<span class="o">=</span><span class="w"> </span><span class="n">max</span><span class="p">(</span><span class="w"> </span><span class="n">DP</span><span class="p">[</span><span class="n">Previous</span><span class="w"> </span><span class="n">Hold</span><span class="p">],</span><span class="w"> </span><span class="n">DP</span><span class="p">[</span><span class="n">previous</span><span class="w"> </span><span class="n">NotHold</span><span class="p">]</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">stock</span><span class="w"> </span><span class="n">price</span><span class="p">)</span>
+</code></pre></div>
+
+<hr />
+<div class="codehilite"><pre><span></span><code><span class="n">DP</span><span class="p">[</span><span class="n">NotHold</span><span class="p">]</span><span class="w"> </span>
+<span class="o">=</span><span class="w"> </span><span class="n">max</span><span class="p">(</span><span class="n">keep</span><span class="w"> </span><span class="n">cash</span><span class="p">,</span><span class="w"> </span><span class="n">or</span><span class="w"> </span><span class="n">just</span><span class="w"> </span><span class="n">sell</span><span class="w"> </span><span class="k">out</span><span class="w"> </span><span class="n">stock</span><span class="w"> </span><span class="n">today</span><span class="p">)</span>
+<span class="o">=</span><span class="w"> </span><span class="n">max</span><span class="p">(</span><span class="w"> </span><span class="n">DP</span><span class="p">[</span><span class="n">Previous</span><span class="w"> </span><span class="n">NotHold</span><span class="p">],</span><span class="w"> </span><span class="n">DP</span><span class="p">[</span><span class="n">previous</span><span class="w"> </span><span class="n">Hold</span><span class="p">]</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">stock</span><span class="w"> </span><span class="n">price</span><span class="p">)</span>
+</code></pre></div>
+
+<hr />
+<p><strong>State machine diagram</strong>:</p>
+<p></p>
+<hr />
+<p>Some reader may argue it is not DP,<br />
+but for me it is.<br />
+Each state depends on early states, and there are overlapped subproblem.</p>
+<p>If you would like to see more traditional DP-style code with multiple dimension, here is the code.</p>
+<p>Some reader feels that DP is an over-kill for Best time to buy and sell stock II.<br />
+I confess it is, but I just want to show that we can solve all Leetcode's stock trading problem series in DP thinking process with state machine transfer in a general way.</p>
+<div class="codehilite"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nl">Solution</span><span class="p">:</span>
+<span class="w">    </span><span class="n">def</span><span class="w"> </span><span class="n">maxProfit</span><span class="p">(</span><span class="n">self</span><span class="p">,</span><span class="w"> </span><span class="nl">prices</span><span class="p">:</span><span class="w"> </span><span class="n">List</span><span class="o">[</span><span class="n">int</span><span class="o">]</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="nc">int</span><span class="err">:</span>
+
+<span class="w">        </span><span class="err">#</span><span class="w"> </span><span class="k">Use</span><span class="w"> </span><span class="n">constant</span><span class="w"> </span><span class="n">literal</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="n">help</span><span class="w"> </span><span class="n">reader</span><span class="w"> </span><span class="n">understand</span><span class="w"> </span><span class="n">source</span><span class="w"> </span><span class="n">code</span><span class="w"> </span><span class="n">below</span><span class="p">.</span>
+<span class="w">        </span><span class="n">HOLD_STOCK</span><span class="p">,</span><span class="w"> </span><span class="n">KEEP_CASH</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span>
+
+<span class="w">        </span><span class="err">##</span><span class="w"> </span><span class="k">Dictionary</span><span class="w"> </span><span class="p">(</span><span class="n">Hash</span><span class="w"> </span><span class="nc">table</span><span class="p">)</span>
+<span class="w">        </span><span class="err">#</span><span class="w"> </span><span class="k">key</span><span class="err">:</span><span class="w"> </span><span class="p">(</span><span class="nf">day</span><span class="p">,</span><span class="w"> </span><span class="k">state</span><span class="p">)</span><span class="w"> </span><span class="n">pair</span>
+<span class="w">        </span><span class="err">#</span><span class="w"> </span><span class="k">value</span><span class="err">:</span><span class="w"> </span><span class="n">coreesponding</span><span class="w"> </span><span class="n">maximal</span><span class="w"> </span><span class="n">profit</span>
+<span class="w">        </span><span class="n">dp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">{}</span>
+
+<span class="w">        </span><span class="err">#</span><span class="w"> </span><span class="k">No</span><span class="w"> </span><span class="k">free</span><span class="w"> </span><span class="n">lunch</span><span class="p">,</span><span class="w"> </span><span class="n">it</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="n">impoosible</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="n">have</span><span class="w"> </span><span class="n">stock</span><span class="w"> </span><span class="k">before</span><span class="w"> </span><span class="k">first</span><span class="w"> </span><span class="n">trading</span><span class="w"> </span><span class="nf">day</span>
+<span class="w">        </span><span class="n">dp</span><span class="o">[</span><span class="n">-1, HOLD_STOCK</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">-</span><span class="n">math</span><span class="p">.</span><span class="n">inf</span>
+
+<span class="w">        </span><span class="err">#</span><span class="w"> </span><span class="k">No</span><span class="w"> </span><span class="n">gain</span><span class="p">,</span><span class="w"> </span><span class="k">no</span><span class="w"> </span><span class="n">loss</span><span class="w"> </span><span class="k">before</span><span class="w"> </span><span class="k">first</span><span class="w"> </span><span class="n">trading</span><span class="w"> </span><span class="nf">day</span>
+<span class="w">        </span><span class="n">dp</span><span class="o">[</span><span class="n">-1, KEEP_CASH</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span>
+
+<span class="w">        </span><span class="err">#</span><span class="w"> </span><span class="k">For</span><span class="w"> </span><span class="k">each</span><span class="w"> </span><span class="nf">day</span><span class="w"> </span><span class="k">with</span><span class="w"> </span><span class="k">corresponding</span><span class="w"> </span><span class="n">stock</span><span class="w"> </span><span class="n">price</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">stock</span><span class="w"> </span><span class="n">market</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="nf">day</span><span class="p">,</span><span class="w"> </span><span class="n">stock_price</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">enumerate</span><span class="p">(</span><span class="n">prices</span><span class="p">)</span><span class="err">:</span>
+
+<span class="w">            </span><span class="err">#</span><span class="w"> </span><span class="k">If</span><span class="w"> </span><span class="n">today</span><span class="w"> </span><span class="n">we</span><span class="w"> </span><span class="n">have</span><span class="w"> </span><span class="n">stock</span><span class="p">,</span><span class="w"> </span><span class="n">either</span><span class="w"> </span><span class="n">we</span><span class="w"> </span><span class="n">already</span><span class="w"> </span><span class="n">had</span><span class="w"> </span><span class="n">it</span><span class="w"> </span><span class="n">yesterday</span><span class="p">,</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="n">we</span><span class="w"> </span><span class="n">just</span><span class="w"> </span><span class="n">buy</span><span class="w"> </span><span class="n">stock</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="k">hold</span><span class="w"> </span><span class="n">it</span><span class="w"> </span><span class="n">today</span><span class="p">.</span>
+<span class="w">            </span><span class="n">dp</span><span class="o">[</span><span class="n">day, HOLD_STOCK</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">max</span><span class="p">(</span><span class="w"> </span><span class="n">dp</span><span class="o">[</span><span class="n">day-1, HOLD_STOCK</span><span class="o">]</span><span class="p">,</span><span class="w"> </span><span class="n">dp</span><span class="o">[</span><span class="n">day-1, KEEP_CASH</span><span class="o">]</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">stock_price</span><span class="p">)</span>
+
+<span class="w">            </span><span class="err">#</span><span class="w"> </span><span class="k">If</span><span class="w"> </span><span class="n">today</span><span class="w"> </span><span class="n">we</span><span class="w"> </span><span class="n">keep</span><span class="w"> </span><span class="n">cash</span><span class="p">,</span><span class="w"> </span><span class="n">either</span><span class="w"> </span><span class="n">we</span><span class="w"> </span><span class="n">already</span><span class="w"> </span><span class="n">kept</span><span class="w"> </span><span class="n">cash</span><span class="w"> </span><span class="n">yesterday</span><span class="p">,</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="n">we</span><span class="w"> </span><span class="n">just</span><span class="w"> </span><span class="n">sell</span><span class="w"> </span><span class="k">out</span><span class="w"> </span><span class="n">stock</span><span class="w"> </span><span class="n">today</span>
+<span class="w">            </span><span class="n">dp</span><span class="o">[</span><span class="n">day, KEEP_CASH</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">max</span><span class="p">(</span><span class="w"> </span><span class="n">dp</span><span class="o">[</span><span class="n">day-1, KEEP_CASH</span><span class="o">]</span><span class="p">,</span><span class="w"> </span><span class="n">dp</span><span class="o">[</span><span class="n">day-1, HOLD_STOCK</span><span class="o">]</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">stock_price</span><span class="p">)</span>
+
+<span class="w">        </span><span class="err">#</span><span class="c1">---------------------------------------------------------------</span>
+<span class="w">        </span><span class="err">#</span><span class="w"> </span><span class="k">To</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="n">maximal</span><span class="w"> </span><span class="n">realized</span><span class="w"> </span><span class="n">profit</span><span class="p">,</span><span class="w"> </span><span class="n">final</span><span class="w"> </span><span class="k">state</span><span class="w"> </span><span class="n">must</span><span class="w"> </span><span class="n">be</span><span class="w"> </span><span class="n">KEEP_CASH</span><span class="p">.</span>
+<span class="w">        </span><span class="n">last_day</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">len</span><span class="p">(</span><span class="n">prices</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">dp</span><span class="o">[</span><span class="n">last_day, KEEP_CASH</span><span class="o">]</span>
+</code></pre></div>
+
+<hr />
+<p><strong>Implementation</strong> by botoom-up DP + iteration:</p>
+<iframe src="https://leetcode.com/playground/J7fnkkAb/shared" frameBorder="0" width="1000" height="600"></iframe>
+
+<p>Time Complexity: O(n), for single level for loop<br />
+Space Complexity: O(1), for fixed size of temporary variables</p>
+<hr />
+<p><strong>Implementation</strong> with Top down DP + recursion</p>
+<iframe src="https://leetcode.com/playground/2zaLvs2H/shared" frameBorder="0" width="1000" height="600"></iframe>
+
+<p>Time Complexity: O(n), for single level for loop<br />
+Space Complexity: O(n), for 1D DP recursion call depth</p>
+<hr />
+<p>Method_#2<br />
+O(n) sol by Greedy</p>
+<p>Share another O(n) solution by price gain collection with <strong>greedy</strong> value taking concept.</p>
+<p>Max profit with <a href="https://en.wikipedia.org/wiki/Long_(finance)">long position</a> ,'做多' in chinese, is met by <strong>collecting all price gain</strong> in the stock price sequence.</p>
+<p>Take care that holding <strong>multiple position at the same time is NOT allowed</strong> by <a href="https://leetcode.com/problems/best-time-to-buy-and-sell-stock-ii/">description</a>.</p>
+<hr />
+<p><strong>Visualization</strong>:</p>
+<p></p>
+<hr />
+<p><strong>Implementation</strong> based on container and summation function:</p>
+<div class="codehilite"><pre><span></span><code><span class="n">Language</span><span class="p">:</span> <span class="n">python</span> 
+<span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">maxProfit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prices</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+
+        <span class="n">price_gain</span> <span class="o">=</span> 
+
+        <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span> <span class="nb">len</span><span class="p">(</span><span class="n">prices</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span> <span class="p">):</span>
+
+            <span class="k">if</span> <span class="n">prices</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">prices</span><span class="p">[</span><span class="n">idx</span><span class="o">+</span><span class="mi">1</span><span class="p">]:</span>
+
+                <span class="n">price_gain</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="n">prices</span><span class="p">[</span><span class="n">idx</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span> <span class="n">prices</span><span class="p">[</span><span class="n">idx</span><span class="p">])</span>
+
+        <span class="k">return</span> <span class="nb">sum</span><span class="p">(</span> <span class="n">price_gain</span> <span class="p">)</span>
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">Java</span><span class="w"> </span>
+<span class="kd">class</span> <span class="nc">Solution</span><span class="w"> </span><span class="p">{</span>
+
+
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="nf">maxProfit</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">prices</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">        </span><span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span><span class="w"> </span><span class="n">priceGain</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span><span class="p">();</span>
+
+<span class="w">        </span><span class="k">for</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">idx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">;</span><span class="w"> </span><span class="n">idx</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">prices</span><span class="p">.</span><span class="na">length</span><span class="o">-</span><span class="mi">1</span><span class="p">;</span><span class="w"> </span><span class="n">idx</span><span class="o">++</span><span class="p">){</span>
+
+<span class="w">            </span><span class="k">if</span><span class="p">(</span><span class="w"> </span><span class="n">prices</span><span class="o">[</span><span class="n">idx</span><span class="o">]</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">prices</span><span class="o">[</span><span class="n">idx</span><span class="o">+</span><span class="mi">1</span><span class="o">]</span><span class="w"> </span><span class="p">){</span>
+<span class="w">                </span><span class="n">priceGain</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="w"> </span><span class="n">prices</span><span class="o">[</span><span class="n">idx</span><span class="o">+</span><span class="mi">1</span><span class="o">]-</span><span class="w"> </span><span class="n">prices</span><span class="o">[</span><span class="n">idx</span><span class="o">]</span><span class="p">);</span>
+<span class="w">            </span><span class="p">}</span>
+
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">priceGain</span><span class="p">.</span><span class="na">stream</span><span class="p">().</span><span class="na">mapToInt</span><span class="p">(</span><span class="n">n</span><span class="o">-&gt;</span><span class="n">n</span><span class="p">).</span><span class="na">sum</span><span class="p">();</span>
+
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code><span class="nx">Language</span><span class="o">:</span><span class="w"> </span><span class="nx">Javascript</span><span class="w"> </span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">accumulate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="p">(</span><span class="nx">prev</span><span class="p">,</span><span class="w"> </span><span class="nx">cur</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">(</span><span class="nx">prev</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nx">cur</span><span class="p">)</span><span class="w"> </span><span class="p">);</span>
+
+<span class="kd">var</span><span class="w"> </span><span class="nx">maxProfit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kd">function</span><span class="p">(</span><span class="nx">prices</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="nx">profit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nb">Array</span><span class="p">();</span>
+
+<span class="w">    </span><span class="k">for</span><span class="p">(</span><span class="w"> </span><span class="kd">let</span><span class="w"> </span><span class="nx">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0</span><span class="w"> </span><span class="p">;</span><span class="w"> </span><span class="nx">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="nx">prices</span><span class="p">.</span><span class="nx">length</span><span class="o">-</span><span class="mf">1</span><span class="w"> </span><span class="p">;</span><span class="w"> </span><span class="nx">i</span><span class="o">++</span><span class="w"> </span><span class="p">){</span>
+
+<span class="w">        </span><span class="k">if</span><span class="p">(</span><span class="w"> </span><span class="nx">prices</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="nx">prices</span><span class="p">[</span><span class="nx">i</span><span class="o">+</span><span class="mf">1</span><span class="p">]</span><span class="w"> </span><span class="p">){</span>
+<span class="w">            </span><span class="nx">profit</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="w">  </span><span class="nx">prices</span><span class="p">[</span><span class="nx">i</span><span class="o">+</span><span class="mf">1</span><span class="p">]</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nx">prices</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span><span class="w"> </span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">profit</span><span class="p">.</span><span class="nx">reduce</span><span class="p">(</span><span class="nx">accumulate</span><span class="p">,</span><span class="w"> </span><span class="mf">0</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code><span class="nx">Language</span><span class="p">:</span><span class="w"> </span><span class="nx">Go</span><span class="w"> </span>
+<span class="kd">func</span><span class="w"> </span><span class="nx">Accumulate</span><span class="p">(</span><span class="nx">elements</span><span class="w"> </span><span class="o">...</span><span class="kt">int</span><span class="p">)</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="p">{</span><span class="w">  </span>
+<span class="w">     </span><span class="nx">sum</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="mi">0</span><span class="w">  </span>
+<span class="w">     </span><span class="k">for</span><span class="w"> </span><span class="nx">_</span><span class="p">,</span><span class="w"> </span><span class="nx">elem</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="k">range</span><span class="w"> </span><span class="nx">elements</span><span class="w"> </span><span class="p">{</span><span class="w">  </span>
+<span class="w">          </span><span class="nx">sum</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="nx">elem</span><span class="w">  </span>
+<span class="w">     </span><span class="p">}</span><span class="w">  </span>
+<span class="w">     </span><span class="k">return</span><span class="w"> </span><span class="nx">sum</span><span class="w">  </span>
+<span class="p">}</span><span class="w"> </span>
+
+
+<span class="kd">func</span><span class="w"> </span><span class="nx">maxProfit</span><span class="p">(</span><span class="nx">prices</span><span class="w"> </span><span class="kt">int</span><span class="p">)</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="nx">profit</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nb">make</span><span class="p">(</span><span class="kt">int</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="nx">i</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">;</span><span class="w"> </span><span class="nx">i</span><span class="w"> </span><span class="p">&lt;</span><span class="w"> </span><span class="nb">len</span><span class="p">(</span><span class="nx">prices</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="w"> </span><span class="p">;</span><span class="w"> </span><span class="nx">i</span><span class="o">++</span><span class="p">{</span>
+
+<span class="w">        </span><span class="k">if</span><span class="p">(</span><span class="w"> </span><span class="nx">prices</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span><span class="w"> </span><span class="p">&lt;</span><span class="w"> </span><span class="nx">prices</span><span class="p">[</span><span class="nx">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="w"> </span><span class="p">){</span>
+<span class="w">            </span><span class="nx">profit</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">append</span><span class="p">(</span><span class="nx">profit</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="nx">prices</span><span class="p">[</span><span class="nx">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nx">prices</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span><span class="w"> </span><span class="p">))</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">Accumulate</span><span class="p">(</span><span class="nx">profit</span><span class="o">...</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">C</span><span class="o">++</span><span class="w"> </span>
+<span class="n">class</span><span class="w"> </span><span class="n">Solution</span><span class="w"> </span><span class="p">{</span>
+<span class="n">public</span><span class="o">:</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">maxProfit</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&amp;</span><span class="w"> </span><span class="n">prices</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">        </span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="w"> </span><span class="n">profit</span><span class="p">;</span>
+
+<span class="w">        </span><span class="k">for</span><span class="p">(</span><span class="w"> </span><span class="kt">size_t</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">prices</span><span class="p">.</span><span class="n">size</span><span class="p">()</span><span class="mi">-1</span><span class="w"> </span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="w"> </span><span class="p">){</span>
+
+<span class="w">            </span><span class="k">if</span><span class="p">(</span><span class="w"> </span><span class="n">prices</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">prices</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="w"> </span><span class="p">){</span>
+<span class="w">                </span><span class="n">profit</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="w"> </span><span class="n">prices</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">prices</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="p">);</span>
+<span class="w">            </span><span class="p">}</span>
+
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">accumulate</span><span class="p">(</span><span class="w"> </span><span class="n">profit</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span><span class="w"> </span><span class="n">profit</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">};</span>
+</code></pre></div>
+
+<p>Time Complexity: O(n), for single level for loop<br />
+Space Complexity: O(n), for array storage sapce</p>
+<hr />
+<p><strong>Implementation</strong> based on generator expression and sum( ... ):</p>
+<div class="codehilite"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nl">Solution</span><span class="p">:</span>
+<span class="w">    </span><span class="n">def</span><span class="w"> </span><span class="n">maxProfit</span><span class="p">(</span><span class="n">self</span><span class="p">,</span><span class="w"> </span><span class="nl">prices</span><span class="p">:</span><span class="w"> </span><span class="n">List</span><span class="o">[</span><span class="n">int</span><span class="o">]</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="nc">int</span><span class="err">:</span>
+
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="nf">sum</span><span class="p">(</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="n">prices</span><span class="o">[</span><span class="n">idx+1</span><span class="o">]-</span><span class="n">prices</span><span class="o">[</span><span class="n">idx</span><span class="o">]</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">idx</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="k">range</span><span class="p">(</span><span class="nf">len</span><span class="p">(</span><span class="n">prices</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">prices</span><span class="o">[</span><span class="n">idx</span><span class="o">]</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">prices</span><span class="o">[</span><span class="n">idx+1</span><span class="o">]</span><span class="w"> </span><span class="p">)</span>
+</code></pre></div>
+
+<hr />
+<p><strong>Implementation</strong> based on O(1) aux space:</p>
+<div class="codehilite"><pre><span></span><code><span class="n">Language</span><span class="p">:</span> <span class="n">python</span> 
+<span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">maxProfit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prices</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+
+        <span class="n">profit_from_price_gain</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span> <span class="nb">len</span><span class="p">(</span><span class="n">prices</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span> <span class="p">):</span>
+
+            <span class="k">if</span> <span class="n">prices</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">prices</span><span class="p">[</span><span class="n">idx</span><span class="o">+</span><span class="mi">1</span><span class="p">]:</span>
+                <span class="n">profit_from_price_gain</span> <span class="o">+=</span> <span class="p">(</span> <span class="n">prices</span><span class="p">[</span><span class="n">idx</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">prices</span><span class="p">[</span><span class="n">idx</span><span class="p">])</span>
+
+        <span class="k">return</span> <span class="n">profit_from_price_gain</span>
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code><span class="nx">Language</span><span class="o">:</span><span class="w"> </span><span class="nx">Javascript</span><span class="w"> </span>
+<span class="kd">var</span><span class="w"> </span><span class="nx">maxProfit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kd">function</span><span class="p">(</span><span class="nx">prices</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="nx">profitFromPriceGain</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">for</span><span class="p">(</span><span class="w"> </span><span class="kd">let</span><span class="w"> </span><span class="nx">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0</span><span class="w"> </span><span class="p">;</span><span class="w"> </span><span class="nx">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="nx">prices</span><span class="p">.</span><span class="nx">length</span><span class="o">-</span><span class="mf">1</span><span class="w"> </span><span class="p">;</span><span class="w"> </span><span class="nx">i</span><span class="o">++</span><span class="w"> </span><span class="p">){</span>
+
+<span class="w">        </span><span class="k">if</span><span class="p">(</span><span class="w"> </span><span class="nx">prices</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="nx">prices</span><span class="p">[</span><span class="nx">i</span><span class="o">+</span><span class="mf">1</span><span class="p">]</span><span class="w"> </span><span class="p">){</span>
+<span class="w">            </span><span class="nx">profitFromPriceGain</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="p">(</span><span class="w">  </span><span class="nx">prices</span><span class="p">[</span><span class="nx">i</span><span class="o">+</span><span class="mf">1</span><span class="p">]</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nx">prices</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span><span class="w"> </span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">profitFromPriceGain</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">Java</span><span class="w"> </span>
+<span class="kd">class</span> <span class="nc">Solution</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="nf">maxProfit</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">prices</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">      </span>
+<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">profitFromPriceGain</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+
+<span class="w">        </span><span class="k">for</span><span class="p">(</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">prices</span><span class="p">.</span><span class="na">length</span><span class="o">-</span><span class="mi">1</span><span class="w"> </span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="w"> </span><span class="p">){</span>
+
+<span class="w">            </span><span class="k">if</span><span class="p">(</span><span class="w"> </span><span class="n">prices</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">prices</span><span class="o">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="o">]</span><span class="w"> </span><span class="p">){</span>
+<span class="w">                </span><span class="n">profitFromPriceGain</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="n">prices</span><span class="o">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="o">]</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">prices</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="w"> </span><span class="p">);</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">profitFromPriceGain</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code><span class="nx">Language</span><span class="p">:</span><span class="w"> </span><span class="nx">Go</span><span class="w"> </span>
+<span class="kd">func</span><span class="w"> </span><span class="nx">maxProfit</span><span class="p">(</span><span class="nx">prices</span><span class="w"> </span><span class="kt">int</span><span class="p">)</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="nx">profitFromPriceGain</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="mi">0</span>
+
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="nx">i</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">;</span><span class="w"> </span><span class="nx">i</span><span class="w"> </span><span class="p">&lt;</span><span class="w"> </span><span class="nb">len</span><span class="p">(</span><span class="nx">prices</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="w"> </span><span class="p">;</span><span class="w"> </span><span class="nx">i</span><span class="o">++</span><span class="p">{</span>
+
+<span class="w">        </span><span class="k">if</span><span class="p">(</span><span class="w"> </span><span class="nx">prices</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span><span class="w"> </span><span class="p">&lt;</span><span class="w"> </span><span class="nx">prices</span><span class="p">[</span><span class="nx">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="w"> </span><span class="p">){</span>
+<span class="w">            </span><span class="nx">profitFromPriceGain</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="nx">prices</span><span class="p">[</span><span class="nx">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nx">prices</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span><span class="w"> </span><span class="p">)</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">profitFromPriceGain</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">C</span><span class="o">++</span><span class="w"> </span>
+<span class="n">class</span><span class="w"> </span><span class="n">Solution</span><span class="w"> </span><span class="p">{</span>
+<span class="n">public</span><span class="o">:</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">maxProfit</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&amp;</span><span class="w"> </span><span class="n">prices</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">profitFromPriceGain</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+
+<span class="w">        </span><span class="k">for</span><span class="p">(</span><span class="w"> </span><span class="kt">size_t</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">prices</span><span class="p">.</span><span class="n">size</span><span class="p">()</span><span class="mi">-1</span><span class="w"> </span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="w"> </span><span class="p">){</span>
+
+<span class="w">            </span><span class="k">if</span><span class="p">(</span><span class="w"> </span><span class="n">prices</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">prices</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="w"> </span><span class="p">){</span>
+<span class="w">                </span><span class="n">profitFromPriceGain</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="n">prices</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">prices</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="p">);</span>
+<span class="w">            </span><span class="p">}</span>
+
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">profitFromPriceGain</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">};</span>
+</code></pre></div>
+
+<p>Time Complexity: O(n), for single level for loop<br />
+Space Complexity: O(1), for fixed size of temporary variables</p>
+<hr />
+<p>Related leetcode challenge:</p>
+<p><a href="https://leetcode.com/problems/best-time-to-buy-and-sell-stock">Leetcode #121 Best Time to Buy and Sell Stock</a></p>
+<p><a href="https://leetcode.com/problems/best-time-to-buy-and-sell-stock-iii">Leetcode #123 Best Time to Buy and Sell Stock III </a></p>
+<p><a href="https://leetcode.com/problems/best-time-to-buy-and-sell-stock-iv">Leetcode #188 Best Time to Buy and Sell Stock IV </a></p>
+<p><a href="https://leetcode.com/problems/best-time-to-buy-and-sell-stock-with-cooldown">Leetcode #309 Best Time to Buy and Sell Stock with Cooldown</a></p>
+<p><a href="https://leetcode.com/problems/best-time-to-buy-and-sell-stock-with-transaction-fee">Leetcode #714 Best Time to Buy and Sell Stock with Transaction Fee </a></p>
+<hr />
+<p>Reference:</p>
+<p>[1] <a href="https://www.python.org/dev/peps/pep-0289/">Python official docs about generator expression</a></p>
+<p>[2] <a href="https://docs.python.org/3/library/functions.html#sum">Python official docs about sum( ... )</a></p></div>
+
+
+<div class='python-solution'><h2>Python/JS/Java/Go/C++ O(n) by DP // Greedy [+ Visualization & Thinking process] 有中文全系列解析專欄 -- Votes: 822</h2><p><a href="https://vocus.cc/article/65fd41d2fd897800015721f3">中文專欄:<br />
+從DP和FSM有限狀態機的角度，去解開Leetcode最佳股票買賣系列題。</a></p>
+<p><a href="https://vocus.cc/article/66616aeffd89780001cab1da">DP演算法框架 與 推薦的學習路徑 (透過相似題去強化對DP結構的認識與理解)<br />
+Common DP algorithm framework and recommended learning path</a></p>
+<p>Our goal:<br />
+Maximize trading profit with at most single long position(每個時刻最多持有一個多頭部位) on every moment.</p>
+<p>Method_#1<br />
+O(n) sol by DP + state machine</p>
+<p>Define "<strong>Hold</strong>" as the state of <strong>holding stock</strong>. (持有股票)<br />
+Define "<strong>NotHold</strong>" as the state of <strong>keep cash</strong>. (持有現金)</p>
+<p>General rule aka recursive relationship.</p>
+<div class="codehilite"><pre><span></span><code><span class="n">DP</span><span class="p">[</span><span class="n">Hold</span><span class="p">]</span><span class="w"> </span>
+<span class="o">=</span><span class="w"> </span><span class="n">max</span><span class="p">(</span><span class="n">keep</span><span class="w"> </span><span class="n">holding</span><span class="w"> </span><span class="n">stock</span><span class="p">,</span><span class="w"> </span><span class="n">or</span><span class="w"> </span><span class="n">just</span><span class="w"> </span><span class="n">buy</span><span class="w"> </span><span class="n">stock</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">hold</span><span class="w"> </span><span class="n">today</span><span class="p">)</span>
+<span class="o">=</span><span class="w"> </span><span class="n">max</span><span class="p">(</span><span class="w"> </span><span class="n">DP</span><span class="p">[</span><span class="n">Previous</span><span class="w"> </span><span class="n">Hold</span><span class="p">],</span><span class="w"> </span><span class="n">DP</span><span class="p">[</span><span class="n">previous</span><span class="w"> </span><span class="n">NotHold</span><span class="p">]</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">stock</span><span class="w"> </span><span class="n">price</span><span class="p">)</span>
+</code></pre></div>
+
+<hr />
+<div class="codehilite"><pre><span></span><code><span class="n">DP</span><span class="p">[</span><span class="n">NotHold</span><span class="p">]</span><span class="w"> </span>
+<span class="o">=</span><span class="w"> </span><span class="n">max</span><span class="p">(</span><span class="n">keep</span><span class="w"> </span><span class="n">cash</span><span class="p">,</span><span class="w"> </span><span class="n">or</span><span class="w"> </span><span class="n">just</span><span class="w"> </span><span class="n">sell</span><span class="w"> </span><span class="k">out</span><span class="w"> </span><span class="n">stock</span><span class="w"> </span><span class="n">today</span><span class="p">)</span>
+<span class="o">=</span><span class="w"> </span><span class="n">max</span><span class="p">(</span><span class="w"> </span><span class="n">DP</span><span class="p">[</span><span class="n">Previous</span><span class="w"> </span><span class="n">NotHold</span><span class="p">],</span><span class="w"> </span><span class="n">DP</span><span class="p">[</span><span class="n">previous</span><span class="w"> </span><span class="n">Hold</span><span class="p">]</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">stock</span><span class="w"> </span><span class="n">price</span><span class="p">)</span>
+</code></pre></div>
+
+<hr />
+<p><strong>State machine diagram</strong>:</p>
+<p></p>
+<hr />
+<p>Some reader may argue it is not DP,<br />
+but for me it is.<br />
+Each state depends on early states, and there are overlapped subproblem.</p>
+<p>If you would like to see more traditional DP-style code with multiple dimension, here is the code.</p>
+<p>Some reader feels that DP is an over-kill for Best time to buy and sell stock II.<br />
+I confess it is, but I just want to show that we can solve all Leetcode's stock trading problem series in DP thinking process with state machine transfer in a general way.</p>
+<div class="codehilite"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nl">Solution</span><span class="p">:</span>
+<span class="w">    </span><span class="n">def</span><span class="w"> </span><span class="n">maxProfit</span><span class="p">(</span><span class="n">self</span><span class="p">,</span><span class="w"> </span><span class="nl">prices</span><span class="p">:</span><span class="w"> </span><span class="n">List</span><span class="o">[</span><span class="n">int</span><span class="o">]</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="nc">int</span><span class="err">:</span>
+
+<span class="w">        </span><span class="err">#</span><span class="w"> </span><span class="k">Use</span><span class="w"> </span><span class="n">constant</span><span class="w"> </span><span class="n">literal</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="n">help</span><span class="w"> </span><span class="n">reader</span><span class="w"> </span><span class="n">understand</span><span class="w"> </span><span class="n">source</span><span class="w"> </span><span class="n">code</span><span class="w"> </span><span class="n">below</span><span class="p">.</span>
+<span class="w">        </span><span class="n">HOLD_STOCK</span><span class="p">,</span><span class="w"> </span><span class="n">KEEP_CASH</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span>
+
+<span class="w">        </span><span class="err">##</span><span class="w"> </span><span class="k">Dictionary</span><span class="w"> </span><span class="p">(</span><span class="n">Hash</span><span class="w"> </span><span class="nc">table</span><span class="p">)</span>
+<span class="w">        </span><span class="err">#</span><span class="w"> </span><span class="k">key</span><span class="err">:</span><span class="w"> </span><span class="p">(</span><span class="nf">day</span><span class="p">,</span><span class="w"> </span><span class="k">state</span><span class="p">)</span><span class="w"> </span><span class="n">pair</span>
+<span class="w">        </span><span class="err">#</span><span class="w"> </span><span class="k">value</span><span class="err">:</span><span class="w"> </span><span class="n">coreesponding</span><span class="w"> </span><span class="n">maximal</span><span class="w"> </span><span class="n">profit</span>
+<span class="w">        </span><span class="n">dp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">{}</span>
+
+<span class="w">        </span><span class="err">#</span><span class="w"> </span><span class="k">No</span><span class="w"> </span><span class="k">free</span><span class="w"> </span><span class="n">lunch</span><span class="p">,</span><span class="w"> </span><span class="n">it</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="n">impoosible</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="n">have</span><span class="w"> </span><span class="n">stock</span><span class="w"> </span><span class="k">before</span><span class="w"> </span><span class="k">first</span><span class="w"> </span><span class="n">trading</span><span class="w"> </span><span class="nf">day</span>
+<span class="w">        </span><span class="n">dp</span><span class="o">[</span><span class="n">-1, HOLD_STOCK</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">-</span><span class="n">math</span><span class="p">.</span><span class="n">inf</span>
+
+<span class="w">        </span><span class="err">#</span><span class="w"> </span><span class="k">No</span><span class="w"> </span><span class="n">gain</span><span class="p">,</span><span class="w"> </span><span class="k">no</span><span class="w"> </span><span class="n">loss</span><span class="w"> </span><span class="k">before</span><span class="w"> </span><span class="k">first</span><span class="w"> </span><span class="n">trading</span><span class="w"> </span><span class="nf">day</span>
+<span class="w">        </span><span class="n">dp</span><span class="o">[</span><span class="n">-1, KEEP_CASH</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span>
+
+<span class="w">        </span><span class="err">#</span><span class="w"> </span><span class="k">For</span><span class="w"> </span><span class="k">each</span><span class="w"> </span><span class="nf">day</span><span class="w"> </span><span class="k">with</span><span class="w"> </span><span class="k">corresponding</span><span class="w"> </span><span class="n">stock</span><span class="w"> </span><span class="n">price</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">stock</span><span class="w"> </span><span class="n">market</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="nf">day</span><span class="p">,</span><span class="w"> </span><span class="n">stock_price</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">enumerate</span><span class="p">(</span><span class="n">prices</span><span class="p">)</span><span class="err">:</span>
+
+<span class="w">            </span><span class="err">#</span><span class="w"> </span><span class="k">If</span><span class="w"> </span><span class="n">today</span><span class="w"> </span><span class="n">we</span><span class="w"> </span><span class="n">have</span><span class="w"> </span><span class="n">stock</span><span class="p">,</span><span class="w"> </span><span class="n">either</span><span class="w"> </span><span class="n">we</span><span class="w"> </span><span class="n">already</span><span class="w"> </span><span class="n">had</span><span class="w"> </span><span class="n">it</span><span class="w"> </span><span class="n">yesterday</span><span class="p">,</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="n">we</span><span class="w"> </span><span class="n">just</span><span class="w"> </span><span class="n">buy</span><span class="w"> </span><span class="n">stock</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="k">hold</span><span class="w"> </span><span class="n">it</span><span class="w"> </span><span class="n">today</span><span class="p">.</span>
+<span class="w">            </span><span class="n">dp</span><span class="o">[</span><span class="n">day, HOLD_STOCK</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">max</span><span class="p">(</span><span class="w"> </span><span class="n">dp</span><span class="o">[</span><span class="n">day-1, HOLD_STOCK</span><span class="o">]</span><span class="p">,</span><span class="w"> </span><span class="n">dp</span><span class="o">[</span><span class="n">day-1, KEEP_CASH</span><span class="o">]</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">stock_price</span><span class="p">)</span>
+
+<span class="w">            </span><span class="err">#</span><span class="w"> </span><span class="k">If</span><span class="w"> </span><span class="n">today</span><span class="w"> </span><span class="n">we</span><span class="w"> </span><span class="n">keep</span><span class="w"> </span><span class="n">cash</span><span class="p">,</span><span class="w"> </span><span class="n">either</span><span class="w"> </span><span class="n">we</span><span class="w"> </span><span class="n">already</span><span class="w"> </span><span class="n">kept</span><span class="w"> </span><span class="n">cash</span><span class="w"> </span><span class="n">yesterday</span><span class="p">,</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="n">we</span><span class="w"> </span><span class="n">just</span><span class="w"> </span><span class="n">sell</span><span class="w"> </span><span class="k">out</span><span class="w"> </span><span class="n">stock</span><span class="w"> </span><span class="n">today</span>
+<span class="w">            </span><span class="n">dp</span><span class="o">[</span><span class="n">day, KEEP_CASH</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">max</span><span class="p">(</span><span class="w"> </span><span class="n">dp</span><span class="o">[</span><span class="n">day-1, KEEP_CASH</span><span class="o">]</span><span class="p">,</span><span class="w"> </span><span class="n">dp</span><span class="o">[</span><span class="n">day-1, HOLD_STOCK</span><span class="o">]</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">stock_price</span><span class="p">)</span>
+
+<span class="w">        </span><span class="err">#</span><span class="c1">---------------------------------------------------------------</span>
+<span class="w">        </span><span class="err">#</span><span class="w"> </span><span class="k">To</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="n">maximal</span><span class="w"> </span><span class="n">realized</span><span class="w"> </span><span class="n">profit</span><span class="p">,</span><span class="w"> </span><span class="n">final</span><span class="w"> </span><span class="k">state</span><span class="w"> </span><span class="n">must</span><span class="w"> </span><span class="n">be</span><span class="w"> </span><span class="n">KEEP_CASH</span><span class="p">.</span>
+<span class="w">        </span><span class="n">last_day</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">len</span><span class="p">(</span><span class="n">prices</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">dp</span><span class="o">[</span><span class="n">last_day, KEEP_CASH</span><span class="o">]</span>
+</code></pre></div>
+
+<hr />
+<p><strong>Implementation</strong> by botoom-up DP + iteration:</p>
+<iframe src="https://leetcode.com/playground/J7fnkkAb/shared" frameBorder="0" width="1000" height="600"></iframe>
+
+<p>Time Complexity: O(n), for single level for loop<br />
+Space Complexity: O(1), for fixed size of temporary variables</p>
+<hr />
+<p><strong>Implementation</strong> with Top down DP + recursion</p>
+<iframe src="https://leetcode.com/playground/2zaLvs2H/shared" frameBorder="0" width="1000" height="600"></iframe>
+
+<p>Time Complexity: O(n), for single level for loop<br />
+Space Complexity: O(n), for 1D DP recursion call depth</p>
+<hr />
+<p>Method_#2<br />
+O(n) sol by Greedy</p>
+<p>Share another O(n) solution by price gain collection with <strong>greedy</strong> value taking concept.</p>
+<p>Max profit with <a href="https://en.wikipedia.org/wiki/Long_(finance)">long position</a> ,'做多' in chinese, is met by <strong>collecting all price gain</strong> in the stock price sequence.</p>
+<p>Take care that holding <strong>multiple position at the same time is NOT allowed</strong> by <a href="https://leetcode.com/problems/best-time-to-buy-and-sell-stock-ii/">description</a>.</p>
+<hr />
+<p><strong>Visualization</strong>:</p>
+<p></p>
+<hr />
+<p><strong>Implementation</strong> based on container and summation function:</p>
+<div class="codehilite"><pre><span></span><code><span class="n">Language</span><span class="p">:</span> <span class="n">python</span> 
+<span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">maxProfit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prices</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+
+        <span class="n">price_gain</span> <span class="o">=</span> 
+
+        <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span> <span class="nb">len</span><span class="p">(</span><span class="n">prices</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span> <span class="p">):</span>
+
+            <span class="k">if</span> <span class="n">prices</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">prices</span><span class="p">[</span><span class="n">idx</span><span class="o">+</span><span class="mi">1</span><span class="p">]:</span>
+
+                <span class="n">price_gain</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="n">prices</span><span class="p">[</span><span class="n">idx</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span> <span class="n">prices</span><span class="p">[</span><span class="n">idx</span><span class="p">])</span>
+
+        <span class="k">return</span> <span class="nb">sum</span><span class="p">(</span> <span class="n">price_gain</span> <span class="p">)</span>
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">Java</span><span class="w"> </span>
+<span class="kd">class</span> <span class="nc">Solution</span><span class="w"> </span><span class="p">{</span>
+
+
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="nf">maxProfit</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">prices</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">        </span><span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span><span class="w"> </span><span class="n">priceGain</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span><span class="p">();</span>
+
+<span class="w">        </span><span class="k">for</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">idx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">;</span><span class="w"> </span><span class="n">idx</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">prices</span><span class="p">.</span><span class="na">length</span><span class="o">-</span><span class="mi">1</span><span class="p">;</span><span class="w"> </span><span class="n">idx</span><span class="o">++</span><span class="p">){</span>
+
+<span class="w">            </span><span class="k">if</span><span class="p">(</span><span class="w"> </span><span class="n">prices</span><span class="o">[</span><span class="n">idx</span><span class="o">]</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">prices</span><span class="o">[</span><span class="n">idx</span><span class="o">+</span><span class="mi">1</span><span class="o">]</span><span class="w"> </span><span class="p">){</span>
+<span class="w">                </span><span class="n">priceGain</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="w"> </span><span class="n">prices</span><span class="o">[</span><span class="n">idx</span><span class="o">+</span><span class="mi">1</span><span class="o">]-</span><span class="w"> </span><span class="n">prices</span><span class="o">[</span><span class="n">idx</span><span class="o">]</span><span class="p">);</span>
+<span class="w">            </span><span class="p">}</span>
+
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">priceGain</span><span class="p">.</span><span class="na">stream</span><span class="p">().</span><span class="na">mapToInt</span><span class="p">(</span><span class="n">n</span><span class="o">-&gt;</span><span class="n">n</span><span class="p">).</span><span class="na">sum</span><span class="p">();</span>
+
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code><span class="nx">Language</span><span class="o">:</span><span class="w"> </span><span class="nx">Javascript</span><span class="w"> </span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">accumulate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="p">(</span><span class="nx">prev</span><span class="p">,</span><span class="w"> </span><span class="nx">cur</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">(</span><span class="nx">prev</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nx">cur</span><span class="p">)</span><span class="w"> </span><span class="p">);</span>
+
+<span class="kd">var</span><span class="w"> </span><span class="nx">maxProfit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kd">function</span><span class="p">(</span><span class="nx">prices</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="nx">profit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nb">Array</span><span class="p">();</span>
+
+<span class="w">    </span><span class="k">for</span><span class="p">(</span><span class="w"> </span><span class="kd">let</span><span class="w"> </span><span class="nx">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0</span><span class="w"> </span><span class="p">;</span><span class="w"> </span><span class="nx">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="nx">prices</span><span class="p">.</span><span class="nx">length</span><span class="o">-</span><span class="mf">1</span><span class="w"> </span><span class="p">;</span><span class="w"> </span><span class="nx">i</span><span class="o">++</span><span class="w"> </span><span class="p">){</span>
+
+<span class="w">        </span><span class="k">if</span><span class="p">(</span><span class="w"> </span><span class="nx">prices</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="nx">prices</span><span class="p">[</span><span class="nx">i</span><span class="o">+</span><span class="mf">1</span><span class="p">]</span><span class="w"> </span><span class="p">){</span>
+<span class="w">            </span><span class="nx">profit</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="w">  </span><span class="nx">prices</span><span class="p">[</span><span class="nx">i</span><span class="o">+</span><span class="mf">1</span><span class="p">]</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nx">prices</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span><span class="w"> </span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">profit</span><span class="p">.</span><span class="nx">reduce</span><span class="p">(</span><span class="nx">accumulate</span><span class="p">,</span><span class="w"> </span><span class="mf">0</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code><span class="nx">Language</span><span class="p">:</span><span class="w"> </span><span class="nx">Go</span><span class="w"> </span>
+<span class="kd">func</span><span class="w"> </span><span class="nx">Accumulate</span><span class="p">(</span><span class="nx">elements</span><span class="w"> </span><span class="o">...</span><span class="kt">int</span><span class="p">)</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="p">{</span><span class="w">  </span>
+<span class="w">     </span><span class="nx">sum</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="mi">0</span><span class="w">  </span>
+<span class="w">     </span><span class="k">for</span><span class="w"> </span><span class="nx">_</span><span class="p">,</span><span class="w"> </span><span class="nx">elem</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="k">range</span><span class="w"> </span><span class="nx">elements</span><span class="w"> </span><span class="p">{</span><span class="w">  </span>
+<span class="w">          </span><span class="nx">sum</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="nx">elem</span><span class="w">  </span>
+<span class="w">     </span><span class="p">}</span><span class="w">  </span>
+<span class="w">     </span><span class="k">return</span><span class="w"> </span><span class="nx">sum</span><span class="w">  </span>
+<span class="p">}</span><span class="w"> </span>
+
+
+<span class="kd">func</span><span class="w"> </span><span class="nx">maxProfit</span><span class="p">(</span><span class="nx">prices</span><span class="w"> </span><span class="kt">int</span><span class="p">)</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="nx">profit</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nb">make</span><span class="p">(</span><span class="kt">int</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="nx">i</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">;</span><span class="w"> </span><span class="nx">i</span><span class="w"> </span><span class="p">&lt;</span><span class="w"> </span><span class="nb">len</span><span class="p">(</span><span class="nx">prices</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="w"> </span><span class="p">;</span><span class="w"> </span><span class="nx">i</span><span class="o">++</span><span class="p">{</span>
+
+<span class="w">        </span><span class="k">if</span><span class="p">(</span><span class="w"> </span><span class="nx">prices</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span><span class="w"> </span><span class="p">&lt;</span><span class="w"> </span><span class="nx">prices</span><span class="p">[</span><span class="nx">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="w"> </span><span class="p">){</span>
+<span class="w">            </span><span class="nx">profit</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">append</span><span class="p">(</span><span class="nx">profit</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="nx">prices</span><span class="p">[</span><span class="nx">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nx">prices</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span><span class="w"> </span><span class="p">))</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">Accumulate</span><span class="p">(</span><span class="nx">profit</span><span class="o">...</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">C</span><span class="o">++</span><span class="w"> </span>
+<span class="n">class</span><span class="w"> </span><span class="n">Solution</span><span class="w"> </span><span class="p">{</span>
+<span class="n">public</span><span class="o">:</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">maxProfit</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&amp;</span><span class="w"> </span><span class="n">prices</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">        </span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="w"> </span><span class="n">profit</span><span class="p">;</span>
+
+<span class="w">        </span><span class="k">for</span><span class="p">(</span><span class="w"> </span><span class="kt">size_t</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">prices</span><span class="p">.</span><span class="n">size</span><span class="p">()</span><span class="mi">-1</span><span class="w"> </span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="w"> </span><span class="p">){</span>
+
+<span class="w">            </span><span class="k">if</span><span class="p">(</span><span class="w"> </span><span class="n">prices</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">prices</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="w"> </span><span class="p">){</span>
+<span class="w">                </span><span class="n">profit</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="w"> </span><span class="n">prices</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">prices</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="p">);</span>
+<span class="w">            </span><span class="p">}</span>
+
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">accumulate</span><span class="p">(</span><span class="w"> </span><span class="n">profit</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span><span class="w"> </span><span class="n">profit</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">};</span>
+</code></pre></div>
+
+<p>Time Complexity: O(n), for single level for loop<br />
+Space Complexity: O(n), for array storage sapce</p>
+<hr />
+<p><strong>Implementation</strong> based on generator expression and sum( ... ):</p>
+<div class="codehilite"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nl">Solution</span><span class="p">:</span>
+<span class="w">    </span><span class="n">def</span><span class="w"> </span><span class="n">maxProfit</span><span class="p">(</span><span class="n">self</span><span class="p">,</span><span class="w"> </span><span class="nl">prices</span><span class="p">:</span><span class="w"> </span><span class="n">List</span><span class="o">[</span><span class="n">int</span><span class="o">]</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="nc">int</span><span class="err">:</span>
+
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="nf">sum</span><span class="p">(</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="n">prices</span><span class="o">[</span><span class="n">idx+1</span><span class="o">]-</span><span class="n">prices</span><span class="o">[</span><span class="n">idx</span><span class="o">]</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">idx</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="k">range</span><span class="p">(</span><span class="nf">len</span><span class="p">(</span><span class="n">prices</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">prices</span><span class="o">[</span><span class="n">idx</span><span class="o">]</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">prices</span><span class="o">[</span><span class="n">idx+1</span><span class="o">]</span><span class="w"> </span><span class="p">)</span>
+</code></pre></div>
+
+<hr />
+<p><strong>Implementation</strong> based on O(1) aux space:</p>
+<div class="codehilite"><pre><span></span><code><span class="n">Language</span><span class="p">:</span> <span class="n">python</span> 
+<span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">maxProfit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prices</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+
+        <span class="n">profit_from_price_gain</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span> <span class="nb">len</span><span class="p">(</span><span class="n">prices</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span> <span class="p">):</span>
+
+            <span class="k">if</span> <span class="n">prices</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">prices</span><span class="p">[</span><span class="n">idx</span><span class="o">+</span><span class="mi">1</span><span class="p">]:</span>
+                <span class="n">profit_from_price_gain</span> <span class="o">+=</span> <span class="p">(</span> <span class="n">prices</span><span class="p">[</span><span class="n">idx</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">prices</span><span class="p">[</span><span class="n">idx</span><span class="p">])</span>
+
+        <span class="k">return</span> <span class="n">profit_from_price_gain</span>
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code><span class="nx">Language</span><span class="o">:</span><span class="w"> </span><span class="nx">Javascript</span><span class="w"> </span>
+<span class="kd">var</span><span class="w"> </span><span class="nx">maxProfit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kd">function</span><span class="p">(</span><span class="nx">prices</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="nx">profitFromPriceGain</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">for</span><span class="p">(</span><span class="w"> </span><span class="kd">let</span><span class="w"> </span><span class="nx">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0</span><span class="w"> </span><span class="p">;</span><span class="w"> </span><span class="nx">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="nx">prices</span><span class="p">.</span><span class="nx">length</span><span class="o">-</span><span class="mf">1</span><span class="w"> </span><span class="p">;</span><span class="w"> </span><span class="nx">i</span><span class="o">++</span><span class="w"> </span><span class="p">){</span>
+
+<span class="w">        </span><span class="k">if</span><span class="p">(</span><span class="w"> </span><span class="nx">prices</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="nx">prices</span><span class="p">[</span><span class="nx">i</span><span class="o">+</span><span class="mf">1</span><span class="p">]</span><span class="w"> </span><span class="p">){</span>
+<span class="w">            </span><span class="nx">profitFromPriceGain</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="p">(</span><span class="w">  </span><span class="nx">prices</span><span class="p">[</span><span class="nx">i</span><span class="o">+</span><span class="mf">1</span><span class="p">]</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nx">prices</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span><span class="w"> </span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">profitFromPriceGain</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">Java</span><span class="w"> </span>
+<span class="kd">class</span> <span class="nc">Solution</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="nf">maxProfit</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">prices</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">      </span>
+<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">profitFromPriceGain</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+
+<span class="w">        </span><span class="k">for</span><span class="p">(</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">prices</span><span class="p">.</span><span class="na">length</span><span class="o">-</span><span class="mi">1</span><span class="w"> </span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="w"> </span><span class="p">){</span>
+
+<span class="w">            </span><span class="k">if</span><span class="p">(</span><span class="w"> </span><span class="n">prices</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">prices</span><span class="o">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="o">]</span><span class="w"> </span><span class="p">){</span>
+<span class="w">                </span><span class="n">profitFromPriceGain</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="n">prices</span><span class="o">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="o">]</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">prices</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="w"> </span><span class="p">);</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">profitFromPriceGain</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code><span class="nx">Language</span><span class="p">:</span><span class="w"> </span><span class="nx">Go</span><span class="w"> </span>
+<span class="kd">func</span><span class="w"> </span><span class="nx">maxProfit</span><span class="p">(</span><span class="nx">prices</span><span class="w"> </span><span class="kt">int</span><span class="p">)</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="nx">profitFromPriceGain</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="mi">0</span>
+
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="nx">i</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">;</span><span class="w"> </span><span class="nx">i</span><span class="w"> </span><span class="p">&lt;</span><span class="w"> </span><span class="nb">len</span><span class="p">(</span><span class="nx">prices</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="w"> </span><span class="p">;</span><span class="w"> </span><span class="nx">i</span><span class="o">++</span><span class="p">{</span>
+
+<span class="w">        </span><span class="k">if</span><span class="p">(</span><span class="w"> </span><span class="nx">prices</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span><span class="w"> </span><span class="p">&lt;</span><span class="w"> </span><span class="nx">prices</span><span class="p">[</span><span class="nx">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="w"> </span><span class="p">){</span>
+<span class="w">            </span><span class="nx">profitFromPriceGain</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="nx">prices</span><span class="p">[</span><span class="nx">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nx">prices</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span><span class="w"> </span><span class="p">)</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">profitFromPriceGain</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">C</span><span class="o">++</span><span class="w"> </span>
+<span class="n">class</span><span class="w"> </span><span class="n">Solution</span><span class="w"> </span><span class="p">{</span>
+<span class="n">public</span><span class="o">:</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">maxProfit</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&amp;</span><span class="w"> </span><span class="n">prices</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">profitFromPriceGain</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+
+<span class="w">        </span><span class="k">for</span><span class="p">(</span><span class="w"> </span><span class="kt">size_t</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">prices</span><span class="p">.</span><span class="n">size</span><span class="p">()</span><span class="mi">-1</span><span class="w"> </span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="w"> </span><span class="p">){</span>
+
+<span class="w">            </span><span class="k">if</span><span class="p">(</span><span class="w"> </span><span class="n">prices</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">prices</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="w"> </span><span class="p">){</span>
+<span class="w">                </span><span class="n">profitFromPriceGain</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="n">prices</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">prices</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="p">);</span>
+<span class="w">            </span><span class="p">}</span>
+
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">profitFromPriceGain</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">};</span>
+</code></pre></div>
+
+<p>Time Complexity: O(n), for single level for loop<br />
+Space Complexity: O(1), for fixed size of temporary variables</p>
+<hr />
+<p>Related leetcode challenge:</p>
+<p><a href="https://leetcode.com/problems/best-time-to-buy-and-sell-stock">Leetcode #121 Best Time to Buy and Sell Stock</a></p>
+<p><a href="https://leetcode.com/problems/best-time-to-buy-and-sell-stock-iii">Leetcode #123 Best Time to Buy and Sell Stock III </a></p>
+<p><a href="https://leetcode.com/problems/best-time-to-buy-and-sell-stock-iv">Leetcode #188 Best Time to Buy and Sell Stock IV </a></p>
+<p><a href="https://leetcode.com/problems/best-time-to-buy-and-sell-stock-with-cooldown">Leetcode #309 Best Time to Buy and Sell Stock with Cooldown</a></p>
+<p><a href="https://leetcode.com/problems/best-time-to-buy-and-sell-stock-with-transaction-fee">Leetcode #714 Best Time to Buy and Sell Stock with Transaction Fee </a></p>
+<hr />
+<p>Reference:</p>
+<p>[1] <a href="https://www.python.org/dev/peps/pep-0289/">Python official docs about generator expression</a></p>
+<p>[2] <a href="https://docs.python.org/3/library/functions.html#sum">Python official docs about sum( ... )</a></p></div><p style="page-break-before: always" ></p>
