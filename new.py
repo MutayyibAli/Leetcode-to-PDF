@@ -104,6 +104,18 @@ def fetch_post(postId):
 
 
 def markdown_to_html(md_text):
+    # Add language label to code blocks and fix codehilite formatting
+    md_text = (
+        re.sub(
+            r"^```(\w+)",
+            lambda m: f"```{m.group(1)}\nLanguage: {m.group(1)}",
+            md_text,
+            flags=re.MULTILINE,
+        )
+        .replace("```", "``` \n")
+        .replace("[]", "[ ]")
+    )
+
     htmlText = mdformat.text(md_text)
     htmlText = markdown.markdown(
         htmlText,
@@ -145,14 +157,17 @@ def cache_ai_explanation(question):
     )
 
     try:
+        PrintHelper.print_info("Generating AI explanation (may take a while)...")
         client = genai.Client(api_key="AIzaSyBTFBZ22rrSD5yWBYqkwRmAGyp6aWUr--4")
         response = client.models.generate_content(
             model="gemini-2.5-pro",
             contents=prompt,
         )
+        PrintHelper.clear_last_lines(1)
     except Exception:
+        PrintHelper.clear_last_lines(1)
         return False
-
+    print(response.text)
     response = markdown.markdown(response.text)
 
     # Prepare ai explanation HTML
@@ -194,18 +209,6 @@ def cache_solution(question):
         # Decode unicode escape sequences
         post = bytes(post, "utf-8").decode("unicode_escape")
         post = post.encode("utf-8", errors="ignore").decode("utf-8")
-
-        # Add language label to code blocks and fix codehilite formatting
-        post = (
-            re.sub(
-                r"^```(\w+)",
-                lambda m: f"```{m.group(1)}\nLanguage: {m.group(1)}",
-                post,
-                flags=re.MULTILINE,
-            )
-            .replace("```", "``` ")
-            .replace("[]", "")
-        )
 
         # Fix relative image paths
         post = post.replace(
