@@ -1,0 +1,95 @@
+<div class='ai-explanation'><h3>List of approaches</h3>
+<ol>
+<li>Brute Force Approach (Merge and Sort)</li>
+<li>Two Pointers Approach (Optimal)</li>
+</ol>
+<hr />
+<h3>Brute Force Approach (Merge and Sort)</h3>
+<p>This approach is the most straightforward. It leverages the fact that <code>nums1</code> has enough space to hold all elements from <code>nums2</code>. We first copy all elements from <code>nums2</code> into the empty slots at the end of <code>nums1</code>, and then we use a built-in sorting algorithm to sort the entire <code>nums1</code> array.</p>
+<ol>
+<li>Iterate through the <code>nums2</code> array from the beginning.</li>
+<li>Copy each element from <code>nums2</code> into <code>nums1</code>, starting at index <code>m</code>.</li>
+<li>Once all elements from <code>nums2</code> are copied, <code>nums1</code> contains all <code>m+n</code> elements, but it is not sorted.</li>
+<li>Call a standard sorting function on the entire <code>nums1</code> array to arrange the elements in non-decreasing order.</li>
+<li>This method is easy to implement but is inefficient because it doesn't utilize the already-sorted nature of the initial parts of the arrays. The time complexity is dominated by the sort operation, O((m+n)log(m+n)), with a space complexity of O(1) (assuming an in-place sort).</li>
+</ol>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;algorithm&gt;
+
+class Solution {
+public:
+    void merge(std::vector&lt;int&gt;&amp; nums1, int m, std::vector&lt;int&gt;&amp; nums2, int n) {
+        // Step 1 &amp; 2: Copy elements of nums2 into nums1
+        for (int j = 0; j &lt; n; j++) {
+            nums1[m + j] = nums2[j];
+        }
+
+        // Step 4: Sort the entire nums1 array
+        std::sort(nums1.begin(), nums1.end());
+    }
+};
+</code></pre>
+<hr />
+<h3>Two Pointers Approach (Optimal)</h3>
+<p>This is an optimal approach that merges the two arrays in-place without requiring a full sort. The key idea is to fill the <code>nums1</code> array from the end. This avoids overwriting elements in <code>nums1</code> that we haven't yet compared. We use three pointers to track our progress.</p>
+<ol>
+<li>Initialize three pointers: <code>p1</code> to the last valid element in <code>nums1</code> (<code>m-1</code>), <code>p2</code> to the last element in <code>nums2</code> (<code>n-1</code>), and <code>p_merged</code> to the last position of the <code>nums1</code> array (<code>m+n-1</code>).</li>
+<li>Loop backwards as long as there are elements in <code>nums2</code> to consider (<code>p2 &gt;= 0</code>).</li>
+<li>In each iteration, compare the elements at <code>nums1[p1]</code> and <code>nums2[p2]</code>.</li>
+<li>Place the larger element at the <code>nums1[p_merged]</code> position.</li>
+<li>Decrement the pointer of the array from which the element was taken (<code>p1</code> or <code>p2</code>) and also decrement the <code>p_merged</code> pointer.</li>
+<li>If <code>p1</code> becomes negative (meaning all elements from the initial part of <code>nums1</code> have been placed), the remaining elements in <code>nums2</code> are all smaller and can be copied over directly. The <code>while</code> loop condition and the <code>if</code> check naturally handle this.</li>
+<li>This algorithm performs a single pass through the arrays, resulting in a time complexity of O(m+n) and a space complexity of O(1).</li>
+</ol>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+
+class Solution {
+public:
+    void merge(std::vector&lt;int&gt;&amp; nums1, int m, std::vector&lt;int&gt;&amp; nums2, int n) {
+        int p1 = m - 1;       // Pointer for last element of initial nums1
+        int p2 = n - 1;       // Pointer for last element of nums2
+        int p_merged = m + n - 1; // Pointer for last position in merged nums1
+
+        // Loop backwards from the end of nums2
+        while (p2 &gt;= 0) {
+            // If p1 is valid and its element is larger, place it at the end
+            if (p1 &gt;= 0 &amp;&amp; nums1[p1] &gt; nums2[p2]) {
+                nums1[p_merged--] = nums1[p1--];
+            } else {
+                // Otherwise, place the element from nums2 at the end
+                nums1[p_merged--] = nums2[p2--];
+            }
+        }
+    }
+};
+</code></pre>
+<hr />
+<h3>Pythonic solution for the best approach</h3>
+<p>The optimal Two Pointers approach can be implemented cleanly in Python. The logic remains the same: fill the <code>nums1</code> array from the back to avoid overwriting elements.</p>
+<pre><code class="language-python">class Solution:
+    def merge(self, nums1: list[int], m: int, nums2: list[int], n: int) -&gt; None:
+        &quot;&quot;&quot;
+        Do not return anything, modify nums1 in-place instead.
+        &quot;&quot;&quot;
+        # Pointer for the last element of the initial nums1
+        p1 = m - 1
+        # Pointer for the last element of nums2
+        p2 = n - 1
+        # Pointer for the last spot in the merged nums1 array
+        p_merged = m + n - 1
+
+        # Iterate while there are still elements in nums2 to merge
+        while p2 &gt;= 0:
+            # Check if there are elements left in nums1 to compare
+            # and if the current nums1 element is greater than the current nums2 element
+            if p1 &gt;= 0 and nums1[p1] &gt; nums2[p2]:
+                nums1[p_merged] = nums1[p1]
+                p1 -= 1
+            else:
+                nums1[p_merged] = nums2[p2]
+                p2 -= 1
+
+            # Move to the next position to fill
+            p_merged -= 1
+
+</code></pre></div>

@@ -4,6 +4,7 @@ from src.printHelper import PrintHelper
 import sys
 import os
 import time
+import ast
 import re
 import colorama
 from joblib import Memory
@@ -70,10 +71,10 @@ def fetch_post(postId):
     return json.loads(result.text, object_hook=lambda d: SimpleNamespace(**d))
 
 
-def fetch_ai_response(prompt):
+def fetch_ai_response(prompt, key):
     try:
         PrintHelper.print_info("Generating AI explanation (may take a while)...")
-        client = genai.Client(api_key="AIzaSyBTFBZ22rrSD5yWBYqkwRmAGyp6aWUr--4")
+        client = genai.Client(api_key=key)
         response = client.models.generate_content(
             model="gemini-2.5-pro",
             contents=prompt,
@@ -86,7 +87,7 @@ def fetch_ai_response(prompt):
     return response.text
 
 
-def cache_ai_explanation(question):
+def cache_ai_explanation(question, key):
     if question not in State.cached_sol:
         cache_solution(question)
 
@@ -107,9 +108,9 @@ def cache_ai_explanation(question):
         ).read()
     )
 
-    response = fetch_ai_response(prompt)
+    response = fetch_ai_response(prompt, key)
     if response == "<ERROR>":
-        PrintHelper.print_error(f"Failed to generate AI explanation for {question}.")
+        PrintHelper.clear_last_lines(1)
         return False
     explanation = helper.markdown_to_html(response)
 
@@ -127,6 +128,33 @@ def cache_ai_explanation(question):
 
 def fetch_missing_ai_explanations():
     fetch_missing_ai_explanations = State.missing_ai_explanations()
+
+    def get_api_key():
+        try:
+            with open(".api/keys.txt", "r") as f:
+                keys = ast.literal_eval(f.read().strip())
+
+                key = keys[keys["key"].strip()]
+        except FileNotFoundError:
+            key = input("Enter your API key: ").strip()
+
+        try:
+            client = genai.Client(api_key=key)
+            client.models.generate_content(
+                model="gemini-2.5-pro",
+                contents="Testing...",
+            )
+            return key
+        except Exception:
+            return "<ERROR>"
+
+    key = get_api_key()
+    if key == "<ERROR>":
+        PrintHelper.print_error("Invalid API key. Please check your key and try again.")
+        return
+    else:
+        PrintHelper.print_info("API key is valid.")
+
     count = 0
     for idx, question in enumerate(fetch_missing_ai_explanations):
         PrintHelper.print_success(f"Fetched {count} AI explanations.")
@@ -134,7 +162,7 @@ def fetch_missing_ai_explanations():
             f"Fetching {idx + 1} of {len(fetch_missing_ai_explanations)}: {question}"
         )
 
-        status = cache_ai_explanation(question)
+        status = cache_ai_explanation(question, key)
         PrintHelper.clear_last_lines(2)
 
         if status:

@@ -1,0 +1,138 @@
+<div class='ai-explanation'><h3>List of Approaches</h3>
+<ol>
+<li>Brute Force Approach (Shifting Elements)</li>
+<li>Two-Pointer Approach (Slow and Fast Pointer)</li>
+<li>Two-Pointer Approach (Optimized for Rare Removals)</li>
+</ol>
+<hr />
+<h3>1. Brute Force Approach (Shifting Elements)</h3>
+<p>This approach iterates through the array. When an element to be removed is found, it shifts all subsequent elements one position to the left to overwrite it.</p>
+<p><strong>Step-by-step Explanation:</strong>
+1.  Initialize a variable <code>n</code> to the size of the array. This will track the effective size.
+2.  Use a loop with an index <code>i</code> to iterate from the beginning of the array up to the current effective size <code>n</code>.
+3.  Inside the loop, if <code>nums[i]</code> equals <code>val</code>:
+    a. Start another loop with index <code>j</code> from <code>i</code> up to <code>n-1</code> to shift elements.
+    b. Set <code>nums[j] = nums[j+1]</code> for each element.
+    c. Decrement the effective size <code>n</code>.
+    d. Decrement the main loop index <code>i</code> to ensure the new element at the current position is also checked.
+4.  After the outer loop completes, return <code>n</code>.</p>
+<p>This method is inefficient because for every element removed, it may need to shift a large portion of the remaining array, leading to a quadratic time complexity in the worst case.</p>
+<p><strong>Time Complexity:</strong> O(n^2)
+<strong>Space Complexity:</strong> O(1)</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+
+class Solution {
+public:
+    int removeElement(std::vector&lt;int&gt;&amp; nums, int val) {
+        int n = nums.size();
+        for (int i = 0; i &lt; n; ) {
+            if (nums[i] == val) {
+                // Shift elements to the left
+                for (int j = i; j &lt; n - 1; ++j) {
+                    nums[j] = nums[j + 1];
+                }
+                n--; // Decrease the effective size
+            } else {
+                i++; // Move to the next element
+            }
+        }
+        return n;
+    }
+};
+</code></pre>
+<hr />
+<h3>2. Two-Pointer Approach (Slow and Fast Pointer)</h3>
+<p>This is a more efficient approach that avoids the costly shifting operation. It uses two pointers: a "fast" pointer to iterate through the array and a "slow" pointer to place the elements that are not equal to <code>val</code>.</p>
+<p><strong>Step-by-step Explanation:</strong>
+1.  Initialize a slow pointer, <code>k</code>, to 0. This pointer will keep track of the next position to place a valid element.
+2.  Iterate through the array with a fast pointer, <code>i</code>, from 0 to the end.
+3.  For each element <code>nums[i]</code>:
+    a. If <code>nums[i]</code> is <strong>not</strong> equal to <code>val</code>, it's an element we want to keep.
+    b. Copy this element to the position indicated by the slow pointer: <code>nums[k] = nums[i]</code>.
+    c. Increment the slow pointer <code>k</code> to prepare for the next valid element.
+4.  The loop processes every element in the array once.
+5.  After the loop, <code>k</code> represents the number of valid elements, which is the new length of the modified array. Return <code>k</code>.</p>
+<p>This approach is optimal as it processes the array in a single pass.</p>
+<p><strong>Time Complexity:</strong> O(n)
+<strong>Space Complexity:</strong> O(1)</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+
+class Solution {
+public:
+    int removeElement(std::vector&lt;int&gt;&amp; nums, int val) {
+        int k = 0; // Slow pointer
+        for (int i = 0; i &lt; nums.size(); ++i) { // Fast pointer
+            if (nums[i] != val) {
+                nums[k] = nums[i];
+                k++;
+            }
+        }
+        return k;
+    }
+};
+</code></pre>
+<hr />
+<h3>3. Two-Pointer Approach (Optimized for Rare Removals)</h3>
+<p>This variation is also a two-pointer approach but can be more efficient in terms of the number of element moves (writes) required, especially when the occurrences of <code>val</code> are infrequent. Instead of shifting, it swaps the element to be removed with the last element of the "valid" part of the array.</p>
+<p><strong>Step-by-step Explanation:</strong>
+1.  Initialize a pointer <code>i</code> to 0 and a variable <code>n</code> to the size of the array. <code>n</code> will represent the boundary of the valid elements.
+2.  Loop while the pointer <code>i</code> is less than <code>n</code>.
+3.  If the current element <code>nums[i]</code> is equal to <code>val</code>:
+    a. Replace <code>nums[i]</code> with the last valid element <code>nums[n-1]</code>.
+    b. Decrement <code>n</code> to shrink the effective size of the array.
+    c. <strong>Do not</strong> increment <code>i</code>, because the newly placed element at <code>nums[i]</code> (which came from the end) needs to be checked as well.
+4.  If <code>nums[i]</code> is <strong>not</strong> equal to <code>val</code>, simply increment <code>i</code> to move to the next element.
+5.  The loop terminates when <code>i</code> catches up to <code>n</code>. The final value of <code>n</code> is the new length. Return <code>n</code>.</p>
+<p>The key advantage is minimizing writes. If an element to be kept is already in its correct relative position, it's never moved.</p>
+<p><strong>Time Complexity:</strong> O(n)
+<strong>Space Complexity:</strong> O(1)</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+
+class Solution {
+public:
+    int removeElement(std::vector&lt;int&gt;&amp; nums, int val) {
+        int i = 0;
+        int n = nums.size();
+        while (i &lt; n) {
+            if (nums[i] == val) {
+                // Replace with the last element and shrink the array
+                nums[i] = nums[n - 1];
+                n--;
+            } else {
+                // Move to the next element
+                i++;
+            }
+        }
+        return n;
+    }
+};
+</code></pre>
+<hr />
+<h3>Pythonic Solution (for the best approach)</h3>
+<p>The Two-Pointer (Optimized) approach is highly efficient and can be implemented concisely in Python.</p>
+<pre><code class="language-python">from typing import List
+
+class Solution:
+    def removeElement(self, nums: List[int], val: int) -&gt; int:
+        &quot;&quot;&quot;
+        Removes all instances of `val` in `nums` in-place using an optimized
+        two-pointer approach.
+
+        This method minimizes element writes by swapping `val` with the
+        last element of the effective array.
+        &quot;&quot;&quot;
+        i = 0
+        n = len(nums)
+        while i &lt; n:
+            if nums[i] == val:
+                # When a value to be removed is found,
+                # replace it with the last element and
+                # reduce the effective array size.
+                nums[i] = nums[n - 1]
+                n -= 1
+            else:
+                # Only move to the next element if the current one is not `val`.
+                i += 1
+        return n
+
+</code></pre></div>
