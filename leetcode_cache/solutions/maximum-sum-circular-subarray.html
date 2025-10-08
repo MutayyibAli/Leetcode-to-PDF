@@ -1,126 +1,112 @@
-<div class='cpp-solution'><h2>✅ [C++]Easy solution with explaination in O(N) time complexity✅ -- Votes: 573</h2><p>Exciting News! Join my Coding Journey! Subscribe Now!</p>
-<p>Link in the leetcode profile</p>
-<p>New coding channel alert! Subscribe to unlock amazing coding content and tutorials. Help me reach 1K subs to start posting more videos! Join now!</p>
-<p>Thanks for your support!</p>
-<h2>Approach</h2>
-<p>There are 2 possibility of The <strong>maximum subarray sum in circular array</strong></p>
-<ol>
-<li><strong>Maximum subarray sum in non circular array</strong><br />
-   - If max subarray sum in non circular array then we can simply apply Kadane's Algorithm and we will calculate the max_sum_subarray<br />
-   - Example A=[-3,-5,<strong>3,5,7,3,5</strong>,-9] ans= 23</li>
-</ol>
-<p>2.<strong>Maximum subarray sum in circular array.</strong></p>
+<div class='cpp-solution'><h4>✅ [C++]Easy solution with explaination in O(N) time complexity✅ [Votes: 573]</h4><p>Exciting News! Join my Coding Journey! Subscribe Now! </p>
+<p>Link in the leetcode profile </p>
+<p>New coding channel alert!  Subscribe to unlock amazing coding content and tutorials. Help me reach 1K subs to start posting more videos! Join now! </p>
+<p>Thanks for your support! </p>
+<h4>Approach</h4>
+<p>There are 2 possibility of The <strong>maximum subarray sum in circular array</strong> 
+1. <strong>Maximum subarray sum in non circular array</strong>
+   - If max subarray sum in non circular array then we can simply apply Kadane's Algorithm and we will calculate the max_sum_subarray
+   -  Example A=[-3,-5,<strong>3,5,7,3,5</strong>,-9] ans= 23</p>
+<p>2.<strong>Maximum subarray sum in circular array.</strong>
+   - If max subarray sum in circular array then we will calculate the <code>minimum sum of subarray</code> and <strong>Subtract</strong> it from <code>total_sum</code> of array.
+   - Example A=[11,1,-17,2,-15,9,13]</p>
 <ul>
-<li>If max subarray sum in circular array then we will calculate the <code>minimum sum of subarray</code> and <strong>Subtract</strong> it from <code>total_sum</code> of array.</li>
-<li>Example A=[11,1,-17,2,-15,9,13]</li>
-</ul>
-<p></p>
-<ul>
-<li>Here we will remove {17,2,-15} from our total sum that will give us max subarray sum because max sum include some prefix and suffix part:-<br />
-  Ans= max(prefix+suffix)<br />
-  Ans= max(total sum - subarray)<br />
-  Ans=total sum + max(-subarray)<br />
+<li>Here we will remove {17,2,-15} from our total sum that will give us max subarray sum because max sum include some prefix and suffix part:- 
+Ans= max(prefix+suffix)
+Ans= max(total sum - subarray)
+Ans=total sum + max(-subarray)
 <strong>Ans= total sum - min(subarray)</strong></li>
-</ul>
-<ol start="3">
 <li>
-<p><strong>Corner case -When all the element in the array are negative</strong> then our answer will be <code>max_sum_subarray</code> because if when all the element are negative at that time our <code>total_sum - minsum_subary=0</code><br />
-   and it will return 0 means empty subarray thats why we will return max sum of subarray</p>
+<p><strong>Corner case -When all the element in the array are negative</strong> then our answer will be <code>max_sum_subarray</code> because if when all the element are negative at that time our <code>total_sum - minsum_subary=0</code>
+and it will return 0 means empty subarray thats why we will return max sum of subarray</p>
 </li>
 <li>
-<p><strong>At last we will return</strong><br />
+<p><strong>At last we will return</strong>
    max(subarray sum in non circular array,Maximum subarray sum in circular array)</p>
 </li>
-</ol>
-<h2>Complexity</h2>
+</ul>
+<h4>Complexity</h4>
 <ul>
 <li>Time complexity:O(N)</li>
 <li>Space complexity:O(1)</li>
 </ul>
-<h2>Code</h2>
-<div class="codehilite"><pre><span></span><code><span class="nt">class</span><span class="w"> </span><span class="nt">Solution</span><span class="w"> </span><span class="p">{</span>
-<span class="n">public</span><span class="p">:</span>
-<span class="w">    </span><span class="n">int</span><span class="w"> </span><span class="nf">maxSubarraySumCircular</span><span class="p">(</span><span class="n">vector</span><span class="err">&lt;</span><span class="n">int</span><span class="err">&gt;&amp;</span><span class="w"> </span><span class="n">A</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
-<span class="w">        </span><span class="n">int</span><span class="w"> </span><span class="n">total_sum</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="n">curr_sum1</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="n">curr_sum2</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="n">mxsum_subary</span><span class="o">=</span><span class="n">INT_MIN</span><span class="p">,</span><span class="n">minsum_subary</span><span class="o">=</span><span class="n">INT_MAX</span><span class="p">;</span><span class="w">   </span>
-<span class="w">        </span><span class="err">for(auto</span><span class="w"> </span><span class="n">i</span><span class="p">:</span><span class="n">A</span><span class="p">)</span>
-<span class="w">        </span><span class="err">{</span>
-<span class="w">            </span><span class="n">total_sum</span><span class="o">+=</span><span class="n">i</span><span class="p">;</span><span class="w"> </span><span class="err">curr_sum1+=i</span><span class="p">;</span><span class="w"> </span><span class="err">curr_sum2+=i</span><span class="p">;</span>
-<span class="w">            </span><span class="err">mxsum_subary=max(mxsum_subary,curr_sum1)</span><span class="p">;</span>
-<span class="w">            </span><span class="err">if(curr_sum1&lt;0)</span><span class="w"> </span><span class="err">curr_sum1=0</span><span class="p">;</span>
-<span class="w">           </span><span class="err">minsum_subary=min(curr_sum2,minsum_subary)</span><span class="p">;</span>
-<span class="w">            </span><span class="err">if(curr_sum2&gt;0)</span><span class="w"> </span><span class="err">curr_sum2=0</span><span class="p">;</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">        </span><span class="nt">return</span><span class="w"> </span><span class="o">(</span><span class="nt">total_sum</span><span class="o">==</span><span class="nt">minsum_subary</span><span class="o">)?</span><span class="nt">mxsum_subary</span><span class="p">:</span><span class="nd">max</span><span class="o">(</span><span class="nt">mxsum_subary</span><span class="o">,</span><span class="nt">total_sum-minsum_subary</span><span class="o">);</span><span class="w">  </span>
-<span class="w">    </span><span class="err">}</span>
-<span class="err">}</span><span class="o">;</span>
-</code></pre></div>
-
-<p>If you really found my solution helpful <strong>please upvote it</strong>, as it motivates me to post such kind of codes.<br />
-<strong>Let me know in comment if i can do better</strong>.<br />
-Let's connect on <strong><a href="https://www.linkedin.com/in/mahesh-vishnoi-a4a47a193/">LINKDIN</a></strong></p>
-<p></p></div>
-
-
-<div class='python-solution'><h2>3 questions, 1 approach Python -- Votes: 50</h2><h3><strong>Kadane's Algorithm</strong></h3>
+<h4>Code</h4>
+<pre><code>class Solution {
+public:
+    int maxSubarraySumCircular(vector&lt;int&gt;&amp; A) {
+        int total_sum=0,curr_sum1=0,curr_sum2=0,mxsum_subary=INT_MIN,minsum_subary=INT_MAX;   
+        for(auto i:A)
+        {
+            total_sum+=i; curr_sum1+=i; curr_sum2+=i;
+            mxsum_subary=max(mxsum_subary,curr_sum1);
+            if(curr_sum1&lt;0) curr_sum1=0;
+           minsum_subary=min(curr_sum2,minsum_subary);
+            if(curr_sum2&gt;0) curr_sum2=0;
+        }
+        return (total_sum==minsum_subary)?mxsum_subary:max(mxsum_subary,total_sum-minsum_subary);  
+    }
+};
+</code></pre>
+<p>If you really found my solution helpful <strong>please upvote it</strong>, as it motivates me to post such kind of codes.
+<strong>Let me know in comment if i can do better</strong>.
+Let's connect on <strong><a href="https://www.linkedin.com/in/mahesh-vishnoi-a4a47a193/">LINKDIN</a></strong></p></div><div class='python-solution'><h4>3 questions, 1 approach Python [Votes: 50]</h4><h5><strong>Kadane's Algorithm</strong></h5>
 <p><strong>Problem 918 : <a href="https://leetcode.com/problems/maximum-sum-circular-subarray/">Maximum Sum Circular Subarray</a></strong></p>
-<div class="codehilite"><pre><span></span><code><span class="n">Language</span><span class="p">:</span> <span class="n">python</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="p">:</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">maxSubarraySumCircular</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">A</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<pre><code class="language-python">class Solution:
+    def maxSubarraySumCircular(self, A: List[int]) -&gt; int:
 
-        <span class="c1"># Method 1 : Kadane&#39;s Algorithm</span>
-        <span class="k">if</span> <span class="nb">max</span><span class="p">(</span><span class="n">A</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="k">return</span> <span class="nb">max</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
+        #### Method 1 : Kadane's Algorithm
+        if max(A) &lt;= 0:
+            return max(A)
 
-        <span class="n">max_sum</span> <span class="o">=</span> <span class="n">curr_max</span> <span class="o">=</span> <span class="n">min_sum</span> <span class="o">=</span> <span class="n">curr_min</span> <span class="o">=</span> <span class="n">A</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> 
+        max_sum = curr_max = min_sum = curr_min = A[0] 
 
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">A</span><span class="p">)):</span> 
-            <span class="n">curr_max</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">A</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">curr_max</span> <span class="o">+</span> <span class="n">A</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> 
-            <span class="n">max_sum</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">max_sum</span><span class="p">,</span> <span class="n">curr_max</span><span class="p">)</span>
-            <span class="n">curr_min</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">A</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">curr_min</span> <span class="o">+</span> <span class="n">A</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> 
-            <span class="n">min_sum</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">min_sum</span><span class="p">,</span> <span class="n">curr_min</span><span class="p">)</span>
+        for i in range(1, len(A)): 
+            curr_max = max(A[i], curr_max + A[i]) 
+            max_sum = max(max_sum, curr_max)
+            curr_min = min(A[i], curr_min + A[i]) 
+            min_sum = min(min_sum, curr_min)
 
-        <span class="k">return</span> <span class="nb">max</span><span class="p">(</span><span class="n">max_sum</span><span class="p">,</span> <span class="nb">sum</span><span class="p">(</span><span class="n">A</span><span class="p">)</span> <span class="o">-</span> <span class="n">min_sum</span><span class="p">)</span>
+        return max(max_sum, sum(A) - min_sum)
 
-<span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">        # Method 2 : Dynamic Programming</span>
-<span class="sd">        if max(A) &lt;= 0:</span>
-<span class="sd">            return max(A)</span>
+        '''
+        #### Method 2 : Dynamic Programming
+        if max(A) &lt;= 0:
+            return max(A)
 
-<span class="sd">        max_dp = [i for i in A]</span>
-<span class="sd">        min_dp = [i for i in A]</span>
+        max_dp = [i for i in A]
+        min_dp = [i for i in A]
 
-<span class="sd">        for i in range(1,len(A)):</span>
-<span class="sd">            if max_dp[i-1] &gt; 0:</span>
-<span class="sd">                max_dp[i] += max_dp[i-1]</span>
-<span class="sd">            if min_dp[i-1] &lt; 0:</span>
-<span class="sd">                min_dp[i] += min_dp[i-1]</span>
+        for i in range(1,len(A)):
+            if max_dp[i-1] &gt; 0:
+                max_dp[i] += max_dp[i-1]
+            if min_dp[i-1] &lt; 0:
+                min_dp[i] += min_dp[i-1]
 
-<span class="sd">        return max(max(max_dp), sum(A) - min(min_dp))</span>
-<span class="sd">        &#39;&#39;&#39;</span>
-</code></pre></div>
+        return max(max(max_dp), sum(A) - min(min_dp))
+        '''
 
+</code></pre>
 <p><strong>Problem 152 : <a href="https://leetcode.com/problems/maximum-product-subarray/">Maximum Product Subarray</a></strong></p>
-<div class="codehilite"><pre><span></span><code><span class="n">Language</span><span class="p">:</span> <span class="n">python</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="p">:</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">maxProduct</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nums</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">nums</span><span class="p">:</span>
-            <span class="k">return</span> <span class="mi">0</span>
-        <span class="n">max_prod</span> <span class="o">=</span> <span class="n">prev_max</span> <span class="o">=</span> <span class="n">prev_min</span> <span class="o">=</span>  <span class="n">nums</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> 
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">nums</span><span class="p">)):</span> 
-            <span class="n">curr_min</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">prev_max</span> <span class="o">*</span> <span class="n">nums</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">prev_min</span> <span class="o">*</span> <span class="n">nums</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">nums</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> 
-            <span class="n">curr_max</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">prev_max</span> <span class="o">*</span> <span class="n">nums</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">prev_min</span> <span class="o">*</span> <span class="n">nums</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">nums</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
-            <span class="n">prev_min</span><span class="p">,</span> <span class="n">prev_max</span> <span class="o">=</span> <span class="n">curr_min</span><span class="p">,</span> <span class="n">curr_max</span>
-            <span class="n">max_prod</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">curr_max</span><span class="p">,</span> <span class="n">max_prod</span><span class="p">)</span>    
-        <span class="k">return</span> <span class="n">max_prod</span>
-</code></pre></div>
+<pre><code class="language-python">class Solution:
+    def maxProduct(self, nums: List[int]) -&gt; int:
+        if not nums:
+            return 0
+        max_prod = prev_max = prev_min =  nums[0] 
+        for i in range(1, len(nums)): 
+            curr_min = min(prev_max * nums[i], prev_min * nums[i], nums[i]) 
+            curr_max = max(prev_max * nums[i], prev_min * nums[i], nums[i])
+            prev_min, prev_max = curr_min, curr_max
+            max_prod = max(curr_max, max_prod)    
+        return max_prod
 
+</code></pre>
 <p><strong>Problem 53 : <a href="https://leetcode.com/problems/maximum-subarray/">Maximum Subarray</a></strong></p>
-<div class="codehilite"><pre><span></span><code><span class="n">Language</span><span class="p">:</span> <span class="n">python</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="p">:</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">maxSubArray</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nums</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-        <span class="n">max_sum</span> <span class="o">=</span> <span class="n">curr</span> <span class="o">=</span> <span class="n">nums</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> 
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">nums</span><span class="p">)):</span> 
-            <span class="n">curr</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">nums</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">curr</span> <span class="o">+</span> <span class="n">nums</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> 
-            <span class="n">max_sum</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">max_sum</span><span class="p">,</span> <span class="n">curr</span><span class="p">)</span>    
-        <span class="k">return</span> <span class="n">max_sum</span> 
-</code></pre></div></div><p style="page-break-before: always" ></p>
+<pre><code class="language-python">class Solution:
+    def maxSubArray(self, nums: List[int]) -&gt; int:
+        max_sum = curr = nums[0] 
+        for i in range(1, len(nums)): 
+            curr = max(nums[i], curr + nums[i]) 
+            max_sum = max(max_sum, curr)    
+        return max_sum 
+
+</code></pre></div>

@@ -1,176 +1,162 @@
-<div class='cpp-solution'><h2>I bet you will understand | Intutive solution | Beginner Friendly | C++ -- Votes: 436</h2><h2>Intuition</h2>
+<div class='cpp-solution'><h4>I bet you will understand | Intutive solution | Beginner Friendly | C++ [Votes: 436]</h4><h4>Intuition</h4>
 <!-- Describe your first thoughts on how to solve this problem. -->
-
-<p>This problem is one of the classical recursion problems.<br />
-For any given n, lets say n = 2, we have to fill four places in our output ("_ _ _ _"). And each of these places can be either filled by an open braces "(" or a closed braces ")".</p>
-<h2>Approach</h2>
+<p>This problem is one of the classical recursion problems. 
+For any given n, lets say n = 2, we have to fill four places in our output ("<em> _ _ </em>"). And each of these places can be either filled by an open braces "(" or a closed braces ")". </p>
+<h4>Approach</h4>
 <!-- Describe your approach to solving the problem. -->
-
-<div class="codehilite"><pre><span></span><code>                                &quot;_  <span class="ge">_  _</span>  _&quot;
+<pre><code>                                "_  _  _  _"
                                 / \     
-                              &#39;(&#39; &#39;)&#39;
-</code></pre></div>
-
-<p>For every place we have two choices and 1 decision to make.<br />
+                              '(' ')'
+</code></pre>
+<p>For every place we have two choices and 1 decision to make. 
 Our choices are to either use '(' or ')'.</p>
 <p>Now lets try to visualize the recursive tree based upon the choices discussed above.</p>
-<p>Initially, we have:<br />
-For n = 3<br />
-current ouput = ""<br />
-availableOpenBracketsCnt = 3 and availableCloseBracketsCnt = 3</p>
+<p>Initially, we have:
+For n = 3
+current ouput = ""
+availableOpenBracketsCnt = 3 and availableCloseBracketsCnt  = 3</p>
 <p>The first choise is very simple. Since we can not start a balanced parenthesis sequence with ')', we have only one choice in the begining. So our output will be '(' and count of open brackets left = 2 and count of closed brackets left = 3.</p>
-<div class="codehilite"><pre><span></span><code>                                    op      ip
-                                    &quot;&quot;   O-3, C-3
+<pre><code>                                    op      ip
+                                    ""   O-3, C-3
 
-                                    &quot;(&quot;,O-2,C-3
+                                    "(",O-2,C-3
 
-                &quot;((&quot;,O-1,C-3                            &quot;()&quot;, O-2,C-2
+                "((",O-1,C-3                            "()", O-2,C-2
 
-    &quot;(((&quot;,0,3             &quot;(()&quot;,1,2                       &quot;()(&quot;,1,2
+    "(((",0,3             "(()",1,2                       "()(",1,2
 
-    &quot;((()&quot;,0,2      &quot;(()(&quot;,0,2    &quot;(())&quot;,1,1        &quot;()((&quot;,0,2      &quot;()()&quot;,1,1
+    "((()",0,2      "(()(",0,2    "(())",1,1        "()((",0,2      "()()",1,1
 
-    &quot;((())&quot;,0,1     &quot;(()()&quot;,0,1   &quot;(())(&quot;,0,1       &quot;()(()&quot;,0,1     &quot;()()(&quot;,0,1
+    "((())",0,1     "(()()",0,1   "(())(",0,1       "()(()",0,1     "()()(",0,1
 
-    &quot;((()))&quot;,0,0   &quot;(()())&quot;,0,0   &quot;(())()&quot;,0,0      &quot;()(())&quot;,0,0    &quot;()()()&quot;, 0,0
-</code></pre></div>
-
-<h2>Observation from the recursive tree</h2>
+    "((()))",0,0   "(()())",0,0   "(())()",0,0      "()(())",0,0    "()()()", 0,0
+</code></pre>
+<h4>Observation from the recursive tree</h4>
 <ul>
-<li>Whenever we have count of open brackets equal to the count of close brackets, we have only one choice - that is to use '('. Because, all the brackets till now have been balanced. And we can not start a new sequence with ')'.</li>
+<li>Whenever we have count of open brackets equal to the count of close brackets, we have only one choice - that is to use '('. Because, all the brackets till now have been balanced. And we can not start a new sequence with ')'. </li>
 <li>Whenever, count of close bracket is 0, we can only use '('.</li>
 <li>Whenever, count of open bracket is 0, we can only use ')'.</li>
 <li>And for all the remaining cases, we have both the choices.</li>
 <li>We get an answer, when count of open == 0 and count of close == 0.</li>
 </ul>
-<p>Just convert these 5 observations into an algorithm and write the code.</p>
-<h2>Code</h2>
-<div class="codehilite"><pre><span></span><code><span class="kd">class</span><span class="w"> </span><span class="nx">Solution</span><span class="w"> </span><span class="p">{</span>
-<span class="nx">public</span><span class="p">:</span>
-<span class="w">    </span><span class="nx">void</span><span class="w"> </span><span class="nx">solve</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="nx">op</span><span class="p">,</span><span class="w"> </span><span class="nx">int</span><span class="w"> </span><span class="nx">open</span><span class="p">,</span><span class="w"> </span><span class="nx">int</span><span class="w"> </span><span class="nx">close</span><span class="p">,</span><span class="w"> </span><span class="nx">vector</span><span class="p">&lt;</span><span class="kt">string</span><span class="p">&gt;</span><span class="w"> </span><span class="o">&amp;</span><span class="nx">ans</span><span class="p">){</span>
-<span class="w">        </span><span class="k">if</span><span class="p">(</span><span class="nx">open</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nx">close</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">){</span>
-<span class="w">            </span><span class="nx">ans</span><span class="p">.</span><span class="nx">push_back</span><span class="p">(</span><span class="nx">op</span><span class="p">);</span>
-<span class="w">            </span><span class="k">return</span><span class="p">;</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">        </span><span class="c1">//when count of open and close brackets are same then </span>
-<span class="w">        </span><span class="c1">//we have only one choice to put open bracket </span>
-<span class="w">        </span><span class="k">if</span><span class="p">(</span><span class="nx">open</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nx">close</span><span class="p">){</span>
-<span class="w">            </span><span class="kt">string</span><span class="w"> </span><span class="nx">op1</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">op</span><span class="p">;</span>
-<span class="w">            </span><span class="nx">op1</span><span class="p">.</span><span class="nx">push_back</span><span class="p">(</span><span class="sc">&#39;(&#39;</span><span class="p">);</span>
-<span class="w">            </span><span class="nx">solve</span><span class="p">(</span><span class="nx">op1</span><span class="p">,</span><span class="w"> </span><span class="nx">open</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="nx">close</span><span class="p">,</span><span class="w"> </span><span class="nx">ans</span><span class="p">);</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">        </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="p">(</span><span class="nx">open</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">){</span>
-<span class="w">            </span><span class="c1">//only choice is to put close brackets </span>
-<span class="w">            </span><span class="kt">string</span><span class="w"> </span><span class="nx">op1</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">op</span><span class="p">;</span>
-<span class="w">            </span><span class="nx">op1</span><span class="p">.</span><span class="nx">push_back</span><span class="p">(</span><span class="sc">&#39;)&#39;</span><span class="p">);</span>
-<span class="w">            </span><span class="nx">solve</span><span class="p">(</span><span class="nx">op1</span><span class="p">,</span><span class="w"> </span><span class="nx">open</span><span class="p">,</span><span class="w"> </span><span class="nx">close</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="nx">ans</span><span class="p">);</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">        </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="p">(</span><span class="nx">close</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">){</span>
-<span class="w">            </span><span class="c1">//only choise is to use open bracket </span>
-<span class="w">            </span><span class="kt">string</span><span class="w"> </span><span class="nx">op1</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">op</span><span class="p">;</span>
-<span class="w">            </span><span class="nx">op1</span><span class="p">.</span><span class="nx">push_back</span><span class="p">(</span><span class="sc">&#39;(&#39;</span><span class="p">);</span>
-<span class="w">            </span><span class="nx">solve</span><span class="p">(</span><span class="nx">op1</span><span class="p">,</span><span class="w"> </span><span class="nx">open</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="nx">close</span><span class="p">,</span><span class="w"> </span><span class="nx">ans</span><span class="p">);</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">        </span><span class="k">else</span><span class="p">{</span>
-<span class="w">            </span><span class="kt">string</span><span class="w"> </span><span class="nx">op1</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">op</span><span class="p">;</span>
-<span class="w">            </span><span class="kt">string</span><span class="w"> </span><span class="nx">op2</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">op</span><span class="p">;</span>
-<span class="w">            </span><span class="nx">op1</span><span class="p">.</span><span class="nx">push_back</span><span class="p">(</span><span class="sc">&#39;(&#39;</span><span class="p">);</span>
-<span class="w">            </span><span class="nx">op2</span><span class="p">.</span><span class="nx">push_back</span><span class="p">(</span><span class="sc">&#39;)&#39;</span><span class="p">);</span>
-<span class="w">            </span><span class="nx">solve</span><span class="p">(</span><span class="nx">op1</span><span class="p">,</span><span class="w"> </span><span class="nx">open</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="nx">close</span><span class="p">,</span><span class="w"> </span><span class="nx">ans</span><span class="p">);</span>
-<span class="w">            </span><span class="nx">solve</span><span class="p">(</span><span class="nx">op2</span><span class="p">,</span><span class="w"> </span><span class="nx">open</span><span class="p">,</span><span class="w"> </span><span class="nx">close</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="nx">ans</span><span class="p">);</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="w">    </span><span class="nx">vector</span><span class="p">&lt;</span><span class="kt">string</span><span class="p">&gt;</span><span class="w"> </span><span class="nx">generateParenthesis</span><span class="p">(</span><span class="nx">int</span><span class="w"> </span><span class="nx">n</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="nx">int</span><span class="w"> </span><span class="nx">open</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">n</span><span class="p">;</span>
-<span class="w">        </span><span class="nx">int</span><span class="w"> </span><span class="nx">close</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">n</span><span class="p">;</span>
-<span class="w">        </span><span class="nx">vector</span><span class="p">&lt;</span><span class="kt">string</span><span class="p">&gt;</span><span class="w"> </span><span class="nx">ans</span><span class="p">;</span>
-<span class="w">        </span><span class="kt">string</span><span class="w"> </span><span class="nx">op</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">&quot;&quot;</span><span class="p">;</span>
-<span class="w">        </span><span class="nx">solve</span><span class="p">(</span><span class="nx">op</span><span class="p">,</span><span class="w"> </span><span class="nx">open</span><span class="p">,</span><span class="w"> </span><span class="nx">close</span><span class="p">,</span><span class="w"> </span><span class="nx">ans</span><span class="p">);</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="nx">ans</span><span class="p">;</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">};</span>
-</code></pre></div>
-
-<p><strong>Note</strong> : I have kept the code implementation simple by just following the observations I mentioned. The same code can be made more compact by reducing some conditional statements (although the time and space complexity will remain the same).<br />
+<p>Just convert these 5 observations into an algorithm and write the code. </p>
+<h4>Code</h4>
+<pre><code>class Solution {
+public:
+    void solve(string op, int open, int close, vector&lt;string&gt; &amp;ans){
+        if(open == 0 &amp;&amp; close == 0){
+            ans.push_back(op);
+            return;
+        }
+        //when count of open and close brackets are same then 
+        //we have only one choice to put open bracket 
+        if(open == close){
+            string op1 = op;
+            op1.push_back('(');
+            solve(op1, open-1, close, ans);
+        }
+        else if(open == 0){
+            //only choice is to put close brackets 
+            string op1 = op;
+            op1.push_back(')');
+            solve(op1, open, close-1, ans);
+        }
+        else if(close == 0){
+            //only choise is to use open bracket 
+            string op1 = op;
+            op1.push_back('(');
+            solve(op1, open-1, close, ans);
+        }
+        else{
+            string op1 = op;
+            string op2 = op;
+            op1.push_back('(');
+            op2.push_back(')');
+            solve(op1, open-1, close, ans);
+            solve(op2, open, close-1, ans);
+        }
+    }
+    vector&lt;string&gt; generateParenthesis(int n) {
+        int open = n;
+        int close = n;
+        vector&lt;string&gt; ans;
+        string op = &quot;&quot;;
+        solve(op, open, close, ans);
+        return ans;
+    }
+};
+</code></pre>
+<p><strong>Note</strong> : I have kept the code implementation simple by just following the observations I mentioned. The same code can be made more compact by reducing some conditional statements (although the time and space complexity will remain the same).
 Try to come up with your own compact version. Refer the comments of other peers for help.</p>
-<h2>Complexity Analysis:</h2>
+<h4>Complexity Analysis:</h4>
 <ul>
-<li>Time Complexity : $O(N<em>2^N)$ where N = 2</em>n<br />
-  $O(2^N)$ : We have N = 2n places to fill and for every place we will have a maximum of 2 choices.<br />
-  $O(N)$ : We will have to multiply our TC by a factor of N, as every time when we hit the base case, we will copy current op (which is of size N) into the answer vector.</li>
-<li>Space Complexity : $O(N)$ + Recursive Stack Space<br />
-  We have used an extra string of size N for storing current output</li>
+<li>Time Complexity : $O(N<em>2^N)$ where N = 2</em>n
+ $O(2^N)$ : We have N = 2n places to fill and for every place we will have a maximum of 2 choices. 
+ $O(N)$ : We will have to multiply our TC by a factor of N, as every time when we hit the base case, we will copy current op (which is of size N) into the answer vector.</li>
+<li>Space Complexity : $O(N)$ + Recursive Stack Space
+ We have used an extra string of size N for storing current output</li>
 </ul>
-<h2>Please upvote the solution if you understood it.</h2>
-<p></p>
-<p><strong>You can connect with me on linkedin, If you understood my solution :D</strong><br />
-https://www.linkedin.com/in/imraghavagr/</p></div>
-
-
-<div class='python-solution'><h2>Python, Java w/ Explanation | Faster than 96% w/ Proof | Easy to Understand -- Votes: 1948</h2><ol>
+<h4>Please upvote the solution if you understood it.</h4>
+<p><strong>You can connect with me on linkedin, If you understood my solution :D</strong>
+https://www.linkedin.com/in/imraghavagr/</p></div><div class='python-solution'><h4>Python, Java w/ Explanation | Faster than 96% w/ Proof | Easy to Understand [Votes: 1948]</h4><ol>
 <li>The idea is to add <code>')'</code> only after valid <code>'('</code></li>
 <li>We use two integer variables <code>left</code> &amp; <code>right</code> to see how many <code>'('</code> &amp; <code>')'</code> are in the current string</li>
 <li>If <code>left &lt; n</code> then we can add <code>'('</code> to the current string</li>
 <li>If <code>right &lt; left</code> then we can add <code>')'</code> to the current string</li>
 </ol>
 <p><strong>Python Code:</strong></p>
-<div class="codehilite"><pre><span></span><code><span class="n">def</span><span class="w"> </span><span class="n">generateParenthesis</span><span class="p">(</span><span class="n">self</span><span class="p">,</span><span class="w"> </span><span class="nl">n</span><span class="p">:</span><span class="w"> </span><span class="nc">int</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">List</span><span class="o">[</span><span class="n">str</span><span class="o">]</span><span class="err">:</span>
-<span class="w">    </span><span class="n">def</span><span class="w"> </span><span class="n">dfs</span><span class="p">(</span><span class="nf">left</span><span class="p">,</span><span class="w"> </span><span class="nf">right</span><span class="p">,</span><span class="w"> </span><span class="n">s</span><span class="p">)</span><span class="err">:</span>
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="nf">len</span><span class="p">(</span><span class="n">s</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">2</span><span class="err">:</span>
-<span class="w">            </span><span class="n">res</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
-<span class="w">            </span><span class="k">return</span><span class="w"> </span>
+<pre><code>def generateParenthesis(self, n: int) -&gt; List[str]:
+    def dfs(left, right, s):
+        if len(s) == n * 2:
+            res.append(s)
+            return 
 
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="nf">left</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="nl">n</span><span class="p">:</span>
-<span class="w">            </span><span class="n">dfs</span><span class="p">(</span><span class="nf">left</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="nf">right</span><span class="p">,</span><span class="w"> </span><span class="n">s</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s1">&#39;(&#39;</span><span class="p">)</span>
+        if left &lt; n:
+            dfs(left + 1, right, s + '(')
 
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="nf">right</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="nf">left</span><span class="err">:</span>
-<span class="w">            </span><span class="n">dfs</span><span class="p">(</span><span class="nf">left</span><span class="p">,</span><span class="w"> </span><span class="nf">right</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">s</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s1">&#39;)&#39;</span><span class="p">)</span>
+        if right &lt; left:
+            dfs(left, right + 1, s + ')')
 
-<span class="w">    </span><span class="n">res</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>
-<span class="w">    </span><span class="n">dfs</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="p">)</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">res</span>
-</code></pre></div>
-
+    res = []
+    dfs(0, 0, '')
+    return res
+</code></pre>
 <p>For<code>n = 2</code>, the recursion tree will be something like this,</p>
-<div class="codehilite"><pre><span></span><code>                                    (0, 0, &#39;&#39;)
+<pre><code>                                    (0, 0, '')
                                         |   
-                                    (1, 0, &#39;(&#39;)  
+                                    (1, 0, '(')  
                                    /           \
-                            (2, 0, &#39;((&#39;)      (1, 1, &#39;()&#39;)
+                            (2, 0, '((')      (1, 1, '()')
                                /                 \
-                        (2, 1, &#39;(()&#39;)           (2, 1, &#39;()(&#39;)
+                        (2, 1, '(()')           (2, 1, '()(')
                            /                       \
-                    (2, 2, &#39;(())&#39;)                (2, 2, &#39;()()&#39;)
+                    (2, 2, '(())')                (2, 2, '()()')
                               |                              |
-                    res.append(&#39;(())&#39;)             res.append(&#39;()()&#39;)
-</code></pre></div>
+                    res.append('(())')             res.append('()()')
 
+</code></pre>
 <p><strong>Java Code:</strong></p>
-<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">java</span>
-<span class="kd">class</span> <span class="nc">Solution</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span><span class="w"> </span><span class="nf">generateParenthesis</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">n</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span><span class="w"> </span><span class="n">res</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span><span class="p">();</span>
-<span class="w">        </span><span class="n">recurse</span><span class="p">(</span><span class="n">res</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">n</span><span class="p">);</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">res</span><span class="p">;</span>
-<span class="w">    </span><span class="p">}</span>
+<pre><code class="language-java">class Solution {
+    public List&lt;String&gt; generateParenthesis(int n) {
+        List&lt;String&gt; res = new ArrayList&lt;String&gt;();
+        recurse(res, 0, 0, &quot;&quot;, n);
+        return res;
+    }
 
-<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">recurse</span><span class="p">(</span><span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span><span class="w"> </span><span class="n">res</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">left</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">right</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">s</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">n</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">s</span><span class="p">.</span><span class="na">length</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="n">res</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="n">s</span><span class="p">);</span>
-<span class="w">            </span><span class="k">return</span><span class="p">;</span>
-<span class="w">        </span><span class="p">}</span>
+    public void recurse(List&lt;String&gt; res, int left, int right, String s, int n) {
+        if (s.length() == n * 2) {
+            res.add(s);
+            return;
+        }
 
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">left</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">n</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="n">recurse</span><span class="p">(</span><span class="n">res</span><span class="p">,</span><span class="w"> </span><span class="n">left</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">right</span><span class="p">,</span><span class="w"> </span><span class="n">s</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">&quot;(&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">n</span><span class="p">);</span>
-<span class="w">        </span><span class="p">}</span>
+        if (left &lt; n) {
+            recurse(res, left + 1, right, s + &quot;(&quot;, n);
+        }
 
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">right</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">left</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="n">recurse</span><span class="p">(</span><span class="n">res</span><span class="p">,</span><span class="w"> </span><span class="n">left</span><span class="p">,</span><span class="w"> </span><span class="n">right</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">s</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">&quot;)&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">n</span><span class="p">);</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="w">    </span><span class="c1">// See above tree diagram with parameters (left, right, s) for better understanding</span>
-<span class="p">}</span>
+        if (right &lt; left) {
+            recurse(res, left, right + 1, s + &quot;)&quot;, n);
+        }
+    }
+    // See above tree diagram with parameters (left, right, s) for better understanding
+}
 </code></pre></div>
-
-<p></p>
-<p></p></div><p style="page-break-before: always" ></p>

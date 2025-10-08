@@ -1,254 +1,117 @@
-<div class='cpp-solution'><h2>✅Beats 100% || C++ || JAVA || PYTHON || Beginner Friendly🔥🔥🔥 -- Votes: 2292</h2><h2>Intuition:</h2>
+<div class='cpp-solution'><h4>✅Beats 100% || C++ || JAVA || PYTHON || Beginner Friendly🔥🔥🔥 [Votes: 2292]</h4><h4>Intuition:</h4>
 <p>The Intuition is to iterate through two linked lists representing non-negative integers in reverse order, starting from the least significant digit. It performs digit-wise addition along with a carry value and constructs a new linked list to represent the sum. The process continues until both input lists and the carry value are exhausted. The resulting linked list represents the sum of the input numbers in the correct order.</p>
-<h2>Explanation:</h2>
+<h4>Explanation:</h4>
 <ol>
 <li>Create a placeholder node called <code>dummyHead</code> with a value of 0. This node will hold the resulting linked list.</li>
 <li>Initialize a pointer called <code>tail</code> and set it to <code>dummyHead</code>. This pointer will keep track of the last node in the result list.</li>
 <li>Initialize a variable called <code>carry</code> to 0. This variable will store the carry value during addition.</li>
 <li>Start a loop that continues until there are no more digits in both input lists (<code>l1</code> and <code>l2</code>) and there is no remaining carry value.</li>
-<li>Inside the loop:<br />
-   - Check if there is a digit in the current node of <code>l1</code>. If it exists, assign its value to a variable called <code>digit1</code>. Otherwise, set <code>digit1</code> to 0.<br />
-   - Check if there is a digit in the current node of <code>l2</code>. If it exists, assign its value to a variable called <code>digit2</code>. Otherwise, set <code>digit2</code> to 0.<br />
-   - Add the current digits from <code>l1</code> and <code>l2</code>, along with the carry value from the previous iteration, and store the sum in a variable called <code>sum</code>.<br />
-   - Calculate the unit digit of <code>sum</code> by taking the modulus (<code>%</code>) of <code>sum</code> by 10. This digit will be placed in a new node for the result.<br />
-   - Update the <code>carry</code> variable by dividing <code>sum</code> by 10 and taking the integer division (<code>/</code>) part. This gives us the carry value for the next iteration.<br />
-   - Create a new node with the calculated digit as its value.<br />
-   - Attach the new node to the <code>tail</code> node of the result list.<br />
-   - Move the <code>tail</code> pointer to the newly added node.<br />
-   - Move to the next nodes in both <code>l1</code> and <code>l2</code>, if they exist. If either list is exhausted, set the corresponding pointer to <code>nullptr</code>.</li>
+<li>Inside the loop:</li>
+<li>Check if there is a digit in the current node of <code>l1</code>. If it exists, assign its value to a variable called <code>digit1</code>. Otherwise, set <code>digit1</code> to 0.</li>
+<li>Check if there is a digit in the current node of <code>l2</code>. If it exists, assign its value to a variable called <code>digit2</code>. Otherwise, set <code>digit2</code> to 0.</li>
+<li>Add the current digits from <code>l1</code> and <code>l2</code>, along with the carry value from the previous iteration, and store the sum in a variable called <code>sum</code>.</li>
+<li>Calculate the unit digit of <code>sum</code> by taking the modulus (<code>%</code>) of <code>sum</code> by 10. This digit will be placed in a new node for the result.</li>
+<li>Update the <code>carry</code> variable by dividing <code>sum</code> by 10 and taking the integer division (<code>/</code>) part. This gives us the carry value for the next iteration.</li>
+<li>Create a new node with the calculated digit as its value.</li>
+<li>Attach the new node to the <code>tail</code> node of the result list.</li>
+<li>Move the <code>tail</code> pointer to the newly added node.</li>
+<li>Move to the next nodes in both <code>l1</code> and <code>l2</code>, if they exist. If either list is exhausted, set the corresponding pointer to <code>nullptr</code>.</li>
 <li>After the loop, obtain the actual result list by skipping the <code>dummyHead</code> node.</li>
 <li>Delete the <code>dummyHead</code> node.</li>
 <li>Return the resulting list.</li>
 </ol>
-<h2>Code</h2>
-<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">C</span><span class="o">++</span><span class="w"> </span>
-<span class="n">class</span><span class="w"> </span><span class="n">Solution</span><span class="w"> </span><span class="p">{</span>
-<span class="n">public</span><span class="o">:</span>
-<span class="w">    </span><span class="n">ListNode</span><span class="o">*</span><span class="w"> </span><span class="n">addTwoNumbers</span><span class="p">(</span><span class="n">ListNode</span><span class="o">*</span><span class="w"> </span><span class="n">l1</span><span class="p">,</span><span class="w"> </span><span class="n">ListNode</span><span class="o">*</span><span class="w"> </span><span class="n">l2</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="n">ListNode</span><span class="o">*</span><span class="w"> </span><span class="n">dummyHead</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">new</span><span class="w"> </span><span class="n">ListNode</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
-<span class="w">        </span><span class="n">ListNode</span><span class="o">*</span><span class="w"> </span><span class="n">tail</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dummyHead</span><span class="p">;</span>
-<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">carry</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<h4>Code</h4>
+<pre><code class="language-cpp">class Solution {
+public:
+    ListNode* addTwoNumbers(ListNode* l1, ListNode* l2) {
+        ListNode* dummyHead = new ListNode(0);
+        ListNode* tail = dummyHead;
+        int carry = 0;
 
-<span class="w">        </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">l1</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">nullptr</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">l2</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">nullptr</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">carry</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="kt">int</span><span class="w"> </span><span class="n">digit1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">l1</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">nullptr</span><span class="p">)</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">l1</span><span class="o">-&gt;</span><span class="n">val</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-<span class="w">            </span><span class="kt">int</span><span class="w"> </span><span class="n">digit2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">l2</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">nullptr</span><span class="p">)</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">l2</span><span class="o">-&gt;</span><span class="n">val</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+        while (l1 != nullptr || l2 != nullptr || carry != 0) {
+            int digit1 = (l1 != nullptr) ? l1-&gt;val : 0;
+            int digit2 = (l2 != nullptr) ? l2-&gt;val : 0;
 
-<span class="w">            </span><span class="kt">int</span><span class="w"> </span><span class="n">sum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">digit1</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">digit2</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">carry</span><span class="p">;</span>
-<span class="w">            </span><span class="kt">int</span><span class="w"> </span><span class="n">digit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sum</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="mi">10</span><span class="p">;</span>
-<span class="w">            </span><span class="n">carry</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sum</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">10</span><span class="p">;</span>
+            int sum = digit1 + digit2 + carry;
+            int digit = sum % 10;
+            carry = sum / 10;
 
-<span class="w">            </span><span class="n">ListNode</span><span class="o">*</span><span class="w"> </span><span class="n">newNode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">new</span><span class="w"> </span><span class="n">ListNode</span><span class="p">(</span><span class="n">digit</span><span class="p">);</span>
-<span class="w">            </span><span class="n">tail</span><span class="o">-&gt;</span><span class="n">next</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">newNode</span><span class="p">;</span>
-<span class="w">            </span><span class="n">tail</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">tail</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">;</span>
+            ListNode* newNode = new ListNode(digit);
+            tail-&gt;next = newNode;
+            tail = tail-&gt;next;
 
-<span class="w">            </span><span class="n">l1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">l1</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">nullptr</span><span class="p">)</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">l1</span><span class="o">-&gt;</span><span class="n">next</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">nullptr</span><span class="p">;</span>
-<span class="w">            </span><span class="n">l2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">l2</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">nullptr</span><span class="p">)</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">l2</span><span class="o">-&gt;</span><span class="n">next</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">nullptr</span><span class="p">;</span>
-<span class="w">        </span><span class="p">}</span>
+            l1 = (l1 != nullptr) ? l1-&gt;next : nullptr;
+            l2 = (l2 != nullptr) ? l2-&gt;next : nullptr;
+        }
 
-<span class="w">        </span><span class="n">ListNode</span><span class="o">*</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dummyHead</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">;</span>
-<span class="w">        </span><span class="n">delete</span><span class="w"> </span><span class="n">dummyHead</span><span class="p">;</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">result</span><span class="p">;</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">};</span>
-</code></pre></div>
+        ListNode* result = dummyHead-&gt;next;
+        delete dummyHead;
+        return result;
+    }
+};
+</code></pre>
+<pre><code class="language-Java">class Solution {
+    public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+        ListNode dummyHead = new ListNode(0);
+        ListNode tail = dummyHead;
+        int carry = 0;
 
-<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">Java</span><span class="w"> </span>
-<span class="kd">class</span> <span class="nc">Solution</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">ListNode</span><span class="w"> </span><span class="nf">addTwoNumbers</span><span class="p">(</span><span class="n">ListNode</span><span class="w"> </span><span class="n">l1</span><span class="p">,</span><span class="w"> </span><span class="n">ListNode</span><span class="w"> </span><span class="n">l2</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="n">ListNode</span><span class="w"> </span><span class="n">dummyHead</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ListNode</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
-<span class="w">        </span><span class="n">ListNode</span><span class="w"> </span><span class="n">tail</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dummyHead</span><span class="p">;</span>
-<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">carry</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+        while (l1 != null || l2 != null || carry != 0) {
+            int digit1 = (l1 != null) ? l1.val : 0;
+            int digit2 = (l2 != null) ? l2.val : 0;
 
-<span class="w">        </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">l1</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">l2</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">carry</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="kt">int</span><span class="w"> </span><span class="n">digit1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">l1</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">l1</span><span class="p">.</span><span class="na">val</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-<span class="w">            </span><span class="kt">int</span><span class="w"> </span><span class="n">digit2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">l2</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">l2</span><span class="p">.</span><span class="na">val</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+            int sum = digit1 + digit2 + carry;
+            int digit = sum % 10;
+            carry = sum / 10;
 
-<span class="w">            </span><span class="kt">int</span><span class="w"> </span><span class="n">sum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">digit1</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">digit2</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">carry</span><span class="p">;</span>
-<span class="w">            </span><span class="kt">int</span><span class="w"> </span><span class="n">digit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sum</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="mi">10</span><span class="p">;</span>
-<span class="w">            </span><span class="n">carry</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sum</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">10</span><span class="p">;</span>
+            ListNode newNode = new ListNode(digit);
+            tail.next = newNode;
+            tail = tail.next;
 
-<span class="w">            </span><span class="n">ListNode</span><span class="w"> </span><span class="n">newNode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ListNode</span><span class="p">(</span><span class="n">digit</span><span class="p">);</span>
-<span class="w">            </span><span class="n">tail</span><span class="p">.</span><span class="na">next</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">newNode</span><span class="p">;</span>
-<span class="w">            </span><span class="n">tail</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">tail</span><span class="p">.</span><span class="na">next</span><span class="p">;</span>
+            l1 = (l1 != null) ? l1.next : null;
+            l2 = (l2 != null) ? l2.next : null;
+        }
 
-<span class="w">            </span><span class="n">l1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">l1</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">l1</span><span class="p">.</span><span class="na">next</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">;</span>
-<span class="w">            </span><span class="n">l2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">l2</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">l2</span><span class="p">.</span><span class="na">next</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">;</span>
-<span class="w">        </span><span class="p">}</span>
+        ListNode result = dummyHead.next;
+        dummyHead.next = null;
+        return result;
+    }
+}
+</code></pre>
+<pre><code class="language-Python3">class Solution:
+    def addTwoNumbers(self, l1: ListNode, l2: ListNode) -&gt; ListNode:
+        dummyHead = ListNode(0)
+        tail = dummyHead
+        carry = 0
 
-<span class="w">        </span><span class="n">ListNode</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dummyHead</span><span class="p">.</span><span class="na">next</span><span class="p">;</span>
-<span class="w">        </span><span class="n">dummyHead</span><span class="p">.</span><span class="na">next</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">null</span><span class="p">;</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">result</span><span class="p">;</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
+        while l1 is not None or l2 is not None or carry != 0:
+            digit1 = l1.val if l1 is not None else 0
+            digit2 = l2.val if l2 is not None else 0
 
-<div class="codehilite"><pre><span></span><code><span class="n">Language</span><span class="p">:</span> <span class="n">Python3</span> 
-<span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="p">:</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">addTwoNumbers</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">l1</span><span class="p">:</span> <span class="n">ListNode</span><span class="p">,</span> <span class="n">l2</span><span class="p">:</span> <span class="n">ListNode</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ListNode</span><span class="p">:</span>
-        <span class="n">dummyHead</span> <span class="o">=</span> <span class="n">ListNode</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-        <span class="n">tail</span> <span class="o">=</span> <span class="n">dummyHead</span>
-        <span class="n">carry</span> <span class="o">=</span> <span class="mi">0</span>
+            sum = digit1 + digit2 + carry
+            digit = sum % 10
+            carry = sum // 10
 
-        <span class="k">while</span> <span class="n">l1</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">l2</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">carry</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="n">digit1</span> <span class="o">=</span> <span class="n">l1</span><span class="o">.</span><span class="n">val</span> <span class="k">if</span> <span class="n">l1</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="mi">0</span>
-            <span class="n">digit2</span> <span class="o">=</span> <span class="n">l2</span><span class="o">.</span><span class="n">val</span> <span class="k">if</span> <span class="n">l2</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="mi">0</span>
+            newNode = ListNode(digit)
+            tail.next = newNode
+            tail = tail.next
 
-            <span class="nb">sum</span> <span class="o">=</span> <span class="n">digit1</span> <span class="o">+</span> <span class="n">digit2</span> <span class="o">+</span> <span class="n">carry</span>
-            <span class="n">digit</span> <span class="o">=</span> <span class="nb">sum</span> <span class="o">%</span> <span class="mi">10</span>
-            <span class="n">carry</span> <span class="o">=</span> <span class="nb">sum</span> <span class="o">//</span> <span class="mi">10</span>
+            l1 = l1.next if l1 is not None else None
+            l2 = l2.next if l2 is not None else None
 
-            <span class="n">newNode</span> <span class="o">=</span> <span class="n">ListNode</span><span class="p">(</span><span class="n">digit</span><span class="p">)</span>
-            <span class="n">tail</span><span class="o">.</span><span class="n">next</span> <span class="o">=</span> <span class="n">newNode</span>
-            <span class="n">tail</span> <span class="o">=</span> <span class="n">tail</span><span class="o">.</span><span class="n">next</span>
-
-            <span class="n">l1</span> <span class="o">=</span> <span class="n">l1</span><span class="o">.</span><span class="n">next</span> <span class="k">if</span> <span class="n">l1</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span>
-            <span class="n">l2</span> <span class="o">=</span> <span class="n">l2</span><span class="o">.</span><span class="n">next</span> <span class="k">if</span> <span class="n">l2</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span>
-
-        <span class="n">result</span> <span class="o">=</span> <span class="n">dummyHead</span><span class="o">.</span><span class="n">next</span>
-        <span class="n">dummyHead</span><span class="o">.</span><span class="n">next</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="k">return</span> <span class="n">result</span>
-</code></pre></div>
-
-<p></p>
-<p><strong>If you are a beginner solve these problems which makes concepts clear for future coding:</strong></p>
-<ol>
-<li><a href="https://leetcode.com/problems/two-sum/solutions/3619262/3-method-s-c-java-python-beginner-friendly/">Two Sum</a></li>
-<li><a href="https://leetcode.com/problems/roman-to-integer/solutions/3651672/best-method-c-java-python-beginner-friendly/">Roman to Integer</a></li>
-<li><a href="https://leetcode.com/problems/palindrome-number/solutions/3651712/2-method-s-c-java-python-beginner-friendly/">Palindrome Number</a></li>
-<li><a href="https://leetcode.com/problems/maximum-subarray/solutions/3666304/beats-100-c-java-python-beginner-friendly/">Maximum Subarray</a></li>
-<li><a href="https://leetcode.com/problems/remove-element/solutions/3670940/best-100-c-java-python-beginner-friendly/">Remove Element</a></li>
-<li><a href="https://leetcode.com/problems/contains-duplicate/solutions/3672475/4-method-s-c-java-python-beginner-friendly/">Contains Duplicate</a></li>
-<li><a href="https://leetcode.com/problems/add-two-numbers/solutions/3675747/beats-100-c-java-python-beginner-friendly/">Add Two Numbers</a></li>
-<li><a href="https://leetcode.com/problems/majority-element/solutions/3676530/3-methods-beats-100-c-java-python-beginner-friendly/">Majority Element</a></li>
-<li><a href="https://leetcode.com/problems/remove-duplicates-from-sorted-array/solutions/3676877/best-method-100-c-java-python-beginner-friendly/">Remove Duplicates from Sorted Array</a></li>
-<li><strong>Practice them in a row for better understanding and please Upvote the post for more questions.</strong></li>
-</ol>
+        result = dummyHead.next
+        dummyHead.next = None
+        return result
+</code></pre>
+<p><strong>If you are a beginner solve these problems which makes concepts clear for future coding:</strong>
+1. <a href="https://leetcode.com/problems/two-sum/solutions/3619262/3-method-s-c-java-python-beginner-friendly/">Two Sum</a>
+2. <a href="https://leetcode.com/problems/roman-to-integer/solutions/3651672/best-method-c-java-python-beginner-friendly/">Roman to Integer</a>
+3. <a href="https://leetcode.com/problems/palindrome-number/solutions/3651712/2-method-s-c-java-python-beginner-friendly/">Palindrome Number</a>
+4. <a href="https://leetcode.com/problems/maximum-subarray/solutions/3666304/beats-100-c-java-python-beginner-friendly/">Maximum Subarray</a>
+5. <a href="https://leetcode.com/problems/remove-element/solutions/3670940/best-100-c-java-python-beginner-friendly/">Remove Element</a>
+6. <a href="https://leetcode.com/problems/contains-duplicate/solutions/3672475/4-method-s-c-java-python-beginner-friendly/">Contains Duplicate</a>
+7. <a href="https://leetcode.com/problems/add-two-numbers/solutions/3675747/beats-100-c-java-python-beginner-friendly/">Add Two Numbers</a>
+8. <a href="https://leetcode.com/problems/majority-element/solutions/3676530/3-methods-beats-100-c-java-python-beginner-friendly/">Majority Element</a>
+9. <a href="https://leetcode.com/problems/remove-duplicates-from-sorted-array/solutions/3676877/best-method-100-c-java-python-beginner-friendly/">Remove Duplicates from Sorted Array</a>
+10. <strong>Practice them in a row for better understanding and please Upvote the post for more questions.</strong></p>
 <p><strong>If you found my solution helpful, I would greatly appreciate your upvote, as it would motivate me to continue sharing more solutions.</strong></p></div>
-
-
-<div class='python-solution'><h2>✅Beats 100% || C++ || JAVA || PYTHON || Beginner Friendly🔥🔥🔥 -- Votes: 2292</h2><h2>Intuition:</h2>
-<p>The Intuition is to iterate through two linked lists representing non-negative integers in reverse order, starting from the least significant digit. It performs digit-wise addition along with a carry value and constructs a new linked list to represent the sum. The process continues until both input lists and the carry value are exhausted. The resulting linked list represents the sum of the input numbers in the correct order.</p>
-<h2>Explanation:</h2>
-<ol>
-<li>Create a placeholder node called <code>dummyHead</code> with a value of 0. This node will hold the resulting linked list.</li>
-<li>Initialize a pointer called <code>tail</code> and set it to <code>dummyHead</code>. This pointer will keep track of the last node in the result list.</li>
-<li>Initialize a variable called <code>carry</code> to 0. This variable will store the carry value during addition.</li>
-<li>Start a loop that continues until there are no more digits in both input lists (<code>l1</code> and <code>l2</code>) and there is no remaining carry value.</li>
-<li>Inside the loop:<br />
-   - Check if there is a digit in the current node of <code>l1</code>. If it exists, assign its value to a variable called <code>digit1</code>. Otherwise, set <code>digit1</code> to 0.<br />
-   - Check if there is a digit in the current node of <code>l2</code>. If it exists, assign its value to a variable called <code>digit2</code>. Otherwise, set <code>digit2</code> to 0.<br />
-   - Add the current digits from <code>l1</code> and <code>l2</code>, along with the carry value from the previous iteration, and store the sum in a variable called <code>sum</code>.<br />
-   - Calculate the unit digit of <code>sum</code> by taking the modulus (<code>%</code>) of <code>sum</code> by 10. This digit will be placed in a new node for the result.<br />
-   - Update the <code>carry</code> variable by dividing <code>sum</code> by 10 and taking the integer division (<code>/</code>) part. This gives us the carry value for the next iteration.<br />
-   - Create a new node with the calculated digit as its value.<br />
-   - Attach the new node to the <code>tail</code> node of the result list.<br />
-   - Move the <code>tail</code> pointer to the newly added node.<br />
-   - Move to the next nodes in both <code>l1</code> and <code>l2</code>, if they exist. If either list is exhausted, set the corresponding pointer to <code>nullptr</code>.</li>
-<li>After the loop, obtain the actual result list by skipping the <code>dummyHead</code> node.</li>
-<li>Delete the <code>dummyHead</code> node.</li>
-<li>Return the resulting list.</li>
-</ol>
-<h2>Code</h2>
-<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">C</span><span class="o">++</span><span class="w"> </span>
-<span class="n">class</span><span class="w"> </span><span class="n">Solution</span><span class="w"> </span><span class="p">{</span>
-<span class="n">public</span><span class="o">:</span>
-<span class="w">    </span><span class="n">ListNode</span><span class="o">*</span><span class="w"> </span><span class="n">addTwoNumbers</span><span class="p">(</span><span class="n">ListNode</span><span class="o">*</span><span class="w"> </span><span class="n">l1</span><span class="p">,</span><span class="w"> </span><span class="n">ListNode</span><span class="o">*</span><span class="w"> </span><span class="n">l2</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="n">ListNode</span><span class="o">*</span><span class="w"> </span><span class="n">dummyHead</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">new</span><span class="w"> </span><span class="n">ListNode</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
-<span class="w">        </span><span class="n">ListNode</span><span class="o">*</span><span class="w"> </span><span class="n">tail</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dummyHead</span><span class="p">;</span>
-<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">carry</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-
-<span class="w">        </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">l1</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">nullptr</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">l2</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">nullptr</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">carry</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="kt">int</span><span class="w"> </span><span class="n">digit1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">l1</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">nullptr</span><span class="p">)</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">l1</span><span class="o">-&gt;</span><span class="n">val</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-<span class="w">            </span><span class="kt">int</span><span class="w"> </span><span class="n">digit2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">l2</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">nullptr</span><span class="p">)</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">l2</span><span class="o">-&gt;</span><span class="n">val</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-
-<span class="w">            </span><span class="kt">int</span><span class="w"> </span><span class="n">sum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">digit1</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">digit2</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">carry</span><span class="p">;</span>
-<span class="w">            </span><span class="kt">int</span><span class="w"> </span><span class="n">digit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sum</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="mi">10</span><span class="p">;</span>
-<span class="w">            </span><span class="n">carry</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sum</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">10</span><span class="p">;</span>
-
-<span class="w">            </span><span class="n">ListNode</span><span class="o">*</span><span class="w"> </span><span class="n">newNode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">new</span><span class="w"> </span><span class="n">ListNode</span><span class="p">(</span><span class="n">digit</span><span class="p">);</span>
-<span class="w">            </span><span class="n">tail</span><span class="o">-&gt;</span><span class="n">next</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">newNode</span><span class="p">;</span>
-<span class="w">            </span><span class="n">tail</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">tail</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">;</span>
-
-<span class="w">            </span><span class="n">l1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">l1</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">nullptr</span><span class="p">)</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">l1</span><span class="o">-&gt;</span><span class="n">next</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">nullptr</span><span class="p">;</span>
-<span class="w">            </span><span class="n">l2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">l2</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">nullptr</span><span class="p">)</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">l2</span><span class="o">-&gt;</span><span class="n">next</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">nullptr</span><span class="p">;</span>
-<span class="w">        </span><span class="p">}</span>
-
-<span class="w">        </span><span class="n">ListNode</span><span class="o">*</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dummyHead</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">;</span>
-<span class="w">        </span><span class="n">delete</span><span class="w"> </span><span class="n">dummyHead</span><span class="p">;</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">result</span><span class="p">;</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">};</span>
-</code></pre></div>
-
-<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">Java</span><span class="w"> </span>
-<span class="kd">class</span> <span class="nc">Solution</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">ListNode</span><span class="w"> </span><span class="nf">addTwoNumbers</span><span class="p">(</span><span class="n">ListNode</span><span class="w"> </span><span class="n">l1</span><span class="p">,</span><span class="w"> </span><span class="n">ListNode</span><span class="w"> </span><span class="n">l2</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="n">ListNode</span><span class="w"> </span><span class="n">dummyHead</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ListNode</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
-<span class="w">        </span><span class="n">ListNode</span><span class="w"> </span><span class="n">tail</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dummyHead</span><span class="p">;</span>
-<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">carry</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-
-<span class="w">        </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">l1</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">l2</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">carry</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="kt">int</span><span class="w"> </span><span class="n">digit1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">l1</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">l1</span><span class="p">.</span><span class="na">val</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-<span class="w">            </span><span class="kt">int</span><span class="w"> </span><span class="n">digit2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">l2</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">l2</span><span class="p">.</span><span class="na">val</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-
-<span class="w">            </span><span class="kt">int</span><span class="w"> </span><span class="n">sum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">digit1</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">digit2</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">carry</span><span class="p">;</span>
-<span class="w">            </span><span class="kt">int</span><span class="w"> </span><span class="n">digit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sum</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="mi">10</span><span class="p">;</span>
-<span class="w">            </span><span class="n">carry</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sum</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">10</span><span class="p">;</span>
-
-<span class="w">            </span><span class="n">ListNode</span><span class="w"> </span><span class="n">newNode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ListNode</span><span class="p">(</span><span class="n">digit</span><span class="p">);</span>
-<span class="w">            </span><span class="n">tail</span><span class="p">.</span><span class="na">next</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">newNode</span><span class="p">;</span>
-<span class="w">            </span><span class="n">tail</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">tail</span><span class="p">.</span><span class="na">next</span><span class="p">;</span>
-
-<span class="w">            </span><span class="n">l1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">l1</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">l1</span><span class="p">.</span><span class="na">next</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">;</span>
-<span class="w">            </span><span class="n">l2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">l2</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">l2</span><span class="p">.</span><span class="na">next</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">;</span>
-<span class="w">        </span><span class="p">}</span>
-
-<span class="w">        </span><span class="n">ListNode</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dummyHead</span><span class="p">.</span><span class="na">next</span><span class="p">;</span>
-<span class="w">        </span><span class="n">dummyHead</span><span class="p">.</span><span class="na">next</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">null</span><span class="p">;</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">result</span><span class="p">;</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
-
-<div class="codehilite"><pre><span></span><code><span class="n">Language</span><span class="p">:</span> <span class="n">Python3</span> 
-<span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="p">:</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">addTwoNumbers</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">l1</span><span class="p">:</span> <span class="n">ListNode</span><span class="p">,</span> <span class="n">l2</span><span class="p">:</span> <span class="n">ListNode</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ListNode</span><span class="p">:</span>
-        <span class="n">dummyHead</span> <span class="o">=</span> <span class="n">ListNode</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-        <span class="n">tail</span> <span class="o">=</span> <span class="n">dummyHead</span>
-        <span class="n">carry</span> <span class="o">=</span> <span class="mi">0</span>
-
-        <span class="k">while</span> <span class="n">l1</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">l2</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">carry</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="n">digit1</span> <span class="o">=</span> <span class="n">l1</span><span class="o">.</span><span class="n">val</span> <span class="k">if</span> <span class="n">l1</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="mi">0</span>
-            <span class="n">digit2</span> <span class="o">=</span> <span class="n">l2</span><span class="o">.</span><span class="n">val</span> <span class="k">if</span> <span class="n">l2</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="mi">0</span>
-
-            <span class="nb">sum</span> <span class="o">=</span> <span class="n">digit1</span> <span class="o">+</span> <span class="n">digit2</span> <span class="o">+</span> <span class="n">carry</span>
-            <span class="n">digit</span> <span class="o">=</span> <span class="nb">sum</span> <span class="o">%</span> <span class="mi">10</span>
-            <span class="n">carry</span> <span class="o">=</span> <span class="nb">sum</span> <span class="o">//</span> <span class="mi">10</span>
-
-            <span class="n">newNode</span> <span class="o">=</span> <span class="n">ListNode</span><span class="p">(</span><span class="n">digit</span><span class="p">)</span>
-            <span class="n">tail</span><span class="o">.</span><span class="n">next</span> <span class="o">=</span> <span class="n">newNode</span>
-            <span class="n">tail</span> <span class="o">=</span> <span class="n">tail</span><span class="o">.</span><span class="n">next</span>
-
-            <span class="n">l1</span> <span class="o">=</span> <span class="n">l1</span><span class="o">.</span><span class="n">next</span> <span class="k">if</span> <span class="n">l1</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span>
-            <span class="n">l2</span> <span class="o">=</span> <span class="n">l2</span><span class="o">.</span><span class="n">next</span> <span class="k">if</span> <span class="n">l2</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span>
-
-        <span class="n">result</span> <span class="o">=</span> <span class="n">dummyHead</span><span class="o">.</span><span class="n">next</span>
-        <span class="n">dummyHead</span><span class="o">.</span><span class="n">next</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="k">return</span> <span class="n">result</span>
-</code></pre></div>
-
-<p></p>
-<p><strong>If you are a beginner solve these problems which makes concepts clear for future coding:</strong></p>
-<ol>
-<li><a href="https://leetcode.com/problems/two-sum/solutions/3619262/3-method-s-c-java-python-beginner-friendly/">Two Sum</a></li>
-<li><a href="https://leetcode.com/problems/roman-to-integer/solutions/3651672/best-method-c-java-python-beginner-friendly/">Roman to Integer</a></li>
-<li><a href="https://leetcode.com/problems/palindrome-number/solutions/3651712/2-method-s-c-java-python-beginner-friendly/">Palindrome Number</a></li>
-<li><a href="https://leetcode.com/problems/maximum-subarray/solutions/3666304/beats-100-c-java-python-beginner-friendly/">Maximum Subarray</a></li>
-<li><a href="https://leetcode.com/problems/remove-element/solutions/3670940/best-100-c-java-python-beginner-friendly/">Remove Element</a></li>
-<li><a href="https://leetcode.com/problems/contains-duplicate/solutions/3672475/4-method-s-c-java-python-beginner-friendly/">Contains Duplicate</a></li>
-<li><a href="https://leetcode.com/problems/add-two-numbers/solutions/3675747/beats-100-c-java-python-beginner-friendly/">Add Two Numbers</a></li>
-<li><a href="https://leetcode.com/problems/majority-element/solutions/3676530/3-methods-beats-100-c-java-python-beginner-friendly/">Majority Element</a></li>
-<li><a href="https://leetcode.com/problems/remove-duplicates-from-sorted-array/solutions/3676877/best-method-100-c-java-python-beginner-friendly/">Remove Duplicates from Sorted Array</a></li>
-<li><strong>Practice them in a row for better understanding and please Upvote the post for more questions.</strong></li>
-</ol>
-<p><strong>If you found my solution helpful, I would greatly appreciate your upvote, as it would motivate me to continue sharing more solutions.</strong></p></div><p style="page-break-before: always" ></p>

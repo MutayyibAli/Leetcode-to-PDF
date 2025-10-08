@@ -1,99 +1,87 @@
-<div class='cpp-solution'><h2>Clear and simple explanation with intuition: 100% faster -- Votes: 186</h2><p><strong>Intuition:</strong> Since we are asked to calculate all the possible combinations , hence we have to use backtracking</p>
-<p><strong>Concept:</strong> In every backtracking problem , there are two things to keep in mind , which we will explore here as well :</p>
+<div class='cpp-solution'><h4>Clear and simple explanation with intuition: 100% faster [Votes: 186]</h4><p><strong>Intuition:</strong> Since we are asked to calculate all the possible combinations , hence we have to use backtracking</p>
+<p><strong>Concept:</strong> In every backtracking problem , there are two things to keep in mind , which we will explore here as well :
+*  Base Case: Every problem of backtracking has some base case which tells us at which point we have to stop with the recursion process. In our case, when the size of our array <code>current</code> equals to <code>k</code> i.e. <code>current.size()=k</code>, we stop with the recursion and add it to our final result <code>ans</code>.</p>
 <ul>
-<li>
-<p>Base Case: Every problem of backtracking has some base case which tells us at which point we have to stop with the recursion process. In our case, when the size of our array <code>current</code> equals to <code>k</code> i.e. <code>current.size()=k</code>, we stop with the recursion and add it to our final result <code>ans</code>.</p>
-</li>
-<li>
-<p>Conditions: There is just one thing to keep in mind here:<br />
-  After generating combinations corresponding to a particular number <code>i</code> , proceed to the next element by popping the element from the temporary array <code>current</code>, as we used that already.</p>
-</li>
+<li>Conditions: There is just one thing to keep in mind here:
+   After generating combinations corresponding to a particular number <code>i</code> , proceed to the next element by popping the element from the temporary array <code>current</code>, as we used that already. </li>
 </ul>
 <p>We basically consider a number <code>i</code>, generate the combinations corresponding to it by recursively calling it again, and then we pop that element as we are done with it and proceed to the next!!</p>
 <p>And thats it!! We are done!! Keeping this in mind, here is the code</p>
 <p><strong>Code:</strong></p>
-<div class="codehilite"><pre><span></span><code><span class="nt">class</span><span class="w"> </span><span class="nt">Solution</span><span class="w"> </span><span class="p">{</span>
-<span class="n">public</span><span class="p">:</span>
-<span class="w">    </span><span class="n">vector</span><span class="o">&lt;</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">int</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="n">ans</span><span class="p">;</span>
+<pre><code>class Solution {
+public:
+    vector&lt;vector&lt;int&gt;&gt; ans;
 
-<span class="w">    </span><span class="err">void</span><span class="w"> </span><span class="err">helper(int</span><span class="w"> </span><span class="err">idx,</span><span class="w"> </span><span class="err">int</span><span class="w"> </span><span class="err">k,vector&lt;int&gt;&amp;current,int</span><span class="w"> </span><span class="err">n)</span>
-<span class="w">    </span><span class="err">{</span>
-<span class="w">        </span><span class="err">if(current.size()==k)</span><span class="w">    </span><span class="err">//</span><span class="w"> </span><span class="err">base</span><span class="w"> </span><span class="err">case</span>
-<span class="w">        </span><span class="err">{</span>
-<span class="w">            </span><span class="err">ans.push_back(current)</span><span class="p">;</span>
-<span class="w">            </span><span class="err">return</span><span class="p">;</span>
-<span class="w">        </span><span class="p">}</span>
+    void helper(int idx, int k,vector&lt;int&gt;&amp;current,int n)
+    {
+        if(current.size()==k)    // base case
+        {
+            ans.push_back(current);
+            return;
+        }
 
-<span class="w">        </span><span class="nt">for</span><span class="o">(</span><span class="nt">int</span><span class="w"> </span><span class="nt">i</span><span class="o">=</span><span class="nt">idx</span><span class="o">;</span><span class="nt">i</span><span class="o">&lt;</span><span class="nt">n</span><span class="o">+</span><span class="nt">1</span><span class="o">;</span><span class="nt">i</span><span class="o">++)</span>
-<span class="w">        </span><span class="p">{</span>
-<span class="w">            </span><span class="err">current.push_back(i)</span><span class="p">;</span><span class="w">  </span><span class="err">//consider</span><span class="w"> </span><span class="err">the</span><span class="w"> </span><span class="err">current</span><span class="w"> </span><span class="err">element</span><span class="w"> </span><span class="err">i</span>
-<span class="w">            </span><span class="err">helper(i+1,k,current,n)</span><span class="p">;</span><span class="w"> </span><span class="err">//</span><span class="w"> </span><span class="err">generate</span><span class="w"> </span><span class="err">combinations</span>
-<span class="w">            </span><span class="err">current.pop_back()</span><span class="p">;</span><span class="w"> </span><span class="err">//proceed</span><span class="w"> </span><span class="err">to</span><span class="w"> </span><span class="err">next</span><span class="w"> </span><span class="err">element</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">    </span><span class="err">}</span>
+        for(int i=idx;i&lt;n+1;i++)
+        {
+            current.push_back(i);  //consider the current element i
+            helper(i+1,k,current,n); // generate combinations
+            current.pop_back(); //proceed to next element
+        }
+    }
 
-<span class="w">    </span><span class="nt">vector</span><span class="o">&lt;</span><span class="nt">vector</span><span class="o">&lt;</span><span class="nt">int</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="nt">combine</span><span class="o">(</span><span class="nt">int</span><span class="w"> </span><span class="nt">n</span><span class="o">,</span><span class="w"> </span><span class="nt">int</span><span class="w"> </span><span class="nt">k</span><span class="o">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="err">vector&lt;int&gt;current</span><span class="p">;</span>
-<span class="w">        </span><span class="err">helper(1,k,current,n)</span><span class="p">;</span>
-<span class="w">        </span><span class="err">return</span><span class="w"> </span><span class="err">ans</span><span class="p">;</span><span class="w"> </span><span class="err">//return</span><span class="w"> </span><span class="err">answer</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="err">}</span><span class="o">;</span>
-</code></pre></div>
-
+    vector&lt;vector&lt;int&gt;&gt; combine(int n, int k) {
+        vector&lt;int&gt;current;
+        helper(1,k,current,n);
+        return ans; //return answer
+    }
+};
+</code></pre>
 <p><strong>For similar problems: <a href="https://leetcode.com/discuss/interview-question/1141947/backtracking-study-and-analysis">Backtracking Collection</a></strong></p>
-<p>If you like, please <strong>UPVOTE</strong></p></div>
-
-
-<div class='python-solution'><h2>Backtracking cheatsheet + simple solution -- Votes: 277</h2><h4>Backtracking</h4>
-<p>Backtracking is a general algorithm for finding all (or some) solutions to some computational problems which incrementally builds candidates to the solution and abandons a candidate ("backtracks") as soon as it determines that the candidate cannot lead to a valid solution.</p>
-<p>It is due to this backtracking behaviour, the backtracking algorithms are often much faster than the brute-force search algorithm, since it eliminates many unnecessary exploration.</p>
-<div class="codehilite"><pre><span></span><code>def backtrack(candidate):
+<p>If you like, please <strong>UPVOTE</strong></p></div><div class='python-solution'><h4>Backtracking cheatsheet + simple solution [Votes: 277]</h4><h6>Backtracking</h6>
+<p>Backtracking is a general algorithm for finding all (or some) solutions to some computational problems which incrementally builds candidates to the solution and abandons a candidate ("backtracks") as soon as it determines that the candidate cannot lead to a valid solution. </p>
+<p>It is due to this backtracking behaviour, the backtracking algorithms are often much faster than the brute-force search algorithm, since it eliminates many unnecessary exploration. </p>
+<pre><code>def backtrack(candidate):
     if find_solution(candidate):
         output(candidate)
         return
 
-    # iterate all possible candidates.
+    #### iterate all possible candidates.
     for next_candidate in list_of_candidates:
         if is_valid(next_candidate):
-            # try this partial candidate solution
+            #### try this partial candidate solution
             place(next_candidate)
-            # given the candidate, explore further.
+            #### given the candidate, explore further.
             backtrack(next_candidate)
-            # backtrack
+            #### backtrack
             remove(next_candidate)
-</code></pre></div>
-
-<p>Overall, the enumeration of candidates is done in two levels:</p>
-<ol>
-<li>at the first level, the function is implemented as recursion. At each occurrence of recursion, the function is one step further to the final solution.</li>
-<li>as the second level, within the recursion, we have an iteration that allows us to explore all the candidates that are of the same progress to the final solution.</li>
-</ol>
-<h4>Code</h4>
+</code></pre>
+<p>Overall, the enumeration of candidates is done in two levels: 
+1) at the first level, the function is implemented as recursion. At each occurrence of recursion, the function is one step further to the final solution.<br />
+2) as the second level, within the recursion, we have an iteration that allows us to explore all the candidates that are of the same progress to the final solution.  </p>
+<h6>Code</h6>
 <p>Here we have to explore all combinations of numbers from 1 to n of length k. Indeed, we could solve the problem with the paradigm of backtracking.</p>
-<p>Problem - combinations<br />
-Decision space- numbers from 1 to n without repetation<br />
+<p>Problem - combinations
+Decision space- numbers from 1 to n without repetation
 Output- all combinatins of numbers from 1 to n of size k</p>
 <p><strong>Python 3</strong></p>
-<div class="codehilite"><pre><span></span><code><span class="nv">def</span><span class="w"> </span><span class="nv">combine</span><span class="ss">(</span><span class="nv">self</span>,<span class="w"> </span><span class="nv">n</span>,<span class="w"> </span><span class="nv">k</span><span class="ss">)</span>:<span class="w">   </span>
-<span class="w">        </span><span class="nv">sol</span><span class="o">=</span>
-<span class="w">        </span><span class="nv">def</span><span class="w"> </span><span class="nv">backtrack</span><span class="ss">(</span><span class="nv">remain</span>,<span class="nv">comb</span>,<span class="nv">nex</span><span class="ss">)</span>:
-<span class="w">            </span>#<span class="w"> </span><span class="nv">solution</span><span class="w"> </span><span class="nv">found</span>
-<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="nv">remain</span><span class="o">==</span><span class="mi">0</span>:
-<span class="w">                </span><span class="nv">sol</span>.<span class="nv">append</span><span class="ss">(</span><span class="nv">comb</span>.<span class="nv">copy</span><span class="ss">())</span>
-<span class="w">            </span><span class="k">else</span>:
-<span class="w">                </span>#<span class="w"> </span><span class="nv">iterate</span><span class="w"> </span><span class="nv">through</span><span class="w"> </span><span class="nv">all</span><span class="w"> </span><span class="nv">possible</span><span class="w"> </span><span class="nv">candidates</span>
-<span class="w">                </span><span class="k">for</span><span class="w"> </span><span class="nv">i</span><span class="w"> </span><span class="nv">in</span><span class="w"> </span><span class="nv">range</span><span class="ss">(</span><span class="nv">nex</span>,<span class="nv">n</span><span class="o">+</span><span class="mi">1</span><span class="ss">)</span>:
-<span class="w">                    </span>#<span class="w"> </span><span class="nv">add</span><span class="w"> </span><span class="nv">candidate</span>
-<span class="w">                    </span><span class="nv">comb</span>.<span class="nv">append</span><span class="ss">(</span><span class="nv">i</span><span class="ss">)</span>
-<span class="w">                    </span>#<span class="nv">backtrack</span>
-<span class="w">                    </span><span class="nv">backtrack</span><span class="ss">(</span><span class="nv">remain</span><span class="o">-</span><span class="mi">1</span>,<span class="nv">comb</span>,<span class="nv">i</span><span class="o">+</span><span class="mi">1</span><span class="ss">)</span>
-<span class="w">                    </span>#<span class="w"> </span><span class="nv">remove</span><span class="w"> </span><span class="nv">candidate</span>
-<span class="w">                    </span><span class="nv">comb</span>.<span class="nv">pop</span><span class="ss">()</span>
+<pre><code>def combine(self, n, k):   
+        sol=[]
+        def backtrack(remain,comb,nex):
+            #### solution found
+            if remain==0:
+                sol.append(comb.copy())
+            else:
+                #### iterate through all possible candidates
+                for i in range(nex,n+1):
+                    #### add candidate
+                    comb.append(i)
+                    #backtrack
+                    backtrack(remain-1,comb,i+1)
+                    #### remove candidate
+                    comb.pop()
 
-<span class="w">        </span><span class="nv">backtrack</span><span class="ss">(</span><span class="nv">k</span>,,<span class="mi">1</span><span class="ss">)</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="nv">sol</span>
-</code></pre></div>
-
+        backtrack(k,[],1)
+        return sol
+</code></pre>
 <ul>
 <li>
 <p>Given an empty array, the task is to add numbers between 1 to n to the array upto size of k. We could model the each step to add a number as a recursion function (i.e. backtrack() function).</p>
@@ -102,25 +90,23 @@ Output- all combinatins of numbers from 1 to n of size k</p>
 <p>At each step, technically we have 9 candidates at hand to add to the array. Yet, we want to consider solutions that lead to a valid case (i.e. is_valid(candidate)). Here the validity is determined by whether the number is repeated or not. Since in the loop, we iterate from nex to n+1, the numbers before nex are already visited and cannot be added to the array. Hence, we dont arrive at an invalid case.</p>
 </li>
 <li>
-<p>Then, among all the suitable candidates, we add different numbers using <code>comb.append(i)</code> i.e. place(next_candidate). Later we can revert our decision with <code>comb.pop()</code> i.e. remove(next_candidate), so that we could try out the other candidates.</p>
+<p>Then, among all the suitable candidates, we add different numbers using <code>comb.append(i)</code> i.e. place(next_candidate). Later we can revert our decision with <code>comb.pop()</code> i.e.  remove(next_candidate), so that we could try out the other candidates.</p>
 </li>
 <li>
 <p>The backtracking would be triggered at the points where the decision space is complete i.e. <code>nex</code> is 9 or when the size of the<code>comb</code>array becomes<code>k</code>. At the end of the backtracking, we would enumerate all the possible combinations.</p>
 </li>
 </ul>
-<h4>Practice problems on backtracking</h4>
+<h6>Practice problems on backtracking</h6>
 <p><em>Easy</em></p>
 <p><a href="http://">Binary watch</a></p>
 <p><em>Medium</em></p>
-<p><a href="http://">Permutations</a><br />
-<a href="http://">Permutations II</a><br />
+<p><a href="http://">Permutations</a>
+<a href="http://">Permutations II</a>
 <a href="http://">Combination sum III</a></p>
 <p><em>Hard</em></p>
-<p><a href="http://">N Queens</a><br />
-<a href="http://">N Queen II</a><br />
+<p><a href="http://">N Queens</a>
+<a href="http://">N Queen II</a>
 <a href="http://">Sudoku solver</a></p>
-<p><strong>Notes</strong></p>
-<ul>
-<li>For more examples and detailed explanation refer <a href="http://">Recursion II</a></li>
-<li>Any suggestions are welcome.</li>
-</ul></div><p style="page-break-before: always" ></p>
+<p><strong>Notes</strong>
+* For more examples and detailed explanation refer <a href="http://">Recursion II</a>
+* Any suggestions are welcome.</p></div>

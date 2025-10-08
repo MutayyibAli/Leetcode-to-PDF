@@ -1,180 +1,82 @@
-<div class='cpp-solution'><h2>[C++/Py3] Explained w/ Diagram - Sliding Window -- Votes: 92</h2><h2><strong>Idea and Approach</strong></h2>
+<div class='cpp-solution'><h4>[C++/Py3] Explained w/ Diagram - Sliding Window [Votes: 92]</h4><h4><strong>Idea and Approach</strong></h4>
 <p>The basic idea to solve this kind of problem is to create a window of the given size and keep on moving it till the end while maintaining the count of the vowels we <em>gain</em> and <em>lose</em> in this transition.</p>
 <p>Below is the implementation and steps explained through diagram:</p>
 <ul>
 <li>
-<p>Traverse through all the elements of the first window and keep track of the vowels.<br />
-</p>
+<p>Traverse through all the elements of the first window and keep track of the vowels.</p>
 </li>
 <li>
 <p>Move the window to the right side without changing the size.</p>
 </li>
+<li>Decrement the count in currentCount if any vowel is removed from the left side during transition</li>
 <li>
-<p>Decrement the count in currentCount if any vowel is removed from the left side during transition</p>
+<p>Increase if vowel is added from the right side.</p>
 </li>
 <li>
-<p>Increase if vowel is added from the right side.<br />
-</p>
-</li>
-<li>
-<p>The answer will be the maximum of all the counts encountered while moving the window.<br />
-</p>
+<p>The answer will be the maximum of all the counts encountered while moving the window.</p>
 </li>
 </ul>
-<h2><strong>Python 3 Code</strong></h2>
-<div class="codehilite"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nl">Solution</span><span class="p">:</span>
-<span class="w">    </span><span class="n">def</span><span class="w"> </span><span class="n">maxVowels</span><span class="p">(</span><span class="n">self</span><span class="p">,</span><span class="w"> </span><span class="nl">s</span><span class="p">:</span><span class="w"> </span><span class="nf">str</span><span class="p">,</span><span class="w"> </span><span class="nl">k</span><span class="p">:</span><span class="w"> </span><span class="nc">int</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="nc">int</span><span class="err">:</span>
-<span class="w">        </span><span class="err">#</span><span class="w"> </span><span class="n">Maximum</span><span class="w"> </span><span class="n">vowels</span><span class="w"> </span><span class="n">i</span><span class="p">.</span><span class="n">e</span><span class="p">.</span><span class="w"> </span><span class="n">ans</span>
-<span class="w">        </span><span class="nl">ans</span><span class="p">:</span><span class="w"> </span><span class="nc">int</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span>
+<h4><strong>Python 3 Code</strong></h4>
+<pre><code>class Solution:
+    def maxVowels(self, s: str, k: int) -&gt; int:
+        #### Maximum vowels i.e. ans
+        ans: int = 0
 
-<span class="w">        </span><span class="err">#</span><span class="w"> </span><span class="n">Vowels</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="k">current</span><span class="w"> </span><span class="k">window</span>
-<span class="w">        </span><span class="nl">currCount</span><span class="p">:</span><span class="w"> </span><span class="nc">int</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span>
+        #### Vowels in current window
+        currCount: int = 0
 
-<span class="w">        </span><span class="err">#</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">vowels</span>
-<span class="w">        </span><span class="nl">vowels</span><span class="p">:</span><span class="w"> </span><span class="nf">str</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ss">&quot;aeiou&quot;</span>
+        #### String of vowels
+        vowels: str = &quot;aeiou&quot;
 
-<span class="w">        </span><span class="err">#</span><span class="w"> </span><span class="k">Using</span><span class="w"> </span><span class="n">sliding</span><span class="w"> </span><span class="k">window</span><span class="w"> </span><span class="n">technique</span><span class="w"> </span><span class="k">to</span><span class="w"> </span>
-<span class="w">        </span><span class="err">#</span><span class="w"> </span><span class="n">calculate</span><span class="w"> </span><span class="n">number</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">vowels</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="k">each</span><span class="w"> </span><span class="k">window</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span>
-<span class="w">        </span><span class="err">#</span><span class="w"> </span><span class="k">update</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="nf">count</span>
-<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">enumerate</span><span class="p">(</span><span class="n">s</span><span class="p">)</span><span class="err">:</span>
-<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="nl">k</span><span class="p">:</span>
-<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="n">s</span><span class="o">[</span><span class="n">i-k</span><span class="o">]</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="nl">vowels</span><span class="p">:</span>
-<span class="w">                    </span><span class="n">currCount</span><span class="w"> </span><span class="o">-=</span><span class="w"> </span><span class="mi">1</span>
-<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="n">s</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="nl">vowels</span><span class="p">:</span>
-<span class="w">                </span><span class="n">currCount</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="mi">1</span>
-<span class="w">            </span><span class="n">ans</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">max</span><span class="p">(</span><span class="n">currCount</span><span class="p">,</span><span class="w"> </span><span class="n">ans</span><span class="p">)</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">ans</span>
-</code></pre></div>
+        #### Using sliding window technique to 
+        #### calculate number of vowels in each window and 
+        #### update the count
+        for i, v in enumerate(s):
+            if i &gt;= k:
+                if s[i-k] in vowels:
+                    currCount -= 1
+            if s[i] in vowels:
+                currCount += 1
+            ans = max(currCount, ans)
+        return ans
+</code></pre>
+<h4><strong>cpp Code</strong></h4>
+<pre><code>class Solution {
+public:
+    int maxVowels(string s, int k) {
 
-<h2><strong>C++ Code</strong></h2>
-<div class="codehilite"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="n">Solution</span><span class="w"> </span><span class="err">{</span>
-<span class="k">public</span><span class="err">:</span>
-<span class="w">    </span><span class="nc">int</span><span class="w"> </span><span class="n">maxVowels</span><span class="p">(</span><span class="n">string</span><span class="w"> </span><span class="n">s</span><span class="p">,</span><span class="w"> </span><span class="nc">int</span><span class="w"> </span><span class="n">k</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
+        // Store current count of vowels in currCount
+        // and maximum currCount occurred in ans
+        int currCount = 0;
+        int ans = 0;
 
-<span class="w">        </span><span class="o">//</span><span class="w"> </span><span class="n">Store</span><span class="w"> </span><span class="k">current</span><span class="w"> </span><span class="nf">count</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">vowels</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">currCount</span>
-<span class="w">        </span><span class="o">//</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="n">maximum</span><span class="w"> </span><span class="n">currCount</span><span class="w"> </span><span class="n">occurred</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">ans</span>
-<span class="w">        </span><span class="nc">int</span><span class="w"> </span><span class="n">currCount</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-<span class="w">        </span><span class="nc">int</span><span class="w"> </span><span class="n">ans</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+        // An array to mark all the vowels' position to true
+        // for checking whether the char is vowel or not
+        bool vowels[26] = {false};
+        vowels[0] = vowels[4] = vowels[8] = vowels[14] = vowels[20] = true;
 
-<span class="w">        </span><span class="o">//</span><span class="w"> </span><span class="n">An</span><span class="w"> </span><span class="k">array</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="n">mark</span><span class="w"> </span><span class="ow">all</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">vowels</span><span class="s1">&#39; position to true</span>
-<span class="s1">        // for checking whether the char is vowel or not</span>
-<span class="s1">        bool vowels[26] = {false};</span>
-<span class="s1">        vowels[0] = vowels[4] = vowels[8] = vowels[14] = vowels[20] = true;</span>
+        // Sliding window implementation
+        for (int i=0; i &lt; s.length(); i++) {
 
-<span class="s1">        // Sliding window implementation</span>
-<span class="s1">        for (int i=0; i &lt; s.length(); i++) {</span>
+            // if any vowel is removed from left-&gt; decrement
+            if (i &gt;= k and vowels[s[i-k]-'a']) {
+                currCount -= 1;
+            }
 
-<span class="s1">            // if any vowel is removed from left-&gt; decrement</span>
-<span class="s1">            if (i &gt;= k and vowels[s[i-k]-&#39;</span><span class="n">a</span><span class="s1">&#39;]) {</span>
-<span class="s1">                currCount -= 1;</span>
-<span class="s1">            }</span>
+            // if any vowel is inserted from right-&gt; increment
+            if (vowels[s[i]-'a']) {
+                currCount += 1;
+            }
 
-<span class="s1">            // if any vowel is inserted from right-&gt; increment</span>
-<span class="s1">            if (vowels[s[i]-&#39;</span><span class="n">a</span><span class="err">&#39;]</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
-<span class="w">                </span><span class="n">currCount</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
-<span class="w">            </span><span class="err">}</span>
+            // Store maximum occurence of currCount in ans
+            ans = max (ans, currCount);
+        }
 
-<span class="w">            </span><span class="o">//</span><span class="w"> </span><span class="n">Store</span><span class="w"> </span><span class="n">maximum</span><span class="w"> </span><span class="n">occurence</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">currCount</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">ans</span>
-<span class="w">            </span><span class="n">ans</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">max</span><span class="w"> </span><span class="p">(</span><span class="n">ans</span><span class="p">,</span><span class="w"> </span><span class="n">currCount</span><span class="p">);</span>
-<span class="w">        </span><span class="err">}</span>
-
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">ans</span><span class="w"> </span><span class="p">;</span>
-<span class="w">    </span><span class="err">}</span>
-<span class="err">}</span><span class="p">;</span>
-</code></pre></div>
-
-<h2><strong>Complexity Analysis</strong>:</h2>
-<p>Time Complexity: <strong>O(n)</strong><br />
+        return ans ;
+    }
+};
+</code></pre>
+<h4><strong>Complexity Analysis</strong>:</h4>
+<p>Time Complexity: <strong>O(n)</strong>
 Space : O(1)</p>
 <p><em>Plz Upvote if you like it.</em></p></div>
-
-
-<div class='python-solution'><h2>[C++/Py3] Explained w/ Diagram - Sliding Window -- Votes: 92</h2><h2><strong>Idea and Approach</strong></h2>
-<p>The basic idea to solve this kind of problem is to create a window of the given size and keep on moving it till the end while maintaining the count of the vowels we <em>gain</em> and <em>lose</em> in this transition.</p>
-<p>Below is the implementation and steps explained through diagram:</p>
-<ul>
-<li>
-<p>Traverse through all the elements of the first window and keep track of the vowels.<br />
-</p>
-</li>
-<li>
-<p>Move the window to the right side without changing the size.</p>
-</li>
-<li>
-<p>Decrement the count in currentCount if any vowel is removed from the left side during transition</p>
-</li>
-<li>
-<p>Increase if vowel is added from the right side.<br />
-</p>
-</li>
-<li>
-<p>The answer will be the maximum of all the counts encountered while moving the window.<br />
-</p>
-</li>
-</ul>
-<h2><strong>Python 3 Code</strong></h2>
-<div class="codehilite"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nl">Solution</span><span class="p">:</span>
-<span class="w">    </span><span class="n">def</span><span class="w"> </span><span class="n">maxVowels</span><span class="p">(</span><span class="n">self</span><span class="p">,</span><span class="w"> </span><span class="nl">s</span><span class="p">:</span><span class="w"> </span><span class="nf">str</span><span class="p">,</span><span class="w"> </span><span class="nl">k</span><span class="p">:</span><span class="w"> </span><span class="nc">int</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="nc">int</span><span class="err">:</span>
-<span class="w">        </span><span class="err">#</span><span class="w"> </span><span class="n">Maximum</span><span class="w"> </span><span class="n">vowels</span><span class="w"> </span><span class="n">i</span><span class="p">.</span><span class="n">e</span><span class="p">.</span><span class="w"> </span><span class="n">ans</span>
-<span class="w">        </span><span class="nl">ans</span><span class="p">:</span><span class="w"> </span><span class="nc">int</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span>
-
-<span class="w">        </span><span class="err">#</span><span class="w"> </span><span class="n">Vowels</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="k">current</span><span class="w"> </span><span class="k">window</span>
-<span class="w">        </span><span class="nl">currCount</span><span class="p">:</span><span class="w"> </span><span class="nc">int</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span>
-
-<span class="w">        </span><span class="err">#</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">vowels</span>
-<span class="w">        </span><span class="nl">vowels</span><span class="p">:</span><span class="w"> </span><span class="nf">str</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ss">&quot;aeiou&quot;</span>
-
-<span class="w">        </span><span class="err">#</span><span class="w"> </span><span class="k">Using</span><span class="w"> </span><span class="n">sliding</span><span class="w"> </span><span class="k">window</span><span class="w"> </span><span class="n">technique</span><span class="w"> </span><span class="k">to</span><span class="w"> </span>
-<span class="w">        </span><span class="err">#</span><span class="w"> </span><span class="n">calculate</span><span class="w"> </span><span class="n">number</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">vowels</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="k">each</span><span class="w"> </span><span class="k">window</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span>
-<span class="w">        </span><span class="err">#</span><span class="w"> </span><span class="k">update</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="nf">count</span>
-<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">enumerate</span><span class="p">(</span><span class="n">s</span><span class="p">)</span><span class="err">:</span>
-<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="nl">k</span><span class="p">:</span>
-<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="n">s</span><span class="o">[</span><span class="n">i-k</span><span class="o">]</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="nl">vowels</span><span class="p">:</span>
-<span class="w">                    </span><span class="n">currCount</span><span class="w"> </span><span class="o">-=</span><span class="w"> </span><span class="mi">1</span>
-<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="n">s</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="nl">vowels</span><span class="p">:</span>
-<span class="w">                </span><span class="n">currCount</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="mi">1</span>
-<span class="w">            </span><span class="n">ans</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">max</span><span class="p">(</span><span class="n">currCount</span><span class="p">,</span><span class="w"> </span><span class="n">ans</span><span class="p">)</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">ans</span>
-</code></pre></div>
-
-<h2><strong>C++ Code</strong></h2>
-<div class="codehilite"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="n">Solution</span><span class="w"> </span><span class="err">{</span>
-<span class="k">public</span><span class="err">:</span>
-<span class="w">    </span><span class="nc">int</span><span class="w"> </span><span class="n">maxVowels</span><span class="p">(</span><span class="n">string</span><span class="w"> </span><span class="n">s</span><span class="p">,</span><span class="w"> </span><span class="nc">int</span><span class="w"> </span><span class="n">k</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
-
-<span class="w">        </span><span class="o">//</span><span class="w"> </span><span class="n">Store</span><span class="w"> </span><span class="k">current</span><span class="w"> </span><span class="nf">count</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">vowels</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">currCount</span>
-<span class="w">        </span><span class="o">//</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="n">maximum</span><span class="w"> </span><span class="n">currCount</span><span class="w"> </span><span class="n">occurred</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">ans</span>
-<span class="w">        </span><span class="nc">int</span><span class="w"> </span><span class="n">currCount</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-<span class="w">        </span><span class="nc">int</span><span class="w"> </span><span class="n">ans</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-
-<span class="w">        </span><span class="o">//</span><span class="w"> </span><span class="n">An</span><span class="w"> </span><span class="k">array</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="n">mark</span><span class="w"> </span><span class="ow">all</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">vowels</span><span class="s1">&#39; position to true</span>
-<span class="s1">        // for checking whether the char is vowel or not</span>
-<span class="s1">        bool vowels[26] = {false};</span>
-<span class="s1">        vowels[0] = vowels[4] = vowels[8] = vowels[14] = vowels[20] = true;</span>
-
-<span class="s1">        // Sliding window implementation</span>
-<span class="s1">        for (int i=0; i &lt; s.length(); i++) {</span>
-
-<span class="s1">            // if any vowel is removed from left-&gt; decrement</span>
-<span class="s1">            if (i &gt;= k and vowels[s[i-k]-&#39;</span><span class="n">a</span><span class="s1">&#39;]) {</span>
-<span class="s1">                currCount -= 1;</span>
-<span class="s1">            }</span>
-
-<span class="s1">            // if any vowel is inserted from right-&gt; increment</span>
-<span class="s1">            if (vowels[s[i]-&#39;</span><span class="n">a</span><span class="err">&#39;]</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
-<span class="w">                </span><span class="n">currCount</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
-<span class="w">            </span><span class="err">}</span>
-
-<span class="w">            </span><span class="o">//</span><span class="w"> </span><span class="n">Store</span><span class="w"> </span><span class="n">maximum</span><span class="w"> </span><span class="n">occurence</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">currCount</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">ans</span>
-<span class="w">            </span><span class="n">ans</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">max</span><span class="w"> </span><span class="p">(</span><span class="n">ans</span><span class="p">,</span><span class="w"> </span><span class="n">currCount</span><span class="p">);</span>
-<span class="w">        </span><span class="err">}</span>
-
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">ans</span><span class="w"> </span><span class="p">;</span>
-<span class="w">    </span><span class="err">}</span>
-<span class="err">}</span><span class="p">;</span>
-</code></pre></div>
-
-<h2><strong>Complexity Analysis</strong>:</h2>
-<p>Time Complexity: <strong>O(n)</strong><br />
-Space : O(1)</p>
-<p><em>Plz Upvote if you like it.</em></p></div><p style="page-break-before: always" ></p>

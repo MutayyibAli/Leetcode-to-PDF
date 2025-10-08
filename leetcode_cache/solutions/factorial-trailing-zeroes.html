@@ -1,31 +1,28 @@
-<div class='cpp-solution'><h2>4-lines 4ms C++ Solution with Explanations -- Votes: 100</h2><p>Well, to compute the number of trailing zeros, we need to first think clear about what will generate a trailing <code>0</code>? Obviously, a number multiplied by <code>10</code> will have a trailing <code>0</code> added to it. So we only need to find out how many <code>10</code>'s will appear in the expression of the factorial. Since <code>10 = 2 * 5</code> and there are a bunch more <code>2</code>'s (each even number will contribute at least one <code>2</code>), we only need to count the number of <code>5</code>'s.</p>
+<div class='cpp-solution'><h4>4-lines 4ms C++ Solution with Explanations [Votes: 100]</h4><p>Well, to compute the number of trailing zeros, we need to first think clear about what will generate a trailing <code>0</code>? Obviously, a number multiplied by <code>10</code> will have a trailing <code>0</code> added to it. So we only need to find out how many <code>10</code>'s will appear in the expression of the factorial. Since <code>10 = 2 * 5</code> and there are a bunch more <code>2</code>'s (each even number will contribute at least one <code>2</code>), we only need to count the number of <code>5</code>'s.</p>
 <p>Now let's see what numbers will contribute a <code>5</code>. Well, simply the multiples of <code>5</code>, like <code>5, 10, 15, 20, 25, 35, ...</code>. So is the result simply <code>n / 5</code>? Well, not that easy. Notice that some numbers may contribute more than one <code>5</code>, like <code>25 = 5 * 5</code>. Well, what numbers will contribute more than one <code>5</code>? Ok, you may notice that only multiples of the power of <code>5</code> will contribute more than one <code>5</code>. For example, multiples of <code>25</code> will contribute at least two <code>5</code>'s.</p>
 <p>Well, how to count them all? If you try some examples, you may finally get the result, which is <code>n / 5 + n / 25 + n / 125 + ...</code>. The idea behind this expression is: all the multiples of <code>5</code> will contribute one <code>5</code>, the multiples of <code>25</code> will contribute one more <code>5</code> and the multiples of <code>125</code> will contribute another one more <code>5</code>... and so on. Now, we can write down the following code, which is pretty short.</p>
-<div class="codehilite"><pre><span></span><code><span class="nt">class</span><span class="w"> </span><span class="nt">Solution</span><span class="w"> </span><span class="p">{</span>
-<span class="n">public</span><span class="p">:</span>
-<span class="w">    </span><span class="n">int</span><span class="w"> </span><span class="nf">trailingZeroes</span><span class="p">(</span><span class="n">int</span><span class="w"> </span><span class="n">n</span><span class="p">)</span><span class="w"> </span><span class="err">{</span><span class="w"> </span>
-<span class="w">        </span><span class="n">int</span><span class="w"> </span><span class="n">count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-<span class="w">        </span><span class="err">for</span><span class="w"> </span><span class="err">(long</span><span class="w"> </span><span class="err">long</span><span class="w"> </span><span class="err">i</span><span class="w"> </span><span class="err">=</span><span class="w"> </span><span class="err">5</span><span class="p">;</span><span class="w"> </span><span class="err">n</span><span class="w"> </span><span class="err">/</span><span class="w"> </span><span class="err">i</span><span class="p">;</span><span class="w"> </span><span class="err">i</span><span class="w"> </span><span class="err">*=</span><span class="w"> </span><span class="err">5)</span>
-<span class="w">            </span><span class="err">count</span><span class="w"> </span><span class="err">+=</span><span class="w"> </span><span class="err">n</span><span class="w"> </span><span class="err">/</span><span class="w"> </span><span class="err">i</span><span class="p">;</span>
-<span class="w">        </span><span class="err">return</span><span class="w"> </span><span class="err">count</span><span class="p">;</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="err">}</span><span class="o">;</span>
-</code></pre></div></div>
-
-
-<div class='python-solution'><h2>O(log5_n) solution, python. -- Votes: 56</h2><ol>
+<pre><code>class Solution {
+public:
+    int trailingZeroes(int n) { 
+        int count = 0;
+        for (long long i = 5; n / i; i *= 5)
+            count += n / i;
+        return count;
+    }
+};
+</code></pre></div><div class='python-solution'><h4>O(log5_n) solution, python. [Votes: 56]</h4><ol>
 <li>meet the number that can be dived by 5, the Trailing will have 1 more zero.</li>
 </ol>
-<p>2 .meet the number that can be dived by 5*5, the Trailing will have 2 more zero.<br />
+<p>2 .meet the number that can be dived by 5*5, the Trailing will have 2 more zero.
 ..</p>
 <p>..</p>
 <p>..</p>
 <p>and so on.</p>
-<p>so we just find how many number can be dived by 5, can be dived by 5*5 ... and sum up.</p>
-<div class="codehilite"><pre><span></span><code><span class="w">    </span><span class="nv">def</span><span class="w"> </span><span class="nv">trailingZeroes</span><span class="ss">(</span><span class="nv">self</span>,<span class="w"> </span><span class="nv">n</span><span class="ss">)</span>:
-<span class="w">        </span><span class="nv">r</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span>
-<span class="w">        </span><span class="k">while</span><span class="w"> </span><span class="nv">n</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">0</span>:
-<span class="w">            </span><span class="nv">n</span><span class="w"> </span><span class="o">/=</span><span class="w"> </span><span class="mi">5</span>
-<span class="w">            </span><span class="nv">r</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="nv">n</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="nv">r</span>
-</code></pre></div></div><p style="page-break-before: always" ></p>
+<p>so we just find how many number can be dived by 5, can be dived by 5*5 ...  and sum up.</p>
+<pre><code>    def trailingZeroes(self, n):
+        r = 0
+        while n &gt; 0:
+            n /= 5
+            r += n
+        return r
+</code></pre></div>

@@ -1,137 +1,133 @@
-<div class='cpp-solution'><h2>4ms O(n) DP Solution in C++ with Explanations -- Votes: 163</h2><p>Well, this problem is similar to <strong>Unique Paths</strong>. The introduction of obstacles only changes the boundary conditions and make some points unreachable (simply set to <code>0</code>).</p>
-<p>Denote the number of paths to arrive at point <code>(i, j)</code> to be <code>P[i][j]</code>, the state equation is <code>P[i][j] = P[i - 1][j] + P[i][j - 1]</code> if <code>obstacleGrid[i][j] != 1</code> and <code>0</code> otherwise.</p>
+<div class='cpp-solution'><h4>4ms O(n) DP Solution in C++ with Explanations [Votes: 163]</h4><p>Well, this problem is similar to <strong>Unique Paths</strong>. The introduction of obstacles only changes the boundary conditions and make some points unreachable (simply set to <code>0</code>).</p>
+<p>Denote the number of paths to arrive at point <code>(i, j)</code> to be <code>P[i][j]</code>, the state equation is <code>P[i][j] = P[i - 1][j] + P[i][j - 1]</code> if <code>obstacleGrid[i][j] != 1</code> and <code>0</code> otherwise. </p>
 <p>Now let's finish the boundary conditions. In the <strong>Unique Paths</strong> problem, we initialize <code>P[0][j] = 1, P[i][0] = 1</code> for all valid <code>i, j</code>. Now, due to obstacles, some boundary points are no longer reachable and need to be initialized to <code>0</code>. For example, if <code>obstacleGrid</code> is like <code>[0, 0, 1, 0, 0]</code>, then the last three points are not reachable and need to be initialized to be <code>0</code>. The result is <code>[1, 1, 0, 0, 0]</code>.</p>
-<p>Now we can write down the following (unoptimized) code. Note that we pad the <code>obstacleGrid</code> by <code>1</code> and initialize <code>dp[0][1] = 1</code> to unify the boundary cases.</p>
-<div class="codehilite"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="n">Solution</span><span class="w"> </span><span class="err">{</span>
-<span class="k">public</span><span class="err">:</span>
-<span class="w">    </span><span class="nc">int</span><span class="w"> </span><span class="n">uniquePathsWithObstacles</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">vector</span><span class="o">&lt;</span><span class="nc">int</span><span class="o">&gt;&gt;&amp;</span><span class="w"> </span><span class="n">obstacleGrid</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
-<span class="w">        </span><span class="nc">int</span><span class="w"> </span><span class="n">m</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">obstacleGrid</span><span class="p">.</span><span class="k">size</span><span class="p">(),</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">obstacleGrid</span><span class="o">[</span><span class="n">0</span><span class="o">]</span><span class="p">.</span><span class="k">size</span><span class="p">();</span>
-<span class="w">        </span><span class="n">vector</span><span class="o">&lt;</span><span class="n">vector</span><span class="o">&lt;</span><span class="nc">int</span><span class="o">&gt;</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">dp</span><span class="p">(</span><span class="n">m</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">vector</span><span class="o">&lt;</span><span class="nc">int</span><span class="o">&gt;</span><span class="w"> </span><span class="p">(</span><span class="n">n</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">));</span>
-<span class="w">        </span><span class="n">dp</span><span class="o">[</span><span class="n">0</span><span class="o">][</span><span class="n">1</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
-<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="nc">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">m</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span>
-<span class="w">            </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="nc">int</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">n</span><span class="p">;</span><span class="w"> </span><span class="n">j</span><span class="o">++</span><span class="p">)</span>
-<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="err">!</span><span class="n">obstacleGrid</span><span class="o">[</span><span class="n">i - 1</span><span class="o">][</span><span class="n">j - 1</span><span class="o">]</span><span class="p">)</span>
-<span class="w">                    </span><span class="n">dp</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="n">j</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dp</span><span class="o">[</span><span class="n">i - 1</span><span class="o">][</span><span class="n">j</span><span class="o">]</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">dp</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="n">j - 1</span><span class="o">]</span><span class="p">;</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">dp</span><span class="o">[</span><span class="n">m</span><span class="o">][</span><span class="n">n</span><span class="o">]</span><span class="p">;</span>
-<span class="w">    </span><span class="err">}</span><span class="w"> </span>
-<span class="err">}</span><span class="p">;</span>
-</code></pre></div>
-
+<p>Now we can write down the following (unoptimized) code. Note that we pad the <code>obstacleGrid</code> by <code>1</code> and initialize <code>dp[0][1] = 1</code> to unify the boundary cases. </p>
+<pre><code>class Solution {
+public:
+    int uniquePathsWithObstacles(vector&lt;vector&lt;int&gt;&gt;&amp; obstacleGrid) {
+        int m = obstacleGrid.size(), n = obstacleGrid[0].size();
+        vector&lt;vector&lt;int&gt; &gt; dp(m + 1, vector&lt;int&gt; (n + 1, 0));
+        dp[0][1] = 1;
+        for (int i = 1; i &lt;= m; i++)
+            for (int j = 1; j &lt;= n; j++)
+                if (!obstacleGrid[i - 1][j - 1])
+                    dp[i][j] = dp[i - 1][j] + dp[i][j - 1];
+        return dp[m][n];
+    } 
+};
+</code></pre>
 <p>Well, the code is accepted but it has some obvious redundancy. There are two major concerns:</p>
 <ol>
 <li>Each time when we update <code>path[i][j]</code>, we only need <code>path[i  - 1][j]</code> (at the same column) and <code>path[i][j - 1]</code> (at the left column), so it is unnecessary to maintain the full <code>m*n</code> matrix. Maintaining two columns is enough.</li>
 <li>There are some cases that the loop can be terminated earlier. Suppose <code>obstacleGrid = [[0, 1, 0, 0], [0, 1, 0, 0], [0, 1, 0, 0]]</code>, then we can see that it is impossible to reach the bottom-right corner after updating the second column since the number of paths to reach each element in the second column is <code>0</code>.</li>
 </ol>
 <p>Taken these into considerations, we write down the following optimized code.</p>
-<div class="codehilite"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="n">Solution</span><span class="w"> </span><span class="err">{</span>
-<span class="k">public</span><span class="err">:</span><span class="w"> </span>
-<span class="w">    </span><span class="nc">int</span><span class="w"> </span><span class="n">uniquePathsWithObstacles</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">vector</span><span class="o">&lt;</span><span class="nc">int</span><span class="o">&gt;&gt;&amp;</span><span class="w"> </span><span class="n">obstacleGrid</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
-<span class="w">        </span><span class="nc">int</span><span class="w"> </span><span class="n">m</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">obstacleGrid</span><span class="p">.</span><span class="k">size</span><span class="p">();</span>
-<span class="w">        </span><span class="nc">int</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">obstacleGrid</span><span class="o">[</span><span class="n">0</span><span class="o">]</span><span class="p">.</span><span class="k">size</span><span class="p">();</span>
-<span class="w">        </span><span class="n">vector</span><span class="o">&lt;</span><span class="nc">int</span><span class="o">&gt;</span><span class="w"> </span><span class="n">pre</span><span class="p">(</span><span class="n">m</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
-<span class="w">        </span><span class="n">vector</span><span class="o">&lt;</span><span class="nc">int</span><span class="o">&gt;</span><span class="w"> </span><span class="n">cur</span><span class="p">(</span><span class="n">m</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
-<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="nc">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">m</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
-<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="err">!</span><span class="n">obstacleGrid</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="n">0</span><span class="o">]</span><span class="p">)</span>
-<span class="w">                </span><span class="n">pre</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
-<span class="w">            </span><span class="k">else</span><span class="w"> </span><span class="k">break</span><span class="p">;</span>
-<span class="w">        </span><span class="err">}</span>
-<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="nc">int</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">n</span><span class="p">;</span><span class="w"> </span><span class="n">j</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
-<span class="w">            </span><span class="n">bool</span><span class="w"> </span><span class="n">flag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">;</span>
-<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="err">!</span><span class="n">obstacleGrid</span><span class="o">[</span><span class="n">0</span><span class="o">][</span><span class="n">j</span><span class="o">]</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
-<span class="w">                </span><span class="n">cur</span><span class="o">[</span><span class="n">0</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">pre</span><span class="o">[</span><span class="n">0</span><span class="o">]</span><span class="p">;</span>
-<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">cur</span><span class="o">[</span><span class="n">0</span><span class="o">]</span><span class="p">)</span><span class="w"> </span><span class="n">flag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span><span class="w"> </span>
-<span class="w">            </span><span class="err">}</span>
-<span class="w">            </span><span class="k">else</span><span class="w"> </span><span class="n">cur</span><span class="o">[</span><span class="n">0</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-<span class="w">            </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="nc">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">m</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
-<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="err">!</span><span class="n">obstacleGrid</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="n">j</span><span class="o">]</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
-<span class="w">                    </span><span class="n">cur</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cur</span><span class="o">[</span><span class="n">i - 1</span><span class="o">]</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">pre</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="p">;</span>
-<span class="w">                    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">cur</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="p">)</span><span class="w"> </span><span class="n">flag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
-<span class="w">                </span><span class="err">}</span>
-<span class="w">                </span><span class="k">else</span><span class="w"> </span><span class="n">cur</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-<span class="w">            </span><span class="err">}</span>
-<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="err">!</span><span class="n">flag</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-<span class="w">            </span><span class="n">swap</span><span class="p">(</span><span class="n">pre</span><span class="p">,</span><span class="w"> </span><span class="n">cur</span><span class="p">);</span>
-<span class="w">        </span><span class="err">}</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">pre</span><span class="o">[</span><span class="n">m - 1</span><span class="o">]</span><span class="p">;</span>
-<span class="w">    </span><span class="err">}</span>
-<span class="err">}</span><span class="p">;</span><span class="w"> </span>
-</code></pre></div>
-
+<pre><code>class Solution {
+public: 
+    int uniquePathsWithObstacles(vector&lt;vector&lt;int&gt;&gt;&amp; obstacleGrid) {
+        int m = obstacleGrid.size();
+        int n = obstacleGrid[0].size();
+        vector&lt;int&gt; pre(m, 0);
+        vector&lt;int&gt; cur(m, 0);
+        for (int i = 0; i &lt; m; i++) {
+            if (!obstacleGrid[i][0])
+                pre[i] = 1;
+            else break;
+        }
+        for (int j = 1; j &lt; n; j++) {
+            bool flag = false;
+            if (!obstacleGrid[0][j]) {
+                cur[0] = pre[0];
+                if (cur[0]) flag = true; 
+            }
+            else cur[0] = 0;
+            for (int i = 1; i &lt; m; i++) {
+                if (!obstacleGrid[i][j]) {
+                    cur[i] = cur[i - 1] + pre[i];
+                    if (cur[i]) flag = true;
+                }
+                else cur[i] = 0;
+            }
+            if (!flag) return 0;
+            swap(pre, cur);
+        }
+        return pre[m - 1];
+    }
+};
+</code></pre>
 <p>Further inspecting the above code, keeping two vectors only serve for the purpose of recovering <code>pre[i]</code>, which is simply <code>cur[i]</code> before its update. So we can use only one vector and the space is further optimized.</p>
-<div class="codehilite"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="n">Solution</span><span class="w"> </span><span class="err">{</span>
-<span class="k">public</span><span class="err">:</span>
-<span class="w">    </span><span class="nc">int</span><span class="w"> </span><span class="n">uniquePathsWithObstacles</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">vector</span><span class="o">&lt;</span><span class="nc">int</span><span class="o">&gt;&gt;&amp;</span><span class="w"> </span><span class="n">obstacleGrid</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
-<span class="w">        </span><span class="nc">int</span><span class="w"> </span><span class="n">m</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">obstacleGrid</span><span class="p">.</span><span class="k">size</span><span class="p">();</span>
-<span class="w">        </span><span class="nc">int</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">obstacleGrid</span><span class="o">[</span><span class="n">0</span><span class="o">]</span><span class="p">.</span><span class="k">size</span><span class="p">();</span>
-<span class="w">        </span><span class="n">vector</span><span class="o">&lt;</span><span class="nc">int</span><span class="o">&gt;</span><span class="w"> </span><span class="n">cur</span><span class="p">(</span><span class="n">m</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
-<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="nc">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">m</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
-<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="err">!</span><span class="n">obstacleGrid</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="n">0</span><span class="o">]</span><span class="p">)</span>
-<span class="w">                </span><span class="n">cur</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
-<span class="w">            </span><span class="k">else</span><span class="w"> </span><span class="k">break</span><span class="p">;</span>
-<span class="w">        </span><span class="err">}</span>
-<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="nc">int</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">n</span><span class="p">;</span><span class="w"> </span><span class="n">j</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
-<span class="w">            </span><span class="n">bool</span><span class="w"> </span><span class="n">flag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">;</span>
-<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">obstacleGrid</span><span class="o">[</span><span class="n">0</span><span class="o">][</span><span class="n">j</span><span class="o">]</span><span class="p">)</span>
-<span class="w">                </span><span class="n">cur</span><span class="o">[</span><span class="n">0</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-<span class="w">            </span><span class="k">else</span><span class="w"> </span><span class="n">flag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
-<span class="w">            </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="nc">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">m</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
-<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="err">!</span><span class="n">obstacleGrid</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="n">j</span><span class="o">]</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
-<span class="w">                    </span><span class="n">cur</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">cur</span><span class="o">[</span><span class="n">i - 1</span><span class="o">]</span><span class="p">;</span><span class="w"> </span>
-<span class="w">                    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">cur</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="p">)</span><span class="w"> </span><span class="n">flag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
-<span class="w">                </span><span class="err">}</span>
-<span class="w">                </span><span class="k">else</span><span class="w"> </span><span class="n">cur</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span>
-<span class="w">            </span><span class="err">}</span>
-<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="err">!</span><span class="n">flag</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-<span class="w">        </span><span class="err">}</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">cur</span><span class="o">[</span><span class="n">m - 1</span><span class="o">]</span><span class="p">;</span>
-<span class="w">    </span><span class="err">}</span>
-<span class="err">}</span><span class="p">;</span>
-</code></pre></div></div>
+<pre><code>class Solution {
+public:
+    int uniquePathsWithObstacles(vector&lt;vector&lt;int&gt;&gt;&amp; obstacleGrid) {
+        int m = obstacleGrid.size();
+        int n = obstacleGrid[0].size();
+        vector&lt;int&gt; cur(m, 0);
+        for (int i = 0; i &lt; m; i++) {
+            if (!obstacleGrid[i][0])
+                cur[i] = 1;
+            else break;
+        }
+        for (int j = 1; j &lt; n; j++) {
+            bool flag = false;
+            if (obstacleGrid[0][j])
+                cur[0] = 0;
+            else flag = true;
+            for (int i = 1; i &lt; m; i++) {
+                if (!obstacleGrid[i][j]) {
+                    cur[i] += cur[i - 1]; 
+                    if (cur[i]) flag = true;
+                }
+                else cur[i] = 0; 
+            }
+            if (!flag) return 0;
+        }
+        return cur[m - 1];
+    }
+};
+</code></pre></div><div class='python-solution'><h4>Python different solutions (O(m*n), O(n), in place). [Votes: 145]</h4><pre><code>    
+#### O(m*n) space
+def uniquePathsWithObstacles1(self, obstacleGrid):
+    if not obstacleGrid:
+        return 
+    r, c = len(obstacleGrid), len(obstacleGrid[0])
+    dp = [[0 for _ in xrange(c)] for _ in xrange(r)]
+    dp[0][0] = 1 - obstacleGrid[0][0]
+    for i in xrange(1, r):
+        dp[i][0] = dp[i-1][0] * (1 - obstacleGrid[i][0])
+    for i in xrange(1, c):
+        dp[0][i] = dp[0][i-1] * (1 - obstacleGrid[0][i])
+    for i in xrange(1, r):
+        for j in xrange(1, c):
+            dp[i][j] = (dp[i][j-1] + dp[i-1][j]) * (1 - obstacleGrid[i][j])
+    return dp[-1][-1]
 
+#### O(n) space
+def uniquePathsWithObstacles2(self, obstacleGrid):
+    if not obstacleGrid:
+        return 
+    r, c = len(obstacleGrid), len(obstacleGrid[0])
+    cur = [0] * c
+    cur[0] = 1 - obstacleGrid[0][0]
+    for i in xrange(1, c):
+        cur[i] = cur[i-1] * (1 - obstacleGrid[0][i])
+    for i in xrange(1, r):
+        cur[0] *= (1 - obstacleGrid[i][0])
+        for j in xrange(1, c):
+            cur[j] = (cur[j-1] + cur[j]) * (1 - obstacleGrid[i][j])
+    return cur[-1]
 
-<div class='python-solution'><h2>Python different solutions (O(m*n), O(n), in place). -- Votes: 145</h2><div class="codehilite"><pre><span></span><code><span class="err">#</span><span class="w"> </span><span class="n">O</span><span class="p">(</span><span class="n">m</span><span class="o">*</span><span class="n">n</span><span class="p">)</span><span class="w"> </span><span class="nf">space</span>
-<span class="n">def</span><span class="w"> </span><span class="n">uniquePathsWithObstacles1</span><span class="p">(</span><span class="n">self</span><span class="p">,</span><span class="w"> </span><span class="n">obstacleGrid</span><span class="p">)</span><span class="err">:</span>
-<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="nl">obstacleGrid</span><span class="p">:</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span>
-<span class="w">    </span><span class="n">r</span><span class="p">,</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">len</span><span class="p">(</span><span class="n">obstacleGrid</span><span class="p">),</span><span class="w"> </span><span class="nf">len</span><span class="p">(</span><span class="n">obstacleGrid</span><span class="o">[</span><span class="n">0</span><span class="o">]</span><span class="p">)</span>
-<span class="w">    </span><span class="n">dp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[</span><span class="n">[0 for _ in xrange(c)</span><span class="o">]</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">_</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">xrange</span><span class="p">(</span><span class="n">r</span><span class="p">)</span><span class="err">]</span>
-<span class="w">    </span><span class="n">dp</span><span class="o">[</span><span class="n">0</span><span class="o">][</span><span class="n">0</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">obstacleGrid</span><span class="o">[</span><span class="n">0</span><span class="o">][</span><span class="n">0</span><span class="o">]</span>
-<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">xrange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">r</span><span class="p">)</span><span class="err">:</span>
-<span class="w">        </span><span class="n">dp</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="n">0</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dp</span><span class="o">[</span><span class="n">i-1</span><span class="o">][</span><span class="n">0</span><span class="o">]</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="p">(</span><span class="mi">1</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">obstacleGrid</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="n">0</span><span class="o">]</span><span class="p">)</span>
-<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">xrange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">c</span><span class="p">)</span><span class="err">:</span>
-<span class="w">        </span><span class="n">dp</span><span class="o">[</span><span class="n">0</span><span class="o">][</span><span class="n">i</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dp</span><span class="o">[</span><span class="n">0</span><span class="o">][</span><span class="n">i-1</span><span class="o">]</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="p">(</span><span class="mi">1</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">obstacleGrid</span><span class="o">[</span><span class="n">0</span><span class="o">][</span><span class="n">i</span><span class="o">]</span><span class="p">)</span>
-<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">xrange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">r</span><span class="p">)</span><span class="err">:</span>
-<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">xrange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">c</span><span class="p">)</span><span class="err">:</span>
-<span class="w">            </span><span class="n">dp</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="n">j</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">dp</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="n">j-1</span><span class="o">]</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">dp</span><span class="o">[</span><span class="n">i-1</span><span class="o">][</span><span class="n">j</span><span class="o">]</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="p">(</span><span class="mi">1</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">obstacleGrid</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="n">j</span><span class="o">]</span><span class="p">)</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">dp</span><span class="o">[</span><span class="n">-1</span><span class="o">][</span><span class="n">-1</span><span class="o">]</span>
-
-<span class="err">#</span><span class="w"> </span><span class="n">O</span><span class="p">(</span><span class="n">n</span><span class="p">)</span><span class="w"> </span><span class="nf">space</span>
-<span class="n">def</span><span class="w"> </span><span class="n">uniquePathsWithObstacles2</span><span class="p">(</span><span class="n">self</span><span class="p">,</span><span class="w"> </span><span class="n">obstacleGrid</span><span class="p">)</span><span class="err">:</span>
-<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="nl">obstacleGrid</span><span class="p">:</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span>
-<span class="w">    </span><span class="n">r</span><span class="p">,</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">len</span><span class="p">(</span><span class="n">obstacleGrid</span><span class="p">),</span><span class="w"> </span><span class="nf">len</span><span class="p">(</span><span class="n">obstacleGrid</span><span class="o">[</span><span class="n">0</span><span class="o">]</span><span class="p">)</span>
-<span class="w">    </span><span class="n">cur</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[</span><span class="n">0</span><span class="o">]</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">c</span>
-<span class="w">    </span><span class="n">cur</span><span class="o">[</span><span class="n">0</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">obstacleGrid</span><span class="o">[</span><span class="n">0</span><span class="o">][</span><span class="n">0</span><span class="o">]</span>
-<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">xrange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">c</span><span class="p">)</span><span class="err">:</span>
-<span class="w">        </span><span class="n">cur</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cur</span><span class="o">[</span><span class="n">i-1</span><span class="o">]</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="p">(</span><span class="mi">1</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">obstacleGrid</span><span class="o">[</span><span class="n">0</span><span class="o">][</span><span class="n">i</span><span class="o">]</span><span class="p">)</span>
-<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">xrange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">r</span><span class="p">)</span><span class="err">:</span>
-<span class="w">        </span><span class="n">cur</span><span class="o">[</span><span class="n">0</span><span class="o">]</span><span class="w"> </span><span class="o">*=</span><span class="w"> </span><span class="p">(</span><span class="mi">1</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">obstacleGrid</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="n">0</span><span class="o">]</span><span class="p">)</span>
-<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">xrange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">c</span><span class="p">)</span><span class="err">:</span>
-<span class="w">            </span><span class="n">cur</span><span class="o">[</span><span class="n">j</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">cur</span><span class="o">[</span><span class="n">j-1</span><span class="o">]</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">cur</span><span class="o">[</span><span class="n">j</span><span class="o">]</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="p">(</span><span class="mi">1</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">obstacleGrid</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="n">j</span><span class="o">]</span><span class="p">)</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">cur</span><span class="o">[</span><span class="n">-1</span><span class="o">]</span>
-
-<span class="err">#</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">place</span>
-<span class="n">def</span><span class="w"> </span><span class="n">uniquePathsWithObstacles</span><span class="p">(</span><span class="n">self</span><span class="p">,</span><span class="w"> </span><span class="n">obstacleGrid</span><span class="p">)</span><span class="err">:</span>
-<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="nl">obstacleGrid</span><span class="p">:</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span>
-<span class="w">    </span><span class="n">r</span><span class="p">,</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">len</span><span class="p">(</span><span class="n">obstacleGrid</span><span class="p">),</span><span class="w"> </span><span class="nf">len</span><span class="p">(</span><span class="n">obstacleGrid</span><span class="o">[</span><span class="n">0</span><span class="o">]</span><span class="p">)</span>
-<span class="w">    </span><span class="n">obstacleGrid</span><span class="o">[</span><span class="n">0</span><span class="o">][</span><span class="n">0</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">obstacleGrid</span><span class="o">[</span><span class="n">0</span><span class="o">][</span><span class="n">0</span><span class="o">]</span>
-<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">xrange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">r</span><span class="p">)</span><span class="err">:</span>
-<span class="w">        </span><span class="n">obstacleGrid</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="n">0</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">obstacleGrid</span><span class="o">[</span><span class="n">i-1</span><span class="o">][</span><span class="n">0</span><span class="o">]</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="p">(</span><span class="mi">1</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">obstacleGrid</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="n">0</span><span class="o">]</span><span class="p">)</span>
-<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">xrange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">c</span><span class="p">)</span><span class="err">:</span>
-<span class="w">        </span><span class="n">obstacleGrid</span><span class="o">[</span><span class="n">0</span><span class="o">][</span><span class="n">i</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">obstacleGrid</span><span class="o">[</span><span class="n">0</span><span class="o">][</span><span class="n">i-1</span><span class="o">]</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="p">(</span><span class="mi">1</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">obstacleGrid</span><span class="o">[</span><span class="n">0</span><span class="o">][</span><span class="n">i</span><span class="o">]</span><span class="p">)</span>
-<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">xrange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">r</span><span class="p">)</span><span class="err">:</span>
-<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">xrange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">c</span><span class="p">)</span><span class="err">:</span>
-<span class="w">            </span><span class="n">obstacleGrid</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="n">j</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">obstacleGrid</span><span class="o">[</span><span class="n">i-1</span><span class="o">][</span><span class="n">j</span><span class="o">]</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">obstacleGrid</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="n">j-1</span><span class="o">]</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="p">(</span><span class="mi">1</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">obstacleGrid</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="n">j</span><span class="o">]</span><span class="p">)</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">obstacleGrid</span><span class="o">[</span><span class="n">-1</span><span class="o">][</span><span class="n">-1</span><span class="o">]</span>
-</code></pre></div></div><p style="page-break-before: always" ></p>
+#### in place
+def uniquePathsWithObstacles(self, obstacleGrid):
+    if not obstacleGrid:
+        return 
+    r, c = len(obstacleGrid), len(obstacleGrid[0])
+    obstacleGrid[0][0] = 1 - obstacleGrid[0][0]
+    for i in xrange(1, r):
+        obstacleGrid[i][0] = obstacleGrid[i-1][0] * (1 - obstacleGrid[i][0])
+    for i in xrange(1, c):
+        obstacleGrid[0][i] = obstacleGrid[0][i-1] * (1 - obstacleGrid[0][i])
+    for i in xrange(1, r):
+        for j in xrange(1, c):
+            obstacleGrid[i][j] = (obstacleGrid[i-1][j] + obstacleGrid[i][j-1]) * (1 - obstacleGrid[i][j])
+    return obstacleGrid[-1][-1]
+</code></pre></div>

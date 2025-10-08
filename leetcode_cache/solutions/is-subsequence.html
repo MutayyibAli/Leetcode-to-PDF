@@ -1,100 +1,89 @@
-<div class='cpp-solution'><h2>【Video】Two Pointer Solution -- Votes: 401</h2><h2>Intuition</h2>
+<div class='cpp-solution'><h4>【Video】Two Pointer Solution [Votes: 401]</h4><h4>Intuition</h4>
 <p>Check both strings one by one.</p>
-<hr />
-<h2>Solution Video</h2>
+<h4>Solution Video</h4>
 <p>In the video, the steps of approach below are visualized using diagrams and drawings. I'm sure you understand the solution easily!</p>
 <p>https://youtu.be/2FYJxatZnxE</p>
-<p>■ Timeline<br />
-<code>0:00</code> Read the question of Is Subsequence<br />
-<code>1:26</code> Explain a basic idea to solve Is Subsequence<br />
-<code>4:04</code> Coding<br />
-<code>5:28</code> Time Complexity &amp; Space Complexity</p>
-<h4>⭐️⭐️ Don't forget to subscribe to my channel! ⭐️⭐️</h4>
-<p><strong>■ Subscribe URL</strong><br />
+<p>■ Timeline
+<code>0:00</code> Read the question of Is Subsequence
+<code>1:26</code> Explain a basic idea to solve Is Subsequence
+<code>4:04</code> Coding
+<code>5:28</code> Time Complexity &amp; Space Complexity </p>
+<h6>⭐️⭐️ Don't forget to subscribe to my channel! ⭐️⭐️</h6>
+<p><strong>■ Subscribe URL</strong>
 http://www.youtube.com/channel/UC9RMNwYTL3SXCP6ShLWVFww?sub_confirmation=1</p>
-<p>Subscribers: 4,177<br />
+<p>Subscribers: 4,177
 Thank you for your support!</p>
-<hr />
-<h2>Approach</h2>
+<h4>Approach</h4>
 <p><strong>How I think about a solution:</strong></p>
 <p>Simply, all we have to do is just to count characters for each string <code>s</code> and <code>t</code> and check if <code>t</code> has all characters of <code>s</code>, but problem is there is an order to find the characters.</p>
-<div class="codehilite"><pre><span></span><code><span class="n">Input</span><span class="o">:</span><span class="w"> </span><span class="n">s</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;abc&quot;</span><span class="o">,</span><span class="w"> </span><span class="n">t</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;ahbgdc&quot;</span>
-</code></pre></div>
-
+<pre><code>Input: s = &quot;abc&quot;, t = &quot;ahbgdc&quot;
+</code></pre>
 <p>In this case, we need to find <code>a</code> in <code>t</code> at first. The next character we must find is <code>b</code> at the position after <code>a</code>, the last character is <code>c</code> at the position after <code>b</code>. That is kind of a challenging part of this question. It might be tough to use simple <code>HashMap</code> or <code>Set</code> because they don't have order of data.</p>
 <p>That's why I just started thinking it with a very simple example like this.</p>
-<div class="codehilite"><pre><span></span><code><span class="n">Input</span><span class="o">:</span><span class="w"> </span><span class="n">s</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;abc&quot;</span><span class="o">,</span><span class="w"> </span><span class="n">t</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;abc&quot;</span>
-</code></pre></div>
-
+<pre><code>Input: s = &quot;abc&quot;, t = &quot;abc&quot;
+</code></pre>
 <p>In this case, if we check each character one by one in the both strings from beginning, we can return <code>true</code> and this simple example gave me a hint to solve this question.</p>
-<p>I realized that if I have the same index number as length of <code>s</code> after I iterate though all characters, I can prove that I have subsequence in <code>t</code>.</p>
+<p>I realized that if I have the same index number as length of <code>s</code> after I iterate though all characters, I can prove that I have subsequence in <code>t</code>. </p>
 <p>To prove that, I also check a simple <code>false</code> case like this.</p>
-<div class="codehilite"><pre><span></span><code><span class="n">Input</span><span class="o">:</span><span class="w"> </span><span class="n">s</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;abc&quot;</span><span class="o">,</span><span class="w"> </span><span class="n">t</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;abd&quot;</span>
-</code></pre></div>
-
-<p>In this case, when I iterate thorugh both strings from beginning, I stopped at index <code>2</code> in <code>s</code> which means I didn't find the last character <code>c</code> in <code>t</code>, so this is a <code>false</code> case because <code>index number for s(2)</code> is not equal to <code>length of s(3)</code>. I couldn't get to <code>the last position of s</code>.</p>
+<pre><code>Input: s = &quot;abc&quot;, t = &quot;abd&quot;
+</code></pre>
+<p>In this case, when I iterate thorugh both strings from beginning, I stopped at index <code>2</code> in <code>s</code> which means I didn't find the last character <code>c</code> in <code>t</code>, so this is a <code>false</code> case because <code>index number for s(2)</code> is not equal to <code>length of s(3)</code>. I couldn't get to <code>the last position of s</code>. </p>
 <p><code>The last position</code> means <code>the last index number + 1</code> because index usually starts from <code>0</code> and counting length of string starts from <code>1</code>.</p>
-<p>From my thought process above, I tried to iterate thorough both strings from beginning at the same time.</p>
+<p>From my thought process above, I tried to iterate thorough both strings from beginning at the same time. </p>
 <p>Let's recap what I said with this example.</p>
-<div class="codehilite"><pre><span></span><code><span class="n">Input</span><span class="o">:</span><span class="w"> </span><span class="n">s</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;abc&quot;</span><span class="o">,</span><span class="w"> </span><span class="n">t</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;ahbgdc&quot;</span>
-</code></pre></div>
+<pre><code>Input: s = &quot;abc&quot;, t = &quot;ahbgdc&quot;
+</code></pre>
+<pre><code>target: a
+s index: 0
+t index: 0
+</code></pre>
+<p>The first target is <code>a</code>. Luckily, the first character of <code>t</code> is also <code>a</code>. </p>
+<pre><code>found: a
+Now I can think inputs like this Input: s = &quot;bc&quot;, t = &quot;hbgdc&quot;
 
-<div class="codehilite"><pre><span></span><code><span class="n">target</span><span class="o">:</span><span class="w"> </span><span class="n">a</span>
-<span class="n">s</span><span class="w"> </span><span class="n">index</span><span class="o">:</span><span class="w"> </span><span class="mi">0</span>
-<span class="n">t</span><span class="w"> </span><span class="n">index</span><span class="o">:</span><span class="w"> </span><span class="mi">0</span>
-</code></pre></div>
+after the above,
 
-<p>The first target is <code>a</code>. Luckily, the first character of <code>t</code> is also <code>a</code>.</p>
-<div class="codehilite"><pre><span></span><code><span class="n">found</span><span class="o">:</span><span class="w"> </span><span class="n">a</span>
-<span class="n">Now</span><span class="w"> </span><span class="n">I</span><span class="w"> </span><span class="n">can</span><span class="w"> </span><span class="n">think</span><span class="w"> </span><span class="n">inputs</span><span class="w"> </span><span class="n">like</span><span class="w"> </span><span class="k">this</span><span class="w"> </span><span class="n">Input</span><span class="o">:</span><span class="w"> </span><span class="n">s</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;bc&quot;</span><span class="o">,</span><span class="w"> </span><span class="n">t</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;hbgdc&quot;</span>
+s index: 1
+t index: 1
+</code></pre>
+<p>Then, the next target is <code>b</code> but the next character of <code>t</code> is <code>h</code>, so now </p>
+<pre><code>target: b
 
-<span class="n">after</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">above</span><span class="o">,</span>
+found: a
+Now I can think inputs like this Input: s = &quot;bc&quot;, t = &quot;bgdc&quot;
 
-<span class="n">s</span><span class="w"> </span><span class="n">index</span><span class="o">:</span><span class="w"> </span><span class="mi">1</span>
-<span class="n">t</span><span class="w"> </span><span class="n">index</span><span class="o">:</span><span class="w"> </span><span class="mi">1</span>
-</code></pre></div>
+after the above,
 
-<p>Then, the next target is <code>b</code> but the next character of <code>t</code> is <code>h</code>, so now</p>
-<div class="codehilite"><pre><span></span><code><span class="n">target</span><span class="o">:</span><span class="w"> </span><span class="n">b</span>
+s index: 1
+t index: 2
 
-<span class="n">found</span><span class="o">:</span><span class="w"> </span><span class="n">a</span>
-<span class="n">Now</span><span class="w"> </span><span class="n">I</span><span class="w"> </span><span class="n">can</span><span class="w"> </span><span class="n">think</span><span class="w"> </span><span class="n">inputs</span><span class="w"> </span><span class="n">like</span><span class="w"> </span><span class="k">this</span><span class="w"> </span><span class="n">Input</span><span class="o">:</span><span class="w"> </span><span class="n">s</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;bc&quot;</span><span class="o">,</span><span class="w"> </span><span class="n">t</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;bgdc&quot;</span>
-
-<span class="n">after</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">above</span><span class="o">,</span>
-
-<span class="n">s</span><span class="w"> </span><span class="n">index</span><span class="o">:</span><span class="w"> </span><span class="mi">1</span>
-<span class="n">t</span><span class="w"> </span><span class="n">index</span><span class="o">:</span><span class="w"> </span><span class="mi">2</span>
-</code></pre></div>
-
+</code></pre>
 <p>The next character of <code>t</code> is <code>b</code>, I found <code>b</code> in <code>t</code>.</p>
-<div class="codehilite"><pre><span></span><code><span class="n">target</span><span class="o">:</span><span class="w"> </span><span class="n">b</span>
+<pre><code>target: b
 
-<span class="n">found</span><span class="o">:</span><span class="w"> </span><span class="n">ab</span>
-<span class="n">Now</span><span class="w"> </span><span class="n">I</span><span class="w"> </span><span class="n">can</span><span class="w"> </span><span class="n">think</span><span class="w"> </span><span class="n">inputs</span><span class="w"> </span><span class="n">like</span><span class="w"> </span><span class="k">this</span><span class="w"> </span><span class="n">Input</span><span class="o">:</span><span class="w"> </span><span class="n">s</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;c&quot;</span><span class="o">,</span><span class="w"> </span><span class="n">t</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;gdc&quot;</span>
+found: ab
+Now I can think inputs like this Input: s = &quot;c&quot;, t = &quot;gdc&quot;
 
-<span class="n">after</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">above</span><span class="o">,</span>
+after the above,
 
-<span class="n">s</span><span class="w"> </span><span class="n">index</span><span class="o">:</span><span class="w"> </span><span class="mi">2</span>
-<span class="n">t</span><span class="w"> </span><span class="n">index</span><span class="o">:</span><span class="w"> </span><span class="mi">3</span>
-</code></pre></div>
-
+s index: 2
+t index: 3
+</code></pre>
 <p>The next and next next character in <code>t</code> are <code>g</code> and <code>d</code>, so just increment <code>t index</code> from <code>3</code> to <code>5</code>.</p>
 <p>Finally, I reached the last character in <code>t</code> and found <code>c</code></p>
-<div class="codehilite"><pre><span></span><code><span class="n">target</span><span class="o">:</span><span class="w"> </span><span class="n">c</span>
+<pre><code>target: c
 
-<span class="n">found</span><span class="w"> </span><span class="n">abc</span>
-<span class="n">Now</span><span class="w"> </span><span class="n">I</span><span class="w"> </span><span class="n">can</span><span class="w"> </span><span class="n">think</span><span class="w"> </span><span class="n">inputs</span><span class="w"> </span><span class="n">like</span><span class="w"> </span><span class="k">this</span><span class="w"> </span><span class="n">Input</span><span class="o">:</span><span class="w"> </span><span class="n">s</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;&quot;</span><span class="o">,</span><span class="w"> </span><span class="n">t</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
+found abc
+Now I can think inputs like this Input: s = &quot;&quot;, t = &quot;&quot;
 
-<span class="n">after</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">above</span><span class="o">,</span>
+after the above,
 
-<span class="n">s</span><span class="w"> </span><span class="n">index</span><span class="o">:</span><span class="w"> </span><span class="mi">3</span>
-<span class="n">t</span><span class="w"> </span><span class="n">index</span><span class="o">:</span><span class="w"> </span><span class="mi">6</span>
-</code></pre></div>
-
+s index: 3
+t index: 6
+</code></pre>
 <p>After the process, all I have to do is just to check if <code>s index(3)</code> is equal to <code>length of s(3)</code>.</p>
-<div class="codehilite"><pre><span></span><code><span class="n">Output</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span>
-</code></pre></div>
-
+<pre><code>Output: true
+</code></pre>
 <p>That's how I think about my solution. Let's see a real algorithm below.</p>
 <p><strong>Algorithm Overview:</strong></p>
 <ol>
@@ -122,160 +111,141 @@ Thank you for your support!</p>
 </ol>
 <p>a. Return <code>True</code> if <code>s</code> is a subsequence of <code>t</code>.</p>
 <p>b. Return <code>False</code> if <code>s</code> is not a subsequence of <code>t</code>.</p>
-<hr />
 <p>https://youtu.be/Abdq3lNRocc</p>
-<hr />
-<h2>Complexity</h2>
+<h4>Complexity</h4>
 <ul>
 <li>
-<p>Time complexity: O(n)<br />
+<p>Time complexity: O(n)
 <code>n</code> is longer length of input string (<code>s</code> or <code>t</code>).</p>
 </li>
 <li>
 <p>Space complexity: O(1)</p>
 </li>
 </ul>
-<div class="codehilite"><pre><span></span><code><span class="n">Language</span><span class="p">:</span> <span class="n">python</span> 
-<span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="p">:</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">isSubsequence</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">s</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="n">sp</span> <span class="o">=</span> <span class="n">tp</span> <span class="o">=</span> <span class="mi">0</span>
+<pre><code class="language-python">class Solution:
+    def isSubsequence(self, s: str, t: str) -&gt; bool:
+        sp = tp = 0
 
-        <span class="k">while</span> <span class="n">sp</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="ow">and</span> <span class="n">tp</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">t</span><span class="p">):</span>
-            <span class="k">if</span> <span class="n">s</span><span class="p">[</span><span class="n">sp</span><span class="p">]</span> <span class="o">==</span> <span class="n">t</span><span class="p">[</span><span class="n">tp</span><span class="p">]:</span>
-                <span class="n">sp</span> <span class="o">+=</span> <span class="mi">1</span>
-            <span class="n">tp</span> <span class="o">+=</span> <span class="mi">1</span>
+        while sp &lt; len(s) and tp &lt; len(t):
+            if s[sp] == t[tp]:
+                sp += 1
+            tp += 1
 
-        <span class="k">return</span> <span class="n">sp</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
-</code></pre></div>
+        return sp == len(s)
+</code></pre>
+<pre><code class="language-javascript">/**
+ * @param {string} s
+ * @param {string} t
+ * @return {boolean}
+ */
+var isSubsequence = function(s, t) {
+    let sp = 0;
+    let tp = 0;
 
-<div class="codehilite"><pre><span></span><code><span class="nx">Language</span><span class="o">:</span><span class="w"> </span><span class="nx">javascript</span><span class="w"> </span>
-<span class="cm">/**</span>
-<span class="cm"> * @param {string} s</span>
-<span class="cm"> * @param {string} t</span>
-<span class="cm"> * @return {boolean}</span>
-<span class="cm"> */</span>
-<span class="kd">var</span><span class="w"> </span><span class="nx">isSubsequence</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kd">function</span><span class="p">(</span><span class="nx">s</span><span class="p">,</span><span class="w"> </span><span class="nx">t</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="nx">sp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0</span><span class="p">;</span>
-<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="nx">tp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0</span><span class="p">;</span>
+    while (sp &lt; s.length &amp;&amp; tp &lt; t.length) {
+        if (s[sp] === t[tp]) {
+            sp++;
+        }
+        tp++;
+    }
 
-<span class="w">    </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="nx">sp</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="nx">s</span><span class="p">.</span><span class="nx">length</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nx">tp</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="nx">t</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">s</span><span class="p">[</span><span class="nx">sp</span><span class="p">]</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="nx">t</span><span class="p">[</span><span class="nx">tp</span><span class="p">])</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="nx">sp</span><span class="o">++</span><span class="p">;</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">        </span><span class="nx">tp</span><span class="o">++</span><span class="p">;</span>
-<span class="w">    </span><span class="p">}</span>
+    return sp === s.length;    
+};
+</code></pre>
+<pre><code class="language-java">class Solution {
+    public boolean isSubsequence(String s, String t) {
+        int sp = 0;
+        int tp = 0;
 
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">sp</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="nx">s</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span><span class="w">    </span>
-<span class="p">};</span>
-</code></pre></div>
+        while (sp &lt; s.length() &amp;&amp; tp &lt; t.length()) {
+            if (s.charAt(sp) == t.charAt(tp)) {
+                sp++;
+            }
+            tp++;
+        }
 
-<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">java</span><span class="w"> </span>
-<span class="kd">class</span> <span class="nc">Solution</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">boolean</span><span class="w"> </span><span class="nf">isSubsequence</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">s</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">t</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">sp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">tp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+        return sp == s.length();        
+    }
+}
+</code></pre>
+<pre><code class="language-cpp">class Solution {
+public:
+    bool isSubsequence(string s, string t) {
+        int sp = 0;
+        int tp = 0;
 
-<span class="w">        </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">sp</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">s</span><span class="p">.</span><span class="na">length</span><span class="p">()</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">tp</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">t</span><span class="p">.</span><span class="na">length</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">s</span><span class="p">.</span><span class="na">charAt</span><span class="p">(</span><span class="n">sp</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">t</span><span class="p">.</span><span class="na">charAt</span><span class="p">(</span><span class="n">tp</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="n">sp</span><span class="o">++</span><span class="p">;</span>
-<span class="w">            </span><span class="p">}</span>
-<span class="w">            </span><span class="n">tp</span><span class="o">++</span><span class="p">;</span>
-<span class="w">        </span><span class="p">}</span>
+        while (sp &lt; s.length() &amp;&amp; tp &lt; t.length()) {
+            if (s[sp] == t[tp]) {
+                sp++;
+            }
+            tp++;
+        }
 
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">sp</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">s</span><span class="p">.</span><span class="na">length</span><span class="p">();</span><span class="w">        </span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
-
-<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">C</span><span class="o">++</span><span class="w"> </span>
-<span class="n">class</span><span class="w"> </span><span class="n">Solution</span><span class="w"> </span><span class="p">{</span>
-<span class="n">public</span><span class="o">:</span>
-<span class="w">    </span><span class="kt">bool</span><span class="w"> </span><span class="n">isSubsequence</span><span class="p">(</span><span class="n">string</span><span class="w"> </span><span class="n">s</span><span class="p">,</span><span class="w"> </span><span class="n">string</span><span class="w"> </span><span class="n">t</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">sp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">tp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-
-<span class="w">        </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">sp</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">s</span><span class="p">.</span><span class="n">length</span><span class="p">()</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">tp</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">t</span><span class="p">.</span><span class="n">length</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="n">sp</span><span class="p">]</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">t</span><span class="p">[</span><span class="n">tp</span><span class="p">])</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="n">sp</span><span class="o">++</span><span class="p">;</span>
-<span class="w">            </span><span class="p">}</span>
-<span class="w">            </span><span class="n">tp</span><span class="o">++</span><span class="p">;</span>
-<span class="w">        </span><span class="p">}</span>
-
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">sp</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">s</span><span class="p">.</span><span class="n">length</span><span class="p">();</span><span class="w">        </span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">};</span>
-</code></pre></div>
-
-<hr />
+        return sp == s.length();        
+    }
+};
+</code></pre>
 <p>Thank you for reading my post. Please upvote it and don't forget to subscribe to my channel!</p>
-<h3>⭐️ Subscribe URL</h3>
+<h5>⭐️ Subscribe URL</h5>
 <p>http://www.youtube.com/channel/UC9RMNwYTL3SXCP6ShLWVFww?sub_confirmation=1</p>
-<h3>⭐️ Twitter</h3>
+<h5>⭐️ Twitter</h5>
 <p>https://twitter.com/CodingNinjaAZ</p>
-<h3>⭐️ My previous post - #55. Jump Game</h3>
-<p>post<br />
+<h5>⭐️ My previous post - #55. Jump Game</h5>
+<p>post
 https://leetcode.com/problems/jump-game/solutions/4920717/video-move-goal-position/</p>
-<p>video<br />
-https://youtu.be/m6AymRRYgko</p></div>
+<p>video
+https://youtu.be/m6AymRRYgko</p></div><div class='python-solution'><h4>[Python , Javascript]  Easy solution with very clear Explanation [Votes: 662]</h4><p><strong>Please dont downvote guys if cannot support,We are putting lot of effort in it</strong></p>
+<pre><code>Question asking us to return true if s is a subsequence of t, or false otherwise.
+
+Example:
+    s='code'
+    t='leetcode'
+    here s is subsequence of t ,we can get code from leetcode.
 
 
-<div class='python-solution'><h2>[Python , Javascript]  Easy solution with very clear Explanation -- Votes: 662</h2><p><strong>Please dont downvote guys if cannot support,We are putting lot of effort in it</strong></p>
-<div class="codehilite"><pre><span></span><code><span class="nv">Question</span><span class="w"> </span><span class="nv">asking</span><span class="w"> </span><span class="nv">us</span><span class="w"> </span><span class="nv">to</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="nv">true</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="nv">s</span><span class="w"> </span><span class="nv">is</span><span class="w"> </span><span class="nv">a</span><span class="w"> </span><span class="nv">subsequence</span><span class="w"> </span><span class="nv">of</span><span class="w"> </span><span class="nv">t</span>,<span class="w"> </span><span class="nv">or</span><span class="w"> </span><span class="nv">false</span><span class="w"> </span><span class="nv">otherwise</span>.
-
-<span class="nv">Example</span>:
-<span class="w">    </span><span class="nv">s</span><span class="o">=</span><span class="s1">&#39;code&#39;</span>
-<span class="w">    </span><span class="nv">t</span><span class="o">=</span><span class="s1">&#39;leetcode&#39;</span>
-<span class="w">    </span><span class="nv">here</span><span class="w"> </span><span class="nv">s</span><span class="w"> </span><span class="nv">is</span><span class="w"> </span><span class="nv">subsequence</span><span class="w"> </span><span class="nv">of</span><span class="w"> </span><span class="nv">t</span><span class="w"> </span>,<span class="nv">we</span><span class="w"> </span><span class="nv">can</span><span class="w"> </span><span class="nv">get</span><span class="w"> </span><span class="nv">code</span><span class="w"> </span><span class="nv">from</span><span class="w"> </span><span class="nv">leetcode</span>.
+What is subsequence and subString?
+    Subsequence: a sequence that appears in the same relative order, but not necessarily contiguous.
+    SubString: a contiguous sequence of symbols that appears in the same relative order as the original string.
 
 
-<span class="nv">What</span><span class="w"> </span><span class="nv">is</span><span class="w"> </span><span class="nv">subsequence</span><span class="w"> </span><span class="nv">and</span><span class="w"> </span><span class="nv">subString</span>?
-<span class="w">    </span><span class="nv">Subsequence</span>:<span class="w"> </span><span class="nv">a</span><span class="w"> </span><span class="nv">sequence</span><span class="w"> </span><span class="nv">that</span><span class="w"> </span><span class="nv">appears</span><span class="w"> </span><span class="nv">in</span><span class="w"> </span><span class="nv">the</span><span class="w"> </span><span class="nv">same</span><span class="w"> </span><span class="nv">relative</span><span class="w"> </span><span class="nv">order</span>,<span class="w"> </span><span class="nv">but</span><span class="w"> </span><span class="nv">not</span><span class="w"> </span><span class="nv">necessarily</span><span class="w"> </span><span class="nv">contiguous</span>.
-<span class="w">    </span><span class="nv">SubString</span>:<span class="w"> </span><span class="nv">a</span><span class="w"> </span><span class="nv">contiguous</span><span class="w"> </span><span class="nv">sequence</span><span class="w"> </span><span class="nv">of</span><span class="w"> </span><span class="nv">symbols</span><span class="w"> </span><span class="nv">that</span><span class="w"> </span><span class="nv">appears</span><span class="w"> </span><span class="nv">in</span><span class="w"> </span><span class="nv">the</span><span class="w"> </span><span class="nv">same</span><span class="w"> </span><span class="nv">relative</span><span class="w"> </span><span class="nv">order</span><span class="w"> </span><span class="nv">as</span><span class="w"> </span><span class="nv">the</span><span class="w"> </span><span class="nv">original</span><span class="w"> </span><span class="nv">string</span>.
-
-
-<span class="w">  </span><span class="nv">Big</span><span class="w"> </span><span class="nv">O</span>:
-<span class="w">    </span><span class="nv">Time</span>:<span class="w"> </span><span class="nv">O</span><span class="ss">(</span><span class="nv">n</span><span class="ss">)</span><span class="w"> </span>#<span class="w"> </span><span class="nv">n</span><span class="w"> </span><span class="nv">is</span><span class="w"> </span><span class="nv">the</span><span class="w"> </span><span class="nv">length</span><span class="w"> </span><span class="nv">of</span><span class="w"> </span><span class="nv">t</span>
-<span class="w">    </span><span class="nv">Space</span>:<span class="w"> </span><span class="nv">O</span><span class="ss">(</span><span class="mi">1</span><span class="ss">)</span>
-</code></pre></div>
-
-<p></p>
-<p></p>
+  Big O:
+    Time: O(n) #### n is the length of t
+    Space: O(1)
+</code></pre>
 <p><code>JavaScript</code></p>
-<div class="codehilite"><pre><span></span><code><span class="n">const</span><span class="w"> </span><span class="n">isSubsequence</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">s</span><span class="p">,</span><span class="w"> </span><span class="n">t</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="err">{</span>
-<span class="w">  </span><span class="o">//</span><span class="err">!</span><span class="w"> </span><span class="n">Edge</span><span class="w"> </span><span class="k">case</span>
-<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">s</span><span class="p">.</span><span class="n">length</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">t</span><span class="p">.</span><span class="n">length</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="k">false</span><span class="p">;</span><span class="w"> </span><span class="o">//</span><span class="err">!</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="nf">len</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">s</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="n">greater</span><span class="w"> </span><span class="k">than</span><span class="w"> </span><span class="nf">len</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">t</span><span class="p">,</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="k">false</span><span class="w"> </span><span class="n">because</span><span class="w"> </span><span class="n">s</span><span class="w"> </span><span class="n">cant</span><span class="w"> </span><span class="n">be</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">subsequence</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">t</span>
-<span class="w">  </span><span class="err">`</span>
-<span class="w">  </span><span class="nl">Example</span><span class="p">:</span>
-<span class="w">    </span><span class="n">s</span><span class="o">=</span><span class="s1">&#39;Leetcode&#39;</span>
-<span class="w">    </span><span class="n">t</span><span class="o">=</span><span class="s1">&#39;Code&#39;</span>
-<span class="w">    </span><span class="n">here</span><span class="w"> </span><span class="n">we</span><span class="w"> </span><span class="k">are</span><span class="w"> </span><span class="n">trying</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="n">find</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="s1">&#39;Leetcode&#39;</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">subsequence</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="s1">&#39;Code&#39;</span><span class="w"> </span><span class="n">which</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="n">possible</span><span class="w"> </span><span class="n">because</span><span class="w"> </span><span class="s1">&#39;Leetcode&#39;</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="n">longer</span><span class="w"> </span><span class="k">than</span><span class="w"> </span><span class="s1">&#39;Code&#39;</span>
+<pre><code>const isSubsequence = (s, t) =&gt; {
+  //! Edge case
+  if (s.length &gt; t.length) return false; //! if len of s is greater than len of t, return false because s cant be a subsequence of t
+  `
+  Example:
+    s='Leetcode'
+    t='Code'
+    here we are trying to find if 'Leetcode' is a subsequence of 'Code' which is not possible because 'Leetcode' is longer than 'Code'
 
-<span class="w">  </span><span class="err">`</span><span class="p">;</span>
-<span class="w">  </span><span class="n">const</span><span class="w"> </span><span class="n">t_length</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">t</span><span class="p">.</span><span class="n">length</span><span class="p">;</span>
-<span class="w">  </span><span class="n">let</span><span class="w"> </span><span class="n">subsequence</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-<span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">let</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">t_length</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
-<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">s</span><span class="o">[</span><span class="n">subsequence</span><span class="o">]</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="n">t</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
-<span class="w">      </span><span class="o">//</span><span class="w"> </span><span class="err">!</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">it</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="n">matching</span><span class="p">,</span><span class="w"> </span><span class="n">increment</span><span class="w"> </span><span class="n">subsequence</span>
-<span class="w">      </span><span class="n">subsequence</span><span class="o">++</span><span class="p">;</span>
-<span class="w">    </span><span class="err">}</span>
-<span class="w">  </span><span class="err">}</span>
-<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">subsequence</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="n">s</span><span class="p">.</span><span class="n">length</span>
-<span class="err">}</span><span class="p">;</span>
-</code></pre></div>
-
+  `;
+  const t_length = t.length;
+  let subsequence = 0;
+  for (let i = 0; i &lt; t_length; i++) {
+    if (s[subsequence] === t[i]) {
+      // ! if it is matching, increment subsequence
+      subsequence++;
+    }
+  }
+  return subsequence === s.length
+};
+</code></pre>
 <p><code>Python</code></p>
-<div class="codehilite"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nl">Solution</span><span class="p">:</span>
-<span class="w">    </span><span class="n">def</span><span class="w"> </span><span class="n">isSubsequence</span><span class="p">(</span><span class="n">self</span><span class="p">,</span><span class="w"> </span><span class="nl">s</span><span class="p">:</span><span class="w"> </span><span class="nf">str</span><span class="p">,</span><span class="w"> </span><span class="nl">t</span><span class="p">:</span><span class="w"> </span><span class="nf">str</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="nl">bool</span><span class="p">:</span>
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="nf">len</span><span class="p">(</span><span class="n">s</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="nf">len</span><span class="p">(</span><span class="n">t</span><span class="p">)</span><span class="err">:</span><span class="k">return</span><span class="w"> </span><span class="k">False</span>
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="nf">len</span><span class="p">(</span><span class="n">s</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="err">:</span><span class="k">return</span><span class="w"> </span><span class="k">True</span>
-<span class="w">        </span><span class="n">subsequence</span><span class="o">=</span><span class="mi">0</span>
-<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="k">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="nf">len</span><span class="p">(</span><span class="n">t</span><span class="p">))</span><span class="err">:</span>
-<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="n">subsequence</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="nf">len</span><span class="p">(</span><span class="n">s</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="mi">1</span><span class="err">:</span>
-<span class="w">                </span><span class="k">print</span><span class="p">(</span><span class="n">s</span><span class="o">[</span><span class="n">subsequence</span><span class="o">]</span><span class="p">)</span>
-<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="n">s</span><span class="o">[</span><span class="n">subsequence</span><span class="o">]==</span><span class="n">t</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="err">:</span>
+<pre><code>class Solution:
+    def isSubsequence(self, s: str, t: str) -&gt; bool:
+        if len(s) &gt; len(t):return False
+        if len(s) == 0:return True
+        subsequence=0
+        for i in range(0,len(t)):
+            if subsequence &lt;= len(s) -1:
+                print(s[subsequence])
+                if s[subsequence]==t[i]:
 
-<span class="w">                    </span><span class="n">subsequence</span><span class="o">+=</span><span class="mi">1</span>
-<span class="w">        </span><span class="k">return</span><span class="w">  </span><span class="n">subsequence</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nf">len</span><span class="p">(</span><span class="n">s</span><span class="p">)</span><span class="w"> </span>
-</code></pre></div>
-
-<p><code>UPVOTE if you like  , If you have any question, feel free to ask.</code></p></div><p style="page-break-before: always" ></p>
+                    subsequence+=1
+        return  subsequence == len(s) 
+</code></pre>
+<p><code>UPVOTE if you like  , If you have any question, feel free to ask.</code></p></div>

@@ -1,316 +1,285 @@
-<div class='cpp-solution'><h2>Python/Go/Java/JS/C++ O(n) sol. by Balance scale. [w/ Animation] 有中文解題文章 -- Votes: 214</h2><p><a href="https://www.youtube.com/watch?v=hK9gdtn2zq0">Tutorial video in Chinese 中文解題影片</a></p>
+<div class='cpp-solution'><h4>Python/Go/Java/JS/C++ O(n) sol. by Balance scale. [w/ Animation] 有中文解題文章 [Votes: 214]</h4><p><a href="https://www.youtube.com/watch?v=hK9gdtn2zq0">Tutorial video in Chinese 中文解題影片</a></p>
 <p><a href="https://vocus.cc/article/655b6d6ffd89780001b34a15">中文詳解 解題文章</a></p>
 <p><a href="https://vocus.cc/article/66d59867fd897800014586cd">用Python來實現Prefix Sum</a></p>
 <p><a href="https://vocus.cc/article/660402f4fd8978000101b7b4">從"前綴和"查表高速計算"區間和"的教學專欄</a></p>
 <p>O(n) sol. by Balance scale.</p>
-<hr />
-<h2>Animation of Balance scale algorithm</h2>
-<p></p>
-<hr />
+<h4>Animation of Balance scale algorithm</h4>
 <p><strong>Hint</strong>:</p>
-<h2>1.</h2>
-<p>Think of the <strong>Balance scale</strong> in laboratory or traditional markets.<br />
-</p>
-<h2>2.</h2>
-<p>Imagine each <strong>number</strong> from input list as a <strong>weight</strong>.<br />
-</p>
-<h2>3</h2>
+<h1>1.</h1>
+<p>Think of the <strong>Balance scale</strong> in laboratory or traditional markets.</p>
+<h1>2.</h1>
+<p>Imagine each <strong>number</strong> from input list as a <strong>weight</strong>.</p>
+<h1>3</h1>
 <p>Turn the finding of pivot index with left hand sum = right hand sum into the <strong>procedure of reaching the balance on boths sides</strong>.</p>
-<hr />
 <p><strong>Algorithm</strong>:</p>
-<hr />
 <p>Step_#1:</p>
-<p>Let<br />
-<strong>Left hand side be empty</strong>, and<br />
+<p>Let 
+<strong>Left hand side be empty</strong>, and
 <strong>Right hand side holds all weights</strong>.</p>
-<hr />
 <p>Step_#2:</p>
 <p>Iterate weight_<em>i</em> from 0 to (n-1)</p>
 <p>During each iteration, <strong>take away weight_#i from right hand side</strong>, <strong>check whether balance is met</strong> or not.</p>
 <p><strong>If yes</strong>, then the <strong>index <em>i</em></strong> is the <strong>pivot index</strong>.</p>
 <p>If no, <strong>put weight_#<em>i</em> on the left hand side</strong>, and <strong>repeat the process</strong> until balance is met or all weights are exchanged.</p>
-<hr />
 <p>Step_#3:</p>
 <p>Finally, if all weights are exchanged and no balance is met, then pivot index does not exist, return -1.</p>
-<hr />
-<div class="codehilite"><pre><span></span><code><span class="n">Language</span><span class="p">:</span> <span class="n">python</span> 
-<span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="p">:</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">pivotIndex</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nums</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<pre><code class="language-python">class Solution:
+    def pivotIndex(self, nums: List[int]) -&gt; int:
 
-        <span class="c1"># Initialization:</span>
-        <span class="c1"># Left hand side be empty, and</span>
-        <span class="c1"># Right hand side holds all weights.</span>
-        <span class="n">total_weight_on_left</span><span class="p">,</span> <span class="n">total_weight_on_right</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">sum</span><span class="p">(</span><span class="n">nums</span><span class="p">)</span>
+        #### Initialization:
+        #### Left hand side be empty, and
+        #### Right hand side holds all weights.
+        total_weight_on_left, total_weight_on_right = 0, sum(nums)
 
-        <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">current_weight</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">nums</span><span class="p">):</span>
+        for idx, current_weight in enumerate(nums):
 
-            <span class="n">total_weight_on_right</span> <span class="o">-=</span> <span class="n">current_weight</span>
+            total_weight_on_right -= current_weight
 
-            <span class="k">if</span> <span class="n">total_weight_on_left</span> <span class="o">==</span> <span class="n">total_weight_on_right</span><span class="p">:</span>
-                <span class="c1"># balance is met on both sides</span>
-                <span class="c1"># i.e., sum( nums[ :idx] ) == sum( nums[idx+1: ] )</span>
-                <span class="k">return</span> <span class="n">idx</span>
+            if total_weight_on_left == total_weight_on_right:
+                #### balance is met on both sides
+                #### i.e., sum( nums[ :idx] ) == sum( nums[idx+1: ] )
+                return idx
 
-            <span class="n">total_weight_on_left</span> <span class="o">+=</span> <span class="n">current_weight</span>
+            total_weight_on_left += current_weight
 
-        <span class="k">return</span> <span class="o">-</span><span class="mi">1</span>
-</code></pre></div>
+        return -1
+</code></pre>
+<pre><code class="language-javascript">function Accumulation(arr){
+    return arr.reduce((a,b)=&gt;a+b);  
+}
 
-<div class="codehilite"><pre><span></span><code><span class="nx">Language</span><span class="o">:</span><span class="w"> </span><span class="nx">javascript</span><span class="w"> </span>
-<span class="kd">function</span><span class="w"> </span><span class="nx">Accumulation</span><span class="p">(</span><span class="nx">arr</span><span class="p">){</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">arr</span><span class="p">.</span><span class="nx">reduce</span><span class="p">((</span><span class="nx">a</span><span class="p">,</span><span class="nx">b</span><span class="p">)=&gt;</span><span class="nx">a</span><span class="o">+</span><span class="nx">b</span><span class="p">);</span><span class="w">  </span>
-<span class="p">}</span>
-
-<span class="kd">var</span><span class="w"> </span><span class="nx">pivotIndex</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kd">function</span><span class="p">(</span><span class="nx">nums</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+var pivotIndex = function(nums) {
 
 
-<span class="w">    </span><span class="c1">// Initialization:</span>
-<span class="w">    </span><span class="c1">// Left hand side be empty, and</span>
-<span class="w">    </span><span class="c1">// Right hand side holds all weights.</span>
+    // Initialization:
+    // Left hand side be empty, and
+    // Right hand side holds all weights.
 
-<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="nx">totalWeightOnLeft</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0</span><span class="p">;</span>
-<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="nx">totalWeightOnRight</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">Accumulation</span><span class="p">(</span><span class="nx">nums</span><span class="p">);</span>
+    let totalWeightOnLeft = 0;
+    let totalWeightOnRight = Accumulation(nums);
 
-<span class="w">    </span><span class="k">for</span><span class="p">(</span><span class="w"> </span><span class="kd">let</span><span class="w"> </span><span class="nx">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0</span><span class="w"> </span><span class="p">;</span><span class="w"> </span><span class="nx">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="nx">nums</span><span class="p">.</span><span class="nx">length</span><span class="w"> </span><span class="p">;</span><span class="w"> </span><span class="nx">i</span><span class="o">++</span><span class="w"> </span><span class="p">){</span>
+    for( let i = 0 ; i &lt; nums.length ; i++ ){
 
-<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="nx">currentWeight</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">nums</span><span class="p">[</span><span class="nx">i</span><span class="p">];</span>
+        let currentWeight = nums[i];
 
-<span class="w">        </span><span class="nx">totalWeightOnRight</span><span class="w"> </span><span class="o">-=</span><span class="w"> </span><span class="nx">currentWeight</span><span class="p">;</span>
+        totalWeightOnRight -= currentWeight;
 
-<span class="w">        </span><span class="k">if</span><span class="p">(</span><span class="w"> </span><span class="nx">totalWeightOnLeft</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nx">totalWeightOnRight</span><span class="w"> </span><span class="p">){</span>
-<span class="w">            </span><span class="c1">// balance is met on both sides</span>
-<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="nx">i</span><span class="p">;</span>
-<span class="w">        </span><span class="p">}</span>
+        if( totalWeightOnLeft == totalWeightOnRight ){
+            // balance is met on both sides
+            return i;
+        }
 
-<span class="w">        </span><span class="nx">totalWeightOnLeft</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="nx">currentWeight</span>
-
-
-<span class="w">    </span><span class="p">}</span>
-
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="o">-</span><span class="mf">1</span><span class="p">;</span>
-
-<span class="p">};</span>
-</code></pre></div>
-
-<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">java</span><span class="w"> </span>
-<span class="kd">class</span> <span class="nc">Solution</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="nf">pivotIndex</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">nums</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-
-<span class="w">        </span><span class="c1">// Initialization:</span>
-<span class="w">        </span><span class="c1">// Left hand side be empty, and</span>
-<span class="w">        </span><span class="c1">// Right hand side holds all weights.</span>
-<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">totalWeightOnLeft</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">totalWeightOnRight</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">IntStream</span><span class="p">.</span><span class="na">of</span><span class="p">(</span><span class="w"> </span><span class="n">nums</span><span class="w"> </span><span class="p">).</span><span class="na">sum</span><span class="p">();</span>
-
-<span class="w">        </span><span class="k">for</span><span class="p">(</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">nums</span><span class="p">.</span><span class="na">length</span><span class="w"> </span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="w"> </span><span class="p">){</span>
-
-<span class="w">            </span><span class="kt">int</span><span class="w"> </span><span class="n">curWeight</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">nums</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="p">;</span>
-
-<span class="w">            </span><span class="n">totalWeightOnRight</span><span class="w"> </span><span class="o">-=</span><span class="w"> </span><span class="n">curWeight</span><span class="p">;</span>
-
-<span class="w">            </span><span class="k">if</span><span class="p">(</span><span class="w"> </span><span class="n">totalWeightOnLeft</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">totalWeightOnRight</span><span class="w"> </span><span class="p">){</span>
-<span class="w">                </span><span class="c1">// balance is met on both sides</span>
-<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="n">i</span><span class="p">;</span>
-<span class="w">            </span><span class="p">}</span>
-
-<span class="w">            </span><span class="n">totalWeightOnLeft</span><span class="w">  </span><span class="o">+=</span><span class="w"> </span><span class="n">curWeight</span><span class="p">;</span>
-<span class="w">        </span><span class="p">}</span>
-
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="o">-</span><span class="mi">1</span><span class="p">;</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
-
-<div class="codehilite"><pre><span></span><code><span class="nx">Language</span><span class="p">:</span><span class="w"> </span><span class="nx">Go</span><span class="w"> </span>
-<span class="kd">func</span><span class="w"> </span><span class="nx">accumulation</span><span class="p">(</span><span class="nx">nums</span><span class="w"> </span><span class="kt">int</span><span class="p">)</span><span class="w"> </span><span class="kt">int</span><span class="p">{</span>
-
-<span class="w">    </span><span class="nx">summation</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="mi">0</span>
-
-<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="nx">_</span><span class="p">,</span><span class="w"> </span><span class="nx">num</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="k">range</span><span class="w"> </span><span class="nx">nums</span><span class="p">{</span>
-<span class="w">        </span><span class="nx">summation</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="nx">num</span><span class="w">    </span>
-<span class="w">    </span><span class="p">}</span>
-
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">summation</span>
-<span class="p">}</span>
+        totalWeightOnLeft += currentWeight
 
 
-<span class="kd">func</span><span class="w"> </span><span class="nx">pivotIndex</span><span class="p">(</span><span class="nx">nums</span><span class="w"> </span><span class="kt">int</span><span class="p">)</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="p">{</span>
+    }
 
-<span class="w">    </span><span class="c1">// Initialization</span>
-<span class="w">    </span><span class="c1">// Left hand side be empty</span>
-<span class="w">    </span><span class="c1">// Right hand side holds all weights</span>
-<span class="w">    </span><span class="nx">totalWeightOnLeft</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="mi">0</span>
-<span class="w">    </span><span class="nx">totalWeightOnRight</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">accumulation</span><span class="p">(</span><span class="w"> </span><span class="nx">nums</span><span class="w"> </span><span class="p">)</span>
+    return -1;
 
-<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="nx">idx</span><span class="p">,</span><span class="w"> </span><span class="nx">currentWeight</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="k">range</span><span class="w"> </span><span class="nx">nums</span><span class="p">{</span>
+};
+</code></pre>
+<pre><code class="language-java">class Solution {
+    public int pivotIndex(int[] nums) {
 
-<span class="w">        </span><span class="nx">totalWeightOnRight</span><span class="w"> </span><span class="o">-=</span><span class="w"> </span><span class="nx">currentWeight</span>
+        // Initialization:
+        // Left hand side be empty, and
+        // Right hand side holds all weights.
+        int totalWeightOnLeft = 0;
+        int totalWeightOnRight = IntStream.of( nums ).sum();
 
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="nx">totalWeightOnLeft</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nx">totalWeightOnRight</span><span class="p">{</span>
-<span class="w">            </span><span class="c1">// balance is met on both sides</span>
-<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="nx">idx</span>
-<span class="w">        </span><span class="p">}</span>
+        for( int i = 0 ; i &lt; nums.length ; i++ ){
 
-<span class="w">        </span><span class="nx">totalWeightOnLeft</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="nx">currentWeight</span>
-<span class="w">    </span><span class="p">}</span>
+            int curWeight = nums[i];
 
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="o">-</span><span class="mi">1</span>
+            totalWeightOnRight -= curWeight;
 
-<span class="p">}</span>
-</code></pre></div>
+            if( totalWeightOnLeft == totalWeightOnRight ){
+                // balance is met on both sides
+                return i;
+            }
 
-<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">C</span><span class="o">++</span><span class="w"> </span>
-<span class="n">class</span><span class="w"> </span><span class="n">Solution</span><span class="w"> </span><span class="p">{</span>
-<span class="n">public</span><span class="o">:</span>
-<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">pivotIndex</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&amp;</span><span class="w"> </span><span class="n">nums</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+            totalWeightOnLeft  += curWeight;
+        }
 
-<span class="w">        </span><span class="c1">// Initialization:</span>
-<span class="w">        </span><span class="c1">// Left hand side be empty, and</span>
-<span class="w">        </span><span class="c1">// Right hand side holds all weights.</span>
+        return -1;
+    }
+}
+</code></pre>
+<pre><code class="language-Go">func accumulation(nums []int) int{
 
-<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">totalWeightOnLeft</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">totalWeightOnRight</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">accumulate</span><span class="p">(</span><span class="w"> </span><span class="n">nums</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span><span class="w"> </span><span class="n">nums</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
+    summation := 0
 
+    for _, num := range nums{
+        summation += num    
+    }
 
-<span class="w">        </span><span class="k">for</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="kt">size_t</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">nums</span><span class="p">.</span><span class="n">size</span><span class="p">()</span><span class="w"> </span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="w"> </span><span class="p">){</span>
-
-<span class="w">            </span><span class="kt">int</span><span class="w"> </span><span class="n">currentWeight</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">nums</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
-
-<span class="w">            </span><span class="n">totalWeightOnRight</span><span class="w"> </span><span class="o">-=</span><span class="w"> </span><span class="n">currentWeight</span><span class="p">;</span>
-
-<span class="w">            </span><span class="k">if</span><span class="p">(</span><span class="w"> </span><span class="n">totalWeightOnLeft</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">totalWeightOnRight</span><span class="w"> </span><span class="p">){</span>
-<span class="w">                </span><span class="c1">// balance is met on both sides</span>
-<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="n">i</span><span class="p">;</span>
-<span class="w">            </span><span class="p">}</span>
-
-<span class="w">            </span><span class="n">totalWeightOnLeft</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">currentWeight</span><span class="p">;</span>
-<span class="w">        </span><span class="p">}</span>
+    return summation
+}
 
 
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="mi">-1</span><span class="p">;</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">};</span>
-</code></pre></div>
+func pivotIndex(nums []int) int {
 
-<hr />
+    // Initialization
+    // Left hand side be empty
+    // Right hand side holds all weights
+    totalWeightOnLeft := 0
+    totalWeightOnRight := accumulation( nums )
+
+    for idx, currentWeight := range nums{
+
+        totalWeightOnRight -= currentWeight
+
+        if totalWeightOnLeft == totalWeightOnRight{
+            // balance is met on both sides
+            return idx
+        }
+
+        totalWeightOnLeft += currentWeight
+    }
+
+    return -1
+
+}
+</code></pre>
+<pre><code class="language-cpp">class Solution {
+public:
+    int pivotIndex(vector&lt;int&gt;&amp; nums) {
+
+        // Initialization:
+        // Left hand side be empty, and
+        // Right hand side holds all weights.
+
+        int totalWeightOnLeft = 0;
+        int totalWeightOnRight = std::accumulate( nums.begin(), nums.end(), 0);
+
+
+        for(std::size_t i = 0; i &lt; nums.size() ; i++ ){
+
+            int currentWeight = nums[i];
+
+            totalWeightOnRight -= currentWeight;
+
+            if( totalWeightOnLeft == totalWeightOnRight ){
+                // balance is met on both sides
+                return i;
+            }
+
+            totalWeightOnLeft += currentWeight;
+        }
+
+
+        return -1;
+    }
+};
+</code></pre>
 <p>Time Complexity: O(n) on for loop iteration, and summation of input array.</p>
 <p>Sapce Complexity: O(1) on fixed size of temp variables.</p>
-<hr />
 <p>Share traditional solution based on prefix sum</p>
-<div class="codehilite"><pre><span></span><code><span class="n">Language</span><span class="p">:</span> <span class="n">python</span> 
-<span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="p">:</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">pivotIndex</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nums</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<pre><code class="language-python">class Solution:
+    def pivotIndex(self, nums: List[int]) -&gt; int:
 
-        <span class="c1"># s = prefix sum of array</span>
-        <span class="c1"># s[i] = nums[0] + nums[1] + ... + nums[i]</span>
-        <span class="n">s</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span> <span class="n">itertools</span><span class="o">.</span><span class="n">accumulate</span><span class="p">(</span><span class="n">nums</span><span class="p">)</span> <span class="p">)</span>
-        <span class="n">total_sum</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span> <span class="n">nums</span> <span class="p">)</span>
+        #### s = prefix sum of array
+        #### s[i] = nums[0] + nums[1] + ... + nums[i]
+        s = list( itertools.accumulate(nums) )
+        total_sum = sum( nums )
 
-        <span class="c1"># Linear scan on each index</span>
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span> <span class="nb">len</span><span class="p">(</span><span class="n">nums</span><span class="p">)</span> <span class="p">):</span>
+        #### Linear scan on each index
+        for i in range( len(nums) ):
 
-            <span class="n">left_sum</span> <span class="o">=</span> <span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="k">if</span> <span class="n">i</span> <span class="o">&gt;=</span> <span class="mi">1</span> <span class="k">else</span> <span class="mi">0</span>
-            <span class="n">right_sum</span> <span class="o">=</span> <span class="n">total_sum</span> <span class="o">-</span> <span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            left_sum = s[i-1] if i &gt;= 1 else 0
+            right_sum = total_sum - s[i]
 
-            <span class="c1"># Find pivot index from definition</span>
-            <span class="k">if</span> <span class="n">left_sum</span> <span class="o">==</span> <span class="n">right_sum</span><span class="p">:</span>
-                <span class="k">return</span> <span class="n">i</span>
+            #### Find pivot index from definition
+            if left_sum == right_sum:
+                return i
 
-        <span class="k">return</span> <span class="o">-</span><span class="mi">1</span>
-</code></pre></div>
-
+        return -1
+</code></pre>
 <p>Time complexity: O(n) on linear scan as well as prefix sum table</p>
-<p>Space complexity: O( n ) on the size of prefix sum table</p></div>
-
-
-<div class='python-solution'><h2>Very Easy || 100% || Fully Explained || Java, C++, Python, JS, Python3 -- Votes: 910</h2><h2><strong>Java Solution:</strong></h2>
-<div class="codehilite"><pre><span></span><code><span class="o">//</span><span class="w"> </span><span class="nl">Runtime</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="n">ms</span><span class="p">,</span><span class="w"> </span><span class="n">faster</span><span class="w"> </span><span class="k">than</span><span class="w"> </span><span class="mf">92.94</span><span class="o">%</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">Java</span><span class="w"> </span><span class="n">online</span><span class="w"> </span><span class="n">submissions</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">Find</span><span class="w"> </span><span class="k">Pivot</span><span class="w"> </span><span class="k">Index</span><span class="p">.</span>
-<span class="o">//</span><span class="w"> </span><span class="nc">Time</span><span class="w"> </span><span class="n">Complexity</span><span class="w"> </span><span class="err">:</span><span class="w"> </span><span class="n">O</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
-<span class="k">class</span><span class="w"> </span><span class="n">Solution</span><span class="w"> </span><span class="err">{</span>
-<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="nc">int</span><span class="w"> </span><span class="n">pivotIndex</span><span class="p">(</span><span class="nc">int</span><span class="w"> </span><span class="n">nums</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
-<span class="w">        </span><span class="o">//</span><span class="w"> </span><span class="k">Initialize</span><span class="w"> </span><span class="n">total</span><span class="w"> </span><span class="nf">sum</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">given</span><span class="w"> </span><span class="k">array</span><span class="p">...</span>
-<span class="w">        </span><span class="nc">int</span><span class="w"> </span><span class="n">totalSum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-<span class="w">        </span><span class="o">//</span><span class="w"> </span><span class="k">Initialize</span><span class="w"> </span><span class="s1">&#39;leftsum&#39;</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nf">sum</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="k">first</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="n">numbers</span><span class="p">,</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="n">including</span><span class="w"> </span><span class="n">nums</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="p">...</span>
-<span class="w">        </span><span class="nc">int</span><span class="w"> </span><span class="n">leftsum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-<span class="w">        </span><span class="o">//</span><span class="w"> </span><span class="n">Traverse</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">elements</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="k">add</span><span class="w"> </span><span class="n">them</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="n">store</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">totalSum</span><span class="p">...</span>
-<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="nc">int</span><span class="w"> </span><span class="n">ele</span><span class="w"> </span><span class="err">:</span><span class="w"> </span><span class="n">nums</span><span class="p">)</span>
-<span class="w">            </span><span class="n">totalSum</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">ele</span><span class="p">;</span>
-<span class="w">        </span><span class="o">//</span><span class="w"> </span><span class="n">Again</span><span class="w"> </span><span class="n">traverse</span><span class="w"> </span><span class="ow">all</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">elements</span><span class="w"> </span><span class="n">through</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">loop</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="n">store</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="nf">sum</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="n">numbers</span><span class="w"> </span><span class="k">from</span><span class="w"> </span><span class="nf">left</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="nf">right</span><span class="p">...</span>
-<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="nc">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">nums</span><span class="p">.</span><span class="n">length</span><span class="p">;</span><span class="w"> </span><span class="n">leftsum</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">nums</span><span class="o">[</span><span class="n">i++</span><span class="o">]</span><span class="p">)</span>
-<span class="w">            </span><span class="o">//</span><span class="w"> </span><span class="nf">sum</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="nf">left</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">leftsum</span><span class="p">.</span>
-<span class="w">            </span><span class="o">//</span><span class="w"> </span><span class="nf">sum</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="nf">right</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="n">totalSum</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">leftsum</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">nums</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="p">..</span>
-<span class="w">            </span><span class="o">//</span><span class="w"> </span><span class="k">check</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">leftsum</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">totalSum</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">leftsum</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">nums</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="p">...</span>
-<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">leftsum</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">totalSum</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">nums</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="p">)</span>
-<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="n">i</span><span class="p">;</span><span class="w">       </span><span class="o">//</span><span class="w"> </span><span class="k">Return</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="k">pivot</span><span class="w"> </span><span class="k">index</span><span class="p">...</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="o">-</span><span class="mi">1</span><span class="p">;</span><span class="w">      </span><span class="o">//</span><span class="w"> </span><span class="k">If</span><span class="w"> </span><span class="n">there</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="k">no</span><span class="w"> </span><span class="k">index</span><span class="w"> </span><span class="n">that</span><span class="w"> </span><span class="n">satisfies</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">conditions</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">problem</span><span class="w"> </span><span class="k">statement</span><span class="p">...</span>
-<span class="w">    </span><span class="err">}</span>
-<span class="err">}</span>
-</code></pre></div>
-
-<h2><strong>C++ Solution:</strong></h2>
-<div class="codehilite"><pre><span></span><code><span class="o">//</span><span class="w"> </span><span class="nc">Time</span><span class="w"> </span><span class="n">Complexity</span><span class="w"> </span><span class="err">:</span><span class="w"> </span><span class="n">O</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
-<span class="k">class</span><span class="w"> </span><span class="n">Solution</span><span class="w"> </span><span class="err">{</span>
-<span class="k">public</span><span class="err">:</span>
-<span class="w">    </span><span class="nc">int</span><span class="w"> </span><span class="n">pivotIndex</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="nc">int</span><span class="o">&gt;&amp;</span><span class="w"> </span><span class="n">nums</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
-<span class="w">        </span><span class="o">//</span><span class="w"> </span><span class="k">Initialize</span><span class="w"> </span><span class="n">rightSum</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="n">store</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="nf">sum</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="ow">all</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">numbers</span><span class="w"> </span><span class="n">strictly</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="k">index</span><span class="s1">&#39;s right...</span>
-<span class="s1">        int rightSum = accumulate(nums.begin(), nums.end(), 0);</span>
-<span class="s1">        // Initialize leftSum to store the sum of all the numbers strictly to the index&#39;</span><span class="n">s</span><span class="w"> </span><span class="nf">left</span><span class="p">...</span>
-<span class="w">        </span><span class="nc">int</span><span class="w"> </span><span class="n">leftSum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-<span class="w">        </span><span class="o">//</span><span class="w"> </span><span class="n">Traverse</span><span class="w"> </span><span class="ow">all</span><span class="w"> </span><span class="n">elements</span><span class="w"> </span><span class="n">through</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">loop</span><span class="p">...</span>
-<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="nc">int</span><span class="w"> </span><span class="n">idx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">idx</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">nums</span><span class="p">.</span><span class="k">size</span><span class="p">();</span><span class="w"> </span><span class="n">idx</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
-<span class="w">            </span><span class="o">//</span><span class="w"> </span><span class="n">subtract</span><span class="w"> </span><span class="k">current</span><span class="w"> </span><span class="n">elements</span><span class="w"> </span><span class="k">with</span><span class="w"> </span><span class="k">from</span><span class="w"> </span><span class="n">rightSum</span><span class="p">...</span>
-<span class="w">            </span><span class="n">rightSum</span><span class="w"> </span><span class="o">-=</span><span class="w"> </span><span class="n">nums</span><span class="o">[</span><span class="n">idx</span><span class="o">]</span><span class="p">;</span>
-<span class="w">            </span><span class="o">//</span><span class="w"> </span><span class="k">If</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="nf">sum</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="ow">all</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">numbers</span><span class="w"> </span><span class="n">strictly</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="nf">left</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="k">index</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="n">equal</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="nf">sum</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="ow">all</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">numbers</span><span class="w"> </span><span class="n">strictly</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="k">index</span><span class="err">&#39;</span><span class="n">s</span><span class="w"> </span><span class="nf">right</span><span class="p">...</span>
-<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">leftSum</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">rightSum</span><span class="p">)</span>
-<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="n">idx</span><span class="p">;</span><span class="w">     </span><span class="o">//</span><span class="w"> </span><span class="k">Return</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="k">pivot</span><span class="w"> </span><span class="k">index</span><span class="p">...</span>
-<span class="w">            </span><span class="o">//</span><span class="w"> </span><span class="k">add</span><span class="w"> </span><span class="k">current</span><span class="w"> </span><span class="n">elements</span><span class="w"> </span><span class="k">with</span><span class="w"> </span><span class="n">leftSum</span><span class="p">...</span>
-<span class="w">            </span><span class="n">leftSum</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">nums</span><span class="o">[</span><span class="n">idx</span><span class="o">]</span><span class="p">;</span>
-<span class="w">        </span><span class="err">}</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="o">-</span><span class="mi">1</span><span class="p">;</span><span class="w">      </span><span class="o">//</span><span class="w"> </span><span class="k">If</span><span class="w"> </span><span class="n">there</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="k">no</span><span class="w"> </span><span class="k">index</span><span class="w"> </span><span class="n">that</span><span class="w"> </span><span class="n">satisfies</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">conditions</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">problem</span><span class="w"> </span><span class="k">statement</span><span class="p">...</span>
-<span class="w">    </span><span class="err">}</span>
-<span class="err">}</span><span class="p">;</span>
-</code></pre></div>
-
-<h2><strong>Python/Python3 Solution:</strong></h2>
-<div class="codehilite"><pre><span></span><code><span class="c1"># Time Complexity : O(n)</span>
-<span class="c1"># Space Complexity : O(1)</span>
-<span class="k">class</span><span class="w"> </span><span class="n">Solution</span><span class="p">(</span><span class="n">object</span><span class="p">):</span>
-<span class="w">    </span><span class="n">def</span><span class="w"> </span><span class="n">pivotIndex</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="w"> </span><span class="n">nums</span><span class="p">):</span>
-<span class="w">        </span><span class="c1"># Initialize leftSum &amp; rightSum to store the sum of all the numbers strictly to the index&#39;s left &amp; right respectively...</span>
-<span class="w">        </span><span class="n">leftSum</span><span class="p">,</span><span class="w"> </span><span class="n">rightSum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">sum</span><span class="p">(</span><span class="n">nums</span><span class="p">)</span>
-<span class="w">        </span><span class="c1"># Traverse elements through the loop...</span>
-<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="n">idx</span><span class="p">,</span><span class="w"> </span><span class="n">ele</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">enumerate</span><span class="p">(</span><span class="n">nums</span><span class="p">):</span>
-<span class="w">            </span><span class="n">rightSum</span><span class="w"> </span><span class="o">-=</span><span class="w"> </span><span class="n">ele</span>
-<span class="w">            </span><span class="c1"># If the sum of all the numbers strictly to the left of the index is equal to the sum of all the numbers strictly to the index&#39;s right...</span>
-<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="n">leftSum</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">rightSum</span><span class="p">:</span>
-<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="n">idx</span><span class="w">      </span><span class="c1"># Return the pivot index...</span>
-<span class="w">            </span><span class="n">leftSum</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">ele</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="o">-</span><span class="mi">1</span><span class="w">       </span><span class="c1"># If there is no index that satisfies the conditions in the problem statement...</span>
-</code></pre></div>
-
-<h2><strong>JavaScript Solution:</strong></h2>
-<div class="codehilite"><pre><span></span><code><span class="o">//</span><span class="w"> </span><span class="nc">Time</span><span class="w"> </span><span class="n">Complexity</span><span class="w"> </span><span class="err">:</span><span class="w"> </span><span class="n">O</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
-<span class="nf">var</span><span class="w"> </span><span class="n">pivotIndex</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">function</span><span class="p">(</span><span class="n">nums</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
-<span class="w">    </span><span class="o">//</span><span class="w"> </span><span class="k">Initialize</span><span class="w"> </span><span class="n">total</span><span class="w"> </span><span class="nf">sum</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">given</span><span class="w"> </span><span class="k">array</span><span class="p">...</span>
-<span class="w">    </span><span class="n">let</span><span class="w"> </span><span class="n">totalSum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span>
-<span class="w">    </span><span class="o">//</span><span class="w"> </span><span class="n">Traverse</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">elements</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="k">add</span><span class="w"> </span><span class="n">them</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="n">store</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">totalSum</span><span class="p">...</span>
-<span class="w">    </span><span class="k">for</span><span class="p">(</span><span class="n">let</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">nums</span><span class="p">.</span><span class="n">length</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
-<span class="w">        </span><span class="n">totalSum</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">nums</span><span class="o">[</span><span class="n">i</span><span class="o">]</span>
-<span class="w">    </span><span class="err">}</span>
-<span class="w">    </span><span class="o">//</span><span class="w"> </span><span class="k">Initialize</span><span class="w"> </span><span class="s1">&#39;leftsum&#39;</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nf">sum</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="k">first</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="n">numbers</span><span class="p">,</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="n">including</span><span class="w"> </span><span class="n">nums</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="p">...</span>
-<span class="w">    </span><span class="n">let</span><span class="w"> </span><span class="n">leftSum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span>
-<span class="w">    </span><span class="o">//</span><span class="w"> </span><span class="n">Again</span><span class="w"> </span><span class="n">traverse</span><span class="w"> </span><span class="ow">all</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">elements</span><span class="w"> </span><span class="n">through</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">loop</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="n">store</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="nf">sum</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="n">numbers</span><span class="w"> </span><span class="k">from</span><span class="w"> </span><span class="nf">left</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="nf">right</span><span class="p">...</span>
-<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">let</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">nums</span><span class="p">.</span><span class="n">length</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
-<span class="w">        </span><span class="o">//</span><span class="w"> </span><span class="nf">sum</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="nf">left</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">leftsum</span><span class="p">.</span>
-<span class="w">        </span><span class="o">//</span><span class="w"> </span><span class="nf">sum</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="nf">right</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="n">totalSum</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">leftsum</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">nums</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="p">..</span>
-<span class="w">        </span><span class="o">//</span><span class="w"> </span><span class="k">check</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">leftsum</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">totalSum</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">leftsum</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">nums</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="p">...</span>
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">leftSum</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">totalSum</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">nums</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="p">)</span>
-<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="n">i</span><span class="p">;</span><span class="w">       </span><span class="o">//</span><span class="w"> </span><span class="k">Return</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="k">pivot</span><span class="w"> </span><span class="k">index</span><span class="p">...</span>
-<span class="w">        </span><span class="n">leftSum</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">nums</span><span class="o">[</span><span class="n">i</span><span class="o">]</span>
-<span class="w">    </span><span class="err">}</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="o">-</span><span class="mi">1</span><span class="w">      </span><span class="o">//</span><span class="w"> </span><span class="k">If</span><span class="w"> </span><span class="n">there</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="k">no</span><span class="w"> </span><span class="k">index</span><span class="w"> </span><span class="n">that</span><span class="w"> </span><span class="n">satisfies</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">conditions</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">problem</span><span class="w"> </span><span class="k">statement</span><span class="p">...</span>
-<span class="err">}</span><span class="p">;</span>
-</code></pre></div>
-
-<p><strong>I am working hard for you guys...<br />
-Please upvote if you found any help with this code...</strong></p></div><p style="page-break-before: always" ></p>
+<p>Space complexity: O( n ) on the size of prefix sum table </p></div><div class='python-solution'><h4>Very Easy || 100% || Fully Explained || Java, C++, Python, JS, Python3 [Votes: 910]</h4><h4><strong>Java Solution:</strong></h4>
+<pre><code>// Runtime: 1 ms, faster than 92.94% of Java online submissions for Find Pivot Index.
+// Time Complexity : O(n)
+class Solution {
+    public int pivotIndex(int[] nums) {
+        // Initialize total sum of the given array...
+        int totalSum = 0;
+        // Initialize 'leftsum' as sum of first i numbers, not including nums[i]...
+        int leftsum = 0;
+        // Traverse the elements and add them to store the totalSum...
+        for (int ele : nums)
+            totalSum += ele;
+        // Again traverse all the elements through the for loop and store the sum of i numbers from left to right...
+        for (int i = 0; i &lt; nums.length; leftsum += nums[i++])
+            // sum to the left == leftsum.
+            // sum to the right === totalSum - leftsum - nums[i]..
+            // check if leftsum == totalSum - leftsum - nums[i]...
+            if (leftsum * 2 == totalSum - nums[i])
+                return i;       // Return the pivot index...
+        return -1;      // If there is no index that satisfies the conditions in the problem statement...
+    }
+}
+</code></pre>
+<h4><strong>cpp Solution:</strong></h4>
+<pre><code>// Time Complexity : O(n)
+class Solution {
+public:
+    int pivotIndex(vector&lt;int&gt;&amp; nums) {
+        // Initialize rightSum to store the sum of all the numbers strictly to the index's right...
+        int rightSum = accumulate(nums.begin(), nums.end(), 0);
+        // Initialize leftSum to store the sum of all the numbers strictly to the index's left...
+        int leftSum = 0;
+        // Traverse all elements through the loop...
+        for (int idx = 0; idx &lt; nums.size(); idx++) {
+            // subtract current elements with from rightSum...
+            rightSum -= nums[idx];
+            // If the sum of all the numbers strictly to the left of the index is equal to the sum of all the numbers strictly to the index's right...
+            if (leftSum == rightSum)
+                return idx;     // Return the pivot index...
+            // add current elements with leftSum...
+            leftSum += nums[idx];
+        }
+        return -1;      // If there is no index that satisfies the conditions in the problem statement...
+    }
+};
+</code></pre>
+<h4><strong>Python/Python3 Solution:</strong></h4>
+<pre><code>#### Time Complexity : O(n)
+#### Space Complexity : O(1)
+class Solution(object):
+    def pivotIndex(self, nums):
+        #### Initialize leftSum &amp; rightSum to store the sum of all the numbers strictly to the index's left &amp; right respectively...
+        leftSum, rightSum = 0, sum(nums)
+        #### Traverse elements through the loop...
+        for idx, ele in enumerate(nums):
+            rightSum -= ele
+            #### If the sum of all the numbers strictly to the left of the index is equal to the sum of all the numbers strictly to the index's right...
+            if leftSum == rightSum:
+                return idx      #### Return the pivot index...
+            leftSum += ele
+        return -1       #### If there is no index that satisfies the conditions in the problem statement...
+</code></pre>
+<h4><strong>JavaScript Solution:</strong></h4>
+<pre><code>// Time Complexity : O(n)
+var pivotIndex = function(nums) {
+    // Initialize total sum of the given array...
+    let totalSum = 0
+    // Traverse the elements and add them to store the totalSum...
+    for(let i = 0; i &lt; nums.length; i++) {
+        totalSum += nums[i]
+    }
+    // Initialize 'leftsum' as sum of first i numbers, not including nums[i]...
+    let leftSum = 0
+    // Again traverse all the elements through the for loop and store the sum of i numbers from left to right...
+    for (let i = 0; i &lt; nums.length; i++) {
+        // sum to the left == leftsum.
+        // sum to the right === totalSum - leftsum - nums[i]..
+        // check if leftsum == totalSum - leftsum - nums[i]...
+        if (leftSum * 2 == totalSum - nums[i])
+            return i;       // Return the pivot index...
+        leftSum += nums[i]
+    }
+    return -1      // If there is no index that satisfies the conditions in the problem statement...
+};
+</code></pre>
+<p><strong>I am working hard for you guys...
+Please upvote if you found any help with this code...</strong></p></div>

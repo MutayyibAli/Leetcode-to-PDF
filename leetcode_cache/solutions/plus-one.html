@@ -1,78 +1,64 @@
-<div class='cpp-solution'><h2>✅ Simple [C++] solution with good explanation. -- Votes: 1007</h2><h2>Intuition</h2>
+<div class='cpp-solution'><h4>✅ Simple [C++] solution with good explanation. [Votes: 1007]</h4><h4>Intuition</h4>
 <p>If we thought that all elements of the vector is a number we need to increase it by 1. The input can be 100 digits so we must handle that through digits.</p>
-<h2>Approach</h2>
+<h4>Approach</h4>
 <p>First we increment the first digit (last element) by 1, if it becomes 10 we make it 0 ans add 1 to the second digit.. until the last digit (first element), if it becoms 10 we make it 1 and push_back a leading zero.</p>
-<h2>Complexity</h2>
+<h4>Complexity</h4>
 <ul>
-<li>Time complexity:<br />
-  O(n)</li>
+<li>Time complexity:
+O(n)</li>
 </ul>
-<h2>Code</h2>
-<div class="codehilite"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="n">Solution</span><span class="w"> </span><span class="err">{</span>
-<span class="k">public</span><span class="err">:</span>
-<span class="w">    </span><span class="n">vector</span><span class="o">&lt;</span><span class="nc">int</span><span class="o">&gt;</span><span class="w"> </span><span class="n">plusOne</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="nc">int</span><span class="o">&gt;&amp;</span><span class="w"> </span><span class="n">v</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
-<span class="w">        </span><span class="nc">int</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">v</span><span class="p">.</span><span class="k">size</span><span class="p">();</span>
-<span class="w">        </span><span class="k">for</span><span class="p">(</span><span class="nc">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="c1">--){</span>
-<span class="w">            </span><span class="k">if</span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
-<span class="w">                </span><span class="n">v</span><span class="o">[</span><span class="n">i</span><span class="o">]++</span><span class="p">;</span>
-<span class="w">            </span><span class="k">if</span><span class="p">(</span><span class="n">v</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">10</span><span class="p">)</span><span class="err">{</span>
-<span class="w">                </span><span class="n">v</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-<span class="w">                </span><span class="k">if</span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="err">{</span>
-<span class="w">                    </span><span class="n">v</span><span class="o">[</span><span class="n">i-1</span><span class="o">]++</span><span class="p">;</span>
-<span class="w">                </span><span class="err">}</span>
-<span class="w">                </span><span class="k">else</span><span class="err">{</span>
-<span class="w">                    </span><span class="n">v</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
-<span class="w">                    </span><span class="n">v</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
-<span class="w">                </span><span class="err">}</span>
-<span class="w">            </span><span class="err">}</span>
-<span class="w">        </span><span class="err">}</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">v</span><span class="p">;</span>
-<span class="w">    </span><span class="err">}</span>
-<span class="err">}</span><span class="p">;</span>
-</code></pre></div>
-
-<p>Don't forget please :')</p>
-<p></p></div>
-
-
-<div class='python-solution'><h2>【Video】Iterate through the array from the end -- Votes: 360</h2><h2>Intuition</h2>
+<h4>Code</h4>
+<pre><code>class Solution {
+public:
+    vector&lt;int&gt; plusOne(vector&lt;int&gt;&amp; v) {
+        int n = v.size();
+        for(int i = n-1; i &gt;= 0; i--){
+            if(i == n-1)
+                v[i]++;
+            if(v[i] == 10){
+                v[i] = 0;
+                if(i != 0){
+                    v[i-1]++;
+                }
+                else{
+                    v.push_back(0);
+                    v[i] = 1;
+                }
+            }
+        }
+        return v;
+    }
+};
+</code></pre>
+<p>Don't forget please :')</p></div><div class='python-solution'><h4>【Video】Iterate through the array from the end [Votes: 360]</h4><h4>Intuition</h4>
 <p>Iterate through the array from the end</p>
-<hr />
-<h2>Solution Video</h2>
+<h4>Solution Video</h4>
 <p>https://youtu.be/9Ea9RH7Dm-g</p>
-<h4>⭐️⭐️ Don't forget to subscribe to my channel! ⭐️⭐️</h4>
-<p><strong>■ Subscribe URL</strong><br />
+<h6>⭐️⭐️ Don't forget to subscribe to my channel! ⭐️⭐️</h6>
+<p><strong>■ Subscribe URL</strong>
 http://www.youtube.com/channel/UC9RMNwYTL3SXCP6ShLWVFww?sub_confirmation=1</p>
-<p>Subscribers: 6,990<br />
+<p>Subscribers: 6,990
 Thank you for your support!</p>
-<hr />
-<h2>Approach</h2>
+<h4>Approach</h4>
 <p>Let's think about this.</p>
-<div class="codehilite"><pre><span></span><code><span class="n">Input</span><span class="o">:</span><span class="w"> </span><span class="n">digits</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[</span><span class="mi">1</span><span class="o">,</span><span class="mi">2</span><span class="o">,</span><span class="mi">3</span><span class="o">]</span>
-</code></pre></div>
-
+<pre><code>Input: digits = [1,2,3]
+</code></pre>
 <p>The description says "Increment the large integer by one and return the resulting array of digits", so we should add <code>1</code> to the last index then return the array.</p>
-<div class="codehilite"><pre><span></span><code>[1,2,4]
-</code></pre></div>
-
-<p>But what if we have</p>
-<div class="codehilite"><pre><span></span><code><span class="n">Input</span><span class="o">:</span><span class="w"> </span><span class="n">digits</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[</span><span class="mi">9</span><span class="o">,</span><span class="mi">9</span><span class="o">]</span>
-</code></pre></div>
-
+<pre><code>[1,2,4]
+</code></pre>
+<p>But what if we have </p>
+<pre><code>Input: digits = [9,9]
+</code></pre>
 <p>If we add <code>1</code> to the last index, the number at the last index will be <code>0</code> then we have <code>carry</code>. Again if we add the carry to the index <code>0</code>, the number at index <code>0</code> will be <code>0</code>, then we will get <code>another carry</code>.</p>
 <p>Finally, add <code>1</code> and <code>1</code> will be the first index and return the array.</p>
-<div class="codehilite"><pre><span></span><code><span class="k">return</span><span class="w"> </span>[<span class="mi">1</span>,<span class="mi">0</span>,<span class="mi">0</span>]
-</code></pre></div>
-
-<hr />
+<pre><code>return [1,0,0]
+</code></pre>
 <p>⭐️ Points</p>
 <p>When we add <code>1</code> then the number is not <code>10</code>, just add <code>1</code> to the last index and return the array.</p>
 <p>If <code>10</code>, add <code>0</code> to the current index, add <code>0</code> to the current index then continue to loop until <code>we find a number except 10</code> or <code>reach index 0</code>.</p>
 <p>If we reach index <code>0</code>, then add <code>1</code> to the first index and other all numbers should be <code>0</code>, <strong>because we have <code>10</code> in each digit and have <code>carry</code> for the next digit.</strong></p>
-<hr />
 <p>https://youtu.be/bU_dXCOWHls</p>
-<hr />
-<h2>Complexity</h2>
+<h4>Complexity</h4>
 <ul>
 <li>Time complexity: $$O(n)$$</li>
 </ul>
@@ -83,81 +69,72 @@ Thank you for your support!</p>
 </ul>
 <!-- Add your space complexity here, e.g. $$O(n)$$ -->
 
-<div class="codehilite"><pre><span></span><code><span class="n">Language</span><span class="p">:</span> <span class="n">python</span> 
-<span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="p">:</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">plusOne</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">digits</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
+<pre><code class="language-python">class Solution:
+    def plusOne(self, digits: List[int]) -&gt; List[int]:
 
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">digits</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+        for i in range(len(digits) - 1, -1, -1):
 
-            <span class="k">if</span> <span class="n">digits</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">!=</span> <span class="mi">10</span><span class="p">:</span>
-                <span class="n">digits</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
-                <span class="k">return</span> <span class="n">digits</span>
+            if digits[i] + 1 != 10:
+                digits[i] += 1
+                return digits
 
-            <span class="n">digits</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+            digits[i] = 0
 
-            <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-                <span class="k">return</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">digits</span>
-</code></pre></div>
+            if i == 0:
+                return [1] + digits
+</code></pre>
+<pre><code class="language-javascript">var plusOne = function(digits) {
+    for (let i = digits.length - 1; i &gt;= 0; i--) {
+        if (digits[i] + 1 !== 10) {
+            digits[i] += 1;
+            return digits;
+        }
+        digits[i] = 0;
+        if (i === 0) {
+            digits.unshift(1);
+            return digits;
+        }
+    }    
+};
+</code></pre>
+<pre><code class="language-java">class Solution {
+    public int[] plusOne(int[] digits) {
+        for (int i = digits.length - 1; i &gt;= 0; i--) {
+            if (digits[i] + 1 != 10) {
+                digits[i] += 1;
+                return digits;
+            }
+            digits[i] = 0;
+        }
 
-<div class="codehilite"><pre><span></span><code><span class="nx">Language</span><span class="o">:</span><span class="w"> </span><span class="nx">javascript</span><span class="w"> </span>
-<span class="kd">var</span><span class="w"> </span><span class="nx">plusOne</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kd">function</span><span class="p">(</span><span class="nx">digits</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kd">let</span><span class="w"> </span><span class="nx">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">digits</span><span class="p">.</span><span class="nx">length</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mf">1</span><span class="p">;</span><span class="w"> </span><span class="nx">i</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mf">0</span><span class="p">;</span><span class="w"> </span><span class="nx">i</span><span class="o">--</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">digits</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mf">1</span><span class="w"> </span><span class="o">!==</span><span class="w"> </span><span class="mf">10</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="nx">digits</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="mf">1</span><span class="p">;</span>
-<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="nx">digits</span><span class="p">;</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">        </span><span class="nx">digits</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0</span><span class="p">;</span>
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">i</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="mf">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="nx">digits</span><span class="p">.</span><span class="nx">unshift</span><span class="p">(</span><span class="mf">1</span><span class="p">);</span>
-<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="nx">digits</span><span class="p">;</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">    </span><span class="p">}</span><span class="w">    </span>
-<span class="p">};</span>
-</code></pre></div>
-
-<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">java</span><span class="w"> </span>
-<span class="kd">class</span> <span class="nc">Solution</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="nf">plusOne</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">digits</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">digits</span><span class="p">.</span><span class="na">length</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">--</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">digits</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">10</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="n">digits</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
-<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="n">digits</span><span class="p">;</span>
-<span class="w">            </span><span class="p">}</span>
-<span class="w">            </span><span class="n">digits</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-<span class="w">        </span><span class="p">}</span>
-
-<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">newDigits</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="kt">int</span><span class="o">[</span><span class="n">digits</span><span class="p">.</span><span class="na">length</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="o">]</span><span class="p">;</span>
-<span class="w">        </span><span class="n">newDigits</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">newDigits</span><span class="p">;</span><span class="w">        </span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
-
-<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">C</span><span class="o">++</span><span class="w"> </span>
-<span class="n">class</span><span class="w"> </span><span class="n">Solution</span><span class="w"> </span><span class="p">{</span>
-<span class="n">public</span><span class="o">:</span>
-<span class="w">    </span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="w"> </span><span class="n">plusOne</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&amp;</span><span class="w"> </span><span class="n">digits</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">digits</span><span class="p">.</span><span class="n">size</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">--</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">digits</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">10</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="n">digits</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
-<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="n">digits</span><span class="p">;</span>
-<span class="w">            </span><span class="p">}</span>
-<span class="w">            </span><span class="n">digits</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="n">digits</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">digits</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span>
-<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="n">digits</span><span class="p">;</span>
-<span class="w">            </span><span class="p">}</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">digits</span><span class="p">;</span><span class="w">        </span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">};</span>
-</code></pre></div>
-
-<hr />
+        int[] newDigits = new int[digits.length + 1];
+        newDigits[0] = 1;
+        return newDigits;        
+    }
+}
+</code></pre>
+<pre><code class="language-cpp">class Solution {
+public:
+    vector&lt;int&gt; plusOne(vector&lt;int&gt;&amp; digits) {
+        for (int i = digits.size() - 1; i &gt;= 0; i--) {
+            if (digits[i] + 1 != 10) {
+                digits[i] += 1;
+                return digits;
+            }
+            digits[i] = 0;
+            if (i == 0) {
+                digits.insert(digits.begin(), 1);
+                return digits;
+            }
+        }
+        return digits;        
+    }
+};
+</code></pre>
 <p>Thank you for reading my post. Please upvote it and don't forget to subscribe to my channel!</p>
-<h4>⭐️ Subscribe URL</h4>
+<h6>⭐️ Subscribe URL</h6>
 <p>http://www.youtube.com/channel/UC9RMNwYTL3SXCP6ShLWVFww?sub_confirmation=1</p>
-<h4>⭐️ Twitter</h4>
+<h6>⭐️ Twitter</h6>
 <p>https://twitter.com/CodingNinjaAZ</p>
-<h4>⭐️ #189 - Rotate Array</h4>
-<p>https://youtu.be/fDRPdN0dlcs</p></div><p style="page-break-before: always" ></p>
+<h6>⭐️ #189 - Rotate Array</h6>
+<p>https://youtu.be/fDRPdN0dlcs</p></div>

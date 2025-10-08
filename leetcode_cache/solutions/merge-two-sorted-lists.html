@@ -1,42 +1,36 @@
-<div class='cpp-solution'><h2>3 lines C++ (12ms) and C (4ms) -- Votes: 111</h2><p><strong>C++</strong></p>
+<div class='cpp-solution'><h4>3 lines C++ (12ms) and C (4ms) [Votes: 111]</h4><p><strong>cpp</strong></p>
 <p>The first line ensures that <code>a</code> is at least as good a list head as <code>b</code>, by swapping them if that's not already the case. The second line merges the remaining lists behind <code>a</code>.</p>
-<div class="codehilite"><pre><span></span><code><span class="n">ListNode</span><span class="o">*</span><span class="w"> </span><span class="n">mergeTwoLists</span><span class="p">(</span><span class="n">ListNode</span><span class="o">*</span><span class="w"> </span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">ListNode</span><span class="o">*</span><span class="w"> </span><span class="n">b</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nf">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">a</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">a</span><span class="o">-&gt;</span><span class="n">val</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">b</span><span class="o">-&gt;</span><span class="n">val</span><span class="p">)</span><span class="w"> </span><span class="n">swap</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="p">);</span>
-<span class="w">    </span><span class="nf">if</span><span class="w"> </span><span class="p">(</span><span class="n">a</span><span class="p">)</span><span class="w"> </span><span class="n">a</span><span class="o">-&gt;</span><span class="n">next</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mergeTwoLists</span><span class="p">(</span><span class="n">a</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="p">);</span>
-<span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="n">a</span><span class="p">;</span>
-<span class="p">}</span>
-</code></pre></div>
-
-<hr />
+<pre><code>ListNode* mergeTwoLists(ListNode* a, ListNode* b) {
+    if (!a || b &amp;&amp; a-&gt;val &gt; b-&gt;val) swap(a, b);
+    if (a) a-&gt;next = mergeTwoLists(a-&gt;next, b);
+    return a;
+}
+</code></pre>
 <p><strong>C</strong></p>
-<p>Same solution, I just have to replace C++'s <code>swap</code>. I'm not sure whether evaluation order is standardized, but it worked and got accepted this way.</p>
-<div class="codehilite"><pre><span></span><code><span class="n">struct</span><span class="w"> </span><span class="n">ListNode</span><span class="o">*</span><span class="w"> </span><span class="n">mergeTwoLists</span><span class="p">(</span><span class="n">struct</span><span class="w"> </span><span class="n">ListNode</span><span class="o">*</span><span class="w"> </span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">struct</span><span class="w"> </span><span class="n">ListNode</span><span class="o">*</span><span class="w"> </span><span class="n">b</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nf">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">a</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">a</span><span class="o">-&gt;</span><span class="n">val</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">b</span><span class="o">-&gt;</span><span class="n">val</span><span class="p">)</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="p">(</span><span class="n">b</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">a</span><span class="p">);</span>
-<span class="w">    </span><span class="nf">if</span><span class="w"> </span><span class="p">(</span><span class="n">a</span><span class="p">)</span><span class="w"> </span><span class="n">a</span><span class="o">-&gt;</span><span class="n">next</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mergeTwoLists</span><span class="p">(</span><span class="n">a</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="p">);</span>
-<span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="n">a</span><span class="p">;</span>
-<span class="p">}</span>
-</code></pre></div></div>
-
-
-<div class='python-solution'><h2>✔️ [Python3] MERGING, Explained -- Votes: 1257</h2><p><strong>UPVOTE if you like (◠‿◠), If you have any question, feel free to ask.</strong></p>
+<p>Same solution, I just have to replace cpp's <code>swap</code>. I'm not sure whether evaluation order is standardized, but it worked and got accepted this way.</p>
+<pre><code>struct ListNode* mergeTwoLists(struct ListNode* a, struct ListNode* b) {
+    if (!a || b &amp;&amp; a-&gt;val &gt; b-&gt;val) a += b - (b = a);
+    if (a) a-&gt;next = mergeTwoLists(a-&gt;next, b);
+    return a;
+}
+</code></pre></div><div class='python-solution'><h4>✔️ [Python3] MERGING, Explained [Votes: 1257]</h4><p><strong>UPVOTE if you like (◠‿◠), If you have any question, feel free to ask.</strong></p>
 <p>For simplicity, we create a dummy node to which we attach nodes from lists. We iterate over lists using two-pointers and build up a resulting list so that values are monotonically increased.</p>
-<p>Time: <strong>O(n)</strong><br />
+<p>Time: <strong>O(n)</strong>
 Space: <strong>O(1)</strong></p>
-<div class="codehilite"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nl">Solution</span><span class="p">:</span>
-<span class="w">    </span><span class="n">def</span><span class="w"> </span><span class="n">mergeTwoLists</span><span class="p">(</span><span class="n">self</span><span class="p">,</span><span class="w"> </span><span class="nl">list1</span><span class="p">:</span><span class="w"> </span><span class="n">Optional</span><span class="o">[</span><span class="n">ListNode</span><span class="o">]</span><span class="p">,</span><span class="w"> </span><span class="nl">list2</span><span class="p">:</span><span class="w"> </span><span class="n">Optional</span><span class="o">[</span><span class="n">ListNode</span><span class="o">]</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">Optional</span><span class="o">[</span><span class="n">ListNode</span><span class="o">]</span><span class="err">:</span>
-<span class="w">        </span><span class="n">cur</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dummy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ListNode</span><span class="p">()</span>
-<span class="w">        </span><span class="k">while</span><span class="w"> </span><span class="n">list1</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="nl">list2</span><span class="p">:</span><span class="w">               </span>
-<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="n">list1</span><span class="p">.</span><span class="n">val</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">list2</span><span class="p">.</span><span class="nl">val</span><span class="p">:</span>
-<span class="w">                </span><span class="n">cur</span><span class="p">.</span><span class="k">next</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">list1</span>
-<span class="w">                </span><span class="n">list1</span><span class="p">,</span><span class="w"> </span><span class="n">cur</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">list1</span><span class="p">.</span><span class="k">next</span><span class="p">,</span><span class="w"> </span><span class="n">list1</span>
-<span class="w">            </span><span class="k">else</span><span class="err">:</span>
-<span class="w">                </span><span class="n">cur</span><span class="p">.</span><span class="k">next</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">list2</span>
-<span class="w">                </span><span class="n">list2</span><span class="p">,</span><span class="w"> </span><span class="n">cur</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">list2</span><span class="p">.</span><span class="k">next</span><span class="p">,</span><span class="w"> </span><span class="n">list2</span>
+<pre><code>class Solution:
+    def mergeTwoLists(self, list1: Optional[ListNode], list2: Optional[ListNode]) -&gt; Optional[ListNode]:
+        cur = dummy = ListNode()
+        while list1 and list2:               
+            if list1.val &lt; list2.val:
+                cur.next = list1
+                list1, cur = list1.next, list1
+            else:
+                cur.next = list2
+                list2, cur = list2.next, list2
 
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="n">list1</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="nl">list2</span><span class="p">:</span>
-<span class="w">            </span><span class="n">cur</span><span class="p">.</span><span class="k">next</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">list1</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">list1</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="n">list2</span>
+        if list1 or list2:
+            cur.next = list1 if list1 else list2
 
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">dummy</span><span class="p">.</span><span class="k">next</span>
-</code></pre></div>
-
-<p><strong>UPVOTE if you like (◠‿◠), If you have any question, feel free to ask.</strong></p></div><p style="page-break-before: always" ></p>
+        return dummy.next
+</code></pre>
+<p><strong>UPVOTE if you like (◠‿◠), If you have any question, feel free to ask.</strong></p></div>

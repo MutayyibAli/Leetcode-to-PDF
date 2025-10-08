@@ -1,41 +1,38 @@
-<div class='cpp-solution'><h2>16 ms C++ solution -- Votes: 111</h2><div class="codehilite"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="n">Solution</span><span class="w"> </span><span class="err">{</span>
-<span class="w">    </span><span class="n">TreeNode</span><span class="o">*</span><span class="w"> </span><span class="n">sortedArrayToBST</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="nc">int</span><span class="o">&gt;&amp;</span><span class="w"> </span><span class="n">nums</span><span class="p">,</span><span class="w"> </span><span class="nc">int</span><span class="w"> </span><span class="k">start</span><span class="p">,</span><span class="w"> </span><span class="nc">int</span><span class="w"> </span><span class="k">end</span><span class="p">)</span><span class="err">{</span>
-<span class="w">        </span><span class="k">if</span><span class="p">(</span><span class="k">end</span><span class="o">&lt;=</span><span class="k">start</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="k">NULL</span><span class="p">;</span><span class="w"> </span>
-<span class="w">        </span><span class="nc">int</span><span class="w"> </span><span class="n">midIdx</span><span class="o">=</span><span class="p">(</span><span class="k">end</span><span class="o">+</span><span class="k">start</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="p">;</span>
-<span class="w">        </span><span class="n">TreeNode</span><span class="o">*</span><span class="w"> </span><span class="n">root</span><span class="o">=</span><span class="k">new</span><span class="w"> </span><span class="n">TreeNode</span><span class="p">(</span><span class="n">nums</span><span class="o">[</span><span class="n">midIdx</span><span class="o">]</span><span class="p">);</span>
-<span class="w">        </span><span class="n">root</span><span class="o">-&gt;</span><span class="nf">left</span><span class="o">=</span><span class="n">sortedArrayToBST</span><span class="p">(</span><span class="n">nums</span><span class="p">,</span><span class="w"> </span><span class="k">start</span><span class="p">,</span><span class="w"> </span><span class="n">midIdx</span><span class="p">);</span>
-<span class="w">        </span><span class="n">root</span><span class="o">-&gt;</span><span class="nf">right</span><span class="o">=</span><span class="n">sortedArrayToBST</span><span class="p">(</span><span class="n">nums</span><span class="p">,</span><span class="w"> </span><span class="n">midIdx</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="k">end</span><span class="p">);</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">root</span><span class="p">;</span>
-<span class="w">    </span><span class="err">}</span>
-<span class="k">public</span><span class="err">:</span>
-<span class="w">    </span><span class="n">TreeNode</span><span class="o">*</span><span class="w"> </span><span class="n">sortedArrayToBST</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="nc">int</span><span class="o">&gt;&amp;</span><span class="w"> </span><span class="n">nums</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">sortedArrayToBST</span><span class="p">(</span><span class="n">nums</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="n">nums</span><span class="p">.</span><span class="k">size</span><span class="p">());</span>
-<span class="w">    </span><span class="err">}</span>
-<span class="err">}</span><span class="p">;</span>
-</code></pre></div></div>
+<div class='cpp-solution'><h4>16 ms C++ solution [Votes: 111]</h4><pre><code>class Solution {
+    TreeNode* sortedArrayToBST(vector&lt;int&gt;&amp; nums, int start, int end){
+        if(end&lt;=start) return NULL; 
+        int midIdx=(end+start)/2;
+        TreeNode* root=new TreeNode(nums[midIdx]);
+        root-&gt;left=sortedArrayToBST(nums, start, midIdx);
+        root-&gt;right=sortedArrayToBST(nums, midIdx+1,end);
+        return root;
+    }
+public:
+    TreeNode* sortedArrayToBST(vector&lt;int&gt;&amp; nums) {
+        return sortedArrayToBST(nums, 0,nums.size());
+    }
+};
+</code></pre></div><div class='python-solution'><h4>An easy Python solution [Votes: 298]</h4><p>The idea is to find the root first, then recursively build each left and right subtree</p>
+<pre><code>#### Definition for a  binary tree node
+#### class TreeNode:
+####     def __init__(self, x):
+####         self.val = x
+####         self.left = None
+####         self.right = None
 
+class Solution:
+    #### @param num, a list of integers
+    #### @return a tree node
+    #### 12:37
+    def sortedArrayToBST(self, num):
+        if not num:
+            return None
 
-<div class='python-solution'><h2>An easy Python solution -- Votes: 298</h2><p>The idea is to find the root first, then recursively build each left and right subtree</p>
-<div class="codehilite"><pre><span></span><code><span class="err">#</span><span class="w"> </span><span class="n">Definition</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">a</span><span class="w">  </span><span class="nc">binary</span><span class="w"> </span><span class="n">tree</span><span class="w"> </span><span class="n">node</span>
-<span class="err">#</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nl">TreeNode</span><span class="p">:</span>
-<span class="err">#</span><span class="w">     </span><span class="n">def</span><span class="w"> </span><span class="n">__init__</span><span class="p">(</span><span class="n">self</span><span class="p">,</span><span class="w"> </span><span class="n">x</span><span class="p">)</span><span class="err">:</span>
-<span class="err">#</span><span class="w">         </span><span class="n">self</span><span class="p">.</span><span class="n">val</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">x</span>
-<span class="err">#</span><span class="w">         </span><span class="n">self</span><span class="p">.</span><span class="nf">left</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">None</span>
-<span class="err">#</span><span class="w">         </span><span class="n">self</span><span class="p">.</span><span class="nf">right</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">None</span>
+        mid = len(num) // 2
 
-<span class="k">class</span><span class="w"> </span><span class="nl">Solution</span><span class="p">:</span>
-<span class="w">    </span><span class="err">#</span><span class="w"> </span><span class="nv">@param</span><span class="w"> </span><span class="n">num</span><span class="p">,</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">list</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">integers</span>
-<span class="w">    </span><span class="err">#</span><span class="w"> </span><span class="nv">@return</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">tree</span><span class="w"> </span><span class="n">node</span>
-<span class="w">    </span><span class="err">#</span><span class="w"> </span><span class="mi">12</span><span class="err">:</span><span class="mi">37</span>
-<span class="w">    </span><span class="n">def</span><span class="w"> </span><span class="n">sortedArrayToBST</span><span class="p">(</span><span class="n">self</span><span class="p">,</span><span class="w"> </span><span class="n">num</span><span class="p">)</span><span class="err">:</span>
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="nl">num</span><span class="p">:</span>
-<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="k">None</span>
+        root = TreeNode(num[mid])
+        root.left = self.sortedArrayToBST(num[:mid])
+        root.right = self.sortedArrayToBST(num[mid+1:])
 
-<span class="w">        </span><span class="n">mid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">len</span><span class="p">(</span><span class="n">num</span><span class="p">)</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="mi">2</span>
-
-<span class="w">        </span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">TreeNode</span><span class="p">(</span><span class="n">num</span><span class="o">[</span><span class="n">mid</span><span class="o">]</span><span class="p">)</span>
-<span class="w">        </span><span class="n">root</span><span class="p">.</span><span class="nf">left</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">self</span><span class="p">.</span><span class="n">sortedArrayToBST</span><span class="p">(</span><span class="n">num</span><span class="o">[</span><span class="n">:mid</span><span class="o">]</span><span class="p">)</span>
-<span class="w">        </span><span class="n">root</span><span class="p">.</span><span class="nf">right</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">self</span><span class="p">.</span><span class="n">sortedArrayToBST</span><span class="p">(</span><span class="n">num</span><span class="o">[</span><span class="n">mid+1:</span><span class="o">]</span><span class="p">)</span>
-
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">root</span>
-</code></pre></div></div><p style="page-break-before: always" ></p>
+        return root
+</code></pre></div>

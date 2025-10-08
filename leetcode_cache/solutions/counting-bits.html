@@ -1,92 +1,77 @@
-<div class='cpp-solution'><h2>Four lines, C++, time O(n), space O(n) -- Votes: 663</h2><div class="codehilite"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="n">Solution</span><span class="w"> </span><span class="err">{</span>
-<span class="k">public</span><span class="err">:</span>
-<span class="w">    </span><span class="n">vector</span><span class="o">&lt;</span><span class="nc">int</span><span class="o">&gt;</span><span class="w"> </span><span class="n">countBits</span><span class="p">(</span><span class="nc">int</span><span class="w"> </span><span class="n">num</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
-<span class="w">        </span><span class="n">vector</span><span class="o">&lt;</span><span class="nc">int</span><span class="o">&gt;</span><span class="w"> </span><span class="n">ret</span><span class="p">(</span><span class="n">num</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
-<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="nc">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">num</span><span class="p">;</span><span class="w"> </span><span class="o">++</span><span class="n">i</span><span class="p">)</span>
-<span class="w">            </span><span class="n">ret</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ret</span><span class="o">[</span><span class="n">i&amp;(i-1)</span><span class="o">]</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">ret</span><span class="p">;</span>
-<span class="w">    </span><span class="err">}</span>
-<span class="err">}</span><span class="p">;</span>
-</code></pre></div></div>
-
-
-<div class='python-solution'><h2>[Python] Simple Solution with Clear Explanation -- Votes: 585</h2><h2>Solution Code</h2>
-<div class="codehilite"><pre><span></span><code><span class="n">def</span><span class="w"> </span><span class="n">countBits</span><span class="p">(</span><span class="n">self</span><span class="p">,</span><span class="w"> </span><span class="nl">num</span><span class="p">:</span><span class="w"> </span><span class="nc">int</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">List</span><span class="o">[</span><span class="n">int</span><span class="o">]</span><span class="err">:</span>
-<span class="w">    </span><span class="n">counter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[</span><span class="n">0</span><span class="o">]</span>
-<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="k">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">num</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="err">:</span>
-<span class="w">        </span><span class="n">counter</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">counter</span><span class="o">[</span><span class="n">i &gt;&gt; 1</span><span class="o">]</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">counter</span>
-</code></pre></div>
-
-<h2>Analysis</h2>
-<p>To understand the solution, we remember the following two points from math:</p>
-<ul>
-<li>All whole numbers can be represented by <strong>2N</strong> (<em>even</em>) and <strong>2N+1</strong> (<em>odd</em>).</li>
-<li>For a given binary number, multiplying by 2 is the same as adding a zero at the end (just as we just add a zero when multiplying by ten in base 10).</li>
-</ul>
-<p>Since multiplying by 2 just adds a zero, then any number and its double will have the same number of 1's. Likewise, doubling a number and adding one will increase the count by exactly 1. Or:</p>
-<ul>
-<li><code>countBits(N) = countBits(2N)</code></li>
-<li><code>countBits(N)+1 = countBits(2N+1)</code></li>
-</ul>
+<div class='cpp-solution'><h4>Four lines, C++, time O(n), space O(n) [Votes: 663]</h4><pre><code>class Solution {
+public:
+    vector&lt;int&gt; countBits(int num) {
+        vector&lt;int&gt; ret(num+1, 0);
+        for (int i = 1; i &lt;= num; ++i)
+            ret[i] = ret[i&amp;(i-1)] + 1;
+        return ret;
+    }
+};
+</code></pre></div><div class='python-solution'><h4>[Python] Simple Solution with Clear Explanation [Votes: 585]</h4><h4>Solution Code</h4>
+<pre><code>def countBits(self, num: int) -&gt; List[int]:
+    counter = [0]
+    for i in range(1, num+1):
+        counter.append(counter[i &gt;&gt; 1] + i % 2)
+    return counter
+</code></pre>
+<h4>Analysis</h4>
+<p>To understand the solution, we remember the following two points from math:
+* All whole numbers can be represented by <strong>2N</strong> (<em>even</em>) and <strong>2N+1</strong> (<em>odd</em>).
+* For a given binary number, multiplying by 2 is the same as adding a zero at the end (just as we just add a zero when multiplying by ten in base 10).</p>
+<p>Since multiplying by 2 just adds a zero, then any number and its double will have the same number of 1's. Likewise, doubling a number and adding one will increase the count by exactly 1. Or:
+* <code>countBits(N) = countBits(2N)</code>
+* <code>countBits(N)+1 = countBits(2N+1)</code></p>
 <p>Thus we can see that any number will have the same <em>bit count</em> as half that number, with an extra one if it's an odd number. We iterate through the range of numbers and calculate each bit count successively in this manner:</p>
-<div class="codehilite"><pre><span></span><code><span class="k">for</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="k">range</span><span class="p">(</span><span class="n">num</span><span class="p">)</span><span class="err">:</span>
-<span class="w">    </span><span class="n">counter</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">counter</span><span class="o">[</span><span class="n">i // 2</span><span class="o">]</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="mi">2</span>
-</code></pre></div>
-
-<p>With a few modifications:</p>
-<ul>
-<li>Define the base case of <code>counter[0] = 0</code> , and start at <code>1</code> .</li>
-<li>We need to include <code>num</code> , so use <code>num+1</code> as the bound on the <code>range</code> .</li>
-<li>Bit-shifting 1 has the same effect as dividing by 2, and is faster, so replace <code>i // 2</code> with <code>i &gt;&gt; 1</code> .</li>
-<li>We can choose to either initiate our list with <code>counter = [0] * (num+1)</code> or just <code>counter = [0]</code> and then <code>append</code> to it (which has O(1)). It's a little faster to initiate it with zeroes and then access it rather than appending each time, but I've chosen the latter for better readibility.</li>
-<li>Some solutions use <code>i &amp; 1</code> to determine the parity of <code>i</code> . While this accomplishes the same purpose as <code>i % 2</code> and keeps with the bitwise-operator theme, it is faster to calculate the modulus.</li>
-</ul>
-<h3>Time and Space Complexity</h3>
-<p>Time: O(n) - We iterate through the range of numbers once.<br />
-Space: O(n) - We use a <code>num</code> -sized array.</p>
-<h3>Examples</h3>
+<pre><code>for i in range(num):
+    counter[i] = counter[i // 2] + i % 2
+</code></pre>
+<p>With a few modifications:
+* Define the base case of <code>counter[0] = 0</code>, and start at <code>1</code>.
+* We need to include <code>num</code>, so use <code>num+1</code> as the bound on the <code>range</code>.
+* Bit-shifting 1 has the same effect as dividing by 2, and is faster, so replace <code>i // 2</code> with <code>i &gt;&gt; 1</code>.
+* We can choose to either initiate our list with <code>counter = [0] * (num+1)</code> or just <code>counter = [0]</code> and then <code>append</code> to it (which has O(1)). It's a little faster to initiate it with zeroes and then access it rather than appending each time, but I've chosen the latter for better readibility.
+* Some solutions use <code>i &amp; 1</code> to determine the parity of <code>i</code>. While this accomplishes the same purpose as <code>i % 2</code> and keeps with the bitwise-operator theme, it is faster to calculate the modulus.</p>
+<h5>Time and Space Complexity</h5>
+<p>Time: O(n) - We iterate through the range of numbers once.
+Space: O(n) - We use a <code>num</code>-sized array.</p>
+<h5>Examples</h5>
 <p>Let's take the number 7, represented in binary as 111.</p>
-<div class="codehilite"><pre><span></span><code>Base 2: 111    Base 10: 7    
+<pre><code>Base 2: 111    Base 10: 7    
 Base 2: 1110   Base 10: 14  
 Base 2: 11100  Base 10: 28 
 Base 2: 11101  Base 10: 29
-</code></pre></div>
-
-<h2>Analysis of Other Approaches</h2>
+</code></pre>
+<h4>Analysis of Other Approaches</h4>
 <p>While we're here, let's take a look at some other approaches:</p>
-<h3>Brute Force</h3>
+<h5>Brute Force</h5>
 <p>The most straightforward solution is simply to convert each number to a binary string and count the 1's in the resulting string. This has time complexity of O(n * length of binary number) and is discouraged in the problem prompt. Regardless, the test cases do not punish this approach very much:</p>
-<div class="codehilite"><pre><span></span><code><span class="n">def</span><span class="w"> </span><span class="n">countBits</span><span class="p">(</span><span class="n">self</span><span class="p">,</span><span class="w"> </span><span class="nl">num</span><span class="p">:</span><span class="w"> </span><span class="nc">int</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">List</span><span class="o">[</span><span class="n">int</span><span class="o">]</span><span class="err">:</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="o">[</span><span class="n">bin(i).count(&#39;1&#39;) for i in range(num+1)</span><span class="o">]</span>
-</code></pre></div>
-
+<pre><code>def countBits(self, num: int) -&gt; List[int]:
+    return [bin(i).count('1') for i in range(num+1)]
+</code></pre>
 <p>or</p>
-<div class="codehilite"><pre><span></span><code><span class="n">def</span><span class="w"> </span><span class="n">countBits</span><span class="p">(</span><span class="n">self</span><span class="p">,</span><span class="w"> </span><span class="nl">num</span><span class="p">:</span><span class="w"> </span><span class="nc">int</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">List</span><span class="o">[</span><span class="n">int</span><span class="o">]</span><span class="err">:</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">list</span><span class="p">(</span><span class="k">map</span><span class="p">(</span><span class="n">lambda</span><span class="w"> </span><span class="nl">x</span><span class="p">:</span><span class="n">bin</span><span class="p">(</span><span class="n">x</span><span class="p">).</span><span class="nf">count</span><span class="p">(</span><span class="s1">&#39;1&#39;</span><span class="p">),</span><span class="w"> </span><span class="k">range</span><span class="p">(</span><span class="n">num</span><span class="o">+</span><span class="mi">1</span><span class="p">)))</span>
-</code></pre></div>
-
-<h3>Extend and Slice</h3>
+<pre><code>def countBits(self, num: int) -&gt; List[int]:
+    return list(map(lambda x:bin(x).count('1'), range(num+1)))
+</code></pre>
+<h5>Extend and Slice</h5>
 <p>Personally, this is my least favourite approach because it performs more work than needed. If you take a look at the pattern that emerges when you start counting bits, you will notice that each successive power of two is the same as the previous set, plus one. This makes sense, since you're just adding a one to the most significant bit. So we can just keep extending the list with itself until we have enough to cover up to <code>num+1</code> and then return just the list up to <code>num</code> (by slicing). However, as before, the test cases don't really punish this approach:</p>
-<div class="codehilite"><pre><span></span><code><span class="n">def</span><span class="w"> </span><span class="n">countBits</span><span class="p">(</span><span class="n">self</span><span class="p">,</span><span class="w"> </span><span class="nl">num</span><span class="p">:</span><span class="w"> </span><span class="nc">int</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">List</span><span class="o">[</span><span class="n">int</span><span class="o">]</span><span class="err">:</span>
-<span class="w">    </span><span class="n">counter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[</span><span class="n">0</span><span class="o">]</span>
-<span class="w">    </span><span class="k">while</span><span class="w"> </span><span class="nf">len</span><span class="p">(</span><span class="n">counter</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">num</span><span class="o">+</span><span class="mi">1</span><span class="err">:</span>
-<span class="w">        </span><span class="n">counter</span><span class="p">.</span><span class="n">extend</span><span class="p">(</span><span class="o">[</span><span class="n">i+1 for i in counter</span><span class="o">]</span><span class="p">)</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">counter</span><span class="o">[</span><span class="n">:num+1</span><span class="o">]</span>
+<pre><code>def countBits(self, num: int) -&gt; List[int]:
+    counter = [0]
+    while len(counter) &lt; num+1:
+        counter.extend([i+1 for i in counter])
+    return counter[:num+1]
+</code></pre>
+<h5>Awkward Counting</h5>
+<p>And finally, this is the most awkward solution I could come up with. It uses the same concept as the previous one, by starting over every power of 2 and adding 1, except instead of extending the list, it tracks when it's time to start the next order of 2, and stops once it reaches <code>num+1</code>. The only reason I'm including it is because it's technically the fastest solution, garnering a 99.55% on one lucky submission.</p>
+<pre><code>def countBits(self, num: int) -&gt; List[int]:
+    nextOrder = 2
+    tracker = 0
+    counter = [0]*(num+1)
+
+    for i in range(1, num+1):
+        if i == nextOrder:
+            nextOrder *= 2
+            tracker = 0
+        counter[i] = counter[tracker] + 1
+        tracker += 1
+    return counter
 </code></pre></div>
-
-<h3>Awkward Counting</h3>
-<p>And finally, this is the most awkward solution I could come up with. It uses the same concept as the previous one, by starting over every power of 2 and adding 1, except instead of extending the list, it tracks when it's time to start the next order of 2, and stops once it reaches <code>num+1</code> . The only reason I'm including it is because it's technically the fastest solution, garnering a 99.55% on one lucky submission.</p>
-<div class="codehilite"><pre><span></span><code><span class="n">def</span><span class="w"> </span><span class="n">countBits</span><span class="p">(</span><span class="n">self</span><span class="p">,</span><span class="w"> </span><span class="nl">num</span><span class="p">:</span><span class="w"> </span><span class="nc">int</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">List</span><span class="o">[</span><span class="n">int</span><span class="o">]</span><span class="err">:</span>
-<span class="w">    </span><span class="n">nextOrder</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span>
-<span class="w">    </span><span class="n">tracker</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span>
-<span class="w">    </span><span class="n">counter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[</span><span class="n">0</span><span class="o">]*</span><span class="p">(</span><span class="n">num</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
-
-<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="k">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">num</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="err">:</span>
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nl">nextOrder</span><span class="p">:</span>
-<span class="w">            </span><span class="n">nextOrder</span><span class="w"> </span><span class="o">*=</span><span class="w"> </span><span class="mi">2</span>
-<span class="w">            </span><span class="n">tracker</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span>
-<span class="w">        </span><span class="n">counter</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">counter</span><span class="o">[</span><span class="n">tracker</span><span class="o">]</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span>
-<span class="w">        </span><span class="n">tracker</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="mi">1</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">counter</span>
-</code></pre></div></div><p style="page-break-before: always" ></p>

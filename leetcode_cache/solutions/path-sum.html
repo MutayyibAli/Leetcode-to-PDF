@@ -1,10 +1,9 @@
-<div class='cpp-solution'><h2>✅Easy Solution🔥Python3/C/C#/C++/Java🔥Explain Line By Line🔥With🗺️Image🗺️ -- Votes: 329</h2><h2>Problem</h2>
+<div class='cpp-solution'><h4>✅Easy Solution🔥Python3/C/C#/C++/Java🔥Explain Line By Line🔥With🗺️Image🗺️ [Votes: 329]</h4><h4>Problem</h4>
 <p>You're given a binary tree and an integer targetSum. The task is to determine whether there exists a root-to-leaf path in the tree where the sum of the values of the nodes along the path equals the targetSum.</p>
 <p>In other words, you need to check if there's a sequence of nodes starting from the root and following edges to reach a leaf node such that the sum of values along this path is equal to the given targetSum.</p>
-<hr />
-<h2>Solution</h2>
+<h4>Solution</h4>
 <p>The provided solution is implemented as a method named hasPathSum within a class named Solution. The method takes two parameters: root, which is the root node of the binary tree, and targetSum, the desired sum.</p>
-<p><strong>Here's how the solution works:</strong></p>
+<p><strong>Here's how the solution works:</strong> </p>
 <ol>
 <li>f root is None (i.e., the tree is empty), there can't be any path with the desired sum. So, the function returns False.</li>
 <li>If root is a leaf node (i.e., it has no left or right children), the function checks whether the value of the leaf node is equal to the remaining targetSum. If they are equal, it returns True, indicating that a valid path with the target sum has been found.</li>
@@ -14,122 +13,108 @@
 </ol>
 <p>The base cases (when the tree is empty or when a leaf node with a matching value is found) guarantee that the recursion will eventually terminate. The recursion explores all possible paths from the root to leaf nodes, checking if any of them sum up to the given targetSum. The logical OR operation on the results of the recursive calls ensures that the function correctly returns True if a valid path is found anywhere in the tree.</p>
 <p>This solution has a time complexity of O(N), where N is the number of nodes in the binary tree, as it visits each node once in the worst case.</p>
-<p></p>
-<h2>Code</h2>
-<hr />
-<div class="codehilite"><pre><span></span><code><span class="n">Language</span><span class="p">:</span> <span class="n">Python3</span> 
-<span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="p">:</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">hasPathSum</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">root</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">TreeNode</span><span class="p">],</span> <span class="n">targetSum</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">root</span><span class="p">:</span>
-            <span class="k">return</span> <span class="kc">False</span>
+<h4>Code</h4>
+<pre><code class="language-Python3">class Solution:
+    def hasPathSum(self, root: Optional[TreeNode], targetSum: int) -&gt; bool:
+        if not root:
+            return False
 
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">root</span><span class="o">.</span><span class="n">left</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">root</span><span class="o">.</span><span class="n">right</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">targetSum</span> <span class="o">==</span> <span class="n">root</span><span class="o">.</span><span class="n">val</span>
+        if not root.left and not root.right:
+            return targetSum == root.val
 
-        <span class="n">left_sum</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">hasPathSum</span><span class="p">(</span><span class="n">root</span><span class="o">.</span><span class="n">left</span><span class="p">,</span> <span class="n">targetSum</span> <span class="o">-</span> <span class="n">root</span><span class="o">.</span><span class="n">val</span><span class="p">)</span>
-        <span class="n">right_sum</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">hasPathSum</span><span class="p">(</span><span class="n">root</span><span class="o">.</span><span class="n">right</span><span class="p">,</span> <span class="n">targetSum</span> <span class="o">-</span> <span class="n">root</span><span class="o">.</span><span class="n">val</span><span class="p">)</span>
+        left_sum = self.hasPathSum(root.left, targetSum - root.val)
+        right_sum = self.hasPathSum(root.right, targetSum - root.val)
 
-        <span class="k">return</span> <span class="n">left_sum</span> <span class="ow">or</span> <span class="n">right_sum</span>
+        return left_sum or right_sum
+</code></pre>
+<pre><code class="language-python">class Solution:
+    def hasPathSum(self, root: Optional[TreeNode], targetSum: int) -&gt; bool:
+        if not root:
+            return False
+
+        if not root.left and not root.right:
+            return targetSum == root.val
+
+        left_sum = self.hasPathSum(root.left, targetSum - root.val)
+        right_sum = self.hasPathSum(root.right, targetSum - root.val)
+
+        return left_sum or right_sum
+</code></pre>
+<pre><code class="language-C####">public class Solution
+{
+    public bool HasPathSum(TreeNode root, int targetSum)
+    {
+        if (root == null)
+        {
+            return false;
+        }
+
+        if (root.left == null &amp;&amp; root.right == null)
+        {
+            return targetSum == root.val;
+        }
+
+        bool leftSum = HasPathSum(root.left, targetSum - root.val);
+        bool rightSum = HasPathSum(root.right, targetSum - root.val);
+
+        return leftSum || rightSum;
+    }
+}
+</code></pre>
+<pre><code class="language-cpp">class Solution {
+public:
+    bool hasPathSum(TreeNode* root, int targetSum) {
+        if (!root) {
+            return false;
+        }
+
+        if (!root-&gt;left &amp;&amp; !root-&gt;right) {
+            return targetSum == root-&gt;val;
+        }
+
+        bool left_sum = hasPathSum(root-&gt;left, targetSum - root-&gt;val);
+        bool right_sum = hasPathSum(root-&gt;right, targetSum - root-&gt;val);
+
+        return left_sum || right_sum;
+    }
+};
+</code></pre>
+<pre><code class="language-Java">class Solution {
+    public boolean hasPathSum(TreeNode root, int targetSum) {
+        if (root == null) {
+            return false;
+        }
+
+        if (root.left == null &amp;&amp; root.right == null) {
+            return targetSum == root.val;
+        }
+
+        boolean leftSum = hasPathSum(root.left, targetSum - root.val);
+        boolean rightSum = hasPathSum(root.right, targetSum - root.val);
+
+        return leftSum || rightSum;
+    }
+}
+</code></pre></div><div class='python-solution'><h4>Short Python recursive solution - O(n) [Votes: 439]</h4><pre><code>#### Definition for a  binary tree node
+#### class TreeNode:
+####     def __init__(self, x):
+####         self.val = x
+####         self.left = None
+####         self.right = None
+
+class Solution:
+    #### @param root, a tree node
+    #### @param sum, an integer
+    #### @return a boolean
+    #### 1:27
+    def hasPathSum(self, root, sum):
+        if not root:
+            return False
+
+        if not root.left and not root.right and root.val == sum:
+            return True
+
+        sum -= root.val
+
+        return self.hasPathSum(root.left, sum) or self.hasPathSum(root.right, sum)
 </code></pre></div>
-
-<div class="codehilite"><pre><span></span><code><span class="n">Language</span><span class="p">:</span> <span class="n">python</span> 
-<span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="p">:</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">hasPathSum</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">root</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">TreeNode</span><span class="p">],</span> <span class="n">targetSum</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">root</span><span class="p">:</span>
-            <span class="k">return</span> <span class="kc">False</span>
-
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">root</span><span class="o">.</span><span class="n">left</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">root</span><span class="o">.</span><span class="n">right</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">targetSum</span> <span class="o">==</span> <span class="n">root</span><span class="o">.</span><span class="n">val</span>
-
-        <span class="n">left_sum</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">hasPathSum</span><span class="p">(</span><span class="n">root</span><span class="o">.</span><span class="n">left</span><span class="p">,</span> <span class="n">targetSum</span> <span class="o">-</span> <span class="n">root</span><span class="o">.</span><span class="n">val</span><span class="p">)</span>
-        <span class="n">right_sum</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">hasPathSum</span><span class="p">(</span><span class="n">root</span><span class="o">.</span><span class="n">right</span><span class="p">,</span> <span class="n">targetSum</span> <span class="o">-</span> <span class="n">root</span><span class="o">.</span><span class="n">val</span><span class="p">)</span>
-
-        <span class="k">return</span> <span class="n">left_sum</span> <span class="ow">or</span> <span class="n">right_sum</span>
-</code></pre></div>
-
-<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">C</span><span class="err">#</span><span class="w"> </span>
-<span class="n">public</span><span class="w"> </span><span class="n">class</span><span class="w"> </span><span class="n">Solution</span>
-<span class="p">{</span>
-<span class="w">    </span><span class="n">public</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">HasPathSum</span><span class="p">(</span><span class="n">TreeNode</span><span class="w"> </span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">targetSum</span><span class="p">)</span>
-<span class="w">    </span><span class="p">{</span>
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">root</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">null</span><span class="p">)</span>
-<span class="w">        </span><span class="p">{</span>
-<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
-<span class="w">        </span><span class="p">}</span>
-
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">root</span><span class="p">.</span><span class="n">left</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">null</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">root</span><span class="p">.</span><span class="n">right</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">null</span><span class="p">)</span>
-<span class="w">        </span><span class="p">{</span>
-<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="n">targetSum</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">root</span><span class="p">.</span><span class="n">val</span><span class="p">;</span>
-<span class="w">        </span><span class="p">}</span>
-
-<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">leftSum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">HasPathSum</span><span class="p">(</span><span class="n">root</span><span class="p">.</span><span class="n">left</span><span class="p">,</span><span class="w"> </span><span class="n">targetSum</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">root</span><span class="p">.</span><span class="n">val</span><span class="p">);</span>
-<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">rightSum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">HasPathSum</span><span class="p">(</span><span class="n">root</span><span class="p">.</span><span class="n">right</span><span class="p">,</span><span class="w"> </span><span class="n">targetSum</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">root</span><span class="p">.</span><span class="n">val</span><span class="p">);</span>
-
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">leftSum</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">rightSum</span><span class="p">;</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
-
-<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">C</span><span class="o">++</span><span class="w"> </span>
-<span class="n">class</span><span class="w"> </span><span class="n">Solution</span><span class="w"> </span><span class="p">{</span>
-<span class="n">public</span><span class="o">:</span>
-<span class="w">    </span><span class="kt">bool</span><span class="w"> </span><span class="n">hasPathSum</span><span class="p">(</span><span class="n">TreeNode</span><span class="o">*</span><span class="w"> </span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">targetSum</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">root</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
-<span class="w">        </span><span class="p">}</span>
-
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">root</span><span class="o">-&gt;</span><span class="n">left</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="o">!</span><span class="n">root</span><span class="o">-&gt;</span><span class="n">right</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="n">targetSum</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">root</span><span class="o">-&gt;</span><span class="n">val</span><span class="p">;</span>
-<span class="w">        </span><span class="p">}</span>
-
-<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">left_sum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">hasPathSum</span><span class="p">(</span><span class="n">root</span><span class="o">-&gt;</span><span class="n">left</span><span class="p">,</span><span class="w"> </span><span class="n">targetSum</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">root</span><span class="o">-&gt;</span><span class="n">val</span><span class="p">);</span>
-<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">right_sum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">hasPathSum</span><span class="p">(</span><span class="n">root</span><span class="o">-&gt;</span><span class="n">right</span><span class="p">,</span><span class="w"> </span><span class="n">targetSum</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">root</span><span class="o">-&gt;</span><span class="n">val</span><span class="p">);</span>
-
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">left_sum</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">right_sum</span><span class="p">;</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">};</span>
-</code></pre></div>
-
-<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">Java</span><span class="w"> </span>
-<span class="kd">class</span> <span class="nc">Solution</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">boolean</span><span class="w"> </span><span class="nf">hasPathSum</span><span class="p">(</span><span class="n">TreeNode</span><span class="w"> </span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">targetSum</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">root</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="kc">false</span><span class="p">;</span>
-<span class="w">        </span><span class="p">}</span>
-
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">root</span><span class="p">.</span><span class="na">left</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kc">null</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">root</span><span class="p">.</span><span class="na">right</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="n">targetSum</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">root</span><span class="p">.</span><span class="na">val</span><span class="p">;</span>
-<span class="w">        </span><span class="p">}</span>
-
-<span class="w">        </span><span class="kt">boolean</span><span class="w"> </span><span class="n">leftSum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">hasPathSum</span><span class="p">(</span><span class="n">root</span><span class="p">.</span><span class="na">left</span><span class="p">,</span><span class="w"> </span><span class="n">targetSum</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">root</span><span class="p">.</span><span class="na">val</span><span class="p">);</span>
-<span class="w">        </span><span class="kt">boolean</span><span class="w"> </span><span class="n">rightSum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">hasPathSum</span><span class="p">(</span><span class="n">root</span><span class="p">.</span><span class="na">right</span><span class="p">,</span><span class="w"> </span><span class="n">targetSum</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">root</span><span class="p">.</span><span class="na">val</span><span class="p">);</span>
-
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">leftSum</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">rightSum</span><span class="p">;</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div></div>
-
-
-<div class='python-solution'><h2>Short Python recursive solution - O(n) -- Votes: 439</h2><div class="codehilite"><pre><span></span><code><span class="err">#</span><span class="w"> </span><span class="n">Definition</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">a</span><span class="w">  </span><span class="nc">binary</span><span class="w"> </span><span class="n">tree</span><span class="w"> </span><span class="n">node</span>
-<span class="err">#</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nl">TreeNode</span><span class="p">:</span>
-<span class="err">#</span><span class="w">     </span><span class="n">def</span><span class="w"> </span><span class="n">__init__</span><span class="p">(</span><span class="n">self</span><span class="p">,</span><span class="w"> </span><span class="n">x</span><span class="p">)</span><span class="err">:</span>
-<span class="err">#</span><span class="w">         </span><span class="n">self</span><span class="p">.</span><span class="n">val</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">x</span>
-<span class="err">#</span><span class="w">         </span><span class="n">self</span><span class="p">.</span><span class="nf">left</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">None</span>
-<span class="err">#</span><span class="w">         </span><span class="n">self</span><span class="p">.</span><span class="nf">right</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">None</span>
-
-<span class="k">class</span><span class="w"> </span><span class="nl">Solution</span><span class="p">:</span>
-<span class="w">    </span><span class="err">#</span><span class="w"> </span><span class="nv">@param</span><span class="w"> </span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">tree</span><span class="w"> </span><span class="n">node</span>
-<span class="w">    </span><span class="err">#</span><span class="w"> </span><span class="nv">@param</span><span class="w"> </span><span class="nf">sum</span><span class="p">,</span><span class="w"> </span><span class="n">an</span><span class="w"> </span><span class="k">integer</span>
-<span class="w">    </span><span class="err">#</span><span class="w"> </span><span class="nv">@return</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="k">boolean</span>
-<span class="w">    </span><span class="err">#</span><span class="w"> </span><span class="mi">1</span><span class="err">:</span><span class="mi">27</span>
-<span class="w">    </span><span class="n">def</span><span class="w"> </span><span class="n">hasPathSum</span><span class="p">(</span><span class="n">self</span><span class="p">,</span><span class="w"> </span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="nf">sum</span><span class="p">)</span><span class="err">:</span>
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="nl">root</span><span class="p">:</span>
-<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="k">False</span>
-
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="n">root</span><span class="p">.</span><span class="nf">left</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="n">root</span><span class="p">.</span><span class="nf">right</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="n">root</span><span class="p">.</span><span class="n">val</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nf">sum</span><span class="err">:</span>
-<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="k">True</span>
-
-<span class="w">        </span><span class="nf">sum</span><span class="w"> </span><span class="o">-=</span><span class="w"> </span><span class="n">root</span><span class="p">.</span><span class="n">val</span>
-
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">self</span><span class="p">.</span><span class="n">hasPathSum</span><span class="p">(</span><span class="n">root</span><span class="p">.</span><span class="nf">left</span><span class="p">,</span><span class="w"> </span><span class="nf">sum</span><span class="p">)</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="n">self</span><span class="p">.</span><span class="n">hasPathSum</span><span class="p">(</span><span class="n">root</span><span class="p">.</span><span class="nf">right</span><span class="p">,</span><span class="w"> </span><span class="nf">sum</span><span class="p">)</span>
-</code></pre></div></div><p style="page-break-before: always" ></p>

@@ -1,62 +1,57 @@
-<div class='cpp-solution'><h2>C++ || Simple BFS (With Full Explanation)🌚 || Beats 100% 🏁🔥 -- Votes: 728</h2><h2>Intuition</h2>
+<div class='cpp-solution'><h4>C++ || Simple BFS (With Full Explanation)🌚 || Beats 100% 🏁🔥 [Votes: 728]</h4><h4>Intuition</h4>
 <p>The intuition behind this code is that it uses a breadth-first search (BFS) algorithm to find the minimum number of moves required to reach the last cell of the board from the first cell. BFS is an algorithm that explores all the vertices of a graph or all the nodes of a tree level by level.</p>
-<h2>Approach</h2>
+<h4>Approach</h4>
 <p>The method starts by creating a vector of pairs called <strong>"cells"</strong> that stores the row and column of each cell in the board. It also creates a vector of integers called <strong>"dist"</strong> that stores the minimum number of moves required to reach each cell and initializes it to -1.</p>
 <p>It then uses a queue to keep track of the cells to be visited and starts by pushing the first cell (cell 1) into the queue. The method then enters a while loop that continues until the queue is empty. In each iteration of the loop, it takes the front element of the queue, which is the current cell, and pops it from the queue.</p>
 <p>For the current cell, the method loops through all the possible next cells which are from curr+1 to min(curr+6,n*n) (because in each move we can move to a dice roll max 6 steps) and checks if the minimum number of moves required to reach that cell has not been assigned yet. If it has not been assigned yet, the method assigns the minimum number of moves required to reach that cell as the minimum number of moves required to reach the current cell plus one. It also pushes the next cell into the queue to be visited in the next iteration.</p>
 <p>The method then continues this process until all the cells have been visited, and the minimum number of moves required to reach each cell has been assigned. Finally, the method returns the minimum number of moves required to reach the last cell, which is stored in dist[n*n].</p>
 <p>It also handles the case if there is a snake or ladder at the cell, it directly assigns the destination cell number as the cell number.</p>
-<h2>Complexity</h2>
+<h4>Complexity</h4>
 <ul>
 <li>
-<p><strong>Time complexity:</strong><br />
-  The time complexity of this code is <strong>O(n^2)</strong>, where n is the size of the board. This is because the method uses a breadth-first search algorithm to traverse through each cell of the board and assigns the distance of each cell from the starting cell. The outer loop iterates n times, and the inner loop iterates n times, so the total number of iterations is n*n.<br />
-  Note that this is assuming the queue and vector operations have a constant time complexity, which is typical but not guaranteed.</p>
+<p><strong>Time complexity:</strong>
+The time complexity of this code is <strong>O(n^2)</strong>, where n is the size of the board. This is because the method uses a breadth-first search algorithm to traverse through each cell of the board and assigns the distance of each cell from the starting cell. The outer loop iterates n times, and the inner loop iterates n times, so the total number of iterations is n*n.
+Note that this is assuming the queue and vector operations have a constant time complexity, which is typical but not guaranteed.</p>
 </li>
 <li>
-<p><strong>Space complexity:</strong><br />
-  The space complexity of this code is also <strong>O(n^2)</strong>. This is because the method uses a vector of integers called "dist" to keep track of the minimum number of moves required to reach each cell, and this vector has nn elements. The method also uses a vector of pairs called "cells" to keep track of the row and column of each cell, and this vector also has nn elements. The method also uses a queue to keep track of the cells to be visited, which can have at most n*n elements.</p>
+<p><strong>Space complexity:</strong>
+The space complexity of this code is also <strong>O(n^2)</strong>. This is because the method uses a vector of integers called "dist" to keep track of the minimum number of moves required to reach each cell, and this vector has nn elements. The method also uses a vector of pairs called "cells" to keep track of the row and column of each cell, and this vector also has nn elements. The method also uses a queue to keep track of the cells to be visited, which can have at most n*n elements.</p>
 </li>
 </ul>
-<h2>Code</h2>
-<div class="codehilite"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="n">Solution</span><span class="w"> </span><span class="err">{</span>
-<span class="k">public</span><span class="err">:</span>
-<span class="w">    </span><span class="nc">int</span><span class="w"> </span><span class="n">snakesAndLadders</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">vector</span><span class="o">&lt;</span><span class="nc">int</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="o">&amp;</span><span class="n">board</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
-<span class="w">        </span><span class="nc">int</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">board</span><span class="p">.</span><span class="k">size</span><span class="p">(),</span><span class="w"> </span><span class="n">lbl</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
-<span class="w">        </span><span class="n">vector</span><span class="o">&lt;</span><span class="n">pair</span><span class="o">&lt;</span><span class="nc">int</span><span class="p">,</span><span class="w"> </span><span class="nc">int</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="n">cells</span><span class="p">(</span><span class="n">n</span><span class="o">*</span><span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">);</span>
-<span class="w">        </span><span class="n">vector</span><span class="o">&lt;</span><span class="nc">int</span><span class="o">&gt;</span><span class="w"> </span><span class="n">columns</span><span class="p">(</span><span class="n">n</span><span class="p">);</span>
-<span class="w">        </span><span class="n">iota</span><span class="p">(</span><span class="n">columns</span><span class="p">.</span><span class="k">begin</span><span class="p">(),</span><span class="w"> </span><span class="n">columns</span><span class="p">.</span><span class="k">end</span><span class="p">(),</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
-<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="nc">int</span><span class="w"> </span><span class="k">row</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span><span class="w"> </span><span class="k">row</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="k">row</span><span class="c1">--) {</span>
-<span class="w">            </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="nc">int</span><span class="w"> </span><span class="k">column</span><span class="w"> </span><span class="err">:</span><span class="w"> </span><span class="n">columns</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
-<span class="w">                </span><span class="n">cells</span><span class="o">[</span><span class="n">lbl++</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">{</span><span class="k">row</span><span class="p">,</span><span class="w"> </span><span class="k">column</span><span class="err">}</span><span class="p">;</span>
-<span class="w">            </span><span class="err">}</span>
-<span class="w">            </span><span class="nf">reverse</span><span class="p">(</span><span class="n">columns</span><span class="p">.</span><span class="k">begin</span><span class="p">(),</span><span class="w"> </span><span class="n">columns</span><span class="p">.</span><span class="k">end</span><span class="p">());</span>
-<span class="w">        </span><span class="err">}</span>
-<span class="w">        </span><span class="n">vector</span><span class="o">&lt;</span><span class="nc">int</span><span class="o">&gt;</span><span class="w"> </span><span class="n">dist</span><span class="p">(</span><span class="n">n</span><span class="o">*</span><span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="o">-</span><span class="mi">1</span><span class="p">);</span>
-<span class="w">        </span><span class="n">dist</span><span class="o">[</span><span class="n">1</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-<span class="w">        </span><span class="n">queue</span><span class="o">&lt;</span><span class="nc">int</span><span class="o">&gt;</span><span class="w"> </span><span class="n">q</span><span class="p">;</span>
-<span class="w">        </span><span class="n">q</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
-<span class="w">        </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="err">!</span><span class="n">q</span><span class="p">.</span><span class="n">empty</span><span class="p">())</span><span class="w"> </span><span class="err">{</span>
-<span class="w">            </span><span class="nc">int</span><span class="w"> </span><span class="n">curr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">q</span><span class="p">.</span><span class="n">front</span><span class="p">();</span>
-<span class="w">            </span><span class="n">q</span><span class="p">.</span><span class="n">pop</span><span class="p">();</span>
-<span class="w">            </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="nc">int</span><span class="w"> </span><span class="k">next</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">curr</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span><span class="w"> </span><span class="k">next</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="nf">min</span><span class="p">(</span><span class="n">curr</span><span class="o">+</span><span class="mi">6</span><span class="p">,</span><span class="w"> </span><span class="n">n</span><span class="o">*</span><span class="n">n</span><span class="p">);</span><span class="w"> </span><span class="k">next</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
-<span class="w">                </span><span class="n">auto</span><span class="w"> </span><span class="o">[</span><span class="n">row, column</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cells</span><span class="o">[</span><span class="n">next</span><span class="o">]</span><span class="p">;</span>
-<span class="w">                </span><span class="nc">int</span><span class="w"> </span><span class="n">destination</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">board</span><span class="o">[</span><span class="n">row</span><span class="o">][</span><span class="n">column</span><span class="o">]</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="o">-</span><span class="mi">1</span><span class="w"> </span><span class="vm">?</span><span class="w"> </span><span class="n">board</span><span class="o">[</span><span class="n">row</span><span class="o">][</span><span class="n">column</span><span class="o">]</span><span class="w"> </span><span class="err">:</span><span class="w"> </span><span class="k">next</span><span class="p">;</span>
-<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">dist</span><span class="o">[</span><span class="n">destination</span><span class="o">]</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
-<span class="w">                    </span><span class="n">dist</span><span class="o">[</span><span class="n">destination</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dist</span><span class="o">[</span><span class="n">curr</span><span class="o">]</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
-<span class="w">                    </span><span class="n">q</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="n">destination</span><span class="p">);</span>
-<span class="w">                </span><span class="err">}</span>
-<span class="w">            </span><span class="err">}</span>
-<span class="w">        </span><span class="err">}</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">dist</span><span class="o">[</span><span class="n">n*n</span><span class="o">]</span><span class="p">;</span>
-<span class="w">    </span><span class="err">}</span>
-<span class="err">}</span><span class="p">;</span>
-</code></pre></div>
-
-<p></p></div>
-
-
-<div class='python-solution'><h2>Python3 clear BFS solution -- Votes: 98</h2><h3>Thought process</h3>
+<h4>Code</h4>
+<pre><code>class Solution {
+public:
+    int snakesAndLadders(vector&lt;vector&lt;int&gt;&gt; &amp;board) {
+        int n = board.size(), lbl = 1;
+        vector&lt;pair&lt;int, int&gt;&gt; cells(n*n+1);
+        vector&lt;int&gt; columns(n);
+        iota(columns.begin(), columns.end(), 0);
+        for (int row = n - 1; row &gt;= 0; row--) {
+            for (int column : columns) {
+                cells[lbl++] = {row, column};
+            }
+            reverse(columns.begin(), columns.end());
+        }
+        vector&lt;int&gt; dist(n*n+1, -1);
+        dist[1] = 0;
+        queue&lt;int&gt; q;
+        q.push(1);
+        while (!q.empty()) {
+            int curr = q.front();
+            q.pop();
+            for (int next = curr + 1; next &lt;= min(curr+6, n*n); next++) {
+                auto [row, column] = cells[next];
+                int destination = board[row][column] != -1 ? board[row][column] : next;
+                if (dist[destination] == -1) {
+                    dist[destination] = dist[curr] + 1;
+                    q.push(destination);
+                }
+            }
+        }
+        return dist[n*n];
+    }
+};
+</code></pre></div><div class='python-solution'><h4>Python3 clear BFS solution [Votes: 98]</h4><h5>Thought process</h5>
 <ul>
 <li>simply apply BFS to find the length of shortest path from <code>1</code> to <code>n*n</code></li>
 <li>key point is to correctly compute the corresponding coordinates of the label</li>
@@ -64,30 +59,29 @@
 <li>time complexity: O(n^2), n is the width and height of the grid</li>
 <li>space complexity: O(n^2)</li>
 </ul>
-<div class="codehilite"><pre><span></span><code><span class="n">Language</span><span class="p">:</span> <span class="n">py</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">snakesAndLadders</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">board</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-        <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">board</span><span class="p">)</span>
-        <span class="k">def</span><span class="w"> </span><span class="nf">label_to_position</span><span class="p">(</span><span class="n">label</span><span class="p">):</span>
-            <span class="n">r</span><span class="p">,</span> <span class="n">c</span> <span class="o">=</span> <span class="nb">divmod</span><span class="p">(</span><span class="n">label</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">r</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-                <span class="k">return</span> <span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="o">-</span><span class="n">r</span><span class="p">,</span> <span class="n">c</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="k">return</span> <span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="o">-</span><span class="n">r</span><span class="p">,</span> <span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="o">-</span><span class="n">c</span>
+<pre><code class="language-py">    def snakesAndLadders(self, board: List[List[int]]) -&gt; int:
+        n = len(board)
+        def label_to_position(label):
+            r, c = divmod(label-1, n)
+            if r % 2 == 0:
+                return n-1-r, c
+            else:
+                return n-1-r, n-1-c
 
-        <span class="n">seen</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
-        <span class="n">queue</span> <span class="o">=</span> <span class="n">collections</span><span class="o">.</span><span class="n">deque</span><span class="p">()</span>
-        <span class="n">queue</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
-        <span class="k">while</span> <span class="n">queue</span><span class="p">:</span>
-            <span class="n">label</span><span class="p">,</span> <span class="n">step</span> <span class="o">=</span> <span class="n">queue</span><span class="o">.</span><span class="n">popleft</span><span class="p">()</span>
-            <span class="n">r</span><span class="p">,</span> <span class="n">c</span> <span class="o">=</span> <span class="n">label_to_position</span><span class="p">(</span><span class="n">label</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">board</span><span class="p">[</span><span class="n">r</span><span class="p">][</span><span class="n">c</span><span class="p">]</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
-                <span class="n">label</span> <span class="o">=</span> <span class="n">board</span><span class="p">[</span><span class="n">r</span><span class="p">][</span><span class="n">c</span><span class="p">]</span>
-            <span class="k">if</span> <span class="n">label</span> <span class="o">==</span> <span class="n">n</span><span class="o">*</span><span class="n">n</span><span class="p">:</span>
-                <span class="k">return</span> <span class="n">step</span>
-            <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">7</span><span class="p">):</span>
-                <span class="n">new_label</span> <span class="o">=</span> <span class="n">label</span> <span class="o">+</span> <span class="n">x</span>
-                <span class="k">if</span> <span class="n">new_label</span> <span class="o">&lt;=</span> <span class="n">n</span><span class="o">*</span><span class="n">n</span> <span class="ow">and</span> <span class="n">new_label</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">seen</span><span class="p">:</span>
-                    <span class="n">seen</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">new_label</span><span class="p">)</span>
-                    <span class="n">queue</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">new_label</span><span class="p">,</span> <span class="n">step</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span>
-        <span class="k">return</span> <span class="o">-</span><span class="mi">1</span>
-</code></pre></div></div><p style="page-break-before: always" ></p>
+        seen = set()
+        queue = collections.deque()
+        queue.append((1, 0))
+        while queue:
+            label, step = queue.popleft()
+            r, c = label_to_position(label)
+            if board[r][c] != -1:
+                label = board[r][c]
+            if label == n*n:
+                return step
+            for x in range(1, 7):
+                new_label = label + x
+                if new_label &lt;= n*n and new_label not in seen:
+                    seen.add(new_label)
+                    queue.append((new_label, step+1))
+        return -1
+</code></pre></div>

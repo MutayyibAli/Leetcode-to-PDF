@@ -1,164 +1,155 @@
-<div class='cpp-solution'><h2>I bet you will understand | Brute->Better->Optimal | Beginner Friendly | C++ -- Votes: 375</h2><h2>(1) Naive Approach:</h2>
-<h3>Intuition:</h3>
+<div class='cpp-solution'><h4>I bet you will understand | Brute->Better->Optimal | Beginner Friendly | C++ [Votes: 375]</h4><h4>(1) Naive Approach:</h4>
+<h5>Intuition:</h5>
 <p>We can do traversal of the given tree using any traversal technique and store the node values in an array/vector. Then we can sort the array in ascending order such that the 1st smallest element comes at 0th index, 2nd smallest element at 1st index ... kth samllest element at k-1th index.</p>
-<h3>Algorithm:</h3>
+<h5>Algorithm:</h5>
 <ol>
 <li>Initialize an empty vector 'v'.</li>
 <li>Do any traversal (lets say preorder) and store the node values in v.</li>
 <li>Sort vector v in ascending order.</li>
 <li>Return v[k-1].</li>
 </ol>
-<h3>Complexity:</h3>
+<h5>Complexity:</h5>
 <ul>
 <li>
-<p>Time complexity: $$O(n)$$ + $$O(nlogn)$$ -&gt; $$O(nlogn)$$<br />
+<p>Time complexity: $$O(n)$$ + $$O(nlogn)$$ -&gt; $$O(nlogn)$$
   O(n) for traversing the Tree and O(nlogn) for sorting the vector of size n.</p>
 </li>
 <li>
-<p>Space complexity:$$O(n)$$ + recursive stack space</p>
+<p>Space complexity:$$O(n)$$ + recursive stack space </p>
 </li>
 </ul>
-<h3>Code</h3>
-<div class="codehilite"><pre><span></span><code><span class="nt">class</span><span class="w"> </span><span class="nt">Solution</span><span class="w"> </span><span class="p">{</span>
-<span class="n">public</span><span class="p">:</span>
-<span class="w">    </span><span class="n">void</span><span class="w"> </span><span class="nf">preOrderTraversal</span><span class="p">(</span><span class="n">TreeNode</span><span class="o">*</span><span class="w"> </span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="n">vector</span><span class="err">&lt;</span><span class="n">int</span><span class="err">&gt;</span><span class="w"> </span><span class="err">&amp;</span><span class="n">v</span><span class="p">)</span><span class="err">{</span>
-<span class="w">        </span><span class="nf">if</span><span class="p">(</span><span class="n">root</span><span class="w"> </span><span class="err">==</span><span class="w"> </span><span class="n">NULL</span><span class="p">)</span><span class="w">    </span><span class="n">return</span><span class="p">;</span>
+<h5>Code</h5>
+<pre><code>class Solution {
+public:
+    void preOrderTraversal(TreeNode* root, vector&lt;int&gt; &amp;v){
+        if(root == NULL)    return;
 
-<span class="w">        </span><span class="err">//root,</span><span class="w"> </span><span class="err">left,</span><span class="w"> </span><span class="err">right</span><span class="w"> </span>
-<span class="w">        </span><span class="err">v.push_back(root-&gt;val)</span><span class="p">;</span>
-<span class="w">        </span><span class="err">preOrderTraversal(root-&gt;left,</span><span class="w"> </span><span class="err">v)</span><span class="p">;</span>
-<span class="w">        </span><span class="err">preOrderTraversal(root-&gt;right,</span><span class="w"> </span><span class="err">v)</span><span class="p">;</span><span class="w">      </span>
-<span class="w">    </span><span class="p">}</span>
-<span class="w">    </span><span class="nt">int</span><span class="w"> </span><span class="nt">kthSmallest</span><span class="o">(</span><span class="nt">TreeNode</span><span class="o">*</span><span class="w"> </span><span class="nt">root</span><span class="o">,</span><span class="w"> </span><span class="nt">int</span><span class="w"> </span><span class="nt">k</span><span class="o">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="err">vector&lt;int&gt;</span><span class="w"> </span><span class="err">v</span><span class="p">;</span><span class="w"> </span>
-<span class="w">        </span><span class="err">preOrderTraversal(root,</span><span class="w"> </span><span class="err">v)</span><span class="p">;</span>
-<span class="w">        </span><span class="err">sort(v.begin(),</span><span class="w"> </span><span class="err">v.end())</span><span class="p">;</span>
-<span class="w">        </span><span class="err">return</span><span class="w"> </span><span class="err">v</span><span class="cp">[</span><span class="nx">k</span><span class="o">-</span><span class="mi">1</span><span class="cp">]</span><span class="p">;</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="err">}</span><span class="o">;</span>
-</code></pre></div>
-
-<h2>(2) Better Approach:</h2>
-<h3>Why Better?</h3>
+        //root, left, right 
+        v.push_back(root-&gt;val);
+        preOrderTraversal(root-&gt;left, v);
+        preOrderTraversal(root-&gt;right, v);      
+    }
+    int kthSmallest(TreeNode* root, int k) {
+        vector&lt;int&gt; v; 
+        preOrderTraversal(root, v);
+        sort(v.begin(), v.end());
+        return v[k-1];
+    }
+};
+</code></pre>
+<h4>(2) Better Approach:</h4>
+<h5>Why Better?</h5>
 <p>In the above approach we are using an extra O(nlogn) for sorting the vector. We need to remove it somehow so that our time complexity boils down to O(n).</p>
-<p>The naive approach of O(nlogn) can also be converted to O(nlogk) using priority queue as we do in the following array question.<br />
+<p>The naive approach of O(nlogn) can also be converted to O(nlogk) using priority queue as we do in the following array question.
 https://leetcode.com/problems/kth-largest-element-in-an-array/</p>
-<p>But, here I will be discussing only the O(n) one.</p>
-<h3>Intuition:</h3>
-<p>We know that the tree given to us is a Binary Search Tree, therefore, all the nodes at the left subtree of a given node will be less than the current node value and it will be less then all the nodes at the right subtree of that node.<br />
+<p>But, here I will be discussing only the O(n) one. </p>
+<h5>Intuition:</h5>
+<p>We know that the tree given to us is a Binary Search Tree, therefore, all the nodes at the left subtree of a given node will be less than the current node value and it will be less then all the nodes at the right subtree of that node.
 i.e.</p>
-<div class="codehilite"><pre><span></span><code>           N
+<pre><code>           N
           / \
          L   R
 
          L&lt;N&lt;R in case of BST
-</code></pre></div>
-
-<p>So, we can take advantage of this and do an INORDER TRAVERSAL. The inorder traversal will always result in a sorted array and the extra NlogN that we were using for sorting will be omitted.</p>
-<h3>Algorithm</h3>
+</code></pre>
+<p>So, we can take advantage of this and do an INORDER TRAVERSAL. The inorder traversal will always result in a sorted array and the extra NlogN that we were using for sorting will be omitted. </p>
+<h5>Algorithm</h5>
 <ol>
 <li>Initialize an empty vector 'v'.</li>
 <li>Do an Inorder traversal and store the node values in v.</li>
 <li>Return v[k-1].</li>
 </ol>
-<h3>Complexity</h3>
+<h5>Complexity</h5>
 <ul>
-<li>Time complexity: $$O(n)$$<br />
+<li>Time complexity: $$O(n)$$
   O(n) for traversing the Tree consisting of n nodes.</li>
-<li>Space complexity:$$O(n)$$ + recursive stack space</li>
+<li>Space complexity:$$O(n)$$ + recursive stack space </li>
 </ul>
-<h3>Code</h3>
-<div class="codehilite"><pre><span></span><code><span class="nt">class</span><span class="w"> </span><span class="nt">Solution</span><span class="w"> </span><span class="p">{</span>
-<span class="n">public</span><span class="p">:</span>
-<span class="w">    </span><span class="n">void</span><span class="w"> </span><span class="nf">inOrderTraversal</span><span class="p">(</span><span class="n">TreeNode</span><span class="o">*</span><span class="w"> </span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="n">vector</span><span class="err">&lt;</span><span class="n">int</span><span class="err">&gt;</span><span class="w"> </span><span class="err">&amp;</span><span class="n">v</span><span class="p">)</span><span class="err">{</span>
-<span class="w">        </span><span class="nf">if</span><span class="p">(</span><span class="n">root</span><span class="w"> </span><span class="err">==</span><span class="w"> </span><span class="n">NULL</span><span class="p">)</span><span class="w">    </span><span class="n">return</span><span class="p">;</span>
+<h5>Code</h5>
+<pre><code>class Solution {
+public:
+    void inOrderTraversal(TreeNode* root, vector&lt;int&gt; &amp;v){
+        if(root == NULL)    return;
 
-<span class="w">        </span><span class="err">//left,</span><span class="w"> </span><span class="err">root,</span><span class="w"> </span><span class="err">right</span><span class="w"> </span>
-<span class="w">        </span><span class="err">inOrderTraversal(root-&gt;left,</span><span class="w"> </span><span class="err">v)</span><span class="p">;</span>
-<span class="w">        </span><span class="err">v.push_back(root-&gt;val)</span><span class="p">;</span>
-<span class="w">        </span><span class="err">inOrderTraversal(root-&gt;right,</span><span class="w"> </span><span class="err">v)</span><span class="p">;</span><span class="w">      </span>
-<span class="w">    </span><span class="p">}</span>
-<span class="w">    </span><span class="nt">int</span><span class="w"> </span><span class="nt">kthSmallest</span><span class="o">(</span><span class="nt">TreeNode</span><span class="o">*</span><span class="w"> </span><span class="nt">root</span><span class="o">,</span><span class="w"> </span><span class="nt">int</span><span class="w"> </span><span class="nt">k</span><span class="o">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="err">vector&lt;int&gt;</span><span class="w"> </span><span class="err">v</span><span class="p">;</span><span class="w"> </span>
-<span class="w">        </span><span class="err">inOrderTraversal(root,</span><span class="w"> </span><span class="err">v)</span><span class="p">;</span>
-<span class="w">        </span><span class="err">return</span><span class="w"> </span><span class="err">v</span><span class="cp">[</span><span class="nx">k</span><span class="o">-</span><span class="mi">1</span><span class="cp">]</span><span class="p">;</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="err">}</span><span class="o">;</span>
-</code></pre></div>
-
-<h2>(3) Optimal Approach: O(N) time and O(1) space:</h2>
+        //left, root, right 
+        inOrderTraversal(root-&gt;left, v);
+        v.push_back(root-&gt;val);
+        inOrderTraversal(root-&gt;right, v);      
+    }
+    int kthSmallest(TreeNode* root, int k) {
+        vector&lt;int&gt; v; 
+        inOrderTraversal(root, v);
+        return v[k-1];
+    }
+};
+</code></pre>
+<h4>(3) Optimal Approach: O(N) time and O(1) space:</h4>
 <p>Approach 2 is fine, but there we are still creating an extra vector to store the node values. We can avoid it so that our space complexity further boils down to O(1).</p>
-<h3>Intuition:</h3>
-<p>We need the kth smallest element. And, we know that our inorder traversal will first give the 1st smallest element, then 2nd smallest element ... and so on.<br />
+<h5>Intuition:</h5>
+<p>We need the kth smallest element. And, we know that our inorder traversal will first give the 1st smallest element, then 2nd smallest element ... and so on. 
 So, instead of storing the node values inside a vector, we can maintain a 'cnt' variable to keep track if we have reached kth smallest value or not in the inorder traversal. And then, we can return the value once cnt reaches k value.</p>
-<h3>Algorithm:</h3>
+<h5>Algorithm:</h5>
 <ol>
 <li>Initialize a variable, cnt = 0;</li>
 <li>Do an Inorder traversal and instead of saving node-&gt;val in vector do a cnt++, denoting that we have encountered cnt th smallest element.</li>
 <li>Return node-&gt;val once cnt == k.</li>
 </ol>
-<h3>Complexity:</h3>
+<h5>Complexity:</h5>
 <ul>
-<li>Time complexity: $$O(n)$$<br />
+<li>Time complexity: $$O(n)$$
   O(n) for traversing the Tree consisting of n nodes.</li>
-<li>Space complexity:$$O(1)$$ + recursive stack space</li>
+<li>Space complexity:$$O(1)$$ + recursive stack space </li>
 </ul>
-<h3>Code:</h3>
-<div class="codehilite"><pre><span></span><code><span class="nt">class</span><span class="w"> </span><span class="nt">Solution</span><span class="w"> </span><span class="p">{</span>
-<span class="n">public</span><span class="p">:</span>
-<span class="w">    </span><span class="n">void</span><span class="w"> </span><span class="nf">solve</span><span class="p">(</span><span class="n">TreeNode</span><span class="o">*</span><span class="w"> </span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="n">int</span><span class="w"> </span><span class="err">&amp;</span><span class="n">cnt</span><span class="p">,</span><span class="w"> </span><span class="n">int</span><span class="w"> </span><span class="err">&amp;</span><span class="n">ans</span><span class="p">,</span><span class="w"> </span><span class="n">int</span><span class="w"> </span><span class="n">k</span><span class="p">)</span><span class="err">{</span>
-<span class="w">        </span><span class="nf">if</span><span class="p">(</span><span class="n">root</span><span class="w"> </span><span class="err">==</span><span class="w"> </span><span class="n">NULL</span><span class="p">)</span><span class="w">    </span><span class="n">return</span><span class="p">;</span>
-<span class="w">        </span><span class="err">//left,</span><span class="w"> </span><span class="err">root,</span><span class="w"> </span><span class="err">right</span><span class="w"> </span>
-<span class="w">        </span><span class="err">solve(root-&gt;left,</span><span class="w"> </span><span class="err">cnt,</span><span class="w"> </span><span class="err">ans,</span><span class="w"> </span><span class="err">k)</span><span class="p">;</span>
-<span class="w">        </span><span class="err">cnt++</span><span class="p">;</span>
-<span class="w">        </span><span class="err">if(cnt</span><span class="w"> </span><span class="err">==</span><span class="w"> </span><span class="err">k){</span>
-<span class="w">            </span><span class="err">ans</span><span class="w"> </span><span class="err">=</span><span class="w"> </span><span class="err">root-&gt;val</span><span class="p">;</span>
-<span class="w">            </span><span class="err">return</span><span class="p">;</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">        </span><span class="nt">solve</span><span class="o">(</span><span class="nt">root-</span><span class="o">&gt;</span><span class="nt">right</span><span class="o">,</span><span class="w"> </span><span class="nt">cnt</span><span class="o">,</span><span class="w"> </span><span class="nt">ans</span><span class="o">,</span><span class="w"> </span><span class="nt">k</span><span class="o">);</span>
-<span class="w">    </span><span class="err">}</span>
-<span class="w">    </span><span class="nt">int</span><span class="w"> </span><span class="nt">kthSmallest</span><span class="o">(</span><span class="nt">TreeNode</span><span class="o">*</span><span class="w"> </span><span class="nt">root</span><span class="o">,</span><span class="w"> </span><span class="nt">int</span><span class="w"> </span><span class="nt">k</span><span class="o">)</span><span class="w"> </span><span class="p">{</span>
+<h5>Code:</h5>
+<pre><code>class Solution {
+public:
+    void solve(TreeNode* root, int &amp;cnt, int &amp;ans, int k){
+        if(root == NULL)    return;
+        //left, root, right 
+        solve(root-&gt;left, cnt, ans, k);
+        cnt++;
+        if(cnt == k){
+            ans = root-&gt;val;
+            return;
+        }
+        solve(root-&gt;right, cnt, ans, k);
+    }
+    int kthSmallest(TreeNode* root, int k) {
 
-<span class="w">        </span><span class="err">int</span><span class="w"> </span><span class="err">cnt</span><span class="w"> </span><span class="err">=</span><span class="w"> </span><span class="err">0</span><span class="p">;</span><span class="w">        </span>
-<span class="w">        </span><span class="err">int</span><span class="w"> </span><span class="err">ans</span><span class="p">;</span>
-<span class="w">        </span><span class="err">solve(root,</span><span class="w"> </span><span class="err">cnt,</span><span class="w"> </span><span class="err">ans,</span><span class="w"> </span><span class="err">k)</span><span class="p">;</span>
-<span class="w">        </span><span class="err">return</span><span class="w"> </span><span class="err">ans</span><span class="p">;</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="err">}</span><span class="o">;</span>
-</code></pre></div>
+        int cnt = 0;        
+        int ans;
+        solve(root, cnt, ans, k);
+        return ans;
+    }
+};
+</code></pre>
+<h4>Please upvote the solution if you understood it.</h4></div><div class='python-solution'><h4>Python Easy Iterative and Recursive Solution [Votes: 222]</h4><p>Recursive:</p>
+<pre><code>def kthSmallest(self, root, k):
+    self.k = k
+    self.res = None
+    self.helper(root)
+    return self.res
 
-<h2>Please upvote the solution if you understood it.</h2>
-<p></p></div>
-
-
-<div class='python-solution'><h2>Python Easy Iterative and Recursive Solution -- Votes: 222</h2><p>Recursive:</p>
-<div class="codehilite"><pre><span></span><code><span class="nv">def</span><span class="w"> </span><span class="nv">kthSmallest</span><span class="ss">(</span><span class="nv">self</span>,<span class="w"> </span><span class="nv">root</span>,<span class="w"> </span><span class="nv">k</span><span class="ss">)</span>:
-<span class="w">    </span><span class="nv">self</span>.<span class="nv">k</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">k</span>
-<span class="w">    </span><span class="nv">self</span>.<span class="nv">res</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">None</span>
-<span class="w">    </span><span class="nv">self</span>.<span class="nv">helper</span><span class="ss">(</span><span class="nv">root</span><span class="ss">)</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">self</span>.<span class="nv">res</span>
-
-<span class="nv">def</span><span class="w"> </span><span class="nv">helper</span><span class="ss">(</span><span class="nv">self</span>,<span class="w"> </span><span class="nv">node</span><span class="ss">)</span>:
-<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="nv">not</span><span class="w"> </span><span class="nv">node</span>:
-<span class="w">        </span><span class="k">return</span>
-<span class="w">    </span><span class="nv">self</span>.<span class="nv">helper</span><span class="ss">(</span><span class="nv">node</span>.<span class="nv">left</span><span class="ss">)</span>
-<span class="w">    </span><span class="nv">self</span>.<span class="nv">k</span><span class="w"> </span><span class="o">-=</span><span class="w"> </span><span class="mi">1</span>
-<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="nv">self</span>.<span class="nv">k</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span>:
-<span class="w">        </span><span class="nv">self</span>.<span class="nv">res</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">node</span>.<span class="nv">val</span>
-<span class="w">        </span><span class="k">return</span>
-<span class="w">    </span><span class="nv">self</span>.<span class="nv">helper</span><span class="ss">(</span><span class="nv">node</span>.<span class="nv">right</span><span class="ss">)</span>
-</code></pre></div>
-
+def helper(self, node):
+    if not node:
+        return
+    self.helper(node.left)
+    self.k -= 1
+    if self.k == 0:
+        self.res = node.val
+        return
+    self.helper(node.right)
+</code></pre>
 <p>Iterative:</p>
-<div class="codehilite"><pre><span></span><code><span class="nv">def</span><span class="w"> </span><span class="nv">kthSmallest</span><span class="ss">(</span><span class="nv">root</span>,<span class="w"> </span><span class="nv">k</span><span class="ss">)</span>:
-<span class="w">    </span><span class="nv">stack</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>
-<span class="w">    </span><span class="k">while</span><span class="w"> </span><span class="nv">root</span><span class="w"> </span><span class="nv">or</span><span class="w"> </span><span class="nv">stack</span>:
-<span class="w">        </span><span class="k">while</span><span class="w"> </span><span class="nv">root</span>:
-<span class="w">            </span><span class="nv">stack</span>.<span class="nv">append</span><span class="ss">(</span><span class="nv">root</span><span class="ss">)</span>
-<span class="w">            </span><span class="nv">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span>.<span class="nv">left</span>
-<span class="w">        </span><span class="nv">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">stack</span>.<span class="nv">pop</span><span class="ss">()</span>
-<span class="w">        </span><span class="nv">k</span><span class="w"> </span><span class="o">-=</span><span class="w"> </span><span class="mi">1</span>
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="nv">k</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span>:
-<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="nv">root</span>.<span class="nv">val</span>
-<span class="w">        </span><span class="nv">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span>.<span class="nv">right</span>
-</code></pre></div></div><p style="page-break-before: always" ></p>
+<pre><code>def kthSmallest(root, k):
+    stack = []
+    while root or stack:
+        while root:
+            stack.append(root)
+            root = root.left
+        root = stack.pop()
+        k -= 1
+        if k == 0:
+            return root.val
+        root = root.right
+</code></pre></div>

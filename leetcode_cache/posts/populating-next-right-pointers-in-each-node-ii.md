@@ -1,0 +1,79 @@
+# Cpp Solution:
+**BFS: LEVEL ORDER TRAVERSAL**
+```
+/*
+// Definition for a Node.
+class Node {
+public:
+    int val;
+    Node* left;
+    Node* right;
+    Node* next;
+
+    Node() : val(0), left(NULL), right(NULL), next(NULL) {}
+
+    Node(int _val) : val(_val), left(NULL), right(NULL), next(NULL) {}
+
+    Node(int _val, Node* _left, Node* _right, Node* _next)
+        : val(_val), left(_left), right(_right), next(_next) {}
+};
+*/
+
+class Solution {
+public:
+    Node* connect(Node* root) 
+    {
+        if (!root)
+            return root;
+        queue<Node*> q;
+        q.push(root);
+        q.push(NULL);
+        while (q.size() > 1)
+        {
+            Node* curr = q.front();
+            q.pop();
+            if (!curr)
+            {
+                q.push(NULL);
+                continue;
+            }
+            curr->next = q.front();
+            if (curr->left)
+                q.push(curr->left);
+            if (curr->right)
+                q.push(curr->right);
+        }
+        return root;
+    }
+};
+```
+Hope you like it.
+
+
+# Python Solution:
+The algorithm is a BFS or level order traversal. We go through the tree level by level. node is the pointer in the parent level, tail is the tail pointer in the child level.
+The parent level can be view as a singly linked list or queue, which we can traversal easily with a pointer.
+Connect the tail with every one of the possible nodes in child level, update it only if the connected node is not nil.
+Do this one level by one level. The whole thing is quite straightforward.
+
+**Python**
+
+    def connect(self, node):
+        tail = dummy = TreeLinkNode(0)
+        while node:
+            tail.next = node.left
+            if tail.next:
+                tail = tail.next
+            tail.next = node.right
+            if tail.next:
+                tail = tail.next
+            node = node.next
+            if not node:
+                tail = dummy
+                node = dummy.next
+
+
+    #### 61 / 61 test cases passed.
+    #### Status: Accepted
+    #### Runtime: 100 ms
+    #### 95.26%

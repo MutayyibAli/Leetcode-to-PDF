@@ -1,0 +1,96 @@
+# Cpp Solution:
+#### Intuition
+We need to use BFS/DFS traversal technique to visit all rooms.
+
+#### Approach
+We define visited array and while visiting all rooms we mark visited rooms. At last we check whether all rooms are visited or not. 
+
+#### DFS
+```
+class Solution 
+{
+public:
+    
+    void dfs(int i, vector<vector<int>> & rooms, vector<int> &vis)
+    {
+        vis[i]=1;
+        for(auto key: rooms[i])
+            if(!vis[key])
+                dfs(key, rooms, vis);
+    }
+    
+    bool canVisitAllRooms(vector<vector<int>>& rooms) 
+    {
+        vector<int> vis(rooms.size(), 0);
+        
+        dfs(0, rooms, vis);
+        
+        for(auto it:vis)
+            if(!it) return false;
+        
+        return true;
+        
+    }
+};
+```
+##### Complexity
+- Time complexity:
+O(n)
+
+- Space complexity:
+O(2n) ~ O(n)
+
+#### BFS
+```
+class Solution 
+{
+public:
+    
+    bool canVisitAllRooms(vector<vector<int>>& rooms) 
+    {
+        int n=rooms.size();
+        vector<int> vis(n, 0);
+        queue<int> q;
+        q.push(0);
+        while(!q.empty())
+        {
+            int curr_room = q.front(); q.pop();
+            vis[curr_room] = 1;
+            for(auto key:rooms[curr_room])
+                if(!vis[key])
+                    q.push(key);
+        }
+
+        for(int i=0; i<n; i++)
+            if(!vis[i]) return false;
+           
+        return true;
+    }
+};
+```
+##### Complexity
+- Time complexity:
+O(n)
+
+- Space complexity:
+O(2n) ~ O(n)
+
+
+
+
+# Python Solution:
+```
+class Solution:
+    def canVisitAllRooms(self, rooms: List[List[int]]) -> bool:
+        visited_rooms = set()
+        stack = [0] #### for rooms that we need to visit and we start from room [0]
+        
+        while stack: 
+            room = stack.pop() 
+            visited_rooms.add(room)
+            for key in rooms[room]:
+                if key not in visited_rooms:
+                    stack.append(key)
+        return len(visited_rooms) == len(rooms)            
+            
+```

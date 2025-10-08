@@ -1,5 +1,4 @@
-<div class='cpp-solution'><h2>✅Python3 || C++|| Java✅ 19 ms || Beats 99.91% -- Votes: 3258</h2><h2>Please UPVOTE</h2>
-<p></p>
+<div class='cpp-solution'><h4>✅Python3 || C++|| Java✅ 19 ms || Beats 99.91% [Votes: 3258]</h4><h4>Please UPVOTE</h4>
 <p>This code implements the longestCommonPrefix function that takes a list of strings v as input and returns the longest common prefix of all the strings. Here is an explanation of how the code works:</p>
 <ol>
 <li>Initialize an empty string ans to store the common prefix.</li>
@@ -10,121 +9,52 @@
 <li>Return the ans string containing the longest common prefix.</li>
 </ol>
 <p>Note that the code assumes that the input list v is non-empty, and that all the strings in v have at least one character. If either of these assumptions is not true, the code may fail.</p>
-<h2>Python3</h2>
-<div class="codehilite"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nl">Solution</span><span class="p">:</span>
-<span class="w">    </span><span class="n">def</span><span class="w"> </span><span class="n">longestCommonPrefix</span><span class="p">(</span><span class="n">self</span><span class="p">,</span><span class="w"> </span><span class="nl">v</span><span class="p">:</span><span class="w"> </span><span class="n">List</span><span class="o">[</span><span class="n">str</span><span class="o">]</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="nf">str</span><span class="err">:</span>
-<span class="w">        </span><span class="n">ans</span><span class="o">=</span><span class="ss">&quot;&quot;</span>
-<span class="w">        </span><span class="n">v</span><span class="o">=</span><span class="n">sorted</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
-<span class="w">        </span><span class="k">first</span><span class="o">=</span><span class="n">v</span><span class="o">[</span><span class="n">0</span><span class="o">]</span>
-<span class="w">        </span><span class="k">last</span><span class="o">=</span><span class="n">v</span><span class="o">[</span><span class="n">-1</span><span class="o">]</span>
-<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="k">range</span><span class="p">(</span><span class="nf">min</span><span class="p">(</span><span class="nf">len</span><span class="p">(</span><span class="k">first</span><span class="p">),</span><span class="nf">len</span><span class="p">(</span><span class="k">last</span><span class="p">)))</span><span class="err">:</span>
-<span class="w">            </span><span class="k">if</span><span class="p">(</span><span class="k">first</span><span class="o">[</span><span class="n">i</span><span class="o">]!=</span><span class="k">last</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="p">)</span><span class="err">:</span>
-<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="n">ans</span>
-<span class="w">            </span><span class="n">ans</span><span class="o">+=</span><span class="k">first</span><span class="o">[</span><span class="n">i</span><span class="o">]</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">ans</span><span class="w"> </span>
-</code></pre></div>
+<h4>Python3</h4>
+<pre><code>class Solution:
+    def longestCommonPrefix(self, v: List[str]) -&gt; str:
+        ans=&quot;&quot;
+        v=sorted(v)
+        first=v[0]
+        last=v[-1]
+        for i in range(min(len(first),len(last))):
+            if(first[i]!=last[i]):
+                return ans
+            ans+=first[i]
+        return ans 
 
-<h2>C++</h2>
-<div class="codehilite"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="n">Solution</span><span class="w"> </span><span class="err">{</span>
-<span class="k">public</span><span class="err">:</span>
-<span class="w">    </span><span class="n">string</span><span class="w"> </span><span class="n">longestCommonPrefix</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">string</span><span class="o">&gt;&amp;</span><span class="w"> </span><span class="n">v</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
-<span class="w">        </span><span class="n">string</span><span class="w"> </span><span class="n">ans</span><span class="o">=</span><span class="ss">&quot;&quot;</span><span class="p">;</span>
-<span class="w">        </span><span class="n">sort</span><span class="p">(</span><span class="n">v</span><span class="p">.</span><span class="k">begin</span><span class="p">(),</span><span class="n">v</span><span class="p">.</span><span class="k">end</span><span class="p">());</span>
-<span class="w">        </span><span class="nc">int</span><span class="w"> </span><span class="n">n</span><span class="o">=</span><span class="n">v</span><span class="p">.</span><span class="k">size</span><span class="p">();</span>
-<span class="w">        </span><span class="n">string</span><span class="w"> </span><span class="k">first</span><span class="o">=</span><span class="n">v</span><span class="o">[</span><span class="n">0</span><span class="o">]</span><span class="p">,</span><span class="k">last</span><span class="o">=</span><span class="n">v</span><span class="o">[</span><span class="n">n-1</span><span class="o">]</span><span class="p">;</span>
-<span class="w">        </span><span class="k">for</span><span class="p">(</span><span class="nc">int</span><span class="w"> </span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="nf">min</span><span class="p">(</span><span class="k">first</span><span class="p">.</span><span class="k">size</span><span class="p">(),</span><span class="k">last</span><span class="p">.</span><span class="k">size</span><span class="p">());</span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="err">{</span>
-<span class="w">            </span><span class="k">if</span><span class="p">(</span><span class="k">first</span><span class="o">[</span><span class="n">i</span><span class="o">]!=</span><span class="k">last</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="p">)</span><span class="err">{</span>
-<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="n">ans</span><span class="p">;</span>
-<span class="w">            </span><span class="err">}</span>
-<span class="w">            </span><span class="n">ans</span><span class="o">+=</span><span class="k">first</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="p">;</span>
-<span class="w">        </span><span class="err">}</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">ans</span><span class="p">;</span>
-<span class="w">    </span><span class="err">}</span>
-<span class="err">}</span><span class="p">;</span>
-</code></pre></div>
-
-<h2>Java</h2>
-<div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="n">Solution</span> {
-    <span class="n">public</span> <span class="n">String</span> <span class="n">longestCommonPrefix</span>(<span class="n">String</span> <span class="n">v</span>) {
-        <span class="n">StringBuilder</span> <span class="n">ans</span> = <span class="nb">new</span> <span class="n">StringBuilder</span>();
-        <span class="n">Arrays</span>.<span class="nb">sort</span>(<span class="n">v</span>);
-        <span class="n">String</span> <span class="nb">first</span> = <span class="n">v</span>[<span class="mi">0</span>];
-        <span class="n">String</span> <span class="nb">last</span> = <span class="n">v</span>[<span class="n">v</span>.<span class="n">length-1</span>];
-        <span class="k">for</span> (<span class="n">int</span> <span class="n">i</span>=<span class="mi">0</span>; <span class="n">i</span><span class="o">&lt;</span><span class="n">Math</span>.<span class="nb">min</span>(<span class="nb">first</span>.<span class="n">length</span>(), <span class="nb">last</span>.<span class="n">length</span>()); <span class="n">i</span>++) {
-            <span class="k">if</span> (<span class="nb">first</span>.<span class="n">charAt</span>(<span class="n">i</span>) != <span class="nb">last</span>.<span class="n">charAt</span>(<span class="n">i</span>)) {
-                <span class="k">return</span> <span class="n">ans</span>.<span class="n">toString</span>();
+</code></pre>
+<h4>cpp</h4>
+<pre><code>class Solution {
+public:
+    string longestCommonPrefix(vector&lt;string&gt;&amp; v) {
+        string ans=&quot;&quot;;
+        sort(v.begin(),v.end());
+        int n=v.size();
+        string first=v[0],last=v[n-1];
+        for(int i=0;i&lt;min(first.size(),last.size());i++){
+            if(first[i]!=last[i]){
+                return ans;
             }
-            <span class="n">ans</span>.<span class="nb">append</span>(<span class="nb">first</span>.<span class="n">charAt</span>(<span class="n">i</span>));
+            ans+=first[i];
         }
-        <span class="k">return</span> <span class="n">ans</span>.<span class="n">toString</span>();
+        return ans;
+    }
+};
+</code></pre>
+<h4>Java</h4>
+<pre><code>class Solution {
+    public String longestCommonPrefix(String[] v) {
+        StringBuilder ans = new StringBuilder();
+        Arrays.sort(v);
+        String first = v[0];
+        String last = v[v.length-1];
+        for (int i=0; i&lt;Math.min(first.length(), last.length()); i++) {
+            if (first.charAt(i) != last.charAt(i)) {
+                return ans.toString();
+            }
+            ans.append(first.charAt(i));
+        }
+        return ans.toString();
     }
 }
 </code></pre></div>
-
-<p></p></div>
-
-
-<div class='python-solution'><h2>✅Python3 || C++|| Java✅ 19 ms || Beats 99.91% -- Votes: 3258</h2><h2>Please UPVOTE</h2>
-<p></p>
-<p>This code implements the longestCommonPrefix function that takes a list of strings v as input and returns the longest common prefix of all the strings. Here is an explanation of how the code works:</p>
-<ol>
-<li>Initialize an empty string ans to store the common prefix.</li>
-<li>Sort the input list v lexicographically. This step is necessary because the common prefix should be common to all the strings, so we need to find the common prefix of the first and last string in the sorted list.</li>
-<li>Iterate through the characters of the first and last string in the sorted list, stopping at the length of the shorter string.</li>
-<li>If the current character of the first string is not equal to the current character of the last string, return the common prefix found so far.</li>
-<li>Otherwise, append the current character to the ans string.</li>
-<li>Return the ans string containing the longest common prefix.</li>
-</ol>
-<p>Note that the code assumes that the input list v is non-empty, and that all the strings in v have at least one character. If either of these assumptions is not true, the code may fail.</p>
-<h2>Python3</h2>
-<div class="codehilite"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nl">Solution</span><span class="p">:</span>
-<span class="w">    </span><span class="n">def</span><span class="w"> </span><span class="n">longestCommonPrefix</span><span class="p">(</span><span class="n">self</span><span class="p">,</span><span class="w"> </span><span class="nl">v</span><span class="p">:</span><span class="w"> </span><span class="n">List</span><span class="o">[</span><span class="n">str</span><span class="o">]</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="nf">str</span><span class="err">:</span>
-<span class="w">        </span><span class="n">ans</span><span class="o">=</span><span class="ss">&quot;&quot;</span>
-<span class="w">        </span><span class="n">v</span><span class="o">=</span><span class="n">sorted</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
-<span class="w">        </span><span class="k">first</span><span class="o">=</span><span class="n">v</span><span class="o">[</span><span class="n">0</span><span class="o">]</span>
-<span class="w">        </span><span class="k">last</span><span class="o">=</span><span class="n">v</span><span class="o">[</span><span class="n">-1</span><span class="o">]</span>
-<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="k">range</span><span class="p">(</span><span class="nf">min</span><span class="p">(</span><span class="nf">len</span><span class="p">(</span><span class="k">first</span><span class="p">),</span><span class="nf">len</span><span class="p">(</span><span class="k">last</span><span class="p">)))</span><span class="err">:</span>
-<span class="w">            </span><span class="k">if</span><span class="p">(</span><span class="k">first</span><span class="o">[</span><span class="n">i</span><span class="o">]!=</span><span class="k">last</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="p">)</span><span class="err">:</span>
-<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="n">ans</span>
-<span class="w">            </span><span class="n">ans</span><span class="o">+=</span><span class="k">first</span><span class="o">[</span><span class="n">i</span><span class="o">]</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">ans</span><span class="w"> </span>
-</code></pre></div>
-
-<h2>C++</h2>
-<div class="codehilite"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="n">Solution</span><span class="w"> </span><span class="err">{</span>
-<span class="k">public</span><span class="err">:</span>
-<span class="w">    </span><span class="n">string</span><span class="w"> </span><span class="n">longestCommonPrefix</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">string</span><span class="o">&gt;&amp;</span><span class="w"> </span><span class="n">v</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
-<span class="w">        </span><span class="n">string</span><span class="w"> </span><span class="n">ans</span><span class="o">=</span><span class="ss">&quot;&quot;</span><span class="p">;</span>
-<span class="w">        </span><span class="n">sort</span><span class="p">(</span><span class="n">v</span><span class="p">.</span><span class="k">begin</span><span class="p">(),</span><span class="n">v</span><span class="p">.</span><span class="k">end</span><span class="p">());</span>
-<span class="w">        </span><span class="nc">int</span><span class="w"> </span><span class="n">n</span><span class="o">=</span><span class="n">v</span><span class="p">.</span><span class="k">size</span><span class="p">();</span>
-<span class="w">        </span><span class="n">string</span><span class="w"> </span><span class="k">first</span><span class="o">=</span><span class="n">v</span><span class="o">[</span><span class="n">0</span><span class="o">]</span><span class="p">,</span><span class="k">last</span><span class="o">=</span><span class="n">v</span><span class="o">[</span><span class="n">n-1</span><span class="o">]</span><span class="p">;</span>
-<span class="w">        </span><span class="k">for</span><span class="p">(</span><span class="nc">int</span><span class="w"> </span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="nf">min</span><span class="p">(</span><span class="k">first</span><span class="p">.</span><span class="k">size</span><span class="p">(),</span><span class="k">last</span><span class="p">.</span><span class="k">size</span><span class="p">());</span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="err">{</span>
-<span class="w">            </span><span class="k">if</span><span class="p">(</span><span class="k">first</span><span class="o">[</span><span class="n">i</span><span class="o">]!=</span><span class="k">last</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="p">)</span><span class="err">{</span>
-<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="n">ans</span><span class="p">;</span>
-<span class="w">            </span><span class="err">}</span>
-<span class="w">            </span><span class="n">ans</span><span class="o">+=</span><span class="k">first</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="p">;</span>
-<span class="w">        </span><span class="err">}</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">ans</span><span class="p">;</span>
-<span class="w">    </span><span class="err">}</span>
-<span class="err">}</span><span class="p">;</span>
-</code></pre></div>
-
-<h2>Java</h2>
-<div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="n">Solution</span> {
-    <span class="n">public</span> <span class="n">String</span> <span class="n">longestCommonPrefix</span>(<span class="n">String</span> <span class="n">v</span>) {
-        <span class="n">StringBuilder</span> <span class="n">ans</span> = <span class="nb">new</span> <span class="n">StringBuilder</span>();
-        <span class="n">Arrays</span>.<span class="nb">sort</span>(<span class="n">v</span>);
-        <span class="n">String</span> <span class="nb">first</span> = <span class="n">v</span>[<span class="mi">0</span>];
-        <span class="n">String</span> <span class="nb">last</span> = <span class="n">v</span>[<span class="n">v</span>.<span class="n">length-1</span>];
-        <span class="k">for</span> (<span class="n">int</span> <span class="n">i</span>=<span class="mi">0</span>; <span class="n">i</span><span class="o">&lt;</span><span class="n">Math</span>.<span class="nb">min</span>(<span class="nb">first</span>.<span class="n">length</span>(), <span class="nb">last</span>.<span class="n">length</span>()); <span class="n">i</span>++) {
-            <span class="k">if</span> (<span class="nb">first</span>.<span class="n">charAt</span>(<span class="n">i</span>) != <span class="nb">last</span>.<span class="n">charAt</span>(<span class="n">i</span>)) {
-                <span class="k">return</span> <span class="n">ans</span>.<span class="n">toString</span>();
-            }
-            <span class="n">ans</span>.<span class="nb">append</span>(<span class="nb">first</span>.<span class="n">charAt</span>(<span class="n">i</span>));
-        }
-        <span class="k">return</span> <span class="n">ans</span>.<span class="n">toString</span>();
-    }
-}
-</code></pre></div>
-
-<p></p></div><p style="page-break-before: always" ></p>

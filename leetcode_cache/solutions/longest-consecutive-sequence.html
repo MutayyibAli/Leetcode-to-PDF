@@ -1,6 +1,5 @@
-<div class='cpp-solution'><h2>✅☑️ Best C++ 4 solution ||  Hash Table || Sorting || Brute Force -> Optimize || One Stop Solution. -- Votes: 748</h2><h2>Intuition</h2>
+<div class='cpp-solution'><h4>✅☑️ Best C++ 4 solution ||  Hash Table || Sorting || Brute Force -> Optimize || One Stop Solution. [Votes: 748]</h4><h4>Intuition</h4>
 <!-- Describe your first thoughts on how to solve this problem. -->
-
 <p>We can solve this problem using Four approaches. (Here I have explained all the possible solutions of this problem).</p>
 <ol>
 <li>Solved using Array(Three Nested Loop). Brute Force Approach.</li>
@@ -8,326 +7,313 @@
 <li>Solved using Array + Hash Table(Unordered map). Optimize Approach.</li>
 <li>Solved using Array + Hash Table (Unordered set). Optimize Approach.</li>
 </ol>
-<h2>Approach</h2>
+<h4>Approach</h4>
 <!-- Describe your approach to solving the problem. -->
-
 <p>We can easily understand the All the approaches by seeing the code which is easy to understand with comments.</p>
-<h2>Complexity</h2>
+<h4>Complexity</h4>
 <ul>
 <li>Time complexity:</li>
 </ul>
 <!-- Add your time complexity here, e.g. $$O(n)$$ -->
-
 <p>Time complexity is given in code comment.</p>
 <ul>
 <li>Space complexity:</li>
 </ul>
 <!-- Add your space complexity here, e.g. $$O(n)$$ -->
-
 <p>Space complexity is given in code comment.</p>
-<h2>Code</h2>
-<div class="codehilite"><pre><span></span><code><span class="cm">/*</span>
+<h4>Code</h4>
+<pre><code>/*
 
-<span class="cm">    Time Complexity : O(N^3), The outer loop runs exactly N times, and because currentNumber increments by 1</span>
-<span class="cm">    during each iteration of the while loop, it runs in O(N) time. Then, on each iteration of the while loop, an</span>
-<span class="cm">    O(N) operation in the array is performed. Therefore, this brute force algorithm is really three nested O(N)</span>
-<span class="cm">    loops, which compound multiplicatively to a cubic runtime. Where N is the size of the Array(nums).</span>
+    Time Complexity : O(N^3), The outer loop runs exactly N times, and because currentNumber increments by 1
+    during each iteration of the while loop, it runs in O(N) time. Then, on each iteration of the while loop, an
+    O(N) operation in the array is performed. Therefore, this brute force algorithm is really three nested O(N)
+    loops, which compound multiplicatively to a cubic runtime. Where N is the size of the Array(nums).
 
-<span class="cm">    Space Complexity : O(1), Constant space.</span>
+    Space Complexity : O(1), Constant space.
 
-<span class="cm">    Using Array(Three Nested Loop). Brute Force Approach.</span>
+    Using Array(Three Nested Loop). Brute Force Approach.
 
-<span class="cm">    Note : This will give TLE.</span>
+    Note : This will give TLE.
 
-<span class="cm">*/</span>
-
-
-<span class="cm">/***************************************** Approach 1 Code *****************************************/</span>
-
-<span class="k">class</span><span class="w"> </span><span class="n">Solution</span><span class="w"> </span><span class="err">{</span>
-<span class="nl">private</span><span class="p">:</span><span class="w"> </span>
-<span class="w">    </span><span class="n">bool</span><span class="w"> </span><span class="n">longestConsecutive</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="nc">int</span><span class="o">&gt;&amp;</span><span class="w"> </span><span class="n">nums</span><span class="p">,</span><span class="w"> </span><span class="nc">int</span><span class="w"> </span><span class="n">target</span><span class="p">)</span><span class="err">{</span>
-<span class="w">        </span><span class="nc">int</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">nums</span><span class="p">.</span><span class="k">size</span><span class="p">();</span>
-<span class="w">        </span><span class="k">for</span><span class="p">(</span><span class="nc">int</span><span class="w"> </span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">&lt;</span><span class="n">n</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="err">{</span>
-<span class="w">            </span><span class="k">if</span><span class="p">(</span><span class="n">nums</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">target</span><span class="p">)</span><span class="err">{</span>
-<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
-<span class="w">            </span><span class="err">}</span>
-<span class="w">        </span><span class="err">}</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="k">false</span><span class="p">;</span>
-<span class="w">    </span><span class="err">}</span>
-<span class="k">public</span><span class="err">:</span>
-<span class="w">    </span><span class="nc">int</span><span class="w"> </span><span class="n">longestConsecutive</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="nc">int</span><span class="o">&gt;&amp;</span><span class="w"> </span><span class="n">nums</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
-<span class="w">        </span><span class="nc">int</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">nums</span><span class="p">.</span><span class="k">size</span><span class="p">();</span>
-<span class="w">        </span><span class="nc">int</span><span class="w"> </span><span class="n">longestConsecutiveSequence</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-<span class="w">        </span><span class="k">for</span><span class="p">(</span><span class="n">auto</span><span class="w"> </span><span class="n">num</span><span class="w"> </span><span class="err">:</span><span class="w"> </span><span class="n">nums</span><span class="p">)</span><span class="err">{</span>
-<span class="w">            </span><span class="nc">int</span><span class="w"> </span><span class="n">currentNumber</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">num</span><span class="p">;</span>
-<span class="w">            </span><span class="nc">int</span><span class="w"> </span><span class="n">currentConsecutiveSequence</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
-<span class="w">            </span><span class="k">while</span><span class="p">(</span><span class="n">longestConsecutive</span><span class="p">(</span><span class="n">nums</span><span class="p">,</span><span class="w"> </span><span class="n">currentNumber</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span><span class="err">{</span>
-<span class="w">                </span><span class="n">currentNumber</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
-<span class="w">                </span><span class="n">currentConsecutiveSequence</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
-<span class="w">            </span><span class="err">}</span>
-<span class="w">            </span><span class="n">longestConsecutiveSequence</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">max</span><span class="p">(</span><span class="n">longestConsecutiveSequence</span><span class="p">,</span><span class="w"> </span><span class="n">currentConsecutiveSequence</span><span class="p">);</span>
-<span class="w">        </span><span class="err">}</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">longestConsecutiveSequence</span><span class="p">;</span>
-<span class="w">    </span><span class="err">}</span>
-<span class="err">}</span><span class="p">;</span>
+*/
 
 
+/***************************************** Approach 1 Code *****************************************/
 
-
-
-
-<span class="cm">/*</span>
-
-<span class="cm">    Time Complexity : O(NlogN), The main for loop does constant work N times, so the algorithm&#39;s time complexity</span>
-<span class="cm">    is dominated by the invocation of sorting algorithm, which will run in O(NlogN) time for any sensible</span>
-<span class="cm">    implementation. Where N is the size of the Array(nums).</span>
-
-<span class="cm">    Space Complexity : O(1), For the implementations provided here, the space complexity is constant because we</span>
-<span class="cm">    sort the input array in place.</span>
-
-<span class="cm">    Solved using Array + Sorting. Brute Better Approach.</span>
-
-<span class="cm">*/</span>
-
-
-<span class="cm">/***************************************** Approach 2 Code *****************************************/</span>
-
-<span class="k">class</span><span class="w"> </span><span class="n">Solution</span><span class="w"> </span><span class="err">{</span>
-<span class="k">public</span><span class="err">:</span>
-<span class="w">    </span><span class="nc">int</span><span class="w"> </span><span class="n">longestConsecutive</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="nc">int</span><span class="o">&gt;&amp;</span><span class="w"> </span><span class="n">nums</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
-<span class="w">        </span><span class="nc">int</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">nums</span><span class="p">.</span><span class="k">size</span><span class="p">();</span>
-<span class="w">        </span><span class="k">if</span><span class="p">(</span><span class="n">n</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="err">{</span>
-<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-<span class="w">        </span><span class="err">}</span>
-<span class="w">        </span><span class="n">sort</span><span class="p">(</span><span class="n">nums</span><span class="p">.</span><span class="k">begin</span><span class="p">(),</span><span class="w"> </span><span class="n">nums</span><span class="p">.</span><span class="k">end</span><span class="p">());</span>
-<span class="w">        </span><span class="nc">int</span><span class="w"> </span><span class="n">currentConsecutiveSequence</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
-<span class="w">        </span><span class="nc">int</span><span class="w"> </span><span class="n">longestConsecutiveSequence</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-<span class="w">        </span><span class="k">for</span><span class="p">(</span><span class="nc">int</span><span class="w"> </span><span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">&lt;</span><span class="n">n</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="err">{</span>
-<span class="w">            </span><span class="k">if</span><span class="p">(</span><span class="n">nums</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">nums</span><span class="o">[</span><span class="n">i-1</span><span class="o">]</span><span class="p">)</span><span class="err">{</span>
-<span class="w">                </span><span class="k">if</span><span class="p">(</span><span class="n">nums</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">nums</span><span class="o">[</span><span class="n">i-1</span><span class="o">]</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="err">{</span>
-<span class="w">                    </span><span class="n">currentConsecutiveSequence</span><span class="o">++</span><span class="p">;</span>
-<span class="w">                </span><span class="err">}</span>
-<span class="w">                </span><span class="k">else</span><span class="err">{</span>
-<span class="w">                    </span><span class="n">longestConsecutiveSequence</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">max</span><span class="p">(</span><span class="n">longestConsecutiveSequence</span><span class="p">,</span><span class="w"> </span><span class="n">currentConsecutiveSequence</span><span class="p">);</span>
-<span class="w">                    </span><span class="n">currentConsecutiveSequence</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
-<span class="w">                </span><span class="err">}</span>
-<span class="w">            </span><span class="err">}</span>
-<span class="w">        </span><span class="err">}</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="nf">max</span><span class="p">(</span><span class="n">longestConsecutiveSequence</span><span class="p">,</span><span class="w"> </span><span class="n">currentConsecutiveSequence</span><span class="p">);</span>
-<span class="w">    </span><span class="err">}</span>
-<span class="err">}</span><span class="p">;</span>
+class Solution {
+private: 
+    bool longestConsecutive(vector&lt;int&gt;&amp; nums, int target){
+        int n = nums.size();
+        for(int i=0; i&lt;n; i++){
+            if(nums[i] == target){
+                return true;
+            }
+        }
+        return false;
+    }
+public:
+    int longestConsecutive(vector&lt;int&gt;&amp; nums) {
+        int n = nums.size();
+        int longestConsecutiveSequence = 0;
+        for(auto num : nums){
+            int currentNumber = num;
+            int currentConsecutiveSequence = 1;
+            while(longestConsecutive(nums, currentNumber+1)){
+                currentNumber += 1;
+                currentConsecutiveSequence += 1;
+            }
+            longestConsecutiveSequence = max(longestConsecutiveSequence, currentConsecutiveSequence);
+        }
+        return longestConsecutiveSequence;
+    }
+};
 
 
 
 
 
 
-<span class="cm">/*</span>
+/*
 
-<span class="cm">    Time Complexity : O(N), We are traversing the Array(nums) thrice which creates the time complexity O(N)</span>
-<span class="cm">    becuase Unordered map operating takes constant time. Where N is the size of the Array(nums).</span>
+    Time Complexity : O(NlogN), The main for loop does constant work N times, so the algorithm's time complexity
+    is dominated by the invocation of sorting algorithm, which will run in O(NlogN) time for any sensible
+    implementation. Where N is the size of the Array(nums).
 
-<span class="cm">    Space Complexity : O(N), Unordered map space.</span>
+    Space Complexity : O(1), For the implementations provided here, the space complexity is constant because we
+    sort the input array in place.
 
-<span class="cm">    Solved using Array + Hash Table(Unordered map). Optimize Approach.</span>
+    Solved using Array + Sorting. Brute Better Approach.
 
-<span class="cm">*/</span>
+*/
 
 
-<span class="cm">/***************************************** Approach 3 Code *****************************************/</span>
+/***************************************** Approach 2 Code *****************************************/
 
-<span class="k">class</span><span class="w"> </span><span class="n">Solution</span><span class="w"> </span><span class="err">{</span>
-<span class="k">public</span><span class="err">:</span>
-<span class="w">    </span><span class="nc">int</span><span class="w"> </span><span class="n">longestConsecutive</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="nc">int</span><span class="o">&gt;&amp;</span><span class="w"> </span><span class="n">nums</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
-<span class="w">        </span><span class="n">unordered_map</span><span class="o">&lt;</span><span class="nc">int</span><span class="p">,</span><span class="w"> </span><span class="n">bool</span><span class="o">&gt;</span><span class="w"> </span><span class="k">map</span><span class="p">;</span>
-<span class="w">        </span><span class="k">for</span><span class="p">(</span><span class="nc">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">&lt;</span><span class="n">nums</span><span class="p">.</span><span class="k">size</span><span class="p">();</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="err">{</span>
-<span class="w">            </span><span class="k">map</span><span class="o">[</span><span class="n">nums[i</span><span class="o">]</span><span class="err">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
-<span class="w">        </span><span class="err">}</span>
-<span class="w">        </span><span class="k">for</span><span class="p">(</span><span class="nc">int</span><span class="w"> </span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">&lt;</span><span class="n">nums</span><span class="p">.</span><span class="k">size</span><span class="p">();</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="err">{</span>
-<span class="w">            </span><span class="k">if</span><span class="p">(</span><span class="k">map</span><span class="p">.</span><span class="nf">count</span><span class="p">(</span><span class="n">nums</span><span class="o">[</span><span class="n">i</span><span class="o">]-</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="err">{</span>
-<span class="w">                </span><span class="k">map</span><span class="o">[</span><span class="n">nums[i</span><span class="o">]</span><span class="err">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">;</span>
-<span class="w">            </span><span class="err">}</span>
-<span class="w">        </span><span class="err">}</span>
-<span class="w">        </span><span class="nc">int</span><span class="w"> </span><span class="n">maxlen</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-<span class="w">        </span><span class="k">for</span><span class="p">(</span><span class="nc">int</span><span class="w"> </span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">&lt;</span><span class="n">nums</span><span class="p">.</span><span class="k">size</span><span class="p">();</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="err">{</span>
-<span class="w">            </span><span class="k">if</span><span class="p">(</span><span class="k">map</span><span class="o">[</span><span class="n">nums[i</span><span class="o">]</span><span class="err">]</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="k">true</span><span class="p">)</span><span class="err">{</span>
-<span class="w">                </span><span class="nc">int</span><span class="w"> </span><span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="nc">int</span><span class="w"> </span><span class="nf">count</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>
-<span class="w">                </span><span class="k">while</span><span class="p">(</span><span class="k">map</span><span class="p">.</span><span class="nf">count</span><span class="p">(</span><span class="n">nums</span><span class="o">[</span><span class="n">i</span><span class="o">]+</span><span class="n">j</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="err">{</span>
-<span class="w">                    </span><span class="n">j</span><span class="o">++</span><span class="p">;</span>
-<span class="w">                    </span><span class="nf">count</span><span class="o">++</span><span class="p">;</span>
-<span class="w">                </span><span class="err">}</span>
-<span class="w">                </span><span class="k">if</span><span class="p">(</span><span class="nf">count</span><span class="o">&gt;</span><span class="n">maxlen</span><span class="p">)</span><span class="err">{</span>
-<span class="w">                    </span><span class="n">maxlen</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">count</span><span class="p">;</span>
-<span class="w">                </span><span class="err">}</span>
-<span class="w">            </span><span class="err">}</span>
-<span class="w">        </span><span class="err">}</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">maxlen</span><span class="p">;</span>
-<span class="w">    </span><span class="err">}</span>
-<span class="err">}</span><span class="p">;</span>
+class Solution {
+public:
+    int longestConsecutive(vector&lt;int&gt;&amp; nums) {
+        int n = nums.size();
+        if(n == 0){
+            return 0;
+        }
+        sort(nums.begin(), nums.end());
+        int currentConsecutiveSequence = 1;
+        int longestConsecutiveSequence = 0;
+        for(int i=1; i&lt;n; i++){
+            if(nums[i] != nums[i-1]){
+                if(nums[i] == nums[i-1] + 1){
+                    currentConsecutiveSequence++;
+                }
+                else{
+                    longestConsecutiveSequence = max(longestConsecutiveSequence, currentConsecutiveSequence);
+                    currentConsecutiveSequence = 1;
+                }
+            }
+        }
+        return max(longestConsecutiveSequence, currentConsecutiveSequence);
+    }
+};
 
 
 
 
 
 
-<span class="cm">/*</span>
+/*
 
-<span class="cm">    Time Complexity : O(N), Although the time complexity appears to be quadratic due to the while loop nested</span>
-<span class="cm">    within the for loop, closer inspection reveals it to be linear. Because the while loop is reached only when</span>
-<span class="cm">    marks the beginning of a sequence (i.e. currentNumber-1 is not present in nums), the while loop can only run</span>
-<span class="cm">    for N iterations throughout the entire runtime of the algorithm. This means that despite looking like O(N^2)</span>
-<span class="cm">    complexity, the nested loops actually run in O(N+N)=O(N) time. All other computations occur in constant</span>
-<span class="cm">    time, so the overall runtime is linear. Where N is the size of the Array(nums).</span>
+    Time Complexity : O(N), We are traversing the Array(nums) thrice which creates the time complexity O(N)
+    becuase Unordered map operating takes constant time. Where N is the size of the Array(nums).
 
-<span class="cm">    Space Complexity : O(N), Unordered set space.</span>
+    Space Complexity : O(N), Unordered map space.
 
-<span class="cm">    Solved using Array + Hash Table(Unordered set). Optimise Approach.</span>
+    Solved using Array + Hash Table(Unordered map). Optimize Approach.
 
-<span class="cm">*/</span>
+*/
 
 
-<span class="cm">/***************************************** Approach 4 Code *****************************************/</span>
+/***************************************** Approach 3 Code *****************************************/
 
-<span class="k">class</span><span class="w"> </span><span class="n">Solution</span><span class="w"> </span><span class="err">{</span>
-<span class="k">public</span><span class="err">:</span>
-<span class="w">    </span><span class="nc">int</span><span class="w"> </span><span class="n">longestConsecutive</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="nc">int</span><span class="o">&gt;&amp;</span><span class="w"> </span><span class="n">nums</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
-<span class="w">        </span><span class="n">unordered_set</span><span class="o">&lt;</span><span class="nc">int</span><span class="o">&gt;</span><span class="w"> </span><span class="k">set</span><span class="p">;</span>
-<span class="w">        </span><span class="k">for</span><span class="p">(</span><span class="nc">int</span><span class="w"> </span><span class="n">num</span><span class="w"> </span><span class="err">:</span><span class="w"> </span><span class="n">nums</span><span class="p">)</span><span class="err">{</span>
-<span class="w">            </span><span class="k">set</span><span class="p">.</span><span class="k">insert</span><span class="p">(</span><span class="n">num</span><span class="p">);</span>
-<span class="w">        </span><span class="err">}</span>
-<span class="w">        </span><span class="nc">int</span><span class="w"> </span><span class="n">longestConsecutiveSequence</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-<span class="w">        </span><span class="k">for</span><span class="p">(</span><span class="nc">int</span><span class="w"> </span><span class="n">num</span><span class="w"> </span><span class="err">:</span><span class="w"> </span><span class="n">nums</span><span class="p">)</span><span class="err">{</span>
-<span class="w">            </span><span class="k">if</span><span class="p">(</span><span class="k">set</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="n">num</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="k">set</span><span class="p">.</span><span class="k">end</span><span class="p">())</span><span class="err">{</span>
-<span class="w">                </span><span class="nc">int</span><span class="w"> </span><span class="n">currentNumber</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">num</span><span class="p">;</span>
-<span class="w">                </span><span class="nc">int</span><span class="w"> </span><span class="n">currentConsecutiveSequence</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
-<span class="w">                </span><span class="k">while</span><span class="p">(</span><span class="k">set</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="n">currentNumber</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="k">set</span><span class="p">.</span><span class="k">end</span><span class="p">())</span><span class="err">{</span>
-<span class="w">                    </span><span class="n">currentNumber</span><span class="o">++</span><span class="p">;</span>
-<span class="w">                    </span><span class="n">currentConsecutiveSequence</span><span class="o">++</span><span class="p">;</span>
-<span class="w">                </span><span class="err">}</span>
-<span class="w">                </span><span class="n">longestConsecutiveSequence</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">max</span><span class="p">(</span><span class="n">longestConsecutiveSequence</span><span class="p">,</span><span class="w"> </span><span class="n">currentConsecutiveSequence</span><span class="p">);</span>
-<span class="w">            </span><span class="err">}</span>
-<span class="w">        </span><span class="err">}</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">longestConsecutiveSequence</span><span class="p">;</span>
-<span class="w">    </span><span class="err">}</span>
-<span class="err">}</span><span class="p">;</span>
+class Solution {
+public:
+    int longestConsecutive(vector&lt;int&gt;&amp; nums) {
+        unordered_map&lt;int, bool&gt; map;
+        for(int i = 0; i&lt;nums.size(); i++){
+            map[nums[i]] = true;
+        }
+        for(int i=0; i&lt;nums.size(); i++){
+            if(map.count(nums[i]-1) &gt; 0){
+                map[nums[i]] = false;
+            }
+        }
+        int maxlen = 0;
+        for(int i=0; i&lt;nums.size(); i++){
+            if(map[nums[i]] == true){
+                int j=0; int count=0;
+                while(map.count(nums[i]+j) &gt; 0){
+                    j++;
+                    count++;
+                }
+                if(count&gt;maxlen){
+                    maxlen = count;
+                }
+            }
+        }
+        return maxlen;
+    }
+};
+
+
+
+
+
+
+/*
+
+    Time Complexity : O(N), Although the time complexity appears to be quadratic due to the while loop nested
+    within the for loop, closer inspection reveals it to be linear. Because the while loop is reached only when
+    marks the beginning of a sequence (i.e. currentNumber-1 is not present in nums), the while loop can only run
+    for N iterations throughout the entire runtime of the algorithm. This means that despite looking like O(N^2)
+    complexity, the nested loops actually run in O(N+N)=O(N) time. All other computations occur in constant
+    time, so the overall runtime is linear. Where N is the size of the Array(nums).
+
+    Space Complexity : O(N), Unordered set space.
+
+    Solved using Array + Hash Table(Unordered set). Optimise Approach.
+
+*/
+
+
+/***************************************** Approach 4 Code *****************************************/
+
+class Solution {
+public:
+    int longestConsecutive(vector&lt;int&gt;&amp; nums) {
+        unordered_set&lt;int&gt; set;
+        for(int num : nums){
+            set.insert(num);
+        }
+        int longestConsecutiveSequence = 0;
+        for(int num : nums){
+            if(set.find(num-1) == set.end()){
+                int currentNumber = num;
+                int currentConsecutiveSequence = 1;
+                while(set.find(currentNumber+1) != set.end()){
+                    currentNumber++;
+                    currentConsecutiveSequence++;
+                }
+                longestConsecutiveSequence = max(longestConsecutiveSequence, currentConsecutiveSequence);
+            }
+        }
+        return longestConsecutiveSequence;
+    }
+};
+</code></pre>
+<p><strong><em>IF YOU LIKE THE SOLUTION THEN PLEASE UPVOTE MY SOLUTION BECAUSE IT GIVES ME MOTIVATION TO REGULARLY POST THE SOLUTION.</em></strong></p></div><div class='python-solution'><h4>Solution [Votes: 487]</h4><pre><code class="language-cpp">int a[100000];
+
+int init = [] {
+    ios_base::sync_with_stdio(false);
+    cin.tie(nullptr);
+    ofstream out(&quot;user.out&quot;);
+    for (string s; getline(cin, s); out &lt;&lt; '\n') {
+        if (s.length() == 2) {
+            out &lt;&lt; 0;
+            continue;
+        }
+        int n = 0;
+        for (int _i = 1, _n = s.length(); _i &lt; _n; ++_i) {
+            bool _neg = false;
+            if (s[_i] == '-') ++_i, _neg = true;
+            int v = s[_i++] &amp; 15;
+            while ((s[_i] &amp; 15) &lt; 10) v = v * 10 + (s[_i++] &amp; 15);
+            if (_neg) v = -v;
+            a[n++] = v;
+        }
+        sort(a, a + n);
+        int ans = 0;
+        for (int i = 0; i &lt; n;) {
+            int i0 = i;
+            for (++i; i &lt; n &amp;&amp; a[i - 1] + 1 &gt;= a[i]; ++i);
+            ans = max(ans, a[i - 1] - a[i0] + 1);
+        }
+        out &lt;&lt; ans;
+    }
+    out.flush();
+    exit(0);
+    return 0;
+}();
+
+class Solution {
+public:
+    int longestConsecutive(vector&lt;int&gt;) { return 999; }
+};
+</code></pre>
+<pre><code class="language-Python3">class Solution:
+    def longestConsecutive(self, nums: List[int]) -&gt; int:
+        longest = 0
+        num_set = set(nums)
+
+        for n in num_set:
+            if (n-1) not in num_set:
+                length = 1
+                while (n+length) in num_set:
+                    length += 1
+                longest = max(longest, length)
+
+        return longest
+</code></pre>
+<pre><code class="language-Java">class Solution {
+    public int longestConsecutive(int[] nums) {int result = 0;
+        if (nums.length &gt; 0) {
+            if (nums.length &lt; 1000) {
+                Arrays.sort(nums);
+                int current = 0;
+                for (int i = 1; i &lt; nums.length; i++) {
+                    if (nums[i] != nums[i - 1]) {
+                        if (nums[i] - nums[i - 1] == 1) {
+                            current++;
+                        } else {
+                            if (current + 1 &gt; result) {
+                                result = current + 1;
+                            }
+                            current = 0;
+                        }
+                    }
+                }
+                if (current + 1 &gt; result) {
+                    result = current + 1;
+                }
+            } else {
+                int min = Integer.MAX_VALUE;
+                int max = Integer.MIN_VALUE;
+                for (int num : nums) {
+                    if (num &gt; max) {
+                        max = num;
+                    }
+                    if (num &lt; min) {
+                        min = num;
+                    }
+                }
+                byte[] bits = new byte[max - min + 1];
+                for (int num : nums) {
+                    bits[num - min] = 1;
+                }
+                int current = 0;
+                for (byte bit : bits) {
+                    if (bit &gt; 0) {
+                        current++;
+                    } else {
+                        if (current &gt; result) {
+                            result = current;
+                        }
+                        current = 0;
+                    }
+                }
+                if (current &gt; result) {
+                    result = current;
+                }
+            }
+        }
+        return result;
+    }
+}
 </code></pre></div>
-
-<p><strong><em>IF YOU LIKE THE SOLUTION THEN PLEASE UPVOTE MY SOLUTION BECAUSE IT GIVES ME MOTIVATION TO REGULARLY POST THE SOLUTION.</em></strong></p>
-<p></p></div>
-
-
-<div class='python-solution'><h2>Solution -- Votes: 487</h2><div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">C</span><span class="o">++</span><span class="w"> </span>
-<span class="kt">int</span><span class="w"> </span><span class="n">a</span><span class="p">[</span><span class="mi">100000</span><span class="p">];</span>
-
-<span class="kt">int</span><span class="w"> </span><span class="n">init</span><span class="w"> </span><span class="o">=</span><span class="w">  </span><span class="p">{</span>
-<span class="w">    </span><span class="n">ios_base</span><span class="o">::</span><span class="n">sync_with_stdio</span><span class="p">(</span><span class="nb">false</span><span class="p">);</span>
-<span class="w">    </span><span class="n">cin</span><span class="p">.</span><span class="n">tie</span><span class="p">(</span><span class="n">nullptr</span><span class="p">);</span>
-<span class="w">    </span><span class="n">ofstream</span><span class="w"> </span><span class="n">out</span><span class="p">(</span><span class="s">&quot;user.out&quot;</span><span class="p">);</span>
-<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">string</span><span class="w"> </span><span class="n">s</span><span class="p">;</span><span class="w"> </span><span class="n">getline</span><span class="p">(</span><span class="n">cin</span><span class="p">,</span><span class="w"> </span><span class="n">s</span><span class="p">);</span><span class="w"> </span><span class="n">out</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="sc">&#39;\n&#39;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">s</span><span class="p">.</span><span class="n">length</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="n">out</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-<span class="w">            </span><span class="k">continue</span><span class="p">;</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">_i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">_n</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">s</span><span class="p">.</span><span class="n">length</span><span class="p">();</span><span class="w"> </span><span class="n">_i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">_n</span><span class="p">;</span><span class="w"> </span><span class="o">++</span><span class="n">_i</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="kt">bool</span><span class="w"> </span><span class="n">_neg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
-<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="n">_i</span><span class="p">]</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="sc">&#39;-&#39;</span><span class="p">)</span><span class="w"> </span><span class="o">++</span><span class="n">_i</span><span class="p">,</span><span class="w"> </span><span class="n">_neg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
-<span class="w">            </span><span class="kt">int</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">s</span><span class="p">[</span><span class="n">_i</span><span class="o">++</span><span class="p">]</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="mi">15</span><span class="p">;</span>
-<span class="w">            </span><span class="k">while</span><span class="w"> </span><span class="p">((</span><span class="n">s</span><span class="p">[</span><span class="n">_i</span><span class="p">]</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="mi">15</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">10</span><span class="p">)</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">10</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="n">_i</span><span class="o">++</span><span class="p">]</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="mi">15</span><span class="p">);</span>
-<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">_neg</span><span class="p">)</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">-</span><span class="n">v</span><span class="p">;</span>
-<span class="w">            </span><span class="n">a</span><span class="p">[</span><span class="n">n</span><span class="o">++</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">v</span><span class="p">;</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">        </span><span class="n">sort</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">n</span><span class="p">);</span>
-<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">ans</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">n</span><span class="p">;)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="kt">int</span><span class="w"> </span><span class="n">i0</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">i</span><span class="p">;</span>
-<span class="w">            </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="o">++</span><span class="n">i</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">]</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">];</span><span class="w"> </span><span class="o">++</span><span class="n">i</span><span class="p">);</span>
-<span class="w">            </span><span class="n">ans</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">max</span><span class="p">(</span><span class="n">ans</span><span class="p">,</span><span class="w"> </span><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">]</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">a</span><span class="p">[</span><span class="n">i0</span><span class="p">]</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">        </span><span class="n">out</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">ans</span><span class="p">;</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="w">    </span><span class="n">out</span><span class="p">.</span><span class="n">flush</span><span class="p">();</span>
-<span class="w">    </span><span class="n">exit</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-<span class="p">}();</span>
-
-<span class="n">class</span><span class="w"> </span><span class="n">Solution</span><span class="w"> </span><span class="p">{</span>
-<span class="n">public</span><span class="o">:</span>
-<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">longestConsecutive</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="mi">999</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
-<span class="p">};</span>
-</code></pre></div>
-
-<div class="codehilite"><pre><span></span><code><span class="n">Language</span><span class="p">:</span> <span class="n">Python3</span> 
-<span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="p">:</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">longestConsecutive</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nums</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-        <span class="n">longest</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="n">num_set</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">nums</span><span class="p">)</span>
-
-        <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">num_set</span><span class="p">:</span>
-            <span class="k">if</span> <span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">num_set</span><span class="p">:</span>
-                <span class="n">length</span> <span class="o">=</span> <span class="mi">1</span>
-                <span class="k">while</span> <span class="p">(</span><span class="n">n</span><span class="o">+</span><span class="n">length</span><span class="p">)</span> <span class="ow">in</span> <span class="n">num_set</span><span class="p">:</span>
-                    <span class="n">length</span> <span class="o">+=</span> <span class="mi">1</span>
-                <span class="n">longest</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">longest</span><span class="p">,</span> <span class="n">length</span><span class="p">)</span>
-
-        <span class="k">return</span> <span class="n">longest</span>
-</code></pre></div>
-
-<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">Java</span><span class="w"> </span>
-<span class="kd">class</span> <span class="nc">Solution</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="nf">longestConsecutive</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">nums</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="kt">int</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">nums</span><span class="p">.</span><span class="na">length</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">nums</span><span class="p">.</span><span class="na">length</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">1000</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="n">Arrays</span><span class="p">.</span><span class="na">sort</span><span class="p">(</span><span class="n">nums</span><span class="p">);</span>
-<span class="w">                </span><span class="kt">int</span><span class="w"> </span><span class="n">current</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-<span class="w">                </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">nums</span><span class="p">.</span><span class="na">length</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">nums</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">nums</span><span class="o">[</span><span class="n">i</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="o">]</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">nums</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">nums</span><span class="o">[</span><span class="n">i</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="o">]</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                            </span><span class="n">current</span><span class="o">++</span><span class="p">;</span>
-<span class="w">                        </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">current</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">result</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                                </span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">current</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
-<span class="w">                            </span><span class="p">}</span>
-<span class="w">                            </span><span class="n">current</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-<span class="w">                        </span><span class="p">}</span>
-<span class="w">                    </span><span class="p">}</span>
-<span class="w">                </span><span class="p">}</span>
-<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">current</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">result</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                    </span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">current</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
-<span class="w">                </span><span class="p">}</span>
-<span class="w">            </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="kt">int</span><span class="w"> </span><span class="n">min</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Integer</span><span class="p">.</span><span class="na">MAX_VALUE</span><span class="p">;</span>
-<span class="w">                </span><span class="kt">int</span><span class="w"> </span><span class="n">max</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Integer</span><span class="p">.</span><span class="na">MIN_VALUE</span><span class="p">;</span>
-<span class="w">                </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">num</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">nums</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">num</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">max</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                        </span><span class="n">max</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">num</span><span class="p">;</span>
-<span class="w">                    </span><span class="p">}</span>
-<span class="w">                    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">num</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">min</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                        </span><span class="n">min</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">num</span><span class="p">;</span>
-<span class="w">                    </span><span class="p">}</span>
-<span class="w">                </span><span class="p">}</span>
-<span class="w">                </span><span class="kt">byte</span><span class="w"> </span><span class="n">bits</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="kt">byte</span><span class="o">[</span><span class="n">max</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">min</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="o">]</span><span class="p">;</span>
-<span class="w">                </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">num</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">nums</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                    </span><span class="n">bits</span><span class="o">[</span><span class="n">num</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">min</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
-<span class="w">                </span><span class="p">}</span>
-<span class="w">                </span><span class="kt">int</span><span class="w"> </span><span class="n">current</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-<span class="w">                </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">byte</span><span class="w"> </span><span class="n">bit</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">bits</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">bit</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                        </span><span class="n">current</span><span class="o">++</span><span class="p">;</span>
-<span class="w">                    </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">current</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">result</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                            </span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">current</span><span class="p">;</span>
-<span class="w">                        </span><span class="p">}</span>
-<span class="w">                        </span><span class="n">current</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-<span class="w">                    </span><span class="p">}</span>
-<span class="w">                </span><span class="p">}</span>
-<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">current</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">result</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                    </span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">current</span><span class="p">;</span>
-<span class="w">                </span><span class="p">}</span>
-<span class="w">            </span><span class="p">}</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">result</span><span class="p">;</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div></div><p style="page-break-before: always" ></p>

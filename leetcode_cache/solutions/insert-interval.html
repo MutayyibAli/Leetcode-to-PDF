@@ -1,85 +1,75 @@
-<div class='cpp-solution'><h2>99.16% faster | proper explaination| c++ solution| O(N) -- Votes: 480</h2><p>Here 3 cases will arive:</p>
-<ol>
-<li><strong><em>Non Overlapping intervals before given newInterval</em></strong> -&gt; push into the ans vector</li>
-<li><strong>Overlapping of intervals and newInterval</strong> update new interval<br />
-   starting point of newInterval will be min of the interval starting point<br />
-   or starting point of newInterval<br />
-   Ending point will be the max of interval ending point or newInterval end point.</li>
-<li><strong>Non overlapping intervals after the newintervals have been merged</strong> -&gt; push ito ans vector</li>
-</ol>
-<p><strong>Time complexity - O(N)</strong><br />
+<div class='cpp-solution'><h4>99.16% faster | proper explaination| c++ solution| O(N) [Votes: 480]</h4><p>Here 3 cases will arive:
+1) <strong><em>Non Overlapping intervals before given newInterval</em></strong> -&gt; push into the ans vector 
+2) <strong>Overlapping of intervals and newInterval</strong> update new interval 
+   starting point of newInterval will be min of the interval starting point 
+   or starting point of newInterval
+   Ending point will be the max of interval ending point or newInterval          end point.
+3) <strong>Non overlapping intervals after the newintervals have been merged</strong> -&gt;    push ito ans vector   </p>
+<p><strong>Time complexity - O(N)</strong> 
 <strong>space complexity - O(1)</strong></p>
 <p>Also, please do not use sorting algo here because we have already provided with sorted list.</p>
-<div class="codehilite"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="n">Solution</span><span class="w"> </span><span class="err">{</span>
-<span class="k">public</span><span class="err">:</span>
-<span class="w">   </span><span class="n">vector</span><span class="o">&lt;</span><span class="n">vector</span><span class="o">&lt;</span><span class="nc">int</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="k">insert</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">vector</span><span class="o">&lt;</span><span class="nc">int</span><span class="o">&gt;&gt;&amp;</span><span class="w"> </span><span class="n">intervals</span><span class="p">,</span><span class="w"> </span><span class="n">vector</span><span class="o">&lt;</span><span class="nc">int</span><span class="o">&gt;&amp;</span><span class="w"> </span><span class="n">newInterval</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
-<span class="w">        </span><span class="nc">int</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">intervals</span><span class="p">.</span><span class="k">size</span><span class="p">(),</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-<span class="w">        </span><span class="n">vector</span><span class="o">&lt;</span><span class="n">vector</span><span class="o">&lt;</span><span class="nc">int</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="n">res</span><span class="p">;</span>
-<span class="w">        </span><span class="o">//</span><span class="k">case</span><span class="w"> </span><span class="mi">1</span><span class="err">:</span><span class="w"> </span><span class="k">no</span><span class="w"> </span><span class="n">overlapping</span><span class="w"> </span><span class="k">case</span><span class="w"> </span><span class="k">before</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="k">merge</span><span class="w"> </span><span class="n">intervals</span>
-<span class="w">        </span><span class="o">//</span><span class="n">compare</span><span class="w"> </span><span class="n">ending</span><span class="w"> </span><span class="n">point</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">intervals</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="n">starting</span><span class="w"> </span><span class="n">point</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">newInterval</span>
-<span class="w">        </span><span class="k">while</span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">intervals</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="n">1</span><span class="o">]</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">newInterval</span><span class="o">[</span><span class="n">0</span><span class="o">]</span><span class="p">)</span><span class="err">{</span>
-<span class="w">            </span><span class="n">res</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">intervals</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="p">);</span>
-<span class="w">            </span><span class="n">i</span><span class="o">++</span><span class="p">;</span>
-<span class="w">        </span><span class="err">}</span><span class="w">                           </span>
-<span class="w">        </span><span class="o">//</span><span class="k">case</span><span class="w"> </span><span class="mi">2</span><span class="err">:</span><span class="w"> </span><span class="n">overlapping</span><span class="w"> </span><span class="k">case</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="n">merging</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">intervals</span>
-<span class="w">        </span><span class="k">while</span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">newInterval</span><span class="o">[</span><span class="n">1</span><span class="o">]</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="n">intervals</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="n">0</span><span class="o">]</span><span class="p">)</span><span class="err">{</span>
-<span class="w">            </span><span class="n">newInterval</span><span class="o">[</span><span class="n">0</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">min</span><span class="p">(</span><span class="n">newInterval</span><span class="o">[</span><span class="n">0</span><span class="o">]</span><span class="p">,</span><span class="w"> </span><span class="n">intervals</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="n">0</span><span class="o">]</span><span class="p">);</span>
-<span class="w">            </span><span class="n">newInterval</span><span class="o">[</span><span class="n">1</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">max</span><span class="p">(</span><span class="n">newInterval</span><span class="o">[</span><span class="n">1</span><span class="o">]</span><span class="p">,</span><span class="w"> </span><span class="n">intervals</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="n">1</span><span class="o">]</span><span class="p">);</span>
-<span class="w">            </span><span class="n">i</span><span class="o">++</span><span class="p">;</span>
-<span class="w">        </span><span class="err">}</span>
-<span class="w">        </span><span class="n">res</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">newInterval</span><span class="p">);</span>
-<span class="w">        </span><span class="o">//</span><span class="w"> </span><span class="k">case</span><span class="w"> </span><span class="mi">3</span><span class="err">:</span><span class="w"> </span><span class="k">no</span><span class="w"> </span><span class="n">overlapping</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">intervals</span><span class="w"> </span><span class="k">after</span><span class="w"> </span><span class="n">newinterval</span><span class="w"> </span><span class="n">being</span><span class="w"> </span><span class="n">merged</span>
-<span class="w">        </span><span class="k">while</span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">n</span><span class="p">)</span><span class="err">{</span>
-<span class="w">            </span><span class="n">res</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">intervals</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="p">);</span>
-<span class="w">            </span><span class="n">i</span><span class="o">++</span><span class="p">;</span>
-<span class="w">        </span><span class="err">}</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">res</span><span class="p">;</span>
-<span class="w">    </span><span class="err">}</span>
-<span class="err">}</span><span class="p">;</span>
-</code></pre></div>
-
-<p><strong>Please upvote and comment if have doubt</strong></p></div>
-
-
-<div class='python-solution'><h2>7+ lines, 3 easy solutions -- Votes: 548</h2><p><strong>Solution 1:</strong> (7 lines, 88 ms)</p>
+<pre><code>class Solution {
+public:
+   vector&lt;vector&lt;int&gt;&gt; insert(vector&lt;vector&lt;int&gt;&gt;&amp; intervals, vector&lt;int&gt;&amp; newInterval) {
+        int n = intervals.size(), i = 0;
+        vector&lt;vector&lt;int&gt;&gt; res;
+        //case 1: no overlapping case before the merge intervals
+        //compare ending point of intervals to starting point of newInterval
+        while(i &lt; n &amp;&amp; intervals[i][1] &lt; newInterval[0]){
+            res.push_back(intervals[i]);
+            i++;
+        }                           
+        //case 2: overlapping case and merging of intervals
+        while(i &lt; n &amp;&amp; newInterval[1] &gt;= intervals[i][0]){
+            newInterval[0] = min(newInterval[0], intervals[i][0]);
+            newInterval[1] = max(newInterval[1], intervals[i][1]);
+            i++;
+        }
+        res.push_back(newInterval);
+        // case 3: no overlapping of intervals after newinterval being merged
+        while(i &lt; n){
+            res.push_back(intervals[i]);
+            i++;
+        }
+        return res;
+    }
+};
+</code></pre>
+<p><strong>Please upvote and comment if have doubt</strong></p></div><div class='python-solution'><h4>7+ lines, 3 easy solutions [Votes: 548]</h4><p><strong>Solution 1:</strong> (7 lines, 88 ms)</p>
 <p>Collect the intervals strictly left or right of the new interval, then merge the new one with the middle ones (if any) before inserting it between left and right ones.</p>
-<div class="codehilite"><pre><span></span><code><span class="nv">def</span><span class="w"> </span><span class="nv">insert</span><span class="ss">(</span><span class="nv">self</span>,<span class="w"> </span><span class="nv">intervals</span>,<span class="w"> </span><span class="nv">newInterval</span><span class="ss">)</span>:
-<span class="w">    </span><span class="nv">s</span>,<span class="w"> </span><span class="nv">e</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">newInterval</span>.<span class="nv">start</span>,<span class="w"> </span><span class="nv">newInterval</span>.<span class="k">end</span>
-<span class="w">    </span><span class="nv">left</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>[<span class="nv">i</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="nv">i</span><span class="w"> </span><span class="nv">in</span><span class="w"> </span><span class="nv">intervals</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="nv">i</span>.<span class="k">end</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="nv">s</span>]
-<span class="w">    </span><span class="nv">right</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>[<span class="nv">i</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="nv">i</span><span class="w"> </span><span class="nv">in</span><span class="w"> </span><span class="nv">intervals</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="nv">i</span>.<span class="nv">start</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="nv">e</span>]
-<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="nv">left</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nv">right</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="nv">intervals</span>:
-<span class="w">        </span><span class="nv">s</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">min</span><span class="ss">(</span><span class="nv">s</span>,<span class="w"> </span><span class="nv">intervals</span>[<span class="nv">len</span><span class="ss">(</span><span class="nv">left</span><span class="ss">)</span>].<span class="nv">start</span><span class="ss">)</span>
-<span class="w">        </span><span class="nv">e</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">max</span><span class="ss">(</span><span class="nv">e</span>,<span class="w"> </span><span class="nv">intervals</span>[<span class="o">~</span><span class="nv">len</span><span class="ss">(</span><span class="nv">right</span><span class="ss">)</span>].<span class="k">end</span><span class="ss">)</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">left</span><span class="w"> </span><span class="o">+</span><span class="w"> </span>[<span class="nv">Interval</span><span class="ss">(</span><span class="nv">s</span>,<span class="w"> </span><span class="nv">e</span><span class="ss">)</span>]<span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nv">right</span>
-</code></pre></div>
-
-<hr />
+<pre><code>def insert(self, intervals, newInterval):
+    s, e = newInterval.start, newInterval.end
+    left = [i for i in intervals if i.end &lt; s]
+    right = [i for i in intervals if i.start &gt; e]
+    if left + right != intervals:
+        s = min(s, intervals[len(left)].start)
+        e = max(e, intervals[~len(right)].end)
+    return left + [Interval(s, e)] + right
+</code></pre>
 <p><strong>Solution 2:</strong> (8 lines, 84 ms)</p>
 <p>Same algorithm as solution 1, but different implementation with only one pass and explicitly collecting the to-be-merged intervals.</p>
-<div class="codehilite"><pre><span></span><code><span class="nv">def</span><span class="w"> </span><span class="nv">insert</span><span class="ss">(</span><span class="nv">self</span>,<span class="w"> </span><span class="nv">intervals</span>,<span class="w"> </span><span class="nv">newInterval</span><span class="ss">)</span>:
-<span class="w">    </span><span class="nv">s</span>,<span class="w"> </span><span class="nv">e</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">newInterval</span>.<span class="nv">start</span>,<span class="w"> </span><span class="nv">newInterval</span>.<span class="k">end</span>
-<span class="w">    </span><span class="nv">parts</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">merge</span>,<span class="w"> </span><span class="nv">left</span>,<span class="w"> </span><span class="nv">right</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>,<span class="w"> </span>,<span class="w"> </span>
-<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="nv">i</span><span class="w"> </span><span class="nv">in</span><span class="w"> </span><span class="nv">intervals</span>:
-<span class="w">        </span><span class="nv">parts</span>[<span class="ss">(</span><span class="nv">i</span>.<span class="k">end</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="nv">s</span><span class="ss">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="ss">(</span><span class="nv">i</span>.<span class="nv">start</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="nv">e</span><span class="ss">)</span>].<span class="nv">append</span><span class="ss">(</span><span class="nv">i</span><span class="ss">)</span>
-<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="nv">merge</span>:
-<span class="w">        </span><span class="nv">s</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">min</span><span class="ss">(</span><span class="nv">s</span>,<span class="w"> </span><span class="nv">merge</span>[<span class="mi">0</span>].<span class="nv">start</span><span class="ss">)</span>
-<span class="w">        </span><span class="nv">e</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">max</span><span class="ss">(</span><span class="nv">e</span>,<span class="w"> </span><span class="nv">merge</span>[<span class="o">-</span><span class="mi">1</span>].<span class="k">end</span><span class="ss">)</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">left</span><span class="w"> </span><span class="o">+</span><span class="w"> </span>[<span class="nv">Interval</span><span class="ss">(</span><span class="nv">s</span>,<span class="w"> </span><span class="nv">e</span><span class="ss">)</span>]<span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nv">right</span>
-</code></pre></div>
-
-<hr />
+<pre><code>def insert(self, intervals, newInterval):
+    s, e = newInterval.start, newInterval.end
+    parts = merge, left, right = [], [], []
+    for i in intervals:
+        parts[(i.end &lt; s) - (i.start &gt; e)].append(i)
+    if merge:
+        s = min(s, merge[0].start)
+        e = max(e, merge[-1].end)
+    return left + [Interval(s, e)] + right
+</code></pre>
 <p><strong>Solution 3:</strong> (11 lines, 80 ms)</p>
 <p>Same again, but collect and merge while going over the intervals once.</p>
-<div class="codehilite"><pre><span></span><code><span class="nv">def</span><span class="w"> </span><span class="nv">insert</span><span class="ss">(</span><span class="nv">self</span>,<span class="w"> </span><span class="nv">intervals</span>,<span class="w"> </span><span class="nv">newInterval</span><span class="ss">)</span>:
-<span class="w">    </span><span class="nv">s</span>,<span class="w"> </span><span class="nv">e</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">newInterval</span>.<span class="nv">start</span>,<span class="w"> </span><span class="nv">newInterval</span>.<span class="k">end</span>
-<span class="w">    </span><span class="nv">left</span>,<span class="w"> </span><span class="nv">right</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>,<span class="w"> </span>
-<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="nv">i</span><span class="w"> </span><span class="nv">in</span><span class="w"> </span><span class="nv">intervals</span>:
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="nv">i</span>.<span class="k">end</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="nv">s</span>:
-<span class="w">            </span><span class="nv">left</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="nv">i</span>,
-<span class="w">        </span><span class="nv">elif</span><span class="w"> </span><span class="nv">i</span>.<span class="nv">start</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="nv">e</span>:
-<span class="w">            </span><span class="nv">right</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="nv">i</span>,
-<span class="w">        </span><span class="k">else</span>:
-<span class="w">            </span><span class="nv">s</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">min</span><span class="ss">(</span><span class="nv">s</span>,<span class="w"> </span><span class="nv">i</span>.<span class="nv">start</span><span class="ss">)</span>
-<span class="w">            </span><span class="nv">e</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">max</span><span class="ss">(</span><span class="nv">e</span>,<span class="w"> </span><span class="nv">i</span>.<span class="k">end</span><span class="ss">)</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">left</span><span class="w"> </span><span class="o">+</span><span class="w"> </span>[<span class="nv">Interval</span><span class="ss">(</span><span class="nv">s</span>,<span class="w"> </span><span class="nv">e</span><span class="ss">)</span>]<span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nv">right</span>
-</code></pre></div></div><p style="page-break-before: always" ></p>
+<pre><code>def insert(self, intervals, newInterval):
+    s, e = newInterval.start, newInterval.end
+    left, right = [], []
+    for i in intervals:
+        if i.end &lt; s:
+            left += i,
+        elif i.start &gt; e:
+            right += i,
+        else:
+            s = min(s, i.start)
+            e = max(e, i.end)
+    return left + [Interval(s, e)] + right
+</code></pre></div>

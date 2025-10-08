@@ -1,4 +1,4 @@
-<div class='cpp-solution'><h2>Sharing my straightforward C++ solution without data structure other than vector -- Votes: 638</h2><div class="codehilite"><pre><span></span><code>ListNode <span class="gs">*mergeKLists(vector&lt;ListNode *</span>&gt; &amp;lists) {
+<div class='cpp-solution'><h4>Sharing my straightforward C++ solution without data structure other than vector [Votes: 638]</h4><pre><code>ListNode *mergeKLists(vector&lt;ListNode *&gt; &amp;lists) {
     if(lists.empty()){
         return nullptr;
     }
@@ -25,41 +25,37 @@ ListNode *mergeTwoLists(ListNode *l1, ListNode *l2) {
         return l2;
     }
 }
+</code></pre>
+<p>The second function is from Merge Two Sorted Lists. </p>
+<p>The basic idea is really simple. We can merge first two lists and then push it back. Keep doing this until there is only one list left in vector. Actually, we can regard this as an iterative divide-and-conquer solution.</p></div><div class='python-solution'><h4>Python easy to understand divide and conquer solution. [Votes: 354]</h4><pre><code>class Solution(object):
+    def mergeKLists(self, lists):
+        if not lists:
+            return None
+        if len(lists) == 1:
+            return lists[0]
+        mid = len(lists) // 2
+        l, r = self.mergeKLists(lists[:mid]), self.mergeKLists(lists[mid:])
+        return self.merge(l, r)
+
+    def merge(self, l, r):
+        dummy = p = ListNode()
+        while l and r:
+            if l.val &lt; r.val:
+                p.next = l
+                l = l.next
+            else:
+                p.next = r
+                r = r.next
+            p = p.next
+        p.next = l or r
+        return dummy.next
+
+    def merge1(self, l, r):
+        if not l or not r:
+            return l or r
+        if l.val&lt; r.val:
+            l.next = self.merge(l.next, r)
+            return l
+        r.next = self.merge(l, r.next)
+        return r
 </code></pre></div>
-
-<p>The second function is from Merge Two Sorted Lists.</p>
-<p>The basic idea is really simple. We can merge first two lists and then push it back. Keep doing this until there is only one list left in vector. Actually, we can regard this as an iterative divide-and-conquer solution.</p></div>
-
-
-<div class='python-solution'><h2>Python easy to understand divide and conquer solution. -- Votes: 354</h2><div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="n">Solution</span>(<span class="n">object</span>):
-    <span class="n">def</span> <span class="n">mergeKLists</span>(<span class="nb">self</span>, <span class="n">lists</span>):
-        <span class="k">if</span> <span class="nb">not</span> <span class="n">lists:</span>
-            <span class="k">return</span> <span class="n">None</span>
-        <span class="k">if</span> <span class="n">len</span>(<span class="n">lists</span>) == <span class="mi">1</span>:
-            <span class="k">return</span> <span class="n">lists</span>[<span class="mi">0</span>]
-        <span class="n">mid</span> = <span class="n">len</span>(<span class="n">lists</span>) // <span class="mi">2</span>
-        <span class="nb">l</span>, <span class="nb">r</span> = <span class="nb">self</span>.<span class="n">mergeKLists</span>(<span class="n">lists</span>[:<span class="n">mid</span>]), <span class="nb">self</span>.<span class="n">mergeKLists</span>(<span class="n">lists</span>[<span class="n">mid:</span>])
-        <span class="k">return</span> <span class="nb">self</span>.<span class="nb">merge</span>(<span class="nb">l</span>, <span class="nb">r</span>)
-
-    <span class="n">def</span> <span class="nb">merge</span>(<span class="nb">self</span>, <span class="nb">l</span>, <span class="nb">r</span>):
-        <span class="n">dummy</span> = <span class="n">p</span> = <span class="n">ListNode</span>()
-        <span class="k">while</span> <span class="nb">l</span> <span class="o">and</span> <span class="n">r:</span>
-            <span class="k">if</span> <span class="nb">l</span>.<span class="nb">val</span> &lt; <span class="nb">r</span>.<span class="n">val:</span>
-                <span class="n">p</span>.<span class="nb">next</span> = <span class="nb">l</span>
-                <span class="nb">l</span> = <span class="nb">l</span>.<span class="nb">next</span>
-            <span class="n">else:</span>
-                <span class="n">p</span>.<span class="nb">next</span> = <span class="nb">r</span>
-                <span class="nb">r</span> = <span class="nb">r</span>.<span class="nb">next</span>
-            <span class="n">p</span> = <span class="n">p</span>.<span class="nb">next</span>
-        <span class="n">p</span>.<span class="nb">next</span> = <span class="nb">l</span> <span class="o">or</span> <span class="nb">r</span>
-        <span class="k">return</span> <span class="n">dummy</span>.<span class="nb">next</span>
-
-    <span class="n">def</span> <span class="n">merge1</span>(<span class="nb">self</span>, <span class="nb">l</span>, <span class="nb">r</span>):
-        <span class="k">if</span> <span class="nb">not</span> <span class="nb">l</span> <span class="o">or</span> <span class="nb">not</span> <span class="n">r:</span>
-            <span class="k">return</span> <span class="nb">l</span> <span class="o">or</span> <span class="nb">r</span>
-        <span class="k">if</span> <span class="nb">l</span>.<span class="nb">val</span>&lt; <span class="nb">r</span>.<span class="n">val:</span>
-            <span class="nb">l</span>.<span class="nb">next</span> = <span class="nb">self</span>.<span class="nb">merge</span>(<span class="nb">l</span>.<span class="nb">next</span>, <span class="nb">r</span>)
-            <span class="k">return</span> <span class="nb">l</span>
-        <span class="nb">r</span>.<span class="nb">next</span> = <span class="nb">self</span>.<span class="nb">merge</span>(<span class="nb">l</span>, <span class="nb">r</span>.<span class="nb">next</span>)
-        <span class="k">return</span> <span class="nb">r</span>
-</code></pre></div></div><p style="page-break-before: always" ></p>

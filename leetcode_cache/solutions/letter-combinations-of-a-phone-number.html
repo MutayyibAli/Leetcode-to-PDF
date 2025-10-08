@@ -1,4 +1,4 @@
-<div class='cpp-solution'><h2>📞 100% Backtracking & Iterative [VIDEO]  Letter Combinations of a Phone Number -- Votes: 224</h2><h2>Intuition</h2>
+<div class='cpp-solution'><h4>📞 100% Backtracking & Iterative [VIDEO]  Letter Combinations of a Phone Number [Votes: 224]</h4><h4>Intuition</h4>
 <p>Given a string containing digits from 2-9 inclusive, we need to return all possible letter combinations that the number could represent, just like on a telephone's buttons. To accomplish this, we present two different approaches:</p>
 <ol>
 <li>
@@ -8,14 +8,12 @@
 <p><strong>Iterative Approach</strong>: This approach builds the combinations iteratively without using recursion. We start with an empty combination and iteratively add letters for each digit in the input string. For each existing combination, we append each corresponding letter for the current digit, building new combinations.</p>
 </li>
 </ol>
-<p><strong>Differences</strong>:</p>
-<ul>
-<li>The backtracking approach relies on recursion to explore all possible combinations, whereas the iterative approach builds combinations step by step using loops.</li>
-<li>Both approaches have similar time complexity, but the iterative approach might save some function call overhead, leading to more efficient execution in some cases.</li>
-</ul>
+<p><strong>Differences</strong>:
+- The backtracking approach relies on recursion to explore all possible combinations, whereas the iterative approach builds combinations step by step using loops.
+- Both approaches have similar time complexity, but the iterative approach might save some function call overhead, leading to more efficient execution in some cases.</p>
 <p>Detailed explanations of both approaches, along with their corresponding code, are provided below. By presenting both methods, we offer a comprehensive view of how to tackle this problem, allowing for flexibility and understanding of different programming paradigms.</p>
 <p>https://youtu.be/Jobb9YUFUq0</p>
-<h2>Approach - Backtracking</h2>
+<h4>Approach - Backtracking</h4>
 <ol>
 <li>
 <p><strong>Initialize a Mapping</strong>: Create a dictionary that maps each digit from 2 to 9 to their corresponding letters on a telephone's buttons. For example, the digit '2' maps to "abc," '3' maps to "def," and so on.</p>
@@ -26,569 +24,487 @@
 <li>
 <p><strong>Recursive Backtracking</strong>:</p>
 </li>
-</ol>
-<ul>
 <li><strong>Define Recursive Function</strong>: Create a recursive function, <code>backtrack</code>, that will be used to explore all possible combinations. It takes two parameters: <code>combination</code>, which holds the current combination of letters, and <code>next_digits</code>, which holds the remaining digits to be explored.</li>
 <li><strong>Termination Condition</strong>: If <code>next_digits</code> is empty, it means that all digits have been processed, so append the current <code>combination</code> to the result.</li>
 <li><strong>Exploration</strong>: If there are more digits to explore, take the first digit from <code>next_digits</code> and iterate over its corresponding letters in the mapping. For each letter, concatenate it to the current combination and recursively call the <code>backtrack</code> function with the new combination and the remaining digits.</li>
-<li><strong>Example</strong>: If the input is "23", the first recursive call explores all combinations starting with 'a', 'b', and 'c' (from '2'), and the next level of recursive calls explores combinations starting with 'd', 'e', 'f' (from '3'), building combinations like "ad," "ae," "af," "bd," "be," etc.</li>
-</ul>
-<ol>
-<li><strong>Result</strong>: Once the recursive exploration is complete, return the collected combinations as the final result. By using recursion, we ensure that all possible combinations are explored, and the result includes all valid letter combinations that the input digits can represent.</li>
+<li>
+<p><strong>Example</strong>: If the input is "23", the first recursive call explores all combinations starting with 'a', 'b', and 'c' (from '2'), and the next level of recursive calls explores combinations starting with 'd', 'e', 'f' (from '3'), building combinations like "ad," "ae," "af," "bd," "be," etc.</p>
+</li>
+<li>
+<p><strong>Result</strong>: Once the recursive exploration is complete, return the collected combinations as the final result. By using recursion, we ensure that all possible combinations are explored, and the result includes all valid letter combinations that the input digits can represent.</p>
+</li>
 </ol>
-<h2>Complexity</h2>
+<h4>Complexity</h4>
 <ul>
 <li>Time complexity: ( O(4^n) ), where ( n ) is the length of the input string. In the worst case, each digit can represent 4 letters, so there will be 4 recursive calls for each digit.</li>
 <li>Space complexity: ( O(n) ), where ( n ) is the length of the input string. This accounts for the recursion stack space.</li>
 </ul>
-<h2>Code - Backtracking</h2>
-<div class="codehilite"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="p">:</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">letterCombinations</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">digits</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">digits</span><span class="p">:</span>
-            <span class="k">return</span> 
+<h4>Code - Backtracking</h4>
+<pre><code class="language-Python">class Solution:
+    def letterCombinations(self, digits: str) -&gt; List[str]:
+        if not digits:
+            return []
 
-        <span class="n">phone_map</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s1">&#39;2&#39;</span><span class="p">:</span> <span class="s1">&#39;abc&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;3&#39;</span><span class="p">:</span> <span class="s1">&#39;def&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;4&#39;</span><span class="p">:</span> <span class="s1">&#39;ghi&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;5&#39;</span><span class="p">:</span> <span class="s1">&#39;jkl&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;6&#39;</span><span class="p">:</span> <span class="s1">&#39;mno&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;7&#39;</span><span class="p">:</span> <span class="s1">&#39;pqrs&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;8&#39;</span><span class="p">:</span> <span class="s1">&#39;tuv&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;9&#39;</span><span class="p">:</span> <span class="s1">&#39;wxyz&#39;</span>
-        <span class="p">}</span>
+        phone_map = {
+            '2': 'abc',
+            '3': 'def',
+            '4': 'ghi',
+            '5': 'jkl',
+            '6': 'mno',
+            '7': 'pqrs',
+            '8': 'tuv',
+            '9': 'wxyz'
+        }
 
-        <span class="k">def</span><span class="w"> </span><span class="nf">backtrack</span><span class="p">(</span><span class="n">combination</span><span class="p">,</span> <span class="n">next_digits</span><span class="p">):</span>
-            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">next_digits</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-                <span class="n">output</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">combination</span><span class="p">)</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="k">for</span> <span class="n">letter</span> <span class="ow">in</span> <span class="n">phone_map</span><span class="p">[</span><span class="n">next_digits</span><span class="p">[</span><span class="mi">0</span><span class="p">]]:</span>
-                    <span class="n">backtrack</span><span class="p">(</span><span class="n">combination</span> <span class="o">+</span> <span class="n">letter</span><span class="p">,</span> <span class="n">next_digits</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
+        def backtrack(combination, next_digits):
+            if len(next_digits) == 0:
+                output.append(combination)
+            else:
+                for letter in phone_map[next_digits[0]]:
+                    backtrack(combination + letter, next_digits[1:])
 
-        <span class="n">output</span> <span class="o">=</span> 
-        <span class="n">backtrack</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">digits</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">output</span>
-</code></pre></div>
+        output = []
+        backtrack(&quot;&quot;, digits)
+        return output
+</code></pre>
+<pre><code class="language-cpp">class Solution {
+public:
+    std::vector&lt;std::string&gt; letterCombinations(std::string digits) {
+        if (digits.empty()) return {};
 
-<div class="codehilite"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="w"> </span><span class="p">{</span>
-<span class="k">public</span><span class="o">:</span>
-<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span><span class="w"> </span><span class="n">letterCombinations</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">digits</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">digits</span><span class="p">.</span><span class="n">empty</span><span class="p">())</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="p">{};</span>
+        std::string phone_map[] = {&quot;abc&quot;, &quot;def&quot;, &quot;ghi&quot;, &quot;jkl&quot;, &quot;mno&quot;, &quot;pqrs&quot;, &quot;tuv&quot;, &quot;wxyz&quot;};
+        std::vector&lt;std::string&gt; output;
+        backtrack(&quot;&quot;, digits, phone_map, output);
+        return output;
+    }
 
-<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">phone_map</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="s">&quot;abc&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;def&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;ghi&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;jkl&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;mno&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;pqrs&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;tuv&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;wxyz&quot;</span><span class="p">};</span>
-<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span><span class="w"> </span><span class="n">output</span><span class="p">;</span>
-<span class="w">        </span><span class="n">backtrack</span><span class="p">(</span><span class="s">&quot;&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">digits</span><span class="p">,</span><span class="w"> </span><span class="n">phone_map</span><span class="p">,</span><span class="w"> </span><span class="n">output</span><span class="p">);</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">output</span><span class="p">;</span>
-<span class="w">    </span><span class="p">}</span>
+private:
+    void backtrack(std::string combination, std::string next_digits, std::string phone_map[], std::vector&lt;std::string&gt;&amp; output) {
+        if (next_digits.empty()) {
+            output.push_back(combination);
+        } else {
+            std::string letters = phone_map[next_digits[0] - '2'];
+            for (char letter : letters) {
+                backtrack(combination + letter, next_digits.substr(1), phone_map, output);
+            }
+        }
+    }
+};
+</code></pre>
+<pre><code class="language-Java">class Solution {
+    public List&lt;String&gt; letterCombinations(String digits) {
+        if (digits.isEmpty()) return Collections.emptyList();
 
-<span class="k">private</span><span class="o">:</span>
-<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="n">backtrack</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">combination</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">next_digits</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">phone_map</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;&amp;</span><span class="w"> </span><span class="n">output</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">next_digits</span><span class="p">.</span><span class="n">empty</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="n">output</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">combination</span><span class="p">);</span>
-<span class="w">        </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">letters</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">phone_map</span><span class="p">[</span><span class="n">next_digits</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="sc">&#39;2&#39;</span><span class="p">];</span>
-<span class="w">            </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">char</span><span class="w"> </span><span class="n">letter</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">letters</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="n">backtrack</span><span class="p">(</span><span class="n">combination</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">letter</span><span class="p">,</span><span class="w"> </span><span class="n">next_digits</span><span class="p">.</span><span class="n">substr</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span><span class="w"> </span><span class="n">phone_map</span><span class="p">,</span><span class="w"> </span><span class="n">output</span><span class="p">);</span>
-<span class="w">            </span><span class="p">}</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">};</span>
-</code></pre></div>
+        String[] phone_map = {&quot;abc&quot;, &quot;def&quot;, &quot;ghi&quot;, &quot;jkl&quot;, &quot;mno&quot;, &quot;pqrs&quot;, &quot;tuv&quot;, &quot;wxyz&quot;};
+        List&lt;String&gt; output = new ArrayList&lt;&gt;();
+        backtrack(&quot;&quot;, digits, phone_map, output);
+        return output;
+    }
 
-<div class="codehilite"><pre><span></span><code><span class="kd">class</span> <span class="nc">Solution</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span><span class="w"> </span><span class="nf">letterCombinations</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">digits</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">digits</span><span class="p">.</span><span class="na">isEmpty</span><span class="p">())</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">Collections</span><span class="p">.</span><span class="na">emptyList</span><span class="p">();</span>
+    private void backtrack(String combination, String next_digits, String[] phone_map, List&lt;String&gt; output) {
+        if (next_digits.isEmpty()) {
+            output.add(combination);
+        } else {
+            String letters = phone_map[next_digits.charAt(0) - '2'];
+            for (char letter : letters.toCharArray()) {
+                backtrack(combination + letter, next_digits.substring(1), phone_map, output);
+            }
+        }
+    }
+}
+</code></pre>
+<pre><code class="language-JavaSxript">/**
+ * @param {string} digits
+ * @return {string[]}
+ */
+var letterCombinations = function(digits) {
+    if (digits.length === 0) return [];
 
-<span class="w">        </span><span class="n">String</span><span class="w"> </span><span class="n">phone_map</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="s">&quot;abc&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;def&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;ghi&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;jkl&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;mno&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;pqrs&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;tuv&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;wxyz&quot;</span><span class="p">};</span>
-<span class="w">        </span><span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span><span class="w"> </span><span class="n">output</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ArrayList</span><span class="o">&lt;&gt;</span><span class="p">();</span>
-<span class="w">        </span><span class="n">backtrack</span><span class="p">(</span><span class="s">&quot;&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">digits</span><span class="p">,</span><span class="w"> </span><span class="n">phone_map</span><span class="p">,</span><span class="w"> </span><span class="n">output</span><span class="p">);</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">output</span><span class="p">;</span>
-<span class="w">    </span><span class="p">}</span>
+    const phone_map = [&quot;abc&quot;, &quot;def&quot;, &quot;ghi&quot;, &quot;jkl&quot;, &quot;mno&quot;, &quot;pqrs&quot;, &quot;tuv&quot;, &quot;wxyz&quot;];
+    const output = [];
+    backtrack(&quot;&quot;, digits, phone_map, output);
+    return output;
 
-<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">backtrack</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">combination</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">next_digits</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">phone_map</span><span class="p">,</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span><span class="w"> </span><span class="n">output</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">next_digits</span><span class="p">.</span><span class="na">isEmpty</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="n">output</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="n">combination</span><span class="p">);</span>
-<span class="w">        </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="n">String</span><span class="w"> </span><span class="n">letters</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">phone_map</span><span class="o">[</span><span class="n">next_digits</span><span class="p">.</span><span class="na">charAt</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="sc">&#39;2&#39;</span><span class="o">]</span><span class="p">;</span>
-<span class="w">            </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">char</span><span class="w"> </span><span class="n">letter</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">letters</span><span class="p">.</span><span class="na">toCharArray</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="n">backtrack</span><span class="p">(</span><span class="n">combination</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">letter</span><span class="p">,</span><span class="w"> </span><span class="n">next_digits</span><span class="p">.</span><span class="na">substring</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span><span class="w"> </span><span class="n">phone_map</span><span class="p">,</span><span class="w"> </span><span class="n">output</span><span class="p">);</span>
-<span class="w">            </span><span class="p">}</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
+    function backtrack(combination, next_digits, phone_map, output) {
+        if (next_digits.length === 0) {
+            output.push(combination);
+        } else {
+            const letters = phone_map[next_digits[0] - '2'];
+            for (const letter of letters) {
+                backtrack(combination + letter, next_digits.slice(1), phone_map, output);
+            }
+        }
+    }
+};
+</code></pre>
+<pre><code class="language-C####">public class Solution {
+    public IList&lt;string&gt; LetterCombinations(string digits) {
+        if (string.IsNullOrEmpty(digits)) return new List&lt;string&gt;();
 
-<div class="codehilite"><pre><span></span><code><span class="o">/**</span>
-<span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="err">@</span><span class="n">param</span><span class="w"> </span><span class="p">{</span><span class="n">string</span><span class="p">}</span><span class="w"> </span><span class="n">digits</span>
-<span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="err">@</span><span class="k">return</span><span class="w"> </span><span class="p">{</span><span class="n">string</span><span class="p">}</span>
-<span class="w"> </span><span class="o">*/</span>
-<span class="k">var</span><span class="w"> </span><span class="n">letterCombinations</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">function</span><span class="p">(</span><span class="n">digits</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">digits</span><span class="o">.</span><span class="n">length</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="p">;</span>
+        string[] phone_map = {&quot;abc&quot;, &quot;def&quot;, &quot;ghi&quot;, &quot;jkl&quot;, &quot;mno&quot;, &quot;pqrs&quot;, &quot;tuv&quot;, &quot;wxyz&quot;};
+        List&lt;string&gt; output = new List&lt;string&gt;();
+        Backtrack(&quot;&quot;, digits, phone_map, output);
+        return output;
+    }
 
-<span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="n">phone_map</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;abc&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;def&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;ghi&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;jkl&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;mno&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;pqrs&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;tuv&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;wxyz&quot;</span><span class="p">];</span>
-<span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="n">output</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">;</span>
-<span class="w">    </span><span class="n">backtrack</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">digits</span><span class="p">,</span><span class="w"> </span><span class="n">phone_map</span><span class="p">,</span><span class="w"> </span><span class="n">output</span><span class="p">);</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">output</span><span class="p">;</span>
+    private void Backtrack(string combination, string next_digits, string[] phone_map, List&lt;string&gt; output) {
+        if (next_digits.Length == 0) {
+            output.Add(combination);
+        } else {
+            string letters = phone_map[next_digits[0] - '2'];
+            foreach (char letter in letters) {
+                Backtrack(combination + letter, next_digits.Substring(1), phone_map, output);
+            }
+        }
+    }
+}
+</code></pre>
+<pre><code class="language-Go">func letterCombinations(digits string) []string {
+    if digits == &quot;&quot; {
+        return []string{}
+    }
 
-<span class="w">    </span><span class="n">function</span><span class="w"> </span><span class="n">backtrack</span><span class="p">(</span><span class="n">combination</span><span class="p">,</span><span class="w"> </span><span class="n">next_digits</span><span class="p">,</span><span class="w"> </span><span class="n">phone_map</span><span class="p">,</span><span class="w"> </span><span class="n">output</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">next_digits</span><span class="o">.</span><span class="n">length</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="n">output</span><span class="o">.</span><span class="n">push</span><span class="p">(</span><span class="n">combination</span><span class="p">);</span>
-<span class="w">        </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="k">const</span><span class="w"> </span><span class="n">letters</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">phone_map</span><span class="p">[</span><span class="n">next_digits</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="s1">&#39;2&#39;</span><span class="p">];</span>
-<span class="w">            </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">letter</span><span class="w"> </span><span class="n">of</span><span class="w"> </span><span class="n">letters</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="n">backtrack</span><span class="p">(</span><span class="n">combination</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">letter</span><span class="p">,</span><span class="w"> </span><span class="n">next_digits</span><span class="o">.</span><span class="n">slice</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span><span class="w"> </span><span class="n">phone_map</span><span class="p">,</span><span class="w"> </span><span class="n">output</span><span class="p">);</span>
-<span class="w">            </span><span class="p">}</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">};</span>
-</code></pre></div>
+    phoneMap := []string{&quot;abc&quot;, &quot;def&quot;, &quot;ghi&quot;, &quot;jkl&quot;, &quot;mno&quot;, &quot;pqrs&quot;, &quot;tuv&quot;, &quot;wxyz&quot;}
+    var output []string
 
-<div class="codehilite"><pre><span></span><code><span class="k">public</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="n">IList</span><span class="o">&lt;</span><span class="kt">string</span><span class="o">&gt;</span><span class="w"> </span><span class="n">LetterCombinations</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">digits</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="kt">string</span><span class="p">.</span><span class="n">IsNullOrEmpty</span><span class="p">(</span><span class="n">digits</span><span class="p">))</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="kt">string</span><span class="o">&gt;</span><span class="p">();</span>
+    var backtrack func(combination string, nextDigits string)
+    backtrack = func(combination string, nextDigits string) {
+        if nextDigits == &quot;&quot; {
+            output = append(output, combination)
+        } else {
+            letters := phoneMap[nextDigits[0]-'2']
+            for _, letter := range letters {
+                backtrack(combination+string(letter), nextDigits[1:])
+            }
+        }
+    }
 
-<span class="w">        </span><span class="kt">string</span><span class="w"> </span><span class="n">phone_map</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="s">&quot;abc&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;def&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;ghi&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;jkl&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;mno&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;pqrs&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;tuv&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;wxyz&quot;</span><span class="p">};</span>
-<span class="w">        </span><span class="n">List</span><span class="o">&lt;</span><span class="kt">string</span><span class="o">&gt;</span><span class="w"> </span><span class="n">output</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="kt">string</span><span class="o">&gt;</span><span class="p">();</span>
-<span class="w">        </span><span class="n">Backtrack</span><span class="p">(</span><span class="s">&quot;&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">digits</span><span class="p">,</span><span class="w"> </span><span class="n">phone_map</span><span class="p">,</span><span class="w"> </span><span class="n">output</span><span class="p">);</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">output</span><span class="p">;</span>
-<span class="w">    </span><span class="p">}</span>
+    backtrack(&quot;&quot;, digits)
+    return output
+}
+</code></pre>
+<pre><code class="language-Rust">impl Solution {
+    pub fn letter_combinations(digits: String) -&gt; Vec&lt;String&gt; {
+        if digits.is_empty() {
+            return vec![];
+        }
 
-<span class="w">    </span><span class="k">private</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">Backtrack</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">combination</span><span class="p">,</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">next_digits</span><span class="p">,</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">phone_map</span><span class="p">,</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="kt">string</span><span class="o">&gt;</span><span class="w"> </span><span class="n">output</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">next_digits</span><span class="p">.</span><span class="n">Length</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="n">output</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">combination</span><span class="p">);</span>
-<span class="w">        </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="kt">string</span><span class="w"> </span><span class="n">letters</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">phone_map</span><span class="p">[</span><span class="n">next_digits</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="sc">&#39;2&#39;</span><span class="p">];</span>
-<span class="w">            </span><span class="k">foreach</span><span class="w"> </span><span class="p">(</span><span class="kt">char</span><span class="w"> </span><span class="n">letter</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="n">letters</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="n">Backtrack</span><span class="p">(</span><span class="n">combination</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">letter</span><span class="p">,</span><span class="w"> </span><span class="n">next_digits</span><span class="p">.</span><span class="n">Substring</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span><span class="w"> </span><span class="n">phone_map</span><span class="p">,</span><span class="w"> </span><span class="n">output</span><span class="p">);</span>
-<span class="w">            </span><span class="p">}</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
+        let phone_map = vec![&quot;abc&quot;, &quot;def&quot;, &quot;ghi&quot;, &quot;jkl&quot;, &quot;mno&quot;, &quot;pqrs&quot;, &quot;tuv&quot;, &quot;wxyz&quot;];
+        let mut output = Vec::new();
 
-<div class="codehilite"><pre><span></span><code><span class="kd">func</span><span class="w"> </span><span class="nx">letterCombinations</span><span class="p">(</span><span class="nx">digits</span><span class="w"> </span><span class="kt">string</span><span class="p">)</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="nx">digits</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">&quot;&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="kt">string</span><span class="p">{}</span>
-<span class="w">    </span><span class="p">}</span>
+        fn backtrack(combination: String, next_digits: &amp;str, phone_map: &amp;Vec&lt;&amp;str&gt;, output: &amp;mut Vec&lt;String&gt;) {
+            if next_digits.is_empty() {
+                output.push(combination);
+            } else {
+                let letters = phone_map[next_digits.chars().nth(0).unwrap() as usize - '2' as usize];
+                for letter in letters.chars() {
+                    let new_combination = combination.clone() + &amp;letter.to_string();
+                    backtrack(new_combination, &amp;next_digits[1..], phone_map, output);
+                }
+            }
+        }
 
-<span class="w">    </span><span class="nx">phoneMap</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="kt">string</span><span class="p">{</span><span class="s">&quot;abc&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;def&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;ghi&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;jkl&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;mno&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;pqrs&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;tuv&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;wxyz&quot;</span><span class="p">}</span>
-<span class="w">    </span><span class="kd">var</span><span class="w"> </span><span class="nx">output</span><span class="w"> </span><span class="kt">string</span>
-
-<span class="w">    </span><span class="kd">var</span><span class="w"> </span><span class="nx">backtrack</span><span class="w"> </span><span class="kd">func</span><span class="p">(</span><span class="nx">combination</span><span class="w"> </span><span class="kt">string</span><span class="p">,</span><span class="w"> </span><span class="nx">nextDigits</span><span class="w"> </span><span class="kt">string</span><span class="p">)</span>
-<span class="w">    </span><span class="nx">backtrack</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="kd">func</span><span class="p">(</span><span class="nx">combination</span><span class="w"> </span><span class="kt">string</span><span class="p">,</span><span class="w"> </span><span class="nx">nextDigits</span><span class="w"> </span><span class="kt">string</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="nx">nextDigits</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">&quot;&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="nx">output</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">append</span><span class="p">(</span><span class="nx">output</span><span class="p">,</span><span class="w"> </span><span class="nx">combination</span><span class="p">)</span>
-<span class="w">        </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="nx">letters</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">phoneMap</span><span class="p">[</span><span class="nx">nextDigits</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="sc">&#39;2&#39;</span><span class="p">]</span>
-<span class="w">            </span><span class="k">for</span><span class="w"> </span><span class="nx">_</span><span class="p">,</span><span class="w"> </span><span class="nx">letter</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="k">range</span><span class="w"> </span><span class="nx">letters</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="nx">backtrack</span><span class="p">(</span><span class="nx">combination</span><span class="o">+</span><span class="nb">string</span><span class="p">(</span><span class="nx">letter</span><span class="p">),</span><span class="w"> </span><span class="nx">nextDigits</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
-<span class="w">            </span><span class="p">}</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">    </span><span class="p">}</span>
-
-<span class="w">    </span><span class="nx">backtrack</span><span class="p">(</span><span class="s">&quot;&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">digits</span><span class="p">)</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">output</span>
-<span class="p">}</span>
-</code></pre></div>
-
-<div class="codehilite"><pre><span></span><code><span class="k">impl</span><span class="w"> </span><span class="n">Solution</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="k">fn</span><span class="w"> </span><span class="nf">letter_combinations</span><span class="p">(</span><span class="n">digits</span><span class="p">:</span><span class="w"> </span><span class="nb">String</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nb">Vec</span><span class="o">&lt;</span><span class="nb">String</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="n">digits</span><span class="p">.</span><span class="n">is_empty</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="fm">vec!</span><span class="p">;</span>
-<span class="w">        </span><span class="p">}</span>
-
-<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">phone_map</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="fm">vec!</span><span class="p">[</span><span class="s">&quot;abc&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;def&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;ghi&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;jkl&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;mno&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;pqrs&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;tuv&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;wxyz&quot;</span><span class="p">];</span>
-<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="k">mut</span><span class="w"> </span><span class="n">output</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">Vec</span><span class="p">::</span><span class="n">new</span><span class="p">();</span>
-
-<span class="w">        </span><span class="k">fn</span><span class="w"> </span><span class="nf">backtrack</span><span class="p">(</span><span class="n">combination</span><span class="p">:</span><span class="w"> </span><span class="nb">String</span><span class="p">,</span><span class="w"> </span><span class="n">next_digits</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="kt">str</span><span class="p">,</span><span class="w"> </span><span class="n">phone_map</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="nb">Vec</span><span class="o">&lt;&amp;</span><span class="kt">str</span><span class="o">&gt;</span><span class="p">,</span><span class="w"> </span><span class="n">output</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="nc">mut</span><span class="w"> </span><span class="nb">Vec</span><span class="o">&lt;</span><span class="nb">String</span><span class="o">&gt;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="n">next_digits</span><span class="p">.</span><span class="n">is_empty</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="n">output</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="n">combination</span><span class="p">);</span>
-<span class="w">            </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="kd">let</span><span class="w"> </span><span class="n">letters</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">phone_map</span><span class="p">[</span><span class="n">next_digits</span><span class="p">.</span><span class="n">chars</span><span class="p">().</span><span class="n">nth</span><span class="p">(</span><span class="mi">0</span><span class="p">).</span><span class="n">unwrap</span><span class="p">()</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="kt">usize</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="sc">&#39;2&#39;</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="kt">usize</span><span class="p">];</span>
-<span class="w">                </span><span class="k">for</span><span class="w"> </span><span class="n">letter</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="n">letters</span><span class="p">.</span><span class="n">chars</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                    </span><span class="kd">let</span><span class="w"> </span><span class="n">new_combination</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">combination</span><span class="p">.</span><span class="n">clone</span><span class="p">()</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="o">&amp;</span><span class="n">letter</span><span class="p">.</span><span class="n">to_string</span><span class="p">();</span>
-<span class="w">                    </span><span class="n">backtrack</span><span class="p">(</span><span class="n">new_combination</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">next_digits</span><span class="p">[</span><span class="mi">1</span><span class="o">..</span><span class="p">],</span><span class="w"> </span><span class="n">phone_map</span><span class="p">,</span><span class="w"> </span><span class="n">output</span><span class="p">);</span>
-<span class="w">                </span><span class="p">}</span>
-<span class="w">            </span><span class="p">}</span>
-<span class="w">        </span><span class="p">}</span>
-
-<span class="w">        </span><span class="n">backtrack</span><span class="p">(</span><span class="nb">String</span><span class="p">::</span><span class="n">new</span><span class="p">(),</span><span class="w"> </span><span class="o">&amp;</span><span class="n">digits</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">phone_map</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="k">mut</span><span class="w"> </span><span class="n">output</span><span class="p">);</span>
-<span class="w">        </span><span class="n">output</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
-
+        backtrack(String::new(), &amp;digits, &amp;phone_map, &amp;mut output);
+        output
+    }
+}
+</code></pre>
 <p>This code can handle any input string containing digits from 2 to 9 and will return the possible letter combinations in any order. The function <code>backtrack</code> is used to handle the recursive exploration of combinations, and <code>phone_map</code> contains the mapping between digits and letters.</p>
-<h3>Performance - Backtracking</h3>
-<table>
-<thead>
-<tr>
-<th>Language</th>
-<th>Runtime (ms)</th>
-<th>Beats (%)</th>
-<th>Memory (MB)</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>C++</td>
-<td>0</td>
-<td>100.00</td>
-<td>6.4</td>
-</tr>
-<tr>
-<td>Go</td>
-<td>0</td>
-<td>100.00</td>
-<td>2.0</td>
-</tr>
-<tr>
-<td>Rust</td>
-<td>1</td>
-<td>82.50</td>
-<td>2.1</td>
-</tr>
-<tr>
-<td>Java</td>
-<td>5</td>
-<td>50.30</td>
-<td>41.6</td>
-</tr>
-<tr>
-<td>Swift</td>
-<td>2</td>
-<td>82.38</td>
-<td>14.0</td>
-</tr>
-<tr>
-<td>Python3</td>
-<td>34</td>
-<td>96.91</td>
-<td>16.3</td>
-</tr>
-<tr>
-<td>TypeScript</td>
-<td>49</td>
-<td>96.36</td>
-<td>44.3</td>
-</tr>
-<tr>
-<td>JavaScript</td>
-<td>58</td>
-<td>55.17</td>
-<td>42.2</td>
-</tr>
-<tr>
-<td>Ruby</td>
-<td>58</td>
-<td>97.98</td>
-<td>211.1</td>
-</tr>
-<tr>
-<td>C#</td>
-<td>136</td>
-<td>89.14</td>
-<td>43.9</td>
-</tr>
-</tbody>
-</table>
-<h2>Video Iterative</h2>
+<h5>Performance - Backtracking</h5>
+<p>| Language    | Runtime (ms) | Beats (%) | Memory (MB) |
+|-------------|--------------|-----------|-------------|
+| cpp         | 0            | 100.00    | 6.4         |
+| Go          | 0            | 100.00    | 2.0         |
+| Rust        | 1            | 82.50     | 2.1         |
+| Java        | 5            | 50.30     | 41.6        |
+| Swift       | 2            | 82.38     | 14.0        |
+| Python3     | 34           | 96.91     | 16.3        |
+| TypeScript  | 49           | 96.36     | 44.3        |
+| JavaScript  | 58           | 55.17     | 42.2        |
+| Ruby        | 58           | 97.98     | 211.1       |
+| C####          | 136          | 89.14     | 43.9        |</p>
+<h4>Video Iterative</h4>
 <p>https://youtu.be/43x3sg_nND8</p>
-<h2>Approach - Iterative</h2>
+<h4>Approach - Iterative</h4>
 <ol>
 <li><strong>Initialize a Mapping</strong>: Create a dictionary that maps each digit from 2 to 9 to their corresponding letters on a telephone's buttons.</li>
 <li><strong>Base Case</strong>: If the input string <code>digits</code> is empty, return an empty list.</li>
-<li><strong>Iteratively Build Combinations</strong>: Start with an empty combination in a list and iteratively build the combinations by processing each digit in the input string.<br />
-   - For each existing combination, append each corresponding letter for the current digit, building new combinations.</li>
+<li><strong>Iteratively Build Combinations</strong>: Start with an empty combination in a list and iteratively build the combinations by processing each digit in the input string.</li>
+<li>For each existing combination, append each corresponding letter for the current digit, building new combinations.</li>
 <li><strong>Result</strong>: Return the generated combinations as the final result.</li>
 </ol>
-<h2>Complexity</h2>
+<h4>Complexity</h4>
 <ul>
 <li>Time complexity: ( O(4^n) ), where ( n ) is the length of the input string. In the worst case, each digit can represent 4 letters.</li>
 <li>Space complexity: ( O(n) ), where ( n ) is the length of the input string.</li>
 </ul>
-<h2>Code - Iterative</h2>
-<div class="codehilite"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="p">:</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">letterCombinations</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">digits</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">digits</span><span class="p">:</span>
-            <span class="k">return</span> 
+<h4>Code - Iterative</h4>
+<pre><code class="language-Python">class Solution:
+    def letterCombinations(self, digits: str) -&gt; List[str]:
+        if not digits:
+            return []
 
-        <span class="n">phone_map</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s1">&#39;2&#39;</span><span class="p">:</span> <span class="s1">&#39;abc&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;3&#39;</span><span class="p">:</span> <span class="s1">&#39;def&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;4&#39;</span><span class="p">:</span> <span class="s1">&#39;ghi&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;5&#39;</span><span class="p">:</span> <span class="s1">&#39;jkl&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;6&#39;</span><span class="p">:</span> <span class="s1">&#39;mno&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;7&#39;</span><span class="p">:</span> <span class="s1">&#39;pqrs&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;8&#39;</span><span class="p">:</span> <span class="s1">&#39;tuv&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;9&#39;</span><span class="p">:</span> <span class="s1">&#39;wxyz&#39;</span>
-        <span class="p">}</span>
-        <span class="n">combinations</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;&quot;</span><span class="p">]</span>
+        phone_map = {
+            '2': 'abc',
+            '3': 'def',
+            '4': 'ghi',
+            '5': 'jkl',
+            '6': 'mno',
+            '7': 'pqrs',
+            '8': 'tuv',
+            '9': 'wxyz'
+        }
+        combinations = [&quot;&quot;]
 
-        <span class="k">for</span> <span class="n">digit</span> <span class="ow">in</span> <span class="n">digits</span><span class="p">:</span>
-            <span class="n">new_combinations</span> <span class="o">=</span> 
-            <span class="k">for</span> <span class="n">combination</span> <span class="ow">in</span> <span class="n">combinations</span><span class="p">:</span>
-                <span class="k">for</span> <span class="n">letter</span> <span class="ow">in</span> <span class="n">phone_map</span><span class="p">[</span><span class="n">digit</span><span class="p">]:</span>
-                    <span class="n">new_combinations</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">combination</span> <span class="o">+</span> <span class="n">letter</span><span class="p">)</span>
-            <span class="n">combinations</span> <span class="o">=</span> <span class="n">new_combinations</span>
+        for digit in digits:
+            new_combinations = []
+            for combination in combinations:
+                for letter in phone_map[digit]:
+                    new_combinations.append(combination + letter)
+            combinations = new_combinations
 
-        <span class="k">return</span> <span class="n">combinations</span>
-</code></pre></div>
+        return combinations
+</code></pre>
+<pre><code class="language-JavaScript">function letterCombinations(digits) {
+  if (!digits) {
+    return [];
+  }
 
-<div class="codehilite"><pre><span></span><code><span class="kd">function</span><span class="w"> </span><span class="nx">letterCombinations</span><span class="p">(</span><span class="nx">digits</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nx">digits</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="p">;</span>
-<span class="w">  </span><span class="p">}</span>
+  const phoneMap = {
+    '2': 'abc',
+    '3': 'def',
+    '4': 'ghi',
+    '5': 'jkl',
+    '6': 'mno',
+    '7': 'pqrs',
+    '8': 'tuv',
+    '9': 'wxyz'
+  };
 
-<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">phoneMap</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="s1">&#39;2&#39;</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;abc&#39;</span><span class="p">,</span>
-<span class="w">    </span><span class="s1">&#39;3&#39;</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;def&#39;</span><span class="p">,</span>
-<span class="w">    </span><span class="s1">&#39;4&#39;</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;ghi&#39;</span><span class="p">,</span>
-<span class="w">    </span><span class="s1">&#39;5&#39;</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;jkl&#39;</span><span class="p">,</span>
-<span class="w">    </span><span class="s1">&#39;6&#39;</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;mno&#39;</span><span class="p">,</span>
-<span class="w">    </span><span class="s1">&#39;7&#39;</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;pqrs&#39;</span><span class="p">,</span>
-<span class="w">    </span><span class="s1">&#39;8&#39;</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;tuv&#39;</span><span class="p">,</span>
-<span class="w">    </span><span class="s1">&#39;9&#39;</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;wxyz&#39;</span>
-<span class="w">  </span><span class="p">};</span>
+  let combinations = [''];
 
-<span class="w">  </span><span class="kd">let</span><span class="w"> </span><span class="nx">combinations</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s1">&#39;&#39;</span><span class="p">];</span>
+  for (const digit of digits) {
+    const newCombinations = [];
+    for (const combination of combinations) {
+      for (const letter of phoneMap[digit]) {
+        newCombinations.push(combination + letter);
+      }
+    }
+    combinations = newCombinations;
+  }
 
-<span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kd">const</span><span class="w"> </span><span class="nx">digit</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="nx">digits</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">newCombinations</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">;</span>
-<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kd">const</span><span class="w"> </span><span class="nx">combination</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="nx">combinations</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kd">const</span><span class="w"> </span><span class="nx">letter</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="nx">phoneMap</span><span class="p">[</span><span class="nx">digit</span><span class="p">])</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="nx">newCombinations</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">combination</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nx">letter</span><span class="p">);</span>
-<span class="w">      </span><span class="p">}</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="w">    </span><span class="nx">combinations</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">newCombinations</span><span class="p">;</span>
-<span class="w">  </span><span class="p">}</span>
+  return combinations;
+}
+</code></pre>
+<pre><code class="language-cpp">class Solution {
+public:
+    std::vector&lt;std::string&gt; letterCombinations(std::string digits) {
+        if (digits.empty()) return {};
 
-<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="nx">combinations</span><span class="p">;</span>
-<span class="p">}</span>
-</code></pre></div>
+        std::string phone_map[] = {&quot;abc&quot;, &quot;def&quot;, &quot;ghi&quot;, &quot;jkl&quot;, &quot;mno&quot;, &quot;pqrs&quot;, &quot;tuv&quot;, &quot;wxyz&quot;};
+        std::vector&lt;std::string&gt; combinations = {&quot;&quot;};
 
-<div class="codehilite"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="w"> </span><span class="p">{</span>
-<span class="k">public</span><span class="o">:</span>
-<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span><span class="w"> </span><span class="n">letterCombinations</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">digits</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">digits</span><span class="p">.</span><span class="n">empty</span><span class="p">())</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="p">{};</span>
+        for (char digit : digits) {
+            std::vector&lt;std::string&gt; new_combinations;
+            for (std::string combination : combinations) {
+                for (char letter : phone_map[digit - '2']) {
+                    new_combinations.push_back(combination + letter);
+                }
+            }
+            combinations = new_combinations;
+        }
 
-<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">phone_map</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="s">&quot;abc&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;def&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;ghi&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;jkl&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;mno&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;pqrs&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;tuv&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;wxyz&quot;</span><span class="p">};</span>
-<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span><span class="w"> </span><span class="n">combinations</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="s">&quot;&quot;</span><span class="p">};</span>
+        return combinations;
+    }
+};
+</code></pre>
+<pre><code class="language-Go">func letterCombinations(digits string) []string {
+    if digits == &quot;&quot; {
+        return []string{}
+    }
 
-<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">char</span><span class="w"> </span><span class="n">digit</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">digits</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span><span class="w"> </span><span class="n">new_combinations</span><span class="p">;</span>
-<span class="w">            </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">combination</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">combinations</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">char</span><span class="w"> </span><span class="n">letter</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">phone_map</span><span class="p">[</span><span class="n">digit</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="sc">&#39;2&#39;</span><span class="p">])</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                    </span><span class="n">new_combinations</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">combination</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">letter</span><span class="p">);</span>
-<span class="w">                </span><span class="p">}</span>
-<span class="w">            </span><span class="p">}</span>
-<span class="w">            </span><span class="n">combinations</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">new_combinations</span><span class="p">;</span>
-<span class="w">        </span><span class="p">}</span>
+    phoneMap := []string{&quot;abc&quot;, &quot;def&quot;, &quot;ghi&quot;, &quot;jkl&quot;, &quot;mno&quot;, &quot;pqrs&quot;, &quot;tuv&quot;, &quot;wxyz&quot;}
+    combinations := []string{&quot;&quot;}
 
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">combinations</span><span class="p">;</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">};</span>
-</code></pre></div>
+    for _, digit := range digits {
+        newCombinations := []string{}
+        for _, combination := range combinations {
+            for _, letter := range phoneMap[digit-'2'] {
+                newCombinations = append(newCombinations, combination+string(letter))
+            }
+        }
+        combinations = newCombinations
+    }
 
-<div class="codehilite"><pre><span></span><code><span class="kd">func</span><span class="w"> </span><span class="nx">letterCombinations</span><span class="p">(</span><span class="nx">digits</span><span class="w"> </span><span class="kt">string</span><span class="p">)</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="nx">digits</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">&quot;&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="kt">string</span><span class="p">{}</span>
-<span class="w">    </span><span class="p">}</span>
-
-<span class="w">    </span><span class="nx">phoneMap</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="kt">string</span><span class="p">{</span><span class="s">&quot;abc&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;def&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;ghi&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;jkl&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;mno&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;pqrs&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;tuv&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;wxyz&quot;</span><span class="p">}</span>
-<span class="w">    </span><span class="nx">combinations</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="kt">string</span><span class="p">{</span><span class="s">&quot;&quot;</span><span class="p">}</span>
-
-<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="nx">_</span><span class="p">,</span><span class="w"> </span><span class="nx">digit</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="k">range</span><span class="w"> </span><span class="nx">digits</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="nx">newCombinations</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="kt">string</span><span class="p">{}</span>
-<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="nx">_</span><span class="p">,</span><span class="w"> </span><span class="nx">combination</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="k">range</span><span class="w"> </span><span class="nx">combinations</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="k">for</span><span class="w"> </span><span class="nx">_</span><span class="p">,</span><span class="w"> </span><span class="nx">letter</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="k">range</span><span class="w"> </span><span class="nx">phoneMap</span><span class="p">[</span><span class="nx">digit</span><span class="o">-</span><span class="sc">&#39;2&#39;</span><span class="p">]</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="nx">newCombinations</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">append</span><span class="p">(</span><span class="nx">newCombinations</span><span class="p">,</span><span class="w"> </span><span class="nx">combination</span><span class="o">+</span><span class="nb">string</span><span class="p">(</span><span class="nx">letter</span><span class="p">))</span>
-<span class="w">            </span><span class="p">}</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">        </span><span class="nx">combinations</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">newCombinations</span>
-<span class="w">    </span><span class="p">}</span>
-
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">combinations</span>
-<span class="p">}</span>
-</code></pre></div>
-
-<p>If you find the solution understandable and helpful, don't hesitate to give it an upvote. Engaging with the code across different languages might just lead you to discover new techniques and preferences! Happy coding!</p></div>
-
-
-<div class='python-solution'><h2>Backtracking Python problems+ solutions- interview prep -- Votes: 703</h2><p>This snippet is helpful while preparing for interviews as it groups together similar python Backtracking problems and solution. Feel free to let me know if you have found similar backtracking problems or have any suggestions, will add it to the post.</p>
+    return combinations
+}
+</code></pre>
+<p>If you find the solution understandable and helpful, don't hesitate to give it an upvote. Engaging with the code across different languages might just lead you to discover new techniques and preferences! Happy coding! </p></div><div class='python-solution'><h4>Backtracking Python problems+ solutions- interview prep [Votes: 703]</h4><p>This snippet is helpful while preparing for interviews as it groups together similar python Backtracking problems and solution.  Feel free to let me know if you have found similar backtracking problems or have any suggestions, will add it to the post.</p>
 <p><strong>78. Subsets:</strong> Runtime: 16 ms, faster than 96.05%</p>
-<div class="codehilite"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="n">Solution</span><span class="p">(</span><span class="k">object</span><span class="p">)</span><span class="err">:</span>
-<span class="w">    </span><span class="n">def</span><span class="w"> </span><span class="n">subsets</span><span class="p">(</span><span class="n">self</span><span class="p">,</span><span class="w"> </span><span class="n">nums</span><span class="p">)</span><span class="err">:</span>
-<span class="w">        </span><span class="ss">&quot;&quot;&quot;</span>
-<span class="ss">        :type nums: List[int]</span>
-<span class="ss">        :rtype: List[List[int]]</span>
-<span class="ss">        &quot;&quot;&quot;</span>
-<span class="w">        </span><span class="n">res</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>
-<span class="w">        </span><span class="n">self</span><span class="p">.</span><span class="n">dfs</span><span class="p">(</span><span class="n">nums</span><span class="p">,</span><span class="w"> </span><span class="p">,</span><span class="w"> </span><span class="n">res</span><span class="p">)</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">res</span>
+<pre><code>class Solution(object):
+    def subsets(self, nums):
+        &quot;&quot;&quot;
+        :type nums: List[int]
+        :rtype: List[List[int]]
+        &quot;&quot;&quot;
+        res = []
+        self.dfs(nums, [], res)
+        return res
 
-<span class="w">    </span><span class="n">def</span><span class="w"> </span><span class="n">dfs</span><span class="p">(</span><span class="n">self</span><span class="p">,</span><span class="w"> </span><span class="n">nums</span><span class="p">,</span><span class="w"> </span><span class="k">path</span><span class="p">,</span><span class="w"> </span><span class="n">res</span><span class="p">)</span><span class="err">:</span>
-<span class="w">        </span><span class="n">res</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="k">path</span><span class="p">)</span>
-<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="k">range</span><span class="p">(</span><span class="nf">len</span><span class="p">(</span><span class="n">nums</span><span class="p">))</span><span class="err">:</span>
-<span class="w">            </span><span class="n">self</span><span class="p">.</span><span class="n">dfs</span><span class="p">(</span><span class="n">nums</span><span class="o">[</span><span class="n">i+1:</span><span class="o">]</span><span class="p">,</span><span class="w"> </span><span class="k">path</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="o">[</span><span class="n">nums[i</span><span class="o">]</span><span class="err">]</span><span class="p">,</span><span class="w"> </span><span class="n">res</span><span class="p">)</span><span class="w">     </span>
-</code></pre></div>
+    def dfs(self, nums, path, res):
+        res.append(path)
+        for i in range(len(nums)):
+            self.dfs(nums[i+1:], path + [nums[i]], res)     
+</code></pre>
+<p><strong>90. Subsets II:</strong>  Runtime: 20 ms, faster than 96.23% </p>
+<pre><code>class Solution(object):
+    def subsetsWithDup(self, nums):
+        &quot;&quot;&quot;
+        :type nums: List[int]
+        :rtype: List[List[int]]
+        &quot;&quot;&quot;
+        res = []
+        nums.sort()
+        self.dfs(nums, [], res)
+        return res
 
-<p><strong>90. Subsets II:</strong> Runtime: 20 ms, faster than 96.23%</p>
-<div class="codehilite"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="n">Solution</span><span class="p">(</span><span class="k">object</span><span class="p">)</span><span class="err">:</span>
-<span class="w">    </span><span class="n">def</span><span class="w"> </span><span class="n">subsetsWithDup</span><span class="p">(</span><span class="n">self</span><span class="p">,</span><span class="w"> </span><span class="n">nums</span><span class="p">)</span><span class="err">:</span>
-<span class="w">        </span><span class="ss">&quot;&quot;&quot;</span>
-<span class="ss">        :type nums: List[int]</span>
-<span class="ss">        :rtype: List[List[int]]</span>
-<span class="ss">        &quot;&quot;&quot;</span>
-<span class="w">        </span><span class="n">res</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>
-<span class="w">        </span><span class="n">nums</span><span class="p">.</span><span class="n">sort</span><span class="p">()</span>
-<span class="w">        </span><span class="n">self</span><span class="p">.</span><span class="n">dfs</span><span class="p">(</span><span class="n">nums</span><span class="p">,</span><span class="w"> </span><span class="p">,</span><span class="w"> </span><span class="n">res</span><span class="p">)</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">res</span>
-
-<span class="w">    </span><span class="n">def</span><span class="w"> </span><span class="n">dfs</span><span class="p">(</span><span class="n">self</span><span class="p">,</span><span class="w"> </span><span class="n">nums</span><span class="p">,</span><span class="w"> </span><span class="k">path</span><span class="p">,</span><span class="w"> </span><span class="n">res</span><span class="p">)</span><span class="err">:</span>
-<span class="w">        </span><span class="n">res</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="k">path</span><span class="p">)</span>
-<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="k">range</span><span class="p">(</span><span class="nf">len</span><span class="p">(</span><span class="n">nums</span><span class="p">))</span><span class="err">:</span>
-<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="n">nums</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">nums</span><span class="o">[</span><span class="n">i-1</span><span class="o">]</span><span class="err">:</span>
-<span class="w">                </span><span class="k">continue</span>
-<span class="w">            </span><span class="n">self</span><span class="p">.</span><span class="n">dfs</span><span class="p">(</span><span class="n">nums</span><span class="o">[</span><span class="n">i+1:</span><span class="o">]</span><span class="p">,</span><span class="w"> </span><span class="k">path</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="o">[</span><span class="n">nums[i</span><span class="o">]</span><span class="err">]</span><span class="p">,</span><span class="w"> </span><span class="n">res</span><span class="p">)</span>
-</code></pre></div>
-
+    def dfs(self, nums, path, res):
+        res.append(path)
+        for i in range(len(nums)):
+            if i &gt; 0 and nums[i] == nums[i-1]:
+                continue
+            self.dfs(nums[i+1:], path + [nums[i]], res)
+</code></pre>
 <p><strong>77. Combinations</strong>: Runtime: 676 ms, faster than 42.96%</p>
-<div class="codehilite"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="n">Solution</span><span class="p">(</span><span class="k">object</span><span class="p">)</span><span class="err">:</span>
-<span class="w">    </span><span class="n">def</span><span class="w"> </span><span class="n">combine</span><span class="p">(</span><span class="n">self</span><span class="p">,</span><span class="w"> </span><span class="n">n</span><span class="p">,</span><span class="w"> </span><span class="n">k</span><span class="p">)</span><span class="err">:</span>
-<span class="w">        </span><span class="ss">&quot;&quot;&quot;</span>
-<span class="ss">        :type n: int</span>
-<span class="ss">        :type k: int</span>
-<span class="ss">        :rtype: List[List[int]]</span>
-<span class="ss">        &quot;&quot;&quot;</span>
-<span class="w">        </span><span class="n">res</span><span class="o">=</span>
-<span class="w">        </span><span class="n">self</span><span class="p">.</span><span class="n">dfs</span><span class="p">(</span><span class="k">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">),</span><span class="w"> </span><span class="n">k</span><span class="p">,</span><span class="w"> </span><span class="p">,</span><span class="w"> </span><span class="n">res</span><span class="p">)</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">res</span>
+<pre><code>class Solution(object):
+    def combine(self, n, k):
+        &quot;&quot;&quot;
+        :type n: int
+        :type k: int
+        :rtype: List[List[int]]
+        &quot;&quot;&quot;
+        res=[]
+        self.dfs(range(1, n+1), k, [], res)
+        return res
 
-<span class="w">    </span><span class="n">def</span><span class="w"> </span><span class="n">dfs</span><span class="p">(</span><span class="n">self</span><span class="p">,</span><span class="w"> </span><span class="n">nums</span><span class="p">,</span><span class="w"> </span><span class="n">k</span><span class="p">,</span><span class="w"> </span><span class="k">path</span><span class="p">,</span><span class="w"> </span><span class="n">res</span><span class="p">)</span><span class="err">:</span>
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="nf">len</span><span class="p">(</span><span class="k">path</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nl">k</span><span class="p">:</span>
-<span class="w">            </span><span class="n">res</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="k">path</span><span class="p">)</span>
-<span class="w">            </span><span class="k">return</span>
-<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="k">range</span><span class="p">(</span><span class="nf">len</span><span class="p">(</span><span class="n">nums</span><span class="p">))</span><span class="err">:</span>
-<span class="w">            </span><span class="n">self</span><span class="p">.</span><span class="n">dfs</span><span class="p">(</span><span class="n">nums</span><span class="o">[</span><span class="n">i+1:</span><span class="o">]</span><span class="p">,</span><span class="w"> </span><span class="n">k</span><span class="p">,</span><span class="w"> </span><span class="k">path</span><span class="o">+</span><span class="w"> </span><span class="o">[</span><span class="n">nums[i</span><span class="o">]</span><span class="err">]</span><span class="p">,</span><span class="w"> </span><span class="n">res</span><span class="p">)</span>
-</code></pre></div>
-
+    def dfs(self, nums, k, path, res):
+        if len(path) == k:
+            res.append(path)
+            return
+        for i in range(len(nums)):
+            self.dfs(nums[i+1:], k, path+ [nums[i]], res)
+</code></pre>
 <p><strong>39. Combination Sum</strong>: Runtime: 124 ms, faster than 30.77%</p>
-<div class="codehilite"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="n">Solution</span><span class="p">(</span><span class="k">object</span><span class="p">)</span><span class="err">:</span>
-<span class="w">    </span><span class="n">def</span><span class="w"> </span><span class="n">combinationSum</span><span class="p">(</span><span class="n">self</span><span class="p">,</span><span class="w"> </span><span class="n">candidates</span><span class="p">,</span><span class="w"> </span><span class="n">target</span><span class="p">)</span><span class="err">:</span>
-<span class="w">        </span><span class="ss">&quot;&quot;&quot;</span>
-<span class="ss">        :type candidates: List[int]</span>
-<span class="ss">        :type target: int</span>
-<span class="ss">        :rtype: List[List[int]]</span>
-<span class="ss">        &quot;&quot;&quot;</span>
-<span class="w">        </span><span class="n">res</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>
-<span class="w">        </span><span class="n">candidates</span><span class="p">.</span><span class="n">sort</span><span class="p">()</span>
-<span class="w">        </span><span class="n">self</span><span class="p">.</span><span class="n">dfs</span><span class="p">(</span><span class="n">candidates</span><span class="p">,</span><span class="w"> </span><span class="n">target</span><span class="p">,</span><span class="w"> </span><span class="p">,</span><span class="w"> </span><span class="n">res</span><span class="p">)</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">res</span>
+<pre><code>class Solution(object):
+    def combinationSum(self, candidates, target):
+        &quot;&quot;&quot;
+        :type candidates: List[int]
+        :type target: int
+        :rtype: List[List[int]]
+        &quot;&quot;&quot;
+        res = []
+        candidates.sort()
+        self.dfs(candidates, target, [], res)
+        return res
 
-<span class="w">    </span><span class="n">def</span><span class="w"> </span><span class="n">dfs</span><span class="p">(</span><span class="n">self</span><span class="p">,</span><span class="w"> </span><span class="n">candidates</span><span class="p">,</span><span class="w"> </span><span class="n">target</span><span class="p">,</span><span class="w"> </span><span class="k">path</span><span class="p">,</span><span class="w"> </span><span class="n">res</span><span class="p">)</span><span class="err">:</span>
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="n">target</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">0</span><span class="err">:</span>
-<span class="w">            </span><span class="k">return</span><span class="w">   </span><span class="n">#backtracking</span>
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="n">target</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="err">:</span>
-<span class="w">            </span><span class="n">res</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="k">path</span><span class="p">)</span>
-<span class="w">            </span><span class="k">return</span>
-<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="k">range</span><span class="p">(</span><span class="nf">len</span><span class="p">(</span><span class="n">candidates</span><span class="p">))</span><span class="err">:</span>
-<span class="w">            </span><span class="n">self</span><span class="p">.</span><span class="n">dfs</span><span class="p">(</span><span class="n">candidates</span><span class="o">[</span><span class="n">i:</span><span class="o">]</span><span class="p">,</span><span class="w"> </span><span class="n">target</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">candidates</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="p">,</span><span class="w"> </span><span class="k">path</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="o">[</span><span class="n">candidates[i</span><span class="o">]</span><span class="err">]</span><span class="p">,</span><span class="w"> </span><span class="n">res</span><span class="p">)</span><span class="w">  </span>
-</code></pre></div>
-
+    def dfs(self, candidates, target, path, res):
+        if target &lt; 0:
+            return   #backtracking
+        if target == 0:
+            res.append(path)
+            return
+        for i in range(len(candidates)):
+            self.dfs(candidates[i:], target - candidates[i], path + [candidates[i]], res)  
+</code></pre>
 <p><strong>40. Combination Sum II</strong>: Runtime: 36 ms, faster than 91.77%</p>
-<div class="codehilite"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="n">Solution</span><span class="p">(</span><span class="k">object</span><span class="p">)</span><span class="err">:</span>
-<span class="w">    </span><span class="n">def</span><span class="w"> </span><span class="n">combinationSum2</span><span class="p">(</span><span class="n">self</span><span class="p">,</span><span class="w"> </span><span class="n">candidates</span><span class="p">,</span><span class="w"> </span><span class="n">target</span><span class="p">)</span><span class="err">:</span>
-<span class="w">        </span><span class="ss">&quot;&quot;&quot;</span>
-<span class="ss">        :type candidates: List[int]</span>
-<span class="ss">        :type target: int</span>
-<span class="ss">        :rtype: List[List[int]]</span>
-<span class="ss">        &quot;&quot;&quot;</span>
-<span class="w">        </span><span class="n">res</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>
-<span class="w">        </span><span class="n">candidates</span><span class="p">.</span><span class="n">sort</span><span class="p">()</span>
-<span class="w">        </span><span class="n">self</span><span class="p">.</span><span class="n">dfs</span><span class="p">(</span><span class="n">candidates</span><span class="p">,</span><span class="w"> </span><span class="n">target</span><span class="p">,</span><span class="w"> </span><span class="p">,</span><span class="w"> </span><span class="n">res</span><span class="p">)</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">res</span>
+<pre><code>class Solution(object):
+    def combinationSum2(self, candidates, target):
+        &quot;&quot;&quot;
+        :type candidates: List[int]
+        :type target: int
+        :rtype: List[List[int]]
+        &quot;&quot;&quot;
+        res = []
+        candidates.sort()
+        self.dfs(candidates, target, [], res)
+        return res
 
-<span class="w">    </span><span class="n">def</span><span class="w"> </span><span class="n">dfs</span><span class="p">(</span><span class="n">self</span><span class="p">,</span><span class="w"> </span><span class="n">candidates</span><span class="p">,</span><span class="w"> </span><span class="n">target</span><span class="p">,</span><span class="w"> </span><span class="k">path</span><span class="p">,</span><span class="w"> </span><span class="n">res</span><span class="p">)</span><span class="err">:</span>
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="n">target</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">0</span><span class="err">:</span>
-<span class="w">            </span><span class="k">return</span>
+    def dfs(self, candidates, target, path, res):
+        if target &lt; 0:
+            return
 
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="n">target</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="err">:</span>
-<span class="w">            </span><span class="n">res</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="k">path</span><span class="p">)</span>
-<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="k">range</span><span class="p">(</span><span class="nf">len</span><span class="p">(</span><span class="n">candidates</span><span class="p">))</span><span class="err">:</span>
-<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="n">candidates</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">candidates</span><span class="o">[</span><span class="n">i-1</span><span class="o">]</span><span class="err">:</span>
-<span class="w">                </span><span class="k">continue</span>
+        if target == 0:
+            res.append(path)
+        for i in range(len(candidates)):
+            if i &gt; 0 and candidates[i] == candidates[i-1]:
+                continue
 
-<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="n">candidates</span><span class="o">[</span><span class="n">i</span><span class="o">]&gt;</span><span class="w"> </span><span class="nl">target</span><span class="p">:</span>
-<span class="w">                </span><span class="k">break</span>
+            if candidates[i]&gt; target:
+                break
 
-<span class="w">            </span><span class="n">self</span><span class="p">.</span><span class="n">dfs</span><span class="p">(</span><span class="n">candidates</span><span class="o">[</span><span class="n">i+1:</span><span class="o">]</span><span class="p">,</span><span class="w"> </span><span class="n">target</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">candidates</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="p">,</span><span class="w"> </span><span class="k">path</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="o">[</span><span class="n">candidates[i</span><span class="o">]</span><span class="err">]</span><span class="p">,</span><span class="w"> </span><span class="n">res</span><span class="p">)</span>
-</code></pre></div>
-
+            self.dfs(candidates[i+1:], target - candidates[i], path + [candidates[i]], res)
+</code></pre>
 <p><strong>46. Permutations</strong>: Runtime: 28 ms, faster than 79.64%</p>
-<div class="codehilite"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="n">Solution</span><span class="p">(</span><span class="k">object</span><span class="p">)</span><span class="err">:</span>
-<span class="w">    </span><span class="n">def</span><span class="w"> </span><span class="n">permute</span><span class="p">(</span><span class="n">self</span><span class="p">,</span><span class="w"> </span><span class="n">nums</span><span class="p">)</span><span class="err">:</span>
-<span class="w">        </span><span class="ss">&quot;&quot;&quot;</span>
-<span class="ss">        :type nums: List[int]</span>
-<span class="ss">        :rtype: List[List[int]]</span>
-<span class="ss">        &quot;&quot;&quot;</span>
-<span class="w">        </span><span class="n">res</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>
-<span class="w">        </span><span class="n">self</span><span class="p">.</span><span class="n">dfs</span><span class="p">(</span><span class="n">nums</span><span class="p">,</span><span class="w"> </span><span class="p">,</span><span class="w"> </span><span class="n">res</span><span class="p">)</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">res</span>
+<pre><code>class Solution(object):
+    def permute(self, nums):
+        &quot;&quot;&quot;
+        :type nums: List[int]
+        :rtype: List[List[int]]
+        &quot;&quot;&quot;
+        res = []
+        self.dfs(nums, [], res)
+        return res
 
-<span class="w">    </span><span class="n">def</span><span class="w"> </span><span class="n">dfs</span><span class="p">(</span><span class="n">self</span><span class="p">,</span><span class="w"> </span><span class="n">nums</span><span class="p">,</span><span class="w"> </span><span class="k">path</span><span class="p">,</span><span class="w"> </span><span class="n">res</span><span class="p">)</span><span class="err">:</span>
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="nf">len</span><span class="p">(</span><span class="n">nums</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="err">:</span>
-<span class="w">            </span><span class="n">res</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="k">path</span><span class="p">)</span>
-<span class="w">            </span><span class="k">return</span>
-<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="k">range</span><span class="p">(</span><span class="nf">len</span><span class="p">(</span><span class="n">nums</span><span class="p">))</span><span class="err">:</span>
-<span class="w">            </span><span class="n">self</span><span class="p">.</span><span class="n">dfs</span><span class="p">(</span><span class="n">nums</span><span class="o">[</span><span class="n">:i</span><span class="o">]</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">nums</span><span class="o">[</span><span class="n">i+1:</span><span class="o">]</span><span class="p">,</span><span class="w"> </span><span class="k">path</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="o">[</span><span class="n">nums[i</span><span class="o">]</span><span class="err">]</span><span class="p">,</span><span class="w"> </span><span class="n">res</span><span class="p">)</span><span class="w">   </span>
-</code></pre></div>
-
+    def dfs(self, nums, path, res):
+        if len(nums) == 0:
+            res.append(path)
+            return
+        for i in range(len(nums)):
+            self.dfs(nums[:i] + nums[i+1:], path + [nums[i]], res)   
+</code></pre>
 <p><strong>47. Permutations II</strong>: Runtime: 40 ms, faster than 92.96%</p>
-<div class="codehilite"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="n">Solution</span><span class="p">(</span><span class="k">object</span><span class="p">)</span><span class="err">:</span>
-<span class="w">    </span><span class="n">def</span><span class="w"> </span><span class="n">permuteUnique</span><span class="p">(</span><span class="n">self</span><span class="p">,</span><span class="w"> </span><span class="n">nums</span><span class="p">)</span><span class="err">:</span>
-<span class="w">        </span><span class="ss">&quot;&quot;&quot;</span>
-<span class="ss">        :type nums: List[int]</span>
-<span class="ss">        :rtype: List[List[int]]</span>
-<span class="ss">        &quot;&quot;&quot;</span>
-<span class="w">        </span><span class="n">res</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>
-<span class="w">        </span><span class="n">nums</span><span class="p">.</span><span class="n">sort</span><span class="p">()</span>
-<span class="w">        </span><span class="n">self</span><span class="p">.</span><span class="n">dfs</span><span class="p">(</span><span class="n">nums</span><span class="p">,</span><span class="w"> </span><span class="p">,</span><span class="w"> </span><span class="n">res</span><span class="p">)</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">res</span>
+<pre><code>class Solution(object):
+    def permuteUnique(self, nums):
+        &quot;&quot;&quot;
+        :type nums: List[int]
+        :rtype: List[List[int]]
+        &quot;&quot;&quot;
+        res = []
+        nums.sort()
+        self.dfs(nums, [], res)
+        return res
 
-<span class="w">    </span><span class="n">def</span><span class="w"> </span><span class="n">dfs</span><span class="p">(</span><span class="n">self</span><span class="p">,</span><span class="w"> </span><span class="n">nums</span><span class="p">,</span><span class="w"> </span><span class="k">path</span><span class="p">,</span><span class="w"> </span><span class="n">res</span><span class="p">)</span><span class="err">:</span>
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="nf">len</span><span class="p">(</span><span class="n">nums</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="err">:</span>
-<span class="w">            </span><span class="n">res</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="k">path</span><span class="p">)</span>
-<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="k">range</span><span class="p">(</span><span class="nf">len</span><span class="p">(</span><span class="n">nums</span><span class="p">))</span><span class="err">:</span>
-<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="n">nums</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">nums</span><span class="o">[</span><span class="n">i-1</span><span class="o">]</span><span class="err">:</span>
-<span class="w">                </span><span class="k">continue</span>
-<span class="w">            </span><span class="n">self</span><span class="p">.</span><span class="n">dfs</span><span class="p">(</span><span class="n">nums</span><span class="o">[</span><span class="n">:i</span><span class="o">]</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">nums</span><span class="o">[</span><span class="n">i+1:</span><span class="o">]</span><span class="p">,</span><span class="w"> </span><span class="k">path</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="o">[</span><span class="n">nums[i</span><span class="o">]</span><span class="err">]</span><span class="p">,</span><span class="w"> </span><span class="n">res</span><span class="p">)</span>
-</code></pre></div>
-
+    def dfs(self, nums, path, res):
+        if len(nums) == 0:
+            res.append(path)
+        for i in range(len(nums)):
+            if i &gt; 0 and nums[i] == nums[i-1]:
+                continue
+            self.dfs(nums[:i] + nums[i+1:], path + [nums[i]], res)
+</code></pre>
 <p><strong>17. Letter combination of a Phone Number:</strong>:Runtime: 24 ms, faster than 43.40%</p>
-<div class="codehilite"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="n">Solution</span><span class="p">(</span><span class="k">object</span><span class="p">)</span><span class="err">:</span>
-<span class="w">    </span><span class="n">def</span><span class="w"> </span><span class="n">letterCombinations</span><span class="p">(</span><span class="n">self</span><span class="p">,</span><span class="w"> </span><span class="n">digits</span><span class="p">)</span><span class="err">:</span>
-<span class="w">        </span><span class="ss">&quot;&quot;&quot;</span>
-<span class="ss">        :type digits: str</span>
-<span class="ss">        :rtype: List[str]</span>
-<span class="ss">        &quot;&quot;&quot;</span>
-<span class="w">        </span><span class="n">dic</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">{</span><span class="w"> </span><span class="ss">&quot;2&quot;</span><span class="err">:</span><span class="w"> </span><span class="ss">&quot;abc&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">&quot;3&quot;</span><span class="err">:</span><span class="w"> </span><span class="ss">&quot;def&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">&quot;4&quot;</span><span class="err">:</span><span class="ss">&quot;ghi&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">&quot;5&quot;</span><span class="err">:</span><span class="ss">&quot;jkl&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">&quot;6&quot;</span><span class="err">:</span><span class="ss">&quot;mno&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">&quot;7&quot;</span><span class="err">:</span><span class="ss">&quot;pqrs&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">&quot;8&quot;</span><span class="err">:</span><span class="ss">&quot;tuv&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">&quot;9&quot;</span><span class="err">:</span><span class="ss">&quot;wxyz&quot;</span><span class="err">}</span>
+<pre><code>class Solution(object):
+    def letterCombinations(self, digits):
+        &quot;&quot;&quot;
+        :type digits: str
+        :rtype: List[str]
+        &quot;&quot;&quot;
+        dic = { &quot;2&quot;: &quot;abc&quot;, &quot;3&quot;: &quot;def&quot;, &quot;4&quot;:&quot;ghi&quot;, &quot;5&quot;:&quot;jkl&quot;, &quot;6&quot;:&quot;mno&quot;, &quot;7&quot;:&quot;pqrs&quot;, &quot;8&quot;:&quot;tuv&quot;, &quot;9&quot;:&quot;wxyz&quot;}
 
-<span class="w">        </span><span class="n">res</span><span class="o">=</span>
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="nf">len</span><span class="p">(</span><span class="n">digits</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="mi">0</span><span class="err">:</span>
-<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="n">res</span>
+        res=[]
+        if len(digits) ==0:
+            return res
 
-<span class="w">        </span><span class="n">self</span><span class="p">.</span><span class="n">dfs</span><span class="p">(</span><span class="n">digits</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">dic</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">res</span><span class="p">)</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">res</span>
+        self.dfs(digits, 0, dic, '', res)
+        return res
 
-<span class="w">    </span><span class="n">def</span><span class="w"> </span><span class="n">dfs</span><span class="p">(</span><span class="n">self</span><span class="p">,</span><span class="w"> </span><span class="n">nums</span><span class="p">,</span><span class="w"> </span><span class="k">index</span><span class="p">,</span><span class="w"> </span><span class="n">dic</span><span class="p">,</span><span class="w"> </span><span class="k">path</span><span class="p">,</span><span class="w"> </span><span class="n">res</span><span class="p">)</span><span class="err">:</span>
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="k">index</span><span class="w"> </span><span class="o">&gt;=</span><span class="nf">len</span><span class="p">(</span><span class="n">nums</span><span class="p">)</span><span class="err">:</span>
-<span class="w">            </span><span class="n">res</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="k">path</span><span class="p">)</span>
-<span class="w">            </span><span class="k">return</span>
-<span class="w">        </span><span class="n">string1</span><span class="w"> </span><span class="o">=</span><span class="n">dic</span><span class="o">[</span><span class="n">nums[index</span><span class="o">]</span><span class="err">]</span>
-<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="nl">string1</span><span class="p">:</span>
-<span class="w">            </span><span class="n">self</span><span class="p">.</span><span class="n">dfs</span><span class="p">(</span><span class="n">nums</span><span class="p">,</span><span class="w"> </span><span class="k">index</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">dic</span><span class="p">,</span><span class="w"> </span><span class="k">path</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">res</span><span class="p">)</span>
-</code></pre></div>
-
-<p>\==========================================================<br />
-I hope that you've found the solutions useful. Please do UPVOTE, it only motivates me to write more such posts. Thanks!</p></div><p style="page-break-before: always" ></p>
+    def dfs(self, nums, index, dic, path, res):
+        if index &gt;=len(nums):
+            res.append(path)
+            return
+        string1 =dic[nums[index]]
+        for i in string1:
+            self.dfs(nums, index+1, dic, path + i, res)
+</code></pre>
+<p>==========================================================
+I hope that you've found the solutions useful. Please do UPVOTE, it only motivates me to write more such posts. Thanks!</p></div>

@@ -1,7 +1,7 @@
-<div class='cpp-solution'><h2>Recursive Approach with Easy Steps -- Votes: 832</h2><h3><strong><em>Please Upvote my solution, if you find it helpful ;)</em></strong></h3>
-<h2>Intuition</h2>
+<div class='cpp-solution'><h4>Recursive Approach with Easy Steps [Votes: 832]</h4><h5><strong><em>Please Upvote my solution, if you find it helpful ;)</em></strong></h5>
+<h4>Intuition</h4>
 <p>The intuition behind the solution is to recursively check if two binary trees are identical. If both trees are empty (null), they are considered identical. If only one tree is empty or the values of the current nodes are different, the trees are not identical. Otherwise, we recursively check if the left and right subtrees of both trees are identical.</p>
-<h2>Approach</h2>
+<h4>Approach</h4>
 <ol>
 <li>Check the base case: if both trees are null, return true.</li>
 <li>Check if only one tree is null or the values of the current nodes are different, return false.</li>
@@ -9,154 +9,62 @@
 <li>Recursively check if the right subtrees of both trees are identical.</li>
 <li>Return the logical AND of the results from steps 3 and 4.</li>
 </ol>
-<p>Complexity</p>
+<p>Complexity
+- Time complexity:
+The time complexity of the solution is $$O(min(N, M))$$, where N and M are the number of nodes in the two trees, respectively. This is because we need to visit each node once in order to compare their values. In the worst case, where both trees have the same number of nodes, the time complexity would be O(N).</p>
 <ul>
-<li>
-<p>Time complexity:<br />
-  The time complexity of the solution is $$O(min(N, M))$$, where N and M are the number of nodes in the two trees, respectively. This is because we need to visit each node once in order to compare their values. In the worst case, where both trees have the same number of nodes, the time complexity would be O(N).</p>
-</li>
-<li>
-<p>Space complexity:<br />
-  The space complexity of the solution is$$O(min(H1, H2))$$, where H1 and H2 are the heights of the two trees, respectively. This is because the space used by the recursive stack is determined by the height of the smaller tree. In the worst case, where one tree is significantly larger than the other, the space complexity would be closer to O(N) or O(M), depending on which tree is larger.</p>
-</li>
+<li>Space complexity:
+The space complexity of the solution is$$O(min(H1, H2))$$, where H1 and H2 are the heights of the two trees, respectively. This is because the space used by the recursive stack is determined by the height of the smaller tree. In the worst case, where one tree is significantly larger than the other, the space complexity would be closer to O(N) or O(M), depending on which tree is larger.</li>
 </ul>
-<h2>Code</h2>
-<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">java</span><span class="w"> </span>
-<span class="kd">class</span> <span class="nc">Solution</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">boolean</span><span class="w"> </span><span class="nf">isSameTree</span><span class="p">(</span><span class="n">TreeNode</span><span class="w"> </span><span class="n">p</span><span class="p">,</span><span class="w"> </span><span class="n">TreeNode</span><span class="w"> </span><span class="n">q</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="c1">// Base case: if both trees are null, they are identical</span>
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">p</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kc">null</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">q</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="kc">true</span><span class="p">;</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">        </span><span class="c1">// If only one tree is null or the values are different, they are not identical</span>
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">p</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kc">null</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">q</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kc">null</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">p</span><span class="p">.</span><span class="na">val</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">q</span><span class="p">.</span><span class="na">val</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="kc">false</span><span class="p">;</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">        </span><span class="c1">// Recursively check if the left and right subtrees are identical</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">isSameTree</span><span class="p">(</span><span class="n">p</span><span class="p">.</span><span class="na">left</span><span class="p">,</span><span class="w"> </span><span class="n">q</span><span class="p">.</span><span class="na">left</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">isSameTree</span><span class="p">(</span><span class="n">p</span><span class="p">.</span><span class="na">right</span><span class="p">,</span><span class="w"> </span><span class="n">q</span><span class="p">.</span><span class="na">right</span><span class="p">);</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
+<h4>Code</h4>
+<pre><code class="language-java">class Solution {
+    public boolean isSameTree(TreeNode p, TreeNode q) {
+        // Base case: if both trees are null, they are identical
+        if (p == null &amp;&amp; q == null) {
+            return true;
+        }
+        // If only one tree is null or the values are different, they are not identical
+        if (p == null || q == null || p.val != q.val) {
+            return false;
+        }
+        // Recursively check if the left and right subtrees are identical
+        return isSameTree(p.left, q.left) &amp;&amp; isSameTree(p.right, q.right);
+    }
+}
 
-<div class="codehilite"><pre><span></span><code><span class="n">Language</span><span class="p">:</span> <span class="n">python</span> 
-<span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="p">:</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">isSameTree</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">q</span><span class="p">):</span>
-        <span class="c1"># If both nodes are None, they are identical</span>
-        <span class="k">if</span> <span class="n">p</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">q</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">return</span> <span class="kc">True</span>
-        <span class="c1"># If only one of the nodes is None, they are not identical</span>
-        <span class="k">if</span> <span class="n">p</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">q</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">return</span> <span class="kc">False</span>
-        <span class="c1"># Check if values are equal and recursively check left and right subtrees</span>
-        <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">val</span> <span class="o">==</span> <span class="n">q</span><span class="o">.</span><span class="n">val</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">isSameTree</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">left</span><span class="p">,</span> <span class="n">q</span><span class="o">.</span><span class="n">left</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">isSameTree</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">right</span><span class="p">,</span> <span class="n">q</span><span class="o">.</span><span class="n">right</span><span class="p">)</span>
-        <span class="c1"># Values are not equal, they are not identical</span>
-        <span class="k">return</span> <span class="kc">False</span>
-</code></pre></div>
-
-<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">C</span><span class="o">++</span><span class="w"> </span>
-<span class="n">class</span><span class="w"> </span><span class="n">Solution</span><span class="w"> </span><span class="p">{</span>
-<span class="n">public</span><span class="o">:</span>
-<span class="w">    </span><span class="kt">bool</span><span class="w"> </span><span class="n">isSameTree</span><span class="p">(</span><span class="n">TreeNode</span><span class="o">*</span><span class="w"> </span><span class="n">p</span><span class="p">,</span><span class="w"> </span><span class="n">TreeNode</span><span class="o">*</span><span class="w"> </span><span class="n">q</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="c1">// If both nodes are NULL, they are identical</span>
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">p</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nb">NULL</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">q</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nb">NULL</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">        </span><span class="c1">// If only one of the nodes is NULL, they are not identical</span>
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">p</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nb">NULL</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">q</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nb">NULL</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">        </span><span class="c1">// Check if values are equal and recursively check left and right subtrees</span>
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">val</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">q</span><span class="o">-&gt;</span><span class="n">val</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="n">isSameTree</span><span class="p">(</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">left</span><span class="p">,</span><span class="w"> </span><span class="n">q</span><span class="o">-&gt;</span><span class="n">left</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">isSameTree</span><span class="p">(</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">right</span><span class="p">,</span><span class="w"> </span><span class="n">q</span><span class="o">-&gt;</span><span class="n">right</span><span class="p">);</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">        </span><span class="c1">// Values are not equal, they are not identical</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">};</span>
-</code></pre></div>
-
-<h3><strong><em>Please Upvote my solution, if you find it helpful ;)</em></strong></h3>
-<p></p></div>
-
-
-<div class='python-solution'><h2>Recursive Approach with Easy Steps -- Votes: 832</h2><h3><strong><em>Please Upvote my solution, if you find it helpful ;)</em></strong></h3>
-<h2>Intuition</h2>
-<p>The intuition behind the solution is to recursively check if two binary trees are identical. If both trees are empty (null), they are considered identical. If only one tree is empty or the values of the current nodes are different, the trees are not identical. Otherwise, we recursively check if the left and right subtrees of both trees are identical.</p>
-<h2>Approach</h2>
-<ol>
-<li>Check the base case: if both trees are null, return true.</li>
-<li>Check if only one tree is null or the values of the current nodes are different, return false.</li>
-<li>Recursively check if the left subtrees of both trees are identical.</li>
-<li>Recursively check if the right subtrees of both trees are identical.</li>
-<li>Return the logical AND of the results from steps 3 and 4.</li>
-</ol>
-<p>Complexity</p>
-<ul>
-<li>
-<p>Time complexity:<br />
-  The time complexity of the solution is $$O(min(N, M))$$, where N and M are the number of nodes in the two trees, respectively. This is because we need to visit each node once in order to compare their values. In the worst case, where both trees have the same number of nodes, the time complexity would be O(N).</p>
-</li>
-<li>
-<p>Space complexity:<br />
-  The space complexity of the solution is$$O(min(H1, H2))$$, where H1 and H2 are the heights of the two trees, respectively. This is because the space used by the recursive stack is determined by the height of the smaller tree. In the worst case, where one tree is significantly larger than the other, the space complexity would be closer to O(N) or O(M), depending on which tree is larger.</p>
-</li>
-</ul>
-<h2>Code</h2>
-<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">java</span><span class="w"> </span>
-<span class="kd">class</span> <span class="nc">Solution</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">boolean</span><span class="w"> </span><span class="nf">isSameTree</span><span class="p">(</span><span class="n">TreeNode</span><span class="w"> </span><span class="n">p</span><span class="p">,</span><span class="w"> </span><span class="n">TreeNode</span><span class="w"> </span><span class="n">q</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="c1">// Base case: if both trees are null, they are identical</span>
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">p</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kc">null</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">q</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="kc">true</span><span class="p">;</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">        </span><span class="c1">// If only one tree is null or the values are different, they are not identical</span>
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">p</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kc">null</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">q</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kc">null</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">p</span><span class="p">.</span><span class="na">val</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">q</span><span class="p">.</span><span class="na">val</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="kc">false</span><span class="p">;</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">        </span><span class="c1">// Recursively check if the left and right subtrees are identical</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">isSameTree</span><span class="p">(</span><span class="n">p</span><span class="p">.</span><span class="na">left</span><span class="p">,</span><span class="w"> </span><span class="n">q</span><span class="p">.</span><span class="na">left</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">isSameTree</span><span class="p">(</span><span class="n">p</span><span class="p">.</span><span class="na">right</span><span class="p">,</span><span class="w"> </span><span class="n">q</span><span class="p">.</span><span class="na">right</span><span class="p">);</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
-
-<div class="codehilite"><pre><span></span><code><span class="n">Language</span><span class="p">:</span> <span class="n">python</span> 
-<span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="p">:</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">isSameTree</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">q</span><span class="p">):</span>
-        <span class="c1"># If both nodes are None, they are identical</span>
-        <span class="k">if</span> <span class="n">p</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">q</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">return</span> <span class="kc">True</span>
-        <span class="c1"># If only one of the nodes is None, they are not identical</span>
-        <span class="k">if</span> <span class="n">p</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">q</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">return</span> <span class="kc">False</span>
-        <span class="c1"># Check if values are equal and recursively check left and right subtrees</span>
-        <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">val</span> <span class="o">==</span> <span class="n">q</span><span class="o">.</span><span class="n">val</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">isSameTree</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">left</span><span class="p">,</span> <span class="n">q</span><span class="o">.</span><span class="n">left</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">isSameTree</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">right</span><span class="p">,</span> <span class="n">q</span><span class="o">.</span><span class="n">right</span><span class="p">)</span>
-        <span class="c1"># Values are not equal, they are not identical</span>
-        <span class="k">return</span> <span class="kc">False</span>
-</code></pre></div>
-
-<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">C</span><span class="o">++</span><span class="w"> </span>
-<span class="n">class</span><span class="w"> </span><span class="n">Solution</span><span class="w"> </span><span class="p">{</span>
-<span class="n">public</span><span class="o">:</span>
-<span class="w">    </span><span class="kt">bool</span><span class="w"> </span><span class="n">isSameTree</span><span class="p">(</span><span class="n">TreeNode</span><span class="o">*</span><span class="w"> </span><span class="n">p</span><span class="p">,</span><span class="w"> </span><span class="n">TreeNode</span><span class="o">*</span><span class="w"> </span><span class="n">q</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="c1">// If both nodes are NULL, they are identical</span>
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">p</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nb">NULL</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">q</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nb">NULL</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">        </span><span class="c1">// If only one of the nodes is NULL, they are not identical</span>
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">p</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nb">NULL</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">q</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nb">NULL</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">        </span><span class="c1">// Check if values are equal and recursively check left and right subtrees</span>
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">val</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">q</span><span class="o">-&gt;</span><span class="n">val</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="n">isSameTree</span><span class="p">(</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">left</span><span class="p">,</span><span class="w"> </span><span class="n">q</span><span class="o">-&gt;</span><span class="n">left</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">isSameTree</span><span class="p">(</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">right</span><span class="p">,</span><span class="w"> </span><span class="n">q</span><span class="o">-&gt;</span><span class="n">right</span><span class="p">);</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">        </span><span class="c1">// Values are not equal, they are not identical</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">};</span>
-</code></pre></div>
-
-<h3><strong><em>Please Upvote my solution, if you find it helpful ;)</em></strong></h3>
-<p></p></div><p style="page-break-before: always" ></p>
+</code></pre>
+<pre><code class="language-python">class Solution:
+    def isSameTree(self, p, q):
+        #### If both nodes are None, they are identical
+        if p is None and q is None:
+            return True
+        #### If only one of the nodes is None, they are not identical
+        if p is None or q is None:
+            return False
+        #### Check if values are equal and recursively check left and right subtrees
+        if p.val == q.val:
+            return self.isSameTree(p.left, q.left) and self.isSameTree(p.right, q.right)
+        #### Values are not equal, they are not identical
+        return False
+</code></pre>
+<pre><code class="language-cpp">class Solution {
+public:
+    bool isSameTree(TreeNode* p, TreeNode* q) {
+        // If both nodes are NULL, they are identical
+        if (p == NULL &amp;&amp; q == NULL) {
+            return true;
+        }
+        // If only one of the nodes is NULL, they are not identical
+        if (p == NULL || q == NULL) {
+            return false;
+        }
+        // Check if values are equal and recursively check left and right subtrees
+        if (p-&gt;val == q-&gt;val) {
+            return isSameTree(p-&gt;left, q-&gt;left) &amp;&amp; isSameTree(p-&gt;right, q-&gt;right);
+        }
+        // Values are not equal, they are not identical
+        return false;
+    }
+};
+</code></pre>
+<h5><strong><em>Please Upvote my solution, if you find it helpful ;)</em></strong></h5></div>

@@ -1,90 +1,81 @@
-<div class='cpp-solution'><h2>C++ Easy & Clean Solution | Fastest: 0ms | 1 Liner | DFS | Detailed Explanation | Dry Run -- Votes: 92</h2><h6>Method: DFS [T(n) = O(n) and S(n) = O(H) [recursion stack space]]</h6>
-<p>Idea is to use DFS (Top Down) and generate number (starting with 0) going root to leaf. At each level, we have: <code>currNum = prevNum * 10 + root-&gt;val</code>. We compute this number for both left and right subtrees and finally return the sum of both subtree numbers.<br />
+<div class='cpp-solution'><h4>C++ Easy & Clean Solution | Fastest: 0ms | 1 Liner | DFS | Detailed Explanation | Dry Run [Votes: 92]</h4><h6>## Method: DFS [T(n) = O(n) and S(n) = O(H) [recursion stack space]]</h6>
+<p>Idea is to use DFS (Top Down) and generate number (starting with 0) going root to leaf. At each level, we have: <code>currNum = prevNum * 10 + root-&gt;val</code>. We compute this number for both left and right subtrees and finally return the sum of both subtree numbers.
 <em>Base case:</em> <code>root-&gt;left == root-&gt;right</code> (only possbile for leaf node).</p>
-<h6>Dry Run:</h6>
-<div class="codehilite"><pre><span></span><code><span class="nv">Suppose</span><span class="w"> </span><span class="nv">Binary</span><span class="w"> </span><span class="nv">Tree</span><span class="w"> </span><span class="nv">is</span>:
-<span class="w">        </span><span class="mi">1</span>
-<span class="w">      </span><span class="o">/</span><span class="w">    </span>\
-<span class="w">    </span><span class="mi">2</span><span class="w">       </span><span class="mi">3</span>
-<span class="w">          </span><span class="o">/</span>
-<span class="w">        </span><span class="mi">4</span>
-<span class="nv">Let</span><span class="w"> </span><span class="nv">func</span>.<span class="w"> </span><span class="nv">name</span><span class="w"> </span><span class="nv">be</span><span class="w"> </span><span class="nv">DFS</span><span class="w"> </span><span class="ss">(</span><span class="k">for</span><span class="w"> </span><span class="nv">explaination</span><span class="w"> </span><span class="nv">only</span><span class="ss">)</span>.
-<span class="nv">DFS</span><span class="ss">(</span><span class="mi">1</span><span class="ss">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">DFS</span><span class="ss">(</span><span class="mi">2</span>,<span class="w"> </span><span class="mi">1</span><span class="ss">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nv">DFS</span><span class="ss">(</span><span class="mi">3</span>,<span class="w"> </span><span class="mi">1</span><span class="ss">)</span>
-<span class="nv">DFS</span><span class="ss">(</span><span class="mi">2</span>,<span class="w"> </span><span class="mi">1</span><span class="ss">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">10</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">12</span><span class="w">     </span><span class="o">//</span><span class="w"> </span><span class="nv">Base</span><span class="w"> </span><span class="nv">case</span>
-<span class="nv">DFS</span><span class="ss">(</span><span class="mi">3</span>,<span class="w"> </span><span class="mi">1</span><span class="ss">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">DFS</span><span class="ss">(</span><span class="mi">4</span>,<span class="w"> </span><span class="mi">10</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">3</span><span class="ss">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">DFS</span><span class="ss">(</span><span class="mi">4</span>,<span class="w"> </span><span class="mi">13</span><span class="ss">)</span>
-<span class="nv">DFS</span><span class="ss">(</span><span class="mi">4</span>,<span class="w"> </span><span class="mi">13</span><span class="ss">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">130</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">4</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">134</span><span class="w">    </span><span class="o">//</span><span class="w"> </span><span class="nv">Base</span><span class="w"> </span><span class="nv">Case</span>
-<span class="o">=&gt;</span><span class="w"> </span><span class="nv">DFS</span><span class="ss">(</span><span class="mi">1</span><span class="ss">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">12</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">134</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">146</span>
-</code></pre></div>
-
-<p><strong>NOTE:</strong></p>
-<ol>
-<li>Below code (sumNumbers func. implementation) is actually 1 liner, Only for readability, I have presented it in 3 lines.</li>
-<li>This problem is a perfect example of how we can use already known solution(s) to solve a new problem. The below solution is very similar to 4th Nov 2021 Daily LC Challenge <a href="https://leetcode.com/problems/sum-of-left-leaves/discuss/1558669/c-easy-clean-solution-fastest-0ms-1-liner-dfs-detailed-explanation-dry-run">here</a> on leetcode.</li>
-</ol>
-<div class="codehilite"><pre><span></span><code><span class="nt">class</span><span class="w"> </span><span class="nt">Solution</span><span class="w"> </span><span class="p">{</span>
-<span class="n">public</span><span class="p">:</span>
-<span class="w">    </span><span class="n">int</span><span class="w"> </span><span class="nf">sumNumbers</span><span class="p">(</span><span class="n">TreeNode</span><span class="o">*</span><span class="w"> </span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="n">int</span><span class="w"> </span><span class="n">num</span><span class="err">=</span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
-<span class="w">        </span><span class="n">return</span><span class="w"> </span><span class="n">root-</span><span class="o">&gt;</span><span class="kc">left</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">root-</span><span class="o">&gt;</span><span class="kc">right</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">num</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">10</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">root-</span><span class="o">&gt;</span><span class="n">val</span><span class="w"> </span><span class="o">:</span>
-<span class="w">            </span><span class="p">((</span><span class="n">root-</span><span class="o">&gt;</span><span class="kc">left</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="nf">sumNumbers</span><span class="p">(</span><span class="n">root</span><span class="o">-</span><span class="err">&gt;</span><span class="kc">left</span><span class="p">,</span><span class="w"> </span><span class="n">num</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">10</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">root</span><span class="o">-</span><span class="err">&gt;</span><span class="n">val</span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span>
-<span class="w">            </span><span class="p">(</span><span class="n">root-</span><span class="o">&gt;</span><span class="kc">right</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="nf">sumNumbers</span><span class="p">(</span><span class="n">root</span><span class="o">-</span><span class="err">&gt;</span><span class="kc">right</span><span class="p">,</span><span class="w"> </span><span class="n">num</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">10</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">root</span><span class="o">-</span><span class="err">&gt;</span><span class="n">val</span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="mi">0</span><span class="p">));</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="err">}</span><span class="o">;</span>
-</code></pre></div>
-
-<p><strong>NOTE:</strong><br />
+<h6>## Dry Run:</h6>
+<pre><code>Suppose Binary Tree is:
+        1
+      /    \
+    2       3
+          /
+        4
+Let func. name be DFS (for explaination only).
+DFS(1) = DFS(2, 1) + DFS(3, 1)
+DFS(2, 1) = 10 + 2 = 12     // Base case
+DFS(3, 1) = DFS(4, 10 + 3) + 0 = DFS(4, 13)
+DFS(4, 13) = 130 + 4 = 134    // Base Case
+=&gt; DFS(1) = 12 + 134 = 146
+</code></pre>
+<p><strong>NOTE:</strong> 
+1. Below code (sumNumbers func. implementation) is actually 1 liner, Only for readability, I have presented it in 3 lines.
+2. This problem is a perfect example of how we can use already known solution(s) to solve a new problem. The below solution is very similar to 4th Nov 2021 Daily LC Challenge <a href="https://leetcode.com/problems/sum-of-left-leaves/discuss/1558669/c-easy-clean-solution-fastest-0ms-1-liner-dfs-detailed-explanation-dry-run">here</a> on leetcode.</p>
+<pre><code>class Solution {
+public:
+    int sumNumbers(TreeNode* root, int num=0) {
+        return root-&gt;left == root-&gt;right ? num * 10 + root-&gt;val :
+            ((root-&gt;left ? sumNumbers(root-&gt;left, num * 10 + root-&gt;val) : 0) + 
+            (root-&gt;right ? sumNumbers(root-&gt;right, num * 10 + root-&gt;val) : 0));
+    }
+};
+</code></pre>
+<p><strong>NOTE:</strong>
 <em>If you find this post helpful then please </em><em>upvote</em><em>. It keeps me </em><em>motivated</em><em> to post such helpful solutions. Thanks!</em></p>
-<p><strong>PS:</strong><br />
-I have also written posts on:</p>
-<ol>
-<li>All C++ (15+) sorting algorithms in a cleaner way <a href="https://leetcode.com/problems/sort-an-array/discuss/1401412/C%2B%2B-Clean-Code-Solution-or-Fastest-or-All-(15%2B)-Sorting-Methods-or-Detailed">here</a> on leetcode.</li>
-<li>Kadane's Algorithm and Follow up Questions [C++] in a cleaner way <a href="https://leetcode.com/problems/maximum-subarray/discuss/1470547/C++-Easy-and-Clean-Solution-or-Fastest:-0ms-or-All-Methods-or-Follow-Ups-or-Detailed-Explanation">here</a> on leetcode.</li>
-</ol>
-<p><em>Do check it out/ bookmark (and upvote :)) to revise those concepts for the interview. Thanks!</em></p></div>
+<p><strong>PS:</strong>
+I have also written posts on:
+1. All cpp (15+) sorting algorithms in a cleaner way <a href="https://leetcode.com/problems/sort-an-array/discuss/1401412/C%2B%2B-Clean-Code-Solution-or-Fastest-or-All-(15%2B)-Sorting-Methods-or-Detailed">here</a> on leetcode.
+2. Kadane's Algorithm and Follow up Questions [cpp] in a cleaner way <a href="https://leetcode.com/problems/maximum-subarray/discuss/1470547/cpp-Easy-and-Clean-Solution-or-Fastest:-0ms-or-All-Methods-or-Follow-Ups-or-Detailed-Explanation">here</a> on leetcode.</p>
+<p><em>Do check it out/ bookmark (and upvote :)) to revise those concepts for the interview. Thanks!</em></p></div><div class='python-solution'><h4>Python solutions (dfs+stack, bfs+queue, dfs recursively). [Votes: 201]</h4><pre><code>class Solution(object):
+    def sumNumbers1(self, root): #### DFS recursively 
+        self.res = 0
+        self.dfs(root, 0)
+        return self.res
 
+    def dfs(self, root, path):
+        if root:
+            if not root.left and not root.right:
+                path = path*10 + root.val
+                self.res += path
+            self.dfs(root.left, path*10+root.val)
+            self.dfs(root.right, path*10+root.val)
 
-<div class='python-solution'><h2>Python solutions (dfs+stack, bfs+queue, dfs recursively). -- Votes: 201</h2><div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="n">Solution</span>(<span class="n">object</span>):
-    <span class="n">def</span> <span class="n">sumNumbers1</span>(<span class="nb">self</span>, <span class="n">root</span>): <span class="c1"># DFS recursively </span>
-        <span class="nb">self</span>.<span class="n">res</span> = <span class="mi">0</span>
-        <span class="nb">self</span>.<span class="n">dfs</span>(<span class="n">root</span>, <span class="mi">0</span>)
-        <span class="k">return</span> <span class="nb">self</span>.<span class="n">res</span>
+    def sumNumbers2(self, root): #### BFS with queue
+        deque, res = collections.deque(), 0
+        if root:
+            deque.append(root)
+        while deque:
+            node = deque.popleft()
+            if not node.left and not node.right:
+                res += node.val
+            if node.left:
+                node.left.val += node.val*10
+                deque.append(node.left)
+            if node.right:
+                node.right.val += node.val*10
+                deque.append(node.right)
+        return res
 
-    <span class="n">def</span> <span class="n">dfs</span>(<span class="nb">self</span>, <span class="n">root</span>, <span class="nb">path</span>):
-        <span class="k">if</span> <span class="n">root:</span>
-            <span class="k">if</span> <span class="nb">not</span> <span class="n">root</span>.<span class="n">left</span> <span class="o">and</span> <span class="nb">not</span> <span class="n">root</span>.<span class="n">right:</span>
-                <span class="nb">path</span> = <span class="nb">path</span><span class="o">*</span><span class="mi">10</span> + <span class="n">root</span>.<span class="nb">val</span>
-                <span class="nb">self</span>.<span class="n">res</span> += <span class="nb">path</span>
-            <span class="nb">self</span>.<span class="n">dfs</span>(<span class="n">root</span>.<span class="n">left</span>, <span class="nb">path</span><span class="o">*</span><span class="mi">10</span><span class="o">+</span><span class="n">root</span>.<span class="nb">val</span>)
-            <span class="nb">self</span>.<span class="n">dfs</span>(<span class="n">root</span>.<span class="nb">right</span>, <span class="nb">path</span><span class="o">*</span><span class="mi">10</span><span class="o">+</span><span class="n">root</span>.<span class="nb">val</span>)
-
-    <span class="n">def</span> <span class="n">sumNumbers2</span>(<span class="nb">self</span>, <span class="n">root</span>): <span class="c1"># BFS with queue</span>
-        <span class="n">deque</span>, <span class="n">res</span> = <span class="n">collections</span>.<span class="n">deque</span>(), <span class="mi">0</span>
-        <span class="k">if</span> <span class="n">root:</span>
-            <span class="n">deque</span>.<span class="nb">append</span>(<span class="n">root</span>)
-        <span class="k">while</span> <span class="n">deque:</span>
-            <span class="n">node</span> = <span class="n">deque</span>.<span class="n">popleft</span>()
-            <span class="k">if</span> <span class="nb">not</span> <span class="n">node</span>.<span class="n">left</span> <span class="o">and</span> <span class="nb">not</span> <span class="n">node</span>.<span class="n">right:</span>
-                <span class="n">res</span> += <span class="n">node</span>.<span class="nb">val</span>
-            <span class="k">if</span> <span class="n">node</span>.<span class="n">left:</span>
-                <span class="n">node</span>.<span class="n">left</span>.<span class="nb">val</span> += <span class="n">node</span>.<span class="nb">val</span><span class="o">*</span><span class="mi">10</span>
-                <span class="n">deque</span>.<span class="nb">append</span>(<span class="n">node</span>.<span class="n">left</span>)
-            <span class="k">if</span> <span class="n">node</span>.<span class="n">right:</span>
-                <span class="n">node</span>.<span class="nb">right</span>.<span class="nb">val</span> += <span class="n">node</span>.<span class="nb">val</span><span class="o">*</span><span class="mi">10</span>
-                <span class="n">deque</span>.<span class="nb">append</span>(<span class="n">node</span>.<span class="nb">right</span>)
-        <span class="k">return</span> <span class="n">res</span>
-
-    <span class="n">def</span> <span class="n">sumNumbers</span>(<span class="nb">self</span>, <span class="n">root</span>): <span class="c1"># DFS with stack</span>
-        <span class="n">stack</span>, <span class="n">res</span> = , <span class="mi">0</span>
-        <span class="k">if</span> <span class="n">root:</span>
-            <span class="n">stack</span>.<span class="nb">append</span>(<span class="n">root</span>)
-        <span class="k">while</span> <span class="n">stack:</span>
-            <span class="n">node</span> = <span class="n">stack</span>.<span class="nb">pop</span>()
-            <span class="k">if</span> <span class="nb">not</span> <span class="n">node</span>.<span class="n">left</span> <span class="o">and</span> <span class="nb">not</span> <span class="n">node</span>.<span class="n">right:</span>
-                <span class="n">res</span> += <span class="n">node</span>.<span class="nb">val</span>
-            <span class="k">if</span> <span class="n">node</span>.<span class="n">right:</span>
-                <span class="n">node</span>.<span class="nb">right</span>.<span class="nb">val</span> += <span class="n">node</span>.<span class="nb">val</span><span class="o">*</span><span class="mi">10</span>
-                <span class="n">stack</span>.<span class="nb">append</span>(<span class="n">node</span>.<span class="nb">right</span>)
-            <span class="k">if</span> <span class="n">node</span>.<span class="n">left:</span>
-                <span class="n">node</span>.<span class="n">left</span>.<span class="nb">val</span> += <span class="n">node</span>.<span class="nb">val</span><span class="o">*</span><span class="mi">10</span>
-                <span class="n">stack</span>.<span class="nb">append</span>(<span class="n">node</span>.<span class="n">left</span>)
-        <span class="k">return</span> <span class="n">res</span>
-</code></pre></div></div><p style="page-break-before: always" ></p>
+    def sumNumbers(self, root): #### DFS with stack
+        stack, res = [], 0
+        if root:
+            stack.append(root)
+        while stack:
+            node = stack.pop()
+            if not node.left and not node.right:
+                res += node.val
+            if node.right:
+                node.right.val += node.val*10
+                stack.append(node.right)
+            if node.left:
+                node.left.val += node.val*10
+                stack.append(node.left)
+        return res
+</code></pre></div>

@@ -1,78 +1,62 @@
-<div class='cpp-solution'><h2>【Video】Two points to solve the question -- Votes: 781</h2><h2>Intuition</h2>
+<div class='cpp-solution'><h4>【Video】Two points to solve the question [Votes: 781]</h4><h4>Intuition</h4>
 <p>We can move up and down with <code>1</code> and <code>-1</code></p>
-<hr />
-<h2>Solution Video</h2>
+<h4>Solution Video</h4>
 <p>https://youtu.be/fxhPxvBAvD0</p>
-<h4>⭐️⭐️ Don't forget to subscribe to my channel! ⭐️⭐️</h4>
-<p><strong>■ Subscribe URL</strong><br />
+<h6>⭐️⭐️ Don't forget to subscribe to my channel! ⭐️⭐️</h6>
+<p><strong>■ Subscribe URL</strong>
 http://www.youtube.com/channel/UC9RMNwYTL3SXCP6ShLWVFww?sub_confirmation=1</p>
-<p>Subscribers: 4,344<br />
+<p>Subscribers: 4,344
 Thank you for your support!</p>
-<hr />
-<h2>Approach</h2>
+<h4>Approach</h4>
 <p>Let's think about this example.</p>
-<div class="codehilite"><pre><span></span><code>s = &quot;abcdefghi&quot;, numRows = 4
-</code></pre></div>
-
+<pre><code>s = &quot;abcdefghi&quot;, numRows = 4
+</code></pre>
 <p>In this case, we put the characters of <code>s</code> like this.</p>
-<div class="codehilite"><pre><span></span><code><span class="mf">1</span><span class="w"> </span><span class="n">a</span><span class="w">     </span><span class="n">g</span><span class="w"> </span><span class="err">→</span><span class="w"> </span><span class="n">ag</span>
-<span class="mf">2</span><span class="w"> </span><span class="n">b</span><span class="w">   </span><span class="n">f</span><span class="w"> </span><span class="n">h</span><span class="w"> </span><span class="err">→</span><span class="w"> </span><span class="n">bfh</span>
-<span class="mf">3</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="n">e</span><span class="w">   </span><span class="n">i</span><span class="w"> </span><span class="err">→</span><span class="w"> </span><span class="n">cei</span>
-<span class="mf">4</span><span class="w"> </span><span class="n">d</span><span class="w">       </span><span class="err">→</span><span class="w"> </span><span class="n">d</span>
-</code></pre></div>
-
-<div class="codehilite"><pre><span></span><code><span class="k">return</span><span class="w"> </span><span class="s2">&quot;agbfhceid&quot;</span>
-</code></pre></div>
-
-<h3>What we should do?</h3>
-<hr />
-<p>⭐️ Points</p>
-<ul>
-<li>Put characters on zigzag path</li>
-<li>Create strings horizontally</li>
-</ul>
-<hr />
-<h4>Put characters on zigzag path</h4>
+<pre><code>1 a     g → ag
+2 b   f h → bfh
+3 c e   i → cei
+4 d       → d
+</code></pre>
+<pre><code>return &quot;agbfhceid&quot;
+</code></pre>
+<h5>What we should do?</h5>
+<p>⭐️ Points
+- Put characters on zigzag path
+- Create strings horizontally</p>
+<h6>Put characters on zigzag path</h6>
 <p>Seems like tough because we move diagonally but it's very simple.</p>
-<div class="codehilite"><pre><span></span><code>s = &quot;abcdefghi&quot;, numRows = 4
-</code></pre></div>
-
+<pre><code>s = &quot;abcdefghi&quot;, numRows = 4
+</code></pre>
 <p>In this case</p>
-<div class="codehilite"><pre><span></span><code>&quot;abcdefghi&quot;
+<pre><code>&quot;abcdefghi&quot;
  123432123 (= row)
-</code></pre></div>
-
+</code></pre>
 <p>All we have to do is that we just move up and down. <strong>More precisely, if we reach <code>numsRows - 1</code>, we move up next time and if we reach the first row, we move down next time.</strong></p>
 <p>We will creat direction variable to handle moving direction. When we move down, the variable has <code>1</code>. On the other hand, when we move up, the variable has <code>-1</code>.</p>
-<h4>Create strings horizontally</h4>
+<h6>Create strings horizontally</h6>
 <p>Now we have an array like this.</p>
-<div class="codehilite"><pre><span></span><code><span class="mf">1</span><span class="w"> </span><span class="n">a</span><span class="w">     </span><span class="n">g</span>
-<span class="mf">2</span><span class="w"> </span><span class="n">b</span><span class="w">   </span><span class="n">f</span><span class="w"> </span><span class="n">h</span>
-<span class="mf">3</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="n">e</span><span class="w">   </span><span class="n">i</span>
-<span class="mf">4</span><span class="w"> </span><span class="n">d</span><span class="w">      </span>
-</code></pre></div>
-
+<pre><code>1 a     g
+2 b   f h
+3 c e   i
+4 d      
+</code></pre>
 <p>All we have to do is just to concatenate all characters in the same row. But there is a point here.</p>
-<hr />
 <p>⭐️ Points</p>
 <p>Use 2d array instead of 1d array</p>
-<hr />
 <p>Why?</p>
 <p>That's because if we use 1d array(of course we can solve the question), we have to concatenate all characters in the same row when we add a new character which is $$O(n)$$. We will repeat the process length of <code>s</code> times, so that is $$O(n^2)$$. <code>n</code> is the length of the string s.</p>
 <p>To avoid $$O(n^2)$$, we use 2d array so that we just append a new character to the last position of a target row which is $$O(1)$$.</p>
 <p><strong>This enables us to keep $$O(n)$$ time instead of $$O(^2)$$.</strong></p>
 <p>I put Python code of $$O(n^2)$$ below.</p>
-<p>Easy!<br />
+<p>Easy!
 Let's see solution codes and step by step algorithm!</p>
-<hr />
 <p>⭐️ I created a video on how I've been using LeetCode to learn.</p>
 <p>https://youtu.be/bU_dXCOWHls</p>
-<hr />
-<h2>Complexity</h2>
+<h4>Complexity</h4>
 <ul>
 <li>
-<p>Time complexity: $$O(n)$$<br />
-<code>n</code> is the length of the string s</p>
+<p>Time complexity: $$O(n)$$
+ <code>n</code> is the length of the string s</p>
 </li>
 <li>
 <p>Space complexity: $$O(n)$$</p>
@@ -80,507 +64,203 @@ Let's see solution codes and step by step algorithm!</p>
 </ul>
 <!-- Add your space complexity here, e.g. $$O(n)$$ -->
 
-<div class="codehilite"><pre><span></span><code><span class="n">Language</span><span class="p">:</span> <span class="n">python</span> 
-<span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="p">:</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">convert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">s</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">numRows</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">numRows</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">or</span> <span class="n">numRows</span> <span class="o">&gt;=</span> <span class="nb">len</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
-            <span class="k">return</span> <span class="n">s</span>
+<pre><code class="language-python">class Solution:
+    def convert(self, s: str, numRows: int) -&gt; str:
+        if numRows == 1 or numRows &gt;= len(s):
+            return s
 
-        <span class="n">idx</span><span class="p">,</span> <span class="n">d</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span>
-        <span class="n">rows</span> <span class="o">=</span> <span class="p">[</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">numRows</span><span class="p">)]</span>
+        idx, d = 0, 1
+        rows = [[] for _ in range(numRows)]
 
-        <span class="k">for</span> <span class="n">char</span> <span class="ow">in</span> <span class="n">s</span><span class="p">:</span>
-            <span class="n">rows</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">char</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">idx</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-                <span class="n">d</span> <span class="o">=</span> <span class="mi">1</span>
-            <span class="k">elif</span> <span class="n">idx</span> <span class="o">==</span> <span class="n">numRows</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
-                <span class="n">d</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
-            <span class="n">idx</span> <span class="o">+=</span> <span class="n">d</span>
+        for char in s:
+            rows[idx].append(char)
+            if idx == 0:
+                d = 1
+            elif idx == numRows - 1:
+                d = -1
+            idx += d
 
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">numRows</span><span class="p">):</span>
-            <span class="n">rows</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">rows</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+        for i in range(numRows):
+            rows[i] = ''.join(rows[i])
 
-        <span class="k">return</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">rows</span><span class="p">)</span>   
-</code></pre></div>
+        return ''.join(rows)   
+</code></pre>
+<pre><code class="language-javascript">var convert = function(s, numRows) {
+    if (numRows === 1 || numRows &gt;= s.length) {
+        return s;
+    }
 
-<div class="codehilite"><pre><span></span><code><span class="nx">Language</span><span class="o">:</span><span class="w"> </span><span class="nx">javascript</span><span class="w"> </span>
-<span class="kd">var</span><span class="w"> </span><span class="nx">convert</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kd">function</span><span class="p">(</span><span class="nx">s</span><span class="p">,</span><span class="w"> </span><span class="nx">numRows</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">numRows</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="mf">1</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nx">numRows</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="nx">s</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="nx">s</span><span class="p">;</span>
-<span class="w">    </span><span class="p">}</span>
+    let idx = 0, d = 1;
+    const rows = new Array(numRows).fill().map(() =&gt; []);
 
-<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="nx">idx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0</span><span class="p">,</span><span class="w"> </span><span class="nx">d</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">1</span><span class="p">;</span>
-<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">rows</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nb">Array</span><span class="p">(</span><span class="nx">numRows</span><span class="p">).</span><span class="nx">fill</span><span class="p">().</span><span class="nx">map</span><span class="p">(()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">);</span>
+    for (const char of s) {
+        rows[idx].push(char);
+        if (idx === 0) {
+            d = 1;
+        } else if (idx === numRows - 1) {
+            d = -1;
+        }
+        idx += d;
+    }
 
-<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kd">const</span><span class="w"> </span><span class="kr">char</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="nx">s</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="nx">rows</span><span class="p">[</span><span class="nx">idx</span><span class="p">].</span><span class="nx">push</span><span class="p">(</span><span class="kr">char</span><span class="p">);</span>
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">idx</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="mf">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="nx">d</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">1</span><span class="p">;</span>
-<span class="w">        </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">idx</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="nx">numRows</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mf">1</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="nx">d</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">-</span><span class="mf">1</span><span class="p">;</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">        </span><span class="nx">idx</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="nx">d</span><span class="p">;</span>
-<span class="w">    </span><span class="p">}</span>
+    for (let i = 0; i &lt; numRows; i++) {
+        rows[i] = rows[i].join('');
+    }
 
-<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kd">let</span><span class="w"> </span><span class="nx">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0</span><span class="p">;</span><span class="w"> </span><span class="nx">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="nx">numRows</span><span class="p">;</span><span class="w"> </span><span class="nx">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="nx">rows</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">rows</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">join</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">);</span>
-<span class="w">    </span><span class="p">}</span>
+    return rows.join('');    
+};
+</code></pre>
+<pre><code class="language-java">class Solution {
+    public String convert(String s, int numRows) {
+       if (numRows == 1 || numRows &gt;= s.length()) {
+            return s;
+        }
 
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">rows</span><span class="p">.</span><span class="nx">join</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">);</span><span class="w">    </span>
-<span class="p">};</span>
-</code></pre></div>
+        int idx = 0, d = 1;
+        List&lt;Character&gt;[] rows = new ArrayList[numRows];
+        for (int i = 0; i &lt; numRows; i++) {
+            rows[i] = new ArrayList&lt;&gt;();
+        }
 
-<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">java</span><span class="w"> </span>
-<span class="kd">class</span> <span class="nc">Solution</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="nf">convert</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">s</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">numRows</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">       </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">numRows</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">numRows</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="n">s</span><span class="p">.</span><span class="na">length</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="n">s</span><span class="p">;</span>
-<span class="w">        </span><span class="p">}</span>
+        for (char c : s.toCharArray()) {
+            rows[idx].add(c);
+            if (idx == 0) {
+                d = 1;
+            } else if (idx == numRows - 1) {
+                d = -1;
+            }
+            idx += d;
+        }
 
-<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">idx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">d</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
-<span class="w">        </span><span class="n">List</span><span class="o">&lt;</span><span class="n">Character</span><span class="o">&gt;</span><span class="w"> </span><span class="n">rows</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ArrayList</span><span class="o">[</span><span class="n">numRows</span><span class="o">]</span><span class="p">;</span>
-<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">numRows</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="n">rows</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ArrayList</span><span class="o">&lt;&gt;</span><span class="p">();</span>
-<span class="w">        </span><span class="p">}</span>
+        StringBuilder result = new StringBuilder();
+        for (List&lt;Character&gt; row : rows) {
+            for (char c : row) {
+                result.append(c);
+            }
+        }
 
-<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">char</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">s</span><span class="p">.</span><span class="na">toCharArray</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="n">rows</span><span class="o">[</span><span class="n">idx</span><span class="o">]</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="n">c</span><span class="p">);</span>
-<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">idx</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="n">d</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
-<span class="w">            </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">idx</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">numRows</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="n">d</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">-</span><span class="mi">1</span><span class="p">;</span>
-<span class="w">            </span><span class="p">}</span>
-<span class="w">            </span><span class="n">idx</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">d</span><span class="p">;</span>
-<span class="w">        </span><span class="p">}</span>
+        return result.toString();        
+    }
+}
+</code></pre>
+<pre><code class="language-cpp">class Solution {
+public:
+    string convert(string s, int numRows) {
+        if (numRows == 1 || numRows &gt;= s.length()) {
+            return s;
+        }
 
-<span class="w">        </span><span class="n">StringBuilder</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">StringBuilder</span><span class="p">();</span>
-<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">List</span><span class="o">&lt;</span><span class="n">Character</span><span class="o">&gt;</span><span class="w"> </span><span class="n">row</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">rows</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">char</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">row</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="n">result</span><span class="p">.</span><span class="na">append</span><span class="p">(</span><span class="n">c</span><span class="p">);</span>
-<span class="w">            </span><span class="p">}</span>
-<span class="w">        </span><span class="p">}</span>
+        int idx = 0, d = 1;
+        vector&lt;vector&lt;char&gt;&gt; rows(numRows);
 
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">result</span><span class="p">.</span><span class="na">toString</span><span class="p">();</span><span class="w">        </span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
+        for (char c : s) {
+            rows[idx].push_back(c);
+            if (idx == 0) {
+                d = 1;
+            } else if (idx == numRows - 1) {
+                d = -1;
+            }
+            idx += d;
+        }
 
-<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">C</span><span class="o">++</span><span class="w"> </span>
-<span class="n">class</span><span class="w"> </span><span class="n">Solution</span><span class="w"> </span><span class="p">{</span>
-<span class="n">public</span><span class="o">:</span>
-<span class="w">    </span><span class="n">string</span><span class="w"> </span><span class="n">convert</span><span class="p">(</span><span class="n">string</span><span class="w"> </span><span class="n">s</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">numRows</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">numRows</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">numRows</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="n">s</span><span class="p">.</span><span class="n">length</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="n">s</span><span class="p">;</span>
-<span class="w">        </span><span class="p">}</span>
+        string result;
+        for (const auto&amp; row : rows) {
+            for (char c : row) {
+                result += c;
+            }
+        }
 
-<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">idx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">d</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
-<span class="w">        </span><span class="n">vector</span><span class="o">&lt;</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">char</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="n">rows</span><span class="p">(</span><span class="n">numRows</span><span class="p">);</span>
-
-<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">char</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">s</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="n">rows</span><span class="p">[</span><span class="n">idx</span><span class="p">].</span><span class="n">push_back</span><span class="p">(</span><span class="n">c</span><span class="p">);</span>
-<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">idx</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="n">d</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
-<span class="w">            </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">idx</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">numRows</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="n">d</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">-1</span><span class="p">;</span>
-<span class="w">            </span><span class="p">}</span>
-<span class="w">            </span><span class="n">idx</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">d</span><span class="p">;</span>
-<span class="w">        </span><span class="p">}</span>
-
-<span class="w">        </span><span class="n">string</span><span class="w"> </span><span class="n">result</span><span class="p">;</span>
-<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="o">&amp;</span><span class="w"> </span><span class="n">row</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">rows</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">char</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">row</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="n">result</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">c</span><span class="p">;</span>
-<span class="w">            </span><span class="p">}</span>
-<span class="w">        </span><span class="p">}</span>
-
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">result</span><span class="p">;</span><span class="w">        </span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">};</span>
-</code></pre></div>
-
-<h3>Step by Step Algorithm</h3>
+        return result;        
+    }
+};
+</code></pre>
+<h5>Step by Step Algorithm</h5>
 <ol>
-<li><strong>Check Special Cases</strong>:</li>
-</ol>
+<li>
+<p><strong>Check Special Cases</strong>: </p>
 <ul>
-<li>If numRows is 1 or greater than or equal to the length of the input string <code>s</code>, it means that the ZigZag pattern will be the same as the input string. In such cases, just return the input string <code>s</code> as it is.</li>
+<li>If numRows is 1 or greater than or equal to the length of the input string <code>s</code>, it means that the ZigZag pattern will be the same as the input string. In such cases, just return the input string <code>s</code> as it is.
+<code>python
+if numRows == 1 or numRows &gt;= len(s):
+    return s</code></li>
 </ul>
-<p><code>python
-   if numRows == 1 or numRows &gt;= len(s):
-       return s</code></p>
-<ol>
-<li><strong>Initialization</strong>:</li>
-</ol>
+</li>
+<li>
+<p><strong>Initialization</strong>: </p>
 <ul>
 <li>Initialize <code>idx</code> to keep track of the current row index, starting from 0, and <code>d</code> as the direction of traversal (1 for downward, -1 for upward).</li>
-<li>Create a list of numRows empty lists to represent the rows of the ZigZag pattern.</li>
+<li>Create a list of numRows empty lists to represent the rows of the ZigZag pattern.
+<code>python
+idx, d = 0, 1
+rows = [[] for row in range(numRows)]</code></li>
 </ul>
-<p><code>python
-   idx, d = 0, 1
-   rows = [ for row in range(numRows)]</code></p>
-<ol>
-<li><strong>Traverse through the String</strong>:</li>
-</ol>
+</li>
+<li>
+<p><strong>Traverse through the String</strong>:</p>
 <ul>
 <li>Iterate through each character <code>char</code> in the input string <code>s</code>.</li>
 <li>Append the current character to the row indicated by the <code>idx</code>.</li>
 <li>Update the direction <code>d</code> based on the current position (<code>idx</code>).</li>
-<li>Update the current row index <code>idx</code> according to the direction <code>d</code>.</li>
+<li>Update the current row index <code>idx</code> according to the direction <code>d</code>.
+<code>python
+for char in s:
+    rows[idx].append(char)
+    if idx == 0:
+        d = 1
+    elif idx == numRows - 1:
+        d = -1
+    idx += d</code></li>
 </ul>
-<p><code>python
-   for char in s:
-       rows[idx].append(char)
-       if idx == 0:
-           d = 1
-       elif idx == numRows - 1:
-           d = -1
-       idx += d</code></p>
-<ol>
-<li><strong>Join Rows</strong>:</li>
-</ol>
+</li>
+<li>
+<p><strong>Join Rows</strong>:</p>
 <ul>
 <li>Iterate through each row in <code>rows</code>.</li>
 <li>Join the characters in each row to form strings.</li>
-<li>Update each row in <code>rows</code> with the joined string.</li>
+<li>Update each row in <code>rows</code> with the joined string.
+<code>python
+for i in range(numRows):
+    rows[i] = ''.join(rows[i])</code></li>
 </ul>
-<p><code>python
-   for i in range(numRows):
-       rows[i] = ''.join(rows[i])</code></p>
-<ol>
-<li><strong>Join Rows into Result String</strong>:</li>
-</ol>
+</li>
+<li>
+<p><strong>Join Rows into Result String</strong>:</p>
 <ul>
-<li>Join all the rows together to form the final ZigZag pattern.</li>
+<li>Join all the rows together to form the final ZigZag pattern.
+<code>python
+return ''.join(rows)</code></li>
 </ul>
-<p><code>python
-   return ''.join(rows)</code></p>
-<hr />
-<h2>Bonus</h2>
+</li>
+</ol>
+<h4>Bonus</h4>
 <p>This is $$O(n^2)$$.</p>
-<div class="codehilite"><pre><span></span><code><span class="n">Language</span><span class="p">:</span> <span class="n">python</span> 
-<span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="p">:</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">convert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">s</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">numRows</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">numRows</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">or</span> <span class="n">numRows</span> <span class="o">&gt;=</span> <span class="nb">len</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
-            <span class="k">return</span> <span class="n">s</span>
+<pre><code class="language-python">class Solution:
+    def convert(self, s: str, numRows: int) -&gt; str:
+        if numRows == 1 or numRows &gt;= len(s):
+            return s
 
-        <span class="n">idx</span><span class="p">,</span> <span class="n">d</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span>
-        <span class="n">rows</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="n">numRows</span>
+        idx, d = 0, 1
+        rows = [''] * numRows
 
-        <span class="k">for</span> <span class="n">char</span> <span class="ow">in</span> <span class="n">s</span><span class="p">:</span>
-            <span class="n">rows</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">+=</span> <span class="n">char</span>
-            <span class="k">if</span> <span class="n">idx</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-                <span class="n">d</span> <span class="o">=</span> <span class="mi">1</span>
-            <span class="k">elif</span> <span class="n">idx</span> <span class="o">==</span> <span class="n">numRows</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
-                <span class="n">d</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
-            <span class="n">idx</span> <span class="o">+=</span> <span class="n">d</span>
+        for char in s:
+            rows[idx] += char
+            if idx == 0:
+                d = 1
+            elif idx == numRows - 1:
+                d = -1
+            idx += d
 
-        <span class="k">return</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">rows</span><span class="p">)</span>  
-</code></pre></div>
-
-<hr />
-<p>Thank you for reading my post.<br />
+        return ''.join(rows)  
+</code></pre>
+<p>Thank you for reading my post.
 ⭐️ Please upvote it and don't forget to subscribe to my channel!</p>
-<h5>⭐️ Subscribe URL</h5>
+<h6># ⭐️ Subscribe URL</h6>
 <p>http://www.youtube.com/channel/UC9RMNwYTL3SXCP6ShLWVFww?sub_confirmation=1</p>
-<h5>⭐️ Twitter</h5>
+<h6># ⭐️ Twitter</h6>
 <p>https://twitter.com/CodingNinjaAZ</p>
-<h2>My previous post and video</h2>
-<h5>⭐️ Best Time to Buy and Sell Stock</h5>
-<p>post<br />
+<h4>My previous post and video</h4>
+<h6># ⭐️ Best Time to Buy and Sell Stock</h6>
+<p>post
 https://leetcode.com/problems/best-time-to-buy-and-sell-stock/solutions/</p>
-<p>video<br />
+<p>video
 https://youtu.be/NG4ZDYD4a2o</p></div>
-
-
-<div class='python-solution'><h2>【Video】Two points to solve the question -- Votes: 781</h2><h2>Intuition</h2>
-<p>We can move up and down with <code>1</code> and <code>-1</code></p>
-<hr />
-<h2>Solution Video</h2>
-<p>https://youtu.be/fxhPxvBAvD0</p>
-<h4>⭐️⭐️ Don't forget to subscribe to my channel! ⭐️⭐️</h4>
-<p><strong>■ Subscribe URL</strong><br />
-http://www.youtube.com/channel/UC9RMNwYTL3SXCP6ShLWVFww?sub_confirmation=1</p>
-<p>Subscribers: 4,344<br />
-Thank you for your support!</p>
-<hr />
-<h2>Approach</h2>
-<p>Let's think about this example.</p>
-<div class="codehilite"><pre><span></span><code>s = &quot;abcdefghi&quot;, numRows = 4
-</code></pre></div>
-
-<p>In this case, we put the characters of <code>s</code> like this.</p>
-<div class="codehilite"><pre><span></span><code><span class="mf">1</span><span class="w"> </span><span class="n">a</span><span class="w">     </span><span class="n">g</span><span class="w"> </span><span class="err">→</span><span class="w"> </span><span class="n">ag</span>
-<span class="mf">2</span><span class="w"> </span><span class="n">b</span><span class="w">   </span><span class="n">f</span><span class="w"> </span><span class="n">h</span><span class="w"> </span><span class="err">→</span><span class="w"> </span><span class="n">bfh</span>
-<span class="mf">3</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="n">e</span><span class="w">   </span><span class="n">i</span><span class="w"> </span><span class="err">→</span><span class="w"> </span><span class="n">cei</span>
-<span class="mf">4</span><span class="w"> </span><span class="n">d</span><span class="w">       </span><span class="err">→</span><span class="w"> </span><span class="n">d</span>
-</code></pre></div>
-
-<div class="codehilite"><pre><span></span><code><span class="k">return</span><span class="w"> </span><span class="s2">&quot;agbfhceid&quot;</span>
-</code></pre></div>
-
-<h3>What we should do?</h3>
-<hr />
-<p>⭐️ Points</p>
-<ul>
-<li>Put characters on zigzag path</li>
-<li>Create strings horizontally</li>
-</ul>
-<hr />
-<h4>Put characters on zigzag path</h4>
-<p>Seems like tough because we move diagonally but it's very simple.</p>
-<div class="codehilite"><pre><span></span><code>s = &quot;abcdefghi&quot;, numRows = 4
-</code></pre></div>
-
-<p>In this case</p>
-<div class="codehilite"><pre><span></span><code>&quot;abcdefghi&quot;
- 123432123 (= row)
-</code></pre></div>
-
-<p>All we have to do is that we just move up and down. <strong>More precisely, if we reach <code>numsRows - 1</code>, we move up next time and if we reach the first row, we move down next time.</strong></p>
-<p>We will creat direction variable to handle moving direction. When we move down, the variable has <code>1</code>. On the other hand, when we move up, the variable has <code>-1</code>.</p>
-<h4>Create strings horizontally</h4>
-<p>Now we have an array like this.</p>
-<div class="codehilite"><pre><span></span><code><span class="mf">1</span><span class="w"> </span><span class="n">a</span><span class="w">     </span><span class="n">g</span>
-<span class="mf">2</span><span class="w"> </span><span class="n">b</span><span class="w">   </span><span class="n">f</span><span class="w"> </span><span class="n">h</span>
-<span class="mf">3</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="n">e</span><span class="w">   </span><span class="n">i</span>
-<span class="mf">4</span><span class="w"> </span><span class="n">d</span><span class="w">      </span>
-</code></pre></div>
-
-<p>All we have to do is just to concatenate all characters in the same row. But there is a point here.</p>
-<hr />
-<p>⭐️ Points</p>
-<p>Use 2d array instead of 1d array</p>
-<hr />
-<p>Why?</p>
-<p>That's because if we use 1d array(of course we can solve the question), we have to concatenate all characters in the same row when we add a new character which is $$O(n)$$. We will repeat the process length of <code>s</code> times, so that is $$O(n^2)$$. <code>n</code> is the length of the string s.</p>
-<p>To avoid $$O(n^2)$$, we use 2d array so that we just append a new character to the last position of a target row which is $$O(1)$$.</p>
-<p><strong>This enables us to keep $$O(n)$$ time instead of $$O(^2)$$.</strong></p>
-<p>I put Python code of $$O(n^2)$$ below.</p>
-<p>Easy!<br />
-Let's see solution codes and step by step algorithm!</p>
-<hr />
-<p>⭐️ I created a video on how I've been using LeetCode to learn.</p>
-<p>https://youtu.be/bU_dXCOWHls</p>
-<hr />
-<h2>Complexity</h2>
-<ul>
-<li>
-<p>Time complexity: $$O(n)$$<br />
-<code>n</code> is the length of the string s</p>
-</li>
-<li>
-<p>Space complexity: $$O(n)$$</p>
-</li>
-</ul>
-<!-- Add your space complexity here, e.g. $$O(n)$$ -->
-
-<div class="codehilite"><pre><span></span><code><span class="n">Language</span><span class="p">:</span> <span class="n">python</span> 
-<span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="p">:</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">convert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">s</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">numRows</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">numRows</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">or</span> <span class="n">numRows</span> <span class="o">&gt;=</span> <span class="nb">len</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
-            <span class="k">return</span> <span class="n">s</span>
-
-        <span class="n">idx</span><span class="p">,</span> <span class="n">d</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span>
-        <span class="n">rows</span> <span class="o">=</span> <span class="p">[</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">numRows</span><span class="p">)]</span>
-
-        <span class="k">for</span> <span class="n">char</span> <span class="ow">in</span> <span class="n">s</span><span class="p">:</span>
-            <span class="n">rows</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">char</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">idx</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-                <span class="n">d</span> <span class="o">=</span> <span class="mi">1</span>
-            <span class="k">elif</span> <span class="n">idx</span> <span class="o">==</span> <span class="n">numRows</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
-                <span class="n">d</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
-            <span class="n">idx</span> <span class="o">+=</span> <span class="n">d</span>
-
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">numRows</span><span class="p">):</span>
-            <span class="n">rows</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">rows</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
-
-        <span class="k">return</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">rows</span><span class="p">)</span>   
-</code></pre></div>
-
-<div class="codehilite"><pre><span></span><code><span class="nx">Language</span><span class="o">:</span><span class="w"> </span><span class="nx">javascript</span><span class="w"> </span>
-<span class="kd">var</span><span class="w"> </span><span class="nx">convert</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kd">function</span><span class="p">(</span><span class="nx">s</span><span class="p">,</span><span class="w"> </span><span class="nx">numRows</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">numRows</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="mf">1</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nx">numRows</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="nx">s</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="nx">s</span><span class="p">;</span>
-<span class="w">    </span><span class="p">}</span>
-
-<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="nx">idx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0</span><span class="p">,</span><span class="w"> </span><span class="nx">d</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">1</span><span class="p">;</span>
-<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">rows</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nb">Array</span><span class="p">(</span><span class="nx">numRows</span><span class="p">).</span><span class="nx">fill</span><span class="p">().</span><span class="nx">map</span><span class="p">(()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">);</span>
-
-<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kd">const</span><span class="w"> </span><span class="kr">char</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="nx">s</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="nx">rows</span><span class="p">[</span><span class="nx">idx</span><span class="p">].</span><span class="nx">push</span><span class="p">(</span><span class="kr">char</span><span class="p">);</span>
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">idx</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="mf">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="nx">d</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">1</span><span class="p">;</span>
-<span class="w">        </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">idx</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="nx">numRows</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mf">1</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="nx">d</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">-</span><span class="mf">1</span><span class="p">;</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">        </span><span class="nx">idx</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="nx">d</span><span class="p">;</span>
-<span class="w">    </span><span class="p">}</span>
-
-<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kd">let</span><span class="w"> </span><span class="nx">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0</span><span class="p">;</span><span class="w"> </span><span class="nx">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="nx">numRows</span><span class="p">;</span><span class="w"> </span><span class="nx">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="nx">rows</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">rows</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">join</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">);</span>
-<span class="w">    </span><span class="p">}</span>
-
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">rows</span><span class="p">.</span><span class="nx">join</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">);</span><span class="w">    </span>
-<span class="p">};</span>
-</code></pre></div>
-
-<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">java</span><span class="w"> </span>
-<span class="kd">class</span> <span class="nc">Solution</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="nf">convert</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">s</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">numRows</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">       </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">numRows</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">numRows</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="n">s</span><span class="p">.</span><span class="na">length</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="n">s</span><span class="p">;</span>
-<span class="w">        </span><span class="p">}</span>
-
-<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">idx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">d</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
-<span class="w">        </span><span class="n">List</span><span class="o">&lt;</span><span class="n">Character</span><span class="o">&gt;</span><span class="w"> </span><span class="n">rows</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ArrayList</span><span class="o">[</span><span class="n">numRows</span><span class="o">]</span><span class="p">;</span>
-<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">numRows</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="n">rows</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ArrayList</span><span class="o">&lt;&gt;</span><span class="p">();</span>
-<span class="w">        </span><span class="p">}</span>
-
-<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">char</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">s</span><span class="p">.</span><span class="na">toCharArray</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="n">rows</span><span class="o">[</span><span class="n">idx</span><span class="o">]</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="n">c</span><span class="p">);</span>
-<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">idx</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="n">d</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
-<span class="w">            </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">idx</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">numRows</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="n">d</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">-</span><span class="mi">1</span><span class="p">;</span>
-<span class="w">            </span><span class="p">}</span>
-<span class="w">            </span><span class="n">idx</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">d</span><span class="p">;</span>
-<span class="w">        </span><span class="p">}</span>
-
-<span class="w">        </span><span class="n">StringBuilder</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">StringBuilder</span><span class="p">();</span>
-<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">List</span><span class="o">&lt;</span><span class="n">Character</span><span class="o">&gt;</span><span class="w"> </span><span class="n">row</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">rows</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">char</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">row</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="n">result</span><span class="p">.</span><span class="na">append</span><span class="p">(</span><span class="n">c</span><span class="p">);</span>
-<span class="w">            </span><span class="p">}</span>
-<span class="w">        </span><span class="p">}</span>
-
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">result</span><span class="p">.</span><span class="na">toString</span><span class="p">();</span><span class="w">        </span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
-
-<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">C</span><span class="o">++</span><span class="w"> </span>
-<span class="n">class</span><span class="w"> </span><span class="n">Solution</span><span class="w"> </span><span class="p">{</span>
-<span class="n">public</span><span class="o">:</span>
-<span class="w">    </span><span class="n">string</span><span class="w"> </span><span class="n">convert</span><span class="p">(</span><span class="n">string</span><span class="w"> </span><span class="n">s</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">numRows</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">numRows</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">numRows</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="n">s</span><span class="p">.</span><span class="n">length</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="n">s</span><span class="p">;</span>
-<span class="w">        </span><span class="p">}</span>
-
-<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">idx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">d</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
-<span class="w">        </span><span class="n">vector</span><span class="o">&lt;</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">char</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="n">rows</span><span class="p">(</span><span class="n">numRows</span><span class="p">);</span>
-
-<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">char</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">s</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="n">rows</span><span class="p">[</span><span class="n">idx</span><span class="p">].</span><span class="n">push_back</span><span class="p">(</span><span class="n">c</span><span class="p">);</span>
-<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">idx</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="n">d</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
-<span class="w">            </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">idx</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">numRows</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="n">d</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">-1</span><span class="p">;</span>
-<span class="w">            </span><span class="p">}</span>
-<span class="w">            </span><span class="n">idx</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">d</span><span class="p">;</span>
-<span class="w">        </span><span class="p">}</span>
-
-<span class="w">        </span><span class="n">string</span><span class="w"> </span><span class="n">result</span><span class="p">;</span>
-<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="o">&amp;</span><span class="w"> </span><span class="n">row</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">rows</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">char</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">row</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="n">result</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">c</span><span class="p">;</span>
-<span class="w">            </span><span class="p">}</span>
-<span class="w">        </span><span class="p">}</span>
-
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">result</span><span class="p">;</span><span class="w">        </span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">};</span>
-</code></pre></div>
-
-<h3>Step by Step Algorithm</h3>
-<ol>
-<li><strong>Check Special Cases</strong>:</li>
-</ol>
-<ul>
-<li>If numRows is 1 or greater than or equal to the length of the input string <code>s</code>, it means that the ZigZag pattern will be the same as the input string. In such cases, just return the input string <code>s</code> as it is.</li>
-</ul>
-<p><code>python
-   if numRows == 1 or numRows &gt;= len(s):
-       return s</code></p>
-<ol>
-<li><strong>Initialization</strong>:</li>
-</ol>
-<ul>
-<li>Initialize <code>idx</code> to keep track of the current row index, starting from 0, and <code>d</code> as the direction of traversal (1 for downward, -1 for upward).</li>
-<li>Create a list of numRows empty lists to represent the rows of the ZigZag pattern.</li>
-</ul>
-<p><code>python
-   idx, d = 0, 1
-   rows = [ for row in range(numRows)]</code></p>
-<ol>
-<li><strong>Traverse through the String</strong>:</li>
-</ol>
-<ul>
-<li>Iterate through each character <code>char</code> in the input string <code>s</code>.</li>
-<li>Append the current character to the row indicated by the <code>idx</code>.</li>
-<li>Update the direction <code>d</code> based on the current position (<code>idx</code>).</li>
-<li>Update the current row index <code>idx</code> according to the direction <code>d</code>.</li>
-</ul>
-<p><code>python
-   for char in s:
-       rows[idx].append(char)
-       if idx == 0:
-           d = 1
-       elif idx == numRows - 1:
-           d = -1
-       idx += d</code></p>
-<ol>
-<li><strong>Join Rows</strong>:</li>
-</ol>
-<ul>
-<li>Iterate through each row in <code>rows</code>.</li>
-<li>Join the characters in each row to form strings.</li>
-<li>Update each row in <code>rows</code> with the joined string.</li>
-</ul>
-<p><code>python
-   for i in range(numRows):
-       rows[i] = ''.join(rows[i])</code></p>
-<ol>
-<li><strong>Join Rows into Result String</strong>:</li>
-</ol>
-<ul>
-<li>Join all the rows together to form the final ZigZag pattern.</li>
-</ul>
-<p><code>python
-   return ''.join(rows)</code></p>
-<hr />
-<h2>Bonus</h2>
-<p>This is $$O(n^2)$$.</p>
-<div class="codehilite"><pre><span></span><code><span class="n">Language</span><span class="p">:</span> <span class="n">python</span> 
-<span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="p">:</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">convert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">s</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">numRows</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">numRows</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">or</span> <span class="n">numRows</span> <span class="o">&gt;=</span> <span class="nb">len</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
-            <span class="k">return</span> <span class="n">s</span>
-
-        <span class="n">idx</span><span class="p">,</span> <span class="n">d</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span>
-        <span class="n">rows</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="n">numRows</span>
-
-        <span class="k">for</span> <span class="n">char</span> <span class="ow">in</span> <span class="n">s</span><span class="p">:</span>
-            <span class="n">rows</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">+=</span> <span class="n">char</span>
-            <span class="k">if</span> <span class="n">idx</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-                <span class="n">d</span> <span class="o">=</span> <span class="mi">1</span>
-            <span class="k">elif</span> <span class="n">idx</span> <span class="o">==</span> <span class="n">numRows</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
-                <span class="n">d</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
-            <span class="n">idx</span> <span class="o">+=</span> <span class="n">d</span>
-
-        <span class="k">return</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">rows</span><span class="p">)</span>  
-</code></pre></div>
-
-<hr />
-<p>Thank you for reading my post.<br />
-⭐️ Please upvote it and don't forget to subscribe to my channel!</p>
-<h5>⭐️ Subscribe URL</h5>
-<p>http://www.youtube.com/channel/UC9RMNwYTL3SXCP6ShLWVFww?sub_confirmation=1</p>
-<h5>⭐️ Twitter</h5>
-<p>https://twitter.com/CodingNinjaAZ</p>
-<h2>My previous post and video</h2>
-<h5>⭐️ Best Time to Buy and Sell Stock</h5>
-<p>post<br />
-https://leetcode.com/problems/best-time-to-buy-and-sell-stock/solutions/</p>
-<p>video<br />
-https://youtu.be/NG4ZDYD4a2o</p></div><p style="page-break-before: always" ></p>

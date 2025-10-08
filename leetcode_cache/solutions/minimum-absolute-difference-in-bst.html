@@ -1,43 +1,37 @@
-<div class='cpp-solution'><h2>[C++] DFS Solution Explained, 100% Time, ~50% Space -- Votes: 84</h2><p>One possible solution would be to take all the values, store them in some container (an array should be cheap enough) and then sort them, going with a loop to find the smaller distance.</p>
+<div class='cpp-solution'><h4>[C++] DFS Solution Explained, 100% Time, ~50% Space [Votes: 84]</h4><p>One possible solution would be to take all the values, store them in some container (an array should be cheap enough) and then sort them, going with a loop to find the smaller distance.</p>
 <p>But we don't really need this, since we are talking about a BST, which means its <a href="https://en.wikipedia.org/wiki/Tree_traversal#In-order_(LNR)">inorder traversal</a> is guaranteed to give us already ordered nodes (that we can then compare 1 by 1).</p>
-<p>Now we can proceed, declaring 2 class variables:</p>
-<ul>
-<li><code>diff</code> will store the minimum difference computed so far from 2 ordered nodes;</li>
-<li><code>prev</code> will store the value of the node we checked before the current one.</li>
-</ul>
+<p>Now we can proceed, declaring 2 class variables:
+* <code>diff</code> will store the minimum difference computed so far from 2 ordered nodes;
+* <code>prev</code> will store the value of the node we checked before the current one.</p>
 <p>Our helper <code>dfs</code> can run without the need to check whether or not <code>root</code> exists at each iteration, since we are told each tree will have at least 2 nodes (and thus also a root) and we will then first of all proceed to call it recursively on <code>root-&gt;left</code> if it is not <code>NULL</code>, then we will check if we have a <code>prev</code> (and this can't happen until we hit the leftmost node before) and in case compute the current distance and update <code>diff</code>.</p>
 <p>After this, we can update the value of <code>prev</code> with <code>root</code> and, as in any inorder procedure, call the function recursively now on <code>root-&gt;right</code> (provided we have it).</p>
 <p>Our main function will just have to call <code>dfs</code> on <code>root</code>, then safely return <code>diff</code> :)</p>
 <p>The code:</p>
-<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">cpp</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="w"> </span><span class="p">{</span>
-<span class="k">public</span><span class="o">:</span>
-<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">diff</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">INT_MAX</span><span class="p">;</span>
-<span class="w">    </span><span class="n">TreeNode</span><span class="w"> </span><span class="o">*</span><span class="n">prev</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">NULL</span><span class="p">;</span>
-<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">dfs</span><span class="p">(</span><span class="n">TreeNode</span><span class="w"> </span><span class="o">*</span><span class="n">root</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="c1">// moving to the left as much as we can</span>
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">root</span><span class="o">-&gt;</span><span class="n">left</span><span class="p">)</span><span class="w"> </span><span class="n">dfs</span><span class="p">(</span><span class="n">root</span><span class="o">-&gt;</span><span class="n">left</span><span class="p">);</span>
-<span class="w">        </span><span class="c1">// if we find at least a node before, we update diff</span>
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">prev</span><span class="p">)</span><span class="w"> </span><span class="n">diff</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">min</span><span class="p">(</span><span class="n">diff</span><span class="p">,</span><span class="w"> </span><span class="n">abs</span><span class="p">(</span><span class="n">prev</span><span class="o">-&gt;</span><span class="n">val</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">root</span><span class="o">-&gt;</span><span class="n">val</span><span class="p">));</span>
-<span class="w">        </span><span class="n">prev</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">root</span><span class="p">;</span>
-<span class="w">        </span><span class="c1">// moving to the right as much as we can</span>
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">root</span><span class="o">-&gt;</span><span class="n">right</span><span class="p">)</span><span class="w"> </span><span class="n">dfs</span><span class="p">(</span><span class="n">root</span><span class="o">-&gt;</span><span class="n">right</span><span class="p">);</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="nf">getMinimumDifference</span><span class="p">(</span><span class="n">TreeNode</span><span class="w"> </span><span class="o">*</span><span class="n">root</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="n">dfs</span><span class="p">(</span><span class="n">root</span><span class="p">);</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">diff</span><span class="p">;</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">};</span>
-</code></pre></div></div>
-
-
-<div class='python-solution'><h2>Python recursive -- Votes: 117</h2><p>Keep track of the lo and hi bounds of each node, when you've passed the leaf nodes, compute <code>hi - lo</code> to get the lowest difference along that path</p>
-<div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="n">Solution</span>(<span class="n">object</span>):
-    <span class="n">def</span> <span class="n">getMinimumDifference</span>(<span class="nb">self</span>, <span class="n">root</span>):
-        <span class="n">def</span> <span class="n">fn</span>(<span class="n">node</span>, <span class="n">lo</span>, <span class="n">hi</span>):
-            <span class="k">if</span> <span class="nb">not</span> <span class="n">node:</span> <span class="k">return</span> <span class="n">hi</span> - <span class="n">lo</span>
-            <span class="n">left</span> = <span class="n">fn</span>(<span class="n">node</span>.<span class="n">left</span>, <span class="n">lo</span>, <span class="n">node</span>.<span class="nb">val</span>)
-            <span class="nb">right</span> = <span class="n">fn</span>(<span class="n">node</span>.<span class="nb">right</span>, <span class="n">node</span>.<span class="nb">val</span>, <span class="n">hi</span>)
-            <span class="k">return</span> <span class="nb">min</span>(<span class="n">left</span>, <span class="nb">right</span>)
-        <span class="k">return</span> <span class="n">fn</span>(<span class="n">root</span>, <span class="n">float</span>(<span class="s">&#39;-inf&#39;</span>), <span class="n">float</span>(<span class="s">&#39;inf&#39;</span>))
-</code></pre></div></div><p style="page-break-before: always" ></p>
+<pre><code class="language-cpp">class Solution {
+public:
+    int diff = INT_MAX;
+    TreeNode *prev = NULL;
+    void dfs(TreeNode *root) {
+        // moving to the left as much as we can
+        if (root-&gt;left) dfs(root-&gt;left);
+        // if we find at least a node before, we update diff
+        if (prev) diff = min(diff, abs(prev-&gt;val - root-&gt;val));
+        prev = root;
+        // moving to the right as much as we can
+        if (root-&gt;right) dfs(root-&gt;right);
+    }
+    int getMinimumDifference(TreeNode *root) {
+        dfs(root);
+        return diff;
+    }
+};
+</code></pre></div><div class='python-solution'><h4>Python recursive [Votes: 117]</h4><p>Keep track of the lo and hi bounds of each node, when you've passed the leaf nodes, compute <code>hi - lo</code> to get the lowest difference along that path </p>
+<pre><code>class Solution(object):
+    def getMinimumDifference(self, root):
+        def fn(node, lo, hi):
+            if not node: return hi - lo
+            left = fn(node.left, lo, node.val)
+            right = fn(node.right, node.val, hi)
+            return min(left, right)
+        return fn(root, float('-inf'), float('inf'))
+</code></pre></div>

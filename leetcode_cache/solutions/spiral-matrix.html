@@ -1,18 +1,18 @@
-<div class='cpp-solution'><h2>Python🔥Java🔥C++🔥Simple Solution🔥Easy to Understand -- Votes: 341</h2><p><strong>!! BIG ANNOUNCEMENT !!</strong><br />
+<div class='cpp-solution'><h4>Python🔥Java🔥C++🔥Simple Solution🔥Easy to Understand [Votes: 341]</h4><p><strong>!! BIG ANNOUNCEMENT !!</strong>
 I am currently Giving away my premium content well-structured assignments and study materials to clear interviews at top companies related to computer science and data science to my current Subscribers. I planned to give for next 10,000 Subscribers as well. If you're interested <strong>DON'T FORGET</strong> to Subscribe</p>
-<h2>Search <code>Tech Wired Leetcode</code> to Subscribe</h2>
-<h2>Video Solution</h2>
-<h2>Search <code>Spiral Matrix by Tech Wired</code></h2>
-<h2>or</h2>
-<h2>Click the Link in my Profile</h2>
-<h2>Approach:</h2>
+<h4>Search  <code>Tech Wired Leetcode</code> to Subscribe</h4>
+<h4>Video Solution</h4>
+<h4>Search  <code>Spiral Matrix by Tech Wired</code></h4>
+<h4>or</h4>
+<h4>Click the Link in my Profile</h4>
+<h4>Approach:</h4>
 <ul>
 <li>We will use a while loop to traverse the matrix in a clockwise spiral order.</li>
 <li>We will define four variables: left, right, top, bottom to represent the four boundaries of the current spiral.</li>
 <li>We will use four for loops to traverse each edge of the current spiral in clockwise order and add the elements to the result list.</li>
 <li>We will update the boundaries of the current spiral and continue the process until all elements have been traversed.</li>
 </ul>
-<h2>Intuition:</h2>
+<h4>Intuition:</h4>
 <ul>
 <li>We start with the outermost layer of the matrix and traverse it in a clockwise spiral order, adding the elements to the result list.</li>
 <li>Then we move on to the next inner layer of the matrix and repeat the process until we have traversed all layers.</li>
@@ -21,163 +21,151 @@ I am currently Giving away my premium content well-structured assignments and st
 <li>Then we move down to the bottom-right corner and move left until we hit the bottom-left corner.</li>
 <li>Finally, we move up to the top-left corner of the next spiral and repeat the process until we have traversed all elements in the matrix.</li>
 </ul>
-<div class="codehilite"><pre><span></span><code><span class="n">Language</span><span class="p">:</span> <span class="n">Python</span> 
-<span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="p">:</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">spiralOrder</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">matrix</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">matrix</span><span class="p">:</span>
-            <span class="k">return</span> 
+<pre><code class="language-Python">class Solution:
+    def spiralOrder(self, matrix: List[List[int]]) -&gt; List[int]:
+        if not matrix:
+            return []
 
-        <span class="n">rows</span><span class="p">,</span> <span class="n">cols</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">matrix</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">matrix</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-        <span class="n">top</span><span class="p">,</span> <span class="n">bottom</span><span class="p">,</span> <span class="n">left</span><span class="p">,</span> <span class="n">right</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">rows</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">cols</span><span class="o">-</span><span class="mi">1</span>
-        <span class="n">result</span> <span class="o">=</span> 
+        rows, cols = len(matrix), len(matrix[0])
+        top, bottom, left, right = 0, rows-1, 0, cols-1
+        result = []
 
-        <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">result</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">rows</span> <span class="o">*</span> <span class="n">cols</span><span class="p">:</span>
-            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
-                <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">matrix</span><span class="p">[</span><span class="n">top</span><span class="p">][</span><span class="n">i</span><span class="p">])</span>
-            <span class="n">top</span> <span class="o">+=</span> <span class="mi">1</span>
+        while len(result) &lt; rows * cols:
+            for i in range(left, right+1):
+                result.append(matrix[top][i])
+            top += 1
 
-            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">top</span><span class="p">,</span> <span class="n">bottom</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
-                <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">matrix</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">right</span><span class="p">])</span>
-            <span class="n">right</span> <span class="o">-=</span> <span class="mi">1</span>
+            for i in range(top, bottom+1):
+                result.append(matrix[i][right])
+            right -= 1
 
-            <span class="k">if</span> <span class="n">top</span> <span class="o">&lt;=</span> <span class="n">bottom</span><span class="p">:</span>
-                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">right</span><span class="p">,</span> <span class="n">left</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>
-                    <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">matrix</span><span class="p">[</span><span class="n">bottom</span><span class="p">][</span><span class="n">i</span><span class="p">])</span>
-                <span class="n">bottom</span> <span class="o">-=</span> <span class="mi">1</span>
+            if top &lt;= bottom:
+                for i in range(right, left-1, -1):
+                    result.append(matrix[bottom][i])
+                bottom -= 1
 
-            <span class="k">if</span> <span class="n">left</span> <span class="o">&lt;=</span> <span class="n">right</span><span class="p">:</span>
-                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">bottom</span><span class="p">,</span> <span class="n">top</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>
-                    <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">matrix</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">left</span><span class="p">])</span>
-                <span class="n">left</span> <span class="o">+=</span> <span class="mi">1</span>
+            if left &lt;= right:
+                for i in range(bottom, top-1, -1):
+                    result.append(matrix[i][left])
+                left += 1
 
-        <span class="k">return</span> <span class="n">result</span>
-</code></pre></div>
+        return result
 
-<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">Java</span><span class="w"> </span>
-<span class="kd">class</span> <span class="nc">Solution</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span><span class="w"> </span><span class="nf">spiralOrder</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">matrix</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="n">List</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ArrayList</span><span class="o">&lt;&gt;</span><span class="p">();</span>
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">matrix</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kc">null</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">matrix</span><span class="p">.</span><span class="na">length</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="n">result</span><span class="p">;</span>
-<span class="w">        </span><span class="p">}</span>
+</code></pre>
+<pre><code class="language-Java">class Solution {
+    public List&lt;Integer&gt; spiralOrder(int[][] matrix) {
+        List&lt;Integer&gt; result = new ArrayList&lt;&gt;();
+        if (matrix == null || matrix.length == 0) {
+            return result;
+        }
 
-<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">rows</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">matrix</span><span class="p">.</span><span class="na">length</span><span class="p">,</span><span class="w"> </span><span class="n">cols</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">matrix</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span><span class="p">.</span><span class="na">length</span><span class="p">;</span>
-<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">left</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">right</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cols</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">top</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">bottom</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">rows</span><span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+        int rows = matrix.length, cols = matrix[0].length;
+        int left = 0, right = cols-1, top = 0, bottom = rows-1;
 
-<span class="w">        </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">left</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">right</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">top</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">bottom</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">left</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">right</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="n">result</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="n">matrix</span><span class="o">[</span><span class="n">top</span><span class="o">][</span><span class="n">i</span><span class="o">]</span><span class="p">);</span>
-<span class="w">            </span><span class="p">}</span>
-<span class="w">            </span><span class="n">top</span><span class="o">++</span><span class="p">;</span>
+        while (left &lt;= right &amp;&amp; top &lt;= bottom) {
+            for (int i = left; i &lt;= right; i++) {
+                result.add(matrix[top][i]);
+            }
+            top++;
 
-<span class="w">            </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">top</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">bottom</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="n">result</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="n">matrix</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="n">right</span><span class="o">]</span><span class="p">);</span>
-<span class="w">            </span><span class="p">}</span>
-<span class="w">            </span><span class="n">right</span><span class="o">--</span><span class="p">;</span>
+            for (int i = top; i &lt;= bottom; i++) {
+                result.add(matrix[i][right]);
+            }
+            right--;
 
-<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">top</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">bottom</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">right</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="n">left</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">--</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                    </span><span class="n">result</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="n">matrix</span><span class="o">[</span><span class="n">bottom</span><span class="o">][</span><span class="n">i</span><span class="o">]</span><span class="p">);</span>
-<span class="w">                </span><span class="p">}</span>
-<span class="w">                </span><span class="n">bottom</span><span class="o">--</span><span class="p">;</span>
-<span class="w">            </span><span class="p">}</span>
+            if (top &lt;= bottom) {
+                for (int i = right; i &gt;= left; i--) {
+                    result.add(matrix[bottom][i]);
+                }
+                bottom--;
+            }
 
-<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">left</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">right</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">bottom</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="n">top</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">--</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                    </span><span class="n">result</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="n">matrix</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="n">left</span><span class="o">]</span><span class="p">);</span>
-<span class="w">                </span><span class="p">}</span>
-<span class="w">                </span><span class="n">left</span><span class="o">++</span><span class="p">;</span>
-<span class="w">            </span><span class="p">}</span>
-<span class="w">        </span><span class="p">}</span>
+            if (left &lt;= right) {
+                for (int i = bottom; i &gt;= top; i--) {
+                    result.add(matrix[i][left]);
+                }
+                left++;
+            }
+        }
 
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">result</span><span class="p">;</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
+        return result;
+    }
+}
 
-<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">C</span><span class="o">++</span><span class="w"> </span>
-<span class="n">class</span><span class="w"> </span><span class="n">Solution</span><span class="w"> </span><span class="p">{</span>
-<span class="n">public</span><span class="o">:</span>
-<span class="w">    </span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="w"> </span><span class="n">spiralOrder</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&gt;&amp;</span><span class="w"> </span><span class="n">matrix</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="w"> </span><span class="n">result</span><span class="p">;</span>
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">matrix</span><span class="p">.</span><span class="n">empty</span><span class="p">()</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">matrix</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="n">empty</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="n">result</span><span class="p">;</span>
-<span class="w">        </span><span class="p">}</span>
+</code></pre>
+<pre><code class="language-cpp">class Solution {
+public:
+    vector&lt;int&gt; spiralOrder(vector&lt;vector&lt;int&gt;&gt;&amp; matrix) {
+        vector&lt;int&gt; result;
+        if (matrix.empty() || matrix[0].empty()) {
+            return result;
+        }
 
-<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">rows</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">matrix</span><span class="p">.</span><span class="n">size</span><span class="p">(),</span><span class="w"> </span><span class="n">cols</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">matrix</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="n">size</span><span class="p">();</span>
-<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">left</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">right</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cols</span><span class="mi">-1</span><span class="p">,</span><span class="w"> </span><span class="n">top</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">bottom</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">rows</span><span class="mi">-1</span><span class="p">;</span>
+        int rows = matrix.size(), cols = matrix[0].size();
+        int left = 0, right = cols-1, top = 0, bottom = rows-1;
 
-<span class="w">        </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">left</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">right</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">top</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">bottom</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">left</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">right</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="n">result</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">matrix</span><span class="p">[</span><span class="n">top</span><span class="p">][</span><span class="n">i</span><span class="p">]);</span>
-<span class="w">            </span><span class="p">}</span>
-<span class="w">            </span><span class="n">top</span><span class="o">++</span><span class="p">;</span>
+        while (left &lt;= right &amp;&amp; top &lt;= bottom) {
+            for (int i = left; i &lt;= right; i++) {
+                result.push_back(matrix[top][i]);
+            }
+            top++;
 
-<span class="w">            </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">top</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">bottom</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="n">result</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">matrix</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">right</span><span class="p">]);</span>
-<span class="w">            </span><span class="p">}</span>
-<span class="w">            </span><span class="n">right</span><span class="o">--</span><span class="p">;</span>
+            for (int i = top; i &lt;= bottom; i++) {
+                result.push_back(matrix[i][right]);
+            }
+            right--;
 
-<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">top</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">bottom</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">right</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="n">left</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">--</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                    </span><span class="n">result</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">matrix</span><span class="p">[</span><span class="n">bottom</span><span class="p">][</span><span class="n">i</span><span class="p">]);</span>
-<span class="w">                </span><span class="p">}</span>
-<span class="w">                </span><span class="n">bottom</span><span class="o">--</span><span class="p">;</span>
-<span class="w">            </span><span class="p">}</span>
+            if (top &lt;= bottom) {
+                for (int i = right; i &gt;= left; i--) {
+                    result.push_back(matrix[bottom][i]);
+                }
+                bottom--;
+            }
 
-<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">left</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">right</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">bottom</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="n">top</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">--</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                    </span><span class="n">result</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">matrix</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">left</span><span class="p">]);</span>
-<span class="w">                </span><span class="p">}</span>
-<span class="w">                </span><span class="n">left</span><span class="o">++</span><span class="p">;</span>
-<span class="w">            </span><span class="p">}</span>
-<span class="w">        </span><span class="p">}</span>
+            if (left &lt;= right) {
+                for (int i = bottom; i &gt;= top; i--) {
+                    result.push_back(matrix[i][left]);
+                }
+                left++;
+            }
+        }
 
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">result</span><span class="p">;</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">};</span>
-</code></pre></div>
+        return result;
+    }
+};
 
-<h2>An Upvote will be encouraging</h2></div>
-
-
-<div class='python-solution'><h2>1-liner in Python + Ruby -- Votes: 1816</h2><p>Take the first row plus the spiral order of the rotated remaining matrix. Inefficient for large matrices, but here I got it accepted in 40 ms, one of the fastest Python submissions.</p>
+</code></pre>
+<h4>An Upvote will be encouraging</h4></div><div class='python-solution'><h4>1-liner in Python + Ruby [Votes: 1816]</h4><p>Take the first row plus the spiral order of the rotated remaining matrix. Inefficient for large matrices, but here I got it accepted in 40 ms, one of the fastest Python submissions.</p>
 <p>Python:</p>
-<div class="codehilite"><pre><span></span><code><span class="s s-Atom">def</span> <span class="nf">spiralOrder</span><span class="p">(</span><span class="s s-Atom">self</span><span class="p">,</span> <span class="s s-Atom">matrix</span><span class="p">)</span><span class="o">:</span>
-    <span class="s s-Atom">return</span> <span class="s s-Atom">matrix</span> <span class="s s-Atom">and</span> <span class="nf">list</span><span class="p">(</span><span class="s s-Atom">matrix</span><span class="p">.</span><span class="nf">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span> <span class="o">+</span> <span class="s s-Atom">self</span><span class="p">.</span><span class="nf">spiralOrder</span><span class="p">(</span><span class="nf">zip</span><span class="p">(</span><span class="o">*</span><span class="s s-Atom">matrix</span><span class="p">)[</span><span class="o">::-</span><span class="mi">1</span><span class="p">])</span>
-</code></pre></div>
-
+<pre><code>def spiralOrder(self, matrix):
+    return matrix and list(matrix.pop(0)) + self.spiralOrder(zip(*matrix)[::-1])
+</code></pre>
 <p>Python 3:</p>
-<div class="codehilite"><pre><span></span><code><span class="s s-Atom">def</span> <span class="nf">spiralOrder</span><span class="p">(</span><span class="s s-Atom">self</span><span class="p">,</span> <span class="s s-Atom">matrix</span><span class="p">)</span><span class="o">:</span>
-    <span class="s s-Atom">return</span> <span class="s s-Atom">matrix</span> <span class="s s-Atom">and</span> <span class="p">[</span><span class="o">*</span><span class="s s-Atom">matrix</span><span class="p">.</span><span class="nf">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)]</span> <span class="o">+</span> <span class="s s-Atom">self</span><span class="p">.</span><span class="nf">spiralOrder</span><span class="p">([</span><span class="o">*</span><span class="nf">zip</span><span class="p">(</span><span class="o">*</span><span class="s s-Atom">matrix</span><span class="p">)][</span><span class="o">::-</span><span class="mi">1</span><span class="p">])</span>
-</code></pre></div>
-
+<pre><code>def spiralOrder(self, matrix):
+    return matrix and [*matrix.pop(0)] + self.spiralOrder([*zip(*matrix)][::-1])
+</code></pre>
 <p>Ruby:</p>
-<div class="codehilite"><pre><span></span><code>def spiral_order(matrix)
-  (row = matrix.shift) ? row + spiral_order(matrix.transpose.reverse) : 
+<pre><code>def spiral_order(matrix)
+  (row = matrix.shift) ? row + spiral_order(matrix.transpose.reverse) : []
 end
-</code></pre></div>
-
+</code></pre>
 <p>or</p>
-<div class="codehilite"><pre><span></span><code>def spiral_order(matrix)
-  matrix[0] ? matrix.shift + spiral_order(matrix.transpose.reverse) : 
+<pre><code>def spiral_order(matrix)
+  matrix[0] ? matrix.shift + spiral_order(matrix.transpose.reverse) : []
 end
-</code></pre></div>
-
-<h4>Visualization</h4>
+</code></pre>
+<h6>Visualization</h6>
 <p>Here's how the matrix changes by always extracting the first row and rotating the remaining matrix counter-clockwise:</p>
-<div class="codehilite"><pre><span></span><code>    |1 2 3|      |6 9|      |8 7|      |4|  =&gt;  |5|  =&gt;  ||
+<pre><code>    |1 2 3|      |6 9|      |8 7|      |4|  =&gt;  |5|  =&gt;  ||
     |4 5 6|  =&gt;  |5 8|  =&gt;  |5 4|  =&gt;  |5|
     |7 8 9|      |4 7|
-</code></pre></div>
-
+</code></pre>
 <p>Now look at the first rows we extracted:</p>
-<div class="codehilite"><pre><span></span><code>    |1 2 3|      |6 9|      |8 7|      |4|      |5|
-</code></pre></div>
-
+<pre><code>    |1 2 3|      |6 9|      |8 7|      |4|      |5|
+</code></pre>
 <p>Those concatenated are the desired result.</p>
-<h4>Another visualization</h4>
-<div class="codehilite"><pre><span></span><code>  spiral_order([[1, 2, 3],
+<h6>Another visualization</h6>
+<pre><code>  spiral_order([[1, 2, 3],
                 [4, 5, 6],
                 [7, 8, 9]])
 
@@ -193,9 +181,9 @@ end
 
 = [1, 2, 3] + [6, 9] + [8, 7] + [4] + spiral_order([[5]])
 
-= [1, 2, 3] + [6, 9] + [8, 7] + [4] + [5] + spiral_order()
+= [1, 2, 3] + [6, 9] + [8, 7] + [4] + [5] + spiral_order([])
 
-= [1, 2, 3] + [6, 9] + [8, 7] + [4] + [5] + 
+= [1, 2, 3] + [6, 9] + [8, 7] + [4] + [5] + []
 
 = [1, 2, 3, 6, 9, 8, 7, 4, 5]
-</code></pre></div></div><p style="page-break-before: always" ></p>
+</code></pre></div>

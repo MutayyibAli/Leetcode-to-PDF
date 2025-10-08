@@ -1,290 +1,129 @@
-<div class='cpp-solution'><h2>✅Beats 100% || C++ || JAVA || PYTHON || Beginner Friendly🔥🔥🔥 -- Votes: 696</h2><h2>Intuition</h2>
+<div class='cpp-solution'><h4>✅Beats 100% || C++ || JAVA || PYTHON || Beginner Friendly🔥🔥🔥 [Votes: 696]</h4><h4>Intuition</h4>
 <p>The Intuition behind the code is to find the maximum sum of a contiguous subarray within the given array <code>nums</code>. It does this by scanning through the array and keeping track of the current sum of the subarray. Whenever the current sum becomes greater than the maximum sum encountered so far, it updates the maximum sum. If the current sum becomes negative, it resets the sum to 0 and starts a new subarray. By the end of the loop, the code returns the maximum sum found.</p>
-<h2>Approach:</h2>
+<h4>Approach:</h4>
 <ol>
-<li>We start by initializing two variables: <code>maxSum</code> and <code>currentSum</code>.<br />
-   - <code>maxSum</code> represents the maximum sum encountered so far and is initially set to the minimum possible integer value to ensure that any valid subarray sum will be greater than it.<br />
-   - <code>currentSum</code> represents the current sum of the subarray being considered and is initially set to 0.</li>
+<li>We start by initializing two variables: <code>maxSum</code> and <code>currentSum</code>.</li>
+<li><code>maxSum</code> represents the maximum sum encountered so far and is initially set to the minimum possible integer value to ensure that any valid subarray sum will be greater than it.</li>
+<li><code>currentSum</code> represents the current sum of the subarray being considered and is initially set to 0.</li>
 <li>We iterate through the <code>nums</code> array using a for loop, starting from the first element and going up to the last element.</li>
 <li>For each element in the array, we add it to the current sum <code>currentSum</code>. This calculates the sum of the subarray ending at the current element.</li>
-<li>Next, we check if the current sum <code>currentSum</code> is greater than the current maximum sum <code>maxSum</code>.<br />
-   - If it is, we update <code>maxSum</code> with the new value of <code>currentSum</code>. This means we have found a new maximum subarray sum.</li>
+<li>Next, we check if the current sum <code>currentSum</code> is greater than the current maximum sum <code>maxSum</code>.</li>
+<li>If it is, we update <code>maxSum</code> with the new value of <code>currentSum</code>. This means we have found a new maximum subarray sum.</li>
 <li>If the current sum <code>currentSum</code> becomes negative, it indicates that including the current element in the subarray would reduce the overall sum. In such cases, we reset <code>currentSum</code> to 0. This effectively discards the current subarray and allows us to start a fresh subarray from the next element.</li>
 <li>We repeat steps 3 to 5 for each element in the array.</li>
 <li>After iterating through the entire array, the variable <code>maxSum</code> will contain the maximum subarray sum encountered.</li>
 <li>Finally, we return the value of <code>maxSum</code> as the result, representing the maximum sum of a contiguous subarray within the given array <code>nums</code>.</li>
 </ol>
-<h2>Code</h2>
-<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">C</span><span class="o">++</span><span class="w"> </span>
-<span class="n">class</span><span class="w"> </span><span class="n">Solution</span><span class="w"> </span><span class="p">{</span>
-<span class="n">public</span><span class="o">:</span>
-<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">maxSubArray</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&amp;</span><span class="w"> </span><span class="n">nums</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">maxSum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">INT_MIN</span><span class="p">;</span>
-<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">currentSum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<h4>Code</h4>
+<pre><code class="language-cpp">class Solution {
+public:
+    int maxSubArray(vector&lt;int&gt;&amp; nums) {
+        int maxSum = INT_MIN;
+        int currentSum = 0;
 
-<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">nums</span><span class="p">.</span><span class="n">size</span><span class="p">();</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="n">currentSum</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">nums</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+        for (int i = 0; i &lt; nums.size(); i++) {
+            currentSum += nums[i];
 
-<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">currentSum</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">maxSum</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="n">maxSum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">currentSum</span><span class="p">;</span>
-<span class="w">            </span><span class="p">}</span>
+            if (currentSum &gt; maxSum) {
+                maxSum = currentSum;
+            }
 
-<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">currentSum</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="n">currentSum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-<span class="w">            </span><span class="p">}</span>
-<span class="w">        </span><span class="p">}</span>
+            if (currentSum &lt; 0) {
+                currentSum = 0;
+            }
+        }
 
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">maxSum</span><span class="p">;</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">};</span>
-</code></pre></div>
+        return maxSum;
+    }
+};
+</code></pre>
+<pre><code class="language-Java">class Solution {
+    public int maxSubArray(int[] nums) {
+        int maxSum = Integer.MIN_VALUE;
+        int currentSum = 0;
 
-<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">Java</span><span class="w"> </span>
-<span class="kd">class</span> <span class="nc">Solution</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="nf">maxSubArray</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">nums</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">maxSum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Integer</span><span class="p">.</span><span class="na">MIN_VALUE</span><span class="p">;</span>
-<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">currentSum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+        for (int i = 0; i &lt; nums.length; i++) {
+            currentSum += nums[i];
 
-<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">nums</span><span class="p">.</span><span class="na">length</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="n">currentSum</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">nums</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="p">;</span>
+            if (currentSum &gt; maxSum) {
+                maxSum = currentSum;
+            }
 
-<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">currentSum</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">maxSum</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="n">maxSum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">currentSum</span><span class="p">;</span>
-<span class="w">            </span><span class="p">}</span>
+            if (currentSum &lt; 0) {
+                currentSum = 0;
+            }
+        }
 
-<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">currentSum</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="n">currentSum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-<span class="w">            </span><span class="p">}</span>
-<span class="w">        </span><span class="p">}</span>
+        return maxSum;
+    }
+}
+</code></pre>
+<pre><code class="language-Python3">class Solution:
+    def maxSubArray(self, nums: List[int]) -&gt; int:
+        maxSum = float('-inf')
+        currentSum = 0
 
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">maxSum</span><span class="p">;</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
+        for num in nums:
+            currentSum += num
 
-<div class="codehilite"><pre><span></span><code><span class="n">Language</span><span class="p">:</span> <span class="n">Python3</span> 
-<span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="p">:</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">maxSubArray</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nums</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-        <span class="n">maxSum</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s1">&#39;-inf&#39;</span><span class="p">)</span>
-        <span class="n">currentSum</span> <span class="o">=</span> <span class="mi">0</span>
+            if currentSum &gt; maxSum:
+                maxSum = currentSum
 
-        <span class="k">for</span> <span class="n">num</span> <span class="ow">in</span> <span class="n">nums</span><span class="p">:</span>
-            <span class="n">currentSum</span> <span class="o">+=</span> <span class="n">num</span>
+            if currentSum &lt; 0:
+                currentSum = 0
 
-            <span class="k">if</span> <span class="n">currentSum</span> <span class="o">&gt;</span> <span class="n">maxSum</span><span class="p">:</span>
-                <span class="n">maxSum</span> <span class="o">=</span> <span class="n">currentSum</span>
+        return maxSum
+</code></pre>
+<h4>clean code</h4>
+<pre><code class="language-cpp">class Solution {
+public:
+    int maxSubArray(vector&lt;int&gt;&amp; nums) {
+        int maxSum = nums[0];
+        int currentSum = nums[0];
 
-            <span class="k">if</span> <span class="n">currentSum</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
-                <span class="n">currentSum</span> <span class="o">=</span> <span class="mi">0</span>
+        for (int i = 1; i &lt; nums.size(); i++) {
+            currentSum = max(nums[i], currentSum + nums[i]);
+            maxSum = max(maxSum, currentSum);
+        }
 
-        <span class="k">return</span> <span class="n">maxSum</span>
-</code></pre></div>
+        return maxSum;
+    }
+};
+</code></pre>
+<pre><code class="language-Java">class Solution {
+    public int maxSubArray(int[] nums) {
+        int maxSum = nums[0];
+        int currentSum = nums[0];
 
-<h2>clean code</h2>
-<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">C</span><span class="o">++</span><span class="w"> </span>
-<span class="n">class</span><span class="w"> </span><span class="n">Solution</span><span class="w"> </span><span class="p">{</span>
-<span class="n">public</span><span class="o">:</span>
-<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">maxSubArray</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&amp;</span><span class="w"> </span><span class="n">nums</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">maxSum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">nums</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
-<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">currentSum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">nums</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+        for (int i = 1; i &lt; nums.length; i++) {
+            currentSum = Math.max(nums[i], currentSum + nums[i]);
+            maxSum = Math.max(maxSum, currentSum);
+        }
 
-<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">nums</span><span class="p">.</span><span class="n">size</span><span class="p">();</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="n">currentSum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">max</span><span class="p">(</span><span class="n">nums</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="w"> </span><span class="n">currentSum</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">nums</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
-<span class="w">            </span><span class="n">maxSum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">max</span><span class="p">(</span><span class="n">maxSum</span><span class="p">,</span><span class="w"> </span><span class="n">currentSum</span><span class="p">);</span>
-<span class="w">        </span><span class="p">}</span>
+        return maxSum;
+    }
+}
+</code></pre>
+<pre><code class="language-Python3">class Solution:
+    def maxSubArray(self, nums: List[int]) -&gt; int:
+        maxSum = nums[0]
+        currentSum = nums[0]
 
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">maxSum</span><span class="p">;</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">};</span>
-</code></pre></div>
+        for num in nums[1:]:
+            currentSum = max(num, currentSum + num)
+            maxSum = max(maxSum, currentSum)
 
-<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">Java</span><span class="w"> </span>
-<span class="kd">class</span> <span class="nc">Solution</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="nf">maxSubArray</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">nums</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">maxSum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">nums</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span><span class="p">;</span>
-<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">currentSum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">nums</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span><span class="p">;</span>
-
-<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">nums</span><span class="p">.</span><span class="na">length</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="n">currentSum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Math</span><span class="p">.</span><span class="na">max</span><span class="p">(</span><span class="n">nums</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="p">,</span><span class="w"> </span><span class="n">currentSum</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">nums</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="p">);</span>
-<span class="w">            </span><span class="n">maxSum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Math</span><span class="p">.</span><span class="na">max</span><span class="p">(</span><span class="n">maxSum</span><span class="p">,</span><span class="w"> </span><span class="n">currentSum</span><span class="p">);</span>
-<span class="w">        </span><span class="p">}</span>
-
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">maxSum</span><span class="p">;</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
-
-<div class="codehilite"><pre><span></span><code><span class="n">Language</span><span class="p">:</span> <span class="n">Python3</span> 
-<span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="p">:</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">maxSubArray</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nums</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-        <span class="n">maxSum</span> <span class="o">=</span> <span class="n">nums</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="n">currentSum</span> <span class="o">=</span> <span class="n">nums</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-
-        <span class="k">for</span> <span class="n">num</span> <span class="ow">in</span> <span class="n">nums</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span>
-            <span class="n">currentSum</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">num</span><span class="p">,</span> <span class="n">currentSum</span> <span class="o">+</span> <span class="n">num</span><span class="p">)</span>
-            <span class="n">maxSum</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">maxSum</span><span class="p">,</span> <span class="n">currentSum</span><span class="p">)</span>
-
-        <span class="k">return</span> <span class="n">maxSum</span>
-</code></pre></div>
-
-<p></p>
-<p><strong>If you are a beginner solve these problems which makes concepts clear for future coding:</strong></p>
-<ol>
-<li><a href="https://leetcode.com/problems/two-sum/solutions/3619262/3-method-s-c-java-python-beginner-friendly/">Two Sum</a></li>
-<li><a href="https://leetcode.com/problems/roman-to-integer/solutions/3651672/best-method-c-java-python-beginner-friendly/">Roman to Integer</a></li>
-<li><a href="https://leetcode.com/problems/palindrome-number/solutions/3651712/2-method-s-c-java-python-beginner-friendly/">Palindrome Number</a></li>
-<li><a href="https://leetcode.com/problems/maximum-subarray/solutions/3666304/beats-100-c-java-python-beginner-friendly/">Maximum Subarray</a></li>
-<li><a href="https://leetcode.com/problems/remove-element/solutions/3670940/best-100-c-java-python-beginner-friendly/">Remove Element</a></li>
-<li><a href="https://leetcode.com/problems/contains-duplicate/solutions/3672475/4-method-s-c-java-python-beginner-friendly/">Contains Duplicate</a></li>
-<li><a href="https://leetcode.com/problems/add-two-numbers/solutions/3675747/beats-100-c-java-python-beginner-friendly/">Add Two Numbers</a></li>
-<li><a href="https://leetcode.com/problems/majority-element/solutions/3676530/3-methods-beats-100-c-java-python-beginner-friendly/">Majority Element</a></li>
-<li><a href="https://leetcode.com/problems/remove-duplicates-from-sorted-array/solutions/3676877/best-method-100-c-java-python-beginner-friendly/">Remove Duplicates from Sorted Array</a></li>
-<li><strong>Practice them in a row for better understanding and please Upvote for more questions.</strong></li>
-</ol>
+        return maxSum
+</code></pre>
+<p><strong>If you are a beginner solve these problems which makes concepts clear for future coding:</strong>
+1. <a href="https://leetcode.com/problems/two-sum/solutions/3619262/3-method-s-c-java-python-beginner-friendly/">Two Sum</a>
+2. <a href="https://leetcode.com/problems/roman-to-integer/solutions/3651672/best-method-c-java-python-beginner-friendly/">Roman to Integer</a>
+3. <a href="https://leetcode.com/problems/palindrome-number/solutions/3651712/2-method-s-c-java-python-beginner-friendly/">Palindrome Number</a>
+4. <a href="https://leetcode.com/problems/maximum-subarray/solutions/3666304/beats-100-c-java-python-beginner-friendly/">Maximum Subarray</a>
+5. <a href="https://leetcode.com/problems/remove-element/solutions/3670940/best-100-c-java-python-beginner-friendly/">Remove Element</a>
+6. <a href="https://leetcode.com/problems/contains-duplicate/solutions/3672475/4-method-s-c-java-python-beginner-friendly/">Contains Duplicate</a>
+7. <a href="https://leetcode.com/problems/add-two-numbers/solutions/3675747/beats-100-c-java-python-beginner-friendly/">Add Two Numbers</a>
+8. <a href="https://leetcode.com/problems/majority-element/solutions/3676530/3-methods-beats-100-c-java-python-beginner-friendly/">Majority Element</a>
+9. <a href="https://leetcode.com/problems/remove-duplicates-from-sorted-array/solutions/3676877/best-method-100-c-java-python-beginner-friendly/">Remove Duplicates from Sorted Array</a>
+10. <strong>Practice them in a row for better understanding and please Upvote for more questions.</strong></p>
 <p><strong>If you found my solution helpful, I would greatly appreciate your upvote, as it would motivate me to continue sharing more solutions.</strong></p></div>
-
-
-<div class='python-solution'><h2>✅Beats 100% || C++ || JAVA || PYTHON || Beginner Friendly🔥🔥🔥 -- Votes: 696</h2><h2>Intuition</h2>
-<p>The Intuition behind the code is to find the maximum sum of a contiguous subarray within the given array <code>nums</code>. It does this by scanning through the array and keeping track of the current sum of the subarray. Whenever the current sum becomes greater than the maximum sum encountered so far, it updates the maximum sum. If the current sum becomes negative, it resets the sum to 0 and starts a new subarray. By the end of the loop, the code returns the maximum sum found.</p>
-<h2>Approach:</h2>
-<ol>
-<li>We start by initializing two variables: <code>maxSum</code> and <code>currentSum</code>.<br />
-   - <code>maxSum</code> represents the maximum sum encountered so far and is initially set to the minimum possible integer value to ensure that any valid subarray sum will be greater than it.<br />
-   - <code>currentSum</code> represents the current sum of the subarray being considered and is initially set to 0.</li>
-<li>We iterate through the <code>nums</code> array using a for loop, starting from the first element and going up to the last element.</li>
-<li>For each element in the array, we add it to the current sum <code>currentSum</code>. This calculates the sum of the subarray ending at the current element.</li>
-<li>Next, we check if the current sum <code>currentSum</code> is greater than the current maximum sum <code>maxSum</code>.<br />
-   - If it is, we update <code>maxSum</code> with the new value of <code>currentSum</code>. This means we have found a new maximum subarray sum.</li>
-<li>If the current sum <code>currentSum</code> becomes negative, it indicates that including the current element in the subarray would reduce the overall sum. In such cases, we reset <code>currentSum</code> to 0. This effectively discards the current subarray and allows us to start a fresh subarray from the next element.</li>
-<li>We repeat steps 3 to 5 for each element in the array.</li>
-<li>After iterating through the entire array, the variable <code>maxSum</code> will contain the maximum subarray sum encountered.</li>
-<li>Finally, we return the value of <code>maxSum</code> as the result, representing the maximum sum of a contiguous subarray within the given array <code>nums</code>.</li>
-</ol>
-<h2>Code</h2>
-<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">C</span><span class="o">++</span><span class="w"> </span>
-<span class="n">class</span><span class="w"> </span><span class="n">Solution</span><span class="w"> </span><span class="p">{</span>
-<span class="n">public</span><span class="o">:</span>
-<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">maxSubArray</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&amp;</span><span class="w"> </span><span class="n">nums</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">maxSum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">INT_MIN</span><span class="p">;</span>
-<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">currentSum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-
-<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">nums</span><span class="p">.</span><span class="n">size</span><span class="p">();</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="n">currentSum</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">nums</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
-
-<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">currentSum</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">maxSum</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="n">maxSum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">currentSum</span><span class="p">;</span>
-<span class="w">            </span><span class="p">}</span>
-
-<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">currentSum</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="n">currentSum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-<span class="w">            </span><span class="p">}</span>
-<span class="w">        </span><span class="p">}</span>
-
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">maxSum</span><span class="p">;</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">};</span>
-</code></pre></div>
-
-<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">Java</span><span class="w"> </span>
-<span class="kd">class</span> <span class="nc">Solution</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="nf">maxSubArray</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">nums</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">maxSum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Integer</span><span class="p">.</span><span class="na">MIN_VALUE</span><span class="p">;</span>
-<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">currentSum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-
-<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">nums</span><span class="p">.</span><span class="na">length</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="n">currentSum</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">nums</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="p">;</span>
-
-<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">currentSum</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">maxSum</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="n">maxSum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">currentSum</span><span class="p">;</span>
-<span class="w">            </span><span class="p">}</span>
-
-<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">currentSum</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="n">currentSum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-<span class="w">            </span><span class="p">}</span>
-<span class="w">        </span><span class="p">}</span>
-
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">maxSum</span><span class="p">;</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
-
-<div class="codehilite"><pre><span></span><code><span class="n">Language</span><span class="p">:</span> <span class="n">Python3</span> 
-<span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="p">:</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">maxSubArray</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nums</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-        <span class="n">maxSum</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s1">&#39;-inf&#39;</span><span class="p">)</span>
-        <span class="n">currentSum</span> <span class="o">=</span> <span class="mi">0</span>
-
-        <span class="k">for</span> <span class="n">num</span> <span class="ow">in</span> <span class="n">nums</span><span class="p">:</span>
-            <span class="n">currentSum</span> <span class="o">+=</span> <span class="n">num</span>
-
-            <span class="k">if</span> <span class="n">currentSum</span> <span class="o">&gt;</span> <span class="n">maxSum</span><span class="p">:</span>
-                <span class="n">maxSum</span> <span class="o">=</span> <span class="n">currentSum</span>
-
-            <span class="k">if</span> <span class="n">currentSum</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
-                <span class="n">currentSum</span> <span class="o">=</span> <span class="mi">0</span>
-
-        <span class="k">return</span> <span class="n">maxSum</span>
-</code></pre></div>
-
-<h2>clean code</h2>
-<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">C</span><span class="o">++</span><span class="w"> </span>
-<span class="n">class</span><span class="w"> </span><span class="n">Solution</span><span class="w"> </span><span class="p">{</span>
-<span class="n">public</span><span class="o">:</span>
-<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">maxSubArray</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&amp;</span><span class="w"> </span><span class="n">nums</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">maxSum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">nums</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
-<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">currentSum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">nums</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
-
-<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">nums</span><span class="p">.</span><span class="n">size</span><span class="p">();</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="n">currentSum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">max</span><span class="p">(</span><span class="n">nums</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="w"> </span><span class="n">currentSum</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">nums</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
-<span class="w">            </span><span class="n">maxSum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">max</span><span class="p">(</span><span class="n">maxSum</span><span class="p">,</span><span class="w"> </span><span class="n">currentSum</span><span class="p">);</span>
-<span class="w">        </span><span class="p">}</span>
-
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">maxSum</span><span class="p">;</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">};</span>
-</code></pre></div>
-
-<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">Java</span><span class="w"> </span>
-<span class="kd">class</span> <span class="nc">Solution</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="nf">maxSubArray</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">nums</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">maxSum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">nums</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span><span class="p">;</span>
-<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">currentSum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">nums</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span><span class="p">;</span>
-
-<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">nums</span><span class="p">.</span><span class="na">length</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="n">currentSum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Math</span><span class="p">.</span><span class="na">max</span><span class="p">(</span><span class="n">nums</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="p">,</span><span class="w"> </span><span class="n">currentSum</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">nums</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="p">);</span>
-<span class="w">            </span><span class="n">maxSum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Math</span><span class="p">.</span><span class="na">max</span><span class="p">(</span><span class="n">maxSum</span><span class="p">,</span><span class="w"> </span><span class="n">currentSum</span><span class="p">);</span>
-<span class="w">        </span><span class="p">}</span>
-
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">maxSum</span><span class="p">;</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
-
-<div class="codehilite"><pre><span></span><code><span class="n">Language</span><span class="p">:</span> <span class="n">Python3</span> 
-<span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="p">:</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">maxSubArray</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nums</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-        <span class="n">maxSum</span> <span class="o">=</span> <span class="n">nums</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="n">currentSum</span> <span class="o">=</span> <span class="n">nums</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-
-        <span class="k">for</span> <span class="n">num</span> <span class="ow">in</span> <span class="n">nums</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span>
-            <span class="n">currentSum</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">num</span><span class="p">,</span> <span class="n">currentSum</span> <span class="o">+</span> <span class="n">num</span><span class="p">)</span>
-            <span class="n">maxSum</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">maxSum</span><span class="p">,</span> <span class="n">currentSum</span><span class="p">)</span>
-
-        <span class="k">return</span> <span class="n">maxSum</span>
-</code></pre></div>
-
-<p></p>
-<p><strong>If you are a beginner solve these problems which makes concepts clear for future coding:</strong></p>
-<ol>
-<li><a href="https://leetcode.com/problems/two-sum/solutions/3619262/3-method-s-c-java-python-beginner-friendly/">Two Sum</a></li>
-<li><a href="https://leetcode.com/problems/roman-to-integer/solutions/3651672/best-method-c-java-python-beginner-friendly/">Roman to Integer</a></li>
-<li><a href="https://leetcode.com/problems/palindrome-number/solutions/3651712/2-method-s-c-java-python-beginner-friendly/">Palindrome Number</a></li>
-<li><a href="https://leetcode.com/problems/maximum-subarray/solutions/3666304/beats-100-c-java-python-beginner-friendly/">Maximum Subarray</a></li>
-<li><a href="https://leetcode.com/problems/remove-element/solutions/3670940/best-100-c-java-python-beginner-friendly/">Remove Element</a></li>
-<li><a href="https://leetcode.com/problems/contains-duplicate/solutions/3672475/4-method-s-c-java-python-beginner-friendly/">Contains Duplicate</a></li>
-<li><a href="https://leetcode.com/problems/add-two-numbers/solutions/3675747/beats-100-c-java-python-beginner-friendly/">Add Two Numbers</a></li>
-<li><a href="https://leetcode.com/problems/majority-element/solutions/3676530/3-methods-beats-100-c-java-python-beginner-friendly/">Majority Element</a></li>
-<li><a href="https://leetcode.com/problems/remove-duplicates-from-sorted-array/solutions/3676877/best-method-100-c-java-python-beginner-friendly/">Remove Duplicates from Sorted Array</a></li>
-<li><strong>Practice them in a row for better understanding and please Upvote for more questions.</strong></li>
-</ol>
-<p><strong>If you found my solution helpful, I would greatly appreciate your upvote, as it would motivate me to continue sharing more solutions.</strong></p></div><p style="page-break-before: always" ></p>

@@ -1,43 +1,40 @@
-<div class='cpp-solution'><h2>Backtracking Solution || C++ || Easy To Understand || With explanation -- Votes: 153</h2><p>Suppose if give string is ABC then recursive tree like this<br />
-</p>
-<div class="codehilite"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="n">Solution</span><span class="w"> </span><span class="err">{</span>
-<span class="k">public</span><span class="err">:</span>
-<span class="w">    </span><span class="n">vector</span><span class="o">&lt;</span><span class="n">vector</span><span class="o">&lt;</span><span class="nc">int</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="k">result</span><span class="p">;</span>
+<div class='cpp-solution'><h4>Backtracking Solution || C++ || Easy To Understand || With explanation [Votes: 153]</h4><p>Suppose if give string is ABC then recursive tree like this</p>
+<pre><code>class Solution {
+public:
+    vector&lt;vector&lt;int&gt;&gt; result;
 
-<span class="w">    </span><span class="o">//</span><span class="w"> </span><span class="n">Backtracking</span>
-<span class="w">    </span><span class="n">void</span><span class="w"> </span><span class="n">permutation</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="nc">int</span><span class="o">&gt;</span><span class="w"> </span><span class="o">&amp;</span><span class="n">nums</span><span class="p">,</span><span class="nc">int</span><span class="w"> </span><span class="n">i</span><span class="p">,</span><span class="nc">int</span><span class="w"> </span><span class="n">n</span><span class="p">)</span><span class="err">{</span>
-<span class="w">        </span><span class="k">if</span><span class="p">(</span><span class="n">i</span><span class="o">==</span><span class="n">n</span><span class="p">)</span><span class="err">{</span>
-<span class="w">            </span><span class="k">result</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">nums</span><span class="p">);</span>
-<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="p">;</span>
-<span class="w">        </span><span class="err">}</span>
+    // Backtracking
+    void permutation(vector&lt;int&gt; &amp;nums,int i,int n){
+        if(i==n){
+            result.push_back(nums);
+            return ;
+        }
 
-<span class="w">        </span><span class="k">for</span><span class="p">(</span><span class="nc">int</span><span class="w"> </span><span class="n">j</span><span class="o">=</span><span class="n">i</span><span class="p">;</span><span class="n">j</span><span class="o">&lt;=</span><span class="n">n</span><span class="p">;</span><span class="n">j</span><span class="o">++</span><span class="p">)</span><span class="err">{</span>
-<span class="w">            </span><span class="n">swap</span><span class="p">(</span><span class="w"> </span><span class="n">nums</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="p">,</span><span class="n">nums</span><span class="o">[</span><span class="n">j</span><span class="o">]</span><span class="p">);</span>
-<span class="w">            </span><span class="n">permutation</span><span class="p">(</span><span class="n">nums</span><span class="p">,</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="n">n</span><span class="p">);</span>
-<span class="w">            </span><span class="n">swap</span><span class="p">(</span><span class="w"> </span><span class="n">nums</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="p">,</span><span class="n">nums</span><span class="o">[</span><span class="n">j</span><span class="o">]</span><span class="p">);</span>
-<span class="w">        </span><span class="err">}</span>
-<span class="w">    </span><span class="err">}</span>
+        for(int j=i;j&lt;=n;j++){
+            swap( nums[i],nums[j]);
+            permutation(nums,i+1,n);
+            swap( nums[i],nums[j]);
+        }
+    }
 
-<span class="w">    </span><span class="n">vector</span><span class="o">&lt;</span><span class="n">vector</span><span class="o">&lt;</span><span class="nc">int</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="n">permute</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="nc">int</span><span class="o">&gt;&amp;</span><span class="w"> </span><span class="n">nums</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
+    vector&lt;vector&lt;int&gt;&gt; permute(vector&lt;int&gt;&amp; nums) {
 
-<span class="w">        </span><span class="n">permutation</span><span class="p">(</span><span class="n">nums</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="n">nums</span><span class="p">.</span><span class="k">size</span><span class="p">()</span><span class="o">-</span><span class="mi">1</span><span class="p">);</span>
+        permutation(nums,0,nums.size()-1);
 
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="k">result</span><span class="p">;</span>
-<span class="w">    </span><span class="err">}</span>
-<span class="err">}</span><span class="p">;</span>
-</code></pre></div></div>
+        return result;
+    }
+};
+</code></pre></div><div class='python-solution'><h4>Simple Python solution (DFS). [Votes: 655]</h4><pre><code>    
+#### DFS
+def permute(self, nums):
+    res = []
+    self.dfs(nums, [], res)
+    return res
 
-
-<div class='python-solution'><h2>Simple Python solution (DFS). -- Votes: 655</h2><div class="codehilite"><pre><span></span><code><span class="err">#</span><span class="w"> </span><span class="n">DFS</span>
-<span class="n">def</span><span class="w"> </span><span class="n">permute</span><span class="p">(</span><span class="n">self</span><span class="p">,</span><span class="w"> </span><span class="n">nums</span><span class="p">)</span><span class="err">:</span>
-<span class="w">    </span><span class="n">res</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>
-<span class="w">    </span><span class="n">self</span><span class="p">.</span><span class="n">dfs</span><span class="p">(</span><span class="n">nums</span><span class="p">,</span><span class="w"> </span><span class="p">,</span><span class="w"> </span><span class="n">res</span><span class="p">)</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">res</span>
-
-<span class="n">def</span><span class="w"> </span><span class="n">dfs</span><span class="p">(</span><span class="n">self</span><span class="p">,</span><span class="w"> </span><span class="n">nums</span><span class="p">,</span><span class="w"> </span><span class="k">path</span><span class="p">,</span><span class="w"> </span><span class="n">res</span><span class="p">)</span><span class="err">:</span>
-<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="nl">nums</span><span class="p">:</span>
-<span class="w">        </span><span class="n">res</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="k">path</span><span class="p">)</span>
-<span class="w">        </span><span class="err">#</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="err">#</span><span class="w"> </span><span class="n">backtracking</span>
-<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">xrange</span><span class="p">(</span><span class="nf">len</span><span class="p">(</span><span class="n">nums</span><span class="p">))</span><span class="err">:</span>
-<span class="w">        </span><span class="n">self</span><span class="p">.</span><span class="n">dfs</span><span class="p">(</span><span class="n">nums</span><span class="o">[</span><span class="n">:i</span><span class="o">]+</span><span class="n">nums</span><span class="o">[</span><span class="n">i+1:</span><span class="o">]</span><span class="p">,</span><span class="w"> </span><span class="k">path</span><span class="o">+[</span><span class="n">nums[i</span><span class="o">]</span><span class="err">]</span><span class="p">,</span><span class="w"> </span><span class="n">res</span><span class="p">)</span>
-</code></pre></div></div><p style="page-break-before: always" ></p>
+def dfs(self, nums, path, res):
+    if not nums:
+        res.append(path)
+        #### return #### backtracking
+    for i in xrange(len(nums)):
+        self.dfs(nums[:i]+nums[i+1:], path+[nums[i]], res)
+</code></pre></div>

@@ -1,138 +1,130 @@
-<div class='cpp-solution'><h2>C++ Dynamic Programming simple and fast solution (4ms) with optimization -- Votes: 560</h2><p>We use a boolean vector dp. dp[<strong><em>i</em></strong>] is set to true if a valid word (word sequence) ends there. The optimization is to look from current position <strong><em>i</em></strong> back and only substring and do dictionary look up in case the preceding position <strong><em>j</em></strong> with <em>dp[</em><em>j</em><em>] == true</em> is found.</p>
-<div class="codehilite"><pre><span></span><code><span class="n">bool</span><span class="w"> </span><span class="n">wordBreak</span><span class="p">(</span><span class="n">string</span><span class="w"> </span><span class="n">s</span><span class="p">,</span><span class="w"> </span><span class="n">unordered_set</span><span class="o">&lt;</span><span class="n">string</span><span class="o">&gt;</span><span class="w"> </span><span class="o">&amp;</span><span class="n">dict</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
-<span class="w">        </span><span class="k">if</span><span class="p">(</span><span class="n">dict</span><span class="p">.</span><span class="k">size</span><span class="p">()</span><span class="o">==</span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="k">false</span><span class="p">;</span>
+<div class='cpp-solution'><h4>C++ Dynamic Programming simple and fast solution (4ms) with optimization [Votes: 560]</h4><p>We use a boolean vector dp[]. dp[<strong><em>i</em></strong>] is set to true if a valid word (word sequence) ends there. The optimization is to look from current position <strong><em>i</em></strong> back and only substring and do dictionary look up in case the preceding position <strong><em>j</em></strong> with <em>dp[</em><em>j</em><em>] == true</em> is found.</p>
+<pre><code>bool wordBreak(string s, unordered_set&lt;string&gt; &amp;dict) {
+        if(dict.size()==0) return false;
 
-<span class="w">        </span><span class="n">vector</span><span class="o">&lt;</span><span class="n">bool</span><span class="o">&gt;</span><span class="w"> </span><span class="n">dp</span><span class="p">(</span><span class="n">s</span><span class="p">.</span><span class="k">size</span><span class="p">()</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="k">false</span><span class="p">);</span>
-<span class="w">        </span><span class="n">dp</span><span class="o">[</span><span class="n">0</span><span class="o">]=</span><span class="k">true</span><span class="p">;</span>
+        vector&lt;bool&gt; dp(s.size()+1,false);
+        dp[0]=true;
 
-<span class="w">        </span><span class="k">for</span><span class="p">(</span><span class="nc">int</span><span class="w"> </span><span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;=</span><span class="n">s</span><span class="p">.</span><span class="k">size</span><span class="p">();</span><span class="n">i</span><span class="o">++</span><span class="p">)</span>
-<span class="w">        </span><span class="err">{</span>
-<span class="w">            </span><span class="k">for</span><span class="p">(</span><span class="nc">int</span><span class="w"> </span><span class="n">j</span><span class="o">=</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">;</span><span class="n">j</span><span class="o">&gt;=</span><span class="mi">0</span><span class="p">;</span><span class="n">j</span><span class="c1">--)</span>
-<span class="w">            </span><span class="err">{</span>
-<span class="w">                </span><span class="k">if</span><span class="p">(</span><span class="n">dp</span><span class="o">[</span><span class="n">j</span><span class="o">]</span><span class="p">)</span>
-<span class="w">                </span><span class="err">{</span>
-<span class="w">                    </span><span class="n">string</span><span class="w"> </span><span class="n">word</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">s</span><span class="p">.</span><span class="n">substr</span><span class="p">(</span><span class="n">j</span><span class="p">,</span><span class="n">i</span><span class="o">-</span><span class="n">j</span><span class="p">);</span>
-<span class="w">                    </span><span class="k">if</span><span class="p">(</span><span class="n">dict</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="n">word</span><span class="p">)</span><span class="o">!=</span><span class="w"> </span><span class="n">dict</span><span class="p">.</span><span class="k">end</span><span class="p">())</span>
-<span class="w">                    </span><span class="err">{</span>
-<span class="w">                        </span><span class="n">dp</span><span class="o">[</span><span class="n">i</span><span class="o">]=</span><span class="k">true</span><span class="p">;</span>
-<span class="w">                        </span><span class="k">break</span><span class="p">;</span><span class="w"> </span><span class="o">//</span><span class="k">next</span><span class="w"> </span><span class="n">i</span>
-<span class="w">                    </span><span class="err">}</span>
-<span class="w">                </span><span class="err">}</span>
-<span class="w">            </span><span class="err">}</span>
-<span class="w">        </span><span class="err">}</span>
+        for(int i=1;i&lt;=s.size();i++)
+        {
+            for(int j=i-1;j&gt;=0;j--)
+            {
+                if(dp[j])
+                {
+                    string word = s.substr(j,i-j);
+                    if(dict.find(word)!= dict.end())
+                    {
+                        dp[i]=true;
+                        break; //next i
+                    }
+                }
+            }
+        }
 
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">dp</span><span class="o">[</span><span class="n">s.size()</span><span class="o">]</span><span class="p">;</span>
-<span class="w">    </span><span class="err">}</span>
-</code></pre></div></div>
+        return dp[s.size()];
+    }
+</code></pre></div><div class='python-solution'><h4>Solution [Votes: 462]</h4><pre><code class="language-cpp">class Solution {
+ public:
+  bool wordBreak(string s, vector&lt;string&gt;&amp; wordDict) {
+    const int n = s.length();
+    const int maxLength = getMaxLength(wordDict);
+    const unordered_set&lt;string&gt; wordSet{begin(wordDict), end(wordDict)};
+    vector&lt;int&gt; dp(n + 1);
+    dp[0] = true;
 
+    for (int i = 1; i &lt;= n; ++i)
+      for (int j = i - 1; j &gt;= 0; --j) {
+        if (i - j &gt; maxLength)
+          break;
+        if (dp[j] &amp;&amp; wordSet.count(s.substr(j, i - j))) {
+          dp[i] = true;
+          break;
+        }
+      }
 
-<div class='python-solution'><h2>Solution -- Votes: 462</h2><div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">C</span><span class="o">++</span><span class="w"> </span>
-<span class="n">class</span><span class="w"> </span><span class="n">Solution</span><span class="w"> </span><span class="p">{</span>
-<span class="w"> </span><span class="n">public</span><span class="o">:</span>
-<span class="w">  </span><span class="kt">bool</span><span class="w"> </span><span class="n">wordBreak</span><span class="p">(</span><span class="n">string</span><span class="w"> </span><span class="n">s</span><span class="p">,</span><span class="w"> </span><span class="n">vector</span><span class="o">&lt;</span><span class="n">string</span><span class="o">&gt;&amp;</span><span class="w"> </span><span class="n">wordDict</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">s</span><span class="p">.</span><span class="n">length</span><span class="p">();</span>
-<span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">maxLength</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">getMaxLength</span><span class="p">(</span><span class="n">wordDict</span><span class="p">);</span>
-<span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="n">unordered_set</span><span class="o">&lt;</span><span class="n">string</span><span class="o">&gt;</span><span class="w"> </span><span class="n">wordSet</span><span class="p">{</span><span class="n">begin</span><span class="p">(</span><span class="n">wordDict</span><span class="p">),</span><span class="w"> </span><span class="n">end</span><span class="p">(</span><span class="n">wordDict</span><span class="p">)};</span>
-<span class="w">    </span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="w"> </span><span class="n">dp</span><span class="p">(</span><span class="n">n</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span>
-<span class="w">    </span><span class="n">dp</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+    return dp[n];
+  }
 
-<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">n</span><span class="p">;</span><span class="w"> </span><span class="o">++</span><span class="n">i</span><span class="p">)</span>
-<span class="w">      </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="o">--</span><span class="n">j</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">maxLength</span><span class="p">)</span>
-<span class="w">          </span><span class="k">break</span><span class="p">;</span>
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">dp</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">wordSet</span><span class="p">.</span><span class="n">count</span><span class="p">(</span><span class="n">s</span><span class="p">.</span><span class="n">substr</span><span class="p">(</span><span class="n">j</span><span class="p">,</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">j</span><span class="p">)))</span><span class="w"> </span><span class="p">{</span>
-<span class="w">          </span><span class="n">dp</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
-<span class="w">          </span><span class="k">break</span><span class="p">;</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">      </span><span class="p">}</span>
+ private:
+  int getMaxLength(const vector&lt;string&gt;&amp; wordDict) {
+    return max_element(begin(wordDict), end(wordDict),
+                       [](const auto&amp; a, const auto&amp; b) {
+                         return a.length() &lt; b.length();
+                       })
+        -&gt;length();
+  }
+};
+</code></pre>
+<pre><code class="language-Python3">class Solution:
+    def wordBreak(self, s: str, wordDict: List[str]) -&gt; bool:
 
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">dp</span><span class="p">[</span><span class="n">n</span><span class="p">];</span>
-<span class="w">  </span><span class="p">}</span>
+        def construct(current,wordDict, memo={}):
+            if current in memo:
+                return memo[current]
 
-<span class="w"> </span><span class="n">private</span><span class="o">:</span>
-<span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="n">getMaxLength</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">vector</span><span class="o">&lt;</span><span class="n">string</span><span class="o">&gt;&amp;</span><span class="w"> </span><span class="n">wordDict</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">max_element</span><span class="p">(</span><span class="n">begin</span><span class="p">(</span><span class="n">wordDict</span><span class="p">),</span><span class="w"> </span><span class="n">end</span><span class="p">(</span><span class="n">wordDict</span><span class="p">),</span>
-<span class="w">                       </span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="o">&amp;</span><span class="w"> </span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="o">&amp;</span><span class="w"> </span><span class="n">b</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                         </span><span class="k">return</span><span class="w"> </span><span class="n">a</span><span class="p">.</span><span class="n">length</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">b</span><span class="p">.</span><span class="n">length</span><span class="p">();</span>
-<span class="w">                       </span><span class="p">})</span>
-<span class="w">        </span><span class="o">-&gt;</span><span class="n">length</span><span class="p">();</span>
-<span class="w">  </span><span class="p">}</span>
-<span class="p">};</span>
+            if not current:
+                return True
+
+            for word in wordDict:
+                if current.startswith(word):
+                    new_current = current[len(word):]
+                    if construct(new_current,wordDict,memo):
+                        memo[current] = True
+                        return True
+
+            memo[current] = False
+            return False
+
+        return construct(s,wordDict)
+</code></pre>
+<pre><code class="language-Java">class Solution {
+    public boolean wordBreak(String s, List&lt;String&gt; wordDict) {
+        return recWay1(s, wordDict);
+    }
+
+    boolean recWay2(String s, List&lt;String&gt; wordDict) {
+        Boolean[] memo = new Boolean[s.length() + 1];
+        return wordBreak2(s, new HashSet&lt;&gt;(wordDict), 0, memo);
+    }
+
+    boolean wordBreak2(String s, Set&lt;String&gt; wordDict, int k, Boolean[] memo) {
+        int n = s.length();
+        if (k == n) return true;
+
+        if (memo[k] != null) return memo[k];
+
+        for (int i=k + 1; i&lt;=n; i++) {
+            String word = s.substring(k, i);
+            if (wordDict.contains(word) &amp;&amp; wordBreak2(s, wordDict, i, memo)) {
+                return memo[k] = true;
+            }
+        }
+
+        return memo[k] = false;
+    }
+
+    boolean recWay1(String s, List&lt;String&gt; wordDict) {
+        Boolean[] memo = new Boolean[s.length() + 1];
+        return wordBreak(s, wordDict, 0, memo);
+    }
+
+    boolean wordBreak(String s, List&lt;String&gt; wordDict, int k, Boolean[] memo) {
+        if (k == s.length()) {
+            return true;
+        }
+
+        if (memo[k] != null) {
+            return memo[k];
+        }
+
+        for (int i=0; i&lt;wordDict.size(); i++) {
+            String word = wordDict.get(i);
+            if (s.startsWith(word, k)) {
+                if(wordBreak(s, wordDict, k + word.length(), memo)) return memo[k] = true;
+            }
+        }
+
+        return memo[k] = false;
+    }
+}
 </code></pre></div>
-
-<div class="codehilite"><pre><span></span><code><span class="n">Language</span><span class="p">:</span> <span class="n">Python3</span> 
-<span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="p">:</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">wordBreak</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">s</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">wordDict</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-
-        <span class="k">def</span><span class="w"> </span><span class="nf">construct</span><span class="p">(</span><span class="n">current</span><span class="p">,</span><span class="n">wordDict</span><span class="p">,</span> <span class="n">memo</span><span class="o">=</span><span class="p">{}):</span>
-            <span class="k">if</span> <span class="n">current</span> <span class="ow">in</span> <span class="n">memo</span><span class="p">:</span>
-                <span class="k">return</span> <span class="n">memo</span><span class="p">[</span><span class="n">current</span><span class="p">]</span>
-
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">current</span><span class="p">:</span>
-                <span class="k">return</span> <span class="kc">True</span>
-
-            <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">wordDict</span><span class="p">:</span>
-                <span class="k">if</span> <span class="n">current</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">word</span><span class="p">):</span>
-                    <span class="n">new_current</span> <span class="o">=</span> <span class="n">current</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">word</span><span class="p">):]</span>
-                    <span class="k">if</span> <span class="n">construct</span><span class="p">(</span><span class="n">new_current</span><span class="p">,</span><span class="n">wordDict</span><span class="p">,</span><span class="n">memo</span><span class="p">):</span>
-                        <span class="n">memo</span><span class="p">[</span><span class="n">current</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
-                        <span class="k">return</span> <span class="kc">True</span>
-
-            <span class="n">memo</span><span class="p">[</span><span class="n">current</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
-            <span class="k">return</span> <span class="kc">False</span>
-
-        <span class="k">return</span> <span class="n">construct</span><span class="p">(</span><span class="n">s</span><span class="p">,</span><span class="n">wordDict</span><span class="p">)</span>
-</code></pre></div>
-
-<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">Java</span><span class="w"> </span>
-<span class="kd">class</span> <span class="nc">Solution</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">boolean</span><span class="w"> </span><span class="nf">wordBreak</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">s</span><span class="p">,</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span><span class="w"> </span><span class="n">wordDict</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">recWay1</span><span class="p">(</span><span class="n">s</span><span class="p">,</span><span class="w"> </span><span class="n">wordDict</span><span class="p">);</span>
-<span class="w">    </span><span class="p">}</span>
-
-<span class="w">    </span><span class="kt">boolean</span><span class="w"> </span><span class="nf">recWay2</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">s</span><span class="p">,</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span><span class="w"> </span><span class="n">wordDict</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="n">Boolean</span><span class="w"> </span><span class="n">memo</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Boolean</span><span class="o">[</span><span class="n">s</span><span class="p">.</span><span class="na">length</span><span class="p">()</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="o">]</span><span class="p">;</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">wordBreak2</span><span class="p">(</span><span class="n">s</span><span class="p">,</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">HashSet</span><span class="o">&lt;&gt;</span><span class="p">(</span><span class="n">wordDict</span><span class="p">),</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">memo</span><span class="p">);</span>
-<span class="w">    </span><span class="p">}</span>
-
-<span class="w">    </span><span class="kt">boolean</span><span class="w"> </span><span class="nf">wordBreak2</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">s</span><span class="p">,</span><span class="w"> </span><span class="n">Set</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span><span class="w"> </span><span class="n">wordDict</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">k</span><span class="p">,</span><span class="w"> </span><span class="n">Boolean</span><span class="w"> </span><span class="n">memo</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">s</span><span class="p">.</span><span class="na">length</span><span class="p">();</span>
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">k</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">n</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="kc">true</span><span class="p">;</span>
-
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">memo</span><span class="o">[</span><span class="n">k</span><span class="o">]</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">memo</span><span class="o">[</span><span class="n">k</span><span class="o">]</span><span class="p">;</span>
-
-<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="o">=</span><span class="n">k</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">&lt;=</span><span class="n">n</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="n">String</span><span class="w"> </span><span class="n">word</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">s</span><span class="p">.</span><span class="na">substring</span><span class="p">(</span><span class="n">k</span><span class="p">,</span><span class="w"> </span><span class="n">i</span><span class="p">);</span>
-<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">wordDict</span><span class="p">.</span><span class="na">contains</span><span class="p">(</span><span class="n">word</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">wordBreak2</span><span class="p">(</span><span class="n">s</span><span class="p">,</span><span class="w"> </span><span class="n">wordDict</span><span class="p">,</span><span class="w"> </span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">memo</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="n">memo</span><span class="o">[</span><span class="n">k</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span><span class="p">;</span>
-<span class="w">            </span><span class="p">}</span>
-<span class="w">        </span><span class="p">}</span>
-
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">memo</span><span class="o">[</span><span class="n">k</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">;</span>
-<span class="w">    </span><span class="p">}</span>
-
-<span class="w">    </span><span class="kt">boolean</span><span class="w"> </span><span class="nf">recWay1</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">s</span><span class="p">,</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span><span class="w"> </span><span class="n">wordDict</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="n">Boolean</span><span class="w"> </span><span class="n">memo</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Boolean</span><span class="o">[</span><span class="n">s</span><span class="p">.</span><span class="na">length</span><span class="p">()</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="o">]</span><span class="p">;</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">wordBreak</span><span class="p">(</span><span class="n">s</span><span class="p">,</span><span class="w"> </span><span class="n">wordDict</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">memo</span><span class="p">);</span>
-<span class="w">    </span><span class="p">}</span>
-
-<span class="w">    </span><span class="kt">boolean</span><span class="w"> </span><span class="nf">wordBreak</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">s</span><span class="p">,</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span><span class="w"> </span><span class="n">wordDict</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">k</span><span class="p">,</span><span class="w"> </span><span class="n">Boolean</span><span class="w"> </span><span class="n">memo</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">k</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">s</span><span class="p">.</span><span class="na">length</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="kc">true</span><span class="p">;</span>
-<span class="w">        </span><span class="p">}</span>
-
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">memo</span><span class="o">[</span><span class="n">k</span><span class="o">]</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="n">memo</span><span class="o">[</span><span class="n">k</span><span class="o">]</span><span class="p">;</span>
-<span class="w">        </span><span class="p">}</span>
-
-<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">&lt;</span><span class="n">wordDict</span><span class="p">.</span><span class="na">size</span><span class="p">();</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="n">String</span><span class="w"> </span><span class="n">word</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">wordDict</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">i</span><span class="p">);</span>
-<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">s</span><span class="p">.</span><span class="na">startsWith</span><span class="p">(</span><span class="n">word</span><span class="p">,</span><span class="w"> </span><span class="n">k</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="k">if</span><span class="p">(</span><span class="n">wordBreak</span><span class="p">(</span><span class="n">s</span><span class="p">,</span><span class="w"> </span><span class="n">wordDict</span><span class="p">,</span><span class="w"> </span><span class="n">k</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">word</span><span class="p">.</span><span class="na">length</span><span class="p">(),</span><span class="w"> </span><span class="n">memo</span><span class="p">))</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">memo</span><span class="o">[</span><span class="n">k</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span><span class="p">;</span>
-<span class="w">            </span><span class="p">}</span>
-<span class="w">        </span><span class="p">}</span>
-
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">memo</span><span class="o">[</span><span class="n">k</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">;</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div></div><p style="page-break-before: always" ></p>

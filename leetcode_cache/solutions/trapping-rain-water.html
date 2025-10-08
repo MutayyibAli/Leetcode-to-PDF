@@ -1,55 +1,47 @@
-<div class='cpp-solution'><h2>【Video】Keep max height on the both side. -- Votes: 503</h2><h2>Intuition</h2>
+<div class='cpp-solution'><h4>【Video】Keep max height on the both side. [Votes: 503]</h4><h4>Intuition</h4>
 <p>Keep max height on the both side.</p>
-<hr />
-<h2>Solution Video</h2>
+<h4>Solution Video</h4>
 <p>https://youtu.be/7yg_WJA35uo</p>
-<h4>⭐️⭐️ Don't forget to subscribe to my channel! ⭐️⭐️</h4>
-<p><strong>■ Subscribe URL</strong><br />
+<h6>⭐️⭐️ Don't forget to subscribe to my channel! ⭐️⭐️</h6>
+<p><strong>■ Subscribe URL</strong>
 http://www.youtube.com/channel/UC9RMNwYTL3SXCP6ShLWVFww?sub_confirmation=1</p>
-<p>Subscribers: 4,819<br />
+<p>Subscribers: 4,819
 Thank you for your support!</p>
-<hr />
-<h2>Approach</h2>
+<h4>Approach</h4>
 <p>To keep water, we have to have a bar on the left side and on the right side. Between them, we can keep water.</p>
 <p>Let's think about this example.</p>
-<div class="codehilite"><pre><span></span><code><span class="n">Input</span><span class="o">:</span><span class="w"> </span><span class="n">height</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[</span><span class="mi">2</span><span class="o">,</span><span class="mi">1</span><span class="o">,</span><span class="mi">0</span><span class="o">,</span><span class="mi">1</span><span class="o">,</span><span class="mi">3</span><span class="o">,</span><span class="mi">2</span><span class="o">]</span>
-</code></pre></div>
-
-<p></p>
+<pre><code>Input: height = [2,1,0,1,3,2]
+</code></pre>
 <p>I think we can easily imagine that we can keep water at <code>0 height</code>(= index <code>2</code>), because we have bars in the adjacent places(= index <code>1</code> and <code>3</code>).</p>
 <p>But how about <code>1 height</code> at index <code>1</code>. We can keep water there. I think left side is easy to imagine because we have a bar in adjacent place(= index <code>0</code>). But how about right side? In the end, we can keep water because we have <code>3 height</code> at index <code>4</code>.</p>
-<hr />
 <p>Question</p>
 <p>How can we judge if we can have water when there is some distance between water and a bar? In this case, water is at index <code>1</code> and the bar is at index <code>4</code>.</p>
-<hr />
 <p>My strategy is to keep <code>max height of left and right</code>. I'll show you how algorithm works.</p>
-<h3>How it works</h3>
-<div class="codehilite"><pre><span></span><code><span class="k">[2,1,0,1,3,2]</span>
-<span class="w"> </span><span class="na">L         R</span>
+<h5>How it works</h5>
+<pre><code>[2,1,0,1,3,2]
+ L         R
 
-<span class="na">left max</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">2</span>
-<span class="na">right max</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">2</span>
-<span class="na">water</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">0</span>
-</code></pre></div>
-
-<p><code>L</code> is current left pointer.<br />
-<code>R</code> is current right pointer.<br />
-<code>left max</code> is max height of left side we found so far. Initialized with the first number.<br />
-<code>right max</code> is max height of right side we found so far. Initialized with the last number<br />
+left max = 2
+right max = 2
+water = 0
+</code></pre>
+<p><code>L</code> is current left pointer.
+<code>R</code> is current right pointer.
+<code>left max</code> is max height of left side we found so far. Initialized with the first number.
+<code>right max</code> is max height of right side we found so far. Initialized with the last number
 <code>water</code> is return value.</p>
 <p>If <code>L</code> is smaller than <code>R</code>, we continue. After that, check <code>left max</code> and <code>right max</code> and <strong>take smaller max height</strong>. I'll explain why later.</p>
 <p>In this case, they are the same, so we can choose one of them. I'll take <code>right</code>.</p>
 <p>First of all, move <code>R</code> to the next.</p>
-<div class="codehilite"><pre><span></span><code><span class="k">[2,1,0,1,3,2]</span>
-<span class="w"> </span><span class="na">L       R</span>
+<pre><code>[2,1,0,1,3,2]
+ L       R
 
-<span class="na">left max</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">2</span>
-<span class="na">right max</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">2</span>
-<span class="na">water</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">0</span>
-</code></pre></div>
-
+left max = 2
+right max = 2
+water = 0
+</code></pre>
 <p>Next, update <code>right max</code> if current bar is taller than current <code>right max</code>.</p>
-<div class="codehilite"><pre><span></span><code>current bar vs current max right
+<pre><code>current bar vs current max right
 = 3 vs 2
 = 3
 
@@ -59,108 +51,91 @@ Thank you for your support!</p>
 left max = 2
 right max = 3
 water = 0
-</code></pre></div>
-
+</code></pre>
 <p>Then, count number of water. Formula is</p>
-<div class="codehilite"><pre><span></span><code>water = current right max - current bar
+<pre><code>water = current right max - current bar
 = 3 - 3
 = 0
-</code></pre></div>
-
+</code></pre>
 <p><code>water</code> should be <code>0</code>.</p>
 <p>Next, <code>L &lt; R</code>, so we continue</p>
 <p>First of all, take smaller max height between left and right. I'll take <code>left max</code>.</p>
 <p>Move <code>L</code> to the next and update <code>left max</code> if needed. No udpate this time.</p>
-<div class="codehilite"><pre><span></span><code><span class="k">[2,1,0,1,3,2]</span>
-<span class="w">   </span><span class="na">L     R</span>
+<pre><code>[2,1,0,1,3,2]
+   L     R
 
-<span class="na">left max</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">2</span>
-<span class="na">right max</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">3</span>
-<span class="na">water</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">0</span>
-</code></pre></div>
-
+left max = 2
+right max = 3
+water = 0
+</code></pre>
 <p>Then here is an important point. <code>water</code> should be</p>
-<div class="codehilite"><pre><span></span><code>current left max - current bar
+<pre><code>current left max - current bar
 2 - 1 = 1
 
 water = 1
-</code></pre></div>
-
+</code></pre>
 <p>Are you sure?</p>
 <p>Yes, I'm sure.</p>
-<hr />
 <p>⭐️ Points</p>
 <p>We take smaller max height between left(= <code>2 height</code>) and right(= <code>3 height</code>) and handle left side because <code>left max</code> is smaller than <code>right max</code>. That means we don't have to care about right side because we know that we have current tallest bar(= <code>3 height</code> at index <code>4</code>) on the right side, so at least we can keep water at <code>2 height</code>(= <code>left max</code>)</p>
-<hr />
 <p>That's the reason why we take smaller max height.</p>
 <p>We can take 2 height as max height but there is bar at index <code>1</code>. That's why</p>
-<div class="codehilite"><pre><span></span><code>left max - current height
+<pre><code>left max - current height
 = 2 - 1
 = 1 water
-</code></pre></div>
+</code></pre>
+<pre><code>[2,1,0,1,3,2]
+   L     R
 
-<div class="codehilite"><pre><span></span><code><span class="k">[2,1,0,1,3,2]</span>
-<span class="w">   </span><span class="na">L     R</span>
-
-<span class="na">left max</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">2</span>
-<span class="na">right max</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">3</span>
-<span class="na">water</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1</span>
-</code></pre></div>
-
+left max = 2
+right max = 3
+water = 1
+</code></pre>
 <p>I'll speed up.</p>
-<p><code>L &lt; R</code>, so we continue.<br />
+<p><code>L &lt; R</code>, so we continue.
 Move <code>L</code> to the next because left max is smaller than right max and update <code>left max</code> if needed. No update this time.</p>
-<div class="codehilite"><pre><span></span><code><span class="k">[2,1,0,1,3,2]</span>
-<span class="w">     </span><span class="na">L   R</span>
+<pre><code>[2,1,0,1,3,2]
+     L   R
 
-<span class="na">left max</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">2</span>
-<span class="na">right max</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">3</span>
-<span class="na">water</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1</span>
-</code></pre></div>
-
+left max = 2
+right max = 3
+water = 1
+</code></pre>
 <p><code>water</code> should be...</p>
-<div class="codehilite"><pre><span></span><code><span class="mf">2</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mf">0</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">2</span>
-<span class="kr">to</span><span class="n">tal</span><span class="w"> </span><span class="n">water</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">3</span>
-</code></pre></div>
-
-<p>Next, <code>L &lt; R</code>, so we continue.<br />
+<pre><code>2 - 0 = 2
+total water = 3
+</code></pre>
+<p>Next, <code>L &lt; R</code>, so we continue.
 Move <code>L</code> to the next because left max is smaller than right max and update <code>left max</code> if needed. No update this time.</p>
-<div class="codehilite"><pre><span></span><code><span class="k">[2,1,0,1,3,2]</span>
-<span class="w">       </span><span class="na">L R</span>
+<pre><code>[2,1,0,1,3,2]
+       L R
 
-<span class="na">left max</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">2</span>
-<span class="na">right max</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">3</span>
-<span class="na">water</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">3</span>
-</code></pre></div>
-
+left max = 2
+right max = 3
+water = 3
+</code></pre>
 <p><code>water</code> should be...</p>
-<div class="codehilite"><pre><span></span><code><span class="mf">2</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mf">1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">1</span>
-<span class="kr">to</span><span class="n">tal</span><span class="w"> </span><span class="n">water</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">4</span>
-</code></pre></div>
-
-<p>Next, <code>L &lt; R</code>, so we continue.<br />
+<pre><code>2 - 1 = 1
+total water = 4
+</code></pre>
+<p>Next, <code>L &lt; R</code>, so we continue.
 Move <code>L</code> to the next because left max is smaller than right max and update <code>left max</code> if needed. we found <code>3</code> this time.</p>
-<div class="codehilite"><pre><span></span><code><span class="k">[2,1,0,1,3,2]</span>
-<span class="w">         </span><span class="na">L</span>
-<span class="w">         </span><span class="na">R</span>
-<span class="na">left max</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">3 (updated. 2 vs 3)</span>
-<span class="na">right max</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">3</span>
-<span class="na">water</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">3</span>
-</code></pre></div>
-
+<pre><code>[2,1,0,1,3,2]
+         L
+         R
+left max = 3 (updated. 2 vs 3)
+right max = 3
+water = 3
+</code></pre>
 <p><code>water</code> should be...</p>
-<div class="codehilite"><pre><span></span><code><span class="mf">3</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mf">3</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0</span>
-<span class="kr">to</span><span class="n">tal</span><span class="w"> </span><span class="n">water</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">4</span>
-</code></pre></div>
-
+<pre><code>3 - 3 = 0
+total water = 4
+</code></pre>
 <p>Now <code>L == R</code>. We stop iteration.</p>
-<div class="codehilite"><pre><span></span><code><span class="k">return</span><span class="w"> </span><span class="mi">4</span>
-</code></pre></div>
-
-<hr />
+<pre><code>return 4
+</code></pre>
 <p>https://youtu.be/Abdq3lNRocc</p>
-<hr />
-<h2>Complexity</h2>
+<h4>Complexity</h4>
 <ul>
 <li>Time complexity: $$O(n)$$</li>
 </ul>
@@ -171,508 +146,149 @@ Move <code>L</code> to the next because left max is smaller than right max and u
 </ul>
 <!-- Add your space complexity here, e.g. $$O(n)$$ -->
 
-<div class="codehilite"><pre><span></span><code><span class="n">Language</span><span class="p">:</span> <span class="n">python</span> 
-<span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="p">:</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">trap</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">height</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-        <span class="n">left</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="n">right</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">height</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
-        <span class="n">left_max</span> <span class="o">=</span> <span class="n">height</span><span class="p">[</span><span class="n">left</span><span class="p">]</span>
-        <span class="n">right_max</span> <span class="o">=</span> <span class="n">height</span><span class="p">[</span><span class="n">right</span><span class="p">]</span>
-        <span class="n">water</span> <span class="o">=</span> <span class="mi">0</span>
+<pre><code class="language-python">class Solution:
+    def trap(self, height: List[int]) -&gt; int:
+        left = 0
+        right = len(height) - 1
+        left_max = height[left]
+        right_max = height[right]
+        water = 0
 
-        <span class="k">while</span> <span class="n">left</span> <span class="o">&lt;</span> <span class="n">right</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">left_max</span> <span class="o">&lt;</span> <span class="n">right_max</span><span class="p">:</span>
-                <span class="n">left</span> <span class="o">+=</span> <span class="mi">1</span>
-                <span class="n">left_max</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">left_max</span><span class="p">,</span> <span class="n">height</span><span class="p">[</span><span class="n">left</span><span class="p">])</span>
-                <span class="n">water</span> <span class="o">+=</span> <span class="n">left_max</span> <span class="o">-</span> <span class="n">height</span><span class="p">[</span><span class="n">left</span><span class="p">]</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">right</span> <span class="o">-=</span> <span class="mi">1</span>
-                <span class="n">right_max</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">right_max</span><span class="p">,</span> <span class="n">height</span><span class="p">[</span><span class="n">right</span><span class="p">])</span>
-                <span class="n">water</span> <span class="o">+=</span> <span class="n">right_max</span> <span class="o">-</span> <span class="n">height</span><span class="p">[</span><span class="n">right</span><span class="p">]</span>
+        while left &lt; right:
+            if left_max &lt; right_max:
+                left += 1
+                left_max = max(left_max, height[left])
+                water += left_max - height[left]
+            else:
+                right -= 1
+                right_max = max(right_max, height[right])
+                water += right_max - height[right]
 
-        <span class="k">return</span> <span class="n">water</span>
-</code></pre></div>
+        return water
+</code></pre>
+<pre><code class="language-javascript">var trap = function(height) {
+    let left = 0;
+    let right = height.length - 1;
+    let leftMax = height[left];
+    let rightMax = height[right];
+    let water = 0;
 
-<div class="codehilite"><pre><span></span><code><span class="nx">Language</span><span class="o">:</span><span class="w"> </span><span class="nx">javascript</span><span class="w"> </span>
-<span class="kd">var</span><span class="w"> </span><span class="nx">trap</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kd">function</span><span class="p">(</span><span class="nx">height</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="nx">left</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0</span><span class="p">;</span>
-<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="nx">right</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">height</span><span class="p">.</span><span class="nx">length</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mf">1</span><span class="p">;</span>
-<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="nx">leftMax</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">height</span><span class="p">[</span><span class="nx">left</span><span class="p">];</span>
-<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="nx">rightMax</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">height</span><span class="p">[</span><span class="nx">right</span><span class="p">];</span>
-<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="nx">water</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0</span><span class="p">;</span>
+    while (left &lt; right) {
+        if (leftMax &lt; rightMax) {
+            left++;
+            leftMax = Math.max(leftMax, height[left]);
+            water += leftMax - height[left];
+        } else {
+            right--;
+            rightMax = Math.max(rightMax, height[right]);
+            water += rightMax - height[right];
+        }
+    }
 
-<span class="w">    </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="nx">left</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="nx">right</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">leftMax</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="nx">rightMax</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="nx">left</span><span class="o">++</span><span class="p">;</span>
-<span class="w">            </span><span class="nx">leftMax</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">Math</span><span class="p">.</span><span class="nx">max</span><span class="p">(</span><span class="nx">leftMax</span><span class="p">,</span><span class="w"> </span><span class="nx">height</span><span class="p">[</span><span class="nx">left</span><span class="p">]);</span>
-<span class="w">            </span><span class="nx">water</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="nx">leftMax</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nx">height</span><span class="p">[</span><span class="nx">left</span><span class="p">];</span>
-<span class="w">        </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="nx">right</span><span class="o">--</span><span class="p">;</span>
-<span class="w">            </span><span class="nx">rightMax</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">Math</span><span class="p">.</span><span class="nx">max</span><span class="p">(</span><span class="nx">rightMax</span><span class="p">,</span><span class="w"> </span><span class="nx">height</span><span class="p">[</span><span class="nx">right</span><span class="p">]);</span>
-<span class="w">            </span><span class="nx">water</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="nx">rightMax</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nx">height</span><span class="p">[</span><span class="nx">right</span><span class="p">];</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">    </span><span class="p">}</span>
+    return water;    
+};
+</code></pre>
+<pre><code class="language-java">class Solution {
+    public int trap(int[] height) {
+        int left = 0;
+        int right = height.length - 1;
+        int leftMax = height[left];
+        int rightMax = height[right];
+        int water = 0;
 
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">water</span><span class="p">;</span><span class="w">    </span>
-<span class="p">};</span>
-</code></pre></div>
+        while (left &lt; right) {
+            if (leftMax &lt; rightMax) {
+                left++;
+                leftMax = Math.max(leftMax, height[left]);
+                water += leftMax - height[left];
+            } else {
+                right--;
+                rightMax = Math.max(rightMax, height[right]);
+                water += rightMax - height[right];
+            }
+        }
 
-<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">java</span><span class="w"> </span>
-<span class="kd">class</span> <span class="nc">Solution</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="nf">trap</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">height</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">left</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">right</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">height</span><span class="p">.</span><span class="na">length</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
-<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">leftMax</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">height</span><span class="o">[</span><span class="n">left</span><span class="o">]</span><span class="p">;</span>
-<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">rightMax</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">height</span><span class="o">[</span><span class="n">right</span><span class="o">]</span><span class="p">;</span>
-<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">water</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+        return water;        
+    }
+}
+</code></pre>
+<pre><code class="language-cpp">class Solution {
+public:
+    int trap(vector&lt;int&gt;&amp; height) {
+        int left = 0;
+        int right = height.size() - 1;
+        int leftMax = height[left];
+        int rightMax = height[right];
+        int water = 0;
 
-<span class="w">        </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">left</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">right</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">leftMax</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">rightMax</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="n">left</span><span class="o">++</span><span class="p">;</span>
-<span class="w">                </span><span class="n">leftMax</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Math</span><span class="p">.</span><span class="na">max</span><span class="p">(</span><span class="n">leftMax</span><span class="p">,</span><span class="w"> </span><span class="n">height</span><span class="o">[</span><span class="n">left</span><span class="o">]</span><span class="p">);</span>
-<span class="w">                </span><span class="n">water</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">leftMax</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">height</span><span class="o">[</span><span class="n">left</span><span class="o">]</span><span class="p">;</span>
-<span class="w">            </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="n">right</span><span class="o">--</span><span class="p">;</span>
-<span class="w">                </span><span class="n">rightMax</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Math</span><span class="p">.</span><span class="na">max</span><span class="p">(</span><span class="n">rightMax</span><span class="p">,</span><span class="w"> </span><span class="n">height</span><span class="o">[</span><span class="n">right</span><span class="o">]</span><span class="p">);</span>
-<span class="w">                </span><span class="n">water</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">rightMax</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">height</span><span class="o">[</span><span class="n">right</span><span class="o">]</span><span class="p">;</span>
-<span class="w">            </span><span class="p">}</span>
-<span class="w">        </span><span class="p">}</span>
+        while (left &lt; right) {
+            if (leftMax &lt; rightMax) {
+                left++;
+                leftMax = max(leftMax, height[left]);
+                water += leftMax - height[left];
+            } else {
+                right--;
+                rightMax = max(rightMax, height[right]);
+                water += rightMax - height[right];
+            }
+        }
 
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">water</span><span class="p">;</span><span class="w">        </span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
-
-<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">C</span><span class="o">++</span><span class="w"> </span>
-<span class="n">class</span><span class="w"> </span><span class="n">Solution</span><span class="w"> </span><span class="p">{</span>
-<span class="n">public</span><span class="o">:</span>
-<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">trap</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&amp;</span><span class="w"> </span><span class="n">height</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">left</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">right</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">height</span><span class="p">.</span><span class="n">size</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
-<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">leftMax</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">height</span><span class="p">[</span><span class="n">left</span><span class="p">];</span>
-<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">rightMax</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">height</span><span class="p">[</span><span class="n">right</span><span class="p">];</span>
-<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">water</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-
-<span class="w">        </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">left</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">right</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">leftMax</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">rightMax</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="n">left</span><span class="o">++</span><span class="p">;</span>
-<span class="w">                </span><span class="n">leftMax</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">max</span><span class="p">(</span><span class="n">leftMax</span><span class="p">,</span><span class="w"> </span><span class="n">height</span><span class="p">[</span><span class="n">left</span><span class="p">]);</span>
-<span class="w">                </span><span class="n">water</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">leftMax</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">height</span><span class="p">[</span><span class="n">left</span><span class="p">];</span>
-<span class="w">            </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="n">right</span><span class="o">--</span><span class="p">;</span>
-<span class="w">                </span><span class="n">rightMax</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">max</span><span class="p">(</span><span class="n">rightMax</span><span class="p">,</span><span class="w"> </span><span class="n">height</span><span class="p">[</span><span class="n">right</span><span class="p">]);</span>
-<span class="w">                </span><span class="n">water</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">rightMax</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">height</span><span class="p">[</span><span class="n">right</span><span class="p">];</span>
-<span class="w">            </span><span class="p">}</span>
-<span class="w">        </span><span class="p">}</span>
-
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">water</span><span class="p">;</span><span class="w">        </span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">};</span>
-</code></pre></div>
-
-<h3>Step by Step Algorithm</h3>
+        return water;        
+    }
+};
+</code></pre>
+<h5>Step by Step Algorithm</h5>
 <ol>
-<li><strong>Initialize pointers and variables</strong>:<br />
-   - Initialize two pointers <code>left</code> and <code>right</code> at the beginning and end of the <code>height</code> list respectively.<br />
-   - Initialize variables <code>left_max</code> and <code>right_max</code> to store the maximum height encountered from the left and right sides respectively.<br />
-   - Initialize a variable <code>water</code> to keep track of the total trapped water.</li>
+<li><strong>Initialize pointers and variables</strong>:</li>
+<li>Initialize two pointers <code>left</code> and <code>right</code> at the beginning and end of the <code>height</code> list respectively.</li>
+<li>Initialize variables <code>left_max</code> and <code>right_max</code> to store the maximum height encountered from the left and right sides respectively.</li>
+<li>Initialize a variable <code>water</code> to keep track of the total trapped water.</li>
 </ol>
-<div class="codehilite"><pre><span></span><code><span class="n">Language</span><span class="p">:</span> <span class="n">python</span>
-<span class="n">left</span> <span class="o">=</span> <span class="mi">0</span>
-<span class="n">right</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">height</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
-<span class="n">left_max</span> <span class="o">=</span> <span class="n">height</span><span class="p">[</span><span class="n">left</span><span class="p">]</span>
-<span class="n">right_max</span> <span class="o">=</span> <span class="n">height</span><span class="p">[</span><span class="n">right</span><span class="p">]</span>
-<span class="n">water</span> <span class="o">=</span> <span class="mi">0</span>
-</code></pre></div>
-
-<ol start="2">
-<li><strong>Loop until pointers meet</strong>:<br />
-   - Continue looping while <code>left</code> pointer is less than <code>right</code> pointer, indicating there are still bars to process.</li>
+<pre><code class="language-python">left = 0
+right = len(height) - 1
+left_max = height[left]
+right_max = height[right]
+water = 0
+</code></pre>
+<ol>
+<li><strong>Loop until pointers meet</strong>:</li>
+<li>Continue looping while <code>left</code> pointer is less than <code>right</code> pointer, indicating there are still bars to process.</li>
 </ol>
-<div class="codehilite"><pre><span></span><code><span class="n">Language</span><span class="p">:</span> <span class="n">python</span>
-<span class="k">while</span> <span class="n">left</span> <span class="o">&lt;</span> <span class="n">right</span><span class="p">:</span>
-</code></pre></div>
-
-<ol start="3">
-<li><strong>Check which side to move</strong>:<br />
-   - Compare <code>left_max</code> and <code>right_max</code> heights.<br />
-   - If <code>left_max</code> is less than <code>right_max</code>, move the <code>left</code> pointer to the right and update <code>left_max</code>.<br />
-   - Otherwise, move the <code>right</code> pointer to the left and update <code>right_max</code>.</li>
+<pre><code class="language-python">while left &lt; right:
+</code></pre>
+<ol>
+<li><strong>Check which side to move</strong>:</li>
+<li>Compare <code>left_max</code> and <code>right_max</code> heights.</li>
+<li>If <code>left_max</code> is less than <code>right_max</code>, move the <code>left</code> pointer to the right and update <code>left_max</code>.</li>
+<li>Otherwise, move the <code>right</code> pointer to the left and update <code>right_max</code>.</li>
 </ol>
-<div class="codehilite"><pre><span></span><code><span class="n">Language</span><span class="p">:</span> <span class="n">python</span>
-<span class="k">if</span> <span class="n">left_max</span> <span class="o">&lt;</span> <span class="n">right_max</span><span class="p">:</span>
-    <span class="n">left</span> <span class="o">+=</span> <span class="mi">1</span>
-    <span class="n">left_max</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">left_max</span><span class="p">,</span> <span class="n">height</span><span class="p">[</span><span class="n">left</span><span class="p">])</span>
-    <span class="n">water</span> <span class="o">+=</span> <span class="n">left_max</span> <span class="o">-</span> <span class="n">height</span><span class="p">[</span><span class="n">left</span><span class="p">]</span>
-<span class="k">else</span><span class="p">:</span>
-    <span class="n">right</span> <span class="o">-=</span> <span class="mi">1</span>
-    <span class="n">right_max</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">right_max</span><span class="p">,</span> <span class="n">height</span><span class="p">[</span><span class="n">right</span><span class="p">])</span>
-    <span class="n">water</span> <span class="o">+=</span> <span class="n">right_max</span> <span class="o">-</span> <span class="n">height</span><span class="p">[</span><span class="n">right</span><span class="p">]</span>
-</code></pre></div>
-
-<ol start="4">
+<pre><code class="language-python">if left_max &lt; right_max:
+    left += 1
+    left_max = max(left_max, height[left])
+    water += left_max - height[left]
+else:
+    right -= 1
+    right_max = max(right_max, height[right])
+    water += right_max - height[right]
+</code></pre>
+<ol>
 <li><strong>Calculate trapped water</strong>:</li>
-</ol>
-<ul>
 <li>Calculate the water trapped at the current position based on the difference between the maximum height and the current height.</li>
-<li>Accumulate this water amount to the <code>water</code> variable.</li>
-</ul>
-<ol>
-<li><strong>Return total trapped water</strong>:</li>
-</ol>
-<ul>
+<li>
+<p>Accumulate this water amount to the <code>water</code> variable.</p>
+</li>
+<li>
+<p><strong>Return total trapped water</strong>:</p>
+</li>
 <li>After the loop ends, return the total trapped water accumulated in the <code>water</code> variable.</li>
-</ul>
-<div class="codehilite"><pre><span></span><code><span class="n">Language</span><span class="p">:</span> <span class="n">python</span>
-<span class="k">return</span> <span class="n">water</span>
-</code></pre></div>
-
+</ol>
+<pre><code class="language-python">return water
+</code></pre>
 <p>This algorithm efficiently iterates through the elevation map, moving pointers inward based on the comparison of maximum heights encountered so far from both sides, ultimately calculating the total trapped water between the bars.</p>
-<hr />
 <p>Thank you for reading my post. Please upvote it and don't forget to subscribe to my channel!</p>
-<h3>⭐️ Subscribe URL</h3>
+<h5>⭐️ Subscribe URL</h5>
 <p>http://www.youtube.com/channel/UC9RMNwYTL3SXCP6ShLWVFww?sub_confirmation=1</p>
-<h3>⭐️ Twitter</h3>
+<h5>⭐️ Twitter</h5>
 <p>https://twitter.com/CodingNinjaAZ</p>
-<h3>⭐️ Related question #322 - Coin Change</h3>
+<h5>⭐️ Related question #322 - Coin Change</h5>
 <p>https://youtu.be/IrHPiwWUTKw</p></div>
-
-
-<div class='python-solution'><h2>【Video】Keep max height on the both side. -- Votes: 503</h2><h2>Intuition</h2>
-<p>Keep max height on the both side.</p>
-<hr />
-<h2>Solution Video</h2>
-<p>https://youtu.be/7yg_WJA35uo</p>
-<h4>⭐️⭐️ Don't forget to subscribe to my channel! ⭐️⭐️</h4>
-<p><strong>■ Subscribe URL</strong><br />
-http://www.youtube.com/channel/UC9RMNwYTL3SXCP6ShLWVFww?sub_confirmation=1</p>
-<p>Subscribers: 4,819<br />
-Thank you for your support!</p>
-<hr />
-<h2>Approach</h2>
-<p>To keep water, we have to have a bar on the left side and on the right side. Between them, we can keep water.</p>
-<p>Let's think about this example.</p>
-<div class="codehilite"><pre><span></span><code><span class="n">Input</span><span class="o">:</span><span class="w"> </span><span class="n">height</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[</span><span class="mi">2</span><span class="o">,</span><span class="mi">1</span><span class="o">,</span><span class="mi">0</span><span class="o">,</span><span class="mi">1</span><span class="o">,</span><span class="mi">3</span><span class="o">,</span><span class="mi">2</span><span class="o">]</span>
-</code></pre></div>
-
-<p></p>
-<p>I think we can easily imagine that we can keep water at <code>0 height</code>(= index <code>2</code>), because we have bars in the adjacent places(= index <code>1</code> and <code>3</code>).</p>
-<p>But how about <code>1 height</code> at index <code>1</code>. We can keep water there. I think left side is easy to imagine because we have a bar in adjacent place(= index <code>0</code>). But how about right side? In the end, we can keep water because we have <code>3 height</code> at index <code>4</code>.</p>
-<hr />
-<p>Question</p>
-<p>How can we judge if we can have water when there is some distance between water and a bar? In this case, water is at index <code>1</code> and the bar is at index <code>4</code>.</p>
-<hr />
-<p>My strategy is to keep <code>max height of left and right</code>. I'll show you how algorithm works.</p>
-<h3>How it works</h3>
-<div class="codehilite"><pre><span></span><code><span class="k">[2,1,0,1,3,2]</span>
-<span class="w"> </span><span class="na">L         R</span>
-
-<span class="na">left max</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">2</span>
-<span class="na">right max</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">2</span>
-<span class="na">water</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">0</span>
-</code></pre></div>
-
-<p><code>L</code> is current left pointer.<br />
-<code>R</code> is current right pointer.<br />
-<code>left max</code> is max height of left side we found so far. Initialized with the first number.<br />
-<code>right max</code> is max height of right side we found so far. Initialized with the last number<br />
-<code>water</code> is return value.</p>
-<p>If <code>L</code> is smaller than <code>R</code>, we continue. After that, check <code>left max</code> and <code>right max</code> and <strong>take smaller max height</strong>. I'll explain why later.</p>
-<p>In this case, they are the same, so we can choose one of them. I'll take <code>right</code>.</p>
-<p>First of all, move <code>R</code> to the next.</p>
-<div class="codehilite"><pre><span></span><code><span class="k">[2,1,0,1,3,2]</span>
-<span class="w"> </span><span class="na">L       R</span>
-
-<span class="na">left max</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">2</span>
-<span class="na">right max</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">2</span>
-<span class="na">water</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">0</span>
-</code></pre></div>
-
-<p>Next, update <code>right max</code> if current bar is taller than current <code>right max</code>.</p>
-<div class="codehilite"><pre><span></span><code>current bar vs current max right
-= 3 vs 2
-= 3
-
-[2,1,0,1,3,2]
- L       R
-
-left max = 2
-right max = 3
-water = 0
-</code></pre></div>
-
-<p>Then, count number of water. Formula is</p>
-<div class="codehilite"><pre><span></span><code>water = current right max - current bar
-= 3 - 3
-= 0
-</code></pre></div>
-
-<p><code>water</code> should be <code>0</code>.</p>
-<p>Next, <code>L &lt; R</code>, so we continue</p>
-<p>First of all, take smaller max height between left and right. I'll take <code>left max</code>.</p>
-<p>Move <code>L</code> to the next and update <code>left max</code> if needed. No udpate this time.</p>
-<div class="codehilite"><pre><span></span><code><span class="k">[2,1,0,1,3,2]</span>
-<span class="w">   </span><span class="na">L     R</span>
-
-<span class="na">left max</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">2</span>
-<span class="na">right max</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">3</span>
-<span class="na">water</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">0</span>
-</code></pre></div>
-
-<p>Then here is an important point. <code>water</code> should be</p>
-<div class="codehilite"><pre><span></span><code>current left max - current bar
-2 - 1 = 1
-
-water = 1
-</code></pre></div>
-
-<p>Are you sure?</p>
-<p>Yes, I'm sure.</p>
-<hr />
-<p>⭐️ Points</p>
-<p>We take smaller max height between left(= <code>2 height</code>) and right(= <code>3 height</code>) and handle left side because <code>left max</code> is smaller than <code>right max</code>. That means we don't have to care about right side because we know that we have current tallest bar(= <code>3 height</code> at index <code>4</code>) on the right side, so at least we can keep water at <code>2 height</code>(= <code>left max</code>)</p>
-<hr />
-<p>That's the reason why we take smaller max height.</p>
-<p>We can take 2 height as max height but there is bar at index <code>1</code>. That's why</p>
-<div class="codehilite"><pre><span></span><code>left max - current height
-= 2 - 1
-= 1 water
-</code></pre></div>
-
-<div class="codehilite"><pre><span></span><code><span class="k">[2,1,0,1,3,2]</span>
-<span class="w">   </span><span class="na">L     R</span>
-
-<span class="na">left max</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">2</span>
-<span class="na">right max</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">3</span>
-<span class="na">water</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1</span>
-</code></pre></div>
-
-<p>I'll speed up.</p>
-<p><code>L &lt; R</code>, so we continue.<br />
-Move <code>L</code> to the next because left max is smaller than right max and update <code>left max</code> if needed. No update this time.</p>
-<div class="codehilite"><pre><span></span><code><span class="k">[2,1,0,1,3,2]</span>
-<span class="w">     </span><span class="na">L   R</span>
-
-<span class="na">left max</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">2</span>
-<span class="na">right max</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">3</span>
-<span class="na">water</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1</span>
-</code></pre></div>
-
-<p><code>water</code> should be...</p>
-<div class="codehilite"><pre><span></span><code><span class="mf">2</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mf">0</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">2</span>
-<span class="kr">to</span><span class="n">tal</span><span class="w"> </span><span class="n">water</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">3</span>
-</code></pre></div>
-
-<p>Next, <code>L &lt; R</code>, so we continue.<br />
-Move <code>L</code> to the next because left max is smaller than right max and update <code>left max</code> if needed. No update this time.</p>
-<div class="codehilite"><pre><span></span><code><span class="k">[2,1,0,1,3,2]</span>
-<span class="w">       </span><span class="na">L R</span>
-
-<span class="na">left max</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">2</span>
-<span class="na">right max</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">3</span>
-<span class="na">water</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">3</span>
-</code></pre></div>
-
-<p><code>water</code> should be...</p>
-<div class="codehilite"><pre><span></span><code><span class="mf">2</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mf">1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">1</span>
-<span class="kr">to</span><span class="n">tal</span><span class="w"> </span><span class="n">water</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">4</span>
-</code></pre></div>
-
-<p>Next, <code>L &lt; R</code>, so we continue.<br />
-Move <code>L</code> to the next because left max is smaller than right max and update <code>left max</code> if needed. we found <code>3</code> this time.</p>
-<div class="codehilite"><pre><span></span><code><span class="k">[2,1,0,1,3,2]</span>
-<span class="w">         </span><span class="na">L</span>
-<span class="w">         </span><span class="na">R</span>
-<span class="na">left max</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">3 (updated. 2 vs 3)</span>
-<span class="na">right max</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">3</span>
-<span class="na">water</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">3</span>
-</code></pre></div>
-
-<p><code>water</code> should be...</p>
-<div class="codehilite"><pre><span></span><code><span class="mf">3</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mf">3</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0</span>
-<span class="kr">to</span><span class="n">tal</span><span class="w"> </span><span class="n">water</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">4</span>
-</code></pre></div>
-
-<p>Now <code>L == R</code>. We stop iteration.</p>
-<div class="codehilite"><pre><span></span><code><span class="k">return</span><span class="w"> </span><span class="mi">4</span>
-</code></pre></div>
-
-<hr />
-<p>https://youtu.be/Abdq3lNRocc</p>
-<hr />
-<h2>Complexity</h2>
-<ul>
-<li>Time complexity: $$O(n)$$</li>
-</ul>
-<!-- Add your time complexity here, e.g. $$O(n)$$ -->
-
-<ul>
-<li>Space complexity: $$O(1)$$</li>
-</ul>
-<!-- Add your space complexity here, e.g. $$O(n)$$ -->
-
-<div class="codehilite"><pre><span></span><code><span class="n">Language</span><span class="p">:</span> <span class="n">python</span> 
-<span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="p">:</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">trap</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">height</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-        <span class="n">left</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="n">right</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">height</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
-        <span class="n">left_max</span> <span class="o">=</span> <span class="n">height</span><span class="p">[</span><span class="n">left</span><span class="p">]</span>
-        <span class="n">right_max</span> <span class="o">=</span> <span class="n">height</span><span class="p">[</span><span class="n">right</span><span class="p">]</span>
-        <span class="n">water</span> <span class="o">=</span> <span class="mi">0</span>
-
-        <span class="k">while</span> <span class="n">left</span> <span class="o">&lt;</span> <span class="n">right</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">left_max</span> <span class="o">&lt;</span> <span class="n">right_max</span><span class="p">:</span>
-                <span class="n">left</span> <span class="o">+=</span> <span class="mi">1</span>
-                <span class="n">left_max</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">left_max</span><span class="p">,</span> <span class="n">height</span><span class="p">[</span><span class="n">left</span><span class="p">])</span>
-                <span class="n">water</span> <span class="o">+=</span> <span class="n">left_max</span> <span class="o">-</span> <span class="n">height</span><span class="p">[</span><span class="n">left</span><span class="p">]</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">right</span> <span class="o">-=</span> <span class="mi">1</span>
-                <span class="n">right_max</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">right_max</span><span class="p">,</span> <span class="n">height</span><span class="p">[</span><span class="n">right</span><span class="p">])</span>
-                <span class="n">water</span> <span class="o">+=</span> <span class="n">right_max</span> <span class="o">-</span> <span class="n">height</span><span class="p">[</span><span class="n">right</span><span class="p">]</span>
-
-        <span class="k">return</span> <span class="n">water</span>
-</code></pre></div>
-
-<div class="codehilite"><pre><span></span><code><span class="nx">Language</span><span class="o">:</span><span class="w"> </span><span class="nx">javascript</span><span class="w"> </span>
-<span class="kd">var</span><span class="w"> </span><span class="nx">trap</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kd">function</span><span class="p">(</span><span class="nx">height</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="nx">left</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0</span><span class="p">;</span>
-<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="nx">right</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">height</span><span class="p">.</span><span class="nx">length</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mf">1</span><span class="p">;</span>
-<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="nx">leftMax</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">height</span><span class="p">[</span><span class="nx">left</span><span class="p">];</span>
-<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="nx">rightMax</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">height</span><span class="p">[</span><span class="nx">right</span><span class="p">];</span>
-<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="nx">water</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0</span><span class="p">;</span>
-
-<span class="w">    </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="nx">left</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="nx">right</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">leftMax</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="nx">rightMax</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="nx">left</span><span class="o">++</span><span class="p">;</span>
-<span class="w">            </span><span class="nx">leftMax</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">Math</span><span class="p">.</span><span class="nx">max</span><span class="p">(</span><span class="nx">leftMax</span><span class="p">,</span><span class="w"> </span><span class="nx">height</span><span class="p">[</span><span class="nx">left</span><span class="p">]);</span>
-<span class="w">            </span><span class="nx">water</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="nx">leftMax</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nx">height</span><span class="p">[</span><span class="nx">left</span><span class="p">];</span>
-<span class="w">        </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="nx">right</span><span class="o">--</span><span class="p">;</span>
-<span class="w">            </span><span class="nx">rightMax</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">Math</span><span class="p">.</span><span class="nx">max</span><span class="p">(</span><span class="nx">rightMax</span><span class="p">,</span><span class="w"> </span><span class="nx">height</span><span class="p">[</span><span class="nx">right</span><span class="p">]);</span>
-<span class="w">            </span><span class="nx">water</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="nx">rightMax</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nx">height</span><span class="p">[</span><span class="nx">right</span><span class="p">];</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">    </span><span class="p">}</span>
-
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">water</span><span class="p">;</span><span class="w">    </span>
-<span class="p">};</span>
-</code></pre></div>
-
-<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">java</span><span class="w"> </span>
-<span class="kd">class</span> <span class="nc">Solution</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="nf">trap</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">height</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">left</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">right</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">height</span><span class="p">.</span><span class="na">length</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
-<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">leftMax</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">height</span><span class="o">[</span><span class="n">left</span><span class="o">]</span><span class="p">;</span>
-<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">rightMax</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">height</span><span class="o">[</span><span class="n">right</span><span class="o">]</span><span class="p">;</span>
-<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">water</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-
-<span class="w">        </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">left</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">right</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">leftMax</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">rightMax</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="n">left</span><span class="o">++</span><span class="p">;</span>
-<span class="w">                </span><span class="n">leftMax</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Math</span><span class="p">.</span><span class="na">max</span><span class="p">(</span><span class="n">leftMax</span><span class="p">,</span><span class="w"> </span><span class="n">height</span><span class="o">[</span><span class="n">left</span><span class="o">]</span><span class="p">);</span>
-<span class="w">                </span><span class="n">water</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">leftMax</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">height</span><span class="o">[</span><span class="n">left</span><span class="o">]</span><span class="p">;</span>
-<span class="w">            </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="n">right</span><span class="o">--</span><span class="p">;</span>
-<span class="w">                </span><span class="n">rightMax</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Math</span><span class="p">.</span><span class="na">max</span><span class="p">(</span><span class="n">rightMax</span><span class="p">,</span><span class="w"> </span><span class="n">height</span><span class="o">[</span><span class="n">right</span><span class="o">]</span><span class="p">);</span>
-<span class="w">                </span><span class="n">water</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">rightMax</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">height</span><span class="o">[</span><span class="n">right</span><span class="o">]</span><span class="p">;</span>
-<span class="w">            </span><span class="p">}</span>
-<span class="w">        </span><span class="p">}</span>
-
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">water</span><span class="p">;</span><span class="w">        </span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
-
-<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">C</span><span class="o">++</span><span class="w"> </span>
-<span class="n">class</span><span class="w"> </span><span class="n">Solution</span><span class="w"> </span><span class="p">{</span>
-<span class="n">public</span><span class="o">:</span>
-<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">trap</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&amp;</span><span class="w"> </span><span class="n">height</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">left</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">right</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">height</span><span class="p">.</span><span class="n">size</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
-<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">leftMax</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">height</span><span class="p">[</span><span class="n">left</span><span class="p">];</span>
-<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">rightMax</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">height</span><span class="p">[</span><span class="n">right</span><span class="p">];</span>
-<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">water</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-
-<span class="w">        </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">left</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">right</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">leftMax</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">rightMax</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="n">left</span><span class="o">++</span><span class="p">;</span>
-<span class="w">                </span><span class="n">leftMax</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">max</span><span class="p">(</span><span class="n">leftMax</span><span class="p">,</span><span class="w"> </span><span class="n">height</span><span class="p">[</span><span class="n">left</span><span class="p">]);</span>
-<span class="w">                </span><span class="n">water</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">leftMax</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">height</span><span class="p">[</span><span class="n">left</span><span class="p">];</span>
-<span class="w">            </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="n">right</span><span class="o">--</span><span class="p">;</span>
-<span class="w">                </span><span class="n">rightMax</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">max</span><span class="p">(</span><span class="n">rightMax</span><span class="p">,</span><span class="w"> </span><span class="n">height</span><span class="p">[</span><span class="n">right</span><span class="p">]);</span>
-<span class="w">                </span><span class="n">water</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">rightMax</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">height</span><span class="p">[</span><span class="n">right</span><span class="p">];</span>
-<span class="w">            </span><span class="p">}</span>
-<span class="w">        </span><span class="p">}</span>
-
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">water</span><span class="p">;</span><span class="w">        </span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">};</span>
-</code></pre></div>
-
-<h3>Step by Step Algorithm</h3>
-<ol>
-<li><strong>Initialize pointers and variables</strong>:<br />
-   - Initialize two pointers <code>left</code> and <code>right</code> at the beginning and end of the <code>height</code> list respectively.<br />
-   - Initialize variables <code>left_max</code> and <code>right_max</code> to store the maximum height encountered from the left and right sides respectively.<br />
-   - Initialize a variable <code>water</code> to keep track of the total trapped water.</li>
-</ol>
-<div class="codehilite"><pre><span></span><code><span class="n">Language</span><span class="p">:</span> <span class="n">python</span>
-<span class="n">left</span> <span class="o">=</span> <span class="mi">0</span>
-<span class="n">right</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">height</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
-<span class="n">left_max</span> <span class="o">=</span> <span class="n">height</span><span class="p">[</span><span class="n">left</span><span class="p">]</span>
-<span class="n">right_max</span> <span class="o">=</span> <span class="n">height</span><span class="p">[</span><span class="n">right</span><span class="p">]</span>
-<span class="n">water</span> <span class="o">=</span> <span class="mi">0</span>
-</code></pre></div>
-
-<ol start="2">
-<li><strong>Loop until pointers meet</strong>:<br />
-   - Continue looping while <code>left</code> pointer is less than <code>right</code> pointer, indicating there are still bars to process.</li>
-</ol>
-<div class="codehilite"><pre><span></span><code><span class="n">Language</span><span class="p">:</span> <span class="n">python</span>
-<span class="k">while</span> <span class="n">left</span> <span class="o">&lt;</span> <span class="n">right</span><span class="p">:</span>
-</code></pre></div>
-
-<ol start="3">
-<li><strong>Check which side to move</strong>:<br />
-   - Compare <code>left_max</code> and <code>right_max</code> heights.<br />
-   - If <code>left_max</code> is less than <code>right_max</code>, move the <code>left</code> pointer to the right and update <code>left_max</code>.<br />
-   - Otherwise, move the <code>right</code> pointer to the left and update <code>right_max</code>.</li>
-</ol>
-<div class="codehilite"><pre><span></span><code><span class="n">Language</span><span class="p">:</span> <span class="n">python</span>
-<span class="k">if</span> <span class="n">left_max</span> <span class="o">&lt;</span> <span class="n">right_max</span><span class="p">:</span>
-    <span class="n">left</span> <span class="o">+=</span> <span class="mi">1</span>
-    <span class="n">left_max</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">left_max</span><span class="p">,</span> <span class="n">height</span><span class="p">[</span><span class="n">left</span><span class="p">])</span>
-    <span class="n">water</span> <span class="o">+=</span> <span class="n">left_max</span> <span class="o">-</span> <span class="n">height</span><span class="p">[</span><span class="n">left</span><span class="p">]</span>
-<span class="k">else</span><span class="p">:</span>
-    <span class="n">right</span> <span class="o">-=</span> <span class="mi">1</span>
-    <span class="n">right_max</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">right_max</span><span class="p">,</span> <span class="n">height</span><span class="p">[</span><span class="n">right</span><span class="p">])</span>
-    <span class="n">water</span> <span class="o">+=</span> <span class="n">right_max</span> <span class="o">-</span> <span class="n">height</span><span class="p">[</span><span class="n">right</span><span class="p">]</span>
-</code></pre></div>
-
-<ol start="4">
-<li><strong>Calculate trapped water</strong>:</li>
-</ol>
-<ul>
-<li>Calculate the water trapped at the current position based on the difference between the maximum height and the current height.</li>
-<li>Accumulate this water amount to the <code>water</code> variable.</li>
-</ul>
-<ol>
-<li><strong>Return total trapped water</strong>:</li>
-</ol>
-<ul>
-<li>After the loop ends, return the total trapped water accumulated in the <code>water</code> variable.</li>
-</ul>
-<div class="codehilite"><pre><span></span><code><span class="n">Language</span><span class="p">:</span> <span class="n">python</span>
-<span class="k">return</span> <span class="n">water</span>
-</code></pre></div>
-
-<p>This algorithm efficiently iterates through the elevation map, moving pointers inward based on the comparison of maximum heights encountered so far from both sides, ultimately calculating the total trapped water between the bars.</p>
-<hr />
-<p>Thank you for reading my post. Please upvote it and don't forget to subscribe to my channel!</p>
-<h3>⭐️ Subscribe URL</h3>
-<p>http://www.youtube.com/channel/UC9RMNwYTL3SXCP6ShLWVFww?sub_confirmation=1</p>
-<h3>⭐️ Twitter</h3>
-<p>https://twitter.com/CodingNinjaAZ</p>
-<h3>⭐️ Related question #322 - Coin Change</h3>
-<p>https://youtu.be/IrHPiwWUTKw</p></div><p style="page-break-before: always" ></p>

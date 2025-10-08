@@ -1,102 +1,94 @@
-<div class='cpp-solution'><h2>Solution -- Votes: 526</h2><div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">C</span><span class="o">++</span><span class="w"> </span>
-<span class="n">class</span><span class="w"> </span><span class="n">Solution</span><span class="w"> </span><span class="p">{</span>
-<span class="n">public</span><span class="o">:</span>
-<span class="w">    </span><span class="n">vector</span><span class="o">&lt;</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="n">merge</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&gt;&amp;</span><span class="w"> </span><span class="n">intervals</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<div class='cpp-solution'><h4>Solution [Votes: 526]</h4><pre><code class="language-cpp">class Solution {
+public:
+    vector&lt;vector&lt;int&gt;&gt; merge(vector&lt;vector&lt;int&gt;&gt;&amp; intervals) {
 
-<span class="w">      </span><span class="k">if</span><span class="p">(</span><span class="n">intervals</span><span class="p">.</span><span class="n">size</span><span class="p">()</span><span class="o">==</span><span class="mi">1</span><span class="p">)</span>
-<span class="w">         </span><span class="k">return</span><span class="w"> </span><span class="n">intervals</span><span class="p">;</span>
-<span class="w">      </span><span class="n">vector</span><span class="o">&lt;</span><span class="n">pair</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="kt">int</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="n">p</span><span class="p">;</span>
-<span class="w">      </span><span class="k">for</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">intervals</span><span class="p">.</span><span class="n">size</span><span class="p">();</span><span class="n">i</span><span class="o">++</span><span class="p">)</span>
-<span class="w">      </span><span class="p">{</span>
-<span class="w">          </span><span class="n">p</span><span class="p">.</span><span class="n">push_back</span><span class="p">({</span><span class="n">intervals</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span><span class="n">intervals</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">]});</span>
-<span class="w">      </span><span class="p">}</span><span class="w"> </span>
-<span class="w">      </span><span class="n">sort</span><span class="p">(</span><span class="n">p</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span><span class="n">p</span><span class="p">.</span><span class="n">end</span><span class="p">());</span>
+      if(intervals.size()==1)
+         return intervals;
+      vector&lt;pair&lt;int,int&gt;&gt; p;
+      for(int i=0;i&lt;intervals.size();i++)
+      {
+          p.push_back({intervals[i][0],intervals[i][1]});
+      } 
+      sort(p.begin(),p.end());
 
-<span class="w">      </span><span class="n">vector</span><span class="o">&lt;</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="n">ans</span><span class="p">;</span>
-<span class="w">      </span><span class="kt">int</span><span class="w"> </span><span class="n">f</span><span class="o">=</span><span class="n">p</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="n">first</span><span class="p">,</span><span class="n">s</span><span class="o">=</span><span class="n">p</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="n">second</span><span class="p">;</span>
-<span class="w">      </span><span class="k">for</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">p</span><span class="p">.</span><span class="n">size</span><span class="p">()</span><span class="mi">-1</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">)</span>
-<span class="w">      </span><span class="p">{</span>
-<span class="w">          </span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="w"> </span><span class="n">a</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
-<span class="w">          </span><span class="k">if</span><span class="p">(</span><span class="n">s</span><span class="o">&gt;=</span><span class="n">p</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">].</span><span class="n">first</span><span class="p">)</span>
-<span class="w">          </span><span class="p">{</span>
-<span class="w">              </span><span class="n">s</span><span class="o">=</span><span class="n">max</span><span class="p">(</span><span class="n">s</span><span class="p">,</span><span class="n">p</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">].</span><span class="n">second</span><span class="p">);</span>
-<span class="w">          </span><span class="p">}</span>
-<span class="w">          </span><span class="k">else</span>
-<span class="w">          </span><span class="p">{</span>
-<span class="w">              </span><span class="n">a</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">=</span><span class="n">f</span><span class="p">;</span>
-<span class="w">              </span><span class="n">a</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">=</span><span class="n">s</span><span class="p">;</span>
-<span class="w">              </span><span class="n">f</span><span class="o">=</span><span class="n">p</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">].</span><span class="n">first</span><span class="p">;</span>
-<span class="w">              </span><span class="n">s</span><span class="o">=</span><span class="n">p</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">].</span><span class="n">second</span><span class="p">;</span>
-<span class="w">              </span><span class="n">ans</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">a</span><span class="p">);</span>
-<span class="w">          </span><span class="p">}</span>
-<span class="w">      </span><span class="p">}</span><span class="w"> </span>
-<span class="w">      </span><span class="kt">int</span><span class="w"> </span><span class="n">n</span><span class="o">=</span><span class="n">intervals</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>
-<span class="w">      </span><span class="n">ans</span><span class="p">.</span><span class="n">push_back</span><span class="p">({</span><span class="n">f</span><span class="p">,</span><span class="n">s</span><span class="p">});</span>
-<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="n">ans</span><span class="p">;</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">};</span>
+      vector&lt;vector&lt;int&gt;&gt; ans;
+      int f=p[0].first,s=p[0].second;
+      for(int i=0;i&lt;p.size()-1;i++)
+      {
+          vector&lt;int&gt; a(2);
+          if(s&gt;=p[i+1].first)
+          {
+              s=max(s,p[i+1].second);
+          }
+          else
+          {
+              a[0]=f;
+              a[1]=s;
+              f=p[i+1].first;
+              s=p[i+1].second;
+              ans.push_back(a);
+          }
+      } 
+      int n=intervals.size();
+      ans.push_back({f,s});
+      return ans;
+    }
+};
+</code></pre>
+<pre><code class="language-Python3">class Solution:
+    def merge(self, intervals: List[List[int]]) -&gt; List[List[int]]:
+        intervals = sorted(intervals, key=lambda x: x [0])
+
+        ans = []
+
+        for interval in intervals:
+            if not ans or ans[-1][1] &lt; interval[0]:
+                ans.append(interval)
+            else:
+                ans[-1][1] = max(ans[-1][1], interval[1])
+
+        return ans
+</code></pre>
+<pre><code class="language-Java">class Solution {
+    public int[][] merge(int[][] intervals) {
+        int min = Integer.MAX_VALUE;
+        int max = Integer.MIN_VALUE;
+
+        for (int i = 0; i &lt; intervals.length; i++) {
+            min = Math.min(min, intervals[i][0]);
+            max = Math.max(max, intervals[i][0]);
+        }
+
+        int[] range = new int[max - min + 1];
+        for (int i = 0; i &lt; intervals.length; i++) {
+            range[intervals[i][0] - min] = Math.max(intervals[i][1] - min, range[intervals[i][0] - min]); 
+        }
+
+        int start = 0, end = 0;
+        LinkedList&lt;int[]&gt; result = new LinkedList&lt;&gt;();
+        for (int i = 0; i &lt; range.length; i++) {
+            if (range[i] == 0) {
+                continue;
+            }
+            if (i &lt;= end) {
+                end = Math.max(range[i], end);
+            } else {
+                result.add(new int[] {start + min, end + min});
+                start = i;
+                end = range[i];
+            }
+        }
+        result.add(new int[] {start + min, end + min});
+        return result.toArray(new int[result.size()][]);
+    }
+}
+</code></pre></div><div class='python-solution'><h4>7 lines, easy, Python [Votes: 577]</h4><p>Just go through the intervals sorted by start coordinate and either combine the current interval with the previous one if they overlap, or add it to the output by itself if they don't.</p>
+<pre><code>def merge(self, intervals):
+    out = []
+    for i in sorted(intervals, key=lambda i: i.start):
+        if out and i.start &lt;= out[-1].end:
+            out[-1].end = max(out[-1].end, i.end)
+        else:
+            out += i,
+    return out
 </code></pre></div>
-
-<div class="codehilite"><pre><span></span><code><span class="n">Language</span><span class="p">:</span> <span class="n">Python3</span> 
-<span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="p">:</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">merge</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">intervals</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]]:</span>
-        <span class="n">intervals</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">intervals</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-
-        <span class="n">ans</span> <span class="o">=</span> 
-
-        <span class="k">for</span> <span class="n">interval</span> <span class="ow">in</span> <span class="n">intervals</span><span class="p">:</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">ans</span> <span class="ow">or</span> <span class="n">ans</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">interval</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
-                <span class="n">ans</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">interval</span><span class="p">)</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">ans</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">ans</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="n">interval</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
-
-        <span class="k">return</span> <span class="n">ans</span>
-</code></pre></div>
-
-<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">Java</span><span class="w"> </span>
-<span class="kd">class</span> <span class="nc">Solution</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="nf">merge</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">intervals</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">min</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Integer</span><span class="p">.</span><span class="na">MAX_VALUE</span><span class="p">;</span>
-<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">max</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Integer</span><span class="p">.</span><span class="na">MIN_VALUE</span><span class="p">;</span>
-
-<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">intervals</span><span class="p">.</span><span class="na">length</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="n">min</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Math</span><span class="p">.</span><span class="na">min</span><span class="p">(</span><span class="n">min</span><span class="p">,</span><span class="w"> </span><span class="n">intervals</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="mi">0</span><span class="o">]</span><span class="p">);</span>
-<span class="w">            </span><span class="n">max</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Math</span><span class="p">.</span><span class="na">max</span><span class="p">(</span><span class="n">max</span><span class="p">,</span><span class="w"> </span><span class="n">intervals</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="mi">0</span><span class="o">]</span><span class="p">);</span>
-<span class="w">        </span><span class="p">}</span>
-
-<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">range</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="kt">int</span><span class="o">[</span><span class="n">max</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">min</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="o">]</span><span class="p">;</span>
-<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">intervals</span><span class="p">.</span><span class="na">length</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="n">range</span><span class="o">[</span><span class="n">intervals</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="mi">0</span><span class="o">]</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">min</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Math</span><span class="p">.</span><span class="na">max</span><span class="p">(</span><span class="n">intervals</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="mi">1</span><span class="o">]</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">min</span><span class="p">,</span><span class="w"> </span><span class="n">range</span><span class="o">[</span><span class="n">intervals</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="mi">0</span><span class="o">]</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">min</span><span class="o">]</span><span class="p">);</span><span class="w"> </span>
-<span class="w">        </span><span class="p">}</span>
-
-<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">start</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">end</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-<span class="w">        </span><span class="n">LinkedList</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">LinkedList</span><span class="o">&lt;&gt;</span><span class="p">();</span>
-<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">range</span><span class="p">.</span><span class="na">length</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">range</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="k">continue</span><span class="p">;</span>
-<span class="w">            </span><span class="p">}</span>
-<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">end</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="n">end</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Math</span><span class="p">.</span><span class="na">max</span><span class="p">(</span><span class="n">range</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="p">,</span><span class="w"> </span><span class="n">end</span><span class="p">);</span>
-<span class="w">            </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="n">result</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="p">{</span><span class="n">start</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">min</span><span class="p">,</span><span class="w"> </span><span class="n">end</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">min</span><span class="p">});</span>
-<span class="w">                </span><span class="n">start</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">i</span><span class="p">;</span>
-<span class="w">                </span><span class="n">end</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">range</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="p">;</span>
-<span class="w">            </span><span class="p">}</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">        </span><span class="n">result</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="p">{</span><span class="n">start</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">min</span><span class="p">,</span><span class="w"> </span><span class="n">end</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">min</span><span class="p">});</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">result</span><span class="p">.</span><span class="na">toArray</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="kt">int</span><span class="o">[</span><span class="n">result</span><span class="p">.</span><span class="na">size</span><span class="p">()</span><span class="o">]</span><span class="p">);</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div></div>
-
-
-<div class='python-solution'><h2>7 lines, easy, Python -- Votes: 577</h2><p>Just go through the intervals sorted by start coordinate and either combine the current interval with the previous one if they overlap, or add it to the output by itself if they don't.</p>
-<div class="codehilite"><pre><span></span><code><span class="nv">def</span><span class="w"> </span><span class="nv">merge</span><span class="ss">(</span><span class="nv">self</span>,<span class="w"> </span><span class="nv">intervals</span><span class="ss">)</span>:
-<span class="w">    </span><span class="nv">out</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>
-<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="nv">i</span><span class="w"> </span><span class="nv">in</span><span class="w"> </span><span class="nv">sorted</span><span class="ss">(</span><span class="nv">intervals</span>,<span class="w"> </span><span class="nv">key</span><span class="o">=</span><span class="nv">lambda</span><span class="w"> </span><span class="nv">i</span>:<span class="w"> </span><span class="nv">i</span>.<span class="nv">start</span><span class="ss">)</span>:
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="nv">out</span><span class="w"> </span><span class="nv">and</span><span class="w"> </span><span class="nv">i</span>.<span class="nv">start</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="nv">out</span>[<span class="o">-</span><span class="mi">1</span>].<span class="k">end</span>:
-<span class="w">            </span><span class="nv">out</span>[<span class="o">-</span><span class="mi">1</span>].<span class="k">end</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">max</span><span class="ss">(</span><span class="nv">out</span>[<span class="o">-</span><span class="mi">1</span>].<span class="k">end</span>,<span class="w"> </span><span class="nv">i</span>.<span class="k">end</span><span class="ss">)</span>
-<span class="w">        </span><span class="k">else</span>:
-<span class="w">            </span><span class="nv">out</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="nv">i</span>,
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">out</span>
-</code></pre></div></div><p style="page-break-before: always" ></p>

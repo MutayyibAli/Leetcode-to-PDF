@@ -1,8 +1,5 @@
-<div class='cpp-solution'><h2>✅☑Beats 99.84% Users || [C++/Java/Python/JavaScript] || EXPLAINED🔥 -- Votes: 343</h2><h2>PLEASE UPVOTE IF IT HELPED</h2>
-<hr />
-<p></p>
-<hr />
-<h2>Approaches</h2>
+<div class='cpp-solution'><h4>✅☑Beats 99.84% Users || [C++/Java/Python/JavaScript] || EXPLAINED🔥 [Votes: 343]</h4><h4>PLEASE UPVOTE IF IT HELPED</h4>
+<h4>Approaches</h4>
 <p>(Also explained in the code)</p>
 <ol>
 <li>The class <code>RandomizedSet</code> uses a vector <code>v</code> to store the elements and an unordered map <code>mp</code> to store the mapping of elements to their indices in the vector.</li>
@@ -11,274 +8,264 @@
 <li>The <code>remove</code> function removes a value from the set if it's present. It replaces the value with the last element in the vector, updates the index in the unordered map, and then removes the last element.</li>
 <li>The <code>getRandom</code> function returns a random element from the vector using the <code>rand()</code> function.</li>
 </ol>
-<h2>Complexity</h2>
+<h4>Complexity</h4>
 <ul>
 <li>
-<p>Time complexity:<br />
-  $$O(1)$$</p>
+<p>Time complexity:
+$$O(1)$$</p>
 </li>
 <li>
-<p>Space complexity:<br />
-  $$O(n)$$</p>
+<p>Space complexity:
+$$O(n)$$</p>
 </li>
 </ul>
-<h2>Code</h2>
-<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">C</span><span class="o">++</span><span class="w"> </span>
-<span class="n">class</span><span class="w"> </span><span class="n">RandomizedSet</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="w"> </span><span class="n">v</span><span class="p">;</span>
-<span class="w">    </span><span class="n">unordered_map</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="kt">int</span><span class="o">&gt;</span><span class="w"> </span><span class="n">mp</span><span class="p">;</span>
-<span class="n">public</span><span class="o">:</span>
+<h4>Code</h4>
+<pre><code class="language-cpp">class RandomizedSet {
+    vector&lt;int&gt; v;
+    unordered_map&lt;int,int&gt; mp;
+public:
 
-<span class="w">    </span><span class="n">RandomizedSet</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="p">}</span>
+    RandomizedSet() {
+    }
 
-<span class="w">    </span><span class="kt">bool</span><span class="w"> </span><span class="n">search</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">val</span><span class="p">){</span>
+    bool search(int val){
 
-<span class="w">         </span><span class="k">if</span><span class="p">(</span><span class="n">mp</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="n">val</span><span class="p">)</span><span class="o">!=</span><span class="n">mp</span><span class="p">.</span><span class="n">end</span><span class="p">())</span>
-<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
-<span class="w">         </span><span class="k">return</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+         if(mp.find(val)!=mp.end())
+            return true;
+         return false;
 
-<span class="w">    </span><span class="p">}</span>
-
-
-<span class="w">    </span><span class="kt">bool</span><span class="w"> </span><span class="n">insert</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">val</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-
-<span class="w">        </span><span class="k">if</span><span class="p">(</span><span class="n">search</span><span class="p">(</span><span class="n">val</span><span class="p">))</span>
-<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
-
-<span class="w">        </span><span class="n">v</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">val</span><span class="p">);</span>
-<span class="w">        </span><span class="n">mp</span><span class="p">[</span><span class="n">val</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">v</span><span class="p">.</span><span class="n">size</span><span class="p">()</span><span class="mi">-1</span><span class="p">;</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
-<span class="w">    </span><span class="p">}</span>
+    }
 
 
-<span class="w">    </span><span class="kt">bool</span><span class="w"> </span><span class="n">remove</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">val</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+    bool insert(int val) {
 
-<span class="w">        </span><span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">search</span><span class="p">(</span><span class="n">val</span><span class="p">))</span>
-<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+        if(search(val))
+            return false;
 
-
-<span class="w">        </span><span class="k">auto</span><span class="w"> </span><span class="n">it</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mp</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="n">val</span><span class="p">);</span>
-<span class="w">        </span><span class="n">v</span><span class="p">[</span><span class="n">it</span><span class="o">-&gt;</span><span class="n">second</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">v</span><span class="p">.</span><span class="n">back</span><span class="p">();</span>
-<span class="w">        </span><span class="n">v</span><span class="p">.</span><span class="n">pop_back</span><span class="p">();</span>
-<span class="w">        </span><span class="n">mp</span><span class="p">[</span><span class="n">v</span><span class="p">[</span><span class="n">it</span><span class="o">-&gt;</span><span class="n">second</span><span class="p">]]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">it</span><span class="o">-&gt;</span><span class="n">second</span><span class="p">;</span>
-<span class="w">        </span><span class="n">mp</span><span class="p">.</span><span class="n">erase</span><span class="p">(</span><span class="n">val</span><span class="p">);</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
-<span class="w">    </span><span class="p">}</span>
+        v.push_back(val);
+        mp[val] = v.size()-1;
+        return true;
+    }
 
 
-<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">getRandom</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+    bool remove(int val) {
 
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">v</span><span class="p">[</span><span class="n">rand</span><span class="p">()</span><span class="o">%</span><span class="n">v</span><span class="p">.</span><span class="n">size</span><span class="p">()];</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">};</span>
-</code></pre></div>
-
-<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">Java</span><span class="w"> </span>
+        if(!search(val))
+            return false;
 
 
-<span class="kd">class</span> <span class="nc">RandomizedSet</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span><span class="w"> </span><span class="n">list</span><span class="p">;</span>
-<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">Map</span><span class="o">&lt;</span><span class="n">Integer</span><span class="p">,</span><span class="w"> </span><span class="n">Integer</span><span class="o">&gt;</span><span class="w"> </span><span class="n">map</span><span class="p">;</span>
-
-<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="nf">RandomizedSet</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="n">list</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ArrayList</span><span class="o">&lt;&gt;</span><span class="p">();</span>
-<span class="w">        </span><span class="n">map</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">HashMap</span><span class="o">&lt;&gt;</span><span class="p">();</span>
-<span class="w">    </span><span class="p">}</span>
-
-<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">boolean</span><span class="w"> </span><span class="nf">search</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">val</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">map</span><span class="p">.</span><span class="na">containsKey</span><span class="p">(</span><span class="n">val</span><span class="p">);</span>
-<span class="w">    </span><span class="p">}</span>
-
-<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">boolean</span><span class="w"> </span><span class="nf">insert</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">val</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">search</span><span class="p">(</span><span class="n">val</span><span class="p">))</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="kc">false</span><span class="p">;</span>
-
-<span class="w">        </span><span class="n">list</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="n">val</span><span class="p">);</span>
-<span class="w">        </span><span class="n">map</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="n">val</span><span class="p">,</span><span class="w"> </span><span class="n">list</span><span class="p">.</span><span class="na">size</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="kc">true</span><span class="p">;</span>
-<span class="w">    </span><span class="p">}</span>
-
-<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">boolean</span><span class="w"> </span><span class="nf">remove</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">val</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">search</span><span class="p">(</span><span class="n">val</span><span class="p">))</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="kc">false</span><span class="p">;</span>
-
-<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">index</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">map</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">val</span><span class="p">);</span>
-<span class="w">        </span><span class="n">list</span><span class="p">.</span><span class="na">set</span><span class="p">(</span><span class="n">index</span><span class="p">,</span><span class="w"> </span><span class="n">list</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">list</span><span class="p">.</span><span class="na">size</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">));</span>
-<span class="w">        </span><span class="n">map</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="n">list</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">index</span><span class="p">),</span><span class="w"> </span><span class="n">index</span><span class="p">);</span>
-<span class="w">        </span><span class="n">list</span><span class="p">.</span><span class="na">remove</span><span class="p">(</span><span class="n">list</span><span class="p">.</span><span class="na">size</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span>
-<span class="w">        </span><span class="n">map</span><span class="p">.</span><span class="na">remove</span><span class="p">(</span><span class="n">val</span><span class="p">);</span>
-
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="kc">true</span><span class="p">;</span>
-<span class="w">    </span><span class="p">}</span>
-
-<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="nf">getRandom</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="n">Random</span><span class="w"> </span><span class="n">rand</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Random</span><span class="p">();</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">list</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">rand</span><span class="p">.</span><span class="na">nextInt</span><span class="p">(</span><span class="n">list</span><span class="p">.</span><span class="na">size</span><span class="p">()));</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
-
-<div class="codehilite"><pre><span></span><code><span class="n">Language</span><span class="p">:</span> <span class="n">python3</span> 
-<span class="kn">import</span><span class="w"> </span><span class="nn">random</span>
-
-<span class="k">class</span><span class="w"> </span><span class="nc">RandomizedSet</span><span class="p">:</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">lst</span> <span class="o">=</span> 
-        <span class="bp">self</span><span class="o">.</span><span class="n">idx_map</span> <span class="o">=</span> <span class="p">{}</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">search</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">val</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">idx_map</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">insert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">val</span><span class="p">):</span>
-            <span class="k">return</span> <span class="kc">False</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">lst</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">idx_map</span><span class="p">[</span><span class="n">val</span><span class="p">]</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lst</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
-        <span class="k">return</span> <span class="kc">True</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">remove</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">val</span><span class="p">):</span>
-            <span class="k">return</span> <span class="kc">False</span>
-
-        <span class="n">idx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">idx_map</span><span class="p">[</span><span class="n">val</span><span class="p">]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">lst</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lst</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">idx_map</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">lst</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]]</span> <span class="o">=</span> <span class="n">idx</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">lst</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
-        <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">idx_map</span><span class="p">[</span><span class="n">val</span><span class="p">]</span>
-        <span class="k">return</span> <span class="kc">True</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">getRandom</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lst</span><span class="p">)</span>
-</code></pre></div>
-
-<div class="codehilite"><pre><span></span><code><span class="nx">Language</span><span class="o">:</span><span class="w"> </span><span class="nx">javascript</span><span class="w"> </span>
-<span class="kd">class</span><span class="w"> </span><span class="nx">RandomizedSet</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="kr">constructor</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="nx">list</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">;</span>
-<span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="nx">map</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nb">Map</span><span class="p">();</span>
-<span class="w">    </span><span class="p">}</span>
-
-<span class="w">    </span><span class="nx">search</span><span class="p">(</span><span class="nx">val</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">map</span><span class="p">.</span><span class="nx">has</span><span class="p">(</span><span class="nx">val</span><span class="p">);</span>
-<span class="w">    </span><span class="p">}</span>
-
-<span class="w">    </span><span class="nx">insert</span><span class="p">(</span><span class="nx">val</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">search</span><span class="p">(</span><span class="nx">val</span><span class="p">))</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="kc">false</span><span class="p">;</span>
-
-<span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="nx">list</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">val</span><span class="p">);</span>
-<span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="nx">map</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="nx">val</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">list</span><span class="p">.</span><span class="nx">length</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mf">1</span><span class="p">);</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="kc">true</span><span class="p">;</span>
-<span class="w">    </span><span class="p">}</span>
-
-<span class="w">    </span><span class="nx">remove</span><span class="p">(</span><span class="nx">val</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="nx">search</span><span class="p">(</span><span class="nx">val</span><span class="p">))</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="kc">false</span><span class="p">;</span>
-
-<span class="w">        </span><span class="kd">const</span><span class="w"> </span><span class="nx">index</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">map</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">val</span><span class="p">);</span>
-<span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="nx">list</span><span class="p">[</span><span class="nx">index</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">list</span><span class="p">[</span><span class="k">this</span><span class="p">.</span><span class="nx">list</span><span class="p">.</span><span class="nx">length</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mf">1</span><span class="p">];</span>
-<span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="nx">map</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">list</span><span class="p">[</span><span class="nx">index</span><span class="p">],</span><span class="w"> </span><span class="nx">index</span><span class="p">);</span>
-<span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="nx">list</span><span class="p">.</span><span class="nx">pop</span><span class="p">();</span>
-<span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="nx">map</span><span class="p">.</span><span class="ow">delete</span><span class="p">(</span><span class="nx">val</span><span class="p">);</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="kc">true</span><span class="p">;</span>
-<span class="w">    </span><span class="p">}</span>
-
-<span class="w">    </span><span class="nx">getRandom</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="kd">const</span><span class="w"> </span><span class="nx">randomIndex</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">Math</span><span class="p">.</span><span class="nx">floor</span><span class="p">(</span><span class="nb">Math</span><span class="p">.</span><span class="nx">random</span><span class="p">()</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">list</span><span class="p">.</span><span class="nx">length</span><span class="p">);</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">list</span><span class="p">[</span><span class="nx">randomIndex</span><span class="p">];</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
-
-<hr />
-<h2>PLEASE UPVOTE IF IT HELPED</h2>
-<hr />
-<hr />
-<hr /></div>
+        auto it = mp.find(val);
+        v[it-&gt;second] = v.back();
+        v.pop_back();
+        mp[v[it-&gt;second]] = it-&gt;second;
+        mp.erase(val);
+        return true;
+    }
 
 
-<div class='python-solution'><h2>Python | Super Efficient | Detailed Explanation -- Votes: 381</h2><p>In python, creating a simple api for a set() would be a perfect solution if not for the third operation, getRandom(). We know that we can retrieve an item from a set, and not know what that item will be, but that would not be actually random. (This is due to the way python implements sets. In python3, when using integers, elements are popped from the set in the order they appear in the underlying<br />
+    int getRandom() {
+
+        return v[rand()%v.size()];
+    }
+};
+
+
+
+</code></pre>
+<pre><code class="language-Java">class RandomizedSet {
+    private ArrayList&lt;Integer&gt; list;
+    private Map&lt;Integer, Integer&gt; map;
+
+    public RandomizedSet() {
+        list = new ArrayList&lt;&gt;();
+        map = new HashMap&lt;&gt;();
+    }
+
+    public boolean search(int val) {
+        return map.containsKey(val);
+    }
+
+    public boolean insert(int val) {
+        if (search(val)) return false;
+
+        list.add(val);
+        map.put(val, list.size() - 1);
+        return true;
+    }
+
+    public boolean remove(int val) {
+        if (!search(val)) return false;
+
+        int index = map.get(val);
+        list.set(index, list.get(list.size() - 1));
+        map.put(list.get(index), index);
+        list.remove(list.size() - 1);
+        map.remove(val);
+
+        return true;
+    }
+
+    public int getRandom() {
+        Random rand = new Random();
+        return list.get(rand.nextInt(list.size()));
+    }
+}
+
+
+
+</code></pre>
+<pre><code class="language-python3">import random
+
+class RandomizedSet:
+
+    def __init__(self):
+        self.lst = []
+        self.idx_map = {}
+
+    def search(self, val):
+        return val in self.idx_map
+
+    def insert(self, val):
+        if self.search(val):
+            return False
+
+        self.lst.append(val)
+        self.idx_map[val] = len(self.lst) - 1
+        return True
+
+    def remove(self, val):
+        if not self.search(val):
+            return False
+
+        idx = self.idx_map[val]
+        self.lst[idx] = self.lst[-1]
+        self.idx_map[self.lst[-1]] = idx
+        self.lst.pop()
+        del self.idx_map[val]
+        return True
+
+    def getRandom(self):
+        return random.choice(self.lst)
+
+
+
+</code></pre>
+<pre><code class="language-javascript">class RandomizedSet {
+    constructor() {
+        this.list = [];
+        this.map = new Map();
+    }
+
+    search(val) {
+        return this.map.has(val);
+    }
+
+    insert(val) {
+        if (this.search(val)) return false;
+
+        this.list.push(val);
+        this.map.set(val, this.list.length - 1);
+        return true;
+    }
+
+    remove(val) {
+        if (!this.search(val)) return false;
+
+        const index = this.map.get(val);
+        this.list[index] = this.list[this.list.length - 1];
+        this.map.set(this.list[index], index);
+        this.list.pop();
+        this.map.delete(val);
+        return true;
+    }
+
+    getRandom() {
+        const randomIndex = Math.floor(Math.random() * this.list.length);
+        return this.list[randomIndex];
+    }
+}
+
+
+
+</code></pre>
+<h4>PLEASE UPVOTE IF IT HELPED</h4>
+<hr /></div><div class='python-solution'><h4>Python | Super Efficient | Detailed Explanation [Votes: 381]</h4><p>In python, creating a simple api for a set() would be a perfect solution if not for the third operation, getRandom(). We know that we can retrieve an item from a set, and not know what that item will be, but that would not be actually random. (This is due to the way python implements sets. In python3, when using integers, elements are popped from the set in the order they appear in the underlying 
 hashtable. Hence, not actually random.)</p>
 <p>A set is implemented essentially the same as a dict in python, so the time complexity of add / delete is on average O(1). When it comes to the random function, however, we run into the problem of needing to convert the data into a python list in order to return a random element. That conversion will add a significant overhead to getRandom, thus slowing the whole thing down.</p>
 <p>Instead of having to do that type conversion (set to list) we can take an approach that involves maintaining both a list and a dictionary side by side. That might look something like:</p>
-<div class="codehilite"><pre><span></span><code>data_map == {4: 0, 6: 1, 2: 2, 5: 3}
+<pre><code>data_map == {4: 0, 6: 1, 2: 2, 5: 3}
 data == [4, 6, 2, 5]
-</code></pre></div>
-
-<p>Notice that the key in the <code>data_map</code> is the element in the list, and the value in the <code>data_map</code> is the index the element is at in the list.</p>
+</code></pre>
+<p>Notice that the key in the <code>data_map</code> is the element in the list, and the value in the <code>data_map</code> is the index the element is at in the list. </p>
 <p>Let's look at the implementation:</p>
-<div class="codehilite"><pre><span></span><code><span class="n">Language</span><span class="p">:</span> <span class="n">python</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">RandomizedSet</span><span class="p">:</span>
+<pre><code class="language-python">class RandomizedSet:
 
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">data_map</span> <span class="o">=</span> <span class="p">{}</span> <span class="c1"># dictionary, aka map, aka hashtable, aka hashmap</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span>  <span class="c1"># list aka array</span>
+    def __init__(self):
+        self.data_map = {} #### dictionary, aka map, aka hashtable, aka hashmap
+        self.data = [] #### list aka array
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">insert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">val</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    def insert(self, val: int) -&gt; bool:
 
-        <span class="c1"># the problem indicates we need to return False if the item </span>
-        <span class="c1"># is already in the RandomizedSet---checking if it&#39;s in the</span>
-        <span class="c1"># dictionary is on average O(1) where as</span>
-        <span class="c1"># checking the array is on average O(n)</span>
-        <span class="k">if</span> <span class="n">val</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_map</span><span class="p">:</span>
-            <span class="k">return</span> <span class="kc">False</span>
+        #### the problem indicates we need to return False if the item 
+        #### is already in the RandomizedSet---checking if it's in the
+        #### dictionary is on average O(1) where as
+        #### checking the array is on average O(n)
+        if val in self.data_map:
+            return False
 
-        <span class="c1"># add the element to the dictionary. Setting the value as the </span>
-        <span class="c1"># length of the list will accurately point to the index of the </span>
-        <span class="c1"># new element. (len(some_list) is equal to the index of the last item +1)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">data_map</span><span class="p">[</span><span class="n">val</span><span class="p">]</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+        #### add the element to the dictionary. Setting the value as the 
+        #### length of the list will accurately point to the index of the 
+        #### new element. (len(some_list) is equal to the index of the last item +1)
+        self.data_map[val] = len(self.data)
 
-        <span class="c1"># add to the list</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+        #### add to the list
+        self.data.append(val)
 
-        <span class="k">return</span> <span class="kc">True</span>
+        return True
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">remove</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">val</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    def remove(self, val: int) -&gt; bool:
 
-        <span class="c1"># again, if the item is not in the data_map, return False. </span>
-        <span class="c1"># we check the dictionary instead of the list due to lookup complexity</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">val</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_map</span><span class="p">:</span>
-            <span class="k">return</span> <span class="kc">False</span>
+        #### again, if the item is not in the data_map, return False. 
+        #### we check the dictionary instead of the list due to lookup complexity
+        if not val in self.data_map:
+            return False
 
-        <span class="c1"># essentially, we&#39;re going to move the last element in the list </span>
-        <span class="c1"># into the location of the element we want to remove. </span>
-        <span class="c1"># this is a significantly more efficient operation than the obvious </span>
-        <span class="c1"># solution of removing the item and shifting the values of every item </span>
-        <span class="c1"># in the dicitionary to match their new position in the list</span>
-        <span class="n">last_elem_in_list</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-        <span class="n">index_of_elem_to_remove</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_map</span><span class="p">[</span><span class="n">val</span><span class="p">]</span>
+        #### essentially, we're going to move the last element in the list 
+        #### into the location of the element we want to remove. 
+        #### this is a significantly more efficient operation than the obvious 
+        #### solution of removing the item and shifting the values of every item 
+        #### in the dicitionary to match their new position in the list
+        last_elem_in_list = self.data[-1]
+        index_of_elem_to_remove = self.data_map[val]
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">data_map</span><span class="p">[</span><span class="n">last_elem_in_list</span><span class="p">]</span> <span class="o">=</span> <span class="n">index_of_elem_to_remove</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">index_of_elem_to_remove</span><span class="p">]</span> <span class="o">=</span> <span class="n">last_elem_in_list</span>
+        self.data_map[last_elem_in_list] = index_of_elem_to_remove
+        self.data[index_of_elem_to_remove] = last_elem_in_list
 
-        <span class="c1"># change the last element in the list to now be the value of the element </span>
-        <span class="c1"># we want to remove</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">val</span>
+        #### change the last element in the list to now be the value of the element 
+        #### we want to remove
+        self.data[-1] = val
 
-        <span class="c1"># remove the last element in the list</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+        #### remove the last element in the list
+        self.data.pop()
 
-        <span class="c1"># remove the element to be removed from the dictionary</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">data_map</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
-        <span class="k">return</span> <span class="kc">True</span>
+        #### remove the element to be removed from the dictionary
+        self.data_map.pop(val)
+        return True
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">getRandom</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-        <span class="c1"># if running outside of leetcode, you need to `import random`.</span>
-        <span class="c1"># random.choice will randomly select an element from the list of data.</span>
-        <span class="k">return</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
-</code></pre></div>
-
+    def getRandom(self) -&gt; int:
+        #### if running outside of leetcode, you need to `import random`.
+        #### random.choice will randomly select an element from the list of data.
+        return random.choice(self.data)
+</code></pre>
 <p>Notes:</p>
-<ol>
-<li>this can be made more efficient by removing the variables <code>last_elem_in_list</code> and <code>index_of_elem_to_remove</code>. I have used this to aid in readability.</li>
-<li>the remove operation might appear complicated so here's a before and after of what the data looks like:</li>
-</ol>
-<div class="codehilite"><pre><span></span><code>element_to_remove = 7
+<p>1) this can be made more efficient by removing the variables <code>last_elem_in_list</code> and <code>index_of_elem_to_remove</code>. I have used this to aid in readability. 
+2) the remove operation might appear complicated so here's a before and after of what the data looks like:</p>
+<pre><code>element_to_remove = 7
 
 before:     [4, 7, 9, 3, 5]
 after:      [4, 5, 9, 3]
 
 before:     {4:0, 7:1, 9:2, 3:3, 5:4}
 after:      {4:0, 9:2, 3:3, 5:1}
-</code></pre></div>
-
-<p>All we're doing is replacing the element in the list that needs to be removed with the last element in the list. And then we update the values in the dictionary to reflect that.</p></div><p style="page-break-before: always" ></p>
+</code></pre>
+<p>All we're doing is replacing the element in the list that needs to be removed with the last element in the list. And then we update the values in the dictionary to reflect that.</p></div>

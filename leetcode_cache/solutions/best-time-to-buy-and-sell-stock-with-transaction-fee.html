@@ -1,194 +1,79 @@
-<div class='cpp-solution'><h2>✅Beats 100% || C++ || JAVA || PYTHON || Beginner Friendly🔥🔥🔥 -- Votes: 298</h2><p><strong>Explore Related Problems to Enhance Conceptual Understanding</strong></p>
-<ol>
-<li><a href="https://leetcode.com/problems/best-time-to-buy-and-sell-stock/description/">Best Time to Buy and Sell Stock</a></li>
-<li><a href="https://leetcode.com/problems/best-time-to-buy-and-sell-stock-ii/description/">Best Time to Buy and Sell Stock II</a></li>
-<li><a href="https://leetcode.com/problems/best-time-to-buy-and-sell-stock-iii/description/">Best Time to Buy and Sell Stock III</a></li>
-<li><a href="https://leetcode.com/problems/best-time-to-buy-and-sell-stock-iv/description/">Best Time to Buy and Sell Stock III</a></li>
-<li><a href="https://leetcode.com/problems/best-time-to-buy-and-sell-stock-with-cooldown/description/">Best Time to Buy and Sell Stock with Cooldown</a></li>
-</ol>
-<h2>Intuition</h2>
+<div class='cpp-solution'><h4>✅Beats 100% || C++ || JAVA || PYTHON || Beginner Friendly🔥🔥🔥 [Votes: 298]</h4><p><strong>Explore Related Problems to Enhance Conceptual Understanding</strong>
+1. <a href="https://leetcode.com/problems/best-time-to-buy-and-sell-stock/description/">Best Time to Buy and Sell Stock</a>
+2. <a href="https://leetcode.com/problems/best-time-to-buy-and-sell-stock-ii/description/">Best Time to Buy and Sell Stock II</a>
+3. <a href="https://leetcode.com/problems/best-time-to-buy-and-sell-stock-iii/description/">Best Time to Buy and Sell Stock III</a>
+4. <a href="https://leetcode.com/problems/best-time-to-buy-and-sell-stock-iv/description/">Best Time to Buy and Sell Stock III</a>
+5. <a href="https://leetcode.com/problems/best-time-to-buy-and-sell-stock-with-cooldown/description/">Best Time to Buy and Sell Stock with Cooldown</a></p>
+<h4>Intuition</h4>
 <p>The intuition behind the solution is to keep track of the minimum cost to buy a stock at each day and the maximum profit that can be achieved by selling the stock at each day.</p>
-<h2>Approach:</h2>
+<h4>Approach:</h4>
 <ol>
+<li>Initialize two variables: <code>buy</code> and <code>sell</code>. Set <code>buy</code> to negative infinity and <code>sell</code> to zero. These variables will keep track of the maximum profit at each day.</li>
+<li>Iterate through the prices of the stocks starting from the first day.</li>
 <li>
-<p>Initialize two variables: <code>buy</code> and <code>sell</code>. Set <code>buy</code> to negative infinity and <code>sell</code> to zero. These variables will keep track of the maximum profit at each day.</p>
+<p>Update the <code>buy</code> variable by taking the maximum of its current value and the previous <code>sell</code> value minus the stock price. This represents the maximum profit after buying the stock.
+   <code>buy = max(buy, sell - price)</code></p>
 </li>
 <li>
-<p>Iterate through the prices of the stocks starting from the first day.</p>
-</li>
-<li>
-<p>Update the <code>buy</code> variable by taking the maximum of its current value and the previous <code>sell</code> value minus the stock price. This represents the maximum profit after buying the stock.<br />
-<code>buy = max(buy, sell - price)</code></p>
-</li>
-<li>
-<p>Update the <code>sell</code> variable by taking the maximum of its current value and the previous <code>buy</code> value plus the stock price minus the transaction fee. This represents the maximum profit after selling the stock.<br />
-<code>sell = max(sell, buy + price - fee)</code></p>
+<p>Update the <code>sell</code> variable by taking the maximum of its current value and the previous <code>buy</code> value plus the stock price minus the transaction fee. This represents the maximum profit after selling the stock.
+   <code>sell = max(sell, buy + price - fee)</code></p>
 </li>
 <li>
 <p>After iterating through all the prices, the maximum profit will be stored in the <code>sell</code> variable.</p>
 </li>
-<li>
-<p>Return the value of <code>sell</code> as the maximum profit.</p>
-</li>
+<li>Return the value of <code>sell</code> as the maximum profit.</li>
 </ol>
-<h2>Complexity</h2>
+<h4>Complexity</h4>
 <ul>
 <li>Time complexity:</li>
 </ul>
 <!-- Add your time complexity here, e.g. $$O(n)$$ -->
-
 <p>$$O(n)$$</p>
 <ul>
 <li>Space complexity:</li>
 </ul>
 <!-- Add your space complexity here, e.g. $$O(n)$$ -->
-
 <p>$$O(1)$$</p>
-<h2>Code</h2>
-<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">C</span><span class="o">++</span><span class="w"> </span>
-<span class="n">class</span><span class="w"> </span><span class="n">Solution</span><span class="w"> </span><span class="p">{</span>
-<span class="n">public</span><span class="o">:</span>
-<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">maxProfit</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&amp;</span><span class="w"> </span><span class="n">prices</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">fee</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">buy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">INT_MIN</span><span class="p">;</span>
-<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">sell</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<h4>Code</h4>
+<pre><code class="language-cpp">class Solution {
+public:
+    int maxProfit(vector&lt;int&gt;&amp; prices, int fee) {
+        int buy = INT_MIN;
+        int sell = 0;
 
-<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">price</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">prices</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="n">buy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">max</span><span class="p">(</span><span class="n">buy</span><span class="p">,</span><span class="w"> </span><span class="n">sell</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">price</span><span class="p">);</span>
-<span class="w">            </span><span class="n">sell</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">max</span><span class="p">(</span><span class="n">sell</span><span class="p">,</span><span class="w"> </span><span class="n">buy</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">price</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">fee</span><span class="p">);</span>
-<span class="w">        </span><span class="p">}</span>
+        for (int price : prices) {
+            buy = max(buy, sell - price);
+            sell = max(sell, buy + price - fee);
+        }
 
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">sell</span><span class="p">;</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">};</span>
-</code></pre></div>
+        return sell;
+    }
+};
+</code></pre>
+<pre><code class="language-Java">class Solution {
+    public int maxProfit(int[] prices, int fee) {
+        int buy = Integer.MIN_VALUE;
+        int sell = 0;
 
-<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">Java</span><span class="w"> </span>
-<span class="kd">class</span> <span class="nc">Solution</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="nf">maxProfit</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">prices</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">fee</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">buy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Integer</span><span class="p">.</span><span class="na">MIN_VALUE</span><span class="p">;</span>
-<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">sell</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+        for (int price : prices) {
+            buy = Math.max(buy, sell - price);
+            sell = Math.max(sell, buy + price - fee);
+        }
 
-<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">price</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">prices</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="n">buy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Math</span><span class="p">.</span><span class="na">max</span><span class="p">(</span><span class="n">buy</span><span class="p">,</span><span class="w"> </span><span class="n">sell</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">price</span><span class="p">);</span>
-<span class="w">            </span><span class="n">sell</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Math</span><span class="p">.</span><span class="na">max</span><span class="p">(</span><span class="n">sell</span><span class="p">,</span><span class="w"> </span><span class="n">buy</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">price</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">fee</span><span class="p">);</span>
-<span class="w">        </span><span class="p">}</span>
+        return sell;
+    }
+}
+</code></pre>
+<pre><code class="language-Python3">class Solution:
+    def maxProfit(self, prices: List[int], fee: int) -&gt; int:
+        buy = float('-inf')
+        sell = 0
 
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">sell</span><span class="p">;</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
+        for price in prices:
+            buy = max(buy, sell - price)
+            sell = max(sell, buy + price - fee)
 
-<div class="codehilite"><pre><span></span><code><span class="n">Language</span><span class="p">:</span> <span class="n">Python3</span> 
-<span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="p">:</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">maxProfit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prices</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">fee</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-        <span class="n">buy</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s1">&#39;-inf&#39;</span><span class="p">)</span>
-        <span class="n">sell</span> <span class="o">=</span> <span class="mi">0</span>
-
-        <span class="k">for</span> <span class="n">price</span> <span class="ow">in</span> <span class="n">prices</span><span class="p">:</span>
-            <span class="n">buy</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">buy</span><span class="p">,</span> <span class="n">sell</span> <span class="o">-</span> <span class="n">price</span><span class="p">)</span>
-            <span class="n">sell</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">sell</span><span class="p">,</span> <span class="n">buy</span> <span class="o">+</span> <span class="n">price</span> <span class="o">-</span> <span class="n">fee</span><span class="p">)</span>
-
-        <span class="k">return</span> <span class="n">sell</span>
-</code></pre></div>
-
+        return sell
+</code></pre>
 <p>Related problems</p>
-<p></p>
 <p><strong>If you found my solution helpful, I would greatly appreciate your upvote, as it would motivate me to continue sharing more solutions.</strong></p></div>
-
-
-<div class='python-solution'><h2>✅Beats 100% || C++ || JAVA || PYTHON || Beginner Friendly🔥🔥🔥 -- Votes: 298</h2><p><strong>Explore Related Problems to Enhance Conceptual Understanding</strong></p>
-<ol>
-<li><a href="https://leetcode.com/problems/best-time-to-buy-and-sell-stock/description/">Best Time to Buy and Sell Stock</a></li>
-<li><a href="https://leetcode.com/problems/best-time-to-buy-and-sell-stock-ii/description/">Best Time to Buy and Sell Stock II</a></li>
-<li><a href="https://leetcode.com/problems/best-time-to-buy-and-sell-stock-iii/description/">Best Time to Buy and Sell Stock III</a></li>
-<li><a href="https://leetcode.com/problems/best-time-to-buy-and-sell-stock-iv/description/">Best Time to Buy and Sell Stock III</a></li>
-<li><a href="https://leetcode.com/problems/best-time-to-buy-and-sell-stock-with-cooldown/description/">Best Time to Buy and Sell Stock with Cooldown</a></li>
-</ol>
-<h2>Intuition</h2>
-<p>The intuition behind the solution is to keep track of the minimum cost to buy a stock at each day and the maximum profit that can be achieved by selling the stock at each day.</p>
-<h2>Approach:</h2>
-<ol>
-<li>
-<p>Initialize two variables: <code>buy</code> and <code>sell</code>. Set <code>buy</code> to negative infinity and <code>sell</code> to zero. These variables will keep track of the maximum profit at each day.</p>
-</li>
-<li>
-<p>Iterate through the prices of the stocks starting from the first day.</p>
-</li>
-<li>
-<p>Update the <code>buy</code> variable by taking the maximum of its current value and the previous <code>sell</code> value minus the stock price. This represents the maximum profit after buying the stock.<br />
-<code>buy = max(buy, sell - price)</code></p>
-</li>
-<li>
-<p>Update the <code>sell</code> variable by taking the maximum of its current value and the previous <code>buy</code> value plus the stock price minus the transaction fee. This represents the maximum profit after selling the stock.<br />
-<code>sell = max(sell, buy + price - fee)</code></p>
-</li>
-<li>
-<p>After iterating through all the prices, the maximum profit will be stored in the <code>sell</code> variable.</p>
-</li>
-<li>
-<p>Return the value of <code>sell</code> as the maximum profit.</p>
-</li>
-</ol>
-<h2>Complexity</h2>
-<ul>
-<li>Time complexity:</li>
-</ul>
-<!-- Add your time complexity here, e.g. $$O(n)$$ -->
-
-<p>$$O(n)$$</p>
-<ul>
-<li>Space complexity:</li>
-</ul>
-<!-- Add your space complexity here, e.g. $$O(n)$$ -->
-
-<p>$$O(1)$$</p>
-<h2>Code</h2>
-<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">C</span><span class="o">++</span><span class="w"> </span>
-<span class="n">class</span><span class="w"> </span><span class="n">Solution</span><span class="w"> </span><span class="p">{</span>
-<span class="n">public</span><span class="o">:</span>
-<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">maxProfit</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&amp;</span><span class="w"> </span><span class="n">prices</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">fee</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">buy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">INT_MIN</span><span class="p">;</span>
-<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">sell</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-
-<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">price</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">prices</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="n">buy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">max</span><span class="p">(</span><span class="n">buy</span><span class="p">,</span><span class="w"> </span><span class="n">sell</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">price</span><span class="p">);</span>
-<span class="w">            </span><span class="n">sell</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">max</span><span class="p">(</span><span class="n">sell</span><span class="p">,</span><span class="w"> </span><span class="n">buy</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">price</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">fee</span><span class="p">);</span>
-<span class="w">        </span><span class="p">}</span>
-
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">sell</span><span class="p">;</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">};</span>
-</code></pre></div>
-
-<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">Java</span><span class="w"> </span>
-<span class="kd">class</span> <span class="nc">Solution</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="nf">maxProfit</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">prices</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">fee</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">buy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Integer</span><span class="p">.</span><span class="na">MIN_VALUE</span><span class="p">;</span>
-<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">sell</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-
-<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">price</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">prices</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="n">buy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Math</span><span class="p">.</span><span class="na">max</span><span class="p">(</span><span class="n">buy</span><span class="p">,</span><span class="w"> </span><span class="n">sell</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">price</span><span class="p">);</span>
-<span class="w">            </span><span class="n">sell</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Math</span><span class="p">.</span><span class="na">max</span><span class="p">(</span><span class="n">sell</span><span class="p">,</span><span class="w"> </span><span class="n">buy</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">price</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">fee</span><span class="p">);</span>
-<span class="w">        </span><span class="p">}</span>
-
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">sell</span><span class="p">;</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
-
-<div class="codehilite"><pre><span></span><code><span class="n">Language</span><span class="p">:</span> <span class="n">Python3</span> 
-<span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="p">:</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">maxProfit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prices</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">fee</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-        <span class="n">buy</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s1">&#39;-inf&#39;</span><span class="p">)</span>
-        <span class="n">sell</span> <span class="o">=</span> <span class="mi">0</span>
-
-        <span class="k">for</span> <span class="n">price</span> <span class="ow">in</span> <span class="n">prices</span><span class="p">:</span>
-            <span class="n">buy</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">buy</span><span class="p">,</span> <span class="n">sell</span> <span class="o">-</span> <span class="n">price</span><span class="p">)</span>
-            <span class="n">sell</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">sell</span><span class="p">,</span> <span class="n">buy</span> <span class="o">+</span> <span class="n">price</span> <span class="o">-</span> <span class="n">fee</span><span class="p">)</span>
-
-        <span class="k">return</span> <span class="n">sell</span>
-</code></pre></div>
-
-<p>Related problems</p>
-<p></p>
-<p><strong>If you found my solution helpful, I would greatly appreciate your upvote, as it would motivate me to continue sharing more solutions.</strong></p></div><p style="page-break-before: always" ></p>

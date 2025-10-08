@@ -1,38 +1,34 @@
-<div class='cpp-solution'><h2>✅ C++ || EASY || DETAILED EXPLAINATION || OPTIMIZED -- Votes: 504</h2><p>**PLEASE UPVOTE IF YOU FIND MY APPROACH HELPFUL, MEANS A LOT **<br />
-<strong>Time</strong> and <strong>Space</strong> Complexity =&gt; <code>O(n)</code>, where n is the size of nums</p>
-<div class="codehilite"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="n">Solution</span><span class="w"> </span><span class="err">{</span>
-<span class="k">public</span><span class="err">:</span>
-<span class="w">    </span><span class="n">bool</span><span class="w"> </span><span class="n">containsNearbyDuplicate</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="nc">int</span><span class="o">&gt;&amp;</span><span class="w"> </span><span class="n">nums</span><span class="p">,</span><span class="w"> </span><span class="nc">int</span><span class="w"> </span><span class="n">k</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
-<span class="w">        </span><span class="n">unordered_map</span><span class="o">&lt;</span><span class="nc">int</span><span class="p">,</span><span class="nc">int</span><span class="o">&gt;</span><span class="w"> </span><span class="n">mp</span><span class="p">;</span>
-<span class="w">        </span><span class="nc">int</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">nums</span><span class="p">.</span><span class="k">size</span><span class="p">();</span>
+<div class='cpp-solution'><h4>✅ C++ || EASY || DETAILED EXPLAINATION || OPTIMIZED [Votes: 504]</h4><p><strong>PLEASE UPVOTE IF YOU FIND MY APPROACH HELPFUL, MEANS A LOT **
+</strong>Time<strong> and </strong>Space** Complexity =&gt; <code>O(n)</code>, where n is the size of nums</p>
+<pre><code>class Solution {
+public:
+    bool containsNearbyDuplicate(vector&lt;int&gt;&amp; nums, int k) {
+        unordered_map&lt;int,int&gt; mp;
+        int n = nums.size();
 
-<span class="w">        </span><span class="k">for</span><span class="p">(</span><span class="nc">int</span><span class="w"> </span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">&lt;</span><span class="n">n</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span>
-<span class="w">        </span><span class="err">{</span>
-<span class="w">            </span><span class="o">//</span><span class="w"> </span><span class="n">mp</span><span class="p">.</span><span class="nf">count</span><span class="p">()</span><span class="w"> </span><span class="n">will</span><span class="w"> </span><span class="n">tell</span><span class="w"> </span><span class="n">whatever</span><span class="w"> </span><span class="n">ith</span><span class="w"> </span><span class="k">index</span><span class="w"> </span><span class="n">that</span><span class="w"> </span><span class="n">I</span><span class="w"> </span><span class="n">want</span><span class="p">,</span><span class="w"> </span><span class="n">have</span><span class="w"> </span><span class="n">I</span><span class="w"> </span><span class="n">seen</span><span class="w"> </span><span class="n">it</span><span class="w"> </span><span class="k">before</span><span class="vm">?</span>
-<span class="w">            </span><span class="k">if</span><span class="p">(</span><span class="n">mp</span><span class="p">.</span><span class="nf">count</span><span class="p">(</span><span class="n">nums</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="p">))</span>
-<span class="w">            </span><span class="err">{</span>
-<span class="w">                </span><span class="o">//</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">I</span><span class="w"> </span><span class="n">have</span><span class="w"> </span><span class="n">already</span><span class="w"> </span><span class="n">seen</span><span class="w"> </span><span class="n">this</span><span class="w"> </span><span class="n">number</span><span class="p">,</span><span class="w"> </span><span class="k">then</span><span class="w"> </span><span class="k">check</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="k">condition</span><span class="w"> </span><span class="nf">abs</span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">j</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">k</span>
-<span class="w">                </span><span class="k">if</span><span class="p">(</span><span class="nf">abs</span><span class="p">(</span><span class="n">i</span><span class="o">-</span><span class="n">mp</span><span class="o">[</span><span class="n">nums[i</span><span class="o">]</span><span class="err">]</span><span class="p">)</span><span class="o">&lt;=</span><span class="n">k</span><span class="p">)</span>
-<span class="w">                    </span><span class="k">return</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
-<span class="w">            </span><span class="err">}</span>
-<span class="w">            </span><span class="o">//</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">I</span><span class="w"> </span><span class="n">have</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="n">seen</span><span class="w"> </span><span class="n">this</span><span class="w"> </span><span class="n">number</span><span class="w"> </span><span class="k">before</span><span class="p">,</span><span class="w"> </span><span class="k">insert</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">number</span><span class="w"> </span><span class="k">with</span><span class="w"> </span><span class="n">its</span><span class="w"> </span><span class="k">position</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="k">map</span>
-<span class="w">            </span><span class="o">//</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">number</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="n">already</span><span class="w"> </span><span class="n">present</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="k">map</span><span class="p">,</span><span class="w"> </span><span class="k">then</span><span class="w"> </span><span class="k">update</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="k">position</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">that</span><span class="w"> </span><span class="n">number</span>
-<span class="w">            </span><span class="n">mp</span><span class="o">[</span><span class="n">nums[i</span><span class="o">]</span><span class="err">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">i</span><span class="p">;</span>
-<span class="w">        </span><span class="err">}</span>
-<span class="w">        </span><span class="o">//</span><span class="w"> </span><span class="k">after</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">complete</span><span class="w"> </span><span class="n">traversal</span><span class="p">,</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">we</span><span class="w"> </span><span class="n">don</span><span class="err">&#39;</span><span class="n">t</span><span class="w"> </span><span class="n">find</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">pair</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="n">satisfy</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="k">condition</span><span class="p">,</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="k">false</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="k">false</span><span class="p">;</span>
-<span class="w">    </span><span class="err">}</span>
-<span class="err">}</span><span class="p">;</span>
+        for(int i=0; i&lt;n; i++)
+        {
+            // mp.count() will tell whatever ith index that I want, have I seen it before?
+            if(mp.count(nums[i]))
+            {
+                // if I have already seen this number, then check for condition abs(i - j) &lt;= k
+                if(abs(i-mp[nums[i]])&lt;=k)
+                    return true;
+            }
+            // if I have not seen this number before, insert the number with its position in the map
+            // and if the number is already present in the map, then update the position of that number
+            mp[nums[i]] = i;
+        }
+        // after the complete traversal, if we don't find a pair to satisfy the condition, return false
+        return false;
+    }
+};
+</code></pre></div><div class='python-solution'><h4>Python concise solution with dictionary. [Votes: 366]</h4><pre><code>    
+def containsNearbyDuplicate(self, nums, k):
+    dic = {}
+    for i, v in enumerate(nums):
+        if v in dic and i - dic[v] &lt;= k:
+            return True
+        dic[v] = i
+    return False
 </code></pre></div>
-
-<p></p></div>
-
-
-<div class='python-solution'><h2>Python concise solution with dictionary. -- Votes: 366</h2><div class="codehilite"><pre><span></span><code><span class="n">def</span><span class="w"> </span><span class="n">containsNearbyDuplicate</span><span class="p">(</span><span class="n">self</span><span class="p">,</span><span class="w"> </span><span class="n">nums</span><span class="p">,</span><span class="w"> </span><span class="n">k</span><span class="p">)</span><span class="err">:</span>
-<span class="w">    </span><span class="n">dic</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">{}</span>
-<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">enumerate</span><span class="p">(</span><span class="n">nums</span><span class="p">)</span><span class="err">:</span>
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">dic</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">dic</span><span class="o">[</span><span class="n">v</span><span class="o">]</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="nl">k</span><span class="p">:</span>
-<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="k">True</span>
-<span class="w">        </span><span class="n">dic</span><span class="o">[</span><span class="n">v</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">i</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="k">False</span>
-</code></pre></div></div><p style="page-break-before: always" ></p>

@@ -1,79 +1,73 @@
-<div class='cpp-solution'><h2>C++ iterative solution & recursive solution -- Votes: 287</h2><h2>Recursive solution</h2>
+<div class='cpp-solution'><h4>C++ iterative solution & recursive solution [Votes: 287]</h4><h4>Recursive solution</h4>
 <p>Recursive solution has <code>O(n)</code> space complexity because of call stacks.</p>
-<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">c</span><span class="o">++</span>
-<span class="w">    </span><span class="n">ListNode</span><span class="o">*</span><span class="w"> </span><span class="n">reverseKGroup</span><span class="p">(</span><span class="n">ListNode</span><span class="o">*</span><span class="w"> </span><span class="n">head</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">k</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="n">ListNode</span><span class="o">*</span><span class="w"> </span><span class="n">cursor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">head</span><span class="p">;</span>
-<span class="w">        </span><span class="k">for</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">k</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">){</span>
-<span class="w">            </span><span class="k">if</span><span class="p">(</span><span class="n">cursor</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">nullptr</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">head</span><span class="p">;</span>
-<span class="w">            </span><span class="n">cursor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cursor</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">;</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">        </span><span class="n">ListNode</span><span class="o">*</span><span class="w"> </span><span class="n">curr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">head</span><span class="p">;</span>
-<span class="w">        </span><span class="n">ListNode</span><span class="o">*</span><span class="w"> </span><span class="n">prev</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">nullptr</span><span class="p">;</span>
-<span class="w">        </span><span class="n">ListNode</span><span class="o">*</span><span class="w"> </span><span class="n">nxt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">nullptr</span><span class="p">;</span>
-<span class="w">        </span><span class="k">for</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">k</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">){</span>
-<span class="w">            </span><span class="n">nxt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">curr</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">;</span>
-<span class="w">            </span><span class="n">curr</span><span class="o">-&gt;</span><span class="n">next</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">prev</span><span class="p">;</span>
-<span class="w">            </span><span class="n">prev</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">curr</span><span class="p">;</span>
-<span class="w">            </span><span class="n">curr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">nxt</span><span class="p">;</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">        </span><span class="n">head</span><span class="o">-&gt;</span><span class="n">next</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">reverseKGroup</span><span class="p">(</span><span class="n">curr</span><span class="p">,</span><span class="w"> </span><span class="n">k</span><span class="p">);</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">prev</span><span class="p">;</span>
-<span class="w">    </span><span class="p">}</span>
-</code></pre></div>
-
+<pre><code class="language-c++">    ListNode* reverseKGroup(ListNode* head, int k) {
+        ListNode* cursor = head;
+        for(int i = 0; i &lt; k; i++){
+            if(cursor == nullptr) return head;
+            cursor = cursor-&gt;next;
+        }
+        ListNode* curr = head;
+        ListNode* prev = nullptr;
+        ListNode* nxt = nullptr;
+        for(int i = 0; i &lt; k; i++){
+            nxt = curr-&gt;next;
+            curr-&gt;next = prev;
+            prev = curr;
+            curr = nxt;
+        }
+        head-&gt;next = reverseKGroup(curr, k);
+        return prev;
+    }
+</code></pre>
 <hr />
-<h2>Iterative solution</h2>
+<h4>Iterative solution</h4>
 <p>Iterative solution has <code>O(1)</code> space complexity.</p>
-<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">c</span><span class="o">++</span>
-<span class="w">    </span><span class="n">ListNode</span><span class="o">*</span><span class="w"> </span><span class="n">reverseKGroup</span><span class="p">(</span><span class="n">ListNode</span><span class="o">*</span><span class="w"> </span><span class="n">head</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">k</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="n">ListNode</span><span class="o">*</span><span class="w"> </span><span class="n">dummy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">new</span><span class="w"> </span><span class="n">ListNode</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
-<span class="w">        </span><span class="n">dummy</span><span class="o">-&gt;</span><span class="n">next</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">head</span><span class="p">;</span>
-<span class="w">        </span><span class="n">ListNode</span><span class="o">*</span><span class="w"> </span><span class="n">before</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dummy</span><span class="p">;</span>
-<span class="w">        </span><span class="n">ListNode</span><span class="o">*</span><span class="w"> </span><span class="n">after</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">head</span><span class="p">;</span>
-<span class="w">        </span><span class="n">ListNode</span><span class="o">*</span><span class="w"> </span><span class="n">curr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">nullptr</span><span class="p">;</span>
-<span class="w">        </span><span class="n">ListNode</span><span class="o">*</span><span class="w"> </span><span class="n">prev</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">nullptr</span><span class="p">;</span>
-<span class="w">        </span><span class="n">ListNode</span><span class="o">*</span><span class="w"> </span><span class="n">nxt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">nullptr</span><span class="p">;</span>
-<span class="w">        </span><span class="k">while</span><span class="p">(</span><span class="nb">true</span><span class="p">){</span>
-<span class="w">            </span><span class="n">ListNode</span><span class="o">*</span><span class="w"> </span><span class="n">cursor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">after</span><span class="p">;</span>
-<span class="w">            </span><span class="k">for</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">k</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">){</span>
-<span class="w">                </span><span class="k">if</span><span class="p">(</span><span class="n">cursor</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">nullptr</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">dummy</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">;</span>
-<span class="w">                </span><span class="n">cursor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cursor</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">;</span>
-<span class="w">            </span><span class="p">}</span>
-<span class="w">            </span><span class="n">curr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">after</span><span class="p">;</span>
-<span class="w">            </span><span class="n">prev</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">before</span><span class="p">;</span>
-<span class="w">            </span><span class="k">for</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">k</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">){</span>
-<span class="w">                </span><span class="n">nxt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">curr</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">;</span>
-<span class="w">                </span><span class="n">curr</span><span class="o">-&gt;</span><span class="n">next</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">prev</span><span class="p">;</span>
-<span class="w">                </span><span class="n">prev</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">curr</span><span class="p">;</span>
-<span class="w">                </span><span class="n">curr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">nxt</span><span class="p">;</span>
-<span class="w">            </span><span class="p">}</span>
-<span class="w">            </span><span class="n">after</span><span class="o">-&gt;</span><span class="n">next</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">curr</span><span class="p">;</span>
-<span class="w">            </span><span class="n">before</span><span class="o">-&gt;</span><span class="n">next</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">prev</span><span class="p">;</span>
-<span class="w">            </span><span class="n">before</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">after</span><span class="p">;</span>
-<span class="w">            </span><span class="n">after</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">curr</span><span class="p">;</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">    </span><span class="p">}</span>
-</code></pre></div></div>
-
-
-<div class='python-solution'><h2>Succinct iterative Python, O(n) time O(1) space -- Votes: 346</h2><p>Use a dummy head, and</p>
-<p>l, r : define reversing range</p>
-<p>pre, cur : used in reversing, standard reverse linked linked list method</p>
-<p>jump : used to connect last node in previous k-group to first node in following k-group</p>
-<div class="codehilite"><pre><span></span><code>def reverseKGroup(self, head, k):
+<pre><code class="language-c++">    ListNode* reverseKGroup(ListNode* head, int k) {
+        ListNode* dummy = new ListNode(0);
+        dummy-&gt;next = head;
+        ListNode* before = dummy;
+        ListNode* after = head;
+        ListNode* curr = nullptr;
+        ListNode* prev = nullptr;
+        ListNode* nxt = nullptr;
+        while(true){
+            ListNode* cursor = after;
+            for(int i = 0; i &lt; k; i++){
+                if(cursor == nullptr) return dummy-&gt;next;
+                cursor = cursor-&gt;next;
+            }
+            curr = after;
+            prev = before;
+            for(int i = 0; i &lt; k; i++){
+                nxt = curr-&gt;next;
+                curr-&gt;next = prev;
+                prev = curr;
+                curr = nxt;
+            }
+            after-&gt;next = curr;
+            before-&gt;next = prev;
+            before = after;
+            after = curr;
+        }
+    }
+</code></pre></div><div class='python-solution'><h4>Succinct iterative Python, O(n) time O(1) space [Votes: 346]</h4><p>Use a dummy head, and</p>
+<p>l, r :          define reversing range</p>
+<p>pre, cur :  used in reversing, standard reverse linked linked list method</p>
+<p>jump :      used to connect last node in previous k-group to first node in following k-group</p>
+<pre><code>def reverseKGroup(self, head, k):
     dummy = jump = ListNode(0)
     dummy.next = l = r = head
 
     while True:
         count = 0
-        while r and count &lt; k:   # use r to locate the range
+        while r and count &lt; k:   #### use r to locate the range
             r = r.next
             count += 1
-        if count == k:  # if size k satisfied, reverse the inner linked list
+        if count == k:  #### if size k satisfied, reverse the inner linked list
             pre, cur = r, l
             for _ in range(k):
-                cur.next, cur, pre = pre, cur.next, cur  # standard reversing
-            jump.next, jump, l = pre, l, r  # connect two k-groups
+                cur.next, cur, pre = pre, cur.next, cur  #### standard reversing
+            jump.next, jump, l = pre, l, r  #### connect two k-groups
         else:
             return dummy.next
-</code></pre></div></div><p style="page-break-before: always" ></p>
+</code></pre></div>

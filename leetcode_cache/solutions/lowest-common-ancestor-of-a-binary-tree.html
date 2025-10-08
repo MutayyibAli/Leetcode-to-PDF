@@ -1,98 +1,40 @@
-<div class='cpp-solution'><h2>4 lines C++/Java/Python/Ruby -- Votes: 1611</h2><p>Same solution in several languages. It's recursive and expands the meaning of the function. If the current (sub)tree contains both p and q, then the function result is their LCA. If only one of them is in that subtree, then the result is that one of them. If neither are in that subtree, the result is null/None/nil.</p>
+<div class='cpp-solution'><h4>4 lines C++/Java/Python/Ruby [Votes: 1611]</h4><p>Same solution in several languages. It's recursive and expands the meaning of the function. If the current (sub)tree contains both p and q, then the function result is their LCA. If only one of them is in that subtree, then the result is that one of them. If neither are in that subtree, the result is null/None/nil.</p>
 <p>Update: I also wrote <a href="https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-tree/discuss/65245/Iterative-Solutions-in-PythonC%2B%2B">two iterative solutions</a> now, one of them being a version of the solution here. They're more complicated than this simple recursive solution, but I do find them interesting.</p>
-<hr />
-<p><strong>C++</strong></p>
-<div class="codehilite"><pre><span></span><code><span class="n">TreeNode</span><span class="o">*</span><span class="w"> </span><span class="n">lowestCommonAncestor</span><span class="p">(</span><span class="n">TreeNode</span><span class="o">*</span><span class="w"> </span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="n">TreeNode</span><span class="o">*</span><span class="w"> </span><span class="n">p</span><span class="p">,</span><span class="w"> </span><span class="n">TreeNode</span><span class="o">*</span><span class="w"> </span><span class="n">q</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nf">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">root</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">q</span><span class="p">)</span><span class="w"> </span><span class="kr">return</span><span class="w"> </span><span class="n">root</span><span class="p">;</span>
-<span class="w">    </span><span class="n">TreeNode</span><span class="o">*</span><span class="w"> </span><span class="kr">left</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">lowestCommonAncestor</span><span class="p">(</span><span class="n">root</span><span class="o">-&gt;</span><span class="kr">left</span><span class="p">,</span><span class="w"> </span><span class="n">p</span><span class="p">,</span><span class="w"> </span><span class="n">q</span><span class="p">);</span>
-<span class="w">    </span><span class="n">TreeNode</span><span class="o">*</span><span class="w"> </span><span class="kr">right</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">lowestCommonAncestor</span><span class="p">(</span><span class="n">root</span><span class="o">-&gt;</span><span class="kr">right</span><span class="p">,</span><span class="w"> </span><span class="n">p</span><span class="p">,</span><span class="w"> </span><span class="n">q</span><span class="p">);</span>
-<span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="o">!</span><span class="kr">left</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="kr">right</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="o">!</span><span class="kr">right</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="kr">left</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">root</span><span class="p">;</span>
-<span class="p">}</span>
-</code></pre></div>
-
-<hr />
+<p><strong>cpp</strong></p>
+<pre><code>TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
+    if (!root || root == p || root == q) return root;
+    TreeNode* left = lowestCommonAncestor(root-&gt;left, p, q);
+    TreeNode* right = lowestCommonAncestor(root-&gt;right, p, q);
+    return !left ? right : !right ? left : root;
+}
+</code></pre>
 <p><strong>Python</strong></p>
-<div class="codehilite"><pre><span></span><code><span class="nv">def</span><span class="w"> </span><span class="nv">lowestCommonAncestor</span><span class="ss">(</span><span class="nv">self</span>,<span class="w"> </span><span class="nv">root</span>,<span class="w"> </span><span class="nv">p</span>,<span class="w"> </span><span class="nv">q</span><span class="ss">)</span>:
-<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="nv">root</span><span class="w"> </span><span class="nv">in</span><span class="w"> </span><span class="ss">(</span><span class="nv">None</span>,<span class="w"> </span><span class="nv">p</span>,<span class="w"> </span><span class="nv">q</span><span class="ss">)</span>:<span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="nv">root</span>
-<span class="w">    </span><span class="nv">left</span>,<span class="w"> </span><span class="nv">right</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ss">(</span><span class="nv">self</span>.<span class="nv">lowestCommonAncestor</span><span class="ss">(</span><span class="nv">kid</span>,<span class="w"> </span><span class="nv">p</span>,<span class="w"> </span><span class="nv">q</span><span class="ss">)</span>
-<span class="w">                   </span><span class="k">for</span><span class="w"> </span><span class="nv">kid</span><span class="w"> </span><span class="nv">in</span><span class="w"> </span><span class="ss">(</span><span class="nv">root</span>.<span class="nv">left</span>,<span class="w"> </span><span class="nv">root</span>.<span class="nv">right</span><span class="ss">))</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">root</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="nv">left</span><span class="w"> </span><span class="nv">and</span><span class="w"> </span><span class="nv">right</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="nv">left</span><span class="w"> </span><span class="nv">or</span><span class="w"> </span><span class="nv">right</span>
-</code></pre></div>
-
+<pre><code>def lowestCommonAncestor(self, root, p, q):
+    if root in (None, p, q): return root
+    left, right = (self.lowestCommonAncestor(kid, p, q)
+                   for kid in (root.left, root.right))
+    return root if left and right else left or right
+</code></pre>
 <p>Or using that <code>None</code> is considered smaller than any node:</p>
-<div class="codehilite"><pre><span></span><code><span class="nv">def</span><span class="w"> </span><span class="nv">lowestCommonAncestor</span><span class="ss">(</span><span class="nv">self</span>,<span class="w"> </span><span class="nv">root</span>,<span class="w"> </span><span class="nv">p</span>,<span class="w"> </span><span class="nv">q</span><span class="ss">)</span>:
-<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="nv">root</span><span class="w"> </span><span class="nv">in</span><span class="w"> </span><span class="ss">(</span><span class="nv">None</span>,<span class="w"> </span><span class="nv">p</span>,<span class="w"> </span><span class="nv">q</span><span class="ss">)</span>:<span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="nv">root</span>
-<span class="w">    </span><span class="nv">subs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>[<span class="nv">self</span>.<span class="nv">lowestCommonAncestor</span><span class="ss">(</span><span class="nv">kid</span>,<span class="w"> </span><span class="nv">p</span>,<span class="w"> </span><span class="nv">q</span><span class="ss">)</span>
-<span class="w">            </span><span class="k">for</span><span class="w"> </span><span class="nv">kid</span><span class="w"> </span><span class="nv">in</span><span class="w"> </span><span class="ss">(</span><span class="nv">root</span>.<span class="nv">left</span>,<span class="w"> </span><span class="nv">root</span>.<span class="nv">right</span><span class="ss">)</span>]
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">root</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="nv">all</span><span class="ss">(</span><span class="nv">subs</span><span class="ss">)</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="nv">max</span><span class="ss">(</span><span class="nv">subs</span><span class="ss">)</span>
-</code></pre></div>
-
-<hr />
+<pre><code>def lowestCommonAncestor(self, root, p, q):
+    if root in (None, p, q): return root
+    subs = [self.lowestCommonAncestor(kid, p, q)
+            for kid in (root.left, root.right)]
+    return root if all(subs) else max(subs)
+</code></pre>
 <p><strong>Ruby</strong></p>
-<div class="codehilite"><pre><span></span><code>def lowest_common_ancestor(root, p, q)
+<pre><code>def lowest_common_ancestor(root, p, q)
     return root if [nil, p, q].index root
     left = lowest_common_ancestor(root.left, p, q)
     right = lowest_common_ancestor(root.right, p, q)
     left &amp;&amp; right ? root : left || right
 end
-</code></pre></div>
-
-<hr />
+</code></pre>
 <p><strong>Java</strong></p>
-<div class="codehilite"><pre><span></span><code><span class="nv">public</span><span class="w"> </span><span class="nv">TreeNode</span><span class="w"> </span><span class="nv">lowestCommonAncestor</span><span class="ss">(</span><span class="nv">TreeNode</span><span class="w"> </span><span class="nv">root</span>,<span class="w"> </span><span class="nv">TreeNode</span><span class="w"> </span><span class="nv">p</span>,<span class="w"> </span><span class="nv">TreeNode</span><span class="w"> </span><span class="nv">q</span><span class="ss">)</span><span class="w"> </span>{
-<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="ss">(</span><span class="nv">root</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nv">null</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nv">root</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nv">p</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nv">root</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nv">q</span><span class="ss">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="nv">root</span><span class="c1">;</span>
-<span class="w">    </span><span class="nv">TreeNode</span><span class="w"> </span><span class="nv">left</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">lowestCommonAncestor</span><span class="ss">(</span><span class="nv">root</span>.<span class="nv">left</span>,<span class="w"> </span><span class="nv">p</span>,<span class="w"> </span><span class="nv">q</span><span class="ss">)</span><span class="c1">;</span>
-<span class="w">    </span><span class="nv">TreeNode</span><span class="w"> </span><span class="nv">right</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">lowestCommonAncestor</span><span class="ss">(</span><span class="nv">root</span>.<span class="nv">right</span>,<span class="w"> </span><span class="nv">p</span>,<span class="w"> </span><span class="nv">q</span><span class="ss">)</span><span class="c1">;</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">left</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nv">null</span><span class="w"> </span>?<span class="w"> </span><span class="nv">right</span><span class="w"> </span>:<span class="w"> </span><span class="nv">right</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nv">null</span><span class="w"> </span>?<span class="w"> </span><span class="nv">left</span><span class="w"> </span>:<span class="w"> </span><span class="nv">root</span><span class="c1">;</span>
+<pre><code>public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+    if (root == null || root == p || root == q) return root;
+    TreeNode left = lowestCommonAncestor(root.left, p, q);
+    TreeNode right = lowestCommonAncestor(root.right, p, q);
+    return left == null ? right : right == null ? left : root;
 }
-</code></pre></div></div>
-
-
-<div class='python-solution'><h2>4 lines C++/Java/Python/Ruby -- Votes: 1611</h2><p>Same solution in several languages. It's recursive and expands the meaning of the function. If the current (sub)tree contains both p and q, then the function result is their LCA. If only one of them is in that subtree, then the result is that one of them. If neither are in that subtree, the result is null/None/nil.</p>
-<p>Update: I also wrote <a href="https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-tree/discuss/65245/Iterative-Solutions-in-PythonC%2B%2B">two iterative solutions</a> now, one of them being a version of the solution here. They're more complicated than this simple recursive solution, but I do find them interesting.</p>
-<hr />
-<p><strong>C++</strong></p>
-<div class="codehilite"><pre><span></span><code><span class="n">TreeNode</span><span class="o">*</span><span class="w"> </span><span class="n">lowestCommonAncestor</span><span class="p">(</span><span class="n">TreeNode</span><span class="o">*</span><span class="w"> </span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="n">TreeNode</span><span class="o">*</span><span class="w"> </span><span class="n">p</span><span class="p">,</span><span class="w"> </span><span class="n">TreeNode</span><span class="o">*</span><span class="w"> </span><span class="n">q</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nf">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">root</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">q</span><span class="p">)</span><span class="w"> </span><span class="kr">return</span><span class="w"> </span><span class="n">root</span><span class="p">;</span>
-<span class="w">    </span><span class="n">TreeNode</span><span class="o">*</span><span class="w"> </span><span class="kr">left</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">lowestCommonAncestor</span><span class="p">(</span><span class="n">root</span><span class="o">-&gt;</span><span class="kr">left</span><span class="p">,</span><span class="w"> </span><span class="n">p</span><span class="p">,</span><span class="w"> </span><span class="n">q</span><span class="p">);</span>
-<span class="w">    </span><span class="n">TreeNode</span><span class="o">*</span><span class="w"> </span><span class="kr">right</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">lowestCommonAncestor</span><span class="p">(</span><span class="n">root</span><span class="o">-&gt;</span><span class="kr">right</span><span class="p">,</span><span class="w"> </span><span class="n">p</span><span class="p">,</span><span class="w"> </span><span class="n">q</span><span class="p">);</span>
-<span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="o">!</span><span class="kr">left</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="kr">right</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="o">!</span><span class="kr">right</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="kr">left</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">root</span><span class="p">;</span>
-<span class="p">}</span>
 </code></pre></div>
-
-<hr />
-<p><strong>Python</strong></p>
-<div class="codehilite"><pre><span></span><code><span class="nv">def</span><span class="w"> </span><span class="nv">lowestCommonAncestor</span><span class="ss">(</span><span class="nv">self</span>,<span class="w"> </span><span class="nv">root</span>,<span class="w"> </span><span class="nv">p</span>,<span class="w"> </span><span class="nv">q</span><span class="ss">)</span>:
-<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="nv">root</span><span class="w"> </span><span class="nv">in</span><span class="w"> </span><span class="ss">(</span><span class="nv">None</span>,<span class="w"> </span><span class="nv">p</span>,<span class="w"> </span><span class="nv">q</span><span class="ss">)</span>:<span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="nv">root</span>
-<span class="w">    </span><span class="nv">left</span>,<span class="w"> </span><span class="nv">right</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ss">(</span><span class="nv">self</span>.<span class="nv">lowestCommonAncestor</span><span class="ss">(</span><span class="nv">kid</span>,<span class="w"> </span><span class="nv">p</span>,<span class="w"> </span><span class="nv">q</span><span class="ss">)</span>
-<span class="w">                   </span><span class="k">for</span><span class="w"> </span><span class="nv">kid</span><span class="w"> </span><span class="nv">in</span><span class="w"> </span><span class="ss">(</span><span class="nv">root</span>.<span class="nv">left</span>,<span class="w"> </span><span class="nv">root</span>.<span class="nv">right</span><span class="ss">))</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">root</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="nv">left</span><span class="w"> </span><span class="nv">and</span><span class="w"> </span><span class="nv">right</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="nv">left</span><span class="w"> </span><span class="nv">or</span><span class="w"> </span><span class="nv">right</span>
-</code></pre></div>
-
-<p>Or using that <code>None</code> is considered smaller than any node:</p>
-<div class="codehilite"><pre><span></span><code><span class="nv">def</span><span class="w"> </span><span class="nv">lowestCommonAncestor</span><span class="ss">(</span><span class="nv">self</span>,<span class="w"> </span><span class="nv">root</span>,<span class="w"> </span><span class="nv">p</span>,<span class="w"> </span><span class="nv">q</span><span class="ss">)</span>:
-<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="nv">root</span><span class="w"> </span><span class="nv">in</span><span class="w"> </span><span class="ss">(</span><span class="nv">None</span>,<span class="w"> </span><span class="nv">p</span>,<span class="w"> </span><span class="nv">q</span><span class="ss">)</span>:<span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="nv">root</span>
-<span class="w">    </span><span class="nv">subs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>[<span class="nv">self</span>.<span class="nv">lowestCommonAncestor</span><span class="ss">(</span><span class="nv">kid</span>,<span class="w"> </span><span class="nv">p</span>,<span class="w"> </span><span class="nv">q</span><span class="ss">)</span>
-<span class="w">            </span><span class="k">for</span><span class="w"> </span><span class="nv">kid</span><span class="w"> </span><span class="nv">in</span><span class="w"> </span><span class="ss">(</span><span class="nv">root</span>.<span class="nv">left</span>,<span class="w"> </span><span class="nv">root</span>.<span class="nv">right</span><span class="ss">)</span>]
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">root</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="nv">all</span><span class="ss">(</span><span class="nv">subs</span><span class="ss">)</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="nv">max</span><span class="ss">(</span><span class="nv">subs</span><span class="ss">)</span>
-</code></pre></div>
-
-<hr />
-<p><strong>Ruby</strong></p>
-<div class="codehilite"><pre><span></span><code>def lowest_common_ancestor(root, p, q)
-    return root if [nil, p, q].index root
-    left = lowest_common_ancestor(root.left, p, q)
-    right = lowest_common_ancestor(root.right, p, q)
-    left &amp;&amp; right ? root : left || right
-end
-</code></pre></div>
-
-<hr />
-<p><strong>Java</strong></p>
-<div class="codehilite"><pre><span></span><code><span class="nv">public</span><span class="w"> </span><span class="nv">TreeNode</span><span class="w"> </span><span class="nv">lowestCommonAncestor</span><span class="ss">(</span><span class="nv">TreeNode</span><span class="w"> </span><span class="nv">root</span>,<span class="w"> </span><span class="nv">TreeNode</span><span class="w"> </span><span class="nv">p</span>,<span class="w"> </span><span class="nv">TreeNode</span><span class="w"> </span><span class="nv">q</span><span class="ss">)</span><span class="w"> </span>{
-<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="ss">(</span><span class="nv">root</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nv">null</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nv">root</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nv">p</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nv">root</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nv">q</span><span class="ss">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="nv">root</span><span class="c1">;</span>
-<span class="w">    </span><span class="nv">TreeNode</span><span class="w"> </span><span class="nv">left</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">lowestCommonAncestor</span><span class="ss">(</span><span class="nv">root</span>.<span class="nv">left</span>,<span class="w"> </span><span class="nv">p</span>,<span class="w"> </span><span class="nv">q</span><span class="ss">)</span><span class="c1">;</span>
-<span class="w">    </span><span class="nv">TreeNode</span><span class="w"> </span><span class="nv">right</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">lowestCommonAncestor</span><span class="ss">(</span><span class="nv">root</span>.<span class="nv">right</span>,<span class="w"> </span><span class="nv">p</span>,<span class="w"> </span><span class="nv">q</span><span class="ss">)</span><span class="c1">;</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">left</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nv">null</span><span class="w"> </span>?<span class="w"> </span><span class="nv">right</span><span class="w"> </span>:<span class="w"> </span><span class="nv">right</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nv">null</span><span class="w"> </span>?<span class="w"> </span><span class="nv">left</span><span class="w"> </span>:<span class="w"> </span><span class="nv">root</span><span class="c1">;</span>
-}
-</code></pre></div></div><p style="page-break-before: always" ></p>

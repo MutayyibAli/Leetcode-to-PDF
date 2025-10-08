@@ -1,48 +1,45 @@
-<div class='cpp-solution'><h2>Two Simple Ways To Do   |   DFS  and  BFS    |  C + +  ⚡️ -- Votes: 26</h2><p><strong>Approach #1 :</strong> <strong><em>Depth First Search</em></strong><br />
-This can be done by applying dfs and keeping track of the current depth . We will keep a sum of elements at a particular depth and will also store the no. of elements encounter for a depth.<br />
-.<br />
-.<br />
-<br />
-.<br />
+<div class='cpp-solution'><h4>Two Simple Ways To Do   |   DFS  and  BFS    |  C + +  ⚡️ [Votes: 26]</h4><p><strong>Approach #1 :</strong> <strong><em>Depth First Search</em></strong> 
+This can be done by applying dfs and keeping track of the current depth . We will keep a sum of elements at a particular depth and will also store the no. of elements encounter for a  depth.
+.
 .</p>
-<div class="codehilite"><pre><span></span><code><span class="w"> </span><span class="n">vector</span><span class="o">&lt;</span><span class="n">pair</span><span class="o">&lt;</span><span class="n">long</span><span class="p">,</span><span class="nc">int</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="nf">count</span><span class="p">;</span><span class="w">       </span><span class="o">//</span><span class="w">  </span><span class="n">stores</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="nf">sum</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="k">level</span><span class="w"> </span><span class="p">,</span><span class="w"> </span><span class="k">no</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">elements</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">that</span><span class="w"> </span><span class="k">level</span><span class="p">)</span>
-<span class="w">    </span><span class="n">void</span><span class="w"> </span><span class="n">dfs</span><span class="p">(</span><span class="n">TreeNode</span><span class="o">*</span><span class="w"> </span><span class="n">root</span><span class="p">,</span><span class="nc">int</span><span class="w"> </span><span class="k">depth</span><span class="p">)</span><span class="err">{</span><span class="w">     </span>
-<span class="w">        </span><span class="k">if</span><span class="p">(</span><span class="err">!</span><span class="n">root</span><span class="p">)</span><span class="k">return</span><span class="p">;</span>
-<span class="w">        </span><span class="nc">int</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">root</span><span class="o">-&gt;</span><span class="n">val</span><span class="p">;</span>
-<span class="w">        </span><span class="k">if</span><span class="p">(</span><span class="nf">count</span><span class="p">.</span><span class="k">size</span><span class="p">()</span><span class="o">&lt;=</span><span class="k">depth</span><span class="p">)</span><span class="err">{</span><span class="w">             </span><span class="o">//</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="k">check</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">we</span><span class="w"> </span><span class="n">have</span><span class="w"> </span><span class="ow">any</span><span class="w"> </span><span class="n">entry</span><span class="w"> </span><span class="k">corresponding</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="k">current</span><span class="w"> </span><span class="k">depth</span><span class="w"> </span>
-<span class="w">            </span><span class="nf">count</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="err">{</span><span class="n">a</span><span class="p">,</span><span class="mi">1</span><span class="err">}</span><span class="p">);</span><span class="w">           </span><span class="o">//</span><span class="w">  </span><span class="k">if</span><span class="w">  </span><span class="n">we</span><span class="w"> </span><span class="k">are</span><span class="w"> </span><span class="k">at</span><span class="w"> </span><span class="k">depth</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="k">only</span><span class="w"> </span><span class="k">depth</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="n">completed</span><span class="w"> </span><span class="k">then</span><span class="w"> </span><span class="nf">count</span><span class="p">.</span><span class="k">size</span><span class="p">()</span><span class="o">=</span><span class="mi">1</span>
-<span class="w">        </span><span class="err">}</span>
-<span class="w">        </span><span class="k">else</span><span class="err">{</span>
-<span class="w">            </span><span class="nf">count</span><span class="o">[</span><span class="n">depth</span><span class="o">]</span><span class="p">.</span><span class="k">first</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">a</span><span class="p">;</span>
-<span class="w">            </span><span class="nf">count</span><span class="o">[</span><span class="n">depth</span><span class="o">]</span><span class="p">.</span><span class="k">second</span><span class="o">++</span><span class="p">;</span>
-<span class="w">        </span><span class="err">}</span>
-<span class="w">        </span><span class="n">dfs</span><span class="p">(</span><span class="n">root</span><span class="o">-&gt;</span><span class="nf">left</span><span class="p">,</span><span class="k">depth</span><span class="o">+</span><span class="mi">1</span><span class="p">);</span>
-<span class="w">        </span><span class="n">dfs</span><span class="p">(</span><span class="n">root</span><span class="o">-&gt;</span><span class="nf">right</span><span class="p">,</span><span class="k">depth</span><span class="o">+</span><span class="mi">1</span><span class="p">);</span><span class="w">    </span>
-<span class="w">    </span><span class="err">}</span>
-
-<span class="w">    </span><span class="n">vector</span><span class="o">&lt;</span><span class="k">double</span><span class="o">&gt;</span><span class="w"> </span><span class="n">averageOfLevels</span><span class="p">(</span><span class="n">TreeNode</span><span class="o">*</span><span class="w"> </span><span class="n">root</span><span class="p">)</span><span class="w"> </span><span class="err">{</span><span class="w">  </span>
-<span class="w">        </span><span class="nf">count</span><span class="p">.</span><span class="n">clear</span><span class="p">();</span>
-<span class="w">        </span><span class="n">dfs</span><span class="p">(</span><span class="n">root</span><span class="p">,</span><span class="mi">0</span><span class="p">);</span>
-<span class="w">        </span><span class="n">vector</span><span class="o">&lt;</span><span class="k">double</span><span class="o">&gt;</span><span class="w"> </span><span class="n">ans</span><span class="p">;</span>
-<span class="w">        </span><span class="k">for</span><span class="p">(</span><span class="nc">int</span><span class="w"> </span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="nf">count</span><span class="p">.</span><span class="k">size</span><span class="p">();</span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="err">{</span>
-<span class="w">            </span><span class="n">ans</span><span class="p">.</span><span class="n">push_back</span><span class="p">((</span><span class="k">double</span><span class="p">)</span><span class="nf">count</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="p">.</span><span class="k">first</span><span class="o">/</span><span class="nf">count</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="p">.</span><span class="k">second</span><span class="p">);</span><span class="w">    </span><span class="o">//</span><span class="w"> </span><span class="n">pushing</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">averages</span>
-<span class="w">        </span><span class="err">}</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">ans</span><span class="p">;</span>
-
-<span class="w">    </span><span class="err">}</span>
-</code></pre></div>
-
-<p>.<br />
-.<br />
-.<br />
-<strong>Approach #2 :</strong> <strong><em>Breadth First Search/Level Order Traversal</em></strong><br />
-This can also be done by traversing level by level , we again need to store the sum and count of a level .As soon as a level ends, (which we get to know by encountering <code>NULL</code>) we push in the average and initialize sum and count of elements again for next level.<br />
-.<br />
-.<br />
-<br />
-.<br />
+<p>.
 .</p>
-<div class="codehilite"><pre><span></span><code>        vector&lt;double&gt; ans;
+<pre><code> vector&lt;pair&lt;long,int&gt;&gt; count;       //  stores ( sum of a level , no of elements in that level)
+    void dfs(TreeNode* root,int depth){     
+        if(!root)return;
+        int a = root-&gt;val;
+        if(count.size()&lt;=depth){             // to check if we have any entry corresponding to current depth 
+            count.push_back({a,1});           //  if  we are at depth 1 and only depth 0 is completed then count.size()=1
+        }
+        else{
+            count[depth].first += a;
+            count[depth].second++;
+        }
+        dfs(root-&gt;left,depth+1);
+        dfs(root-&gt;right,depth+1);    
+    }
+
+    vector&lt;double&gt; averageOfLevels(TreeNode* root) {  
+        count.clear();
+        dfs(root,0);
+        vector&lt;double&gt; ans;
+        for(int i=0;i&lt;count.size();i++){
+            ans.push_back((double)count[i].first/count[i].second);    // pushing in averages
+        }
+        return ans;
+
+    }
+</code></pre>
+<p>.
+.
+.
+<strong>Approach #2 :</strong> <strong><em>Breadth First Search/Level Order Traversal</em></strong> 
+This can also be done by traversing level by level , we again need to store the sum and count of a level .As soon as a level ends, (which we get to know by encountering <code>NULL</code>) we push in the average and initialize sum and count of elements again for next level.
+.
+.</p>
+<p>.
+.</p>
+<pre><code>        vector&lt;double&gt; ans;
         queue&lt;TreeNode*&gt; q;
         q.push(root);
         q.push(NULL);                  // to mark end of a level 
@@ -65,104 +62,87 @@ This can also be done by traversing level by level , we again need to store the 
         }
 
         return ans;
-</code></pre></div>
-
-<p>.<br />
-.<br />
-<strong><em>Thanks!</em></strong></p></div>
-
-
-<div class='python-solution'><h2>JS, Python, Java, C++ | Easy BFS Solution w/ Explanation -- Votes: 136</h2><p><em>(Note: This is part of a series of Leetcode solution explanations. If you like this solution or find it useful,</em> <strong><em>please upvote</em></strong> <em>this post.)</em></p>
-<hr />
-<h5><strong><em>Idea:</em></strong></h5>
+</code></pre>
+<p>.
+.
+<strong><em>Thanks!</em></strong></p></div><div class='python-solution'><h4>JS, Python, Java, C++ | Easy BFS Solution w/ Explanation [Votes: 136]</h4><p><em>(Note: This is part of a series of Leetcode solution explanations. If you like this solution or find it useful,</em> <strong><em>please upvote</em></strong> <em>this post.)</em></p>
+<h6># <strong><em>Idea:</em></strong></h6>
 <p>A problem talking about levels in a binary tree should immediately bring to mind a <strong>breadth-first search</strong> (<strong>BFS</strong>) approach. The classic BFS approach for a binary tree is to use a <strong>queue</strong> and push each queue entry's children onto the end of the queue. This way, the queue will run to the end of the row/level before moving onto the next level.</p>
 <p>When a problem requires you to isolate a level, you can simply take the length of the queue at the start of the row and then once you've processed that many nodes from the queue, you'll know that you're ready to start the next row.</p>
 <p>So as long as the queue exists, we'll take each row, sum the row's values (<strong>row</strong>), then divide by the length of the row (<strong>qlen</strong>) to find the average, pushing each average into our answer array (<strong>ans</strong>).</p>
-<hr />
-<h5><strong><em>Implementation:</em></strong></h5>
+<h6># <strong><em>Implementation:</em></strong></h6>
 <p>The code for all four languages is almost identical.</p>
-<hr />
-<h5><strong><em>Javascript Code:</em></strong></h5>
+<h6># <strong><em>Javascript Code:</em></strong></h6>
 <p>The best result for the code below is <strong>84ms / 43.2MB</strong> (beats 98% / 73%).</p>
-<div class="codehilite"><pre><span></span><code><span class="nx">Language</span><span class="o">:</span><span class="w"> </span><span class="nx">javascript</span>
-<span class="kd">var</span><span class="w"> </span><span class="nx">averageOfLevels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kd">function</span><span class="p">(</span><span class="nx">root</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="nx">q</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="nx">root</span><span class="p">],</span><span class="w"> </span><span class="nx">ans</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>
-<span class="w">    </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="nx">q</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="nx">qlen</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">q</span><span class="p">.</span><span class="nx">length</span><span class="p">,</span><span class="w"> </span><span class="nx">row</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0</span>
-<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kd">let</span><span class="w"> </span><span class="nx">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0</span><span class="p">;</span><span class="w"> </span><span class="nx">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="nx">qlen</span><span class="p">;</span><span class="w"> </span><span class="nx">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="kd">let</span><span class="w"> </span><span class="nx">curr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">q</span><span class="p">.</span><span class="nx">shift</span><span class="p">()</span>
-<span class="w">            </span><span class="nx">row</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="nx">curr</span><span class="p">.</span><span class="nx">val</span>
-<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">curr</span><span class="p">.</span><span class="nx">left</span><span class="p">)</span><span class="w"> </span><span class="nx">q</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">curr</span><span class="p">.</span><span class="nx">left</span><span class="p">)</span>
-<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">curr</span><span class="p">.</span><span class="nx">right</span><span class="p">)</span><span class="w"> </span><span class="nx">q</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">curr</span><span class="p">.</span><span class="nx">right</span><span class="p">)</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">        </span><span class="nx">ans</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">row</span><span class="o">/</span><span class="nx">qlen</span><span class="p">)</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">ans</span>
-<span class="p">};</span>
-</code></pre></div>
-
-<hr />
-<h5><strong><em>Python Code:</em></strong></h5>
+<pre><code class="language-javascript">var averageOfLevels = function(root) {
+    let q = [root], ans = []
+    while (q.length) {
+        let qlen = q.length, row = 0
+        for (let i = 0; i &lt; qlen; i++) {
+            let curr = q.shift()
+            row += curr.val
+            if (curr.left) q.push(curr.left)
+            if (curr.right) q.push(curr.right)
+        }
+        ans.push(row/qlen)
+    }
+    return ans
+};
+</code></pre>
+<h6># <strong><em>Python Code:</em></strong></h6>
 <p>The best result for the code below is <strong>44ms / 16.3MB</strong> (beats 92% / 100%).</p>
-<div class="codehilite"><pre><span></span><code><span class="n">Language</span><span class="p">:</span> <span class="n">python</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="p">:</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">averageOfLevels</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">root</span><span class="p">:</span> <span class="n">TreeNode</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>
-        <span class="n">q</span><span class="p">,</span> <span class="n">ans</span> <span class="o">=</span> <span class="p">[</span><span class="n">root</span><span class="p">],</span> 
-        <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">q</span><span class="p">):</span>
-            <span class="n">qlen</span><span class="p">,</span> <span class="n">row</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">q</span><span class="p">),</span> <span class="mi">0</span>
-            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">qlen</span><span class="p">):</span>
-                <span class="n">curr</span> <span class="o">=</span> <span class="n">q</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-                <span class="n">row</span> <span class="o">+=</span> <span class="n">curr</span><span class="o">.</span><span class="n">val</span>
-                <span class="k">if</span> <span class="n">curr</span><span class="o">.</span><span class="n">left</span><span class="p">:</span> <span class="n">q</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">curr</span><span class="o">.</span><span class="n">left</span><span class="p">)</span>
-                <span class="k">if</span> <span class="n">curr</span><span class="o">.</span><span class="n">right</span><span class="p">:</span> <span class="n">q</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">curr</span><span class="o">.</span><span class="n">right</span><span class="p">)</span>
-            <span class="n">ans</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">row</span><span class="o">/</span><span class="n">qlen</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">ans</span>
-</code></pre></div>
-
-<hr />
-<h5><strong><em>Java Code:</em></strong></h5>
+<pre><code class="language-python">class Solution:
+    def averageOfLevels(self, root: TreeNode) -&gt; List[float]:
+        q, ans = [root], []
+        while len(q):
+            qlen, row = len(q), 0
+            for i in range(qlen):
+                curr = q.pop(0)
+                row += curr.val
+                if curr.left: q.append(curr.left)
+                if curr.right: q.append(curr.right)
+            ans.append(row/qlen)
+        return ans
+</code></pre>
+<h6># <strong><em>Java Code:</em></strong></h6>
 <p>The best result for the code below is <strong>2ms / 40.5MB</strong> (beats 82% / 97%).</p>
-<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">java</span>
-<span class="kd">class</span> <span class="nc">Solution</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">Double</span><span class="o">&gt;</span><span class="w"> </span><span class="nf">averageOfLevels</span><span class="p">(</span><span class="n">TreeNode</span><span class="w"> </span><span class="n">root</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="n">Queue</span><span class="o">&lt;</span><span class="n">TreeNode</span><span class="o">&gt;</span><span class="w"> </span><span class="n">q</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">LinkedList</span><span class="o">&lt;&gt;</span><span class="p">(</span><span class="n">List</span><span class="p">.</span><span class="na">of</span><span class="p">(</span><span class="n">root</span><span class="p">));</span>
-<span class="w">        </span><span class="n">List</span><span class="o">&lt;</span><span class="n">Double</span><span class="o">&gt;</span><span class="w"> </span><span class="n">ans</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ArrayList</span><span class="o">&lt;&gt;</span><span class="p">();</span>
-<span class="w">        </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">q</span><span class="p">.</span><span class="na">size</span><span class="p">()</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="kt">double</span><span class="w"> </span><span class="n">qlen</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">q</span><span class="p">.</span><span class="na">size</span><span class="p">(),</span><span class="w"> </span><span class="n">row</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-<span class="w">            </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">qlen</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="n">TreeNode</span><span class="w"> </span><span class="n">curr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">q</span><span class="p">.</span><span class="na">poll</span><span class="p">();</span>
-<span class="w">                </span><span class="n">row</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">curr</span><span class="p">.</span><span class="na">val</span><span class="p">;</span>
-<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">curr</span><span class="p">.</span><span class="na">left</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="n">q</span><span class="p">.</span><span class="na">offer</span><span class="p">(</span><span class="n">curr</span><span class="p">.</span><span class="na">left</span><span class="p">);</span>
-<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">curr</span><span class="p">.</span><span class="na">right</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="n">q</span><span class="p">.</span><span class="na">offer</span><span class="p">(</span><span class="n">curr</span><span class="p">.</span><span class="na">right</span><span class="p">);</span>
-<span class="w">            </span><span class="p">}</span>
-<span class="w">            </span><span class="n">ans</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="n">row</span><span class="o">/</span><span class="n">qlen</span><span class="p">);</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">ans</span><span class="p">;</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
-
-<hr />
-<h5><strong><em>C++ Code:</em></strong></h5>
+<pre><code class="language-java">class Solution {
+    public List&lt;Double&gt; averageOfLevels(TreeNode root) {
+        Queue&lt;TreeNode&gt; q = new LinkedList&lt;&gt;(List.of(root));
+        List&lt;Double&gt; ans = new ArrayList&lt;&gt;();
+        while (q.size() &gt; 0) {
+            double qlen = q.size(), row = 0;
+            for (int i = 0; i &lt; qlen; i++) {
+                TreeNode curr = q.poll();
+                row += curr.val;
+                if (curr.left != null) q.offer(curr.left);
+                if (curr.right != null) q.offer(curr.right);
+            }
+            ans.add(row/qlen);
+        }
+        return ans;
+    }
+}
+</code></pre>
+<h6># <strong><em>cpp Code:</em></strong></h6>
 <p>The best result for the code below is <strong>8ms / 22.3MB</strong> (beats 99% / 99%).</p>
-<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">c</span><span class="o">++</span>
-<span class="n">class</span><span class="w"> </span><span class="n">Solution</span><span class="w"> </span><span class="p">{</span>
-<span class="n">public</span><span class="o">:</span>
-<span class="w">    </span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="w"> </span><span class="n">averageOfLevels</span><span class="p">(</span><span class="n">TreeNode</span><span class="o">*</span><span class="w"> </span><span class="n">root</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="n">queue</span><span class="o">&lt;</span><span class="n">TreeNode</span><span class="o">*&gt;</span><span class="w"> </span><span class="n">q</span><span class="p">;</span>
-<span class="w">        </span><span class="n">q</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="n">root</span><span class="p">);</span>
-<span class="w">        </span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="w"> </span><span class="n">ans</span><span class="p">;</span>
-<span class="w">        </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">q</span><span class="p">.</span><span class="n">size</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="kt">double</span><span class="w"> </span><span class="n">qlen</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">q</span><span class="p">.</span><span class="n">size</span><span class="p">(),</span><span class="w"> </span><span class="n">row</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-<span class="w">            </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">qlen</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="n">TreeNode</span><span class="o">*</span><span class="w"> </span><span class="n">curr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">q</span><span class="p">.</span><span class="n">front</span><span class="p">();</span><span class="w"> </span><span class="n">q</span><span class="p">.</span><span class="n">pop</span><span class="p">();</span>
-<span class="w">                </span><span class="n">row</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">curr</span><span class="o">-&gt;</span><span class="n">val</span><span class="p">;</span>
-<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">curr</span><span class="o">-&gt;</span><span class="n">left</span><span class="p">)</span><span class="w"> </span><span class="n">q</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="n">curr</span><span class="o">-&gt;</span><span class="n">left</span><span class="p">);</span>
-<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">curr</span><span class="o">-&gt;</span><span class="n">right</span><span class="p">)</span><span class="w"> </span><span class="n">q</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="n">curr</span><span class="o">-&gt;</span><span class="n">right</span><span class="p">);</span>
-<span class="w">            </span><span class="p">}</span>
-<span class="w">            </span><span class="n">ans</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">row</span><span class="o">/</span><span class="n">qlen</span><span class="p">);</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">ans</span><span class="p">;</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">};</span>
-</code></pre></div></div><p style="page-break-before: always" ></p>
+<pre><code class="language-c++">class Solution {
+public:
+    vector&lt;double&gt; averageOfLevels(TreeNode* root) {
+        queue&lt;TreeNode*&gt; q;
+        q.push(root);
+        vector&lt;double&gt; ans;
+        while (q.size()) {
+            double qlen = q.size(), row = 0;
+            for (int i = 0; i &lt; qlen; i++) {
+                TreeNode* curr = q.front(); q.pop();
+                row += curr-&gt;val;
+                if (curr-&gt;left) q.push(curr-&gt;left);
+                if (curr-&gt;right) q.push(curr-&gt;right);
+            }
+            ans.push_back(row/qlen);
+        }
+        return ans;
+    }
+};
+</code></pre></div>

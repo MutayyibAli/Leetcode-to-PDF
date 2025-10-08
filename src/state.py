@@ -5,6 +5,7 @@ from src.printHelper import PrintHelper
 
 
 class State:
+    file_name = ""
     lines = []
     selected_questions = []
     all_cached_questions = []
@@ -16,6 +17,7 @@ class State:
 
     @classmethod
     def get_lines(cls, filepath):
+        cls.file_name = filepath[len(".txt/") :]
         try:
             file_path = os.path.join("questions_lists", filepath)
             with open(file_path) as f:
@@ -110,3 +112,11 @@ class State:
             f"{Fore.RED}{len(cls.missing_ai_explanations()):^20}{Fore.MAGENTA}|"
         )
         PrintHelper.print_line()
+
+    @staticmethod
+    def is_question(line):
+        return line.startswith("https://leetcode.com/problems/") and line != ""
+
+    @staticmethod
+    def is_heading(line):
+        return line.startswith("* ") and line != ""

@@ -1,189 +1,150 @@
-<div class='cpp-solution'><h2>H-Index || Easy solution || brute force or Binary Search ✅✅ -- Votes: 75</h2><h2>Intuition</h2>
+<div class='cpp-solution'><h4>H-Index || Easy solution || brute force or Binary Search ✅✅ [Votes: 75]</h4><h4>Intuition</h4>
 <ul>
 <li>The problem is to find the h-index of a researcher based on their citation counts. The h-index is the maximum value h such that the researcher has published at least h papers that have each been cited at least h times.</li>
 </ul>
-<hr />
-<h2>Approach</h2>
+<h4>Approach</h4>
 <ul>
 <li><strong><em>Two common approaches to solve this problem are:</em></strong></li>
 </ul>
-<h2>1. Brute Force Approach:</h2>
+<h4>1. Brute Force Approach:</h4>
 <ul>
 <li>Sort the array of citations in descending order and iterate through the sorted array. For each paper, check if its citation count is greater than or equal to its position in the sorted array. Keep track of the maximum h-index encountered. This approach has a time complexity of O(n log n) due to the sorting step.</li>
 </ul>
-<h2>2. Binary Search Approach:</h2>
+<h4>2. Binary Search Approach:</h4>
 <ul>
 <li>Sort the array of citations and perform a binary search to find the h-index. Initialize a search range between 0 and the length of the citations array. In each iteration, calculate the mid-point and count the number of papers with citations greater than or equal to the mid-point. Adjust the search range based on this count. This approach has a time complexity of O(n log n) due to the sorting step.</li>
 </ul>
-<hr />
-<h2>Complexity</h2>
-<h2>- Time complexity:</h2>
+<h4>Complexity</h4>
+<h4>- Time complexity:</h4>
 <ol>
 <li><strong>Code 1 (Brute Force)</strong></li>
-</ol>
-<ul>
-<li>Time complexity: O(n log n) - Sorting the array takes O(n log n) time, and the subsequent iteration takes O(n) time.</li>
-</ul>
-<ol start="2">
-<li><strong>Code 2 (Binary Search)</strong></li>
-</ol>
-<ul>
+<li>
+<p>Time complexity: O(n log n) - Sorting the array takes O(n log n) time, and the subsequent iteration takes O(n) time.</p>
+</li>
+<li>
+<p><strong>Code 2 (Binary Search)</strong></p>
+</li>
 <li>Time complexity: O(n log n) - Sorting the array takes O(n log n) time, and the binary search takes O(log n) time.</li>
-</ul>
-<h2>- Space complexity:</h2>
+</ol>
+<h4>- Space complexity:</h4>
 <ol>
 <li><strong>Code 1 (Brute Force)</strong></li>
-</ol>
-<ul>
+<li>
+<p>Space complexity: O(1) - Constant space is used.</p>
+</li>
+<li>
+<p><strong>Code 2 (Binary Search)</strong></p>
+</li>
 <li>Space complexity: O(1) - Constant space is used.</li>
-</ul>
-<ol start="2">
-<li><strong>Code 2 (Binary Search)</strong></li>
 </ol>
-<ul>
-<li>Space complexity: O(1) - Constant space is used.</li>
-</ul>
-<h2>Code 1.</h2>
-<div class="codehilite"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="n">Solution</span><span class="w"> </span><span class="err">{</span>
-<span class="k">public</span><span class="err">:</span>
+<h4>Code 1.</h4>
+<pre><code>class Solution {
+public:
 
-<span class="w">    </span><span class="nc">int</span><span class="w"> </span><span class="n">hIndexBruteForce</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="nc">int</span><span class="o">&gt;&amp;</span><span class="w"> </span><span class="n">c</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
-<span class="w">        </span><span class="n">sort</span><span class="p">(</span><span class="n">c</span><span class="p">.</span><span class="k">begin</span><span class="p">(),</span><span class="w"> </span><span class="n">c</span><span class="p">.</span><span class="k">end</span><span class="p">());</span>
-<span class="w">        </span><span class="nc">int</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">c</span><span class="p">.</span><span class="k">size</span><span class="p">();</span>
-<span class="w">        </span><span class="nc">int</span><span class="w"> </span><span class="n">maxi</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-<span class="w">        </span><span class="k">for</span><span class="p">(</span><span class="nc">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">n</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
-<span class="w">            </span><span class="k">if</span><span class="p">(</span><span class="n">c</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
-<span class="w">                </span><span class="n">maxi</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">max</span><span class="p">(</span><span class="n">maxi</span><span class="p">,</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">i</span><span class="p">);</span>
-<span class="w">            </span><span class="err">}</span>
-<span class="w">        </span><span class="err">}</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">maxi</span><span class="p">;</span>
-<span class="w">    </span><span class="err">}</span>
+    int hIndexBruteForce(vector&lt;int&gt;&amp; c) {
+        sort(c.begin(), c.end());
+        int n = c.size();
+        int maxi = 0;
+        for(int i = 0; i &lt; n; i++) {
+            if(c[i] &gt;= n - i) {
+                maxi = max(maxi, n - i);
+            }
+        }
+        return maxi;
+    }
 
-<span class="w">    </span><span class="nc">int</span><span class="w"> </span><span class="n">hIndex</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="nc">int</span><span class="o">&gt;&amp;</span><span class="w"> </span><span class="n">citations</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">hIndexBruteForce</span><span class="p">(</span><span class="n">citations</span><span class="p">);</span>
-<span class="w">    </span><span class="err">}</span>
-<span class="err">}</span><span class="p">;</span>
-</code></pre></div>
-
-<h2>Code 2.</h2>
-<div class="codehilite"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="n">Solution</span>
-<span class="err">{</span>
-<span class="k">public</span><span class="err">:</span>
-<span class="w">    </span><span class="nc">int</span><span class="w"> </span><span class="n">hIndex</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="nc">int</span><span class="o">&gt;</span><span class="w"> </span><span class="o">&amp;</span><span class="n">citations</span><span class="p">)</span>
-<span class="w">    </span><span class="err">{</span>
-<span class="w">        </span><span class="n">sort</span><span class="p">(</span><span class="n">citations</span><span class="p">.</span><span class="k">begin</span><span class="p">(),</span><span class="w"> </span><span class="n">citations</span><span class="p">.</span><span class="k">end</span><span class="p">());</span>
-<span class="w">        </span><span class="nc">int</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">citations</span><span class="p">.</span><span class="k">size</span><span class="p">();</span>
-<span class="w">        </span><span class="nc">int</span><span class="w"> </span><span class="k">start</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="k">end</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
-<span class="w">        </span><span class="nc">int</span><span class="w"> </span><span class="n">ans</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-<span class="w">        </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="k">start</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="k">end</span><span class="p">)</span>
-<span class="w">        </span><span class="err">{</span>
-<span class="w">            </span><span class="nc">int</span><span class="w"> </span><span class="n">mid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">start</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="p">(</span><span class="k">end</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="k">start</span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">2</span><span class="p">;</span>
-<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">citations</span><span class="o">[</span><span class="n">mid</span><span class="o">]</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">mid</span><span class="p">)</span>
-<span class="w">            </span><span class="err">{</span>
-<span class="w">                </span><span class="n">ans</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">max</span><span class="p">(</span><span class="n">ans</span><span class="p">,</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">mid</span><span class="p">);</span>
-<span class="w">                </span><span class="k">end</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mid</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
-<span class="w">            </span><span class="err">}</span>
-<span class="w">            </span><span class="k">else</span>
-<span class="w">            </span><span class="err">{</span>
-<span class="w">                </span><span class="k">start</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mid</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
-<span class="w">            </span><span class="err">}</span>
-<span class="w">        </span><span class="err">}</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">ans</span><span class="p">;</span>
-<span class="w">    </span><span class="err">}</span>
-<span class="err">}</span><span class="p">;</span>
-</code></pre></div>
-
-<p></p></div>
-
-
-<div class='python-solution'><h2>✅ Python || 🔥2 Approaches🔥 || Sorting & Counting || Summary with Comparison🔥🔥🔥 -- Votes: 217</h2><h2>IF YOU FIND THIS POST HELPFUL PLEASE UPVOTE</h2>
-<h2>Approach: 1 Sorting and Iteration</h2>
+    int hIndex(vector&lt;int&gt;&amp; citations) {
+        return hIndexBruteForce(citations);
+    }
+};
+</code></pre>
+<h4>Code 2.</h4>
+<pre><code>class Solution
+{
+public:
+    int hIndex(vector&lt;int&gt; &amp;citations)
+    {
+        sort(citations.begin(), citations.end());
+        int n = citations.size();
+        int start = 0, end = n - 1;
+        int ans = 0;
+        while (start &lt;= end)
+        {
+            int mid = start + (end - start) / 2;
+            if (citations[mid] &gt;= n - mid)
+            {
+                ans = max(ans, n - mid);
+                end = mid - 1;
+            }
+            else
+            {
+                start = mid + 1;
+            }
+        }
+        return ans;
+    }
+};
+</code></pre></div><div class='python-solution'><h4>✅ Python || 🔥2 Approaches🔥 || Sorting & Counting || Summary with Comparison🔥🔥🔥 [Votes: 217]</h4><h4>IF YOU FIND THIS POST HELPFUL PLEASE UPVOTE</h4>
+<h4>Approach: 1  Sorting and Iteration</h4>
 <ul>
 <li><strong>Sorting:</strong> Sorts the <code>citations</code> list in ascending order.</li>
-<li><strong>Iterative Check:</strong> Iterates through the sorted list.<br />
-  For each citation <code>v</code> at index <code>i</code>:</li>
+<li><strong>Iterative Check:</strong> Iterates through the sorted list.
+For each citation <code>v</code> at index <code>i</code>:<ul>
 <li>If <code>n - i</code>(number of articles with at least <code>n - i</code> citations) is less than or equal to <code>v</code> itself (the current citation count), it means the h-index is <code>n - i</code>.</li>
 <li>Returns <code>n - i</code> as the <code>h-index</code>.</li>
+</ul>
+</li>
 <li><strong>Default Return:</strong> If no valid <code>h-index</code> is found, returns <code>0</code>.</li>
 </ul>
-<h2>Code : 1</h2>
-<div class="codehilite"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nl">Solution</span><span class="p">:</span>
-<span class="w">    </span><span class="n">def</span><span class="w"> </span><span class="n">hIndex</span><span class="p">(</span><span class="n">self</span><span class="p">,</span><span class="w"> </span><span class="nl">citations</span><span class="p">:</span><span class="w"> </span><span class="n">List</span><span class="o">[</span><span class="n">int</span><span class="o">]</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="nc">int</span><span class="err">:</span>
-<span class="w">        </span><span class="n">n</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">len</span><span class="p">(</span><span class="n">citations</span><span class="p">)</span>
-<span class="w">        </span><span class="n">citations</span><span class="p">.</span><span class="n">sort</span><span class="p">()</span>
+<h4>Code : 1</h4>
+<pre><code>class Solution:
+    def hIndex(self, citations: List[int]) -&gt; int:
+        n = len(citations)
+        citations.sort()
 
-<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="n">i</span><span class="p">,</span><span class="n">v</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">enumerate</span><span class="p">(</span><span class="n">citations</span><span class="p">)</span><span class="err">:</span>
-<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="nl">v</span><span class="p">:</span>
-<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">i</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span>
-</code></pre></div>
-
-<h2>Approach: 2 Counting Frequency and Backward Iteration</h2>
+        for i,v in enumerate(citations):
+            if n - i &lt;= v:
+                return n - i
+        return 0
+</code></pre>
+<h4>Approach: 2 Counting Frequency and Backward Iteration</h4>
 <ul>
 <li><strong>Frequency Array:</strong> Creates a temporary array <code>temp</code> of size <code>n + 1</code> to store citation frequencies.</li>
-<li><strong>Counting Citations:</strong> Iterates through the <code>citations</code> list:</li>
+<li><strong>Counting Citations:</strong> Iterates through the <code>citations</code> list:<ul>
 <li>If a citation <code>v</code> is greater than <code>n</code>, adds it to the highest frequency bucket (<code>temp[n]</code>).</li>
 <li>Otherwise, increments the count in the corresponding bucket (<code>temp</code>[v]).</li>
-<li><strong>Calculating h-index:</strong> Iterates backward through the <code>temp</code> array:</li>
+</ul>
+</li>
+<li><strong>Calculating h-index:</strong> Iterates backward through the <code>temp</code> array:<ul>
 <li>Accumulates the <code>total</code> number of citations up to each index <code>i</code>.</li>
 <li>If the total count (total) is greater than or equal to <code>i</code> itself, it means <code>i</code> is the <code>h-index</code>.</li>
 <li>Returns <code>i</code> as the <code>h-index</code>.</li>
 </ul>
-<h2>Code : 2</h2>
-<div class="codehilite"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nl">Solution</span><span class="p">:</span>
-<span class="w">    </span><span class="n">def</span><span class="w"> </span><span class="n">hIndex</span><span class="p">(</span><span class="n">self</span><span class="p">,</span><span class="w"> </span><span class="nl">citations</span><span class="p">:</span><span class="w"> </span><span class="n">List</span><span class="o">[</span><span class="n">int</span><span class="o">]</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="nc">int</span><span class="err">:</span>
-<span class="w">        </span><span class="n">n</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">len</span><span class="p">(</span><span class="n">citations</span><span class="p">)</span>
-<span class="w">        </span><span class="n">temp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[</span><span class="n">0 for _ in range(n + 1)</span><span class="o">]</span>
+</li>
+</ul>
+<h4>Code : 2</h4>
+<pre><code>class Solution:
+    def hIndex(self, citations: List[int]) -&gt; int:
+        n = len(citations)
+        temp = [0 for _ in range(n + 1)]
 
-<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="n">i</span><span class="p">,</span><span class="n">v</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">enumerate</span><span class="p">(</span><span class="n">citations</span><span class="p">)</span><span class="err">:</span>
-<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="err">:</span>
-<span class="w">                </span><span class="n">temp</span><span class="o">[</span><span class="n">n</span><span class="o">]</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="mi">1</span>
-<span class="w">            </span><span class="k">else</span><span class="err">:</span>
-<span class="w">                </span><span class="n">temp</span><span class="o">[</span><span class="n">v</span><span class="o">]</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="mi">1</span>
+        for i,v in enumerate(citations):
+            if v &gt; n :
+                temp[n] += 1
+            else:
+                temp[v] += 1
 
-<span class="w">        </span><span class="n">total</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span>
-<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="k">range</span><span class="p">(</span><span class="n">n</span><span class="p">,</span><span class="w"> </span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="err">:</span>
-<span class="w">            </span><span class="n">total</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">temp</span><span class="o">[</span><span class="n">i</span><span class="o">]</span>
-<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="n">total</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="nl">i</span><span class="p">:</span>
-<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="n">i</span>
-</code></pre></div>
-
-<h2>Comparison Table:</h2>
-<table>
-<thead>
-<tr>
-<th>Feature</th>
-<th>Code 1</th>
-<th>Code 2</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Approach</td>
-<td>Sorting and iteration Frequency</td>
-<td>counting and backward iteration</td>
-</tr>
-<tr>
-<td>Time Complexity</td>
-<td>O(n log n) due to sorting</td>
-<td>O(n)</td>
-</tr>
-<tr>
-<td>Space Complexity</td>
-<td>O(1)</td>
-<td>O(n) for temp array</td>
-</tr>
-<tr>
-<td>Advantages</td>
-<td>Simpler to understand</td>
-<td>Linear time complexity</td>
-</tr>
-<tr>
-<td>Disadvantages</td>
-<td>Slower for large inputs</td>
-<td>Requires extra space for temp array</td>
-</tr>
-</tbody>
-</table>
-<h4>If you found my solution and information helpful, I would greatly appreciate your upvote, as it would motivate me to continue sharing more solutions.</h4>
-<p></p></div><p style="page-break-before: always" ></p>
+        total = 0
+        for i in range(n, -1, -1):
+            total += temp[i]
+            if total &gt;= i:
+                return i
+</code></pre>
+<h4>Comparison Table:</h4>
+<p>Feature | Code 1    | Code 2
+---------|--------|-Approach    | Sorting and iteration Frequency | counting and backward iteration
+Time Complexity | O(n log n) due to sorting | O(n)
+Space Complexity    | O(1)  | O(n) for temp array
+Advantages  | Simpler to understand | Linear time complexity
+Disadvantages   | Slower for large inputs   | Requires extra space for temp array</p>
+<h6>If you found my solution and information helpful, I would greatly appreciate your upvote, as it would motivate me to continue sharing more solutions.</h6></div>

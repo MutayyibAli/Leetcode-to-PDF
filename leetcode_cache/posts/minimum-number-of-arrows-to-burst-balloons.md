@@ -1,0 +1,103 @@
+# Cpp Solution:
+
+
+#### Approach
+**Greedy algorithm**
+1.An arrow shoots through multiple intervals, all of which are coincident. We try to stack the overlapping intervals together and give a jump.
+2.To facilitate identifying coincidence in a single traversal, we sort in ascending order on the right
+
+#### Complexity
+- Time complexity:O(NlogN)
+
+- Space complexity:O(1)
+
+#### Code
+```
+class Solution {
+public:
+    int findMinArrowShots(vector<vector<int>>& p) {
+        sort(p.begin(), p.end());
+        int lastpoint = p[0][1];
+        int ans = 1;
+        for(auto point : p) {
+            if(point[0] > lastpoint) {
+                ans++;
+                lastpoint = point[1];
+            }
+            lastpoint = min(point[1],lastpoint);
+        }
+        return ans;
+    }
+};
+```
+***IF YOU LIKE THE SOLUTION PLEASE UPVOTE.***
+let's connnect [Linkdin](https://www.linkedin.com/in/mahesh-vishnoi-a4a47a193/) AND [Telegram](https://t.me/mahesh_vishnoi29)
+
+
+
+
+# Python Solution:
+**PLEASE UPVOTE if you like**  **If you have any question, feel free to ask.** 
+
+* Problem Understanding
+	* There is some **misleading** in the description of the problem, **`points` are not points but line segments, so I just modify `points` to `segments`.**
+	* There are several `segments` on the one-dimensional coordinate axis, find out the minimum number of `arrows` which are orthogonal to the coordinate axis so that each `segment` can be shot through by at least one `arrow`.
+* Approch
+	* Sort the `segments` by the end
+	* put an arrow at the end of the 1-st `segment`
+	* from the 2-nd `segment`, we check whether the current arrow pass through the current `segment`, if not add an arrow, put it at the end of the current `segment`
+
+
+
+
+
+**Python**
+```py
+class Solution(object):
+    def findMinArrowShots(self, segments):
+        segments.sort(key=lambda p: p[1])
+        ans, arrow = 0, 0
+        for [start, end] in segments:
+            if ans == 0 or start > arrow:
+                ans, arrow = ans + 1, end
+        return ans
+```
+
+**cpp**
+```
+bool cmp(vector<int>& a, vector<int>& b) {return a[1] < b[1];}
+class Solution {
+public:  
+    int findMinArrowShots(vector<vector<int>>& segments) {
+        sort(segments.begin(), segments.end(), cmp);
+        int ans = 0, arrow = 0;
+        for (int i = 0; i < segments.size(); i ++) {
+            if (ans == 0 || segments[i][0] > arrow) {
+                ans ++;
+                arrow = segments[i][1];
+            }
+        }
+        return ans;
+    }
+};
+```
+
+**Java**
+```
+class Solution {
+    public int findMinArrowShots(int[][] segments) {
+        Arrays.sort(segments, (a, b) -> Integer.compare(a[1], b[1]));
+        int ans = 0, arrow = 0;
+        for (int i = 0; i < segments.length; i ++) {
+            if (ans == 0 || segments[i][0] > arrow) {
+                ans ++;
+                arrow = segments[i][1];
+            }
+        }
+        return ans;
+    }
+}
+
+```
+
+**PLEASE UPVOTE if you like**  **If you have any question, feel free to ask.**

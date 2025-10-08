@@ -1,254 +1,119 @@
-<div class='cpp-solution'><h2>✅Beats 100% || C++ || JAVA || PYTHON || Beginner Friendly🔥🔥🔥 -- Votes: 2007</h2><h2>Intuition:</h2>
+<div class='cpp-solution'><h4>✅Beats 100% || C++ || JAVA || PYTHON || Beginner Friendly🔥🔥🔥 [Votes: 2007]</h4><h4>Intuition:</h4>
 <p>The intuition is to group words that are anagrams of each other together. Anagrams are words that have the <code>same</code> characters but in a <code>different</code> order.</p>
-<h2>Explanation:</h2>
+<h4>Explanation:</h4>
 <p>Let's go through the code step by step using the example input <code>["eat","tea","tan","ate","nat","bat"]</code> to understand how it works.</p>
 <ol>
-<li><strong>Initializing Variables</strong></li>
-</ol>
+<li>
+<p><strong>Initializing Variables</strong></p>
 <ul>
 <li>We start by initializing an empty unordered map called <code>mp</code> (short for map), which will store the groups of anagrams.</li>
 </ul>
-<ol>
-<li><strong>Grouping Anagrams</strong><br />
-   We iterate through each word in the input vector <code>strs</code>. Let's take the first word, "eat", as an example.</li>
-</ol>
+</li>
+<li>
+<p><strong>Grouping Anagrams</strong>
+We iterate through each word in the input vector <code>strs</code>. Let's take the first word, "eat", as an example.</p>
 <ul>
 <li>
-<p><strong>Sorting the Word</strong><br />
-     We create a string variable called <code>word</code> and assign it the value of the current word ("eat" in this case).</p>
-<p>Next, we sort the characters in <code>word</code> using the <code>sort()</code> function. After sorting, <code>word</code> becomes "aet".</p>
+<p><strong>Sorting the Word</strong>
+We create a string variable called <code>word</code> and assign it the value of the current word ("eat" in this case). </p>
+<p>Next, we sort the characters in <code>word</code> using the <code>sort()</code> function. After sorting, <code>word</code> becomes "aet". </p>
 </li>
 <li>
-<p><strong>Grouping the Anagram</strong><br />
-     We insert <code>word</code> as the key into the <code>mp</code> unordered map using <code>mp[word]</code>, and we push the original word ("eat") into the vector associated with that key using <code>mp[word].push_back(x)</code>, where <code>x</code> is the current word.</p>
-<p>Since "aet" is a unique sorted representation of all the anagrams, it serves as the key in the <code>mp</code> map, and the associated vector holds all the anagrams.</p>
+<p><strong>Grouping the Anagram</strong>
+We insert <code>word</code> as the key into the <code>mp</code> unordered map using <code>mp[word]</code>, and we push the original word ("eat") into the vector associated with that key using <code>mp[word].push_back(x)</code>, where <code>x</code> is the current word.</p>
+<p>Since "aet" is a unique sorted representation of all the anagrams, it serves as the key in the <code>mp</code> map, and the associated vector holds all the anagrams. </p>
 </li>
 </ul>
+</li>
+</ol>
 <p>For the given example, the <code>mp</code> map would look like this after processing all the words:</p>
-<div class="codehilite"><pre><span></span><code>{
+<pre><code>{
   &quot;aet&quot;: [&quot;eat&quot;, &quot;tea&quot;, &quot;ate&quot;],
   &quot;ant&quot;: [&quot;tan&quot;, &quot;nat&quot;],
   &quot;abt&quot;: [&quot;bat&quot;]
 }
-</code></pre></div>
-
-<ol start="3">
-<li><strong>Creating the Result</strong><br />
-   We initialize an empty vector called <code>ans</code> (short for answer) to store the final result.</li>
-</ol>
+</code></pre>
+<ol>
+<li>
+<p><strong>Creating the Result</strong>
+We initialize an empty vector called <code>ans</code> (short for answer) to store the final result.</p>
 <ul>
 <li>We iterate through each key-value pair in the <code>mp</code> map using a range-based for loop. For each pair, we push the vector of anagrams (<code>x.second</code>) into the <code>ans</code> vector.</li>
 </ul>
+</li>
+</ol>
 <p>For the given example, the <code>ans</code> vector would look like this:</p>
-<div class="codehilite"><pre><span></span><code>[
+<pre><code>[
   [&quot;eat&quot;, &quot;tea&quot;, &quot;ate&quot;],
   [&quot;tan&quot;, &quot;nat&quot;],
   [&quot;bat&quot;]
 ]
-</code></pre></div>
-
-<ol start="4">
-<li><strong>Returning the Result</strong><br />
-   We return the <code>ans</code> vector, which contains the groups of anagrams.</li>
-</ol>
-<h2>Code</h2>
-<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">C</span><span class="o">++</span><span class="w"> </span>
-<span class="n">class</span><span class="w"> </span><span class="n">Solution</span><span class="w"> </span><span class="p">{</span>
-<span class="n">public</span><span class="o">:</span>
-<span class="w">    </span><span class="n">vector</span><span class="o">&lt;</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">string</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="n">groupAnagrams</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">string</span><span class="o">&gt;&amp;</span><span class="w"> </span><span class="n">strs</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="n">unordered_map</span><span class="o">&lt;</span><span class="n">string</span><span class="p">,</span><span class="w"> </span><span class="n">vector</span><span class="o">&lt;</span><span class="n">string</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="n">mp</span><span class="p">;</span>
-
-<span class="w">        </span><span class="k">for</span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="n">x</span><span class="o">:</span><span class="w"> </span><span class="n">strs</span><span class="p">){</span>
-<span class="w">            </span><span class="n">string</span><span class="w"> </span><span class="n">word</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">x</span><span class="p">;</span>
-<span class="w">            </span><span class="n">sort</span><span class="p">(</span><span class="n">word</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span><span class="w"> </span><span class="n">word</span><span class="p">.</span><span class="n">end</span><span class="p">());</span>
-<span class="w">            </span><span class="n">mp</span><span class="p">[</span><span class="n">word</span><span class="p">].</span><span class="n">push_back</span><span class="p">(</span><span class="n">x</span><span class="p">);</span>
-<span class="w">        </span><span class="p">}</span>
-
-<span class="w">        </span><span class="n">vector</span><span class="o">&lt;</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">string</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="n">ans</span><span class="p">;</span>
-<span class="w">        </span><span class="k">for</span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="n">x</span><span class="o">:</span><span class="w"> </span><span class="n">mp</span><span class="p">){</span>
-<span class="w">            </span><span class="n">ans</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">x</span><span class="p">.</span><span class="n">second</span><span class="p">);</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">ans</span><span class="p">;</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">};</span>
-</code></pre></div>
-
-<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">Java</span><span class="w"> </span>
-<span class="kd">class</span> <span class="nc">Solution</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="nf">groupAnagrams</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">strs</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="p">,</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="n">map</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">HashMap</span><span class="o">&lt;&gt;</span><span class="p">();</span>
-
-<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">word</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">strs</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="kt">char</span><span class="w"> </span><span class="n">chars</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">word</span><span class="p">.</span><span class="na">toCharArray</span><span class="p">();</span>
-<span class="w">            </span><span class="n">Arrays</span><span class="p">.</span><span class="na">sort</span><span class="p">(</span><span class="n">chars</span><span class="p">);</span>
-<span class="w">            </span><span class="n">String</span><span class="w"> </span><span class="n">sortedWord</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">String</span><span class="p">(</span><span class="n">chars</span><span class="p">);</span>
-
-<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">map</span><span class="p">.</span><span class="na">containsKey</span><span class="p">(</span><span class="n">sortedWord</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="n">map</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="n">sortedWord</span><span class="p">,</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ArrayList</span><span class="o">&lt;&gt;</span><span class="p">());</span>
-<span class="w">            </span><span class="p">}</span>
-
-<span class="w">            </span><span class="n">map</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">sortedWord</span><span class="p">).</span><span class="na">add</span><span class="p">(</span><span class="n">word</span><span class="p">);</span>
-<span class="w">        </span><span class="p">}</span>
-
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ArrayList</span><span class="o">&lt;&gt;</span><span class="p">(</span><span class="n">map</span><span class="p">.</span><span class="na">values</span><span class="p">());</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
-
-<div class="codehilite"><pre><span></span><code><span class="n">Language</span><span class="p">:</span> <span class="n">Python3</span> 
-<span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="p">:</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">groupAnagrams</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">strs</span><span class="p">):</span>
-        <span class="n">anagram_map</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span>
-
-        <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">strs</span><span class="p">:</span>
-            <span class="n">sorted_word</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">word</span><span class="p">))</span>
-            <span class="n">anagram_map</span><span class="p">[</span><span class="n">sorted_word</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">word</span><span class="p">)</span>
-
-        <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">anagram_map</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
-</code></pre></div>
-
-<p></p>
-<p><strong>If you are a beginner solve these problems which makes concepts clear for future coding:</strong></p>
+</code></pre>
 <ol>
-<li><a href="https://leetcode.com/problems/two-sum/solutions/3619262/3-method-s-c-java-python-beginner-friendly/">Two Sum</a></li>
-<li><a href="https://leetcode.com/problems/roman-to-integer/solutions/3651672/best-method-c-java-python-beginner-friendly/">Roman to Integer</a></li>
-<li><a href="https://leetcode.com/problems/palindrome-number/solutions/3651712/2-method-s-c-java-python-beginner-friendly/">Palindrome Number</a></li>
-<li><a href="https://leetcode.com/problems/maximum-subarray/solutions/3666304/beats-100-c-java-python-beginner-friendly/">Maximum Subarray</a></li>
-<li><a href="https://leetcode.com/problems/remove-element/solutions/3670940/best-100-c-java-python-beginner-friendly/">Remove Element</a></li>
-<li><a href="https://leetcode.com/problems/contains-duplicate/solutions/3672475/4-method-s-c-java-python-beginner-friendly/">Contains Duplicate</a></li>
-<li><a href="https://leetcode.com/problems/add-two-numbers/solutions/3675747/beats-100-c-java-python-beginner-friendly/">Add Two Numbers</a></li>
-<li><a href="https://leetcode.com/problems/majority-element/solutions/3676530/3-methods-beats-100-c-java-python-beginner-friendly/">Majority Element</a></li>
-<li><a href="https://leetcode.com/problems/remove-duplicates-from-sorted-array/solutions/3676877/best-method-100-c-java-python-beginner-friendly/">Remove Duplicates from Sorted Array</a></li>
-<li><a href="https://leetcode.com/problems/valid-anagram/solutions/3687854/3-methods-c-java-python-beginner-friendly/">Valid Anagram</a></li>
-<li><a href="https://leetcode.com/problems/group-anagrams/solutions/3687735/beats-100-c-java-python-beginner-friendly/">Group Anagrams</a></li>
-<li><strong>Practice them in a row for better understanding and please Upvote for more questions.</strong></li>
+<li><strong>Returning the Result</strong>
+We return the <code>ans</code> vector, which contains the groups of anagrams.</li>
 </ol>
+<h4>Code</h4>
+<pre><code class="language-cpp">class Solution {
+public:
+    vector&lt;vector&lt;string&gt;&gt; groupAnagrams(vector&lt;string&gt;&amp; strs) {
+        unordered_map&lt;string, vector&lt;string&gt;&gt; mp;
+
+        for(auto x: strs){
+            string word = x;
+            sort(word.begin(), word.end());
+            mp[word].push_back(x);
+        }
+
+        vector&lt;vector&lt;string&gt;&gt; ans;
+        for(auto x: mp){
+            ans.push_back(x.second);
+        }
+        return ans;
+    }
+};
+</code></pre>
+<pre><code class="language-Java">class Solution {
+    public List&lt;List&lt;String&gt;&gt; groupAnagrams(String[] strs) {
+        Map&lt;String, List&lt;String&gt;&gt; map = new HashMap&lt;&gt;();
+
+        for (String word : strs) {
+            char[] chars = word.toCharArray();
+            Arrays.sort(chars);
+            String sortedWord = new String(chars);
+
+            if (!map.containsKey(sortedWord)) {
+                map.put(sortedWord, new ArrayList&lt;&gt;());
+            }
+
+            map.get(sortedWord).add(word);
+        }
+
+        return new ArrayList&lt;&gt;(map.values());
+    }
+}
+</code></pre>
+<pre><code class="language-Python3">class Solution:
+    def groupAnagrams(self, strs):
+        anagram_map = defaultdict(list)
+
+        for word in strs:
+            sorted_word = ''.join(sorted(word))
+            anagram_map[sorted_word].append(word)
+
+        return list(anagram_map.values())
+</code></pre>
+<p><strong>If you are a beginner solve these problems which makes concepts clear for future coding:</strong>
+1. <a href="https://leetcode.com/problems/two-sum/solutions/3619262/3-method-s-c-java-python-beginner-friendly/">Two Sum</a>
+2. <a href="https://leetcode.com/problems/roman-to-integer/solutions/3651672/best-method-c-java-python-beginner-friendly/">Roman to Integer</a>
+3. <a href="https://leetcode.com/problems/palindrome-number/solutions/3651712/2-method-s-c-java-python-beginner-friendly/">Palindrome Number</a>
+4. <a href="https://leetcode.com/problems/maximum-subarray/solutions/3666304/beats-100-c-java-python-beginner-friendly/">Maximum Subarray</a>
+5. <a href="https://leetcode.com/problems/remove-element/solutions/3670940/best-100-c-java-python-beginner-friendly/">Remove Element</a>
+6. <a href="https://leetcode.com/problems/contains-duplicate/solutions/3672475/4-method-s-c-java-python-beginner-friendly/">Contains Duplicate</a>
+7. <a href="https://leetcode.com/problems/add-two-numbers/solutions/3675747/beats-100-c-java-python-beginner-friendly/">Add Two Numbers</a>
+8. <a href="https://leetcode.com/problems/majority-element/solutions/3676530/3-methods-beats-100-c-java-python-beginner-friendly/">Majority Element</a>
+9. <a href="https://leetcode.com/problems/remove-duplicates-from-sorted-array/solutions/3676877/best-method-100-c-java-python-beginner-friendly/">Remove Duplicates from Sorted Array</a>
+10. <a href="https://leetcode.com/problems/valid-anagram/solutions/3687854/3-methods-c-java-python-beginner-friendly/">Valid Anagram</a>
+11. <a href="https://leetcode.com/problems/group-anagrams/solutions/3687735/beats-100-c-java-python-beginner-friendly/">Group Anagrams</a>
+12. <strong>Practice them in a row for better understanding and please Upvote for more questions.</strong></p>
 <p><strong>If you found my solution helpful, I would greatly appreciate your upvote, as it would motivate me to continue sharing more solutions.</strong></p></div>
-
-
-<div class='python-solution'><h2>✅Beats 100% || C++ || JAVA || PYTHON || Beginner Friendly🔥🔥🔥 -- Votes: 2007</h2><h2>Intuition:</h2>
-<p>The intuition is to group words that are anagrams of each other together. Anagrams are words that have the <code>same</code> characters but in a <code>different</code> order.</p>
-<h2>Explanation:</h2>
-<p>Let's go through the code step by step using the example input <code>["eat","tea","tan","ate","nat","bat"]</code> to understand how it works.</p>
-<ol>
-<li><strong>Initializing Variables</strong></li>
-</ol>
-<ul>
-<li>We start by initializing an empty unordered map called <code>mp</code> (short for map), which will store the groups of anagrams.</li>
-</ul>
-<ol>
-<li><strong>Grouping Anagrams</strong><br />
-   We iterate through each word in the input vector <code>strs</code>. Let's take the first word, "eat", as an example.</li>
-</ol>
-<ul>
-<li>
-<p><strong>Sorting the Word</strong><br />
-     We create a string variable called <code>word</code> and assign it the value of the current word ("eat" in this case).</p>
-<p>Next, we sort the characters in <code>word</code> using the <code>sort()</code> function. After sorting, <code>word</code> becomes "aet".</p>
-</li>
-<li>
-<p><strong>Grouping the Anagram</strong><br />
-     We insert <code>word</code> as the key into the <code>mp</code> unordered map using <code>mp[word]</code>, and we push the original word ("eat") into the vector associated with that key using <code>mp[word].push_back(x)</code>, where <code>x</code> is the current word.</p>
-<p>Since "aet" is a unique sorted representation of all the anagrams, it serves as the key in the <code>mp</code> map, and the associated vector holds all the anagrams.</p>
-</li>
-</ul>
-<p>For the given example, the <code>mp</code> map would look like this after processing all the words:</p>
-<div class="codehilite"><pre><span></span><code>{
-  &quot;aet&quot;: [&quot;eat&quot;, &quot;tea&quot;, &quot;ate&quot;],
-  &quot;ant&quot;: [&quot;tan&quot;, &quot;nat&quot;],
-  &quot;abt&quot;: [&quot;bat&quot;]
-}
-</code></pre></div>
-
-<ol start="3">
-<li><strong>Creating the Result</strong><br />
-   We initialize an empty vector called <code>ans</code> (short for answer) to store the final result.</li>
-</ol>
-<ul>
-<li>We iterate through each key-value pair in the <code>mp</code> map using a range-based for loop. For each pair, we push the vector of anagrams (<code>x.second</code>) into the <code>ans</code> vector.</li>
-</ul>
-<p>For the given example, the <code>ans</code> vector would look like this:</p>
-<div class="codehilite"><pre><span></span><code>[
-  [&quot;eat&quot;, &quot;tea&quot;, &quot;ate&quot;],
-  [&quot;tan&quot;, &quot;nat&quot;],
-  [&quot;bat&quot;]
-]
-</code></pre></div>
-
-<ol start="4">
-<li><strong>Returning the Result</strong><br />
-   We return the <code>ans</code> vector, which contains the groups of anagrams.</li>
-</ol>
-<h2>Code</h2>
-<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">C</span><span class="o">++</span><span class="w"> </span>
-<span class="n">class</span><span class="w"> </span><span class="n">Solution</span><span class="w"> </span><span class="p">{</span>
-<span class="n">public</span><span class="o">:</span>
-<span class="w">    </span><span class="n">vector</span><span class="o">&lt;</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">string</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="n">groupAnagrams</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">string</span><span class="o">&gt;&amp;</span><span class="w"> </span><span class="n">strs</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="n">unordered_map</span><span class="o">&lt;</span><span class="n">string</span><span class="p">,</span><span class="w"> </span><span class="n">vector</span><span class="o">&lt;</span><span class="n">string</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="n">mp</span><span class="p">;</span>
-
-<span class="w">        </span><span class="k">for</span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="n">x</span><span class="o">:</span><span class="w"> </span><span class="n">strs</span><span class="p">){</span>
-<span class="w">            </span><span class="n">string</span><span class="w"> </span><span class="n">word</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">x</span><span class="p">;</span>
-<span class="w">            </span><span class="n">sort</span><span class="p">(</span><span class="n">word</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span><span class="w"> </span><span class="n">word</span><span class="p">.</span><span class="n">end</span><span class="p">());</span>
-<span class="w">            </span><span class="n">mp</span><span class="p">[</span><span class="n">word</span><span class="p">].</span><span class="n">push_back</span><span class="p">(</span><span class="n">x</span><span class="p">);</span>
-<span class="w">        </span><span class="p">}</span>
-
-<span class="w">        </span><span class="n">vector</span><span class="o">&lt;</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">string</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="n">ans</span><span class="p">;</span>
-<span class="w">        </span><span class="k">for</span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="n">x</span><span class="o">:</span><span class="w"> </span><span class="n">mp</span><span class="p">){</span>
-<span class="w">            </span><span class="n">ans</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">x</span><span class="p">.</span><span class="n">second</span><span class="p">);</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">ans</span><span class="p">;</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">};</span>
-</code></pre></div>
-
-<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">Java</span><span class="w"> </span>
-<span class="kd">class</span> <span class="nc">Solution</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="nf">groupAnagrams</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">strs</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="p">,</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="n">map</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">HashMap</span><span class="o">&lt;&gt;</span><span class="p">();</span>
-
-<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">word</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">strs</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="kt">char</span><span class="w"> </span><span class="n">chars</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">word</span><span class="p">.</span><span class="na">toCharArray</span><span class="p">();</span>
-<span class="w">            </span><span class="n">Arrays</span><span class="p">.</span><span class="na">sort</span><span class="p">(</span><span class="n">chars</span><span class="p">);</span>
-<span class="w">            </span><span class="n">String</span><span class="w"> </span><span class="n">sortedWord</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">String</span><span class="p">(</span><span class="n">chars</span><span class="p">);</span>
-
-<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">map</span><span class="p">.</span><span class="na">containsKey</span><span class="p">(</span><span class="n">sortedWord</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="n">map</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="n">sortedWord</span><span class="p">,</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ArrayList</span><span class="o">&lt;&gt;</span><span class="p">());</span>
-<span class="w">            </span><span class="p">}</span>
-
-<span class="w">            </span><span class="n">map</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">sortedWord</span><span class="p">).</span><span class="na">add</span><span class="p">(</span><span class="n">word</span><span class="p">);</span>
-<span class="w">        </span><span class="p">}</span>
-
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ArrayList</span><span class="o">&lt;&gt;</span><span class="p">(</span><span class="n">map</span><span class="p">.</span><span class="na">values</span><span class="p">());</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
-
-<div class="codehilite"><pre><span></span><code><span class="n">Language</span><span class="p">:</span> <span class="n">Python3</span> 
-<span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="p">:</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">groupAnagrams</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">strs</span><span class="p">):</span>
-        <span class="n">anagram_map</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span>
-
-        <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">strs</span><span class="p">:</span>
-            <span class="n">sorted_word</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">word</span><span class="p">))</span>
-            <span class="n">anagram_map</span><span class="p">[</span><span class="n">sorted_word</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">word</span><span class="p">)</span>
-
-        <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">anagram_map</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
-</code></pre></div>
-
-<p></p>
-<p><strong>If you are a beginner solve these problems which makes concepts clear for future coding:</strong></p>
-<ol>
-<li><a href="https://leetcode.com/problems/two-sum/solutions/3619262/3-method-s-c-java-python-beginner-friendly/">Two Sum</a></li>
-<li><a href="https://leetcode.com/problems/roman-to-integer/solutions/3651672/best-method-c-java-python-beginner-friendly/">Roman to Integer</a></li>
-<li><a href="https://leetcode.com/problems/palindrome-number/solutions/3651712/2-method-s-c-java-python-beginner-friendly/">Palindrome Number</a></li>
-<li><a href="https://leetcode.com/problems/maximum-subarray/solutions/3666304/beats-100-c-java-python-beginner-friendly/">Maximum Subarray</a></li>
-<li><a href="https://leetcode.com/problems/remove-element/solutions/3670940/best-100-c-java-python-beginner-friendly/">Remove Element</a></li>
-<li><a href="https://leetcode.com/problems/contains-duplicate/solutions/3672475/4-method-s-c-java-python-beginner-friendly/">Contains Duplicate</a></li>
-<li><a href="https://leetcode.com/problems/add-two-numbers/solutions/3675747/beats-100-c-java-python-beginner-friendly/">Add Two Numbers</a></li>
-<li><a href="https://leetcode.com/problems/majority-element/solutions/3676530/3-methods-beats-100-c-java-python-beginner-friendly/">Majority Element</a></li>
-<li><a href="https://leetcode.com/problems/remove-duplicates-from-sorted-array/solutions/3676877/best-method-100-c-java-python-beginner-friendly/">Remove Duplicates from Sorted Array</a></li>
-<li><a href="https://leetcode.com/problems/valid-anagram/solutions/3687854/3-methods-c-java-python-beginner-friendly/">Valid Anagram</a></li>
-<li><a href="https://leetcode.com/problems/group-anagrams/solutions/3687735/beats-100-c-java-python-beginner-friendly/">Group Anagrams</a></li>
-<li><strong>Practice them in a row for better understanding and please Upvote for more questions.</strong></li>
-</ol>
-<p><strong>If you found my solution helpful, I would greatly appreciate your upvote, as it would motivate me to continue sharing more solutions.</strong></p></div><p style="page-break-before: always" ></p>

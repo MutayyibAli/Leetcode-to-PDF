@@ -1,15 +1,11 @@
-<div class='cpp-solution'><h2>✔️✔️Easy Solutions in Java ✔️✔️, Python ✔️, and C++ ✔️🧐Look at once 💻 with Exaplanation -- Votes: 2798</h2><h2>Intuition</h2>
+<div class='cpp-solution'><h4>✔️✔️Easy Solutions in Java ✔️✔️, Python ✔️, and C++ ✔️🧐Look at once 💻 with Exaplanation [Votes: 2798]</h4><h4>Intuition</h4>
 <!-- Describe your first thoughts on how to solve this problem. -->
-
 <p>The problem requires us to determine if the given string of brackets is valid or not. We can use a stack data structure to keep track of opening brackets encountered and check if they match with the corresponding closing brackets.</p>
-<h2>Approach</h2>
+<h4>Approach</h4>
 <!-- Describe your approach to solving the problem. -->
-
-<p>Here is the step-by-step approach of the algorithm:</p>
+<p>Here is the step-by-step approach of the algorithm:
+1. Initialize an empty stack.</p>
 <ol>
-<li>
-<p>Initialize an empty stack.</p>
-</li>
 <li>
 <p>Traverse the input string character by character.</p>
 </li>
@@ -23,374 +19,162 @@
 <p>After traversing the entire input string, if the stack is empty, return true, because all opening brackets have been matched with their corresponding closing brackets. Otherwise, return false, because some opening brackets have not been matched with their corresponding closing brackets.</p>
 </li>
 </ol>
-<h2>Complexity</h2>
+<h4>Complexity</h4>
 <ul>
 <li>Time complexity:</li>
 </ul>
 <!-- Add your time complexity here, e.g. $$O(n)$$ -->
-
 <p>The time complexity of the solution is $$O(n)$$, where n is the length of the input string. This is because we traverse the string once and perform constant time operations for each character.</p>
 <ul>
 <li>Space complexity:</li>
 </ul>
 <!-- Add your space complexity here, e.g. $$O(n)$$ -->
-
 <p>The space complexity of the solution is $$O(n)$$, where n is the length of the input string. This is because the worst-case scenario is when all opening brackets are present in the string and the stack will have to store them all.</p>
-<p></p>
-<h2>Please Upvote</h2>
-<div class="codehilite"><pre><span></span><code><span class="nx">Thanks</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="nx">visiting</span><span class="w"> </span><span class="nx">my</span><span class="w"> </span><span class="nx">solution</span><span class="p">.</span><span class="w"> </span><span class="nx">Keep</span><span class="w"> </span><span class="nx">Learning</span>
-<span class="nx">Please</span><span class="w"> </span><span class="nx">give</span><span class="w"> </span><span class="nx">my</span><span class="w"> </span><span class="nx">solution</span><span class="w"> </span><span class="nx">an</span><span class="w"> </span><span class="nx">upvote</span><span class="p">!</span><span class="w"> </span>
-<span class="nx">It</span><span class="err">&#39;</span><span class="nx">s</span><span class="w"> </span><span class="nx">a</span><span class="w"> </span><span class="nx">simple</span><span class="w"> </span><span class="nx">way</span><span class="w"> </span><span class="nx">to</span><span class="w"> </span><span class="nx">show</span><span class="w"> </span><span class="nx">your</span><span class="w"> </span><span class="nx">appreciation</span><span class="w"> </span><span class="k">and</span>
-<span class="nx">keep</span><span class="w"> </span><span class="nx">me</span><span class="w"> </span><span class="nx">motivated</span><span class="p">.</span><span class="w"> </span><span class="nx">Thank</span><span class="w"> </span><span class="nx">you</span><span class="p">!</span><span class="w"> </span>
-</code></pre></div>
+<h4>Please Upvote</h4>
+<pre><code>Thanks for visiting my solution. Keep Learning
+Please give my solution an upvote! 
+It's a simple way to show your appreciation and
+keep me motivated. Thank you! 
+</code></pre>
+<h4>Code</h4>
+<pre><code class="language-java">class Solution {
+    public boolean isValid(String s) {
+        Stack&lt;Character&gt; stack = new Stack&lt;Character&gt;(); // create an empty stack
+        for (char c : s.toCharArray()) { // loop through each character in the string
+            if (c == '(') // if the character is an opening parenthesis
+                stack.push(')'); // push the corresponding closing parenthesis onto the stack
+            else if (c == '{') // if the character is an opening brace
+                stack.push('}'); // push the corresponding closing brace onto the stack
+            else if (c == '[') // if the character is an opening bracket
+                stack.push(']'); // push the corresponding closing bracket onto the stack
+            else if (stack.isEmpty() || stack.pop() != c) // if the character is a closing bracket
+                // if the stack is empty (i.e., there is no matching opening bracket) or the top of the stack
+                // does not match the closing bracket, the string is not valid, so return false
+                return false;
+        }
+        // if the stack is empty, all opening brackets have been matched with their corresponding closing brackets,
+        // so the string is valid, otherwise, there are unmatched opening brackets, so return false
+        return stack.isEmpty();
+    }
+}
 
-<h2>Code</h2>
-<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">java</span><span class="w"> </span>
-<span class="kd">class</span> <span class="nc">Solution</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">boolean</span><span class="w"> </span><span class="nf">isValid</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">s</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="n">Stack</span><span class="o">&lt;</span><span class="n">Character</span><span class="o">&gt;</span><span class="w"> </span><span class="n">stack</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Stack</span><span class="o">&lt;</span><span class="n">Character</span><span class="o">&gt;</span><span class="p">();</span><span class="w"> </span><span class="c1">// create an empty stack</span>
-<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">char</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">s</span><span class="p">.</span><span class="na">toCharArray</span><span class="p">())</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="c1">// loop through each character in the string</span>
-<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">c</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="sc">&#39;(&#39;</span><span class="p">)</span><span class="w"> </span><span class="c1">// if the character is an opening parenthesis</span>
-<span class="w">                </span><span class="n">stack</span><span class="p">.</span><span class="na">push</span><span class="p">(</span><span class="sc">&#39;)&#39;</span><span class="p">);</span><span class="w"> </span><span class="c1">// push the corresponding closing parenthesis onto the stack</span>
-<span class="w">            </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">c</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="sc">&#39;{&#39;</span><span class="p">)</span><span class="w"> </span><span class="c1">// if the character is an opening brace</span>
-<span class="w">                </span><span class="n">stack</span><span class="p">.</span><span class="na">push</span><span class="p">(</span><span class="sc">&#39;}&#39;</span><span class="p">);</span><span class="w"> </span><span class="c1">// push the corresponding closing brace onto the stack</span>
-<span class="w">            </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">c</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="sc">&#39;[&#39;</span><span class="p">)</span><span class="w"> </span><span class="c1">// if the character is an opening bracket</span>
-<span class="w">                </span><span class="n">stack</span><span class="p">.</span><span class="na">push</span><span class="p">(</span><span class="sc">&#39;]&#39;</span><span class="p">);</span><span class="w"> </span><span class="c1">// push the corresponding closing bracket onto the stack</span>
-<span class="w">            </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">stack</span><span class="p">.</span><span class="na">isEmpty</span><span class="p">()</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">stack</span><span class="p">.</span><span class="na">pop</span><span class="p">()</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">c</span><span class="p">)</span><span class="w"> </span><span class="c1">// if the character is a closing bracket</span>
-<span class="w">                </span><span class="c1">// if the stack is empty (i.e., there is no matching opening bracket) or the top of the stack</span>
-<span class="w">                </span><span class="c1">// does not match the closing bracket, the string is not valid, so return false</span>
-<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="kc">false</span><span class="p">;</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">        </span><span class="c1">// if the stack is empty, all opening brackets have been matched with their corresponding closing brackets,</span>
-<span class="w">        </span><span class="c1">// so the string is valid, otherwise, there are unmatched opening brackets, so return false</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">stack</span><span class="p">.</span><span class="na">isEmpty</span><span class="p">();</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
+</code></pre>
+<pre><code class="language-java">class Solution {
+    public boolean isValid(String s) {
+        // Create an empty stack to keep track of opening brackets
+        Stack&lt;Character&gt; stack = new Stack&lt;Character&gt;();
 
-<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">java</span><span class="w"> </span>
-<span class="kd">class</span> <span class="nc">Solution</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">boolean</span><span class="w"> </span><span class="nf">isValid</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">s</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="c1">// Create an empty stack to keep track of opening brackets</span>
-<span class="w">        </span><span class="n">Stack</span><span class="o">&lt;</span><span class="n">Character</span><span class="o">&gt;</span><span class="w"> </span><span class="n">stack</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Stack</span><span class="o">&lt;</span><span class="n">Character</span><span class="o">&gt;</span><span class="p">();</span>
+        // Loop through every character in the string
+        for (char c : s.toCharArray()) {
+            // If the character is an opening bracket, push it onto the stack
+            if (c == '(' || c == '[' || c == '{') {
+                stack.push(c);
+            } else { // If the character is a closing bracket
+                // If the stack is empty, there is no matching opening bracket, so return false
+                if (stack.isEmpty()) {
+                    return false;
+                }
+                // Otherwise, get the top of the stack and check if it's the matching opening bracket
+                char top = stack.peek();
+                if ((c == ')' &amp;&amp; top == '(') || (c == ']' &amp;&amp; top == '[') || (c == '}' &amp;&amp; top == '{')) {
+                    // If it is, pop the opening bracket from the stack
+                    stack.pop();
+                } else { // Otherwise, the brackets don't match, so return false
+                    return false;
+                }
+            }
+        }
+        // If the stack is empty, all opening brackets have been closed, so return true
+        // Otherwise, there are unmatched opening brackets, so return false
+        return stack.isEmpty();
+    }
+}
 
-<span class="w">        </span><span class="c1">// Loop through every character in the string</span>
-<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">char</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">s</span><span class="p">.</span><span class="na">toCharArray</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="c1">// If the character is an opening bracket, push it onto the stack</span>
-<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">c</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="sc">&#39;(&#39;</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="sc">&#39;[&#39;</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="sc">&#39;{&#39;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="n">stack</span><span class="p">.</span><span class="na">push</span><span class="p">(</span><span class="n">c</span><span class="p">);</span>
-<span class="w">            </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="c1">// If the character is a closing bracket</span>
-<span class="w">                </span><span class="c1">// If the stack is empty, there is no matching opening bracket, so return false</span>
-<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">stack</span><span class="p">.</span><span class="na">isEmpty</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                    </span><span class="k">return</span><span class="w"> </span><span class="kc">false</span><span class="p">;</span>
-<span class="w">                </span><span class="p">}</span>
-<span class="w">                </span><span class="c1">// Otherwise, get the top of the stack and check if it&#39;s the matching opening bracket</span>
-<span class="w">                </span><span class="kt">char</span><span class="w"> </span><span class="n">top</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">stack</span><span class="p">.</span><span class="na">peek</span><span class="p">();</span>
-<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">((</span><span class="n">c</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="sc">&#39;)&#39;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">top</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="sc">&#39;(&#39;</span><span class="p">)</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="p">(</span><span class="n">c</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="sc">&#39;]&#39;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">top</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="sc">&#39;[&#39;</span><span class="p">)</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="p">(</span><span class="n">c</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="sc">&#39;}&#39;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">top</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="sc">&#39;{&#39;</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                    </span><span class="c1">// If it is, pop the opening bracket from the stack</span>
-<span class="w">                    </span><span class="n">stack</span><span class="p">.</span><span class="na">pop</span><span class="p">();</span>
-<span class="w">                </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="c1">// Otherwise, the brackets don&#39;t match, so return false</span>
-<span class="w">                    </span><span class="k">return</span><span class="w"> </span><span class="kc">false</span><span class="p">;</span>
-<span class="w">                </span><span class="p">}</span>
-<span class="w">            </span><span class="p">}</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">        </span><span class="c1">// If the stack is empty, all opening brackets have been closed, so return true</span>
-<span class="w">        </span><span class="c1">// Otherwise, there are unmatched opening brackets, so return false</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">stack</span><span class="p">.</span><span class="na">isEmpty</span><span class="p">();</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
+</code></pre>
+<pre><code class="language-python">class Solution(object):
+    def isValid(self, s):
+        stack = [] #### create an empty stack to store opening brackets
+        for c in s: #### loop through each character in the string
+            if c in '([{': #### if the character is an opening bracket
+                stack.append(c) #### push it onto the stack
+            else: #### if the character is a closing bracket
+                if not stack or \
+                    (c == ')' and stack[-1] != '(') or \
+                    (c == '}' and stack[-1] != '{') or \
+                    (c == ']' and stack[-1] != '['):
+                    return False #### the string is not valid, so return false
+                stack.pop() #### otherwise, pop the opening bracket from the stack
+        return not stack #### if the stack is empty, all opening brackets have been matched with their corresponding closing brackets,
+                         #### so the string is valid, otherwise, there are unmatched opening brackets, so return false
+</code></pre>
+<pre><code class="language-c++">class Solution {
+public:
+    bool isValid(string s) {
+        stack&lt;char&gt; st; // create an empty stack to store opening brackets
+        for (char c : s) { // loop through each character in the string
+            if (c == '(' || c == '{' || c == '[') { // if the character is an opening bracket
+                st.push(c); // push it onto the stack
+            } else { // if the character is a closing bracket
+                if (st.empty() || // if the stack is empty or 
+                    (c == ')' &amp;&amp; st.top() != '(') || // the closing bracket doesn't match the corresponding opening bracket at the top of the stack
+                    (c == '}' &amp;&amp; st.top() != '{') ||
+                    (c == ']' &amp;&amp; st.top() != '[')) {
+                    return false; // the string is not valid, so return false
+                }
+                st.pop(); // otherwise, pop the opening bracket from the stack
+            }
+        }
+        return st.empty(); // if the stack is empty, all opening brackets have been matched with their corresponding closing brackets,
+                           // so the string is valid, otherwise, there are unmatched opening brackets, so return false
+    }
+};
+</code></pre>
+<pre><code class="language-javascript">/**
+ * @param {string} s
+ * @return {boolean}
+ */
+var isValid = function(s) {
+    let stack = []; // create an empty stack to store opening brackets
+    for (let c of s) { // loop through each character in the string
+        if (c === '(' || c === '{' || c === '[') { // if the character is an opening bracket
+            stack.push(c); // push it onto the stack
+        } else { // if the character is a closing bracket
+            if (!stack.length || // if the stack is empty or 
+                (c === ')' &amp;&amp; stack[stack.length - 1] !== '(') || // the closing bracket doesn't match the corresponding opening bracket at the top of the stack
+                (c === '}' &amp;&amp; stack[stack.length - 1] !== '{') ||
+                (c === ']' &amp;&amp; stack[stack.length - 1] !== '[')) {
+                return false; // the string is not valid, so return false
+            }
+            stack.pop(); // otherwise, pop the opening bracket from the stack
+        }
+    }
+    return !stack.length; // if the stack is empty, all opening brackets have been matched with their corresponding closing brackets,
+                          // so the string is valid, otherwise, there are unmatched opening brackets, so return false
+};
 
-<div class="codehilite"><pre><span></span><code><span class="n">Language</span><span class="p">:</span> <span class="n">python</span> 
-<span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">isValid</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">s</span><span class="p">):</span>
-        <span class="n">stack</span> <span class="o">=</span>  <span class="c1"># create an empty stack to store opening brackets</span>
-        <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">s</span><span class="p">:</span> <span class="c1"># loop through each character in the string</span>
-            <span class="k">if</span> <span class="n">c</span> <span class="ow">in</span> <span class="s1">&#39;([{&#39;</span><span class="p">:</span> <span class="c1"># if the character is an opening bracket</span>
-                <span class="n">stack</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="c1"># push it onto the stack</span>
-            <span class="k">else</span><span class="p">:</span> <span class="c1"># if the character is a closing bracket</span>
-                <span class="k">if</span> <span class="ow">not</span> <span class="n">stack</span> <span class="ow">or</span> \
-                    <span class="p">(</span><span class="n">c</span> <span class="o">==</span> <span class="s1">&#39;)&#39;</span> <span class="ow">and</span> <span class="n">stack</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;(&#39;</span><span class="p">)</span> <span class="ow">or</span> \
-                    <span class="p">(</span><span class="n">c</span> <span class="o">==</span> <span class="s1">&#39;}&#39;</span> <span class="ow">and</span> <span class="n">stack</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;{&#39;</span><span class="p">)</span> <span class="ow">or</span> \
-                    <span class="p">(</span><span class="n">c</span> <span class="o">==</span> <span class="s1">&#39;]&#39;</span> <span class="ow">and</span> <span class="n">stack</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;[&#39;</span><span class="p">):</span>
-                    <span class="k">return</span> <span class="kc">False</span> <span class="c1"># the string is not valid, so return false</span>
-                <span class="n">stack</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span> <span class="c1"># otherwise, pop the opening bracket from the stack</span>
-        <span class="k">return</span> <span class="ow">not</span> <span class="n">stack</span> <span class="c1"># if the stack is empty, all opening brackets have been matched with their corresponding closing brackets,</span>
-                         <span class="c1"># so the string is valid, otherwise, there are unmatched opening brackets, so return false</span>
-</code></pre></div>
+</code></pre>
+<h4>JAVA solution without using stack</h4>
+<pre><code class="language-Java">public class Solution {
+    public static boolean isValid(String s) {
+        while (true) {
+            if (s.contains(&quot;()&quot;)) {
+                s = s.replace(&quot;()&quot;, &quot;&quot;);
+            } else if (s.contains(&quot;{}&quot;)) {
+                s = s.replace(&quot;{}&quot;, &quot;&quot;);
+            } else if (s.contains(&quot;[]&quot;)) {
+                s = s.replace(&quot;[]&quot;, &quot;&quot;);
+            } else {
+                // If the string becomes empty, it indicates all brackets are matched.
+                return s.isEmpty();
+            }
+        }
+    }
+}
 
-<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">c</span><span class="o">++</span><span class="w"> </span>
-<span class="n">class</span><span class="w"> </span><span class="n">Solution</span><span class="w"> </span><span class="p">{</span>
-<span class="n">public</span><span class="o">:</span>
-<span class="w">    </span><span class="kt">bool</span><span class="w"> </span><span class="n">isValid</span><span class="p">(</span><span class="n">string</span><span class="w"> </span><span class="n">s</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="n">stack</span><span class="o">&lt;</span><span class="kt">char</span><span class="o">&gt;</span><span class="w"> </span><span class="n">st</span><span class="p">;</span><span class="w"> </span><span class="c1">// create an empty stack to store opening brackets</span>
-<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">char</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">s</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="c1">// loop through each character in the string</span>
-<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">c</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="sc">&#39;(&#39;</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="sc">&#39;{&#39;</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="sc">&#39;[&#39;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="c1">// if the character is an opening bracket</span>
-<span class="w">                </span><span class="n">st</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="n">c</span><span class="p">);</span><span class="w"> </span><span class="c1">// push it onto the stack</span>
-<span class="w">            </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="c1">// if the character is a closing bracket</span>
-<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">st</span><span class="p">.</span><span class="n">empty</span><span class="p">()</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="c1">// if the stack is empty or </span>
-<span class="w">                    </span><span class="p">(</span><span class="n">c</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="sc">&#39;)&#39;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">st</span><span class="p">.</span><span class="n">top</span><span class="p">()</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="sc">&#39;(&#39;</span><span class="p">)</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="c1">// the closing bracket doesn&#39;t match the corresponding opening bracket at the top of the stack</span>
-<span class="w">                    </span><span class="p">(</span><span class="n">c</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="sc">&#39;}&#39;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">st</span><span class="p">.</span><span class="n">top</span><span class="p">()</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="sc">&#39;{&#39;</span><span class="p">)</span><span class="w"> </span><span class="o">||</span>
-<span class="w">                    </span><span class="p">(</span><span class="n">c</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="sc">&#39;]&#39;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">st</span><span class="p">.</span><span class="n">top</span><span class="p">()</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="sc">&#39;[&#39;</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                    </span><span class="k">return</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span><span class="w"> </span><span class="c1">// the string is not valid, so return false</span>
-<span class="w">                </span><span class="p">}</span>
-<span class="w">                </span><span class="n">st</span><span class="p">.</span><span class="n">pop</span><span class="p">();</span><span class="w"> </span><span class="c1">// otherwise, pop the opening bracket from the stack</span>
-<span class="w">            </span><span class="p">}</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">st</span><span class="p">.</span><span class="n">empty</span><span class="p">();</span><span class="w"> </span><span class="c1">// if the stack is empty, all opening brackets have been matched with their corresponding closing brackets,</span>
-<span class="w">                           </span><span class="c1">// so the string is valid, otherwise, there are unmatched opening brackets, so return false</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">};</span>
-</code></pre></div>
-
-<div class="codehilite"><pre><span></span><code><span class="nx">Language</span><span class="o">:</span><span class="w"> </span><span class="nx">javascript</span><span class="w"> </span>
-<span class="cm">/**</span>
-<span class="cm"> * @param {string} s</span>
-<span class="cm"> * @return {boolean}</span>
-<span class="cm"> */</span>
-<span class="kd">var</span><span class="w"> </span><span class="nx">isValid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kd">function</span><span class="p">(</span><span class="nx">s</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="nx">stack</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">;</span><span class="w"> </span><span class="c1">// create an empty stack to store opening brackets</span>
-<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kd">let</span><span class="w"> </span><span class="nx">c</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="nx">s</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="c1">// loop through each character in the string</span>
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">c</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">&#39;(&#39;</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nx">c</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">&#39;{&#39;</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nx">c</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">&#39;[&#39;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="c1">// if the character is an opening bracket</span>
-<span class="w">            </span><span class="nx">stack</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">c</span><span class="p">);</span><span class="w"> </span><span class="c1">// push it onto the stack</span>
-<span class="w">        </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="c1">// if the character is a closing bracket</span>
-<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nx">stack</span><span class="p">.</span><span class="nx">length</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="c1">// if the stack is empty or </span>
-<span class="w">                </span><span class="p">(</span><span class="nx">c</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">&#39;)&#39;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nx">stack</span><span class="p">[</span><span class="nx">stack</span><span class="p">.</span><span class="nx">length</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mf">1</span><span class="p">]</span><span class="w"> </span><span class="o">!==</span><span class="w"> </span><span class="s1">&#39;(&#39;</span><span class="p">)</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="c1">// the closing bracket doesn&#39;t match the corresponding opening bracket at the top of the stack</span>
-<span class="w">                </span><span class="p">(</span><span class="nx">c</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">&#39;}&#39;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nx">stack</span><span class="p">[</span><span class="nx">stack</span><span class="p">.</span><span class="nx">length</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mf">1</span><span class="p">]</span><span class="w"> </span><span class="o">!==</span><span class="w"> </span><span class="s1">&#39;{&#39;</span><span class="p">)</span><span class="w"> </span><span class="o">||</span>
-<span class="w">                </span><span class="p">(</span><span class="nx">c</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">&#39;]&#39;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nx">stack</span><span class="p">[</span><span class="nx">stack</span><span class="p">.</span><span class="nx">length</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mf">1</span><span class="p">]</span><span class="w"> </span><span class="o">!==</span><span class="w"> </span><span class="s1">&#39;[&#39;</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="kc">false</span><span class="p">;</span><span class="w"> </span><span class="c1">// the string is not valid, so return false</span>
-<span class="w">            </span><span class="p">}</span>
-<span class="w">            </span><span class="nx">stack</span><span class="p">.</span><span class="nx">pop</span><span class="p">();</span><span class="w"> </span><span class="c1">// otherwise, pop the opening bracket from the stack</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="o">!</span><span class="nx">stack</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span><span class="w"> </span><span class="c1">// if the stack is empty, all opening brackets have been matched with their corresponding closing brackets,</span>
-<span class="w">                          </span><span class="c1">// so the string is valid, otherwise, there are unmatched opening brackets, so return false</span>
-<span class="p">};</span>
-</code></pre></div>
-
-<h2>JAVA solution without using stack</h2>
-<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">Java</span><span class="w"> </span>
-<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">Solution</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kt">boolean</span><span class="w"> </span><span class="nf">isValid</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">s</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="kc">true</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">s</span><span class="p">.</span><span class="na">contains</span><span class="p">(</span><span class="s">&quot;()&quot;</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="n">s</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">s</span><span class="p">.</span><span class="na">replace</span><span class="p">(</span><span class="s">&quot;()&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;&quot;</span><span class="p">);</span>
-<span class="w">            </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">s</span><span class="p">.</span><span class="na">contains</span><span class="p">(</span><span class="s">&quot;{}&quot;</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="n">s</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">s</span><span class="p">.</span><span class="na">replace</span><span class="p">(</span><span class="s">&quot;{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;&quot;</span><span class="p">);</span>
-<span class="w">            </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">s</span><span class="p">.</span><span class="na">contains</span><span class="p">(</span><span class="s">&quot;&quot;</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="n">s</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">s</span><span class="p">.</span><span class="na">replace</span><span class="p">(</span><span class="s">&quot;&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;&quot;</span><span class="p">);</span>
-<span class="w">            </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="c1">// If the string becomes empty, it indicates all brackets are matched.</span>
-<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="n">s</span><span class="p">.</span><span class="na">isEmpty</span><span class="p">();</span>
-<span class="w">            </span><span class="p">}</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
-
-<h4>Please Comment</h4>
-<p>Thanks for visiting my solution. Comment below if you like it.</p>
-<p><a href="https://www.linkedin.com/in/vikas-pathak-8499451b0"></a> <strong>Connect on LinkedIn</strong>\<br />
-<a href="https://www.instagram.com/vikas123.vp79/"></a> <strong>Follow on Instagram</strong>\<br />
+</code></pre>
+<h6>Please Comment</h6>
+<p>Thanks for visiting my solution. Comment below if you like it.  </p>
+<p><a href="https://www.linkedin.com/in/vikas-pathak-8499451b0"></a> <strong>Connect on LinkedIn</strong><br />
+<a href="https://www.instagram.com/vikas123.vp79/"></a> <strong>Follow on Instagram</strong><br />
 <a href="https://github.com/Vikas-Pathak-123"></a> <strong>Check out my GitHub</strong></p>
-<div class="codehilite"><pre><span></span><code>
-</code></pre></div></div>
-
-
-<div class='python-solution'><h2>✔️✔️Easy Solutions in Java ✔️✔️, Python ✔️, and C++ ✔️🧐Look at once 💻 with Exaplanation -- Votes: 2798</h2><h2>Intuition</h2>
-<!-- Describe your first thoughts on how to solve this problem. -->
-
-<p>The problem requires us to determine if the given string of brackets is valid or not. We can use a stack data structure to keep track of opening brackets encountered and check if they match with the corresponding closing brackets.</p>
-<h2>Approach</h2>
-<!-- Describe your approach to solving the problem. -->
-
-<p>Here is the step-by-step approach of the algorithm:</p>
-<ol>
-<li>
-<p>Initialize an empty stack.</p>
-</li>
-<li>
-<p>Traverse the input string character by character.</p>
-</li>
-<li>
-<p>If the current character is an opening bracket (i.e., '(', '{', '['), push it onto the stack.</p>
-</li>
-<li>
-<p>If the current character is a closing bracket (i.e., ')', '}', ']'), check if the stack is empty. If it is empty, return false, because the closing bracket does not have a corresponding opening bracket. Otherwise, pop the top element from the stack and check if it matches the current closing bracket. If it does not match, return false, because the brackets are not valid.</p>
-</li>
-<li>
-<p>After traversing the entire input string, if the stack is empty, return true, because all opening brackets have been matched with their corresponding closing brackets. Otherwise, return false, because some opening brackets have not been matched with their corresponding closing brackets.</p>
-</li>
-</ol>
-<h2>Complexity</h2>
-<ul>
-<li>Time complexity:</li>
-</ul>
-<!-- Add your time complexity here, e.g. $$O(n)$$ -->
-
-<p>The time complexity of the solution is $$O(n)$$, where n is the length of the input string. This is because we traverse the string once and perform constant time operations for each character.</p>
-<ul>
-<li>Space complexity:</li>
-</ul>
-<!-- Add your space complexity here, e.g. $$O(n)$$ -->
-
-<p>The space complexity of the solution is $$O(n)$$, where n is the length of the input string. This is because the worst-case scenario is when all opening brackets are present in the string and the stack will have to store them all.</p>
-<p></p>
-<h2>Please Upvote</h2>
-<div class="codehilite"><pre><span></span><code><span class="nx">Thanks</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="nx">visiting</span><span class="w"> </span><span class="nx">my</span><span class="w"> </span><span class="nx">solution</span><span class="p">.</span><span class="w"> </span><span class="nx">Keep</span><span class="w"> </span><span class="nx">Learning</span>
-<span class="nx">Please</span><span class="w"> </span><span class="nx">give</span><span class="w"> </span><span class="nx">my</span><span class="w"> </span><span class="nx">solution</span><span class="w"> </span><span class="nx">an</span><span class="w"> </span><span class="nx">upvote</span><span class="p">!</span><span class="w"> </span>
-<span class="nx">It</span><span class="err">&#39;</span><span class="nx">s</span><span class="w"> </span><span class="nx">a</span><span class="w"> </span><span class="nx">simple</span><span class="w"> </span><span class="nx">way</span><span class="w"> </span><span class="nx">to</span><span class="w"> </span><span class="nx">show</span><span class="w"> </span><span class="nx">your</span><span class="w"> </span><span class="nx">appreciation</span><span class="w"> </span><span class="k">and</span>
-<span class="nx">keep</span><span class="w"> </span><span class="nx">me</span><span class="w"> </span><span class="nx">motivated</span><span class="p">.</span><span class="w"> </span><span class="nx">Thank</span><span class="w"> </span><span class="nx">you</span><span class="p">!</span><span class="w"> </span>
-</code></pre></div>
-
-<h2>Code</h2>
-<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">java</span><span class="w"> </span>
-<span class="kd">class</span> <span class="nc">Solution</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">boolean</span><span class="w"> </span><span class="nf">isValid</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">s</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="n">Stack</span><span class="o">&lt;</span><span class="n">Character</span><span class="o">&gt;</span><span class="w"> </span><span class="n">stack</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Stack</span><span class="o">&lt;</span><span class="n">Character</span><span class="o">&gt;</span><span class="p">();</span><span class="w"> </span><span class="c1">// create an empty stack</span>
-<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">char</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">s</span><span class="p">.</span><span class="na">toCharArray</span><span class="p">())</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="c1">// loop through each character in the string</span>
-<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">c</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="sc">&#39;(&#39;</span><span class="p">)</span><span class="w"> </span><span class="c1">// if the character is an opening parenthesis</span>
-<span class="w">                </span><span class="n">stack</span><span class="p">.</span><span class="na">push</span><span class="p">(</span><span class="sc">&#39;)&#39;</span><span class="p">);</span><span class="w"> </span><span class="c1">// push the corresponding closing parenthesis onto the stack</span>
-<span class="w">            </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">c</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="sc">&#39;{&#39;</span><span class="p">)</span><span class="w"> </span><span class="c1">// if the character is an opening brace</span>
-<span class="w">                </span><span class="n">stack</span><span class="p">.</span><span class="na">push</span><span class="p">(</span><span class="sc">&#39;}&#39;</span><span class="p">);</span><span class="w"> </span><span class="c1">// push the corresponding closing brace onto the stack</span>
-<span class="w">            </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">c</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="sc">&#39;[&#39;</span><span class="p">)</span><span class="w"> </span><span class="c1">// if the character is an opening bracket</span>
-<span class="w">                </span><span class="n">stack</span><span class="p">.</span><span class="na">push</span><span class="p">(</span><span class="sc">&#39;]&#39;</span><span class="p">);</span><span class="w"> </span><span class="c1">// push the corresponding closing bracket onto the stack</span>
-<span class="w">            </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">stack</span><span class="p">.</span><span class="na">isEmpty</span><span class="p">()</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">stack</span><span class="p">.</span><span class="na">pop</span><span class="p">()</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">c</span><span class="p">)</span><span class="w"> </span><span class="c1">// if the character is a closing bracket</span>
-<span class="w">                </span><span class="c1">// if the stack is empty (i.e., there is no matching opening bracket) or the top of the stack</span>
-<span class="w">                </span><span class="c1">// does not match the closing bracket, the string is not valid, so return false</span>
-<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="kc">false</span><span class="p">;</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">        </span><span class="c1">// if the stack is empty, all opening brackets have been matched with their corresponding closing brackets,</span>
-<span class="w">        </span><span class="c1">// so the string is valid, otherwise, there are unmatched opening brackets, so return false</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">stack</span><span class="p">.</span><span class="na">isEmpty</span><span class="p">();</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
-
-<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">java</span><span class="w"> </span>
-<span class="kd">class</span> <span class="nc">Solution</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">boolean</span><span class="w"> </span><span class="nf">isValid</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">s</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="c1">// Create an empty stack to keep track of opening brackets</span>
-<span class="w">        </span><span class="n">Stack</span><span class="o">&lt;</span><span class="n">Character</span><span class="o">&gt;</span><span class="w"> </span><span class="n">stack</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Stack</span><span class="o">&lt;</span><span class="n">Character</span><span class="o">&gt;</span><span class="p">();</span>
-
-<span class="w">        </span><span class="c1">// Loop through every character in the string</span>
-<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">char</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">s</span><span class="p">.</span><span class="na">toCharArray</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="c1">// If the character is an opening bracket, push it onto the stack</span>
-<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">c</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="sc">&#39;(&#39;</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="sc">&#39;[&#39;</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="sc">&#39;{&#39;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="n">stack</span><span class="p">.</span><span class="na">push</span><span class="p">(</span><span class="n">c</span><span class="p">);</span>
-<span class="w">            </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="c1">// If the character is a closing bracket</span>
-<span class="w">                </span><span class="c1">// If the stack is empty, there is no matching opening bracket, so return false</span>
-<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">stack</span><span class="p">.</span><span class="na">isEmpty</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                    </span><span class="k">return</span><span class="w"> </span><span class="kc">false</span><span class="p">;</span>
-<span class="w">                </span><span class="p">}</span>
-<span class="w">                </span><span class="c1">// Otherwise, get the top of the stack and check if it&#39;s the matching opening bracket</span>
-<span class="w">                </span><span class="kt">char</span><span class="w"> </span><span class="n">top</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">stack</span><span class="p">.</span><span class="na">peek</span><span class="p">();</span>
-<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">((</span><span class="n">c</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="sc">&#39;)&#39;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">top</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="sc">&#39;(&#39;</span><span class="p">)</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="p">(</span><span class="n">c</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="sc">&#39;]&#39;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">top</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="sc">&#39;[&#39;</span><span class="p">)</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="p">(</span><span class="n">c</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="sc">&#39;}&#39;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">top</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="sc">&#39;{&#39;</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                    </span><span class="c1">// If it is, pop the opening bracket from the stack</span>
-<span class="w">                    </span><span class="n">stack</span><span class="p">.</span><span class="na">pop</span><span class="p">();</span>
-<span class="w">                </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="c1">// Otherwise, the brackets don&#39;t match, so return false</span>
-<span class="w">                    </span><span class="k">return</span><span class="w"> </span><span class="kc">false</span><span class="p">;</span>
-<span class="w">                </span><span class="p">}</span>
-<span class="w">            </span><span class="p">}</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">        </span><span class="c1">// If the stack is empty, all opening brackets have been closed, so return true</span>
-<span class="w">        </span><span class="c1">// Otherwise, there are unmatched opening brackets, so return false</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">stack</span><span class="p">.</span><span class="na">isEmpty</span><span class="p">();</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
-
-<div class="codehilite"><pre><span></span><code><span class="n">Language</span><span class="p">:</span> <span class="n">python</span> 
-<span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">isValid</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">s</span><span class="p">):</span>
-        <span class="n">stack</span> <span class="o">=</span>  <span class="c1"># create an empty stack to store opening brackets</span>
-        <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">s</span><span class="p">:</span> <span class="c1"># loop through each character in the string</span>
-            <span class="k">if</span> <span class="n">c</span> <span class="ow">in</span> <span class="s1">&#39;([{&#39;</span><span class="p">:</span> <span class="c1"># if the character is an opening bracket</span>
-                <span class="n">stack</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="c1"># push it onto the stack</span>
-            <span class="k">else</span><span class="p">:</span> <span class="c1"># if the character is a closing bracket</span>
-                <span class="k">if</span> <span class="ow">not</span> <span class="n">stack</span> <span class="ow">or</span> \
-                    <span class="p">(</span><span class="n">c</span> <span class="o">==</span> <span class="s1">&#39;)&#39;</span> <span class="ow">and</span> <span class="n">stack</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;(&#39;</span><span class="p">)</span> <span class="ow">or</span> \
-                    <span class="p">(</span><span class="n">c</span> <span class="o">==</span> <span class="s1">&#39;}&#39;</span> <span class="ow">and</span> <span class="n">stack</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;{&#39;</span><span class="p">)</span> <span class="ow">or</span> \
-                    <span class="p">(</span><span class="n">c</span> <span class="o">==</span> <span class="s1">&#39;]&#39;</span> <span class="ow">and</span> <span class="n">stack</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;[&#39;</span><span class="p">):</span>
-                    <span class="k">return</span> <span class="kc">False</span> <span class="c1"># the string is not valid, so return false</span>
-                <span class="n">stack</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span> <span class="c1"># otherwise, pop the opening bracket from the stack</span>
-        <span class="k">return</span> <span class="ow">not</span> <span class="n">stack</span> <span class="c1"># if the stack is empty, all opening brackets have been matched with their corresponding closing brackets,</span>
-                         <span class="c1"># so the string is valid, otherwise, there are unmatched opening brackets, so return false</span>
-</code></pre></div>
-
-<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">c</span><span class="o">++</span><span class="w"> </span>
-<span class="n">class</span><span class="w"> </span><span class="n">Solution</span><span class="w"> </span><span class="p">{</span>
-<span class="n">public</span><span class="o">:</span>
-<span class="w">    </span><span class="kt">bool</span><span class="w"> </span><span class="n">isValid</span><span class="p">(</span><span class="n">string</span><span class="w"> </span><span class="n">s</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="n">stack</span><span class="o">&lt;</span><span class="kt">char</span><span class="o">&gt;</span><span class="w"> </span><span class="n">st</span><span class="p">;</span><span class="w"> </span><span class="c1">// create an empty stack to store opening brackets</span>
-<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">char</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">s</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="c1">// loop through each character in the string</span>
-<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">c</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="sc">&#39;(&#39;</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="sc">&#39;{&#39;</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="sc">&#39;[&#39;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="c1">// if the character is an opening bracket</span>
-<span class="w">                </span><span class="n">st</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="n">c</span><span class="p">);</span><span class="w"> </span><span class="c1">// push it onto the stack</span>
-<span class="w">            </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="c1">// if the character is a closing bracket</span>
-<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">st</span><span class="p">.</span><span class="n">empty</span><span class="p">()</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="c1">// if the stack is empty or </span>
-<span class="w">                    </span><span class="p">(</span><span class="n">c</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="sc">&#39;)&#39;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">st</span><span class="p">.</span><span class="n">top</span><span class="p">()</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="sc">&#39;(&#39;</span><span class="p">)</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="c1">// the closing bracket doesn&#39;t match the corresponding opening bracket at the top of the stack</span>
-<span class="w">                    </span><span class="p">(</span><span class="n">c</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="sc">&#39;}&#39;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">st</span><span class="p">.</span><span class="n">top</span><span class="p">()</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="sc">&#39;{&#39;</span><span class="p">)</span><span class="w"> </span><span class="o">||</span>
-<span class="w">                    </span><span class="p">(</span><span class="n">c</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="sc">&#39;]&#39;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">st</span><span class="p">.</span><span class="n">top</span><span class="p">()</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="sc">&#39;[&#39;</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                    </span><span class="k">return</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span><span class="w"> </span><span class="c1">// the string is not valid, so return false</span>
-<span class="w">                </span><span class="p">}</span>
-<span class="w">                </span><span class="n">st</span><span class="p">.</span><span class="n">pop</span><span class="p">();</span><span class="w"> </span><span class="c1">// otherwise, pop the opening bracket from the stack</span>
-<span class="w">            </span><span class="p">}</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">st</span><span class="p">.</span><span class="n">empty</span><span class="p">();</span><span class="w"> </span><span class="c1">// if the stack is empty, all opening brackets have been matched with their corresponding closing brackets,</span>
-<span class="w">                           </span><span class="c1">// so the string is valid, otherwise, there are unmatched opening brackets, so return false</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">};</span>
-</code></pre></div>
-
-<div class="codehilite"><pre><span></span><code><span class="nx">Language</span><span class="o">:</span><span class="w"> </span><span class="nx">javascript</span><span class="w"> </span>
-<span class="cm">/**</span>
-<span class="cm"> * @param {string} s</span>
-<span class="cm"> * @return {boolean}</span>
-<span class="cm"> */</span>
-<span class="kd">var</span><span class="w"> </span><span class="nx">isValid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kd">function</span><span class="p">(</span><span class="nx">s</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="nx">stack</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">;</span><span class="w"> </span><span class="c1">// create an empty stack to store opening brackets</span>
-<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kd">let</span><span class="w"> </span><span class="nx">c</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="nx">s</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="c1">// loop through each character in the string</span>
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">c</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">&#39;(&#39;</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nx">c</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">&#39;{&#39;</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nx">c</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">&#39;[&#39;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="c1">// if the character is an opening bracket</span>
-<span class="w">            </span><span class="nx">stack</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">c</span><span class="p">);</span><span class="w"> </span><span class="c1">// push it onto the stack</span>
-<span class="w">        </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="c1">// if the character is a closing bracket</span>
-<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nx">stack</span><span class="p">.</span><span class="nx">length</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="c1">// if the stack is empty or </span>
-<span class="w">                </span><span class="p">(</span><span class="nx">c</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">&#39;)&#39;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nx">stack</span><span class="p">[</span><span class="nx">stack</span><span class="p">.</span><span class="nx">length</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mf">1</span><span class="p">]</span><span class="w"> </span><span class="o">!==</span><span class="w"> </span><span class="s1">&#39;(&#39;</span><span class="p">)</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="c1">// the closing bracket doesn&#39;t match the corresponding opening bracket at the top of the stack</span>
-<span class="w">                </span><span class="p">(</span><span class="nx">c</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">&#39;}&#39;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nx">stack</span><span class="p">[</span><span class="nx">stack</span><span class="p">.</span><span class="nx">length</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mf">1</span><span class="p">]</span><span class="w"> </span><span class="o">!==</span><span class="w"> </span><span class="s1">&#39;{&#39;</span><span class="p">)</span><span class="w"> </span><span class="o">||</span>
-<span class="w">                </span><span class="p">(</span><span class="nx">c</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">&#39;]&#39;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nx">stack</span><span class="p">[</span><span class="nx">stack</span><span class="p">.</span><span class="nx">length</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mf">1</span><span class="p">]</span><span class="w"> </span><span class="o">!==</span><span class="w"> </span><span class="s1">&#39;[&#39;</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="kc">false</span><span class="p">;</span><span class="w"> </span><span class="c1">// the string is not valid, so return false</span>
-<span class="w">            </span><span class="p">}</span>
-<span class="w">            </span><span class="nx">stack</span><span class="p">.</span><span class="nx">pop</span><span class="p">();</span><span class="w"> </span><span class="c1">// otherwise, pop the opening bracket from the stack</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="o">!</span><span class="nx">stack</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span><span class="w"> </span><span class="c1">// if the stack is empty, all opening brackets have been matched with their corresponding closing brackets,</span>
-<span class="w">                          </span><span class="c1">// so the string is valid, otherwise, there are unmatched opening brackets, so return false</span>
-<span class="p">};</span>
-</code></pre></div>
-
-<h2>JAVA solution without using stack</h2>
-<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">Java</span><span class="w"> </span>
-<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">Solution</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kt">boolean</span><span class="w"> </span><span class="nf">isValid</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">s</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="kc">true</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">s</span><span class="p">.</span><span class="na">contains</span><span class="p">(</span><span class="s">&quot;()&quot;</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="n">s</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">s</span><span class="p">.</span><span class="na">replace</span><span class="p">(</span><span class="s">&quot;()&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;&quot;</span><span class="p">);</span>
-<span class="w">            </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">s</span><span class="p">.</span><span class="na">contains</span><span class="p">(</span><span class="s">&quot;{}&quot;</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="n">s</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">s</span><span class="p">.</span><span class="na">replace</span><span class="p">(</span><span class="s">&quot;{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;&quot;</span><span class="p">);</span>
-<span class="w">            </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">s</span><span class="p">.</span><span class="na">contains</span><span class="p">(</span><span class="s">&quot;&quot;</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="n">s</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">s</span><span class="p">.</span><span class="na">replace</span><span class="p">(</span><span class="s">&quot;&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;&quot;</span><span class="p">);</span>
-<span class="w">            </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="c1">// If the string becomes empty, it indicates all brackets are matched.</span>
-<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="n">s</span><span class="p">.</span><span class="na">isEmpty</span><span class="p">();</span>
-<span class="w">            </span><span class="p">}</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
-
-<h4>Please Comment</h4>
-<p>Thanks for visiting my solution. Comment below if you like it.</p>
-<p><a href="https://www.linkedin.com/in/vikas-pathak-8499451b0"></a> <strong>Connect on LinkedIn</strong>\<br />
-<a href="https://www.instagram.com/vikas123.vp79/"></a> <strong>Follow on Instagram</strong>\<br />
-<a href="https://github.com/Vikas-Pathak-123"></a> <strong>Check out my GitHub</strong></p>
-<div class="codehilite"><pre><span></span><code>
-</code></pre></div></div><p style="page-break-before: always" ></p>
+<p>```</p></div>

@@ -1,0 +1,294 @@
+# Cpp Solution:
+
+
+#### YouTube Video Explanation:
+
+<!-- **If you want a video for this question please write in the comments** -->
+
+<!-- https://www.youtube.com/watch?v=ujU-jeO1v-k -->
+
+https://youtu.be/16G6jjbMhjo
+
+** Please like, share, and subscribe to support our channel's mission of making complex concepts easy to understand.**
+
+Subscribe Link: https://www.youtube.com/@leetlogics/?sub_confirmation=1
+
+*Subscribe Goal: 1700 Subscribers*
+*Current Subscribers: 1610*
+
+#### Intuition:
+The problem asks for finding the length of the longest common subsequence between two strings. A common subsequence is a sequence of characters that appear in the same order in both strings. The dynamic programming approach can be used to efficiently find the length of the longest common subsequence.
+
+#### Approach:
+1. **Dynamic Programming (DP):**
+   - We create a 2D array `dp` to store the lengths of the longest common subsequences for all subproblems.
+   - The array `dp` has dimensions `(length1 + 1) x (length2 + 1)` to accommodate empty strings as substrings.
+   - The cell `dp[i][j]` represents the length of the longest common subsequence of substrings `text1[0...i-1]` and `text2[0...j-1]`.
+   - We fill in the `dp` array from the bottom up using the following recurrence relation:
+     - If characters at indices `i-1` and `j-1` match, `dp[i][j] = dp[i-1][j-1] + 1`.
+     - If characters do not match, `dp[i][j] = max(dp[i-1][j], dp[i][j-1])`.
+
+2. **Result:**
+   - The bottom-right cell `dp[length1][length2]` contains the length of the longest common subsequence of the entire strings `text1` and `text2`.
+
+#### Complexity Analysis:
+- **Time Complexity:** O(length1 * length2)
+  - The nested loops iterate through each character in both strings, filling the 2D array.
+- **Space Complexity:** O(length1 * length2)
+  - The space used by the 2D array to store intermediate results.
+
+#### Code Explanation:
+- The code initializes a 2D array `dp` and iterates through both strings, updating the `dp` array according to the recurrence relation.
+- The result is obtained from the bottom-right cell of the `dp` array, which represents the length of the longest common subsequence.
+
+#### Code
+```Java
+class Solution {
+    public int longestCommonSubsequence(String text1, String text2) {
+        // Lengths of the input strings
+        int length1 = text1.length();
+        int length2 = text2.length();
+      
+        // Create a 2D array to store the lengths of longest common subsequences
+        // for all subproblems, initialized with zero
+        int[][] dp = new int[length1 + 1][length2 + 1];
+
+        // Build the dp array from the bottom up
+        for (int i = 1; i <= length1; ++i) {
+            for (int j = 1; j <= length2; ++j) {
+                // If characters match, take diagonal value and add 1
+                if (text1.charAt(i - 1) == text2.charAt(j - 1)) {
+                    dp[i][j] = dp[i - 1][j - 1] + 1;
+                }
+                // If characters do not match, take the maximum value from 
+                // the left (dp[i][j-1]) or above (dp[i-1][j])
+                else {
+                    dp[i][j] = Math.max(dp[i - 1][j], dp[i][j - 1]);
+                }
+            }
+        }
+        // The bottom-right cell contains the length of the longest
+        // common subsequence of text1 and text2
+        return dp[length1][length2];
+    }
+}
+```
+```cpp
+class Solution {
+public:
+    // Function to find the length of the longest common subsequence in two strings.
+    int longestCommonSubsequence(string text1, string text2) {
+        int text1Length = text1.size(), text2Length = text2.size();
+        // Create a 2D array to store lengths of common subsequence at each index.
+        int dp[text1Length + 1][text2Length + 1];
+      
+        // Initialize the 2D array with zero.
+        memset(dp, 0, sizeof dp);
+      
+        // Loop through both strings and fill the dp array.
+        for (int i = 1; i <= text1Length; ++i) {
+            for (int j = 1; j <= text2Length; ++j) {
+                // If current characters match, add 1 to the length of the sequence
+                // until the previous character from both strings.
+                if (text1[i - 1] == text2[j - 1]) {
+                    dp[i][j] = dp[i - 1][j - 1] + 1;
+                } else {
+                    // If current characters do not match, take the maximum length
+                    // achieved by either skipping the current character of text1 or text2.
+                    dp[i][j] = max(dp[i - 1][j], dp[i][j - 1]);
+                }
+            }
+        }
+      
+        // Return the value in the bottom-right cell which contains the
+        // length of the longest common subsequence for the entire strings.
+        return dp[text1Length][text2Length];
+    }
+};
+```
+```Python
+class Solution:
+    def longestCommonSubsequence(self, text1: str, text2: str) -> int:
+        #### Get the lengths of both input strings
+        len_text1, len_text2 = len(text1), len(text2)
+      
+        #### Initialize a 2D array (list of lists) with zeros for dynamic programming
+        #### The array has (len_text1 + 1) rows and (len_text2 + 1) columns
+        dp_matrix = [[0] * (len_text2 + 1) for _ in range(len_text1 + 1)]
+      
+        #### Loop through each character index of text1 and text2
+        for i in range(1, len_text1 + 1):
+            for j in range(1, len_text2 + 1):
+                #### If the characters match, take the diagonal value and add 1
+                if text1[i - 1] == text2[j - 1]:
+                    dp_matrix[i][j] = dp_matrix[i - 1][j - 1] + 1
+                else:
+                    #### If the characters do not match, take the maximum of the value from the left and above
+                    dp_matrix[i][j] = max(dp_matrix[i - 1][j], dp_matrix[i][j - 1])
+      
+        #### The bottom-right value in the matrix contains the length of the longest common subsequence
+        return dp_matrix[len_text1][len_text2]
+```
+```JavaScript
+/**
+ * @param {string} text1
+ * @param {string} text2
+ * @return {number}
+ */
+var longestCommonSubsequence = function(text1, text2) {
+    // Lengths of the input strings
+    const length1 = text1.length;
+    const length2 = text2.length;
+
+    // Create a 2D array to store the lengths of longest common subsequences
+    // for all subproblems, initialized with zero
+    const dp = new Array(length1 + 1).fill(0).map(() => new Array(length2 + 1).fill(0));
+
+    // Build the dp array from the bottom up
+    for (let i = 1; i <= length1; ++i) {
+        for (let j = 1; j <= length2; ++j) {
+            // If characters match, take diagonal value and add 1
+            if (text1.charAt(i - 1) === text2.charAt(j - 1)) {
+                dp[i][j] = dp[i - 1][j - 1] + 1;
+            }
+            // If characters do not match, take the maximum value from 
+            // the left (dp[i][j-1]) or above (dp[i-1][j])
+            else {
+                dp[i][j] = Math.max(dp[i - 1][j], dp[i][j - 1]);
+            }
+        }
+    }
+    // The bottom-right cell contains the length of the longest
+    // common subsequence of text1 and text2
+    return dp[length1][length2];
+};
+```
+
+
+
+
+# Python Solution:
+**Update:**
+**Q & A:**
+
+Q1: What is the difference between `[[0] * m] * n` and `[[0] * m for _ in range(n)]`? Why does the former update all the rows of that column when I try to update one particular cell ?
+A1: `[[0] * m] * n` creates `n` references to the exactly same list objet: `[0] * m`; In contrast: `[[0] * m for _ in range(n)]` creates `n` different list objects that have same value of `[0] * m`.
+
+**End of Q & A**
+
+
+-
+
+Please refer to my solution [Java/Python 3 2 Clean DP codes of O(m * n) & O(min(m, n)) space w/ breif explanation and analysis](https://leetcode.com/problems/max-dot-product-of-two-subsequences/discuss/649858/JavaPython-3-2-Clean-DP-codes-of-O(mn)-and-O(min(m-n))-space-w-breif-explanation-and-analysis.) of a similar problem: [1458. Max Dot Product of Two Subsequences](https://leetcode.com/problems/max-dot-product-of-two-subsequences/description/)
+
+More similar LCS problems:
+[1092. Shortest Common Supersequence](https://leetcode.com/problems/shortest-common-supersequence/) and [Solution](https://leetcode.com/problems/shortest-common-supersequence/discuss/312757/JavaPython-3-O(mn)-clean-DP-code-w-picture-comments-and-analysis.)
+[1062. Longest Repeating Substring](https://leetcode.com/problems/longest-repeating-substring/) (Premium).
+[516. Longest Palindromic  Subsequence](https://leetcode.com/problems/longest-palindromic-subsequence/)
+[1312. Minimum Insertion Steps to Make a String Palindrome](https://leetcode.com/problems/minimum-insertion-steps-to-make-a-string-palindrome/discuss/470709/JavaPython-3-DP-longest-common-subsequence-w-brief-explanation-and-analysis)
+
+-
+Find LCS;
+Let `X` be `“XMJYAUZ”` and `Y` be `“MZJAWXU”`. The longest common subsequence between `X` and `Y` is `“MJAU”`. The following table shows the lengths of the longest common subsequences between prefixes of `X` and `Y`. The `ith` row and `jth` column shows the length of the LCS between `X_{1..i}` and `Y_{1..j}`.
+
+you can refer to [here](https://en.m.wikipedia.org/wiki/Longest_common_subsequence_problem) for more details.
+
+
+**Method 1:**
+
+```java
+    public int longestCommonSubsequence(String s1, String s2) {
+        int[][] dp = new int[s1.length() + 1][s2.length() + 1];
+        for (int i = 0; i < s1.length(); ++i)
+            for (int j = 0; j < s2.length(); ++j)
+                if (s1.charAt(i) == s2.charAt(j)) dp[i + 1][j + 1] = 1 + dp[i][j];
+                else dp[i + 1][j + 1] =  Math.max(dp[i][j + 1], dp[i + 1][j]);
+        return dp[s1.length()][s2.length()];
+    }
+```
+```python
+    def longestCommonSubsequence(self, text1: str, text2: str) -> int:
+        dp = [[0] * (len(text2) + 1) for _ in range(len(text1) + 1)]
+        for i, c in enumerate(text1):
+            for j, d in enumerate(text2):
+                dp[i + 1][j + 1] = 1 + dp[i][j] if c == d else max(dp[i][j + 1], dp[i + 1][j])
+        return dp[-1][-1]
+```
+**Analysis:**
+
+Time & space: O(m * n)
+
+**Method 2:**
+
+***Space Optimization***
+
+credit to **@FunBam** for the following picture.
+
+
+
+Obviously, the code in method 1 only needs information of previous row to update current row. So we just use a **two-row** 2D array to save and update the matching results for chars in `s1` and `s2`.
+
+Note: use `k ^ 1` and `k ^= 1` to switch between `dp[0] (row 0)` and `dp[1] (row 1)`.
+
+```java
+    public int longestCommonSubsequence(String s1, String s2) {
+        int m = s1.length(), n = s2.length();
+        if (m < n)  return longestCommonSubsequence(s2, s1);
+        int[][] dp = new int[2][n + 1];
+        for (int i = 0, k = 1; i < m; ++i, k ^= 1)
+            for (int j = 0; j < n; ++j)
+                if (s1.charAt(i) == s2.charAt(j)) dp[k][j + 1] = 1 + dp[k ^ 1][j];
+                else dp[k][j + 1] = Math.max(dp[k ^ 1][j + 1], dp[k][j]);
+        return dp[m % 2][n];
+    }
+```
+Note: use `1 - i % 2` and `i % 2` to switch between `dp[0] (row 0)` and `dp[1] (row 1)`.
+```python
+    def longestCommonSubsequence(self, text1: str, text2: str) -> int:
+        m, n = len(text1), len(text2)
+        if m < n:
+            tex1, tex2 = text2, text1
+        dp = [[0] * (n + 1) for _ in range(2)]
+        for i, c in enumerate(text1):
+            for j, d in enumerate(text2):
+                dp[1 - i % 2][j + 1] = 1 + dp[i % 2][j] if c == d else max(dp[i % 2][j + 1], dp[1 - i % 2][j])
+        return dp[m % 2][-1]
+```
+***Further Space Optimization to save half space*** - credit to **@survive and @lenchen1112**.
+
+Obviously, the above code in method 2 only needs information of previous and current columns of previous row to update current row. So we just use a **1-row** 1D array and `2` variables to save and update the matching results for chars in `text1` and `text2`.
+
+```java
+    public int longestCommonSubsequence(String text1, String text2) {
+        int m = text1.length(), n = text2.length();
+        if (m < n) {
+            return longestCommonSubsequence(text2, text1);
+        }
+        int[] dp = new int[n + 1];
+        for (int i = 0; i < text1.length(); ++i) {
+            for (int j = 0, prevRow = 0, prevRowPrevCol = 0; j < text2.length(); ++j) {
+                prevRowPrevCol = prevRow;
+                prevRow = dp[j + 1];
+                dp[j + 1] = text1.charAt(i) == text2.charAt(j) ? prevRowPrevCol + 1 : Math.max(dp[j], prevRow);
+            }
+        }
+        return dp[n];
+    }
+```
+```python
+    def longestCommonSubsequence(self, text1: str, text2: str) -> int:
+        m, n = map(len, (text1, text2))
+        if m < n:
+            tex1, tex2 = text2, text1
+        dp = [0] * (n + 1)
+        for c in text1:
+            prevRow, prevRowPrevCol = 0, 0
+            for j, d in enumerate(text2):
+                prevRow, prevRowPrevCol = dp[j + 1], prevRow
+                dp[j + 1] = prevRowPrevCol + 1 if c == d else max(dp[j], prevRow)
+        return dp[-1]
+```
+
+**Analysis:**
+
+ Time: O(m * n). space: O(min(m, n)).

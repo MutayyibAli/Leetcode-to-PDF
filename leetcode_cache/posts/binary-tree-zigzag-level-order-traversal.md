@@ -1,0 +1,156 @@
+# Cpp Solution:
+  
+Assuming after traversing the 1st level, nodes in queue are {9, 20, 8}, And we are going to traverse 2nd level, which is even line and should print value from right to left [8, 20, 9]. 
+
+We know there are 3 nodes in current queue, so the vector for this level in final result should be of size 3. 
+Then,     queue [i] -> goes to ->  vector[queue.size() - 1 - i]
+i.e. the ith node in current queue should be placed in (queue.size() - 1 - i) position in vector for that line.
+ 
+For example, for node(9), it's index in queue is 0, so its index in vector should be (3-1-0) = 2. 
+
+
+    vector<vector<int> > zigzagLevelOrder(TreeNode* root) {
+        if (root == NULL) {
+            return vector<vector<int> > ();
+        }
+        vector<vector<int> > result;
+    
+        queue<TreeNode*> nodesQueue;
+        nodesQueue.push(root);
+        bool leftToRight = true;
+    
+        while ( !nodesQueue.empty()) {
+            int size = nodesQueue.size();
+            vector<int> row(size);
+            for (int i = 0; i < size; i++) {
+                TreeNode* node = nodesQueue.front();
+                nodesQueue.pop();
+
+                // find position to fill node's value
+                int index = (leftToRight) ? i : (size - 1 - i);
+
+                row[index] = node->val;
+                if (node->left) {
+                    nodesQueue.push(node->left);
+                }
+                if (node->right) {
+                    nodesQueue.push(node->right);
+                }
+            }
+            // after this level
+            leftToRight = !leftToRight;
+            result.push_back(row);
+        }
+        return result;
+    }
+
+
+# Python Solution:
+####### Approach - 1
+Using single ended queue and reverse. Although we are using `deque` we are utilizing only single ended queue functionality here.
+```python
+def zigzagLevelOrder(self, root: TreeNode) -> List[List[int]]:
+	if not root: return []
+	queue = collections.deque([root])
+	res = []
+	even_level = False
+	while queue:
+		n = len(queue)
+		level = []
+		for _ in range(n):
+			node = queue.popleft()
+			level.append(node.val)
+			if node.left:
+				queue.append(node.left)
+			if node.right:
+				queue.append(node.right)
+		if even_level:
+			res.append(level[::-1])
+		else:
+			res.append(level)
+		even_level = not even_level
+	return res
+```
+
+####### Appraoch - 2
+Using single ended queue and initializing array instead of reversing. 
+```python
+def zigzagLevelOrder(self, root: TreeNode) -> List[List[int]]:
+	if not root: return []
+	queue = collections.deque([root])
+	res = []
+	even_level = False
+	while queue:
+		n = len(queue)
+		level = [0] * n #### initalize the array since we know the length
+		for i in range(n):
+			node = queue.popleft()
+			if node.left:
+				queue.append(node.left)
+			if node.right:
+				queue.append(node.right)
+			if even_level:
+				level[n-1-i] = node.val
+			else:
+				level[i] = node.val
+		res.append(level)
+		even_level = not even_level
+
+	return res
+```
+####### Approach - 3
+Using the double ended queue functionality. We pop from left in odd levels and pop from right in even levels. Trick is to flip the order of left and right when we are appending from left. 
+```python
+def zigzagLevelOrder(self, root: TreeNode) -> List[List[int]]:
+	if not root: return []
+	queue = collections.deque([root])
+	res = []
+	even_level = False
+	while queue:
+		n = len(queue)
+		level = []
+		for i in range(n):
+			if even_level:
+				#### pop from right and append from left.
+				node = queue.pop()
+				#### to maintain the order of nodes in the format of [left, right, left, right] 
+				#### we push right first since we are appending from left
+				if node.right: queue.appendleft(node.right)
+				if node.left: queue.appendleft(node.left)
+			else:
+				#### pop from left and append from right
+				node = queue.popleft()
+				#### here the order is maintained in the format [left, right, left, right] 
+				if node.left: queue.append(node.left)
+				if node.right: queue.append(node.right)
+			level.append(node.val)
+		res.append(level)
+		even_level = not even_level
+	return res
+```
+
+####### Approach - 4
+Using deque for each level instead of list.
+```python
+def zigzagLevelOrder(self, root: TreeNode) -> List[List[int]]:
+    if not root: return []
+    res = []
+    queue = collections.deque([root])
+    even_level = False
+    while queue:
+        n = len(queue)
+        level = collections.deque()
+        for _ in range(n):
+            node = queue.popleft()
+            if even_level:
+                level.appendleft(node.val)
+            else:
+                level.append(node.val)
+            if node.left:
+                queue.append(node.left)
+            if node.right:
+                queue.append(node.right)
+        res.append(list(level))
+        even_level = not even_level
+    return res
+```

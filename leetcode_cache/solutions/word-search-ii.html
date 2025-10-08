@@ -1,116 +1,113 @@
-<div class='cpp-solution'><h2>C++ Trie solution, 99.62% faster. -- Votes: 67</h2><p>C++ implementation in this <a href="https://leetcode.com/problems/word-search-ii/discuss/59780/Java-15ms-Easiest-Solution-(100.00)">post</a></p>
-<div class="codehilite"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="n">Solution</span><span class="w"> </span><span class="err">{</span>
-<span class="w">    </span><span class="n">struct</span><span class="w"> </span><span class="n">TrieNode</span><span class="w"> </span><span class="err">{</span>
-<span class="w">        </span><span class="n">TrieNode</span><span class="w"> </span><span class="o">*</span><span class="n">children</span><span class="o">[</span><span class="n">26</span><span class="o">]</span><span class="p">;</span>
-<span class="w">        </span><span class="n">string</span><span class="w"> </span><span class="n">word</span><span class="p">;</span>
+<div class='cpp-solution'><h4>C++ Trie solution, 99.62% faster. [Votes: 67]</h4><p>cpp implementation in this <a href="https://leetcode.com/problems/word-search-ii/discuss/59780/Java-15ms-Easiest-Solution-(100.00)">post</a></p>
+<pre><code>class Solution {
+    struct TrieNode {
+        TrieNode *children[26];
+        string word;
 
-<span class="w">        </span><span class="n">TrieNode</span><span class="p">()</span><span class="w"> </span><span class="err">:</span><span class="w"> </span><span class="n">word</span><span class="p">(</span><span class="ss">&quot;&quot;</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
-<span class="w">            </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="nc">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">26</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
-<span class="w">                </span><span class="n">children</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">nullptr</span><span class="p">;</span>
-<span class="w">            </span><span class="err">}</span>
-<span class="w">        </span><span class="err">}</span>
-<span class="w">    </span><span class="err">}</span><span class="p">;</span>
+        TrieNode() : word(&quot;&quot;) {
+            for (int i = 0; i &lt; 26; i++) {
+                children[i] = nullptr;
+            }
+        }
+    };
 
-<span class="k">public</span><span class="err">:</span>
-<span class="w">    </span><span class="n">vector</span><span class="o">&lt;</span><span class="n">string</span><span class="o">&gt;</span><span class="w"> </span><span class="n">findWords</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">vector</span><span class="o">&lt;</span><span class="nc">char</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="o">&amp;</span><span class="n">board</span><span class="p">,</span><span class="w"> </span><span class="n">vector</span><span class="o">&lt;</span><span class="n">string</span><span class="o">&gt;</span><span class="w"> </span><span class="o">&amp;</span><span class="n">words</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
-<span class="w">        </span><span class="n">TrieNode</span><span class="w"> </span><span class="o">*</span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">buildTrie</span><span class="p">(</span><span class="n">words</span><span class="p">);</span>
-<span class="w">        </span><span class="n">vector</span><span class="o">&lt;</span><span class="n">string</span><span class="o">&gt;</span><span class="w"> </span><span class="k">result</span><span class="p">;</span>
-<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="nc">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">board</span><span class="p">.</span><span class="k">size</span><span class="p">();</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
-<span class="w">            </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="nc">int</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">board</span><span class="o">[</span><span class="n">0</span><span class="o">]</span><span class="p">.</span><span class="k">size</span><span class="p">();</span><span class="w"> </span><span class="n">j</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
-<span class="w">                </span><span class="n">dfs</span><span class="p">(</span><span class="n">board</span><span class="p">,</span><span class="w"> </span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">j</span><span class="p">,</span><span class="w"> </span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="k">result</span><span class="p">);</span>
-<span class="w">            </span><span class="err">}</span>
-<span class="w">        </span><span class="err">}</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="k">result</span><span class="p">;</span>
-<span class="w">    </span><span class="err">}</span>
+public:
+    vector&lt;string&gt; findWords(vector&lt;vector&lt;char&gt;&gt; &amp;board, vector&lt;string&gt; &amp;words) {
+        TrieNode *root = buildTrie(words);
+        vector&lt;string&gt; result;
+        for (int i = 0; i &lt; board.size(); i++) {
+            for (int j = 0; j &lt; board[0].size(); j++) {
+                dfs(board, i, j, root, result);
+            }
+        }
+        return result;
+    }
 
-<span class="w">    </span><span class="cm">/** Inserts a word into the trie. */</span>
-<span class="w">    </span><span class="n">TrieNode</span><span class="w"> </span><span class="o">*</span><span class="n">buildTrie</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">string</span><span class="o">&gt;</span><span class="w"> </span><span class="o">&amp;</span><span class="n">words</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
-<span class="w">        </span><span class="n">TrieNode</span><span class="w"> </span><span class="o">*</span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">TrieNode</span><span class="p">();</span>
-<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="nc">int</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">words</span><span class="p">.</span><span class="k">size</span><span class="p">();</span><span class="w"> </span><span class="n">j</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
-<span class="w">            </span><span class="n">string</span><span class="w"> </span><span class="n">word</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">words</span><span class="o">[</span><span class="n">j</span><span class="o">]</span><span class="p">;</span>
-<span class="w">            </span><span class="n">TrieNode</span><span class="w"> </span><span class="o">*</span><span class="n">curr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">root</span><span class="p">;</span>
-<span class="w">            </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="nc">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">word</span><span class="p">.</span><span class="n">length</span><span class="p">();</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
-<span class="w">                </span><span class="nc">char</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">word</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="s1">&#39;a&#39;</span><span class="p">;</span>
-<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">curr</span><span class="o">-&gt;</span><span class="n">children</span><span class="o">[</span><span class="n">c</span><span class="o">]</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">nullptr</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
-<span class="w">                    </span><span class="n">curr</span><span class="o">-&gt;</span><span class="n">children</span><span class="o">[</span><span class="n">c</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">TrieNode</span><span class="p">();</span>
-<span class="w">                </span><span class="err">}</span>
-<span class="w">                </span><span class="n">curr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">curr</span><span class="o">-&gt;</span><span class="n">children</span><span class="o">[</span><span class="n">c</span><span class="o">]</span><span class="p">;</span>
-<span class="w">            </span><span class="err">}</span>
-<span class="w">            </span><span class="n">curr</span><span class="o">-&gt;</span><span class="n">word</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">word</span><span class="p">;</span>
-<span class="w">        </span><span class="err">}</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">root</span><span class="p">;</span>
-<span class="w">    </span><span class="err">}</span>
+    /** Inserts a word into the trie. */
+    TrieNode *buildTrie(vector&lt;string&gt; &amp;words) {
+        TrieNode *root = new TrieNode();
+        for (int j = 0; j &lt; words.size(); j++) {
+            string word = words[j];
+            TrieNode *curr = root;
+            for (int i = 0; i &lt; word.length(); i++) {
+                char c = word[i] - 'a';
+                if (curr-&gt;children[c] == nullptr) {
+                    curr-&gt;children[c] = new TrieNode();
+                }
+                curr = curr-&gt;children[c];
+            }
+            curr-&gt;word = word;
+        }
+        return root;
+    }
 
-<span class="w">    </span><span class="n">void</span><span class="w"> </span><span class="n">dfs</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">vector</span><span class="o">&lt;</span><span class="nc">char</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="o">&amp;</span><span class="n">board</span><span class="p">,</span><span class="w"> </span><span class="nc">int</span><span class="w"> </span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="nc">int</span><span class="w"> </span><span class="n">j</span><span class="p">,</span><span class="w"> </span><span class="n">TrieNode</span><span class="w"> </span><span class="o">*</span><span class="n">p</span><span class="p">,</span><span class="w"> </span><span class="n">vector</span><span class="o">&lt;</span><span class="n">string</span><span class="o">&gt;</span><span class="w"> </span><span class="o">&amp;</span><span class="k">result</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
-<span class="w">        </span><span class="nc">char</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">board</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="n">j</span><span class="o">]</span><span class="p">;</span>
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">c</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s1">&#39;#&#39;</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="err">!</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">children</span><span class="o">[</span><span class="n">c - &#39;a&#39;</span><span class="o">]</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="p">;</span>
-<span class="w">        </span><span class="n">p</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p</span><span class="o">-&gt;</span><span class="n">children</span><span class="o">[</span><span class="n">c - &#39;a&#39;</span><span class="o">]</span><span class="p">;</span>
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">word</span><span class="p">.</span><span class="k">size</span><span class="p">()</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
-<span class="w">            </span><span class="k">result</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">word</span><span class="p">);</span>
-<span class="w">            </span><span class="n">p</span><span class="o">-&gt;</span><span class="n">word</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ss">&quot;&quot;</span><span class="p">;</span>
-<span class="w">        </span><span class="err">}</span>
+    void dfs(vector&lt;vector&lt;char&gt;&gt; &amp;board, int i, int j, TrieNode *p, vector&lt;string&gt; &amp;result) {
+        char c = board[i][j];
+        if (c == '#' || !p-&gt;children[c - 'a']) return;
+        p = p-&gt;children[c - 'a'];
+        if (p-&gt;word.size() &gt; 0) {
+            result.push_back(p-&gt;word);
+            p-&gt;word = &quot;&quot;;
+        }
 
-<span class="w">        </span><span class="n">board</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="n">j</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;#&#39;</span><span class="p">;</span>
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="n">dfs</span><span class="p">(</span><span class="n">board</span><span class="p">,</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">j</span><span class="p">,</span><span class="w"> </span><span class="n">p</span><span class="p">,</span><span class="w"> </span><span class="k">result</span><span class="p">);</span>
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">j</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="n">dfs</span><span class="p">(</span><span class="n">board</span><span class="p">,</span><span class="w"> </span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">p</span><span class="p">,</span><span class="w"> </span><span class="k">result</span><span class="p">);</span>
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">board</span><span class="p">.</span><span class="k">size</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="n">dfs</span><span class="p">(</span><span class="n">board</span><span class="p">,</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">j</span><span class="p">,</span><span class="w"> </span><span class="n">p</span><span class="p">,</span><span class="w"> </span><span class="k">result</span><span class="p">);</span>
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">j</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">board</span><span class="o">[</span><span class="n">0</span><span class="o">]</span><span class="p">.</span><span class="k">size</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="n">dfs</span><span class="p">(</span><span class="n">board</span><span class="p">,</span><span class="w"> </span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">p</span><span class="p">,</span><span class="w"> </span><span class="k">result</span><span class="p">);</span>
-<span class="w">        </span><span class="n">board</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="n">j</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">c</span><span class="p">;</span>
-<span class="w">    </span><span class="err">}</span>
-<span class="err">}</span><span class="p">;</span>
-</code></pre></div></div>
+        board[i][j] = '#';
+        if (i &gt; 0) dfs(board, i - 1, j, p, result);
+        if (j &gt; 0) dfs(board, i, j - 1, p, result);
+        if (i &lt; board.size() - 1) dfs(board, i + 1, j, p, result);
+        if (j &lt; board[0].size() - 1) dfs(board, i, j + 1, p, result);
+        board[i][j] = c;
+    }
+};
+</code></pre></div><div class='python-solution'><h4>Python dfs solution (directly use Trie implemented). [Votes: 384]</h4><p>Here is an implementation based on  <a href="https://leetcode.com/problems/implement-trie-prefix-tree/">Implement Trie</a> in LeetCode. TrieNode, Trie, Solution are treated as seperated classes. </p>
+<pre><code>class TrieNode():
+    def __init__(self):
+        self.children = collections.defaultdict(TrieNode)
+        self.isWord = False
 
+class Trie():
+    def __init__(self):
+        self.root = TrieNode()
 
-<div class='python-solution'><h2>Python dfs solution (directly use Trie implemented). -- Votes: 384</h2><p>Here is an implementation based on <a href="https://leetcode.com/problems/implement-trie-prefix-tree/">Implement Trie</a> in LeetCode. TrieNode, Trie, Solution are treated as seperated classes.</p>
-<div class="codehilite"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="n">TrieNode</span><span class="p">()</span><span class="err">:</span>
-<span class="w">    </span><span class="n">def</span><span class="w"> </span><span class="n">__init__</span><span class="p">(</span><span class="n">self</span><span class="p">)</span><span class="err">:</span>
-<span class="w">        </span><span class="n">self</span><span class="p">.</span><span class="n">children</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">collections</span><span class="p">.</span><span class="n">defaultdict</span><span class="p">(</span><span class="n">TrieNode</span><span class="p">)</span>
-<span class="w">        </span><span class="n">self</span><span class="p">.</span><span class="n">isWord</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">False</span>
+    def insert(self, word):
+        node = self.root
+        for w in word:
+            node = node.children[w]
+        node.isWord = True
 
-<span class="k">class</span><span class="w"> </span><span class="n">Trie</span><span class="p">()</span><span class="err">:</span>
-<span class="w">    </span><span class="n">def</span><span class="w"> </span><span class="n">__init__</span><span class="p">(</span><span class="n">self</span><span class="p">)</span><span class="err">:</span>
-<span class="w">        </span><span class="n">self</span><span class="p">.</span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">TrieNode</span><span class="p">()</span>
+    def search(self, word):
+        node = self.root
+        for w in word:
+            node = node.children.get(w)
+            if not node:
+                return False
+        return node.isWord
 
-<span class="w">    </span><span class="n">def</span><span class="w"> </span><span class="k">insert</span><span class="p">(</span><span class="n">self</span><span class="p">,</span><span class="w"> </span><span class="n">word</span><span class="p">)</span><span class="err">:</span>
-<span class="w">        </span><span class="n">node</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">self</span><span class="p">.</span><span class="n">root</span>
-<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="n">w</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="nl">word</span><span class="p">:</span>
-<span class="w">            </span><span class="n">node</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">node</span><span class="p">.</span><span class="n">children</span><span class="o">[</span><span class="n">w</span><span class="o">]</span>
-<span class="w">        </span><span class="n">node</span><span class="p">.</span><span class="n">isWord</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">True</span>
+class Solution(object):
+    def findWords(self, board, words):
+        res = []
+        trie = Trie()
+        node = trie.root
+        for w in words:
+            trie.insert(w)
+        for i in xrange(len(board)):
+            for j in xrange(len(board[0])):
+                self.dfs(board, node, i, j, "", res)
+        return res
 
-<span class="w">    </span><span class="n">def</span><span class="w"> </span><span class="k">search</span><span class="p">(</span><span class="n">self</span><span class="p">,</span><span class="w"> </span><span class="n">word</span><span class="p">)</span><span class="err">:</span>
-<span class="w">        </span><span class="n">node</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">self</span><span class="p">.</span><span class="n">root</span>
-<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="n">w</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="nl">word</span><span class="p">:</span>
-<span class="w">            </span><span class="n">node</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">node</span><span class="p">.</span><span class="n">children</span><span class="p">.</span><span class="k">get</span><span class="p">(</span><span class="n">w</span><span class="p">)</span>
-<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="nl">node</span><span class="p">:</span>
-<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="k">False</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">node</span><span class="p">.</span><span class="n">isWord</span>
-
-<span class="k">class</span><span class="w"> </span><span class="n">Solution</span><span class="p">(</span><span class="k">object</span><span class="p">)</span><span class="err">:</span>
-<span class="w">    </span><span class="n">def</span><span class="w"> </span><span class="n">findWords</span><span class="p">(</span><span class="n">self</span><span class="p">,</span><span class="w"> </span><span class="n">board</span><span class="p">,</span><span class="w"> </span><span class="n">words</span><span class="p">)</span><span class="err">:</span>
-<span class="w">        </span><span class="n">res</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>
-<span class="w">        </span><span class="n">trie</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Trie</span><span class="p">()</span>
-<span class="w">        </span><span class="n">node</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">trie</span><span class="p">.</span><span class="n">root</span>
-<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="n">w</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="nl">words</span><span class="p">:</span>
-<span class="w">            </span><span class="n">trie</span><span class="p">.</span><span class="k">insert</span><span class="p">(</span><span class="n">w</span><span class="p">)</span>
-<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">xrange</span><span class="p">(</span><span class="nf">len</span><span class="p">(</span><span class="n">board</span><span class="p">))</span><span class="err">:</span>
-<span class="w">            </span><span class="k">for</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">xrange</span><span class="p">(</span><span class="nf">len</span><span class="p">(</span><span class="n">board</span><span class="o">[</span><span class="n">0</span><span class="o">]</span><span class="p">))</span><span class="err">:</span>
-<span class="w">                </span><span class="n">self</span><span class="p">.</span><span class="n">dfs</span><span class="p">(</span><span class="n">board</span><span class="p">,</span><span class="w"> </span><span class="n">node</span><span class="p">,</span><span class="w"> </span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">j</span><span class="p">,</span><span class="w"> </span><span class="ss">&quot;&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">res</span><span class="p">)</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">res</span>
-
-<span class="w">    </span><span class="n">def</span><span class="w"> </span><span class="n">dfs</span><span class="p">(</span><span class="n">self</span><span class="p">,</span><span class="w"> </span><span class="n">board</span><span class="p">,</span><span class="w"> </span><span class="n">node</span><span class="p">,</span><span class="w"> </span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">j</span><span class="p">,</span><span class="w"> </span><span class="k">path</span><span class="p">,</span><span class="w"> </span><span class="n">res</span><span class="p">)</span><span class="err">:</span>
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="n">node</span><span class="p">.</span><span class="nl">isWord</span><span class="p">:</span>
-<span class="w">            </span><span class="n">res</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="k">path</span><span class="p">)</span>
-<span class="w">            </span><span class="n">node</span><span class="p">.</span><span class="n">isWord</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">False</span>
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="nf">len</span><span class="p">(</span><span class="n">board</span><span class="p">)</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="nf">len</span><span class="p">(</span><span class="n">board</span><span class="o">[</span><span class="n">0</span><span class="o">]</span><span class="p">)</span><span class="err">:</span>
-<span class="w">            </span><span class="k">return</span><span class="w"> </span>
-<span class="w">        </span><span class="n">tmp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">board</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="n">j</span><span class="o">]</span>
-<span class="w">        </span><span class="n">node</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">node</span><span class="p">.</span><span class="n">children</span><span class="p">.</span><span class="k">get</span><span class="p">(</span><span class="n">tmp</span><span class="p">)</span>
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="nl">node</span><span class="p">:</span>
-<span class="w">            </span><span class="k">return</span><span class="w"> </span>
-<span class="w">        </span><span class="n">board</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="n">j</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ss">&quot;#&quot;</span>
-<span class="w">        </span><span class="n">self</span><span class="p">.</span><span class="n">dfs</span><span class="p">(</span><span class="n">board</span><span class="p">,</span><span class="w"> </span><span class="n">node</span><span class="p">,</span><span class="w"> </span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">j</span><span class="p">,</span><span class="w"> </span><span class="k">path</span><span class="o">+</span><span class="n">tmp</span><span class="p">,</span><span class="w"> </span><span class="n">res</span><span class="p">)</span>
-<span class="w">        </span><span class="n">self</span><span class="p">.</span><span class="n">dfs</span><span class="p">(</span><span class="n">board</span><span class="p">,</span><span class="w"> </span><span class="n">node</span><span class="p">,</span><span class="w"> </span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">j</span><span class="p">,</span><span class="w"> </span><span class="k">path</span><span class="o">+</span><span class="n">tmp</span><span class="p">,</span><span class="w"> </span><span class="n">res</span><span class="p">)</span>
-<span class="w">        </span><span class="n">self</span><span class="p">.</span><span class="n">dfs</span><span class="p">(</span><span class="n">board</span><span class="p">,</span><span class="w"> </span><span class="n">node</span><span class="p">,</span><span class="w"> </span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">j</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="k">path</span><span class="o">+</span><span class="n">tmp</span><span class="p">,</span><span class="w"> </span><span class="n">res</span><span class="p">)</span>
-<span class="w">        </span><span class="n">self</span><span class="p">.</span><span class="n">dfs</span><span class="p">(</span><span class="n">board</span><span class="p">,</span><span class="w"> </span><span class="n">node</span><span class="p">,</span><span class="w"> </span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">j</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="k">path</span><span class="o">+</span><span class="n">tmp</span><span class="p">,</span><span class="w"> </span><span class="n">res</span><span class="p">)</span>
-<span class="w">        </span><span class="n">board</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="n">j</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">tmp</span>
-</code></pre></div></div><p style="page-break-before: always" ></p>
+    def dfs(self, board, node, i, j, path, res):
+        if node.isWord:
+            res.append(path)
+            node.isWord = False
+        if i &lt; 0 or i &gt;= len(board) or j &lt; 0 or j &gt;= len(board[0]):
+            return 
+        tmp = board[i][j]
+        node = node.children.get(tmp)
+        if not node:
+            return 
+        board[i][j] = "#"
+        self.dfs(board, node, i+1, j, path+tmp, res)
+        self.dfs(board, node, i-1, j, path+tmp, res)
+        self.dfs(board, node, i, j-1, path+tmp, res)
+        self.dfs(board, node, i, j+1, path+tmp, res)
+        board[i][j] = tmp
+</code></pre></div>

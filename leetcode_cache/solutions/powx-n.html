@@ -1,145 +1,135 @@
-<div class='cpp-solution'><h2>✅ [JAVA / C++] : Simple | O log(n) | Easy | Faster than 100% | Explained -- Votes: 1199</h2><ul>
-<li><u><strong>FIRST APPROACH</strong></u></li>
-</ul>
-<p>We can solve this problem by multiplying x by n times<br />
-  eg:<br />
-<code>x = 7 and n = 11</code><br />
-<strong>7 * 7 * 7 * 7 * 7 * 7 * 7 * 7 * 7 * 7 * 7 = 1977326743</strong><br />
-  Here we have <strong>multiplied 7 for 11 times</strong>, which will result in <strong>O(n)</strong><br />
-  But, Suppose <code>x = 1 and n = 2147483647</code><br />
-  If we follow this approach then, <strong>1 will be multiplied 2147483647 times</strong> which is not efficient at all.</p>
-<ul>
+<div class='cpp-solution'><h4>✅ [JAVA / C++] : Simple | O log(n) | Easy | Faster than 100% | Explained [Votes: 1199]</h4><ul>
+<li>
+<p><u><strong>FIRST APPROACH</strong></u></p>
+<p>We can solve this problem by multiplying x by n times
+eg:
+<code>x = 7 and n = 11</code>
+<strong>7 * 7 * 7 * 7 * 7 * 7 * 7 * 7 * 7 * 7 * 7 = 1977326743</strong>
+Here we have <strong>multiplied 7 for 11 times</strong>, which will result in <strong>O(n)</strong>
+But, Suppose <code>x = 1 and n = 2147483647</code>
+If we follow this approach then, <strong>1 will be multiplied 2147483647 times</strong> which is not efficient at all.</p>
+</li>
 <li>
 <p><u><strong>COMPLEXITY</strong></u></p>
-</li>
-<li>
-<p><strong>Time: O(n)</strong>, where <code>n</code> is the given power</p>
-</li>
+<ul>
+<li><strong>Time: O(n)</strong>, where <code>n</code> is the given power</li>
 <li><strong>Space: O(1)</strong>, in-place</li>
+</ul>
+</li>
 </ul>
 <hr>
 
 <ul>
-<li><u><strong>SECOND APPROACH</strong></u></li>
-</ul>
+<li>
+<p><u><strong>SECOND  APPROACH</strong></u></p>
 <p>In order to improve efficiency we will opt for <strong>Binary Exponentiation using which we can calculate x<sup>n</sup> using O log<sub>2</sub>(N) multiplications.</strong></p>
-<p><strong>Basic Idea is to divide the work using binary representation of exponents</strong><br />
-  i.e. is to keep multiplying pow with x, if the bit is odd, and multiplying x with itself until we get 0<br />
-  We will use very <strong>1st example of 1st Approach</strong> i.e.<br />
-<code>x = 7, n = 11 and pow = 1</code><br />
-  Here, we have to calculate 7<sup>11</sup><br />
-<strong>Binary of n i.e. (11)<sub>10</sub> is (1011)<sub>2</sub></strong><br />
-<strong>1   0   1   1</strong><br />
-  2<sup>3  </sup>2<sup>2</sup>  2<sup>1</sup>  2<sup>0</sup>   \&lt;-- Corresponding <strong>place values</strong> of each bit</p>
-<p>OR we can also write this as<br />
-<strong>1 0 1 1</strong><br />
-  8 4 2 1 \&lt;-- Corresponding <strong>place values</strong> of each bit</p>
-<p>Now, <strong>7<sup>8</sup> × 7<sup>2</sup> × 7<sup>1</sup></strong> == <strong>7<sup>11</sup></strong> as <strong>7<sup>(8 + 2 + 1)</sup></strong> == <strong>7<sup>11</sup></strong><br />
-<strong>NOTE:</strong> We have not considered <strong>7<sup>4</sup></strong> in this case as the <strong>4th place bit is OFF</strong></p>
-<p>So, <strong>7<sup>8</sup> × 7<sup>2</sup> × 7<sup>1</sup></strong> == <strong>5764801 × 49 × 7</strong> == <strong>1977326743</strong> <strong>\&lt;-- Desired Output</strong><br />
-  Now, applying logic keeping this concept in mind</p>
-<p>```<br />
-  double pow = 1;<br />
-  while(n != 0){<br />
+<p><strong>Basic Idea is to divide the work using binary representation of exponents</strong>
+i.e. is to keep multiplying pow with x, if the bit is odd, and multiplying x with itself until we get 0
+We will use very <strong>1st example of 1st Approach</strong> i.e.
+<code>x = 7, n = 11 and pow = 1</code>
+Here, we have to calculate 7<sup>11</sup>
+<strong>Binary of n i.e. (11)<sub>10</sub> is (1011)<sub>2</sub></strong>
+<strong>1 &nbsp; 0 &nbsp; 1 &nbsp; 1</strong>
+2<sup>3 &nbsp;</sup>2<sup>2</sup>&nbsp; 2<sup>1</sup> &nbsp;2<sup>0</sup>&nbsp;&nbsp;  &lt;-- Corresponding <strong>place values</strong> of each bit</p>
+<p>OR we can also write this as
+<strong>1  0  1  1</strong>
+8 4 2 1  &lt;-- Corresponding <strong>place values</strong> of each bit</p>
+<p>Now, <strong>7<sup>8</sup> &#215; 7<sup>2</sup> &#215; 7<sup>1</sup></strong> == <strong>7<sup>11</sup></strong> as <strong>7<sup>(8 + 2 + 1)</sup></strong> == <strong>7<sup>11</sup></strong>
+<strong>NOTE:</strong>  We have not considered <strong>7<sup>4</sup></strong> in this case as the <strong>4th place bit is OFF</strong></p>
+<p>So, <strong>7<sup>8</sup> &#215; 7<sup>2</sup> &#215; 7<sup>1</sup></strong> == <strong>5764801 &#215; 49 &#215; 7</strong> == <strong>1977326743</strong> <strong>&lt;-- Desired Output</strong>
+Now, applying logic keeping this concept in mind</p>
+<p>```
+double pow = 1;
+while(n != 0){
     if((n &amp; 1) != 0) // equivalent to if((n % 2) != 0) i.e. multiply only when the number is odd<br />
     pow *= x;</p>
-<div class="codehilite"><pre><span></span><code>x *= x;
+<pre><code>x *= x;
 n &gt;&gt;&gt;= 1; // equivalent to n = n / 2; i.e. keep dividing the number by 2
-</code></pre></div>
-
-<p>}<br />
-  ```</p>
+</code></pre>
+<p>}
+```
+*   <u><strong>PROCESS</strong></u>
+*   <strong>Iteration 1</strong>
+pow = <u>1 &#215; 7</u> = 7
+x = 7 × 7 = 49
+n = 11 &gt;&gt;&gt; 1 = 5</p>
 <ul>
 <li>
-<p><u><strong>PROCESS</strong></u></p>
+<p><strong>Iteration 2</strong>
+pow = <u>7 × 49</u> = 343
+x = 49 × 49 = 2401
+n = 5 &gt;&gt;&gt; 1 = 2</p>
 </li>
 <li>
-<p><strong>Iteration 1</strong><br />
-    pow = <u>1 × 7</u> = 7<br />
-    x = 7 × 7 = 49<br />
-    n = 11 &gt;&gt;&gt; 1 = 5</p>
+<p><strong>Iteration 3</strong>
+x = 2401 × 2401 = 5764801
+n = 2 &gt;&gt;&gt; 1 = 1</p>
 </li>
 <li>
-<p><strong>Iteration 2</strong><br />
-    pow = <u>7 × 49</u> = 343<br />
-    x = 49 × 49 = 2401<br />
-    n = 5 &gt;&gt;&gt; 1 = 2</p>
-</li>
-<li>
-<p><strong>Iteration 3</strong><br />
-    x = 2401 × 2401 = 5764801<br />
-    n = 2 &gt;&gt;&gt; 1 = 1</p>
-</li>
-<li>
-<p><strong>Iteration 4</strong><br />
-    pow = <u>343 × 5764801</u> = 1977326743<br />
-    x = 5764801 × 5764801 = 3.323293057 × 10¹³<br />
-    n = 1 &gt;&gt;&gt; 1 = 0</p>
+<p><strong>Iteration 4</strong>
+pow = <u>343 × 5764801</u> = 1977326743
+x = 5764801 × 5764801 = 3.323293057 × 10¹³
+n = 1 &gt;&gt;&gt; 1 = 0</p>
 </li>
 </ul>
-<p>We exit the loop as the number has become 0 and we got pow as <strong>1977326743 which is the desired output</strong><br />
+</li>
+</ul>
+<p>We exit the loop as the number has become 0 and we got pow as <strong>1977326743 which is the desired output</strong>
 In this binary exponentiation approach, the loop iterated for only 4 times which is nothing but (O log<sub>2</sub>(N) + 1) ~ <strong>(O log<sub>2</sub>(N))</strong></p>
-<p>And for <strong>2nd example of 1st Approach</strong> where<br />
-<code>x = 1 and n = 2147483647</code><br />
+<p>And for <strong>2nd example of 1st Approach</strong> where
+<code>x = 1 and n = 2147483647</code>
 This loop executed for only 31 times <strong>(O log<sub>2</sub>(N))</strong> which is far far less than 2147483647 times(in case of O(N) approach)<br></p>
 <ul>
-<li><u><strong>JAVA / C++ CODE</strong></u></li>
-</ul>
-<iframe src="https://leetcode.com/playground/hRAZkbLc/shared" frameBorder="0" width="100%" height="400"></iframe>
-
-<ul>
+<li>
+<p><u><strong>JAVA / cpp CODE</strong></u></p>
+<p><iframe src="https://leetcode.com/playground/hRAZkbLc/shared" frameBorder="0" width="100%" height="400"></iframe></p>
+</li>
 <li>
 <p><u><strong>COMPLEXITY</strong></u></p>
-</li>
-<li>
-<p><strong>Time: O(log<sub>2</sub>(n))</strong>, where <code>n</code> is the given power</p>
-</li>
+<ul>
+<li><strong>Time: O(log<sub>2</sub>(n))</strong>, where <code>n</code> is the given power</li>
 <li><strong>Space: O(1),</strong> in-place</li>
 </ul>
-<p><br />
-<br><br><br><br />
-<br />
+</li>
+</ul>
+<p><img src = "https://assets.leetcode.com/users/images/6f980162-6f32-4bfc-88e2-212a3d2d83cd_1645193689.9401023.jpeg" width = "100%">
+<br><br><br>
+<img src = "https://assets.leetcode.com/users/images/5e27a0db-88da-4bfa-830b-a9e18b37cc30_1645193695.887591.jpeg" width = "100%">
 <br><br></p>
-<p><u><strong>Refer to the following github repsitory for more leetcode solutions</strong></u><br />
+<p><u><strong>Refer to the following github repsitory for more leetcode solutions</strong></u>
 https://github.com/Akshaya-Amar/LeetCodeSolutions</p>
-<h2><strong>Please UPVOTE if you find this post helpful :)</strong></h2></div>
-
-
-<div class='python-solution'><h2>Shortest Python - Guaranteed -- Votes: 503</h2><p><a href="http://stackoverflow.com/questions/30693639/why-does-class-x-mypow-pow-work-what-about-self">Surprisingly</a>, I can just use Python's existing <code>pow</code> like this:</p>
-<div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="n">Solution:</span>
-    <span class="n">myPow</span> = <span class="n">pow</span>
-</code></pre></div>
-
+<h4><strong>Please UPVOTE if you find this post helpful :)</strong></h4></div><div class='python-solution'><h4>Shortest Python - Guaranteed [Votes: 503]</h4><p><a href="http://stackoverflow.com/questions/30693639/why-does-class-x-mypow-pow-work-what-about-self">Surprisingly</a>, I can just use Python's existing <code>pow</code> like this:</p>
+<pre><code>class Solution:
+    myPow = pow
+</code></pre>
 <p>That's even shorter than the other more obvious "cheat":</p>
-<div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="n">Solution:</span>
-    <span class="n">def</span> <span class="n">myPow</span>(<span class="nb">self</span>, <span class="nb">x</span>, <span class="n">n</span>):
-        <span class="k">return</span> <span class="nb">x</span> ** <span class="n">n</span>
-</code></pre></div>
-
+<pre><code>class Solution:
+    def myPow(self, x, n):
+        return x ** n
+</code></pre>
 <p>And to calm down the haters, here's me <em>"doing it myself"</em>:</p>
 <p>Recursive:</p>
-<div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="n">Solution:</span>
-    <span class="n">def</span> <span class="n">myPow</span>(<span class="nb">self</span>, <span class="nb">x</span>, <span class="n">n</span>):
-        <span class="k">if</span> <span class="nb">not</span> <span class="n">n:</span>
-            <span class="k">return</span> <span class="mi">1</span>
-        <span class="k">if</span> <span class="n">n</span> &lt; <span class="mi">0</span>:
-            <span class="k">return</span> <span class="mi">1</span> / <span class="nb">self</span>.<span class="n">myPow</span>(<span class="nb">x</span>, -<span class="n">n</span>)
-        <span class="k">if</span> <span class="n">n</span> % <span class="mi">2</span>:
-            <span class="k">return</span> <span class="nb">x</span> * <span class="nb">self</span>.<span class="n">myPow</span>(<span class="nb">x</span>, <span class="n">n-1</span>)
-        <span class="k">return</span> <span class="nb">self</span>.<span class="n">myPow</span>(<span class="nb">x</span><span class="o">*</span><span class="nb">x</span>, <span class="n">n</span><span class="o">/</span><span class="mi">2</span>)
-</code></pre></div>
-
+<pre><code>class Solution:
+    def myPow(self, x, n):
+        if not n:
+            return 1
+        if n &lt; 0:
+            return 1 / self.myPow(x, -n)
+        if n % 2:
+            return x * self.myPow(x, n-1)
+        return self.myPow(x*x, n/2)
+</code></pre>
 <p>Iterative:</p>
-<div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="n">Solution:</span>
-    <span class="n">def</span> <span class="n">myPow</span>(<span class="nb">self</span>, <span class="nb">x</span>, <span class="n">n</span>):
-        <span class="k">if</span> <span class="n">n</span> &lt; <span class="mi">0</span>:
-            <span class="nb">x</span> = <span class="mi">1</span> / <span class="nb">x</span>
-            <span class="n">n</span> = -<span class="n">n</span>
-        <span class="n">pow</span> = <span class="mi">1</span>
-        <span class="k">while</span> <span class="n">n:</span>
-            <span class="k">if</span> <span class="n">n</span> &amp; <span class="mi">1</span>:
-                <span class="n">pow</span> *= <span class="nb">x</span>
-            <span class="nb">x</span> *= <span class="nb">x</span>
-            <span class="n">n</span> &gt;&gt;= <span class="mi">1</span>
-        <span class="k">return</span> <span class="n">pow</span>
-</code></pre></div></div><p style="page-break-before: always" ></p>
+<pre><code>class Solution:
+    def myPow(self, x, n):
+        if n &lt; 0:
+            x = 1 / x
+            n = -n
+        pow = 1
+        while n:
+            if n &amp; 1:
+                pow *= x
+            x *= x
+            n &gt;&gt;= 1
+        return pow
+</code></pre></div>

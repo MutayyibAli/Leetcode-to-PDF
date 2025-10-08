@@ -1,217 +1,201 @@
-<div class='cpp-solution'><h2>From Dumb to Pro with Just One Visit - My Promise to You with Efficient Selection of k Smallest Pair -- Votes: 198</h2><h2>Intuition</h2>
+<div class='cpp-solution'><h4>From Dumb to Pro with Just One Visit - My Promise to You with Efficient Selection of k Smallest Pair [Votes: 198]</h4><h4>Intuition</h4>
 <!-- Describe your first thoughts on how to solve this problem. -->
-
 <p>The code aims to find the k smallest pairs from two sorted arrays, <code>nums1</code> and <code>nums2</code>, based on their pair sums. The approach used in the code is optimized to avoid inserting all pairs into the priority queue, which would result in a time complexity of $O(N^2 log N^2)$ and lead to a Time Limit Exceeded (TLE) error.</p>
 <p>To overcome this, the code follows a specific method to find the k smallest pairs efficiently. It starts by inserting the pair sums of each element from <code>nums1</code> and the first element of <code>nums2</code> into a priority queue. Since both arrays are sorted, the pair sums will be in increasing order.</p>
 <p>By utilizing a priority queue, the smallest sum pair is always accessible at the top. The code then pops the smallest pair from the priority queue and adds it to the result vector. Next, it inserts the next pair, which consists of the same element from <code>nums1</code> but the next element from <code>nums2</code>.</p>
 <p>The code repeats this process, gradually inserting pairs with increasing elements from <code>nums2</code>, until it has added k pairs to the result vector or the priority queue becomes empty (i.e., all pairs have been explored). This ensures that only the k smallest pairs are considered.</p>
 <p>Finally, the code returns the resulting vector containing the k smallest pairs.</p>
 <p>Overall, the approach intelligently uses the priority queue to avoid unnecessary computations, allowing for an optimized solution with a time complexity of $O(K log N)$, where N represents the size of <code>nums1</code> and K is the given parameter for the number of smallest pairs to find.</p>
-<h2>Approach</h2>
+<h4>Approach</h4>
 <!-- Describe your approach to solving the problem. -->
-
 <ol>
 <li>Create an empty result vector <code>resV</code> to store the k smallest pairs.</li>
 <li>Create a priority queue <code>pq</code> to store pairs of elements from <code>nums1</code> and <code>nums2</code> with the smallest sums. The pairs are sorted by their sum in ascending order.</li>
-<li>Iterate through each element <code>x</code> in <code>nums1</code>.<br />
-   - Calculate the sum of <code>x</code> and the first element of <code>nums2</code> (since <code>nums2</code> is sorted, the first element has the smallest value).<br />
-   - Push the pair consisting of the sum and the index of the first element in <code>nums2</code> (which is 0) into the priority queue.</li>
-<li>While <code>k</code> is greater than 0 and the priority queue is not empty, perform the following steps:<br />
-   - Get the pair with the smallest sum from the top of the priority queue.<br />
-   - Extract the sum and the index from the pair.<br />
-   - Create a pair by subtracting the value of the second element in the pair from the sum and the value of the second element itself.<br />
-   - Add the created pair to the result vector <code>resV</code>.<br />
-   - Remove the pair from the priority queue.<br />
-   - If there are more elements in <code>nums2</code> (i.e., the index of the second element is less than the size of <code>nums2</code> minus 1), calculate the sum of the next pair by subtracting the current second element from the sum and adding the next element in <code>nums2</code>. Push this new pair into the priority queue.<br />
-   - Decrement <code>k</code> by 1.</li>
+<li>Iterate through each element <code>x</code> in <code>nums1</code>.<ul>
+<li>Calculate the sum of <code>x</code> and the first element of <code>nums2</code> (since <code>nums2</code> is sorted, the first element has the smallest value).</li>
+<li>Push the pair consisting of the sum and the index of the first element in <code>nums2</code> (which is 0) into the priority queue.</li>
+</ul>
+</li>
+<li>While <code>k</code> is greater than 0 and the priority queue is not empty, perform the following steps:<ul>
+<li>Get the pair with the smallest sum from the top of the priority queue.</li>
+<li>Extract the sum and the index from the pair.</li>
+<li>Create a pair by subtracting the value of the second element in the pair from the sum and the value of the second element itself.</li>
+<li>Add the created pair to the result vector <code>resV</code>.</li>
+<li>Remove the pair from the priority queue.</li>
+<li>If there are more elements in <code>nums2</code> (i.e., the index of the second element is less than the size of <code>nums2</code> minus 1), calculate the sum of the next pair by subtracting the current second element from the sum and adding the next element in <code>nums2</code>. Push this new pair into the priority queue.</li>
+<li>Decrement <code>k</code> by 1.</li>
+</ul>
+</li>
 <li>Return the resulting vector <code>resV</code> containing the k smallest pairs.</li>
 </ol>
 <p>The approach essentially involves maintaining a priority queue to keep track of the smallest sums and their corresponding pairs. By iteratively extracting the smallest sum and updating the index of the second element from <code>nums2</code>, the code ensures that only the k smallest pairs are included in the result.</p>
-<h2>Complexity</h2>
+<h4>Complexity</h4>
 <ul>
 <li>
 <p>Time Complexity:</p>
-</li>
-<li>
-<p>The maximum size of the priority queue <code>pq</code> is <code>nums1.size()</code> (denoted as <code>n1</code>), as for each element in nums1, we push one element into the priority queue. The maximum number of iterations that can happen is <code>k</code>, as the loop runs until k smallest pairs are found or until the priority queue is empty.</p>
-</li>
-<li>
-<p><strong>Therefore, the time complexity of the given code is $O(k * log (n1))$, where n1 is the size of nums1 and k is the desired number of smallest pairs to be found.</strong></p>
+<ul>
+<li>The maximum size of the priority queue <code>pq</code> is <code>nums1.size()</code> (denoted as <code>n1</code>), as for each element in nums1, we push one element into the priority queue. The maximum number of iterations that can happen is <code>k</code>, as the loop runs until k smallest pairs are found or until the priority queue is empty.</li>
+<li><strong>Therefore, the time complexity of the given code is $O(k * log (n1))$, where n1 is the size of nums1 and k is the desired number of smallest pairs to be found.</strong></li>
+</ul>
 </li>
 <li>
 <p>Space Complexity:</p>
-</li>
-<li>
-<p>The additional space used by the code includes the result vector <code>resV</code> and the priority queue <code>pq</code>.</p>
-</li>
+<ul>
+<li>The additional space used by the code includes the result vector <code>resV</code> and the priority queue <code>pq</code>.</li>
 <li>The result vector <code>resV</code> will contain at most k pairs, so it occupies $O(k)$ space.</li>
 <li>The priority queue <code>pq</code> can hold at most k pairs as well, resulting in $O(n1)$ space.</li>
 <li><strong>Therefore, the overall space complexity is $O(n1 + k)$.</strong></li>
 </ul>
-<h2>Code</h2>
-<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">cpp</span><span class="w"> </span>
-<span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="w"> </span><span class="p">{</span>
-<span class="k">public</span><span class="o">:</span>
-<span class="w">    </span><span class="n">vector</span><span class="o">&lt;</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="n">kSmallestPairs</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&amp;</span><span class="w"> </span><span class="n">nums1</span><span class="p">,</span><span class="w"> </span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&amp;</span><span class="w"> </span><span class="n">nums2</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">k</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="n">vector</span><span class="o">&lt;</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="n">resV</span><span class="p">;</span><span class="w"> </span><span class="c1">// Result vector to store the pairs</span>
-<span class="w">        </span><span class="n">priority_queue</span><span class="o">&lt;</span><span class="n">pair</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="o">&gt;</span><span class="p">,</span><span class="w"> </span><span class="n">vector</span><span class="o">&lt;</span><span class="n">pair</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="o">&gt;&gt;</span><span class="p">,</span><span class="w"> </span><span class="n">greater</span><span class="o">&lt;</span><span class="n">pair</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="o">&gt;&gt;&gt;</span><span class="w"> </span><span class="n">pq</span><span class="p">;</span>
-<span class="w">        </span><span class="c1">// Priority queue to store pairs with smallest sums, sorted by the sum</span>
+</li>
+</ul>
+<h4>Code</h4>
+<pre><code class="language-cpp">class Solution {
+public:
+    vector&lt;vector&lt;int&gt;&gt; kSmallestPairs(vector&lt;int&gt;&amp; nums1, vector&lt;int&gt;&amp; nums2, int k) {
+        vector&lt;vector&lt;int&gt;&gt; resV; // Result vector to store the pairs
+        priority_queue&lt;pair&lt;int, int&gt;, vector&lt;pair&lt;int, int&gt;&gt;, greater&lt;pair&lt;int, int&gt;&gt;&gt; pq;
+        // Priority queue to store pairs with smallest sums, sorted by the sum
 
-<span class="w">        </span><span class="c1">// Push the initial pairs into the priority queue</span>
-<span class="w">        </span><span class="k">for</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">nums1</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="n">pq</span><span class="p">.</span><span class="n">push</span><span class="p">({</span><span class="n">x</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">nums2</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="w"> </span><span class="mi">0</span><span class="p">});</span><span class="w"> </span><span class="c1">// The sum and the index of the second element in nums2</span>
-<span class="w">        </span><span class="p">}</span>
+        // Push the initial pairs into the priority queue
+        for(int x : nums1) {
+            pq.push({x + nums2[0], 0}); // The sum and the index of the second element in nums2
+        }
 
-<span class="w">        </span><span class="c1">// Pop the k smallest pairs from the priority queue</span>
-<span class="w">        </span><span class="k">while</span><span class="p">(</span><span class="n">k</span><span class="o">--</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="o">!</span><span class="n">pq</span><span class="p">.</span><span class="n">empty</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="kt">int</span><span class="w"> </span><span class="n">sum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">pq</span><span class="p">.</span><span class="n">top</span><span class="p">().</span><span class="n">first</span><span class="p">;</span><span class="w"> </span><span class="c1">// Get the smallest sum</span>
-<span class="w">            </span><span class="kt">int</span><span class="w"> </span><span class="n">pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">pq</span><span class="p">.</span><span class="n">top</span><span class="p">().</span><span class="n">second</span><span class="p">;</span><span class="w"> </span><span class="c1">// Get the index of the second element in nums2</span>
+        // Pop the k smallest pairs from the priority queue
+        while(k-- &amp;&amp; !pq.empty()) {
+            int sum = pq.top().first; // Get the smallest sum
+            int pos = pq.top().second; // Get the index of the second element in nums2
 
-<span class="w">            </span><span class="n">resV</span><span class="p">.</span><span class="n">push_back</span><span class="p">({</span><span class="n">sum</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">nums2</span><span class="p">[</span><span class="n">pos</span><span class="p">],</span><span class="w"> </span><span class="n">nums2</span><span class="p">[</span><span class="n">pos</span><span class="p">]});</span><span class="w"> </span><span class="c1">// Add the pair to the result vector</span>
-<span class="w">            </span><span class="n">pq</span><span class="p">.</span><span class="n">pop</span><span class="p">();</span><span class="w"> </span><span class="c1">// Remove the pair from the priority queue</span>
+            resV.push_back({sum - nums2[pos], nums2[pos]}); // Add the pair to the result vector
+            pq.pop(); // Remove the pair from the priority queue
 
-<span class="w">            </span><span class="c1">// If there are more elements in nums2, push the next pair into the priority queue</span>
-<span class="w">            </span><span class="k">if</span><span class="p">(</span><span class="n">pos</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">nums2</span><span class="p">.</span><span class="n">size</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="n">pq</span><span class="p">.</span><span class="n">push</span><span class="p">({</span><span class="n">sum</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">nums2</span><span class="p">[</span><span class="n">pos</span><span class="p">]</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">nums2</span><span class="p">[</span><span class="n">pos</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">],</span><span class="w"> </span><span class="n">pos</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">});</span>
-<span class="w">            </span><span class="p">}</span>
-<span class="w">        </span><span class="p">}</span>
+            // If there are more elements in nums2, push the next pair into the priority queue
+            if(pos + 1 &lt; nums2.size()) {
+                pq.push({sum - nums2[pos] + nums2[pos + 1], pos + 1});
+            }
+        }
 
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">resV</span><span class="p">;</span><span class="w"> </span><span class="c1">// Return the k smallest pairs</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">};</span>
-</code></pre></div>
+        return resV; // Return the k smallest pairs
+    }
+};
+</code></pre>
+<pre><code class="language-java">class Solution {
+    public List&lt;List&lt;Integer&gt;&gt; kSmallestPairs(int[] nums1, int[] nums2, int k) {
+        List&lt;List&lt;Integer&gt;&gt; resV = new ArrayList&lt;&gt;(); // Result list to store the pairs
+        PriorityQueue&lt;int[]&gt; pq = new PriorityQueue&lt;&gt;((a, b) -&gt; a[0] - b[0]);
+        // Priority queue to store pairs with smallest sums, sorted by the sum
 
-<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">java</span><span class="w"> </span>
-<span class="kd">class</span> <span class="nc">Solution</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">List</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="nf">kSmallestPairs</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">nums1</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">nums2</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">k</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="n">List</span><span class="o">&lt;</span><span class="n">List</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="n">resV</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ArrayList</span><span class="o">&lt;&gt;</span><span class="p">();</span><span class="w"> </span><span class="c1">// Result list to store the pairs</span>
-<span class="w">        </span><span class="n">PriorityQueue</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="w"> </span><span class="n">pq</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">PriorityQueue</span><span class="o">&lt;&gt;</span><span class="p">((</span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">a</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">b</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span><span class="p">);</span>
-<span class="w">        </span><span class="c1">// Priority queue to store pairs with smallest sums, sorted by the sum</span>
+        // Push the initial pairs into the priority queue
+        for (int x : nums1) {
+            pq.offer(new int[]{x + nums2[0], 0}); // The sum and the index of the second element in nums2
+        }
 
-<span class="w">        </span><span class="c1">// Push the initial pairs into the priority queue</span>
-<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">nums1</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="n">pq</span><span class="p">.</span><span class="na">offer</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="kt">int</span><span class="p">{</span><span class="n">x</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">nums2</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">});</span><span class="w"> </span><span class="c1">// The sum and the index of the second element in nums2</span>
-<span class="w">        </span><span class="p">}</span>
+        // Pop the k smallest pairs from the priority queue
+        while (k &gt; 0 &amp;&amp; !pq.isEmpty()) {
+            int[] pair = pq.poll();
+            int sum = pair[0]; // Get the smallest sum
+            int pos = pair[1]; // Get the index of the second element in nums2
 
-<span class="w">        </span><span class="c1">// Pop the k smallest pairs from the priority queue</span>
-<span class="w">        </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">k</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="o">!</span><span class="n">pq</span><span class="p">.</span><span class="na">isEmpty</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="kt">int</span><span class="w"> </span><span class="n">pair</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">pq</span><span class="p">.</span><span class="na">poll</span><span class="p">();</span>
-<span class="w">            </span><span class="kt">int</span><span class="w"> </span><span class="n">sum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">pair</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="c1">// Get the smallest sum</span>
-<span class="w">            </span><span class="kt">int</span><span class="w"> </span><span class="n">pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">pair</span><span class="o">[</span><span class="mi">1</span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="c1">// Get the index of the second element in nums2</span>
+            List&lt;Integer&gt; currentPair = new ArrayList&lt;&gt;();
+            currentPair.add(sum - nums2[pos]);
+            currentPair.add(nums2[pos]);
+            resV.add(currentPair); // Add the pair to the result list
 
-<span class="w">            </span><span class="n">List</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span><span class="w"> </span><span class="n">currentPair</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ArrayList</span><span class="o">&lt;&gt;</span><span class="p">();</span>
-<span class="w">            </span><span class="n">currentPair</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="n">sum</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">nums2</span><span class="o">[</span><span class="n">pos</span><span class="o">]</span><span class="p">);</span>
-<span class="w">            </span><span class="n">currentPair</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="n">nums2</span><span class="o">[</span><span class="n">pos</span><span class="o">]</span><span class="p">);</span>
-<span class="w">            </span><span class="n">resV</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="n">currentPair</span><span class="p">);</span><span class="w"> </span><span class="c1">// Add the pair to the result list</span>
+            // If there are more elements in nums2, push the next pair into the priority queue
+            if (pos + 1 &lt; nums2.length) {
+                pq.offer(new int[]{sum - nums2[pos] + nums2[pos + 1], pos + 1});
+            }
 
-<span class="w">            </span><span class="c1">// If there are more elements in nums2, push the next pair into the priority queue</span>
-<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">pos</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">nums2</span><span class="p">.</span><span class="na">length</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="n">pq</span><span class="p">.</span><span class="na">offer</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="kt">int</span><span class="p">{</span><span class="n">sum</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">nums2</span><span class="o">[</span><span class="n">pos</span><span class="o">]</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">nums2</span><span class="o">[</span><span class="n">pos</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="o">]</span><span class="p">,</span><span class="w"> </span><span class="n">pos</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">});</span>
-<span class="w">            </span><span class="p">}</span>
+            k--; // Decrement k
+        }
 
-<span class="w">            </span><span class="n">k</span><span class="o">--</span><span class="p">;</span><span class="w"> </span><span class="c1">// Decrement k</span>
-<span class="w">        </span><span class="p">}</span>
+        return resV; // Return the k smallest pairs
+    }
+}
+</code></pre>
+<pre><code class="language-python">class Solution:
+    def kSmallestPairs(self, nums1, nums2, k):
+        resV = []  #### Result list to store the pairs
+        pq = []  #### Priority queue to store pairs with smallest sums, sorted by the sum
 
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">resV</span><span class="p">;</span><span class="w"> </span><span class="c1">// Return the k smallest pairs</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
+        #### Push the initial pairs into the priority queue
+        for x in nums1:
+            heapq.heappush(pq, [x + nums2[0], 0])  #### The sum and the index of the second element in nums2
 
-<div class="codehilite"><pre><span></span><code><span class="n">Language</span><span class="p">:</span> <span class="n">python</span> 
-<span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="p">:</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">kSmallestPairs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nums1</span><span class="p">,</span> <span class="n">nums2</span><span class="p">,</span> <span class="n">k</span><span class="p">):</span>
-        <span class="n">resV</span> <span class="o">=</span>   <span class="c1"># Result list to store the pairs</span>
-        <span class="n">pq</span> <span class="o">=</span>   <span class="c1"># Priority queue to store pairs with smallest sums, sorted by the sum</span>
+        #### Pop the k smallest pairs from the priority queue
+        while k &gt; 0 and pq:
+            pair = heapq.heappop(pq)
+            s, pos = pair[0], pair[1]  #### Get the smallest sum and the index of the second element in nums2
 
-        <span class="c1"># Push the initial pairs into the priority queue</span>
-        <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">nums1</span><span class="p">:</span>
-            <span class="n">heapq</span><span class="o">.</span><span class="n">heappush</span><span class="p">(</span><span class="n">pq</span><span class="p">,</span> <span class="p">[</span><span class="n">x</span> <span class="o">+</span> <span class="n">nums2</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">0</span><span class="p">])</span>  <span class="c1"># The sum and the index of the second element in nums2</span>
+            resV.append([s - nums2[pos], nums2[pos]])  #### Add the pair to the result list
 
-        <span class="c1"># Pop the k smallest pairs from the priority queue</span>
-        <span class="k">while</span> <span class="n">k</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">pq</span><span class="p">:</span>
-            <span class="n">pair</span> <span class="o">=</span> <span class="n">heapq</span><span class="o">.</span><span class="n">heappop</span><span class="p">(</span><span class="n">pq</span><span class="p">)</span>
-            <span class="n">s</span><span class="p">,</span> <span class="n">pos</span> <span class="o">=</span> <span class="n">pair</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">pair</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>  <span class="c1"># Get the smallest sum and the index of the second element in nums2</span>
+            #### If there are more elements in nums2, push the next pair into the priority queue
+            if pos + 1 &lt; len(nums2):
+                heapq.heappush(pq, [s - nums2[pos] + nums2[pos + 1], pos + 1])
 
-            <span class="n">resV</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">s</span> <span class="o">-</span> <span class="n">nums2</span><span class="p">[</span><span class="n">pos</span><span class="p">],</span> <span class="n">nums2</span><span class="p">[</span><span class="n">pos</span><span class="p">]])</span>  <span class="c1"># Add the pair to the result list</span>
+            k -= 1  #### Decrement k
 
-            <span class="c1"># If there are more elements in nums2, push the next pair into the priority queue</span>
-            <span class="k">if</span> <span class="n">pos</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">nums2</span><span class="p">):</span>
-                <span class="n">heapq</span><span class="o">.</span><span class="n">heappush</span><span class="p">(</span><span class="n">pq</span><span class="p">,</span> <span class="p">[</span><span class="n">s</span> <span class="o">-</span> <span class="n">nums2</span><span class="p">[</span><span class="n">pos</span><span class="p">]</span> <span class="o">+</span> <span class="n">nums2</span><span class="p">[</span><span class="n">pos</span> <span class="o">+</span> <span class="mi">1</span><span class="p">],</span> <span class="n">pos</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span>
-
-            <span class="n">k</span> <span class="o">-=</span> <span class="mi">1</span>  <span class="c1"># Decrement k</span>
-
-        <span class="k">return</span> <span class="n">resV</span>  <span class="c1"># Return the k smallest pairs</span>
-</code></pre></div>
-
+        return resV  #### Return the k smallest pairs
+</code></pre>
 <p><em>Thank you for taking the time to read my post in its entirety. I appreciate your attention and hope you found it informative and helpful.</em></p>
-<p><strong>PLEASE UPVOTE THIS POST IF YOU FOUND IT HELPFUL</strong></p></div>
-
-
-<div class='python-solution'><h2>Slow 1-liner to Fast solutions -- Votes: 579</h2><p>Several solutions from naive to more elaborate. I found it helpful to visualize the input as an <strong>m×n matrix</strong> of sums, for example for nums1=[1,7,11], and nums2=[2,4,6]:</p>
-<div class="codehilite"><pre><span></span><code>      2   4   6
-   +------------
- 1 |  3   5   7
+<p><strong>PLEASE UPVOTE THIS POST IF YOU FOUND IT HELPFUL</strong></p></div><div class='python-solution'><h4>Slow 1-liner to Fast solutions [Votes: 579]</h4><p>Several solutions from naive to more elaborate. I found it helpful to visualize the input as an <strong>m×n matrix</strong> of sums, for example for nums1=[1,7,11], and nums2=[2,4,6]:</p>
+<pre><code>      2   4   6
+   +---------     1 |  3   5   7
  7 |  9  11  13
 11 | 13  15  17
-</code></pre></div>
-
-<p>Of course the smallest pair overall is in the top left corner, the one with sum 3. We don't even need to look anywhere else. After including that pair in the output, the next-smaller pair must be the next on the right (sum=5) or the next below (sum=9). We can keep a "horizon" of possible candidates, implemented as a heap / priority-queue, and roughly speaking we'll grow from the top left corner towards the right/bottom. That's what my solution 5 does. Solution 4 is similar, not quite as efficient but a lot shorter and my favorite.<br />
+</code></pre>
+<p>Of course the smallest pair overall is in the top left corner, the one with sum 3. We don't even need to look anywhere else. After including that pair in the output, the next-smaller pair must be the next on the right (sum=5) or the next below (sum=9). We can keep a "horizon" of possible candidates, implemented as a heap / priority-queue, and roughly speaking we'll grow from the top left corner towards the right/bottom. That's what my solution 5 does. Solution 4 is similar, not quite as efficient but a lot shorter and my favorite.
 <br></p>
-<h3><strong>Solution 1: Brute Force</strong> <sup>(accepted in 560 ms)</sup></h3>
+<h5><strong>Solution 1: Brute Force</strong> <sup>(accepted in 560 ms)</sup></h5>
 <p>Just produce all pairs, sort them by sum, and return the first k.</p>
-<div class="codehilite"><pre><span></span><code><span class="n">def</span><span class="w"> </span><span class="n">kSmallestPairs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="w"> </span><span class="n">nums1</span><span class="p">,</span><span class="w"> </span><span class="n">nums2</span><span class="p">,</span><span class="w"> </span><span class="n">k</span><span class="p">):</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">sorted</span><span class="p">(</span><span class="n">itertools</span><span class="o">.</span><span class="n">product</span><span class="p">(</span><span class="n">nums1</span><span class="p">,</span><span class="w"> </span><span class="n">nums2</span><span class="p">),</span><span class="w"> </span><span class="n">key</span><span class="o">=</span><span class="n">sum</span><span class="p">)[:</span><span class="n">k</span><span class="p">]</span>
-</code></pre></div>
-
-<h3><strong>Solution 2: Clean Brute Force</strong> <sup>(accepted in 532 ms)</sup></h3>
+<pre><code>def kSmallestPairs(self, nums1, nums2, k):
+    return sorted(itertools.product(nums1, nums2), key=sum)[:k]
+</code></pre>
+<h5><strong>Solution 2: Clean Brute Force</strong> <sup>(accepted in 532 ms)</sup></h5>
 <p>The above produces tuples and while the judge doesn't care, it's cleaner to make them lists as requested:</p>
-<div class="codehilite"><pre><span></span><code><span class="n">def</span><span class="w"> </span><span class="n">kSmallestPairs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="w"> </span><span class="n">nums1</span><span class="p">,</span><span class="w"> </span><span class="n">nums2</span><span class="p">,</span><span class="w"> </span><span class="n">k</span><span class="p">):</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">map</span><span class="p">(</span><span class="n">list</span><span class="p">,</span><span class="w"> </span><span class="n">sorted</span><span class="p">(</span><span class="n">itertools</span><span class="o">.</span><span class="n">product</span><span class="p">(</span><span class="n">nums1</span><span class="p">,</span><span class="w"> </span><span class="n">nums2</span><span class="p">),</span><span class="w"> </span><span class="n">key</span><span class="o">=</span><span class="n">sum</span><span class="p">)[:</span><span class="n">k</span><span class="p">])</span>
-</code></pre></div>
-
-<h3><strong>Solution 3: Less Brute Force</strong> <sup>(accepted in 296 ms)</sup></h3>
+<pre><code>def kSmallestPairs(self, nums1, nums2, k):
+    return map(list, sorted(itertools.product(nums1, nums2), key=sum)[:k])
+</code></pre>
+<h5><strong>Solution 3: Less Brute Force</strong> <sup>(accepted in 296 ms)</sup></h5>
 <p>Still going through all pairs, but only with a generator and <code>heapq.nsmallest</code>, which uses a heap of size k. So this only takes O(k) extra memory and O(mn log k) time.</p>
-<div class="codehilite"><pre><span></span><code><span class="n">def</span><span class="w"> </span><span class="n">kSmallestPairs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="w"> </span><span class="n">nums1</span><span class="p">,</span><span class="w"> </span><span class="n">nums2</span><span class="p">,</span><span class="w"> </span><span class="n">k</span><span class="p">):</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">map</span><span class="p">(</span><span class="n">list</span><span class="p">,</span><span class="w"> </span><span class="n">heapq</span><span class="o">.</span><span class="n">nsmallest</span><span class="p">(</span><span class="n">k</span><span class="p">,</span><span class="w"> </span><span class="n">itertools</span><span class="o">.</span><span class="n">product</span><span class="p">(</span><span class="n">nums1</span><span class="p">,</span><span class="w"> </span><span class="n">nums2</span><span class="p">),</span><span class="w"> </span><span class="n">key</span><span class="o">=</span><span class="n">sum</span><span class="p">))</span>
-</code></pre></div>
-
+<pre><code>def kSmallestPairs(self, nums1, nums2, k):
+    return map(list, heapq.nsmallest(k, itertools.product(nums1, nums2), key=sum))
+</code></pre>
 <p>Or (accepted in 368 ms):</p>
-<div class="codehilite"><pre><span></span><code><span class="nv">def</span><span class="w"> </span><span class="nv">kSmallestPairs</span><span class="ss">(</span><span class="nv">self</span>,<span class="w"> </span><span class="nv">nums1</span>,<span class="w"> </span><span class="nv">nums2</span>,<span class="w"> </span><span class="nv">k</span><span class="ss">)</span>:
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">heapq</span>.<span class="nv">nsmallest</span><span class="ss">(</span><span class="nv">k</span>,<span class="w"> </span><span class="ss">(</span>[<span class="nv">u</span>,<span class="w"> </span><span class="nv">v</span>]<span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="nv">u</span><span class="w"> </span><span class="nv">in</span><span class="w"> </span><span class="nv">nums1</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="nv">v</span><span class="w"> </span><span class="nv">in</span><span class="w"> </span><span class="nv">nums2</span><span class="ss">)</span>,<span class="w"> </span><span class="nv">key</span><span class="o">=</span><span class="nv">sum</span><span class="ss">)</span>
-</code></pre></div>
-
-<h3><strong>Solution 4: Efficient</strong> <sup>(accepted in 112 ms)</sup></h3>
+<pre><code>def kSmallestPairs(self, nums1, nums2, k):
+    return heapq.nsmallest(k, ([u, v] for u in nums1 for v in nums2), key=sum)
+</code></pre>
+<h5><strong>Solution 4: Efficient</strong>  <sup>(accepted in 112 ms)</sup></h5>
 <p>The brute force solutions computed the whole matrix (see visualization above). This solution doesn't. It turns each row into a generator of triples [u+v, u, v], only computing the next when asked for one. And then merges these generators with a heap. Takes O(m + k*log(m)) time and O(m) extra space.</p>
-<div class="codehilite"><pre><span></span><code><span class="n">def</span><span class="w"> </span><span class="n">kSmallestPairs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="w"> </span><span class="n">nums1</span><span class="p">,</span><span class="w"> </span><span class="n">nums2</span><span class="p">,</span><span class="w"> </span><span class="n">k</span><span class="p">):</span>
-<span class="w">    </span><span class="n">streams</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">map</span><span class="p">(</span><span class="n">lambda</span><span class="w"> </span><span class="n">u</span><span class="p">:</span><span class="w"> </span><span class="p">([</span><span class="n">u</span><span class="o">+</span><span class="n">v</span><span class="p">,</span><span class="w"> </span><span class="n">u</span><span class="p">,</span><span class="w"> </span><span class="n">v</span><span class="p">]</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">nums2</span><span class="p">),</span><span class="w"> </span><span class="n">nums1</span><span class="p">)</span>
-<span class="w">    </span><span class="n">stream</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">heapq</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="o">*</span><span class="n">streams</span><span class="p">)</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="p">[</span><span class="n">suv</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">suv</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">itertools</span><span class="o">.</span><span class="n">islice</span><span class="p">(</span><span class="n">stream</span><span class="p">,</span><span class="w"> </span><span class="n">k</span><span class="p">)]</span>
-</code></pre></div>
-
-<h3><strong>Solution 5: More efficient</strong> <sup>(accepted in 104 ms)</sup></h3>
+<pre><code>def kSmallestPairs(self, nums1, nums2, k):
+    streams = map(lambda u: ([u+v, u, v] for v in nums2), nums1)
+    stream = heapq.merge(*streams)
+    return [suv[1:] for suv in itertools.islice(stream, k)]
+</code></pre>
+<h5><strong>Solution 5: More efficient</strong>  <sup>(accepted in 104 ms)</sup></h5>
 <p>The previous solution right away considered (the first pair of) all matrix rows (see visualization above). This one doesn't. It starts off only with the very first pair at the top-left corner of the matrix, and expands from there as needed. Whenever a pair is chosen into the output result, the next pair in the row gets added to the priority queue of current options. Also, if the chosen pair is the first one in its row, then the first pair in the next row is added to the queue.</p>
 <p>Here's a visualization of a possible state:</p>
-<div class="codehilite"><pre><span></span><code># # # # # ? . .
-# # # ? . . . .
-# ? . . . . . .   &quot;#&quot; means pair already in the output
-# ? . . . . . .   &quot;?&quot; means pair currently in the queue
-# ? . . . . . .
+<pre><code>#### #### #### #### #### ? . .
+#### #### #### ? . . . .
+#### ? . . . . . .   &quot;#&quot; means pair already in the output
+#### ? . . . . . .   &quot;?&quot; means pair currently in the queue
+#### ? . . . . . .
 ? . . . . . . .
 . . . . . . . .
-</code></pre></div>
-
-<p>As I mentioned in the comments, that could be further improved. Two of those <code>?</code> don't actually need to be in the queue yet. I'll leave that as an exercise for the reader :-)</p>
-<p><code>def kSmallestPairs(self, nums1, nums2, k):
-        queue = 
+</code></pre>
+<p>As I mentioned in the comments, that could be further improved. Two of those <code>?</code> don't actually need to be in the queue yet. I'll leave that as an exercise for the reader :-)
+```
+    def kSmallestPairs(self, nums1, nums2, k):
+        queue = []
         def push(i, j):
             if i &lt; len(nums1) and j &lt; len(nums2):
                 heapq.heappush(queue, [nums1[i] + nums2[j], i, j])
         push(0, 0)
-        pairs = 
+        pairs = []
         while queue and len(pairs) &lt; k:
             _, i, j = heapq.heappop(queue)
             pairs.append([nums1[i], nums2[j]])
             push(i, j + 1)
             if j == 0:
                 push(i + 1, 0)
-        return pairs</code></p></div><p style="page-break-before: always" ></p>
+        return pairs</p></div>

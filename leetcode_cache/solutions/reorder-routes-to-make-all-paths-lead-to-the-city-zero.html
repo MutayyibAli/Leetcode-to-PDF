@@ -1,12 +1,12 @@
-<div class='cpp-solution'><h2>🔥Easy Solutions with Exaplanation in Java 📝, Python 🐍, and C++ 🖥️🧐Look at once 💻 -- Votes: 132</h2><h2>Intuition</h2>
+<div class='cpp-solution'><h4>🔥Easy Solutions with Exaplanation in Java 📝, Python 🐍, and C++ 🖥️🧐Look at once 💻 [Votes: 132]</h4><h4>Intuition</h4>
 <p>We can use DFS to traverse the tree and change the direction of edges if needed.</p>
-<h2>Approach</h2>
+<h4>Approach</h4>
 <p>First, we create an adjacency list to represent the tree. Each node in the list contains a list of its neighbors.</p>
 <p>To change the direction of edges, we assign a direction to each edge. If an edge goes from node i to node j, we represent it as i -&gt; j. If an edge goes from node j to node i, we represent it as j -&gt; -i.</p>
 <p>Then, we start DFS from node 0. We mark visited nodes to avoid revisiting them. If we reach a node i that has not been visited before, it means we need to change the direction of the edge that leads to node i. We do this by adding 1 to the result if the edge is directed from node j to node i (i.e., j -&gt; i), and 0 otherwise (i.e., j -&gt; -i).</p>
 <p>We repeat this process until all nodes have been visited.</p>
 <p>Finally, we return the total number of edges that we have changed.</p>
-<h2>Complexity</h2>
+<h4>Complexity</h4>
 <ul>
 <li>
 <p>Time complexity: O(n), where n is the number of nodes in the tree. We traverse the tree once using DFS.</p>
@@ -17,170 +17,72 @@
 </ul>
 <!-- Add your space complexity here, e.g. $$O(n)$$ -->
 
-<p></p>
-<h2>Please Upvote</h2>
-<div class="codehilite"><pre><span></span><code><span class="nx">Thanks</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="nx">visiting</span><span class="w"> </span><span class="nx">my</span><span class="w"> </span><span class="nx">solution</span><span class="p">.</span><span class="w"> </span><span class="nx">Keep</span><span class="w"> </span><span class="nx">Learning</span>
-<span class="nx">Please</span><span class="w"> </span><span class="nx">give</span><span class="w"> </span><span class="nx">my</span><span class="w"> </span><span class="nx">solution</span><span class="w"> </span><span class="nx">an</span><span class="w"> </span><span class="nx">upvote</span><span class="p">!</span><span class="w"> </span>
-<span class="nx">It</span><span class="err">&#39;</span><span class="nx">s</span><span class="w"> </span><span class="nx">a</span><span class="w"> </span><span class="nx">simple</span><span class="w"> </span><span class="nx">way</span><span class="w"> </span><span class="nx">to</span><span class="w"> </span><span class="nx">show</span><span class="w"> </span><span class="nx">your</span><span class="w"> </span><span class="nx">appreciation</span><span class="w"> </span><span class="k">and</span>
-<span class="nx">keep</span><span class="w"> </span><span class="nx">me</span><span class="w"> </span><span class="nx">motivated</span><span class="p">.</span><span class="w"> </span><span class="nx">Thank</span><span class="w"> </span><span class="nx">you</span><span class="p">!</span><span class="w"> </span>
+<h4>Please Upvote</h4>
+<pre><code>Thanks for visiting my solution. Keep Learning
+Please give my solution an upvote! 
+It's a simple way to show your appreciation and
+keep me motivated. Thank you! 
+</code></pre>
+<h4>Code</h4>
+<pre><code class="language-Java">class Solution {
+    int dfs(List&lt;List&lt;Integer&gt;&gt; al, boolean[] visited, int from) {
+        int change = 0;
+        visited[from] = true;
+        for (var to : al.get(from))
+            if (!visited[Math.abs(to)])
+                change += dfs(al, visited, Math.abs(to)) + (to &gt; 0 ? 1 : 0);
+        return change;   
+    }
+    public int minReorder(int n, int[][] connections) {
+        List&lt;List&lt;Integer&gt;&gt; al = new ArrayList&lt;&gt;();
+        for(int i = 0; i &lt; n; ++i) 
+            al.add(new ArrayList&lt;&gt;());
+        for (var c : connections) {
+            al.get(c[0]).add(c[1]);
+            al.get(c[1]).add(-c[0]);
+        }
+        return dfs(al, new boolean[n], 0);
+    }
+}
+</code></pre>
+<pre><code class="language-cpp">class Solution {
+public:
+    int dfs(vector&lt;vector&lt;int&gt;&gt; &amp;al, vector&lt;bool&gt; &amp;visited, int from) {
+    auto change = 0;
+    visited[from] = true;
+    for (auto to : al[from])
+        if (!visited[abs(to)])
+            change += dfs(al, visited, abs(to)) + (to &gt; 0);
+    return change;        
+    }
+    int minReorder(int n, vector&lt;vector&lt;int&gt;&gt;&amp; connections) {
+        vector&lt;vector&lt;int&gt;&gt; al(n);
+        for (auto &amp;c : connections) {
+            al[c[0]].push_back(c[1]);
+            al[c[1]].push_back(-c[0]);
+        }
+        return dfs(al, vector&lt;bool&gt;(n) = {}, 0);
+    }
+};
+</code></pre>
+<pre><code class="language-Python">class Solution:
+    def dfs(self, al, visited, from_node):
+        change = 0
+        visited[from_node] = True
+        for to_node in al[from_node]:
+            if not visited[abs(to_node)]:
+                change += self.dfs(al, visited, abs(to_node)) + (1 if to_node &gt; 0 else 0)
+        return change
+
+    def minReorder(self, n, connections):
+        al = [[] for _ in range(n)]
+        for c in connections:
+            al[c[0]].append(c[1])
+            al[c[1]].append(-c[0])
+        visited = [False] * n
+        return self.dfs(al, visited, 0)
+
+</code></pre>
+<h4>Please Comment</h4>
+<pre><code>Thanks for visiting my solution comment below if you like it.
 </code></pre></div>
-
-<h2>Code</h2>
-<div class="codehilite"><pre><span></span><code><span class="kd">class</span> <span class="nc">Solution</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="nf">dfs</span><span class="p">(</span><span class="n">List</span><span class="o">&lt;</span><span class="n">List</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="n">al</span><span class="p">,</span><span class="w"> </span><span class="kt">boolean</span><span class="w"> </span><span class="n">visited</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">from</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">change</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-<span class="w">        </span><span class="n">visited</span><span class="o">[</span><span class="n">from</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span><span class="p">;</span>
-<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kd">var</span><span class="w"> </span><span class="n">to</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">al</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">from</span><span class="p">))</span>
-<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">visited</span><span class="o">[</span><span class="n">Math</span><span class="p">.</span><span class="na">abs</span><span class="p">(</span><span class="n">to</span><span class="p">)</span><span class="o">]</span><span class="p">)</span>
-<span class="w">                </span><span class="n">change</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">dfs</span><span class="p">(</span><span class="n">al</span><span class="p">,</span><span class="w"> </span><span class="n">visited</span><span class="p">,</span><span class="w"> </span><span class="n">Math</span><span class="p">.</span><span class="na">abs</span><span class="p">(</span><span class="n">to</span><span class="p">))</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="p">(</span><span class="n">to</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">change</span><span class="p">;</span><span class="w">   </span>
-<span class="w">    </span><span class="p">}</span>
-<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="nf">minReorder</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">n</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">connections</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="n">List</span><span class="o">&lt;</span><span class="n">List</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="n">al</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ArrayList</span><span class="o">&lt;&gt;</span><span class="p">();</span>
-<span class="w">        </span><span class="k">for</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">n</span><span class="p">;</span><span class="w"> </span><span class="o">++</span><span class="n">i</span><span class="p">)</span><span class="w"> </span>
-<span class="w">            </span><span class="n">al</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">ArrayList</span><span class="o">&lt;&gt;</span><span class="p">());</span>
-<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kd">var</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">connections</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="n">al</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">c</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span><span class="p">).</span><span class="na">add</span><span class="p">(</span><span class="n">c</span><span class="o">[</span><span class="mi">1</span><span class="o">]</span><span class="p">);</span>
-<span class="w">            </span><span class="n">al</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">c</span><span class="o">[</span><span class="mi">1</span><span class="o">]</span><span class="p">).</span><span class="na">add</span><span class="p">(</span><span class="o">-</span><span class="n">c</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span><span class="p">);</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">dfs</span><span class="p">(</span><span class="n">al</span><span class="p">,</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="kt">boolean</span><span class="o">[</span><span class="n">n</span><span class="o">]</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
-
-<div class="codehilite"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="w"> </span><span class="p">{</span>
-<span class="k">public</span><span class="o">:</span>
-<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">dfs</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="o">&amp;</span><span class="n">al</span><span class="p">,</span><span class="w"> </span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">bool</span><span class="o">&gt;</span><span class="w"> </span><span class="o">&amp;</span><span class="n">visited</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">from</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="k">auto</span><span class="w"> </span><span class="n">change</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-<span class="w">    </span><span class="n">visited</span><span class="p">[</span><span class="n">from</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
-<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="n">to</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">al</span><span class="p">[</span><span class="n">from</span><span class="p">])</span>
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">visited</span><span class="p">[</span><span class="n">abs</span><span class="p">(</span><span class="n">to</span><span class="p">)])</span>
-<span class="w">            </span><span class="n">change</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">dfs</span><span class="p">(</span><span class="n">al</span><span class="p">,</span><span class="w"> </span><span class="n">visited</span><span class="p">,</span><span class="w"> </span><span class="n">abs</span><span class="p">(</span><span class="n">to</span><span class="p">))</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="p">(</span><span class="n">to</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">change</span><span class="p">;</span><span class="w">        </span>
-<span class="w">    </span><span class="p">}</span>
-<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">minReorder</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">n</span><span class="p">,</span><span class="w"> </span><span class="n">vector</span><span class="o">&lt;</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&gt;&amp;</span><span class="w"> </span><span class="n">connections</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="n">vector</span><span class="o">&lt;</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="n">al</span><span class="p">(</span><span class="n">n</span><span class="p">);</span>
-<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="o">&amp;</span><span class="n">c</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">connections</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="n">al</span><span class="p">[</span><span class="n">c</span><span class="p">[</span><span class="mi">0</span><span class="p">]].</span><span class="n">push_back</span><span class="p">(</span><span class="n">c</span><span class="p">[</span><span class="mi">1</span><span class="p">]);</span>
-<span class="w">            </span><span class="n">al</span><span class="p">[</span><span class="n">c</span><span class="p">[</span><span class="mi">1</span><span class="p">]].</span><span class="n">push_back</span><span class="p">(</span><span class="o">-</span><span class="n">c</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">dfs</span><span class="p">(</span><span class="n">al</span><span class="p">,</span><span class="w"> </span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">bool</span><span class="o">&gt;</span><span class="p">(</span><span class="n">n</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{},</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">};</span>
-</code></pre></div>
-
-<div class="codehilite"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="p">:</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">dfs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">al</span><span class="p">,</span> <span class="n">visited</span><span class="p">,</span> <span class="n">from_node</span><span class="p">):</span>
-        <span class="n">change</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="n">visited</span><span class="p">[</span><span class="n">from_node</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
-        <span class="k">for</span> <span class="n">to_node</span> <span class="ow">in</span> <span class="n">al</span><span class="p">[</span><span class="n">from_node</span><span class="p">]:</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">visited</span><span class="p">[</span><span class="nb">abs</span><span class="p">(</span><span class="n">to_node</span><span class="p">)]:</span>
-                <span class="n">change</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dfs</span><span class="p">(</span><span class="n">al</span><span class="p">,</span> <span class="n">visited</span><span class="p">,</span> <span class="nb">abs</span><span class="p">(</span><span class="n">to_node</span><span class="p">))</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span> <span class="k">if</span> <span class="n">to_node</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">0</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">change</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">minReorder</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">connections</span><span class="p">):</span>
-        <span class="n">al</span> <span class="o">=</span> <span class="p">[</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">)]</span>
-        <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">connections</span><span class="p">:</span>
-            <span class="n">al</span><span class="p">[</span><span class="n">c</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">c</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
-            <span class="n">al</span><span class="p">[</span><span class="n">c</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="o">-</span><span class="n">c</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-        <span class="n">visited</span> <span class="o">=</span> <span class="p">[</span><span class="kc">False</span><span class="p">]</span> <span class="o">*</span> <span class="n">n</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">dfs</span><span class="p">(</span><span class="n">al</span><span class="p">,</span> <span class="n">visited</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
-</code></pre></div>
-
-<h2>Please Comment</h2>
-<div class="codehilite"><pre><span></span><code><span class="nv">Thanks</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="nv">visiting</span><span class="w"> </span><span class="nv">my</span><span class="w"> </span><span class="nv">solution</span><span class="w"> </span><span class="nv">comment</span><span class="w"> </span><span class="nv">below</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="nv">you</span><span class="w"> </span><span class="nv">like</span><span class="w"> </span><span class="nv">it</span>.
-</code></pre></div></div>
-
-
-<div class='python-solution'><h2>🔥Easy Solutions with Exaplanation in Java 📝, Python 🐍, and C++ 🖥️🧐Look at once 💻 -- Votes: 132</h2><h2>Intuition</h2>
-<p>We can use DFS to traverse the tree and change the direction of edges if needed.</p>
-<h2>Approach</h2>
-<p>First, we create an adjacency list to represent the tree. Each node in the list contains a list of its neighbors.</p>
-<p>To change the direction of edges, we assign a direction to each edge. If an edge goes from node i to node j, we represent it as i -&gt; j. If an edge goes from node j to node i, we represent it as j -&gt; -i.</p>
-<p>Then, we start DFS from node 0. We mark visited nodes to avoid revisiting them. If we reach a node i that has not been visited before, it means we need to change the direction of the edge that leads to node i. We do this by adding 1 to the result if the edge is directed from node j to node i (i.e., j -&gt; i), and 0 otherwise (i.e., j -&gt; -i).</p>
-<p>We repeat this process until all nodes have been visited.</p>
-<p>Finally, we return the total number of edges that we have changed.</p>
-<h2>Complexity</h2>
-<ul>
-<li>
-<p>Time complexity: O(n), where n is the number of nodes in the tree. We traverse the tree once using DFS.</p>
-</li>
-<li>
-<p>Space complexity: O(n), where n is the number of nodes in the tree. We use a boolean array to keep track of visited nodes. Also, we use an adjacency list to represent the tree, which requires O(n) space.</p>
-</li>
-</ul>
-<!-- Add your space complexity here, e.g. $$O(n)$$ -->
-
-<p></p>
-<h2>Please Upvote</h2>
-<div class="codehilite"><pre><span></span><code><span class="nx">Thanks</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="nx">visiting</span><span class="w"> </span><span class="nx">my</span><span class="w"> </span><span class="nx">solution</span><span class="p">.</span><span class="w"> </span><span class="nx">Keep</span><span class="w"> </span><span class="nx">Learning</span>
-<span class="nx">Please</span><span class="w"> </span><span class="nx">give</span><span class="w"> </span><span class="nx">my</span><span class="w"> </span><span class="nx">solution</span><span class="w"> </span><span class="nx">an</span><span class="w"> </span><span class="nx">upvote</span><span class="p">!</span><span class="w"> </span>
-<span class="nx">It</span><span class="err">&#39;</span><span class="nx">s</span><span class="w"> </span><span class="nx">a</span><span class="w"> </span><span class="nx">simple</span><span class="w"> </span><span class="nx">way</span><span class="w"> </span><span class="nx">to</span><span class="w"> </span><span class="nx">show</span><span class="w"> </span><span class="nx">your</span><span class="w"> </span><span class="nx">appreciation</span><span class="w"> </span><span class="k">and</span>
-<span class="nx">keep</span><span class="w"> </span><span class="nx">me</span><span class="w"> </span><span class="nx">motivated</span><span class="p">.</span><span class="w"> </span><span class="nx">Thank</span><span class="w"> </span><span class="nx">you</span><span class="p">!</span><span class="w"> </span>
-</code></pre></div>
-
-<h2>Code</h2>
-<div class="codehilite"><pre><span></span><code><span class="kd">class</span> <span class="nc">Solution</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="nf">dfs</span><span class="p">(</span><span class="n">List</span><span class="o">&lt;</span><span class="n">List</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="n">al</span><span class="p">,</span><span class="w"> </span><span class="kt">boolean</span><span class="w"> </span><span class="n">visited</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">from</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">change</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-<span class="w">        </span><span class="n">visited</span><span class="o">[</span><span class="n">from</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span><span class="p">;</span>
-<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kd">var</span><span class="w"> </span><span class="n">to</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">al</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">from</span><span class="p">))</span>
-<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">visited</span><span class="o">[</span><span class="n">Math</span><span class="p">.</span><span class="na">abs</span><span class="p">(</span><span class="n">to</span><span class="p">)</span><span class="o">]</span><span class="p">)</span>
-<span class="w">                </span><span class="n">change</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">dfs</span><span class="p">(</span><span class="n">al</span><span class="p">,</span><span class="w"> </span><span class="n">visited</span><span class="p">,</span><span class="w"> </span><span class="n">Math</span><span class="p">.</span><span class="na">abs</span><span class="p">(</span><span class="n">to</span><span class="p">))</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="p">(</span><span class="n">to</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">change</span><span class="p">;</span><span class="w">   </span>
-<span class="w">    </span><span class="p">}</span>
-<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="nf">minReorder</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">n</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">connections</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="n">List</span><span class="o">&lt;</span><span class="n">List</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="n">al</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ArrayList</span><span class="o">&lt;&gt;</span><span class="p">();</span>
-<span class="w">        </span><span class="k">for</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">n</span><span class="p">;</span><span class="w"> </span><span class="o">++</span><span class="n">i</span><span class="p">)</span><span class="w"> </span>
-<span class="w">            </span><span class="n">al</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">ArrayList</span><span class="o">&lt;&gt;</span><span class="p">());</span>
-<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kd">var</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">connections</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="n">al</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">c</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span><span class="p">).</span><span class="na">add</span><span class="p">(</span><span class="n">c</span><span class="o">[</span><span class="mi">1</span><span class="o">]</span><span class="p">);</span>
-<span class="w">            </span><span class="n">al</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">c</span><span class="o">[</span><span class="mi">1</span><span class="o">]</span><span class="p">).</span><span class="na">add</span><span class="p">(</span><span class="o">-</span><span class="n">c</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span><span class="p">);</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">dfs</span><span class="p">(</span><span class="n">al</span><span class="p">,</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="kt">boolean</span><span class="o">[</span><span class="n">n</span><span class="o">]</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
-
-<div class="codehilite"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="w"> </span><span class="p">{</span>
-<span class="k">public</span><span class="o">:</span>
-<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">dfs</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="o">&amp;</span><span class="n">al</span><span class="p">,</span><span class="w"> </span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">bool</span><span class="o">&gt;</span><span class="w"> </span><span class="o">&amp;</span><span class="n">visited</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">from</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="k">auto</span><span class="w"> </span><span class="n">change</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-<span class="w">    </span><span class="n">visited</span><span class="p">[</span><span class="n">from</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
-<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="n">to</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">al</span><span class="p">[</span><span class="n">from</span><span class="p">])</span>
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">visited</span><span class="p">[</span><span class="n">abs</span><span class="p">(</span><span class="n">to</span><span class="p">)])</span>
-<span class="w">            </span><span class="n">change</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">dfs</span><span class="p">(</span><span class="n">al</span><span class="p">,</span><span class="w"> </span><span class="n">visited</span><span class="p">,</span><span class="w"> </span><span class="n">abs</span><span class="p">(</span><span class="n">to</span><span class="p">))</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="p">(</span><span class="n">to</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">change</span><span class="p">;</span><span class="w">        </span>
-<span class="w">    </span><span class="p">}</span>
-<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">minReorder</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">n</span><span class="p">,</span><span class="w"> </span><span class="n">vector</span><span class="o">&lt;</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&gt;&amp;</span><span class="w"> </span><span class="n">connections</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="n">vector</span><span class="o">&lt;</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="n">al</span><span class="p">(</span><span class="n">n</span><span class="p">);</span>
-<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="o">&amp;</span><span class="n">c</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">connections</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="n">al</span><span class="p">[</span><span class="n">c</span><span class="p">[</span><span class="mi">0</span><span class="p">]].</span><span class="n">push_back</span><span class="p">(</span><span class="n">c</span><span class="p">[</span><span class="mi">1</span><span class="p">]);</span>
-<span class="w">            </span><span class="n">al</span><span class="p">[</span><span class="n">c</span><span class="p">[</span><span class="mi">1</span><span class="p">]].</span><span class="n">push_back</span><span class="p">(</span><span class="o">-</span><span class="n">c</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">dfs</span><span class="p">(</span><span class="n">al</span><span class="p">,</span><span class="w"> </span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">bool</span><span class="o">&gt;</span><span class="p">(</span><span class="n">n</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{},</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">};</span>
-</code></pre></div>
-
-<div class="codehilite"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="p">:</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">dfs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">al</span><span class="p">,</span> <span class="n">visited</span><span class="p">,</span> <span class="n">from_node</span><span class="p">):</span>
-        <span class="n">change</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="n">visited</span><span class="p">[</span><span class="n">from_node</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
-        <span class="k">for</span> <span class="n">to_node</span> <span class="ow">in</span> <span class="n">al</span><span class="p">[</span><span class="n">from_node</span><span class="p">]:</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">visited</span><span class="p">[</span><span class="nb">abs</span><span class="p">(</span><span class="n">to_node</span><span class="p">)]:</span>
-                <span class="n">change</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dfs</span><span class="p">(</span><span class="n">al</span><span class="p">,</span> <span class="n">visited</span><span class="p">,</span> <span class="nb">abs</span><span class="p">(</span><span class="n">to_node</span><span class="p">))</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span> <span class="k">if</span> <span class="n">to_node</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">0</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">change</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">minReorder</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">connections</span><span class="p">):</span>
-        <span class="n">al</span> <span class="o">=</span> <span class="p">[</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">)]</span>
-        <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">connections</span><span class="p">:</span>
-            <span class="n">al</span><span class="p">[</span><span class="n">c</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">c</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
-            <span class="n">al</span><span class="p">[</span><span class="n">c</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="o">-</span><span class="n">c</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-        <span class="n">visited</span> <span class="o">=</span> <span class="p">[</span><span class="kc">False</span><span class="p">]</span> <span class="o">*</span> <span class="n">n</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">dfs</span><span class="p">(</span><span class="n">al</span><span class="p">,</span> <span class="n">visited</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
-</code></pre></div>
-
-<h2>Please Comment</h2>
-<div class="codehilite"><pre><span></span><code><span class="nv">Thanks</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="nv">visiting</span><span class="w"> </span><span class="nv">my</span><span class="w"> </span><span class="nv">solution</span><span class="w"> </span><span class="nv">comment</span><span class="w"> </span><span class="nv">below</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="nv">you</span><span class="w"> </span><span class="nv">like</span><span class="w"> </span><span class="nv">it</span>.
-</code></pre></div></div><p style="page-break-before: always" ></p>

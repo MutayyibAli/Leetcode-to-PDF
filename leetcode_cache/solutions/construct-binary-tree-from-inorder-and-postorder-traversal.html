@@ -1,258 +1,124 @@
-<div class='cpp-solution'><h2>🔥Easy Solutions in Java 📝, Python 🐍, and C++ 🖥️🧐Look at once 💻 -- Votes: 295</h2><h2>Intuition</h2>
+<div class='cpp-solution'><h4>🔥Easy Solutions in Java 📝, Python 🐍, and C++ 🖥️🧐Look at once 💻 [Votes: 295]</h4><h4>Intuition</h4>
 <!-- Describe your first thoughts on how to solve this problem. -->
-
-<p>To construct a binary tree from inorder and postorder traversal arrays, we first need to understand what each of these traversals represents.<br />
-Inorder traversal visits the nodes in ascending order of their values, i.e., left child, parent, and right child. On the other hand, postorder traversal visits the nodes in the order left child, right child, and parent.<br />
+<p>To construct a binary tree from inorder and postorder traversal arrays, we first need to understand what each of these traversals represents.
+Inorder traversal visits the nodes in ascending order of their values, i.e., left child, parent, and right child. On the other hand, postorder traversal visits the nodes in the order left child, right child, and parent.
 Knowing this, we can say that the last element in the postorder array is the root node, and its index in the inorder array divides the tree into left and right subtrees. We can recursively apply this logic to construct the entire binary tree.</p>
-<h2>Approach</h2>
+<h4>Approach</h4>
 <!-- Describe your approach to solving the problem. -->
-
 <ol>
 <li>Start with the last element of the postorder array as the root node.</li>
 <li>Find the index of the root node in the inorder array.</li>
 <li>Divide the inorder array into left and right subtrees based on the index of the root node.</li>
-<li>Divide the postorder array into left and right subtrees based on the number of elements<br />
-   in the left and right subtrees of the inorder array.</li>
+<li>Divide the postorder array into left and right subtrees based on the number of elements
+in the left and right subtrees of the inorder array.</li>
 <li>Recursively construct the left and right subtrees.</li>
 </ol>
-<h2>Complexity</h2>
+<h4>Complexity</h4>
 <ul>
 <li>
-<p>Time complexity:<br />
-  The time complexity of this algorithm is O(n), where n is the number of nodes in the tree. We visit each node only once.</p>
+<p>Time complexity:
+The time complexity of this algorithm is O(n), where n is the number of nodes in the tree. We visit each node only once.</p>
 </li>
 <li>
-<p>Space complexity:<br />
-  The space complexity of this algorithm is O(n). We create a hashmap to store the indices of the inorder traversal, which takes O(n) space. Additionally, the recursive call stack can go up to O(n) in the worst case if the binary tree is skewed.</p>
+<p>Space complexity:
+The space complexity of this algorithm is O(n). We create a hashmap to store the indices of the inorder traversal, which takes O(n) space. Additionally, the recursive call stack can go up to O(n) in the worst case if the binary tree is skewed.</p>
 </li>
 </ul>
-<p></p>
-<h2>Please Upvote</h2>
-<div class="codehilite"><pre><span></span><code><span class="nx">Thanks</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="nx">visiting</span><span class="w"> </span><span class="nx">my</span><span class="w"> </span><span class="nx">solution</span><span class="p">.</span><span class="w"> </span><span class="nx">Keep</span><span class="w"> </span><span class="nx">Learning</span>
-<span class="nx">Please</span><span class="w"> </span><span class="nx">give</span><span class="w"> </span><span class="nx">my</span><span class="w"> </span><span class="nx">solution</span><span class="w"> </span><span class="nx">an</span><span class="w"> </span><span class="nx">upvote</span><span class="p">!</span><span class="w"> </span>
-<span class="nx">It</span><span class="err">&#39;</span><span class="nx">s</span><span class="w"> </span><span class="nx">a</span><span class="w"> </span><span class="nx">simple</span><span class="w"> </span><span class="nx">way</span><span class="w"> </span><span class="nx">to</span><span class="w"> </span><span class="nx">show</span><span class="w"> </span><span class="nx">your</span><span class="w"> </span><span class="nx">appreciation</span><span class="w"> </span><span class="k">and</span>
-<span class="nx">keep</span><span class="w"> </span><span class="nx">me</span><span class="w"> </span><span class="nx">motivated</span><span class="p">.</span><span class="w"> </span><span class="nx">Thank</span><span class="w"> </span><span class="nx">you</span><span class="p">!</span><span class="w"> </span>
+<h4>Please Upvote</h4>
+<pre><code>Thanks for visiting my solution. Keep Learning
+Please give my solution an upvote! 
+It's a simple way to show your appreciation and
+keep me motivated. Thank you! 
+</code></pre>
+<h4>Code</h4>
+<pre><code class="language-Java">lass Solution {
+    public TreeNode buildTree(int[] inorder, int[] postorder) {
+        // Call the recursive function with full arrays and return the result
+        return buildTree(inorder, 0, inorder.length - 1, postorder, 0, postorder.length - 1);
+    }
+
+    private TreeNode buildTree(int[] inorder, int inStart, int inEnd, int[] postorder, int postStart, int postEnd) {
+        // Base case
+        if (inStart &gt; inEnd || postStart &gt; postEnd) {
+            return null;
+        }
+
+        // Find the root node from the last element of postorder traversal
+        int rootVal = postorder[postEnd];
+        TreeNode root = new TreeNode(rootVal);
+
+        // Find the index of the root node in inorder traversal
+        int rootIndex = 0;
+        for (int i = inStart; i &lt;= inEnd; i++) {
+            if (inorder[i] == rootVal) {
+                rootIndex = i;
+                break;
+            }
+        }
+
+        // Recursively build the left and right subtrees
+        int leftSize = rootIndex - inStart;
+        int rightSize = inEnd - rootIndex;
+        root.left = buildTree(inorder, inStart, rootIndex - 1, postorder, postStart, postStart + leftSize - 1);
+        root.right = buildTree(inorder, rootIndex + 1, inEnd, postorder, postEnd - rightSize, postEnd - 1);
+
+        return root;
+    }
+}
+
+
+</code></pre>
+<pre><code class="language-Python">class Solution(object):
+    def buildTree(self, inorder, postorder):
+        &quot;&quot;&quot;
+        :type inorder: List[int]
+        :type postorder: List[int]
+        :rtype: TreeNode
+        &quot;&quot;&quot;
+        #### Base case
+        if not inorder:
+            return None
+
+        #### The last element of postorder list is the root
+        root_val = postorder.pop()
+        root = TreeNode(root_val)
+
+        #### Find the position of the root in the inorder list
+        inorder_index = inorder.index(root_val)
+
+        #### Recursively build the left and right subtrees
+        root.right = self.buildTree(inorder[inorder_index+1:], postorder)
+        root.left = self.buildTree(inorder[:inorder_index], postorder)
+
+        return root
+
+</code></pre>
+<pre><code class="language-cpp">class Solution {
+public:
+    TreeNode* buildTree(vector&lt;int&gt;&amp; inorder, vector&lt;int&gt;&amp; postorder) {
+        unordered_map&lt;int, int&gt; index;
+        for (int i = 0; i &lt; inorder.size(); i++) {
+            index[inorder[i]] = i;
+        }
+        return buildTreeHelper(inorder, postorder, 0, inorder.size() - 1, 0, postorder.size() - 1, index);
+    }
+
+    TreeNode* buildTreeHelper(vector&lt;int&gt;&amp; inorder, vector&lt;int&gt;&amp; postorder, int inorderStart, int inorderEnd, int postorderStart, int postorderEnd, unordered_map&lt;int, int&gt;&amp; index) {
+        if (inorderStart &gt; inorderEnd || postorderStart &gt; postorderEnd) {
+            return nullptr;
+        }
+        int rootVal = postorder[postorderEnd];
+        TreeNode* root = new TreeNode(rootVal);
+        int inorderRootIndex = index[rootVal];
+        int leftSubtreeSize = inorderRootIndex - inorderStart;
+        root-&gt;left = buildTreeHelper(inorder, postorder, inorderStart, inorderRootIndex - 1, postorderStart, postorderStart + leftSubtreeSize - 1, index);
+        root-&gt;right = buildTreeHelper(inorder, postorder, inorderRootIndex + 1, inorderEnd, postorderStart + leftSubtreeSize, postorderEnd - 1, index);
+        return root;
+    }
+};
+
+
+</code></pre>
+<h4>Please Comment</h4>
+<pre><code>Thanks for visiting my solution comment below if you like it.
 </code></pre></div>
-
-<h2>Code</h2>
-<div class="codehilite"><pre><span></span><code><span class="n">lass</span><span class="w"> </span><span class="n">Solution</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">TreeNode</span><span class="w"> </span><span class="nf">buildTree</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">inorder</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">postorder</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="c1">// Call the recursive function with full arrays and return the result</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">buildTree</span><span class="p">(</span><span class="n">inorder</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">inorder</span><span class="p">.</span><span class="na">length</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">postorder</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">postorder</span><span class="p">.</span><span class="na">length</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span>
-<span class="w">    </span><span class="p">}</span>
-
-<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">TreeNode</span><span class="w"> </span><span class="nf">buildTree</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">inorder</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">inStart</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">inEnd</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">postorder</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">postStart</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">postEnd</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="c1">// Base case</span>
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">inStart</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">inEnd</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">postStart</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">postEnd</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="kc">null</span><span class="p">;</span>
-<span class="w">        </span><span class="p">}</span>
-
-<span class="w">        </span><span class="c1">// Find the root node from the last element of postorder traversal</span>
-<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">rootVal</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">postorder</span><span class="o">[</span><span class="n">postEnd</span><span class="o">]</span><span class="p">;</span>
-<span class="w">        </span><span class="n">TreeNode</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">TreeNode</span><span class="p">(</span><span class="n">rootVal</span><span class="p">);</span>
-
-<span class="w">        </span><span class="c1">// Find the index of the root node in inorder traversal</span>
-<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">rootIndex</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">inStart</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">inEnd</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">inorder</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">rootVal</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="n">rootIndex</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">i</span><span class="p">;</span>
-<span class="w">                </span><span class="k">break</span><span class="p">;</span>
-<span class="w">            </span><span class="p">}</span>
-<span class="w">        </span><span class="p">}</span>
-
-<span class="w">        </span><span class="c1">// Recursively build the left and right subtrees</span>
-<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">leftSize</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">rootIndex</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">inStart</span><span class="p">;</span>
-<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">rightSize</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">inEnd</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">rootIndex</span><span class="p">;</span>
-<span class="w">        </span><span class="n">root</span><span class="p">.</span><span class="na">left</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">buildTree</span><span class="p">(</span><span class="n">inorder</span><span class="p">,</span><span class="w"> </span><span class="n">inStart</span><span class="p">,</span><span class="w"> </span><span class="n">rootIndex</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">postorder</span><span class="p">,</span><span class="w"> </span><span class="n">postStart</span><span class="p">,</span><span class="w"> </span><span class="n">postStart</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">leftSize</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span>
-<span class="w">        </span><span class="n">root</span><span class="p">.</span><span class="na">right</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">buildTree</span><span class="p">(</span><span class="n">inorder</span><span class="p">,</span><span class="w"> </span><span class="n">rootIndex</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">inEnd</span><span class="p">,</span><span class="w"> </span><span class="n">postorder</span><span class="p">,</span><span class="w"> </span><span class="n">postEnd</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">rightSize</span><span class="p">,</span><span class="w"> </span><span class="n">postEnd</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span>
-
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">root</span><span class="p">;</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
-
-<div class="codehilite"><pre><span></span><code><span class="n">Language</span><span class="p">:</span> <span class="n">Python</span> 
-<span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">buildTree</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inorder</span><span class="p">,</span> <span class="n">postorder</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        :type inorder: List[int]</span>
-<span class="sd">        :type postorder: List[int]</span>
-<span class="sd">        :rtype: TreeNode</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="c1"># Base case</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">inorder</span><span class="p">:</span>
-            <span class="k">return</span> <span class="kc">None</span>
-
-        <span class="c1"># The last element of postorder list is the root</span>
-        <span class="n">root_val</span> <span class="o">=</span> <span class="n">postorder</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
-        <span class="n">root</span> <span class="o">=</span> <span class="n">TreeNode</span><span class="p">(</span><span class="n">root_val</span><span class="p">)</span>
-
-        <span class="c1"># Find the position of the root in the inorder list</span>
-        <span class="n">inorder_index</span> <span class="o">=</span> <span class="n">inorder</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">root_val</span><span class="p">)</span>
-
-        <span class="c1"># Recursively build the left and right subtrees</span>
-        <span class="n">root</span><span class="o">.</span><span class="n">right</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">buildTree</span><span class="p">(</span><span class="n">inorder</span><span class="p">[</span><span class="n">inorder_index</span><span class="o">+</span><span class="mi">1</span><span class="p">:],</span> <span class="n">postorder</span><span class="p">)</span>
-        <span class="n">root</span><span class="o">.</span><span class="n">left</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">buildTree</span><span class="p">(</span><span class="n">inorder</span><span class="p">[:</span><span class="n">inorder_index</span><span class="p">],</span> <span class="n">postorder</span><span class="p">)</span>
-
-        <span class="k">return</span> <span class="n">root</span>
-</code></pre></div>
-
-<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">C</span><span class="o">++</span><span class="w"> </span>
-<span class="n">class</span><span class="w"> </span><span class="n">Solution</span><span class="w"> </span><span class="p">{</span>
-<span class="n">public</span><span class="o">:</span>
-<span class="w">    </span><span class="n">TreeNode</span><span class="o">*</span><span class="w"> </span><span class="n">buildTree</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&amp;</span><span class="w"> </span><span class="n">inorder</span><span class="p">,</span><span class="w"> </span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&amp;</span><span class="w"> </span><span class="n">postorder</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="n">unordered_map</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="o">&gt;</span><span class="w"> </span><span class="n">index</span><span class="p">;</span>
-<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">inorder</span><span class="p">.</span><span class="n">size</span><span class="p">();</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="n">index</span><span class="p">[</span><span class="n">inorder</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">i</span><span class="p">;</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">buildTreeHelper</span><span class="p">(</span><span class="n">inorder</span><span class="p">,</span><span class="w"> </span><span class="n">postorder</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">inorder</span><span class="p">.</span><span class="n">size</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">postorder</span><span class="p">.</span><span class="n">size</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">index</span><span class="p">);</span>
-<span class="w">    </span><span class="p">}</span>
-
-<span class="w">    </span><span class="n">TreeNode</span><span class="o">*</span><span class="w"> </span><span class="n">buildTreeHelper</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&amp;</span><span class="w"> </span><span class="n">inorder</span><span class="p">,</span><span class="w"> </span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&amp;</span><span class="w"> </span><span class="n">postorder</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">inorderStart</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">inorderEnd</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">postorderStart</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">postorderEnd</span><span class="p">,</span><span class="w"> </span><span class="n">unordered_map</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="o">&gt;&amp;</span><span class="w"> </span><span class="n">index</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">inorderStart</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">inorderEnd</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">postorderStart</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">postorderEnd</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="n">nullptr</span><span class="p">;</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">rootVal</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">postorder</span><span class="p">[</span><span class="n">postorderEnd</span><span class="p">];</span>
-<span class="w">        </span><span class="n">TreeNode</span><span class="o">*</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">new</span><span class="w"> </span><span class="n">TreeNode</span><span class="p">(</span><span class="n">rootVal</span><span class="p">);</span>
-<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">inorderRootIndex</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">index</span><span class="p">[</span><span class="n">rootVal</span><span class="p">];</span>
-<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">leftSubtreeSize</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">inorderRootIndex</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">inorderStart</span><span class="p">;</span>
-<span class="w">        </span><span class="n">root</span><span class="o">-&gt;</span><span class="n">left</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">buildTreeHelper</span><span class="p">(</span><span class="n">inorder</span><span class="p">,</span><span class="w"> </span><span class="n">postorder</span><span class="p">,</span><span class="w"> </span><span class="n">inorderStart</span><span class="p">,</span><span class="w"> </span><span class="n">inorderRootIndex</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">postorderStart</span><span class="p">,</span><span class="w"> </span><span class="n">postorderStart</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">leftSubtreeSize</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">index</span><span class="p">);</span>
-<span class="w">        </span><span class="n">root</span><span class="o">-&gt;</span><span class="n">right</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">buildTreeHelper</span><span class="p">(</span><span class="n">inorder</span><span class="p">,</span><span class="w"> </span><span class="n">postorder</span><span class="p">,</span><span class="w"> </span><span class="n">inorderRootIndex</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">inorderEnd</span><span class="p">,</span><span class="w"> </span><span class="n">postorderStart</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">leftSubtreeSize</span><span class="p">,</span><span class="w"> </span><span class="n">postorderEnd</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">index</span><span class="p">);</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">root</span><span class="p">;</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">};</span>
-</code></pre></div>
-
-<h2>Please Comment</h2>
-<div class="codehilite"><pre><span></span><code><span class="nv">Thanks</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="nv">visiting</span><span class="w"> </span><span class="nv">my</span><span class="w"> </span><span class="nv">solution</span><span class="w"> </span><span class="nv">comment</span><span class="w"> </span><span class="nv">below</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="nv">you</span><span class="w"> </span><span class="nv">like</span><span class="w"> </span><span class="nv">it</span>.
-</code></pre></div></div>
-
-
-<div class='python-solution'><h2>🔥Easy Solutions in Java 📝, Python 🐍, and C++ 🖥️🧐Look at once 💻 -- Votes: 295</h2><h2>Intuition</h2>
-<!-- Describe your first thoughts on how to solve this problem. -->
-
-<p>To construct a binary tree from inorder and postorder traversal arrays, we first need to understand what each of these traversals represents.<br />
-Inorder traversal visits the nodes in ascending order of their values, i.e., left child, parent, and right child. On the other hand, postorder traversal visits the nodes in the order left child, right child, and parent.<br />
-Knowing this, we can say that the last element in the postorder array is the root node, and its index in the inorder array divides the tree into left and right subtrees. We can recursively apply this logic to construct the entire binary tree.</p>
-<h2>Approach</h2>
-<!-- Describe your approach to solving the problem. -->
-
-<ol>
-<li>Start with the last element of the postorder array as the root node.</li>
-<li>Find the index of the root node in the inorder array.</li>
-<li>Divide the inorder array into left and right subtrees based on the index of the root node.</li>
-<li>Divide the postorder array into left and right subtrees based on the number of elements<br />
-   in the left and right subtrees of the inorder array.</li>
-<li>Recursively construct the left and right subtrees.</li>
-</ol>
-<h2>Complexity</h2>
-<ul>
-<li>
-<p>Time complexity:<br />
-  The time complexity of this algorithm is O(n), where n is the number of nodes in the tree. We visit each node only once.</p>
-</li>
-<li>
-<p>Space complexity:<br />
-  The space complexity of this algorithm is O(n). We create a hashmap to store the indices of the inorder traversal, which takes O(n) space. Additionally, the recursive call stack can go up to O(n) in the worst case if the binary tree is skewed.</p>
-</li>
-</ul>
-<p></p>
-<h2>Please Upvote</h2>
-<div class="codehilite"><pre><span></span><code><span class="nx">Thanks</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="nx">visiting</span><span class="w"> </span><span class="nx">my</span><span class="w"> </span><span class="nx">solution</span><span class="p">.</span><span class="w"> </span><span class="nx">Keep</span><span class="w"> </span><span class="nx">Learning</span>
-<span class="nx">Please</span><span class="w"> </span><span class="nx">give</span><span class="w"> </span><span class="nx">my</span><span class="w"> </span><span class="nx">solution</span><span class="w"> </span><span class="nx">an</span><span class="w"> </span><span class="nx">upvote</span><span class="p">!</span><span class="w"> </span>
-<span class="nx">It</span><span class="err">&#39;</span><span class="nx">s</span><span class="w"> </span><span class="nx">a</span><span class="w"> </span><span class="nx">simple</span><span class="w"> </span><span class="nx">way</span><span class="w"> </span><span class="nx">to</span><span class="w"> </span><span class="nx">show</span><span class="w"> </span><span class="nx">your</span><span class="w"> </span><span class="nx">appreciation</span><span class="w"> </span><span class="k">and</span>
-<span class="nx">keep</span><span class="w"> </span><span class="nx">me</span><span class="w"> </span><span class="nx">motivated</span><span class="p">.</span><span class="w"> </span><span class="nx">Thank</span><span class="w"> </span><span class="nx">you</span><span class="p">!</span><span class="w"> </span>
-</code></pre></div>
-
-<h2>Code</h2>
-<div class="codehilite"><pre><span></span><code><span class="n">lass</span><span class="w"> </span><span class="n">Solution</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">TreeNode</span><span class="w"> </span><span class="nf">buildTree</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">inorder</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">postorder</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="c1">// Call the recursive function with full arrays and return the result</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">buildTree</span><span class="p">(</span><span class="n">inorder</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">inorder</span><span class="p">.</span><span class="na">length</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">postorder</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">postorder</span><span class="p">.</span><span class="na">length</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span>
-<span class="w">    </span><span class="p">}</span>
-
-<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">TreeNode</span><span class="w"> </span><span class="nf">buildTree</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">inorder</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">inStart</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">inEnd</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">postorder</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">postStart</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">postEnd</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="c1">// Base case</span>
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">inStart</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">inEnd</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">postStart</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">postEnd</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="kc">null</span><span class="p">;</span>
-<span class="w">        </span><span class="p">}</span>
-
-<span class="w">        </span><span class="c1">// Find the root node from the last element of postorder traversal</span>
-<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">rootVal</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">postorder</span><span class="o">[</span><span class="n">postEnd</span><span class="o">]</span><span class="p">;</span>
-<span class="w">        </span><span class="n">TreeNode</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">TreeNode</span><span class="p">(</span><span class="n">rootVal</span><span class="p">);</span>
-
-<span class="w">        </span><span class="c1">// Find the index of the root node in inorder traversal</span>
-<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">rootIndex</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">inStart</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">inEnd</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">inorder</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">rootVal</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="n">rootIndex</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">i</span><span class="p">;</span>
-<span class="w">                </span><span class="k">break</span><span class="p">;</span>
-<span class="w">            </span><span class="p">}</span>
-<span class="w">        </span><span class="p">}</span>
-
-<span class="w">        </span><span class="c1">// Recursively build the left and right subtrees</span>
-<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">leftSize</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">rootIndex</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">inStart</span><span class="p">;</span>
-<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">rightSize</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">inEnd</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">rootIndex</span><span class="p">;</span>
-<span class="w">        </span><span class="n">root</span><span class="p">.</span><span class="na">left</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">buildTree</span><span class="p">(</span><span class="n">inorder</span><span class="p">,</span><span class="w"> </span><span class="n">inStart</span><span class="p">,</span><span class="w"> </span><span class="n">rootIndex</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">postorder</span><span class="p">,</span><span class="w"> </span><span class="n">postStart</span><span class="p">,</span><span class="w"> </span><span class="n">postStart</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">leftSize</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span>
-<span class="w">        </span><span class="n">root</span><span class="p">.</span><span class="na">right</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">buildTree</span><span class="p">(</span><span class="n">inorder</span><span class="p">,</span><span class="w"> </span><span class="n">rootIndex</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">inEnd</span><span class="p">,</span><span class="w"> </span><span class="n">postorder</span><span class="p">,</span><span class="w"> </span><span class="n">postEnd</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">rightSize</span><span class="p">,</span><span class="w"> </span><span class="n">postEnd</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span>
-
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">root</span><span class="p">;</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
-
-<div class="codehilite"><pre><span></span><code><span class="n">Language</span><span class="p">:</span> <span class="n">Python</span> 
-<span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">buildTree</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inorder</span><span class="p">,</span> <span class="n">postorder</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        :type inorder: List[int]</span>
-<span class="sd">        :type postorder: List[int]</span>
-<span class="sd">        :rtype: TreeNode</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="c1"># Base case</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">inorder</span><span class="p">:</span>
-            <span class="k">return</span> <span class="kc">None</span>
-
-        <span class="c1"># The last element of postorder list is the root</span>
-        <span class="n">root_val</span> <span class="o">=</span> <span class="n">postorder</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
-        <span class="n">root</span> <span class="o">=</span> <span class="n">TreeNode</span><span class="p">(</span><span class="n">root_val</span><span class="p">)</span>
-
-        <span class="c1"># Find the position of the root in the inorder list</span>
-        <span class="n">inorder_index</span> <span class="o">=</span> <span class="n">inorder</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">root_val</span><span class="p">)</span>
-
-        <span class="c1"># Recursively build the left and right subtrees</span>
-        <span class="n">root</span><span class="o">.</span><span class="n">right</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">buildTree</span><span class="p">(</span><span class="n">inorder</span><span class="p">[</span><span class="n">inorder_index</span><span class="o">+</span><span class="mi">1</span><span class="p">:],</span> <span class="n">postorder</span><span class="p">)</span>
-        <span class="n">root</span><span class="o">.</span><span class="n">left</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">buildTree</span><span class="p">(</span><span class="n">inorder</span><span class="p">[:</span><span class="n">inorder_index</span><span class="p">],</span> <span class="n">postorder</span><span class="p">)</span>
-
-        <span class="k">return</span> <span class="n">root</span>
-</code></pre></div>
-
-<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">C</span><span class="o">++</span><span class="w"> </span>
-<span class="n">class</span><span class="w"> </span><span class="n">Solution</span><span class="w"> </span><span class="p">{</span>
-<span class="n">public</span><span class="o">:</span>
-<span class="w">    </span><span class="n">TreeNode</span><span class="o">*</span><span class="w"> </span><span class="n">buildTree</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&amp;</span><span class="w"> </span><span class="n">inorder</span><span class="p">,</span><span class="w"> </span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&amp;</span><span class="w"> </span><span class="n">postorder</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="n">unordered_map</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="o">&gt;</span><span class="w"> </span><span class="n">index</span><span class="p">;</span>
-<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">inorder</span><span class="p">.</span><span class="n">size</span><span class="p">();</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="n">index</span><span class="p">[</span><span class="n">inorder</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">i</span><span class="p">;</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">buildTreeHelper</span><span class="p">(</span><span class="n">inorder</span><span class="p">,</span><span class="w"> </span><span class="n">postorder</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">inorder</span><span class="p">.</span><span class="n">size</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">postorder</span><span class="p">.</span><span class="n">size</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">index</span><span class="p">);</span>
-<span class="w">    </span><span class="p">}</span>
-
-<span class="w">    </span><span class="n">TreeNode</span><span class="o">*</span><span class="w"> </span><span class="n">buildTreeHelper</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&amp;</span><span class="w"> </span><span class="n">inorder</span><span class="p">,</span><span class="w"> </span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&amp;</span><span class="w"> </span><span class="n">postorder</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">inorderStart</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">inorderEnd</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">postorderStart</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">postorderEnd</span><span class="p">,</span><span class="w"> </span><span class="n">unordered_map</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="o">&gt;&amp;</span><span class="w"> </span><span class="n">index</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">inorderStart</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">inorderEnd</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">postorderStart</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">postorderEnd</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="n">nullptr</span><span class="p">;</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">rootVal</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">postorder</span><span class="p">[</span><span class="n">postorderEnd</span><span class="p">];</span>
-<span class="w">        </span><span class="n">TreeNode</span><span class="o">*</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">new</span><span class="w"> </span><span class="n">TreeNode</span><span class="p">(</span><span class="n">rootVal</span><span class="p">);</span>
-<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">inorderRootIndex</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">index</span><span class="p">[</span><span class="n">rootVal</span><span class="p">];</span>
-<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">leftSubtreeSize</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">inorderRootIndex</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">inorderStart</span><span class="p">;</span>
-<span class="w">        </span><span class="n">root</span><span class="o">-&gt;</span><span class="n">left</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">buildTreeHelper</span><span class="p">(</span><span class="n">inorder</span><span class="p">,</span><span class="w"> </span><span class="n">postorder</span><span class="p">,</span><span class="w"> </span><span class="n">inorderStart</span><span class="p">,</span><span class="w"> </span><span class="n">inorderRootIndex</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">postorderStart</span><span class="p">,</span><span class="w"> </span><span class="n">postorderStart</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">leftSubtreeSize</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">index</span><span class="p">);</span>
-<span class="w">        </span><span class="n">root</span><span class="o">-&gt;</span><span class="n">right</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">buildTreeHelper</span><span class="p">(</span><span class="n">inorder</span><span class="p">,</span><span class="w"> </span><span class="n">postorder</span><span class="p">,</span><span class="w"> </span><span class="n">inorderRootIndex</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">inorderEnd</span><span class="p">,</span><span class="w"> </span><span class="n">postorderStart</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">leftSubtreeSize</span><span class="p">,</span><span class="w"> </span><span class="n">postorderEnd</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">index</span><span class="p">);</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">root</span><span class="p">;</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">};</span>
-</code></pre></div>
-
-<h2>Please Comment</h2>
-<div class="codehilite"><pre><span></span><code><span class="nv">Thanks</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="nv">visiting</span><span class="w"> </span><span class="nv">my</span><span class="w"> </span><span class="nv">solution</span><span class="w"> </span><span class="nv">comment</span><span class="w"> </span><span class="nv">below</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="nv">you</span><span class="w"> </span><span class="nv">like</span><span class="w"> </span><span class="nv">it</span>.
-</code></pre></div></div><p style="page-break-before: always" ></p>

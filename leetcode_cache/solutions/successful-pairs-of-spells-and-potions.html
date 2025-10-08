@@ -1,17 +1,15 @@
-<div class='cpp-solution'><h2>✔️✔️Easy Solutions in Java ✔️✔️, Python ✔️, and C++ ✔️🧐Look at once 💻 with Exaplanation -- Votes: 318</h2><h2>Intuition</h2>
+<div class='cpp-solution'><h4>✔️✔️Easy Solutions in Java ✔️✔️, Python ✔️, and C++ ✔️🧐Look at once 💻 with Exaplanation [Votes: 318]</h4><h4>Intuition</h4>
 <!-- Describe your first thoughts on how to solve this problem. -->
-
 <p>For each spell, we need to find the number of potions that can form a successful pair with it. A pair is successful if the product of their strengths is at least the given success value. To find the number of successful pairs for each spell, we can iterate through the potions array and check if the product of the spell strength and the potion strength is greater than or equal to the success value. If it is, we can increment a counter for that spell. We can then return the counters as an array.</p>
-<h2>Approach</h2>
+<h4>Approach</h4>
 <!-- Describe your approach to solving the problem. -->
-
 <ol>
 <li>
 <p>We start by initializing the output array <code>pairs</code> with all zeros, and sorting the <code>potions</code> array in ascending order.</p>
 </li>
 <li>
-<p>For each <code>spell</code> in <code>spells</code>, we perform a binary search on the <code>potions</code> array to find the number of <code>potions</code> that form a successful pair with the current <code>spell</code>. We maintain two pointers <code>left</code> and <code>right</code> that initially point to the first and last indices<br />
-   of the <code>potions</code> array, respectively.</p>
+<p>For each <code>spell</code> in <code>spells</code>, we perform a binary search on the <code>potions</code> array to find the number of <code>potions</code> that form a successful pair with the current <code>spell</code>. We maintain two pointers <code>left</code> and <code>right</code> that initially point to the first and last indices
+of the <code>potions</code> array, respectively.</p>
 </li>
 <li>
 <p>We repeat the binary search until the <code>left</code> and <code>right</code> pointers meet or cross each other. In each iteration, we compute the product of the current <code>spell</code> and the middle <code>potion</code> using long integer multiplication to avoid integer overflow. If the product is greater than or equal to the <code>success</code> threshold, we move the <code>right</code> pointer to the left of the middle index. Otherwise, we move the <code>left</code> pointer to the right of the middle index.</p>
@@ -23,228 +21,98 @@
 <p>Finally, we return the <code>pairs</code> array as the result.</p>
 </li>
 </ol>
-<h2>Complexity</h2>
+<h4>Complexity</h4>
 <ul>
 <li>Time complexity:</li>
 </ul>
 <!-- Add your time complexity here, e.g. $$O(n)$$ -->
-
 <p>The time complexity of this solution is $$O(n log m)$$, where n is the length of <code>spells</code> and m is the length of <code>potions</code>, due to the binary search. The space complexity is O(1).</p>
 <ul>
 <li>Space complexity:</li>
 </ul>
 <!-- Add your space complexity here, e.g. $$O(n)$$ -->
-
 <p>The space complexity is $$O(1)$$, since we only use a constant amount of extra memory to store the <code>pairs</code> array and the binary search pointers.</p>
-<p></p>
-<h2>Please Upvote</h2>
-<div class="codehilite"><pre><span></span><code><span class="nx">Thanks</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="nx">visiting</span><span class="w"> </span><span class="nx">my</span><span class="w"> </span><span class="nx">solution</span><span class="p">.</span><span class="w"> </span><span class="nx">Keep</span><span class="w"> </span><span class="nx">Learning</span>
-<span class="nx">Please</span><span class="w"> </span><span class="nx">give</span><span class="w"> </span><span class="nx">my</span><span class="w"> </span><span class="nx">solution</span><span class="w"> </span><span class="nx">an</span><span class="w"> </span><span class="nx">upvote</span><span class="p">!</span><span class="w"> </span>
-<span class="nx">It</span><span class="err">&#39;</span><span class="nx">s</span><span class="w"> </span><span class="nx">a</span><span class="w"> </span><span class="nx">simple</span><span class="w"> </span><span class="nx">way</span><span class="w"> </span><span class="nx">to</span><span class="w"> </span><span class="nx">show</span><span class="w"> </span><span class="nx">your</span><span class="w"> </span><span class="nx">appreciation</span><span class="w"> </span><span class="k">and</span>
-<span class="nx">keep</span><span class="w"> </span><span class="nx">me</span><span class="w"> </span><span class="nx">motivated</span><span class="p">.</span><span class="w"> </span><span class="nx">Thank</span><span class="w"> </span><span class="nx">you</span><span class="p">!</span><span class="w"> </span>
+<h4>Please Upvote</h4>
+<pre><code>Thanks for visiting my solution. Keep Learning
+Please give my solution an upvote! 
+It's a simple way to show your appreciation and
+keep me motivated. Thank you! 
+</code></pre>
+<h4>Code</h4>
+<pre><code class="language-Java">class Solution {
+    public int[] successfulPairs(int[] spells, int[] potions, long success) {
+        int n = spells.length;
+        int m = potions.length;
+        int[] pairs = new int[n];
+        Arrays.sort(potions);
+        for (int i = 0; i &lt; n; i++) {
+            int spell = spells[i];
+            int left = 0;
+            int right = m - 1;
+            while (left &lt;= right) {
+                int mid = left + (right - left) / 2;
+                long product = (long) spell * potions[mid];
+                if (product &gt;= success) {
+                    right = mid - 1;
+                } else {
+                    left = mid + 1;
+                }
+            }
+            pairs[i] = m - left;
+        }
+        return pairs;
+    }
+}
+
+</code></pre>
+<pre><code class="language-Python">class Solution(object):
+    def successfulPairs(self, spells, potions, success):
+        n = len(spells)
+        m = len(potions)
+        pairs = [0] * n
+        potions.sort()
+        for i in range(n):
+            spell = spells[i]
+            left = 0
+            right = m - 1
+            while left &lt;= right:
+                mid = left + (right - left) // 2
+                product = spell * potions[mid]
+                if product &gt;= success:
+                    right = mid - 1
+                else:
+                    left = mid + 1
+            pairs[i] = m - left
+        return pairs
+
+</code></pre>
+<pre><code class="language-cpp">class Solution {
+public:
+    vector&lt;int&gt; successfulPairs(vector&lt;int&gt;&amp; spells, vector&lt;int&gt;&amp; potions, long long success) {
+        int n = spells.size();
+        int m = potions.size();
+        vector&lt;int&gt; pairs(n, 0);
+        sort(potions.begin(), potions.end());
+        for (int i = 0; i &lt; n; i++) {
+            int spell = spells[i];
+            int left = 0;
+            int right = m - 1;
+            while (left &lt;= right) {
+                int mid = left + (right - left) / 2;
+                long long product = (long long)spell * (long long)potions[mid];
+                if (product &gt;= success) {
+                    right = mid - 1;
+                } else {
+                    left = mid + 1;
+                }
+            }
+            pairs[i] = m - left;
+        }
+        return pairs;
+    }
+};
+
+</code></pre>
+<h4>Please Comment</h4>
+<pre><code>Thanks for visiting my solution comment below if you like it.
 </code></pre></div>
-
-<h2>Code</h2>
-<div class="codehilite"><pre><span></span><code><span class="kd">class</span> <span class="nc">Solution</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="nf">successfulPairs</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">spells</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">potions</span><span class="p">,</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">success</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">spells</span><span class="p">.</span><span class="na">length</span><span class="p">;</span>
-<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">m</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">potions</span><span class="p">.</span><span class="na">length</span><span class="p">;</span>
-<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">pairs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="kt">int</span><span class="o">[</span><span class="n">n</span><span class="o">]</span><span class="p">;</span>
-<span class="w">        </span><span class="n">Arrays</span><span class="p">.</span><span class="na">sort</span><span class="p">(</span><span class="n">potions</span><span class="p">);</span>
-<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">n</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="kt">int</span><span class="w"> </span><span class="n">spell</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">spells</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="p">;</span>
-<span class="w">            </span><span class="kt">int</span><span class="w"> </span><span class="n">left</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-<span class="w">            </span><span class="kt">int</span><span class="w"> </span><span class="n">right</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
-<span class="w">            </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">left</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">right</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="kt">int</span><span class="w"> </span><span class="n">mid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">left</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="p">(</span><span class="n">right</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">left</span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">2</span><span class="p">;</span>
-<span class="w">                </span><span class="kt">long</span><span class="w"> </span><span class="n">product</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kt">long</span><span class="p">)</span><span class="w"> </span><span class="n">spell</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">potions</span><span class="o">[</span><span class="n">mid</span><span class="o">]</span><span class="p">;</span>
-<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">product</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="n">success</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                    </span><span class="n">right</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mid</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
-<span class="w">                </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                    </span><span class="n">left</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mid</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
-<span class="w">                </span><span class="p">}</span>
-<span class="w">            </span><span class="p">}</span>
-<span class="w">            </span><span class="n">pairs</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">left</span><span class="p">;</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">pairs</span><span class="p">;</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
-
-<div class="codehilite"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">successfulPairs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">spells</span><span class="p">,</span> <span class="n">potions</span><span class="p">,</span> <span class="n">success</span><span class="p">):</span>
-        <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">spells</span><span class="p">)</span>
-        <span class="n">m</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">potions</span><span class="p">)</span>
-        <span class="n">pairs</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">n</span>
-        <span class="n">potions</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
-            <span class="n">spell</span> <span class="o">=</span> <span class="n">spells</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
-            <span class="n">left</span> <span class="o">=</span> <span class="mi">0</span>
-            <span class="n">right</span> <span class="o">=</span> <span class="n">m</span> <span class="o">-</span> <span class="mi">1</span>
-            <span class="k">while</span> <span class="n">left</span> <span class="o">&lt;=</span> <span class="n">right</span><span class="p">:</span>
-                <span class="n">mid</span> <span class="o">=</span> <span class="n">left</span> <span class="o">+</span> <span class="p">(</span><span class="n">right</span> <span class="o">-</span> <span class="n">left</span><span class="p">)</span> <span class="o">//</span> <span class="mi">2</span>
-                <span class="n">product</span> <span class="o">=</span> <span class="n">spell</span> <span class="o">*</span> <span class="n">potions</span><span class="p">[</span><span class="n">mid</span><span class="p">]</span>
-                <span class="k">if</span> <span class="n">product</span> <span class="o">&gt;=</span> <span class="n">success</span><span class="p">:</span>
-                    <span class="n">right</span> <span class="o">=</span> <span class="n">mid</span> <span class="o">-</span> <span class="mi">1</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="n">left</span> <span class="o">=</span> <span class="n">mid</span> <span class="o">+</span> <span class="mi">1</span>
-            <span class="n">pairs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">m</span> <span class="o">-</span> <span class="n">left</span>
-        <span class="k">return</span> <span class="n">pairs</span>
-</code></pre></div>
-
-<div class="codehilite"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="w"> </span><span class="p">{</span>
-<span class="k">public</span><span class="o">:</span>
-<span class="w">    </span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="w"> </span><span class="n">successfulPairs</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&amp;</span><span class="w"> </span><span class="n">spells</span><span class="p">,</span><span class="w"> </span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&amp;</span><span class="w"> </span><span class="n">potions</span><span class="p">,</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">success</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">spells</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>
-<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">m</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">potions</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>
-<span class="w">        </span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="w"> </span><span class="n">pairs</span><span class="p">(</span><span class="n">n</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
-<span class="w">        </span><span class="n">sort</span><span class="p">(</span><span class="n">potions</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span><span class="w"> </span><span class="n">potions</span><span class="p">.</span><span class="n">end</span><span class="p">());</span>
-<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">n</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="kt">int</span><span class="w"> </span><span class="n">spell</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">spells</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
-<span class="w">            </span><span class="kt">int</span><span class="w"> </span><span class="n">left</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-<span class="w">            </span><span class="kt">int</span><span class="w"> </span><span class="n">right</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
-<span class="w">            </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">left</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">right</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="kt">int</span><span class="w"> </span><span class="n">mid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">left</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="p">(</span><span class="n">right</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">left</span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">2</span><span class="p">;</span>
-<span class="w">                </span><span class="kt">long</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">product</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kt">long</span><span class="w"> </span><span class="kt">long</span><span class="p">)</span><span class="n">spell</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="p">(</span><span class="kt">long</span><span class="w"> </span><span class="kt">long</span><span class="p">)</span><span class="n">potions</span><span class="p">[</span><span class="n">mid</span><span class="p">];</span>
-<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">product</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="n">success</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                    </span><span class="n">right</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mid</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
-<span class="w">                </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                    </span><span class="n">left</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mid</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
-<span class="w">                </span><span class="p">}</span>
-<span class="w">            </span><span class="p">}</span>
-<span class="w">            </span><span class="n">pairs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">left</span><span class="p">;</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">pairs</span><span class="p">;</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">};</span>
-</code></pre></div>
-
-<h2>Please Comment</h2>
-<div class="codehilite"><pre><span></span><code><span class="nv">Thanks</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="nv">visiting</span><span class="w"> </span><span class="nv">my</span><span class="w"> </span><span class="nv">solution</span><span class="w"> </span><span class="nv">comment</span><span class="w"> </span><span class="nv">below</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="nv">you</span><span class="w"> </span><span class="nv">like</span><span class="w"> </span><span class="nv">it</span>.
-</code></pre></div></div>
-
-
-<div class='python-solution'><h2>✔️✔️Easy Solutions in Java ✔️✔️, Python ✔️, and C++ ✔️🧐Look at once 💻 with Exaplanation -- Votes: 318</h2><h2>Intuition</h2>
-<!-- Describe your first thoughts on how to solve this problem. -->
-
-<p>For each spell, we need to find the number of potions that can form a successful pair with it. A pair is successful if the product of their strengths is at least the given success value. To find the number of successful pairs for each spell, we can iterate through the potions array and check if the product of the spell strength and the potion strength is greater than or equal to the success value. If it is, we can increment a counter for that spell. We can then return the counters as an array.</p>
-<h2>Approach</h2>
-<!-- Describe your approach to solving the problem. -->
-
-<ol>
-<li>
-<p>We start by initializing the output array <code>pairs</code> with all zeros, and sorting the <code>potions</code> array in ascending order.</p>
-</li>
-<li>
-<p>For each <code>spell</code> in <code>spells</code>, we perform a binary search on the <code>potions</code> array to find the number of <code>potions</code> that form a successful pair with the current <code>spell</code>. We maintain two pointers <code>left</code> and <code>right</code> that initially point to the first and last indices<br />
-   of the <code>potions</code> array, respectively.</p>
-</li>
-<li>
-<p>We repeat the binary search until the <code>left</code> and <code>right</code> pointers meet or cross each other. In each iteration, we compute the product of the current <code>spell</code> and the middle <code>potion</code> using long integer multiplication to avoid integer overflow. If the product is greater than or equal to the <code>success</code> threshold, we move the <code>right</code> pointer to the left of the middle index. Otherwise, we move the <code>left</code> pointer to the right of the middle index.</p>
-</li>
-<li>
-<p>Once the binary search is complete, we set the corresponding element of <code>pairs</code> to the number of <code>potions</code> that come after the <code>left</code> pointer in the sorted <code>potions</code> array, which are guaranteed to form a successful pair with the current <code>spell</code>.</p>
-</li>
-<li>
-<p>Finally, we return the <code>pairs</code> array as the result.</p>
-</li>
-</ol>
-<h2>Complexity</h2>
-<ul>
-<li>Time complexity:</li>
-</ul>
-<!-- Add your time complexity here, e.g. $$O(n)$$ -->
-
-<p>The time complexity of this solution is $$O(n log m)$$, where n is the length of <code>spells</code> and m is the length of <code>potions</code>, due to the binary search. The space complexity is O(1).</p>
-<ul>
-<li>Space complexity:</li>
-</ul>
-<!-- Add your space complexity here, e.g. $$O(n)$$ -->
-
-<p>The space complexity is $$O(1)$$, since we only use a constant amount of extra memory to store the <code>pairs</code> array and the binary search pointers.</p>
-<p></p>
-<h2>Please Upvote</h2>
-<div class="codehilite"><pre><span></span><code><span class="nx">Thanks</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="nx">visiting</span><span class="w"> </span><span class="nx">my</span><span class="w"> </span><span class="nx">solution</span><span class="p">.</span><span class="w"> </span><span class="nx">Keep</span><span class="w"> </span><span class="nx">Learning</span>
-<span class="nx">Please</span><span class="w"> </span><span class="nx">give</span><span class="w"> </span><span class="nx">my</span><span class="w"> </span><span class="nx">solution</span><span class="w"> </span><span class="nx">an</span><span class="w"> </span><span class="nx">upvote</span><span class="p">!</span><span class="w"> </span>
-<span class="nx">It</span><span class="err">&#39;</span><span class="nx">s</span><span class="w"> </span><span class="nx">a</span><span class="w"> </span><span class="nx">simple</span><span class="w"> </span><span class="nx">way</span><span class="w"> </span><span class="nx">to</span><span class="w"> </span><span class="nx">show</span><span class="w"> </span><span class="nx">your</span><span class="w"> </span><span class="nx">appreciation</span><span class="w"> </span><span class="k">and</span>
-<span class="nx">keep</span><span class="w"> </span><span class="nx">me</span><span class="w"> </span><span class="nx">motivated</span><span class="p">.</span><span class="w"> </span><span class="nx">Thank</span><span class="w"> </span><span class="nx">you</span><span class="p">!</span><span class="w"> </span>
-</code></pre></div>
-
-<h2>Code</h2>
-<div class="codehilite"><pre><span></span><code><span class="kd">class</span> <span class="nc">Solution</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="nf">successfulPairs</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">spells</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">potions</span><span class="p">,</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">success</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">spells</span><span class="p">.</span><span class="na">length</span><span class="p">;</span>
-<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">m</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">potions</span><span class="p">.</span><span class="na">length</span><span class="p">;</span>
-<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">pairs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="kt">int</span><span class="o">[</span><span class="n">n</span><span class="o">]</span><span class="p">;</span>
-<span class="w">        </span><span class="n">Arrays</span><span class="p">.</span><span class="na">sort</span><span class="p">(</span><span class="n">potions</span><span class="p">);</span>
-<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">n</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="kt">int</span><span class="w"> </span><span class="n">spell</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">spells</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="p">;</span>
-<span class="w">            </span><span class="kt">int</span><span class="w"> </span><span class="n">left</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-<span class="w">            </span><span class="kt">int</span><span class="w"> </span><span class="n">right</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
-<span class="w">            </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">left</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">right</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="kt">int</span><span class="w"> </span><span class="n">mid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">left</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="p">(</span><span class="n">right</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">left</span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">2</span><span class="p">;</span>
-<span class="w">                </span><span class="kt">long</span><span class="w"> </span><span class="n">product</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kt">long</span><span class="p">)</span><span class="w"> </span><span class="n">spell</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">potions</span><span class="o">[</span><span class="n">mid</span><span class="o">]</span><span class="p">;</span>
-<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">product</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="n">success</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                    </span><span class="n">right</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mid</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
-<span class="w">                </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                    </span><span class="n">left</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mid</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
-<span class="w">                </span><span class="p">}</span>
-<span class="w">            </span><span class="p">}</span>
-<span class="w">            </span><span class="n">pairs</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">left</span><span class="p">;</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">pairs</span><span class="p">;</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
-
-<div class="codehilite"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">successfulPairs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">spells</span><span class="p">,</span> <span class="n">potions</span><span class="p">,</span> <span class="n">success</span><span class="p">):</span>
-        <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">spells</span><span class="p">)</span>
-        <span class="n">m</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">potions</span><span class="p">)</span>
-        <span class="n">pairs</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">n</span>
-        <span class="n">potions</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
-            <span class="n">spell</span> <span class="o">=</span> <span class="n">spells</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
-            <span class="n">left</span> <span class="o">=</span> <span class="mi">0</span>
-            <span class="n">right</span> <span class="o">=</span> <span class="n">m</span> <span class="o">-</span> <span class="mi">1</span>
-            <span class="k">while</span> <span class="n">left</span> <span class="o">&lt;=</span> <span class="n">right</span><span class="p">:</span>
-                <span class="n">mid</span> <span class="o">=</span> <span class="n">left</span> <span class="o">+</span> <span class="p">(</span><span class="n">right</span> <span class="o">-</span> <span class="n">left</span><span class="p">)</span> <span class="o">//</span> <span class="mi">2</span>
-                <span class="n">product</span> <span class="o">=</span> <span class="n">spell</span> <span class="o">*</span> <span class="n">potions</span><span class="p">[</span><span class="n">mid</span><span class="p">]</span>
-                <span class="k">if</span> <span class="n">product</span> <span class="o">&gt;=</span> <span class="n">success</span><span class="p">:</span>
-                    <span class="n">right</span> <span class="o">=</span> <span class="n">mid</span> <span class="o">-</span> <span class="mi">1</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="n">left</span> <span class="o">=</span> <span class="n">mid</span> <span class="o">+</span> <span class="mi">1</span>
-            <span class="n">pairs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">m</span> <span class="o">-</span> <span class="n">left</span>
-        <span class="k">return</span> <span class="n">pairs</span>
-</code></pre></div>
-
-<div class="codehilite"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="w"> </span><span class="p">{</span>
-<span class="k">public</span><span class="o">:</span>
-<span class="w">    </span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="w"> </span><span class="n">successfulPairs</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&amp;</span><span class="w"> </span><span class="n">spells</span><span class="p">,</span><span class="w"> </span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&amp;</span><span class="w"> </span><span class="n">potions</span><span class="p">,</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">success</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">spells</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>
-<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">m</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">potions</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>
-<span class="w">        </span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="w"> </span><span class="n">pairs</span><span class="p">(</span><span class="n">n</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
-<span class="w">        </span><span class="n">sort</span><span class="p">(</span><span class="n">potions</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span><span class="w"> </span><span class="n">potions</span><span class="p">.</span><span class="n">end</span><span class="p">());</span>
-<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">n</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="kt">int</span><span class="w"> </span><span class="n">spell</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">spells</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
-<span class="w">            </span><span class="kt">int</span><span class="w"> </span><span class="n">left</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-<span class="w">            </span><span class="kt">int</span><span class="w"> </span><span class="n">right</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
-<span class="w">            </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">left</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">right</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="kt">int</span><span class="w"> </span><span class="n">mid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">left</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="p">(</span><span class="n">right</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">left</span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">2</span><span class="p">;</span>
-<span class="w">                </span><span class="kt">long</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">product</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kt">long</span><span class="w"> </span><span class="kt">long</span><span class="p">)</span><span class="n">spell</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="p">(</span><span class="kt">long</span><span class="w"> </span><span class="kt">long</span><span class="p">)</span><span class="n">potions</span><span class="p">[</span><span class="n">mid</span><span class="p">];</span>
-<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">product</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="n">success</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                    </span><span class="n">right</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mid</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
-<span class="w">                </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                    </span><span class="n">left</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mid</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
-<span class="w">                </span><span class="p">}</span>
-<span class="w">            </span><span class="p">}</span>
-<span class="w">            </span><span class="n">pairs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">left</span><span class="p">;</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">pairs</span><span class="p">;</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">};</span>
-</code></pre></div>
-
-<h2>Please Comment</h2>
-<div class="codehilite"><pre><span></span><code><span class="nv">Thanks</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="nv">visiting</span><span class="w"> </span><span class="nv">my</span><span class="w"> </span><span class="nv">solution</span><span class="w"> </span><span class="nv">comment</span><span class="w"> </span><span class="nv">below</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="nv">you</span><span class="w"> </span><span class="nv">like</span><span class="w"> </span><span class="nv">it</span>.
-</code></pre></div></div><p style="page-break-before: always" ></p>

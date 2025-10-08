@@ -1,185 +1,170 @@
-<div class='cpp-solution'><h2>C++ EASY SOLUTIONS - (SORTING , XOR , MAPS (OR FREQUENCY ARRAY)) -- Votes: 1688</h2><p>Hi , everybody . This question is quite easy. I am quite confident that most of you would have reached atleast 1 of the following approaches to solve this question. But , incase you missed any of them , do give this a read.</p>
-<h4>EXPLANATION :</h4>
-<p><strong>The question simply asks us to find an element in the given array whose frequency is 1.All the other elements have a frequency=2.<br />
-We have to do so in :</strong></p>
-<ul>
-<li><strong>Linear Time</strong></li>
-<li><strong>Using Constant Space</strong></li>
-</ul>
-<h6>METHOD 1 : USING MAPS (NOT USING CONSTANT SPACE )</h6>
-<p>The question states that we have to find an element in the array with frequency=1.<br />
-So , the first idea that pops in the mind is to store the frequency of each element in a map (or a frequency array) and then traverse that map/array and return the element with frequency=1.</p>
+<div class='cpp-solution'><h4>C++ EASY SOLUTIONS - (SORTING , XOR , MAPS (OR FREQUENCY ARRAY)) [Votes: 1688]</h4><p>Hi , everybody . This question is quite easy. I am quite confident that most of you would have reached atleast 1 of the following approaches to solve this question. But , incase you missed any of them , do give this a read.</p>
+<h6>EXPLANATION :</h6>
+<p><strong>The question simply asks us to find an element in the given array whose frequency is 1.All the other elements have a frequency=2. 
+We have to do so in :</strong>
+* <strong>Linear Time</strong>
+* <strong>Using Constant Space</strong></p>
+<h6>## METHOD 1 : USING MAPS (NOT USING CONSTANT SPACE )</h6>
+<p>The question states that we have to find an element in the array with frequency=1. 
+So , the first idea that pops in the mind is to store the frequency of each element in a map (or a frequency array) and then traverse that map/array and return the element with frequency=1. </p>
 <ol>
 <li>Map the given array's elements to their frequency. ( KEY : ELEMENT , VALUE : FREQUENCY )</li>
-<li>Traverse that map and return the key whose value =1.</li>
+<li>Traverse that map and return the key whose value =1. </li>
 </ol>
-<h6>CODE :</h6>
-<div class="codehilite"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="n">Solution</span><span class="w"> </span><span class="err">{</span>
-<span class="k">public</span><span class="err">:</span>
-<span class="w">    </span><span class="nc">int</span><span class="w"> </span><span class="n">singleNumber</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="nc">int</span><span class="o">&gt;&amp;</span><span class="w"> </span><span class="n">nums</span><span class="p">)</span><span class="w"> </span><span class="err">{</span><span class="w"> </span>
-<span class="w">       </span><span class="n">unordered_map</span><span class="o">&lt;</span><span class="nc">int</span><span class="p">,</span><span class="nc">int</span><span class="o">&gt;</span><span class="w"> </span><span class="n">a</span><span class="p">;</span>
-<span class="w">       </span><span class="k">for</span><span class="p">(</span><span class="n">auto</span><span class="w"> </span><span class="nl">x</span><span class="p">:</span><span class="w"> </span><span class="n">nums</span><span class="p">)</span>
-<span class="w">           </span><span class="n">a</span><span class="o">[</span><span class="n">x</span><span class="o">]++</span><span class="p">;</span>
-<span class="w">       </span><span class="k">for</span><span class="p">(</span><span class="n">auto</span><span class="w"> </span><span class="nl">z</span><span class="p">:</span><span class="n">a</span><span class="p">)</span>
-<span class="w">           </span><span class="k">if</span><span class="p">(</span><span class="n">z</span><span class="p">.</span><span class="k">second</span><span class="o">==</span><span class="mi">1</span><span class="p">)</span>
-<span class="w">               </span><span class="k">return</span><span class="w"> </span><span class="n">z</span><span class="p">.</span><span class="k">first</span><span class="p">;</span>
-<span class="w">       </span><span class="k">return</span><span class="w"> </span><span class="o">-</span><span class="mi">1</span><span class="p">;</span>
-<span class="w">    </span><span class="err">}</span>
-<span class="err">}</span><span class="p">;</span>
-</code></pre></div>
-
-<p><strong>TC: O(N)</strong><br />
+<h6>## CODE :</h6>
+<pre><code>class Solution {
+public:
+    int singleNumber(vector&lt;int&gt;&amp; nums) { 
+       unordered_map&lt;int,int&gt; a;
+       for(auto x: nums)
+           a[x]++;
+       for(auto z:a)
+           if(z.second==1)
+               return z.first;
+       return -1;
+    }
+};
+</code></pre>
+<p><strong>TC: O(N)</strong>
 <strong>SC: O(N)</strong></p>
-<p>Now , if we see the above method uses variable extra space, which is why it can't be our answer.<br />
-(Although it is an approach to solve this problem).<br />
-Then how do we solve this ??<br />
-Imagine you have blocks with the array elements inscribed on them. Now , if I sort the array for you and now ask you to find the element , CAN YOU DO SO ??</p>
+<p>Now , if we see the above method uses variable extra space, which is why it can't be our answer. 
+(Although it is an approach to solve this problem). 
+Then how do we solve this ?? 
+Imagine you have blocks with the array elements inscribed on them. Now , if I sort the array for you and now ask you to find the element , CAN YOU DO SO ?? </p>
 <p>Yes , upon sorting , every element will have a similar element adjacent to it , if it has the frequency of 2.</p>
-<h6>METHOD 2 : USING SORTING (USING CONSTANT SPACE )</h6>
-<p>As explained above , we do the following :</p>
-<ol>
-<li>Sort the array.</li>
-<li>Traverse the array and check if one of the adjacent elements is equal to the current element or not.</li>
-<li>If yes , move ahead. Else return the current element.</li>
-</ol>
-<h6>CODE :</h6>
-<div class="codehilite"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="n">Solution</span><span class="w"> </span><span class="err">{</span>
-<span class="k">public</span><span class="err">:</span>
-<span class="w">    </span><span class="nc">int</span><span class="w"> </span><span class="n">singleNumber</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="nc">int</span><span class="o">&gt;&amp;</span><span class="w"> </span><span class="n">nums</span><span class="p">)</span><span class="w"> </span><span class="err">{</span><span class="w"> </span>
-<span class="w">       </span><span class="n">sort</span><span class="p">(</span><span class="n">nums</span><span class="p">.</span><span class="k">begin</span><span class="p">(),</span><span class="n">nums</span><span class="p">.</span><span class="k">end</span><span class="p">());</span>
-<span class="w">        </span><span class="k">for</span><span class="p">(</span><span class="nc">int</span><span class="w"> </span><span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">nums</span><span class="p">.</span><span class="k">size</span><span class="p">();</span><span class="n">i</span><span class="o">+=</span><span class="mi">2</span><span class="p">)</span>
-<span class="w">        </span><span class="err">{</span>
-<span class="w">            </span><span class="k">if</span><span class="p">(</span><span class="n">nums</span><span class="o">[</span><span class="n">i</span><span class="o">]!=</span><span class="n">nums</span><span class="o">[</span><span class="n">i-1</span><span class="o">]</span><span class="p">)</span>
-<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="n">nums</span><span class="o">[</span><span class="n">i-1</span><span class="o">]</span><span class="p">;</span>
-<span class="w">        </span><span class="err">}</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">nums</span><span class="o">[</span><span class="n">nums.size()-1</span><span class="o">]</span><span class="p">;</span>
-<span class="w">    </span><span class="err">}</span>
-<span class="err">}</span><span class="p">;</span>
-</code></pre></div>
-
-<p><strong>TC: O(NlogN)</strong><br />
+<h6>## METHOD 2 : USING SORTING (USING CONSTANT SPACE )</h6>
+<p>As explained above , we do the following :
+1. Sort the array. 
+2. Traverse the array and check if one of the adjacent elements is equal to the current element or not. 
+3. If yes , move ahead. Else return the current element. </p>
+<h6>## CODE :</h6>
+<pre><code>class Solution {
+public:
+    int singleNumber(vector&lt;int&gt;&amp; nums) { 
+       sort(nums.begin(),nums.end());
+        for(int i=1;i&lt;nums.size();i+=2)
+        {
+            if(nums[i]!=nums[i-1])
+                return nums[i-1];
+        }
+        return nums[nums.size()-1];
+    }
+};
+</code></pre>
+<p><strong>TC: O(NlogN)</strong>
 <strong>SC: O(1)</strong></p>
-<p>The above approach can be used to solve the problem . But what if we can improve the time complexity ??<br />
-What if we don't have to sort the array ??<br />
-The following method deals with that approach.</p>
-<h6>METHOD 3 : USING BITWISE XOR OPERATOR (USING CONSTANT SPACE )</h6>
-<p>To use this approach you first need to understand about Bitwise XOR operator.<br />
-Most of us who have a background in physics ( highschool level ) , are aware of the LOGIC GATES.<br />
-One of such gates is the XOR Gate :<br />
-According to this gate , the output is true , only if both the inputs are of opposite kind .<br />
-That is ,<br />
-<strong>A B Y</strong><br />
-<strong>0 0 0</strong><br />
-<strong>0 1 1</strong><br />
-<strong>1 0 1</strong><br />
-<strong>1 1 0</strong></p>
-<p>We apply the extended version of this gate in our bitwise XOR operator.<br />
-If we do "a^b" , it means that we are applying the XOR gate on the 2 numbers in a bitwise fashion ( on each of the corresponding bits of the numbers).<br />
-Similarly , if we observe ,</p>
-<ol>
-<li><strong><em>A^A=0</em></strong></li>
-<li><strong><em>A^B^A=B</em></strong></li>
-<li><strong><em>(A^A^B) = (B^A^A) = (A^B^A) = B</em></strong> This shows that position doesn't matter.</li>
-<li>Similarly , if we see , <strong><em>a^a^a......... (even times)=0 and a^a^a........(odd times)=a</em></strong></li>
-</ol>
-<p>Google It for more details.</p>
-<p>We apply the above observations :</p>
-<ol>
-<li>Traverse the array and take the Bitwise XOR of each element.</li>
-<li>Return the value.</li>
-</ol>
-<p><strong>Why does this work ??</strong><br />
-Because , the elements with frequency=2 will result in 0. And then the only element with frequency=1 will generate the answer.</p>
-<h6>CODE :</h6>
-<div class="codehilite"><pre><span></span><code><span class="nt">class</span><span class="w"> </span><span class="nt">Solution</span><span class="w"> </span><span class="p">{</span>
-<span class="n">public</span><span class="p">:</span>
-<span class="w">    </span><span class="n">int</span><span class="w"> </span><span class="nf">singleNumber</span><span class="p">(</span><span class="n">vector</span><span class="err">&lt;</span><span class="n">int</span><span class="err">&gt;&amp;</span><span class="w"> </span><span class="n">nums</span><span class="p">)</span><span class="w"> </span><span class="err">{</span><span class="w"> </span>
-<span class="w">       </span><span class="n">int</span><span class="w"> </span><span class="n">ans</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>
-<span class="w">       </span><span class="err">for(auto</span><span class="w"> </span><span class="n">x</span><span class="p">:</span><span class="n">nums</span><span class="p">)</span>
-<span class="w">       </span><span class="n">ans</span><span class="o">^=</span><span class="n">x</span><span class="p">;</span>
-<span class="w">       </span><span class="err">return</span><span class="w"> </span><span class="err">ans</span><span class="p">;</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="err">}</span><span class="o">;</span>
-</code></pre></div>
-
-<p><strong>TC: O(N)</strong><br />
+<p>The above approach can be used to solve the problem . But what if we can improve the time complexity ??
+What if we don't have to sort the array ?? 
+The following method deals with that approach. </p>
+<h6>## METHOD 3 : USING BITWISE XOR OPERATOR (USING CONSTANT SPACE )</h6>
+<p>To use this approach you first need to understand about Bitwise XOR operator. 
+Most of us who have a background in physics ( highschool level ) , are aware of the LOGIC GATES. 
+One of such gates is the XOR Gate : 
+According to this gate , the output is true , only if both the inputs are of opposite kind . 
+That is , 
+                     <strong>A             B                   Y</strong>
+                     <strong>0             0                    0</strong>
+                     <strong>0             1                    1</strong>
+                     <strong>1             0                    1</strong>
+                     <strong>1             1                    0</strong></p>
+<p>We apply the extended version of this gate in our bitwise XOR operator. 
+If we do "a^b" , it means that we are applying the XOR gate on the 2 numbers in a bitwise fashion ( on each of the corresponding bits of the numbers). 
+Similarly , if we observe , 
+1.  <strong><em>A^A=0</em></strong>
+2.  <strong><em>A^B^A=B</em></strong>
+3.  <strong><em>(A^A^B) = (B^A^A) = (A^B^A) = B</em></strong>  This shows that position doesn't matter. 
+4.  Similarly , if we see , <strong><em>a^a^a......... (even times)=0 and a^a^a........(odd times)=a</em></strong></p>
+<p>Google It for more details. </p>
+<p>We apply the above observations : 
+1. Traverse the array and take the Bitwise XOR of each element. 
+2. Return the value. </p>
+<p><strong>Why does this work ??</strong>
+Because , the elements with frequency=2 will result in 0. And then the only element with frequency=1 will generate the answer. </p>
+<h6>## CODE :</h6>
+<pre><code>class Solution {
+public:
+    int singleNumber(vector&lt;int&gt;&amp; nums) { 
+       int ans=0;
+       for(auto x:nums)
+       ans^=x;
+       return ans;
+    }
+};
+</code></pre>
+<p><strong>TC: O(N)</strong>
 <strong>SC: O(1)</strong></p>
-<h4>PS : METHOD 4: SUM OF ELEMENTS</h4>
-<p>All the unique elements , in the array have a frequency of 2 , except one element.</p>
+<h6>PS : METHOD 4: SUM OF ELEMENTS</h6>
+<p>All the unique elements , in the array have a frequency of 2 , except one element. </p>
 <ol>
-<li>Store all the unique elements in set.</li>
-<li>Add the elements of the set and multiply by 2 (SUM_1).</li>
-<li>Add all the elements of the array(ARRAY_SUM).</li>
-<li>Return (SUM_1 - ARRAY_SUM) .</li>
+<li>Store all the unique elements in set. </li>
+<li>Add the elements of the set and multiply by 2 (SUM_1). </li>
+<li>Add all the elements of the array(ARRAY_SUM). </li>
+<li>Return (SUM_1 - ARRAY_SUM) . </li>
 </ol>
-<p><strong>Why does this work ??</strong><br />
-ARRAY_SUM = 2*(a1+a2+a3...+ak) + a(k+1)<br />
-SUM_1 = 2*(a1+a2+a3+....+ak+ a(k+1))</p>
-<p><em>a(x) represents the xth unique element in the array.<br />
+<p><strong>Why does this work ??</strong>
+ARRAY_SUM = 2<em>(a1+a2+a3...+ak) + a(k+1)
+SUM_1 = 2</em>(a1+a2+a3+....+ak+ a(k+1)) </p>
+<p><em>a(x) represents the xth unique element in the array. 
 a(k+1) represents the element with frequency=1.</em></p>
-<p>Hope you found this post useful . If so , then do upvote and comment below.</p></div>
-
-
-<div class='python-solution'><h2>Think it through || Time: O(n) Space: O(1) || Python Go Explained -- Votes: 802</h2><h4>Edge Cases:</h4>
+<p>Hope you found this post useful . If so , then do upvote and comment below.</p></div><div class='python-solution'><h4>Think it through || Time: O(n) Space: O(1) || Python Go Explained [Votes: 802]</h4><h6>Edge Cases:</h6>
 <ol>
 <li>No element appears twice; it is a constraint so not possible</li>
 <li>Single length array; return the only element already present in the array</li>
 <li>len(nums) &gt; 1; find the single element that does not appear twice</li>
 </ol>
-<h4>Approaches:</h4>
+<h6>Approaches:</h6>
 <ol>
 <li>
-<p><strong>Brute Force</strong><br />
-   Intuition:<br />
-   Iterate through every element in the nums and check if any of the element does not appear twice, in that case return the element.<br />
-<em>Time: O(n^2)<br />
-   Space: O(1)</em></p>
+<p><strong>Brute Force</strong>
+Intuition:
+Iterate through every element in the nums and check if any of the element does not appear twice, in that case return the element.
+<em>Time: O(n^2)
+Space: O(1)</em></p>
 </li>
 <li>
-<p><strong>Use Sorting</strong><br />
-   Intuition:<br />
-   If the elements of the nums array are sorted/when we sort it, we can compare the neighbours to find the single element. It is already mentioned that all other elements appear twice except one.<br />
-<em>Time: O(nlogn) for sorting then O(n) to check neighbouring elements<br />
-   Space: O(1)</em></p>
+<p><strong>Use Sorting</strong>
+Intuition:
+If the elements of the nums array are sorted/when we sort it, we can compare the neighbours to find the single element. It is already mentioned that all other elements appear twice except one.
+<em>Time: O(nlogn) for sorting then O(n) to check neighbouring elements
+Space: O(1)</em></p>
 </li>
 <li>
-<p><strong>Use Hashing/Set</strong><br />
-   Intuition:<br />
-   i) As we iterate through the nums array we store the elements encountered and check if we find them again while iteration continues. While checking if we find them again, we maintain a single_element object/variable which stores that single element, eventually returning the single_element.<br />
-   ii) The other way is to maintain a num_frequency hashmap/dictionary and iterate over it to find which has exactly 1 frequency and return that key/num.<br />
-<em>Time: O(n) for iterating over the nums array<br />
-   Space: O(n) for hashing</em></p>
+<p><strong>Use Hashing/Set</strong>
+Intuition:
+i) As we iterate through the nums array we store the elements encountered and check if we find them again while iteration continues. While checking if we find them again, we maintain a single_element object/variable which stores that single element, eventually returning the single_element.
+ii) The other way is to maintain a num_frequency hashmap/dictionary and iterate over it to find which has exactly 1 frequency and return that key/num.
+<em>Time: O(n) for iterating over the nums array
+Space: O(n) for hashing</em></p>
 </li>
 <li>
-<p><strong>Use Xor/Bit Manipulation</strong><br />
-   Intuition:<br />
-   Xor of any two num gives the difference of bit as 1 and same bit as 0.<br />
-   Thus, using this we get 1 ^ 1 == 0 because the same numbers have same bits.<br />
-   So, we will always get the single element because all the same ones will evaluate to 0 and 0^single_number = single_number.<br />
-<em>Time: O(n)<br />
-   Space: O(1)</em></p>
+<p><strong>Use Xor/Bit Manipulation</strong>
+Intuition:
+Xor of any two num gives the difference of bit as 1 and same bit as 0.
+Thus, using this we get 1 ^ 1 == 0 because the same numbers have same bits.
+So, we will always get the single element because all the same ones will evaluate to 0 and 0^single_number = single_number.
+<em>Time: O(n)
+Space: O(1)</em></p>
 </li>
 </ol>
-<div class="codehilite"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nl">Solution</span><span class="p">:</span>
-<span class="w">    </span><span class="n">def</span><span class="w"> </span><span class="n">singleNumber</span><span class="p">(</span><span class="n">self</span><span class="p">,</span><span class="w"> </span><span class="nl">nums</span><span class="p">:</span><span class="w"> </span><span class="n">List</span><span class="o">[</span><span class="n">int</span><span class="o">]</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="nc">int</span><span class="err">:</span>
-<span class="w">        </span><span class="n">xor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span>
-<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="n">num</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="nl">nums</span><span class="p">:</span>
-<span class="w">            </span><span class="n">xor</span><span class="w"> </span><span class="o">^=</span><span class="w"> </span><span class="n">num</span>
+<pre><code>class Solution:
+    def singleNumber(self, nums: List[int]) -&gt; int:
+        xor = 0
+        for num in nums:
+            xor ^= num
 
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">xor</span>
-</code></pre></div>
+        return xor
 
+</code></pre>
 <p>In Golang:</p>
-<div class="codehilite"><pre><span></span><code><span class="k">func</span><span class="w"> </span><span class="n">singleNumber</span><span class="p">(</span><span class="n">nums</span><span class="w"> </span><span class="nb nb-Type">int</span><span class="p">)</span><span class="w"> </span><span class="nb nb-Type">int</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="n">result</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="mi">0</span>
-<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="n">_</span><span class="p">,</span><span class="w"> </span><span class="n">num</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="nb">range</span><span class="w"> </span><span class="n">nums</span><span class="p">{</span>
-<span class="w">        </span><span class="n">result</span><span class="w"> </span><span class="o">^=</span><span class="w"> </span><span class="n">num</span>
-<span class="w">    </span><span class="p">}</span>
+<pre><code>func singleNumber(nums []int) int {
+    result := 0
+    for _, num := range nums{
+        result ^= num
+    }
 
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">result</span>
-<span class="p">}</span>
-</code></pre></div>
-
-<p><strong>Updated</strong>:<br />
+    return result
+}
+</code></pre>
+<p><strong>Updated</strong>:
 <em>You can find more of my solutions like this in discuss forums by searching through either </em><em>satyamsinha93</em><em> or </em><em>Think it through</em><em>.</em></p>
-<p>Thanks for all the love and upvoting!</p></div><p style="page-break-before: always" ></p>
+<p>Thanks for all the love and upvoting!</p></div>

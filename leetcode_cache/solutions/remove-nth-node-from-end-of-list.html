@@ -1,65 +1,55 @@
-<div class='cpp-solution'><h2>【Video】Using distance between two pointers -- Votes: 310</h2><h2>Intuition</h2>
+<div class='cpp-solution'><h4>【Video】Using distance between two pointers [Votes: 310]</h4><h4>Intuition</h4>
 <p>Using distance between two pointers to find nth node from the last.</p>
-<h2>Solution Video</h2>
+<h4>Solution Video</h4>
 <p>https://youtu.be/D56o6uCaVJM</p>
-<h4>⭐️⭐️ Don't forget to subscribe to my channel! ⭐️⭐️</h4>
-<p><strong>■ Subscribe URL</strong><br />
+<h6>⭐️⭐️ Don't forget to subscribe to my channel! ⭐️⭐️</h6>
+<p><strong>■ Subscribe URL</strong>
 http://www.youtube.com/channel/UC9RMNwYTL3SXCP6ShLWVFww?sub_confirmation=1</p>
-<p>Subscribers: 4,565<br />
+<p>Subscribers: 4,565
 Thank you for your support!</p>
-<hr />
-<h2>Approach</h2>
+<h4>Approach</h4>
 <p>A challenging point of this question is that Linked List doesn't have index number, so we don't know which node is the last Nth node from the last.</p>
 <p>My strategy is to create <code>dummy</code> pointer and create distance <code>dummy</code> pointer and <code>head</code> pointer.</p>
-<div class="codehilite"><pre><span></span><code><span class="n">Input</span><span class="o">:</span><span class="w"> </span><span class="n">head</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[</span><span class="mi">1</span><span class="o">,</span><span class="mi">2</span><span class="o">,</span><span class="mi">3</span><span class="o">,</span><span class="mi">4</span><span class="o">,</span><span class="mi">5</span><span class="o">],</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span>
-</code></pre></div>
+<pre><code>Input: head = [1,2,3,4,5], n = 2
+</code></pre>
+<pre><code>[1,2,3,4,5]
+ d   h
+ r
 
-<div class="codehilite"><pre><span></span><code><span class="k">[1,2,3,4,5]</span>
-<span class="w"> </span><span class="na">d   h</span>
-<span class="w"> </span><span class="na">r</span>
-
-<span class="na">d</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">dummy</span>
-<span class="na">h</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">head</span>
-<span class="na">r</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">res (return value)</span>
-</code></pre></div>
-
+d = dummy
+h = head
+r = res (return value)
+</code></pre>
 <p>Now we move <code>dummy</code> and <code>head</code> at the same time until <code>head</code> is at the last node.</p>
-<div class="codehilite"><pre><span></span><code><span class="k">[1,2,3,4,5]</span>
-<span class="w">   </span><span class="na">d   h</span>
-<span class="w"> </span><span class="na">r</span>
+<pre><code>[1,2,3,4,5]
+   d   h
+ r
 
-<span class="k">[1,2,3,4,5]</span>
-<span class="w">     </span><span class="na">d   h</span>
-<span class="w"> </span><span class="na">r</span>
-</code></pre></div>
-
+[1,2,3,4,5]
+     d   h
+ r
+</code></pre>
 <p>This example has <code>n = 2</code>, so we should remove <code>node 4</code>. Luckily, we stop at <code>node 3</code> which is right before <code>node 4</code>. That is very important.</p>
 <p>Why?</p>
 <p>That's because if we stop right before target node, we can remove the target node like this.</p>
-<div class="codehilite"><pre><span></span><code><span class="nv">dummy</span>.<span class="k">next</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">dummy</span>.<span class="k">next</span>.<span class="k">next</span><span class="ss">(</span><span class="o">=</span><span class="w"> </span><span class="mi">5</span><span class="w"> </span><span class="nv">in</span><span class="w"> </span><span class="nv">this</span><span class="w"> </span><span class="nv">case</span><span class="ss">)</span>
-</code></pre></div>
-
+<pre><code>dummy.next = dummy.next.next(= 5 in this case)
+</code></pre>
 <p>But what if we stop at the target node.</p>
-<div class="codehilite"><pre><span></span><code><span class="k">[1,2,3,4,5]</span>
-<span class="w">       </span><span class="na">d   h</span>
-</code></pre></div>
-
+<pre><code>[1,2,3,4,5]
+       d   h
+</code></pre>
 <p>It's going to be tough to remove the target node. That's why it's important to stop right before the target node.</p>
 <p>Before we return a new list, we have one more problem. How can we return whole new list? Because <code>head</code> pointer is now the last node and <code>dummy</code> pointer is pointing to <code>node 3</code>.</p>
-<div class="codehilite"><pre><span></span><code><span class="k">[1,2,3,4,5]</span>
-<span class="w">     </span><span class="na">d   h</span>
-<span class="w"> </span><span class="na">r</span>
-</code></pre></div>
-
+<pre><code>[1,2,3,4,5]
+     d   h
+ r
+</code></pre>
 <p>That's why at first we have <code>dummy</code> pointer and <code>result</code> pointer. The <code>result</code> pointer is still pointing to <code>node 1</code>.</p>
 <p>All we have to do is just</p>
-<div class="codehilite"><pre><span></span><code><span class="k">return</span><span class="w"> </span><span class="nv">res</span>.<span class="k">next</span>
-</code></pre></div>
-
-<hr />
+<pre><code>return res.next
+</code></pre>
 <p>https://youtu.be/bU_dXCOWHls</p>
-<hr />
-<h2>Complexity</h2>
+<h4>Complexity</h4>
 <ul>
 <li>Time complexity: $$O(n)$$</li>
 </ul>
@@ -70,223 +60,199 @@ Thank you for your support!</p>
 </ul>
 <!-- Add your space complexity here, e.g. $$O(n)$$ -->
 
-<div class="codehilite"><pre><span></span><code><span class="n">Language</span><span class="p">:</span> <span class="n">python</span> 
-<span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="p">:</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">removeNthFromEnd</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">head</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">ListNode</span><span class="p">],</span> <span class="n">n</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">ListNode</span><span class="p">]:</span>
-        <span class="n">res</span> <span class="o">=</span> <span class="n">ListNode</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">head</span><span class="p">)</span>
-        <span class="n">dummy</span> <span class="o">=</span> <span class="n">res</span>
+<pre><code class="language-python">class Solution:
+    def removeNthFromEnd(self, head: Optional[ListNode], n: int) -&gt; Optional[ListNode]:
+        res = ListNode(0, head)
+        dummy = res
 
-        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
-            <span class="n">head</span> <span class="o">=</span> <span class="n">head</span><span class="o">.</span><span class="n">next</span>
+        for _ in range(n):
+            head = head.next
 
-        <span class="k">while</span> <span class="n">head</span><span class="p">:</span>
-            <span class="n">head</span> <span class="o">=</span> <span class="n">head</span><span class="o">.</span><span class="n">next</span>
-            <span class="n">dummy</span> <span class="o">=</span> <span class="n">dummy</span><span class="o">.</span><span class="n">next</span>
+        while head:
+            head = head.next
+            dummy = dummy.next
 
-        <span class="n">dummy</span><span class="o">.</span><span class="n">next</span> <span class="o">=</span> <span class="n">dummy</span><span class="o">.</span><span class="n">next</span><span class="o">.</span><span class="n">next</span>
+        dummy.next = dummy.next.next
 
-        <span class="k">return</span> <span class="n">res</span><span class="o">.</span><span class="n">next</span>
-</code></pre></div>
+        return res.next
+</code></pre>
+<pre><code class="language-javascript">var removeNthFromEnd = function(head, n) {
+    let res = new ListNode(0, head);
+    let dummy = res;
 
-<div class="codehilite"><pre><span></span><code><span class="nx">Language</span><span class="o">:</span><span class="w"> </span><span class="nx">javascript</span><span class="w"> </span>
-<span class="kd">var</span><span class="w"> </span><span class="nx">removeNthFromEnd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kd">function</span><span class="p">(</span><span class="nx">head</span><span class="p">,</span><span class="w"> </span><span class="nx">n</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="nx">res</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">ListNode</span><span class="p">(</span><span class="mf">0</span><span class="p">,</span><span class="w"> </span><span class="nx">head</span><span class="p">);</span>
-<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="nx">dummy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">res</span><span class="p">;</span>
+    for (let i = 0; i &lt; n; i++) {
+        head = head.next;
+    }
 
-<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kd">let</span><span class="w"> </span><span class="nx">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0</span><span class="p">;</span><span class="w"> </span><span class="nx">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="nx">n</span><span class="p">;</span><span class="w"> </span><span class="nx">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="nx">head</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">head</span><span class="p">.</span><span class="nx">next</span><span class="p">;</span>
-<span class="w">    </span><span class="p">}</span>
+    while (head) {
+        head = head.next;
+        dummy = dummy.next;
+    }
 
-<span class="w">    </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="nx">head</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="nx">head</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">head</span><span class="p">.</span><span class="nx">next</span><span class="p">;</span>
-<span class="w">        </span><span class="nx">dummy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">dummy</span><span class="p">.</span><span class="nx">next</span><span class="p">;</span>
-<span class="w">    </span><span class="p">}</span>
+    dummy.next = dummy.next.next;
 
-<span class="w">    </span><span class="nx">dummy</span><span class="p">.</span><span class="nx">next</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">dummy</span><span class="p">.</span><span class="nx">next</span><span class="p">.</span><span class="nx">next</span><span class="p">;</span>
+    return res.next;    
+};
+</code></pre>
+<pre><code class="language-java">class Solution {
+    public ListNode removeNthFromEnd(ListNode head, int n) {
+        ListNode res = new ListNode(0, head);
+        ListNode dummy = res;
 
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">res</span><span class="p">.</span><span class="nx">next</span><span class="p">;</span><span class="w">    </span>
-<span class="p">};</span>
-</code></pre></div>
+        for (int i = 0; i &lt; n; i++) {
+            head = head.next;
+        }
 
-<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">java</span><span class="w"> </span>
-<span class="kd">class</span> <span class="nc">Solution</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">ListNode</span><span class="w"> </span><span class="nf">removeNthFromEnd</span><span class="p">(</span><span class="n">ListNode</span><span class="w"> </span><span class="n">head</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">n</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="n">ListNode</span><span class="w"> </span><span class="n">res</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ListNode</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">head</span><span class="p">);</span>
-<span class="w">        </span><span class="n">ListNode</span><span class="w"> </span><span class="n">dummy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">res</span><span class="p">;</span>
+        while (head != null) {
+            head = head.next;
+            dummy = dummy.next;
+        }
 
-<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">n</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="n">head</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">head</span><span class="p">.</span><span class="na">next</span><span class="p">;</span>
-<span class="w">        </span><span class="p">}</span>
+        dummy.next = dummy.next.next;
 
-<span class="w">        </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">head</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="n">head</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">head</span><span class="p">.</span><span class="na">next</span><span class="p">;</span>
-<span class="w">            </span><span class="n">dummy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dummy</span><span class="p">.</span><span class="na">next</span><span class="p">;</span>
-<span class="w">        </span><span class="p">}</span>
+        return res.next;        
+    }
+}
+</code></pre>
+<pre><code class="language-cpp">class Solution {
+public:
+    ListNode* removeNthFromEnd(ListNode* head, int n) {
+        ListNode* res = new ListNode(0, head);
+        ListNode* dummy = res;
 
-<span class="w">        </span><span class="n">dummy</span><span class="p">.</span><span class="na">next</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dummy</span><span class="p">.</span><span class="na">next</span><span class="p">.</span><span class="na">next</span><span class="p">;</span>
+        for (int i = 0; i &lt; n; i++) {
+            head = head-&gt;next;
+        }
 
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">res</span><span class="p">.</span><span class="na">next</span><span class="p">;</span><span class="w">        </span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
+        while (head != nullptr) {
+            head = head-&gt;next;
+            dummy = dummy-&gt;next;
+        }
 
-<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">C</span><span class="o">++</span><span class="w"> </span>
-<span class="n">class</span><span class="w"> </span><span class="n">Solution</span><span class="w"> </span><span class="p">{</span>
-<span class="n">public</span><span class="o">:</span>
-<span class="w">    </span><span class="n">ListNode</span><span class="o">*</span><span class="w"> </span><span class="n">removeNthFromEnd</span><span class="p">(</span><span class="n">ListNode</span><span class="o">*</span><span class="w"> </span><span class="n">head</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">n</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="n">ListNode</span><span class="o">*</span><span class="w"> </span><span class="n">res</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">new</span><span class="w"> </span><span class="n">ListNode</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">head</span><span class="p">);</span>
-<span class="w">        </span><span class="n">ListNode</span><span class="o">*</span><span class="w"> </span><span class="n">dummy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">res</span><span class="p">;</span>
+        dummy-&gt;next = dummy-&gt;next-&gt;next;
 
-<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">n</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="n">head</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">head</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">;</span>
-<span class="w">        </span><span class="p">}</span>
-
-<span class="w">        </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">head</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">nullptr</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="n">head</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">head</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">;</span>
-<span class="w">            </span><span class="n">dummy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dummy</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">;</span>
-<span class="w">        </span><span class="p">}</span>
-
-<span class="w">        </span><span class="n">dummy</span><span class="o">-&gt;</span><span class="n">next</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dummy</span><span class="o">-&gt;</span><span class="n">next</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">;</span>
-
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">res</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">;</span><span class="w">        </span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">};</span>
-</code></pre></div>
-
-<h2>Step by Step Algorithm</h2>
+        return res-&gt;next;        
+    }
+};
+</code></pre>
+<h4>Step by Step Algorithm</h4>
 <ol>
-<li><strong>Initialize variables:</strong></li>
-</ol>
+<li>
+<p><strong>Initialize variables:</strong></p>
 <ul>
 <li>We create a dummy node <code>res</code> with a value of 0 and set its next pointer to the head of the original list. This dummy node helps in handling edge cases when removing the first node.</li>
 <li>We initialize another pointer <code>dummy</code> to the dummy node <code>res</code>. This pointer will be used to traverse the list.</li>
 </ul>
 <p><code>python
-   res = ListNode(0, head)
-   dummy = res</code></p>
-<ol>
-<li><strong>Move <code>head</code> pointer forward by <code>n</code> nodes:</strong></li>
-</ol>
+res = ListNode(0, head)
+dummy = res</code></p>
+</li>
+<li>
+<p><strong>Move <code>head</code> pointer forward by <code>n</code> nodes:</strong></p>
 <ul>
 <li>We iterate <code>n</code> times using a for loop to advance the <code>head</code> pointer <code>n</code> nodes forward. This effectively moves <code>head</code> to the nth node from the beginning.</li>
 </ul>
 <p><code>python
-   for _ in range(n):
-       head = head.next</code></p>
-<ol>
-<li><strong>Find the node before the node to be removed:</strong></li>
-</ol>
+for _ in range(n):
+    head = head.next</code></p>
+</li>
+<li>
+<p><strong>Find the node before the node to be removed:</strong></p>
 <ul>
 <li>We use a while loop to traverse the list with both <code>head</code> and <code>dummy</code> pointers.</li>
 <li>As long as <code>head</code> is not None, we move both <code>head</code> and <code>dummy</code> pointers one node forward in each iteration.</li>
 <li>After this loop, <code>dummy</code> will be pointing to the node right before the node to be removed.</li>
 </ul>
 <p><code>python
-   while head:
-       head = head.next
-       dummy = dummy.next</code></p>
-<ol>
-<li><strong>Remove the nth node from the end:</strong></li>
-</ol>
+while head:
+    head = head.next
+    dummy = dummy.next</code></p>
+</li>
+<li>
+<p><strong>Remove the nth node from the end:</strong></p>
 <ul>
 <li>Once the loop finishes, <code>dummy</code> will be pointing to the node right before the node to be removed.</li>
 <li>We update the <code>next</code> pointer of the node pointed by <code>dummy</code> to skip the next node, effectively removing the nth node from the end.</li>
 </ul>
 <p><code>python
-   dummy.next = dummy.next.next</code></p>
-<ol>
-<li><strong>Return the modified list:</strong></li>
-</ol>
+dummy.next = dummy.next.next</code></p>
+</li>
+<li>
+<p><strong>Return the modified list:</strong></p>
 <ul>
 <li>Finally, we return the next node after the dummy node <code>res</code>, which is the head of the modified list.</li>
 </ul>
 <p><code>python
-   return res.next</code></p>
+return res.next</code></p>
+</li>
+</ol>
 <p>This algorithm effectively removes the nth node from the end of the linked list by traversing it only once.</p>
-<hr />
 <p>Thank you for reading my post. Please upvote it and don't forget to subscribe to my channel!</p>
-<h4>⭐️ Subscribe URL</h4>
+<h6>⭐️ Subscribe URL</h6>
 <p>http://www.youtube.com/channel/UC9RMNwYTL3SXCP6ShLWVFww?sub_confirmation=1</p>
-<h4>⭐️ Twitter</h4>
+<h6>⭐️ Twitter</h6>
 <p>https://twitter.com/CodingNinjaAZ</p>
-<h4>⭐️ Related question #167 - Two Sum II - Input Array Is Sorted</h4>
-<p>https://youtu.be/fj5ruWT6B5U</p></div>
-
-
-<div class='python-solution'><h2>JS, Python, Java, C++ | Easy Two-Pointer Solution w/ Explanation -- Votes: 1447</h2><p><em>(Note: This is part of a series of Leetcode solution explanations. If you like this solution or find it useful,</em> <strong><em>please upvote</em></strong> <em>this post.)</em></p>
-<hr />
-<h5><strong><em>Idea:</em></strong></h5>
+<h6>⭐️ Related question #167 - Two Sum II - Input Array Is Sorted</h6>
+<p>https://youtu.be/fj5ruWT6B5U</p></div><div class='python-solution'><h4>JS, Python, Java, C++ | Easy Two-Pointer Solution w/ Explanation [Votes: 1447]</h4><p><em>(Note: This is part of a series of Leetcode solution explanations. If you like this solution or find it useful,</em> <strong><em>please upvote</em></strong> <em>this post.)</em></p>
+<h6># <strong><em>Idea:</em></strong></h6>
 <p>With a singly linked list, the <em>only</em> way to find the end of the list, and thus the <strong>n</strong>'th node from the end, is to actually iterate all the way to the end. The challenge here is attemping to find the solution in only one pass. A naive approach here might be to store pointers to each node in an array, allowing us to calculate the <strong>n</strong>'th from the end once we reach the end, but that would take <strong>O(M) extra space</strong>, where <strong>M</strong> is the length of the linked list.</p>
 <p>A slightly less naive approach would be to only store only the last <strong>n+1</strong> node pointers in the array. This could be achieved by overwriting the elements of the storage array in circlular fashion as we iterate through the list. This would lower the <strong>space complexity</strong> to <strong>O(N+1)</strong>.</p>
 <p>In order to solve this problem in only one pass and <strong>O(1) extra space</strong>, however, we would need to find a way to <em>both</em> reach the end of the list with one pointer <em>and also</em> reach the <strong>n</strong>'th node from the end simultaneously with a second pointer.</p>
 <p>To do that, we can simply stagger our two pointers by <strong>n</strong> nodes by giving the first pointer (<strong>fast</strong>) a head start before starting the second pointer (<strong>slow</strong>). Doing this will cause <strong>slow</strong> to reach the <strong>n</strong>'th node from the end at the same time that <strong>fast</strong> reaches the end.</p>
-<p></p>
 <p>Since we will need access to the node <em>before</em> the target node in order to remove the target node, we can use <strong>fast.next == null</strong> as our exit condition, rather than <strong>fast == null</strong>, so that we stop one node earlier.</p>
 <p>This will unfortunately cause a problem when <strong>n</strong> is the same as the length of the list, which would make the first node the target node, and thus make it impossible to find the node <em>before</em> the target node. If that's the case, however, we can just <strong>return head.next</strong> without needing to stitch together the two sides of the target node.</p>
 <p>Otherwise, once we succesfully find the node <em>before</em> the target, we can then stitch it together with the node <em>after</em> the target, and then <strong>return head</strong>.</p>
-<hr />
-<h5><strong><em>Implementation:</em></strong></h5>
+<h6># <strong><em>Implementation:</em></strong></h6>
 <p>There are only minor differences between the code of all four languages.</p>
-<hr />
-<h5><strong><em>Javascript Code:</em></strong></h5>
+<h6># <strong><em>Javascript Code:</em></strong></h6>
 <p>The best result for the code below is <strong>60ms / 40.6MB</strong> (beats 100% / 13%).</p>
-<div class="codehilite"><pre><span></span><code><span class="nx">Language</span><span class="o">:</span><span class="w"> </span><span class="nx">javascript</span>
-<span class="kd">var</span><span class="w"> </span><span class="nx">removeNthFromEnd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kd">function</span><span class="p">(</span><span class="nx">head</span><span class="p">,</span><span class="w"> </span><span class="nx">n</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="nx">fast</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">head</span><span class="p">,</span><span class="w"> </span><span class="nx">slow</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">head</span>
-<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kd">let</span><span class="w"> </span><span class="nx">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0</span><span class="p">;</span><span class="w"> </span><span class="nx">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="nx">n</span><span class="p">;</span><span class="w"> </span><span class="nx">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="nx">fast</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">fast</span><span class="p">.</span><span class="nx">next</span>
-<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nx">fast</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="nx">head</span><span class="p">.</span><span class="nx">next</span>
-<span class="w">    </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="nx">fast</span><span class="p">.</span><span class="nx">next</span><span class="p">)</span><span class="w"> </span><span class="nx">fast</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">fast</span><span class="p">.</span><span class="nx">next</span><span class="p">,</span><span class="w"> </span><span class="nx">slow</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">slow</span><span class="p">.</span><span class="nx">next</span>
-<span class="w">    </span><span class="nx">slow</span><span class="p">.</span><span class="nx">next</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">slow</span><span class="p">.</span><span class="nx">next</span><span class="p">.</span><span class="nx">next</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">head</span>
-<span class="p">};</span>
-</code></pre></div>
-
-<hr />
-<h5><strong><em>Python Code:</em></strong></h5>
+<pre><code class="language-javascript">var removeNthFromEnd = function(head, n) {
+    let fast = head, slow = head
+    for (let i = 0; i &lt; n; i++) fast = fast.next
+    if (!fast) return head.next
+    while (fast.next) fast = fast.next, slow = slow.next
+    slow.next = slow.next.next
+    return head
+};
+</code></pre>
+<h6># <strong><em>Python Code:</em></strong></h6>
 <p>The best result for the code below is <strong>28ms / 13.9MB</strong> (beats 92% / 99%).</p>
-<div class="codehilite"><pre><span></span><code><span class="n">Language</span><span class="p">:</span> <span class="n">python</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="p">:</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">removeNthFromEnd</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">head</span><span class="p">:</span> <span class="n">ListNode</span><span class="p">,</span> <span class="n">n</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ListNode</span><span class="p">:</span>
-        <span class="n">fast</span><span class="p">,</span> <span class="n">slow</span> <span class="o">=</span> <span class="n">head</span><span class="p">,</span> <span class="n">head</span>
-        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span> <span class="n">fast</span> <span class="o">=</span> <span class="n">fast</span><span class="o">.</span><span class="n">next</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">fast</span><span class="p">:</span> <span class="k">return</span> <span class="n">head</span><span class="o">.</span><span class="n">next</span>
-        <span class="k">while</span> <span class="n">fast</span><span class="o">.</span><span class="n">next</span><span class="p">:</span> <span class="n">fast</span><span class="p">,</span> <span class="n">slow</span> <span class="o">=</span> <span class="n">fast</span><span class="o">.</span><span class="n">next</span><span class="p">,</span> <span class="n">slow</span><span class="o">.</span><span class="n">next</span>
-        <span class="n">slow</span><span class="o">.</span><span class="n">next</span> <span class="o">=</span> <span class="n">slow</span><span class="o">.</span><span class="n">next</span><span class="o">.</span><span class="n">next</span>
-        <span class="k">return</span> <span class="n">head</span>
-</code></pre></div>
-
-<hr />
-<h5><strong><em>Java Code:</em></strong></h5>
+<pre><code class="language-python">class Solution:
+    def removeNthFromEnd(self, head: ListNode, n: int) -&gt; ListNode:
+        fast, slow = head, head
+        for _ in range(n): fast = fast.next
+        if not fast: return head.next
+        while fast.next: fast, slow = fast.next, slow.next
+        slow.next = slow.next.next
+        return head
+</code></pre>
+<h6># <strong><em>Java Code:</em></strong></h6>
 <p>The best result for the code below is <strong>0ms / 36.5MB</strong> (beats 100% / 97%).</p>
-<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">java</span>
-<span class="kd">class</span> <span class="nc">Solution</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">ListNode</span><span class="w"> </span><span class="nf">removeNthFromEnd</span><span class="p">(</span><span class="n">ListNode</span><span class="w"> </span><span class="n">head</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">n</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="n">ListNode</span><span class="w"> </span><span class="n">fast</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">head</span><span class="p">,</span><span class="w"> </span><span class="n">slow</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">head</span><span class="p">;</span>
-<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">n</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="n">fast</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">fast</span><span class="p">.</span><span class="na">next</span><span class="p">;</span>
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">fast</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">head</span><span class="p">.</span><span class="na">next</span><span class="p">;</span>
-<span class="w">        </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">fast</span><span class="p">.</span><span class="na">next</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="n">fast</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">fast</span><span class="p">.</span><span class="na">next</span><span class="p">;</span>
-<span class="w">            </span><span class="n">slow</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">slow</span><span class="p">.</span><span class="na">next</span><span class="p">;</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">        </span><span class="n">slow</span><span class="p">.</span><span class="na">next</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">slow</span><span class="p">.</span><span class="na">next</span><span class="p">.</span><span class="na">next</span><span class="p">;</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">head</span><span class="p">;</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
-
-<hr />
-<h5><strong><em>C++ Code:</em></strong></h5>
+<pre><code class="language-java">class Solution {
+    public ListNode removeNthFromEnd(ListNode head, int n) {
+        ListNode fast = head, slow = head;
+        for (int i = 0; i &lt; n; i++) fast = fast.next;
+        if (fast == null) return head.next;
+        while (fast.next != null) {
+            fast = fast.next;
+            slow = slow.next;
+        }
+        slow.next = slow.next.next;
+        return head;
+    }
+}
+</code></pre>
+<h6># <strong><em>cpp Code:</em></strong></h6>
 <p>The best result for the code below is <strong>0ms / 10.6MB</strong> (beats 100% / 93%).</p>
-<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">c</span><span class="o">++</span>
-<span class="n">class</span><span class="w"> </span><span class="n">Solution</span><span class="w"> </span><span class="p">{</span>
-<span class="n">public</span><span class="o">:</span>
-<span class="w">    </span><span class="n">ListNode</span><span class="o">*</span><span class="w"> </span><span class="n">removeNthFromEnd</span><span class="p">(</span><span class="n">ListNode</span><span class="o">*</span><span class="w"> </span><span class="n">head</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">n</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="n">ListNode</span><span class="w"> </span><span class="o">*</span><span class="n">fast</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">head</span><span class="p">,</span><span class="w"> </span><span class="o">*</span><span class="n">slow</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">head</span><span class="p">;</span>
-<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">n</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="n">fast</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">fast</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">;</span>
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">fast</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">head</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">;</span>
-<span class="w">        </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">fast</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">)</span><span class="w"> </span><span class="n">fast</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">fast</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">,</span><span class="w"> </span><span class="n">slow</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">slow</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">;</span>
-<span class="w">        </span><span class="n">slow</span><span class="o">-&gt;</span><span class="n">next</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">slow</span><span class="o">-&gt;</span><span class="n">next</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">;</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">head</span><span class="p">;</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">};</span>
-</code></pre></div></div><p style="page-break-before: always" ></p>
+<pre><code class="language-c++">class Solution {
+public:
+    ListNode* removeNthFromEnd(ListNode* head, int n) {
+        ListNode *fast = head, *slow = head;
+        for (int i = 0; i &lt; n; i++) fast = fast-&gt;next;
+        if (!fast) return head-&gt;next;
+        while (fast-&gt;next) fast = fast-&gt;next, slow = slow-&gt;next;
+        slow-&gt;next = slow-&gt;next-&gt;next;
+        return head;
+    }
+};
+</code></pre></div>

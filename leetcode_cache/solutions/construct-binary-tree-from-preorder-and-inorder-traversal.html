@@ -1,91 +1,84 @@
-<div class='cpp-solution'><h2>Solution -- Votes: 482</h2><div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">C</span><span class="o">++</span><span class="w"> </span>
-<span class="n">class</span><span class="w"> </span><span class="n">Solution</span><span class="w"> </span><span class="p">{</span>
-<span class="n">public</span><span class="o">:</span>
-<span class="n">TreeNode</span><span class="o">*</span><span class="w"> </span><span class="n">constructTree</span><span class="p">(</span><span class="n">vector</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">preorder</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">preStart</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">preEnd</span><span class="p">,</span><span class="w"> </span><span class="n">vector</span><span class="w"> </span>
-<span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">inorder</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">inStart</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">inEnd</span><span class="p">,</span><span class="w"> </span><span class="n">map</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="kt">int</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">mp</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">preStart</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">preEnd</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">inStart</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">inEnd</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="nb">NULL</span><span class="p">;</span>
+<div class='cpp-solution'><h4>Solution [Votes: 482]</h4><pre><code class="language-cpp">class Solution {
+public:
+TreeNode* constructTree(vector &lt; int &gt; &amp; preorder, int preStart, int preEnd, vector 
+ &lt; int &gt; &amp; inorder, int inStart, int inEnd, map &lt; int, int &gt; &amp; mp) {
+  if (preStart &gt; preEnd || inStart &gt; inEnd) return NULL;
 
-<span class="w">  </span><span class="n">TreeNode</span><span class="o">*</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">new</span><span class="w"> </span><span class="n">TreeNode</span><span class="p">(</span><span class="n">preorder</span><span class="p">[</span><span class="n">preStart</span><span class="p">]);</span>
-<span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="n">elem</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mp</span><span class="p">[</span><span class="n">root</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">val</span><span class="p">];</span>
-<span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="n">nElem</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">elem</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">inStart</span><span class="p">;</span>
+  TreeNode* root = new TreeNode(preorder[preStart]);
+  int elem = mp[root -&gt; val];
+  int nElem = elem - inStart;
 
-<span class="w">  </span><span class="n">root</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">left</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">constructTree</span><span class="p">(</span><span class="n">preorder</span><span class="p">,</span><span class="w"> </span><span class="n">preStart</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">preStart</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">nElem</span><span class="p">,</span><span class="w"> </span><span class="n">inorder</span><span class="p">,</span>
-<span class="w">  </span><span class="n">inStart</span><span class="p">,</span><span class="w"> </span><span class="n">elem</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">mp</span><span class="p">);</span>
-<span class="w">  </span><span class="n">root</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">right</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">constructTree</span><span class="p">(</span><span class="n">preorder</span><span class="p">,</span><span class="w"> </span><span class="n">preStart</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">nElem</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">preEnd</span><span class="p">,</span><span class="w"> </span><span class="n">inorder</span><span class="p">,</span><span class="w"> </span>
-<span class="w">  </span><span class="n">elem</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">inEnd</span><span class="p">,</span><span class="w"> </span><span class="n">mp</span><span class="p">);</span>
+  root -&gt; left = constructTree(preorder, preStart + 1, preStart + nElem, inorder,
+  inStart, elem - 1, mp);
+  root -&gt; right = constructTree(preorder, preStart + nElem + 1, preEnd, inorder, 
+  elem + 1, inEnd, mp);
 
-<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">root</span><span class="p">;</span>
-<span class="p">}</span>
+  return root;
+}
 
-<span class="n">TreeNode</span><span class="o">*</span><span class="w"> </span><span class="n">buildTree</span><span class="p">(</span><span class="n">vector</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">preorder</span><span class="p">,</span><span class="w"> </span><span class="n">vector</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">inorder</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="n">preStart</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">preEnd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">preorder</span><span class="p">.</span><span class="n">size</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
-<span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="n">inStart</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">inEnd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">inorder</span><span class="p">.</span><span class="n">size</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+TreeNode* buildTree(vector &lt; int &gt; &amp; preorder, vector &lt; int &gt; &amp; inorder) {
+  int preStart = 0, preEnd = preorder.size() - 1;
+  int inStart = 0, inEnd = inorder.size() - 1;
 
-<span class="w">  </span><span class="n">map</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="kt">int</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">mp</span><span class="p">;</span>
-<span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">inStart</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">inEnd</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="n">mp</span><span class="p">[</span><span class="n">inorder</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">i</span><span class="p">;</span>
-<span class="w">  </span><span class="p">}</span>
+  map &lt; int, int &gt; mp;
+  for (int i = inStart; i &lt;= inEnd; i++) {
+    mp[inorder[i]] = i;
+  }
 
-<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">constructTree</span><span class="p">(</span><span class="n">preorder</span><span class="p">,</span><span class="w"> </span><span class="n">preStart</span><span class="p">,</span><span class="w"> </span><span class="n">preEnd</span><span class="p">,</span><span class="w"> </span><span class="n">inorder</span><span class="p">,</span><span class="w"> </span><span class="n">inStart</span><span class="p">,</span><span class="w"> </span><span class="n">inEnd</span><span class="p">,</span><span class="w"> </span><span class="n">mp</span><span class="p">);</span>
-<span class="p">}</span>
-<span class="p">};</span>
+  return constructTree(preorder, preStart, preEnd, inorder, inStart, inEnd, mp);
+}
+};
+</code></pre>
+<pre><code class="language-Python3">class Solution:
+    def buildTree(self, preorder: List[int], inorder: List[int]) -&gt; Optional[TreeNode]:
+        VAL_TO_INORDER_IDX = {inorder[i]: i for i in range(len(inorder))}
+
+        def buildTreePartition(preorder, inorder_start, inorder_end):
+            if not preorder or inorder_start &lt; 0 or inorder_end &gt; len(inorder):
+                return None
+
+            root_val = preorder[0]
+            root_inorder_idx = VAL_TO_INORDER_IDX[root_val]
+            if root_inorder_idx &gt; inorder_end or root_inorder_idx &lt; inorder_start:
+                return None
+
+            root = TreeNode(preorder.pop(0))
+            root.left = buildTreePartition(preorder, inorder_start, root_inorder_idx - 1)
+            root.right = buildTreePartition(preorder, root_inorder_idx + 1, inorder_end)
+
+            return root
+
+        return buildTreePartition(preorder, 0, len(inorder) - 1)
+</code></pre>
+<pre><code class="language-Java">class Solution {
+    private int i = 0;
+    private int p = 0;
+
+    public TreeNode buildTree(int[] preorder, int[] inorder) {
+        return build(preorder, inorder, Integer.MIN_VALUE);
+    }
+
+    private TreeNode build(int[] preorder, int[] inorder, int stop) {
+        if (p &gt;= preorder.length) {
+            return null;
+        }
+        if (inorder[i] == stop) {
+            ++i;
+            return null;
+        }
+
+        TreeNode node = new TreeNode(preorder[p++]);
+        node.left = build(preorder, inorder, node.val);
+        node.right = build(preorder, inorder, stop);
+        return node;
+    }
+}
+</code></pre></div><div class='python-solution'><h4>Python short recursive solution. [Votes: 973]</h4><pre><code>    
+def buildTree(self, preorder, inorder):
+    if inorder:
+        ind = inorder.index(preorder.pop(0))
+        root = TreeNode(inorder[ind])
+        root.left = self.buildTree(preorder, inorder[0:ind])
+        root.right = self.buildTree(preorder, inorder[ind+1:])
+        return root
 </code></pre></div>
-
-<div class="codehilite"><pre><span></span><code><span class="n">Language</span><span class="p">:</span> <span class="n">Python3</span> 
-<span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="p">:</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">buildTree</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">preorder</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">inorder</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">TreeNode</span><span class="p">]:</span>
-        <span class="n">VAL_TO_INORDER_IDX</span> <span class="o">=</span> <span class="p">{</span><span class="n">inorder</span><span class="p">[</span><span class="n">i</span><span class="p">]:</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">inorder</span><span class="p">))}</span>
-
-        <span class="k">def</span><span class="w"> </span><span class="nf">buildTreePartition</span><span class="p">(</span><span class="n">preorder</span><span class="p">,</span> <span class="n">inorder_start</span><span class="p">,</span> <span class="n">inorder_end</span><span class="p">):</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">preorder</span> <span class="ow">or</span> <span class="n">inorder_start</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">inorder_end</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">inorder</span><span class="p">):</span>
-                <span class="k">return</span> <span class="kc">None</span>
-
-            <span class="n">root_val</span> <span class="o">=</span> <span class="n">preorder</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-            <span class="n">root_inorder_idx</span> <span class="o">=</span> <span class="n">VAL_TO_INORDER_IDX</span><span class="p">[</span><span class="n">root_val</span><span class="p">]</span>
-            <span class="k">if</span> <span class="n">root_inorder_idx</span> <span class="o">&gt;</span> <span class="n">inorder_end</span> <span class="ow">or</span> <span class="n">root_inorder_idx</span> <span class="o">&lt;</span> <span class="n">inorder_start</span><span class="p">:</span>
-                <span class="k">return</span> <span class="kc">None</span>
-
-            <span class="n">root</span> <span class="o">=</span> <span class="n">TreeNode</span><span class="p">(</span><span class="n">preorder</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
-            <span class="n">root</span><span class="o">.</span><span class="n">left</span> <span class="o">=</span> <span class="n">buildTreePartition</span><span class="p">(</span><span class="n">preorder</span><span class="p">,</span> <span class="n">inorder_start</span><span class="p">,</span> <span class="n">root_inorder_idx</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
-            <span class="n">root</span><span class="o">.</span><span class="n">right</span> <span class="o">=</span> <span class="n">buildTreePartition</span><span class="p">(</span><span class="n">preorder</span><span class="p">,</span> <span class="n">root_inorder_idx</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">inorder_end</span><span class="p">)</span>
-
-            <span class="k">return</span> <span class="n">root</span>
-
-        <span class="k">return</span> <span class="n">buildTreePartition</span><span class="p">(</span><span class="n">preorder</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">inorder</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
-</code></pre></div>
-
-<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">Java</span><span class="w"> </span>
-<span class="kd">class</span> <span class="nc">Solution</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-
-<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">TreeNode</span><span class="w"> </span><span class="nf">buildTree</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">preorder</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">inorder</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">build</span><span class="p">(</span><span class="n">preorder</span><span class="p">,</span><span class="w"> </span><span class="n">inorder</span><span class="p">,</span><span class="w"> </span><span class="n">Integer</span><span class="p">.</span><span class="na">MIN_VALUE</span><span class="p">);</span>
-<span class="w">    </span><span class="p">}</span>
-
-<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">TreeNode</span><span class="w"> </span><span class="nf">build</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">preorder</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">inorder</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">stop</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">p</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="n">preorder</span><span class="p">.</span><span class="na">length</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="kc">null</span><span class="p">;</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">inorder</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">stop</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="o">++</span><span class="n">i</span><span class="p">;</span>
-<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="kc">null</span><span class="p">;</span>
-<span class="w">        </span><span class="p">}</span>
-
-<span class="w">        </span><span class="n">TreeNode</span><span class="w"> </span><span class="n">node</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">TreeNode</span><span class="p">(</span><span class="n">preorder</span><span class="o">[</span><span class="n">p</span><span class="o">++]</span><span class="p">);</span>
-<span class="w">        </span><span class="n">node</span><span class="p">.</span><span class="na">left</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">build</span><span class="p">(</span><span class="n">preorder</span><span class="p">,</span><span class="w"> </span><span class="n">inorder</span><span class="p">,</span><span class="w"> </span><span class="n">node</span><span class="p">.</span><span class="na">val</span><span class="p">);</span>
-<span class="w">        </span><span class="n">node</span><span class="p">.</span><span class="na">right</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">build</span><span class="p">(</span><span class="n">preorder</span><span class="p">,</span><span class="w"> </span><span class="n">inorder</span><span class="p">,</span><span class="w"> </span><span class="n">stop</span><span class="p">);</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">node</span><span class="p">;</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div></div>
-
-
-<div class='python-solution'><h2>Python short recursive solution. -- Votes: 973</h2><div class="codehilite"><pre><span></span><code><span class="n">def</span><span class="w"> </span><span class="n">buildTree</span><span class="p">(</span><span class="n">self</span><span class="p">,</span><span class="w"> </span><span class="k">preorder</span><span class="p">,</span><span class="w"> </span><span class="n">inorder</span><span class="p">)</span><span class="err">:</span>
-<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="nl">inorder</span><span class="p">:</span>
-<span class="w">        </span><span class="n">ind</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">inorder</span><span class="p">.</span><span class="k">index</span><span class="p">(</span><span class="k">preorder</span><span class="p">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
-<span class="w">        </span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">TreeNode</span><span class="p">(</span><span class="n">inorder</span><span class="o">[</span><span class="n">ind</span><span class="o">]</span><span class="p">)</span>
-<span class="w">        </span><span class="n">root</span><span class="p">.</span><span class="nf">left</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">self</span><span class="p">.</span><span class="n">buildTree</span><span class="p">(</span><span class="k">preorder</span><span class="p">,</span><span class="w"> </span><span class="n">inorder</span><span class="o">[</span><span class="n">0:ind</span><span class="o">]</span><span class="p">)</span>
-<span class="w">        </span><span class="n">root</span><span class="p">.</span><span class="nf">right</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">self</span><span class="p">.</span><span class="n">buildTree</span><span class="p">(</span><span class="k">preorder</span><span class="p">,</span><span class="w"> </span><span class="n">inorder</span><span class="o">[</span><span class="n">ind+1:</span><span class="o">]</span><span class="p">)</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">root</span>
-</code></pre></div></div><p style="page-break-before: always" ></p>

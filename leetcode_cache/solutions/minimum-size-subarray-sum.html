@@ -1,21 +1,19 @@
-<div class='cpp-solution'><h2>C++ O(n) and O(nlogn) -- Votes: 448</h2><p>The <code>O(n)</code> solution is to use two pointers: <code>l</code> and <code>r</code>. First we move <code>r</code> until we get a <code>sum  &gt;= s</code>, then we move <code>l</code> to the right until <code>sum &lt; s</code>. In this process, store the minimum length between <code>l</code> and <code>r</code>. Since each element in <code>nums</code> will be visited by <code>l</code> and <code>r</code> for at most once. This algorithm is of <code>O(n)</code> time.</p>
-<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">cpp</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="w"> </span><span class="p">{</span>
-<span class="k">public</span><span class="o">:</span>
-<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">minSubArrayLen</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">s</span><span class="p">,</span><span class="w"> </span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&amp;</span><span class="w"> </span><span class="n">nums</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">l</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">r</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">nums</span><span class="p">.</span><span class="n">size</span><span class="p">(),</span><span class="w"> </span><span class="n">sum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">len</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">INT_MAX</span><span class="p">;</span>
-<span class="w">        </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">r</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">n</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="n">sum</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">nums</span><span class="p">[</span><span class="n">r</span><span class="o">++</span><span class="p">];</span>
-<span class="w">            </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">sum</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="n">s</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="n">len</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">min</span><span class="p">(</span><span class="n">len</span><span class="p">,</span><span class="w"> </span><span class="n">r</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">l</span><span class="p">);</span>
-<span class="w">                </span><span class="n">sum</span><span class="w"> </span><span class="o">-=</span><span class="w"> </span><span class="n">nums</span><span class="p">[</span><span class="n">l</span><span class="o">++</span><span class="p">];</span>
-<span class="w">            </span><span class="p">}</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">len</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">INT_MAX</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">len</span><span class="p">;</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">};</span>
-</code></pre></div>
-
+<div class='cpp-solution'><h4>C++ O(n) and O(nlogn) [Votes: 448]</h4><p>The <code>O(n)</code> solution is to use two pointers: <code>l</code> and <code>r</code>. First we move <code>r</code> until we get a <code>sum  &gt;= s</code>, then we move <code>l</code> to the right until <code>sum &lt; s</code>. In this process, store the minimum length between <code>l</code> and <code>r</code>. Since each element in <code>nums</code> will be visited by <code>l</code> and <code>r</code> for at most once. This algorithm is of <code>O(n)</code> time.</p>
+<pre><code class="language-cpp">class Solution {
+public:
+    int minSubArrayLen(int s, vector&lt;int&gt;&amp; nums) {
+        int l = 0, r = 0, n = nums.size(), sum = 0, len = INT_MAX;
+        while (r &lt; n) {
+            sum += nums[r++];
+            while (sum &gt;= s) {
+                len = min(len, r - l);
+                sum -= nums[l++];
+            }
+        }
+        return len == INT_MAX ? 0 : len;
+    }
+};
+</code></pre>
 <p>Then comes the <code>O(nlogn)</code> solution. This less efficient one turns out to be more difficult to come up with.</p>
 <p>First, we maintain an array of accumulated sums of elements in <code>nums</code> according to the following two equations.</p>
 <ol>
@@ -34,32 +32,28 @@
 </ul>
 <p>So, we have <code>nums[j - 1] + ... + nums[i - 1] &gt;= s</code> but <code>nums[j] + ... + nums[i - 1] &lt; s</code>. So <code>nums[j-1..i-1]</code> is the shortest subarray with sum not less than <code>s</code> <strong>ending at <code>i - 1</code></strong>. After traversing all possible <code>i</code>, we will find out the shortest subarray with sum not less than <code>s</code>.</p>
 <p>By the way, a <code>0</code> is added to the head of <code>sums</code> to account for cases like <code>nums = [3], s = 3</code>.</p>
-<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">cpp</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="w"> </span><span class="p">{</span>
-<span class="k">public</span><span class="o">:</span>
-<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">minSubArrayLen</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">s</span><span class="p">,</span><span class="w"> </span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&amp;</span><span class="w"> </span><span class="n">nums</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">nums</span><span class="p">.</span><span class="n">size</span><span class="p">(),</span><span class="w"> </span><span class="n">len</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">INT_MAX</span><span class="p">;</span>
-<span class="w">        </span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="w"> </span><span class="n">sums</span><span class="p">(</span><span class="n">n</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
-<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">n</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="n">sums</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sums</span><span class="p">[</span><span class="n">i</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">]</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">nums</span><span class="p">[</span><span class="n">i</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">];</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">n</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">sums</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="n">s</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">--</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="kt">int</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">upper_bound</span><span class="p">(</span><span class="n">sums</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span><span class="w"> </span><span class="n">sums</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span><span class="w"> </span><span class="n">sums</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">s</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">sums</span><span class="p">.</span><span class="n">begin</span><span class="p">();</span>
-<span class="w">            </span><span class="n">len</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">min</span><span class="p">(</span><span class="n">len</span><span class="p">,</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">len</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">INT_MAX</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">len</span><span class="p">;</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">};</span>
-</code></pre></div></div>
-
-
-<div class='python-solution'><h2>2 Approaches |100% fast | Binary Serarch & Sliding Window  | Easy Line by Line + Video Explanation -- Votes: 176</h2><h2>Approach</h2>
-<p>For detailed explanation you can refer to my youtube channel (Hindi Language)<br />
-https://youtu.be/0tZ-9dIAY_Q<br />
-or link in my profile.Here,you can find any solution in playlists monthwise from june 2023 with detailed explanation.i upload daily leetcode solution video with short and precise explanation (5-10) minutes.<br />
-or<br />
+<pre><code class="language-cpp">class Solution {
+public:
+    int minSubArrayLen(int s, vector&lt;int&gt;&amp; nums) {
+        int n = nums.size(), len = INT_MAX;
+        vector&lt;int&gt; sums(n + 1, 0);
+        for (int i = 1; i &lt;= n; i++) {
+            sums[i] = sums[i - 1] + nums[i - 1];
+        }
+        for (int i = n; i &gt;= 0 &amp;&amp; sums[i] &gt;= s; i--) {
+            int j = upper_bound(sums.begin(), sums.end(), sums[i] - s) - sums.begin();
+            len = min(len, i - j + 1);
+        }
+        return len == INT_MAX ? 0 : len;
+    }
+};
+</code></pre></div><div class='python-solution'><h4>2 Approaches |100% fast | Binary Serarch & Sliding Window  | Easy Line by Line + Video Explanation [Votes: 176]</h4><h4>Approach</h4>
+<p>For detailed explanation you can refer to my youtube channel (Hindi Language)
+https://youtu.be/0tZ-9dIAY_Q
+ or link in my profile.Here,you can find any solution in playlists monthwise from june 2023 with detailed explanation.i upload daily leetcode solution video with short and precise explanation (5-10) minutes.
+or
 search <code>Minimum size subarray sum by Let's Code Together</code> on youtube</p>
-<h2>Sliding Window Approach</h2>
+<h4>Sliding Window Approach</h4>
 <ol>
 <li>Initialize two pointers, <code>i</code> and <code>j</code>, to track the start and end of the current subarray, respectively. Set <code>i</code> and <code>j</code> to 0 initially.</li>
 <li>Initialize a variable <code>sum</code> to keep track of the current sum of elements in the subarray.</li>
@@ -67,10 +61,10 @@ search <code>Minimum size subarray sum by Let's Code Together</code> on youtube<
 <li>Start a while loop that continues until the <code>j</code> pointer reaches the end of the array <code>nums</code>.</li>
 <li>Inside the loop, add the element at index <code>j</code> to the <code>sum</code> variable.</li>
 <li>Check if the <code>sum</code> is greater than or equal to the target value.</li>
-<li>If the condition is true, enter another while loop. This loop will handle the case where the current subarray sum is equal to or greater than the target.<br />
-   a. Decrement the <code>sum</code> by subtracting the element at index <code>i</code>.<br />
-   b. Update <code>mn</code> with the minimum length found so far (<code>j - i + 1</code>).<br />
-   c. Increment the <code>i</code> pointer to move the window to the right.<br />
+<li>If the condition is true, enter another while loop. This loop will handle the case where the current subarray sum is equal to or greater than the target.
+   a. Decrement the <code>sum</code> by subtracting the element at index <code>i</code>.
+   b. Update <code>mn</code> with the minimum length found so far (<code>j - i + 1</code>).
+   c. Increment the <code>i</code> pointer to move the window to the right.
    d. Repeat steps a-c until the <code>sum</code> is no longer greater than or equal to the target value.</li>
 <li>Increment the <code>j</code> pointer to move the window to the right.</li>
 <li>Repeat steps 5-8 until the <code>j</code> pointer reaches the end of the array.</li>
@@ -78,94 +72,89 @@ search <code>Minimum size subarray sum by Let's Code Together</code> on youtube<
 <li>Otherwise, return the value of <code>mn</code>, which represents the minimum length of a subarray whose sum is greater than or equal to the target.</li>
 </ol>
 <p>The sliding window technique allows us to efficiently search for the minimum length subarray that satisfies the given condition. By maintaining two pointers and adjusting the window based on the sum of elements, we can avoid unnecessary computations and achieve a time complexity of O(N), where N is the size of the input array <code>nums</code>.</p>
-<h2>Code1 Sliding Window</h2>
-<div class="codehilite"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="n">Solution</span><span class="w"> </span><span class="err">{</span>
-<span class="k">public</span><span class="err">:</span>
-<span class="w">    </span><span class="nc">int</span><span class="w"> </span><span class="n">minSubArrayLen</span><span class="p">(</span><span class="nc">int</span><span class="w"> </span><span class="n">target</span><span class="p">,</span><span class="w"> </span><span class="n">vector</span><span class="o">&lt;</span><span class="nc">int</span><span class="o">&gt;&amp;</span><span class="w"> </span><span class="n">nums</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
-<span class="w">        </span><span class="nc">int</span><span class="w"> </span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>
-<span class="w">        </span><span class="nc">int</span><span class="w"> </span><span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>
-<span class="w">        </span><span class="nc">int</span><span class="w"> </span><span class="nf">sum</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>
-<span class="w">        </span><span class="nc">int</span><span class="w"> </span><span class="n">mn</span><span class="o">=</span><span class="n">INT_MAX</span><span class="p">;</span>
-<span class="w">        </span><span class="k">while</span><span class="p">(</span><span class="n">j</span><span class="o">&lt;</span><span class="n">nums</span><span class="p">.</span><span class="k">size</span><span class="p">())</span><span class="err">{</span>
-<span class="w">            </span><span class="nf">sum</span><span class="o">+=</span><span class="n">nums</span><span class="o">[</span><span class="n">j</span><span class="o">]</span><span class="p">;</span>
-<span class="w">            </span><span class="k">while</span><span class="p">(</span><span class="nf">sum</span><span class="o">&gt;=</span><span class="n">target</span><span class="p">)</span><span class="err">{</span>
-<span class="w">                </span><span class="nf">sum</span><span class="o">-=</span><span class="n">nums</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="p">;</span>
-<span class="w">                </span><span class="n">mn</span><span class="o">=</span><span class="nf">min</span><span class="p">(</span><span class="n">j</span><span class="o">-</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="n">mn</span><span class="p">);</span>
-<span class="w">                </span><span class="n">i</span><span class="o">++</span><span class="p">;</span>
-<span class="w">            </span><span class="err">}</span>
-<span class="w">            </span><span class="n">j</span><span class="o">++</span><span class="p">;</span>
-<span class="w">        </span><span class="err">}</span>
-<span class="w">        </span><span class="k">if</span><span class="p">(</span><span class="n">mn</span><span class="o">==</span><span class="n">INT_MAX</span><span class="p">)</span><span class="err">{</span>
-<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-<span class="w">        </span><span class="err">}</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">mn</span><span class="p">;</span>
-<span class="w">    </span><span class="err">}</span>
-<span class="err">}</span><span class="p">;</span>
-</code></pre></div>
-
-<h2>Complexity</h2>
+<h4>Code1 Sliding Window</h4>
+<pre><code>class Solution {
+public:
+    int minSubArrayLen(int target, vector&lt;int&gt;&amp; nums) {
+        int i=0;
+        int j=0;
+        int sum=0;
+        int mn=INT_MAX;
+        while(j&lt;nums.size()){
+            sum+=nums[j];
+            while(sum&gt;=target){
+                sum-=nums[i];
+                mn=min(j-i+1,mn);
+                i++;
+            }
+            j++;
+        }
+        if(mn==INT_MAX){
+            return 0;
+        }
+        return mn;
+    }
+};
+</code></pre>
+<h4>Complexity</h4>
 <ul>
-<li>Time complexity: $$O(n)$$</li>
+<li>Time complexity: $$O(n)$$  </li>
 <li>Space complexity: O(1)</li>
 </ul>
-<h2>Code2 Binary Search</h2>
-<h2>Binary Search Approach</h2>
+<h4>Code2 Binary Search</h4>
+<h4>Binary Search Approach</h4>
 <ol>
 <li>The <code>windowfind</code> function checks if there exists a subarray of a given size whose sum is greater than or equal to the target.</li>
 <li>It uses the sliding window technique to iterate through the array and maintain a window of the specified size.</li>
 <li>If the sum of the elements in the window is greater than or equal to the target, it returns <code>true</code>.</li>
 <li>Otherwise, it returns <code>false</code>.</li>
 </ol>
-<p>The <code>minSubArrayLen</code> function finds the minimum length of a subarray whose sum is greater than or equal to the target using binary search.</p>
-<ol>
-<li>It initializes a range from 1 to the size of the input array.</li>
-<li>It repeatedly divides the range in half and checks if a subarray of the mid-point length satisfies the condition using the <code>windowfind</code> function.</li>
-<li>If a valid subarray is found, it updates the upper bound of the range to mid-1 and stores the mid-point length as the minimum length found so far.</li>
-<li>If a valid subarray is not found, it updates the lower bound of the range to mid+1.</li>
-<li>The search continues until the lower bound is no longer less than or equal to the upper bound.</li>
-<li>Finally, it returns the minimum length of the subarray.</li>
-</ol>
+<p>The <code>minSubArrayLen</code> function finds the minimum length of a subarray whose sum is greater than or equal to the target using binary search.
+1. It initializes a range from 1 to the size of the input array.
+2. It repeatedly divides the range in half and checks if a subarray of the mid-point length satisfies the condition using the <code>windowfind</code> function.
+3. If a valid subarray is found, it updates the upper bound of the range to mid-1 and stores the mid-point length as the minimum length found so far.
+4. If a valid subarray is not found, it updates the lower bound of the range to mid+1.
+5. The search continues until the lower bound is no longer less than or equal to the upper bound.
+6. Finally, it returns the minimum length of the subarray.</p>
 <p>The code efficiently utilizes the sliding window technique and binary search to find the minimum length subarray satisfying the given condition.</p>
-<div class="codehilite"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="n">Solution</span><span class="w"> </span><span class="err">{</span>
-<span class="k">public</span><span class="err">:</span>
-<span class="w">      </span><span class="n">bool</span><span class="w"> </span><span class="n">windowfind</span><span class="p">(</span><span class="nc">int</span><span class="w"> </span><span class="k">size</span><span class="p">,</span><span class="w"> </span><span class="n">vector</span><span class="o">&lt;</span><span class="nc">int</span><span class="o">&gt;&amp;</span><span class="n">nums</span><span class="p">,</span><span class="w"> </span><span class="nc">int</span><span class="w"> </span><span class="n">target</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
-<span class="w">        </span><span class="nc">int</span><span class="w"> </span><span class="nf">sum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-<span class="w">        </span><span class="nc">int</span><span class="w"> </span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>
-<span class="w">        </span><span class="nc">int</span><span class="w"> </span><span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>
-<span class="w">        </span><span class="nc">int</span><span class="w"> </span><span class="n">mx</span><span class="o">=</span><span class="n">INT_MIN</span><span class="p">;</span>
-<span class="w">        </span><span class="nc">int</span><span class="w"> </span><span class="n">n</span><span class="o">=</span><span class="n">nums</span><span class="p">.</span><span class="k">size</span><span class="p">();</span>
-<span class="w">        </span><span class="k">while</span><span class="p">(</span><span class="n">j</span><span class="o">&lt;</span><span class="n">n</span><span class="p">)</span><span class="err">{</span>
-<span class="w">            </span><span class="nf">sum</span><span class="o">+=</span><span class="n">nums</span><span class="o">[</span><span class="n">j</span><span class="o">]</span><span class="p">;</span>
-<span class="w">            </span><span class="k">if</span><span class="p">(</span><span class="n">j</span><span class="o">-</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="o">==</span><span class="k">size</span><span class="p">)</span><span class="err">{</span>
-<span class="w">              </span><span class="n">mx</span><span class="o">=</span><span class="nf">max</span><span class="p">(</span><span class="nf">sum</span><span class="p">,</span><span class="n">mx</span><span class="p">);</span>
-<span class="w">              </span><span class="nf">sum</span><span class="o">-=</span><span class="n">nums</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="p">;</span>
-<span class="w">              </span><span class="n">i</span><span class="o">++</span><span class="p">;</span>
-<span class="w">            </span><span class="err">}</span>
-<span class="w">            </span><span class="n">j</span><span class="o">++</span><span class="p">;</span>
-<span class="w">        </span><span class="err">}</span>
-<span class="w">        </span><span class="k">if</span><span class="p">(</span><span class="n">mx</span><span class="o">&gt;=</span><span class="n">target</span><span class="p">)</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="k">false</span><span class="p">;</span>
-<span class="w">    </span><span class="err">}</span>
+<pre><code>class Solution {
+public:
+      bool windowfind(int size, vector&lt;int&gt;&amp;nums, int target) {
+        int sum = 0;
+        int i=0;
+        int j=0;
+        int mx=INT_MIN;
+        int n=nums.size();
+        while(j&lt;n){
+            sum+=nums[j];
+            if(j-i+1==size){
+              mx=max(sum,mx);
+              sum-=nums[i];
+              i++;
+            }
+            j++;
+        }
+        if(mx&gt;=target)
+        return true;
+        return false;
+    }
 
-<span class="w">    </span><span class="nc">int</span><span class="w"> </span><span class="n">minSubArrayLen</span><span class="p">(</span><span class="nc">int</span><span class="w"> </span><span class="n">target</span><span class="p">,</span><span class="w"> </span><span class="n">vector</span><span class="o">&lt;</span><span class="nc">int</span><span class="o">&gt;&amp;</span><span class="w"> </span><span class="n">nums</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
-<span class="w">        </span><span class="nc">int</span><span class="w"> </span><span class="n">low</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">high</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">nums</span><span class="p">.</span><span class="k">size</span><span class="p">(),</span><span class="w"> </span><span class="n">mn</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-<span class="w">        </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">low</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">high</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
-<span class="w">            </span><span class="nc">int</span><span class="w"> </span><span class="n">mid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">low</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">high</span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">2</span><span class="p">;</span>
-<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">windowfind</span><span class="p">(</span><span class="n">mid</span><span class="p">,</span><span class="w"> </span><span class="n">nums</span><span class="p">,</span><span class="w"> </span><span class="n">target</span><span class="p">))</span><span class="w"> </span><span class="err">{</span>
-<span class="w">                </span><span class="n">high</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mid</span><span class="o">-</span><span class="mi">1</span><span class="p">;</span>
-<span class="w">                </span><span class="n">mn</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mid</span><span class="p">;</span>
-<span class="w">            </span><span class="err">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="n">low</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mid</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
-<span class="w">        </span><span class="err">}</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">mn</span><span class="p">;</span>
-<span class="w">    </span><span class="err">}</span>
-<span class="err">}</span><span class="p">;</span>
-</code></pre></div>
-
-<h2>Complexity</h2>
+    int minSubArrayLen(int target, vector&lt;int&gt;&amp; nums) {
+        int low = 1, high = nums.size(), mn = 0;
+        while (low &lt;= high) {
+            int mid = (low + high) / 2;
+            if (windowfind(mid, nums, target)) {
+                high = mid-1;
+                mn = mid;
+            } else low = mid + 1;
+        }
+        return mn;
+    }
+};
+</code></pre>
+<h4>Complexity</h4>
 <ul>
-<li>Time complexity: $$O(n logn)$$</li>
+<li>Time complexity: $$O(n logn)$$ </li>
 <li>Space complexity: O(1)</li>
 </ul>
-<p></p>
-<p>Please Upvote</p></div><p style="page-break-before: always" ></p>
+<p>Please Upvote </p></div>

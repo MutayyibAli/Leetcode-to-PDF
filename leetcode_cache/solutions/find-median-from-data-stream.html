@@ -1,113 +1,107 @@
-<div class='cpp-solution'><h2>[ C++ ] Easy, Understandable ,Two heaps Intuitive Solution. O(logn) add, O(1) find -- Votes: 90</h2><p>As the data stream continuously come in, we have to consider the middle most element everytime for calculating the median.</p>
+<div class='cpp-solution'><h4>[ C++ ] Easy, Understandable ,Two heaps Intuitive Solution. O(logn) add, O(1) find [Votes: 90]</h4><p>As the data stream continuously come in, we have to consider the middle most element everytime for calculating the median.</p>
 <p><strong>TWO HEAP INTUITION :</strong> <strong>We have to consider middle element/s where all other elements are sorted as data stream come. Heaps come into picture with less time complexity to achieve this. So, we keep two heaps, one min heap and one max heap and keep a track of middle elements by balancing each heap.</strong></p>
 <p>The left heap is containing elements in decreasing order (Max to Min) and right heap is in increasing order (Min to Max) but all the elements are greater than the left heap elements. We start pushing the elements in left heap and try to balance it everytime by comparing with the new elements and with heap size and accordingly put it into the right heap.</p>
-<div class="codehilite"><pre><span></span><code><span class="nt">class</span><span class="w"> </span><span class="nt">MedianFinder</span><span class="w"> </span><span class="p">{</span>
-<span class="n">public</span><span class="p">:</span>
-<span class="w">    </span><span class="c">/** initialize your data structure here. */</span>
-<span class="w">    </span><span class="n">priority_queue</span><span class="o">&lt;</span><span class="n">int</span><span class="p">,</span><span class="w"> </span><span class="n">vector</span><span class="o">&lt;</span><span class="n">int</span><span class="o">&gt;</span><span class="p">,</span><span class="w"> </span><span class="n">greater</span><span class="o">&lt;</span><span class="n">int</span><span class="o">&gt;</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">minHeap</span><span class="p">;</span>
-<span class="w">    </span><span class="err">priority_queue&lt;int&gt;</span><span class="w"> </span><span class="err">maxHeap</span><span class="p">;</span>
-<span class="w">    </span><span class="err">MedianFinder(){</span><span class="p">}</span>
+<pre><code>class MedianFinder {
+public:
+    /** initialize your data structure here. */
+    priority_queue&lt;int, vector&lt;int&gt;, greater&lt;int&gt; &gt; minHeap;
+    priority_queue&lt;int&gt; maxHeap;
+    MedianFinder(){}
 
-<span class="w">    </span><span class="nt">void</span><span class="w"> </span><span class="nt">addNum</span><span class="o">(</span><span class="nt">int</span><span class="w"> </span><span class="nt">num</span><span class="o">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="err">if</span><span class="w"> </span><span class="err">(maxHeap.empty()</span><span class="w"> </span><span class="err">or</span><span class="w"> </span><span class="err">maxHeap.top()</span><span class="w"> </span><span class="err">&gt;</span><span class="w"> </span><span class="err">num)</span><span class="w"> </span><span class="err">{</span>
-<span class="w">            </span><span class="err">maxHeap.push(num)</span><span class="p">;</span>
-<span class="w">        </span><span class="p">}</span><span class="w"> </span><span class="nt">else</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="err">minHeap.push(num)</span><span class="p">;</span>
-<span class="w">        </span><span class="p">}</span>
+    void addNum(int num) {
+        if (maxHeap.empty() or maxHeap.top() &gt; num) {
+            maxHeap.push(num);
+        } else {
+            minHeap.push(num);
+        }
 
-<span class="w">        </span><span class="nt">if</span><span class="w"> </span><span class="o">(</span><span class="nt">maxHeap</span><span class="p">.</span><span class="nc">size</span><span class="o">()</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="nt">minHeap</span><span class="p">.</span><span class="nc">size</span><span class="o">()</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nt">1</span><span class="o">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="err">minHeap.push(maxHeap.top())</span><span class="p">;</span>
-<span class="w">            </span><span class="err">maxHeap.pop()</span><span class="p">;</span>
-<span class="w">        </span><span class="p">}</span><span class="w"> </span><span class="nt">else</span><span class="w"> </span><span class="nt">if</span><span class="w"> </span><span class="o">(</span><span class="nt">minHeap</span><span class="p">.</span><span class="nc">size</span><span class="o">()</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="nt">maxHeap</span><span class="p">.</span><span class="nc">size</span><span class="o">()</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nt">1</span><span class="o">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="err">maxHeap.push(minHeap.top())</span><span class="p">;</span>
-<span class="w">            </span><span class="err">minHeap.pop()</span><span class="p">;</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">    </span><span class="err">}</span>
+        if (maxHeap.size() &gt; minHeap.size() + 1) {
+            minHeap.push(maxHeap.top());
+            maxHeap.pop();
+        } else if (minHeap.size() &gt; maxHeap.size() + 1) {
+            maxHeap.push(minHeap.top());
+            minHeap.pop();
+        }
+    }
 
-<span class="w">    </span><span class="nt">double</span><span class="w"> </span><span class="nt">findMedian</span><span class="o">()</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="err">if</span><span class="w"> </span><span class="err">(maxHeap.size()</span><span class="w"> </span><span class="err">==</span><span class="w"> </span><span class="err">minHeap.size())</span><span class="w"> </span><span class="err">{</span>
-<span class="w">            </span><span class="err">if</span><span class="w"> </span><span class="err">(maxHeap.empty())</span><span class="w"> </span><span class="err">{</span>
-<span class="w">                </span><span class="err">return</span><span class="w"> </span><span class="err">0</span><span class="p">;</span>
-<span class="w">            </span><span class="p">}</span><span class="w"> </span><span class="nt">else</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="err">double</span><span class="w"> </span><span class="err">avg</span><span class="w"> </span><span class="err">=</span><span class="w"> </span><span class="err">(maxHeap.top()</span><span class="w"> </span><span class="err">+</span><span class="w"> </span><span class="err">minHeap.top())</span><span class="w"> </span><span class="err">/</span><span class="w"> </span><span class="err">2.0</span><span class="p">;</span>
-<span class="w">                </span><span class="err">return</span><span class="w"> </span><span class="err">avg</span><span class="p">;</span>
-<span class="w">            </span><span class="p">}</span>
+    double findMedian() {
+        if (maxHeap.size() == minHeap.size()) {
+            if (maxHeap.empty()) {
+                return 0;
+            } else {
+                double avg = (maxHeap.top() + minHeap.top()) / 2.0;
+                return avg;
+            }
 
-<span class="w">        </span><span class="err">}</span><span class="w"> </span><span class="nt">else</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="err">return</span><span class="w"> </span><span class="err">maxHeap.size()</span><span class="w"> </span><span class="err">&gt;</span><span class="w"> </span><span class="err">minHeap.size()</span><span class="w"> </span><span class="err">?</span><span class="w"> </span><span class="err">maxHeap.top()</span><span class="w"> </span><span class="err">:</span><span class="w"> </span><span class="err">minHeap.top()</span><span class="p">;</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">    </span><span class="err">}</span>
-<span class="err">}</span><span class="o">;</span>
-</code></pre></div>
+        } else {
+            return maxHeap.size() &gt; minHeap.size() ? maxHeap.top() : minHeap.top();
+        }
+    }
+};
 
-<p>Please upvote if you find the solution helpful :)</p></div>
-
-
-<div class='python-solution'><h2>Java/Python two heap solution, O(log n) add, O(1) find -- Votes: 1544</h2><p>The invariant of the algorithm is two heaps, small and large, each represent half of the current list. The length of smaller half is kept to be n / 2 at all time and the length of the larger half is either n / 2 or n / 2 + 1 depend on n's parity.</p>
+</code></pre>
+<p>Please upvote if you find the solution helpful :)</p></div><div class='python-solution'><h4>Java/Python two heap solution, O(log n) add, O(1) find [Votes: 1544]</h4><p>The invariant of the algorithm is two heaps, small and large, each represent half of the current list. The length of smaller half is kept to be n / 2 at all time and the length of the larger half is either n / 2 or n / 2 + 1 depend on n's parity. </p>
 <p>This way we only need to peek the two heaps' top number to calculate median.</p>
 <p>Any time before we add a new number, there are two scenarios, (total n numbers, k = n / 2):</p>
-<div class="codehilite"><pre><span></span><code>(1) length of (small, large) == (k, k)
+<pre><code>(1) length of (small, large) == (k, k)
 (2) length of (small, large) == (k, k + 1)
-</code></pre></div>
-
+</code></pre>
 <p>After adding the number, total (n + 1) numbers, they will become:</p>
-<div class="codehilite"><pre><span></span><code>(1) length of (small, large) == (k, k + 1)
+<pre><code>(1) length of (small, large) == (k, k + 1)
 (2) length of (small, large) == (k + 1, k + 1)
-</code></pre></div>
-
+</code></pre>
 <p>Here we take the first scenario for example, we know the large will gain one more item and small will remain the same size, but we cannot just push the item into large. What we should do is we push the new number into small and pop the maximum item from small then push it into large (all the pop and push here are heappop and heappush). By doing this kind of operations for the two scenarios we can keep our invariant.</p>
 <p>Therefore to add a number, we have 3 O(log n) heap operations. Luckily the heapq provided us a function "heappushpop" which saves some time by combine two into one. The document says:</p>
 <blockquote>Push item on the heap, then pop and return the smallest item from the heap. The combined action runs more efficiently than heappush() followed by a separate call to heappop().</blockquote>
 
-<p>Alltogether, the add operation is O(logn), The findMedian operation is O(1).</p>
+<p>Alltogether, the add operation is O(logn), The findMedian operation is O(1). </p>
 <p>Note that the heapq in python is a min heap, thus we need to invert the values in the smaller half to mimic a "max heap".</p>
 <p>A further observation is that the two scenarios take turns when adding numbers, thus it is possible to combine the two into one. For this please see <a href="https://leetcode.com/discuss/64910/very-short-o-log-n-o-1">stefan's post</a></p>
 <p><strong>Java</strong></p>
-<div class="codehilite"><pre><span></span><code><span class="nv">private</span><span class="w"> </span><span class="nv">PriorityQueue</span><span class="o">&lt;</span><span class="nv">Integer</span><span class="o">&gt;</span><span class="w"> </span><span class="nv">small</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">new</span><span class="w"> </span><span class="nv">PriorityQueue</span><span class="o">&lt;&gt;</span><span class="ss">(</span><span class="nv">Collections</span>.<span class="nv">reverseOrder</span><span class="ss">())</span><span class="c1">;</span>
-<span class="nv">private</span><span class="w"> </span><span class="nv">PriorityQueue</span><span class="o">&lt;</span><span class="nv">Integer</span><span class="o">&gt;</span><span class="w"> </span><span class="nv">large</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">new</span><span class="w"> </span><span class="nv">PriorityQueue</span><span class="o">&lt;&gt;</span><span class="ss">()</span><span class="c1">;</span>
-<span class="nv">private</span><span class="w"> </span><span class="nv">boolean</span><span class="w"> </span><span class="nv">even</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">true</span><span class="c1">;</span>
+<pre><code>private PriorityQueue&lt;Integer&gt; small = new PriorityQueue&lt;&gt;(Collections.reverseOrder());
+private PriorityQueue&lt;Integer&gt; large = new PriorityQueue&lt;&gt;();
+private boolean even = true;
 
-<span class="nv">public</span><span class="w"> </span><span class="nv">double</span><span class="w"> </span><span class="nv">findMedian</span><span class="ss">()</span><span class="w"> </span>{
-<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="ss">(</span><span class="nv">even</span><span class="ss">)</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="ss">(</span><span class="nv">small</span>.<span class="nv">peek</span><span class="ss">()</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nv">large</span>.<span class="nv">peek</span><span class="ss">())</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">2</span>.<span class="mi">0</span><span class="c1">;</span>
-<span class="w">    </span><span class="k">else</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="nv">small</span>.<span class="nv">peek</span><span class="ss">()</span><span class="c1">;</span>
+public double findMedian() {
+    if (even)
+        return (small.peek() + large.peek()) / 2.0;
+    else
+        return small.peek();
 }
 
-<span class="nv">public</span><span class="w"> </span><span class="nv">void</span><span class="w"> </span><span class="nv">addNum</span><span class="ss">(</span><span class="nv">int</span><span class="w"> </span><span class="nv">num</span><span class="ss">)</span><span class="w"> </span>{
-<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="ss">(</span><span class="nv">even</span><span class="ss">)</span><span class="w"> </span>{
-<span class="w">        </span><span class="nv">large</span>.<span class="nv">offer</span><span class="ss">(</span><span class="nv">num</span><span class="ss">)</span><span class="c1">;</span>
-<span class="w">        </span><span class="nv">small</span>.<span class="nv">offer</span><span class="ss">(</span><span class="nv">large</span>.<span class="nv">poll</span><span class="ss">())</span><span class="c1">;</span>
-<span class="w">    </span>}<span class="w"> </span><span class="k">else</span><span class="w"> </span>{
-<span class="w">        </span><span class="nv">small</span>.<span class="nv">offer</span><span class="ss">(</span><span class="nv">num</span><span class="ss">)</span><span class="c1">;</span>
-<span class="w">        </span><span class="nv">large</span>.<span class="nv">offer</span><span class="ss">(</span><span class="nv">small</span>.<span class="nv">poll</span><span class="ss">())</span><span class="c1">;</span>
-<span class="w">    </span>}
-<span class="w">    </span><span class="nv">even</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">!</span><span class="nv">even</span><span class="c1">;</span>
+public void addNum(int num) {
+    if (even) {
+        large.offer(num);
+        small.offer(large.poll());
+    } else {
+        small.offer(num);
+        large.offer(small.poll());
+    }
+    even = !even;
 }
-</code></pre></div>
-
+</code></pre>
 <p><strong>Python</strong></p>
-<div class="codehilite"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">heapq</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
+<pre><code>from heapq import *
 
 
-<span class="k">class</span><span class="w"> </span><span class="nc">MedianFinder</span><span class="p">:</span>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">small</span> <span class="o">=</span>   <span class="c1"># the smaller half of the list, max heap (invert min-heap)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">large</span> <span class="o">=</span>   <span class="c1"># the larger half of the list, min heap</span>
+class MedianFinder:
+    def __init__(self):
+        self.small = []  #### the smaller half of the list, max heap (invert min-heap)
+        self.large = []  #### the larger half of the list, min heap
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">addNum</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num</span><span class="p">):</span>
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">small</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">large</span><span class="p">):</span>
-            <span class="n">heappush</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">large</span><span class="p">,</span> <span class="o">-</span><span class="n">heappushpop</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">small</span><span class="p">,</span> <span class="o">-</span><span class="n">num</span><span class="p">))</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">heappush</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">small</span><span class="p">,</span> <span class="o">-</span><span class="n">heappushpop</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">large</span><span class="p">,</span> <span class="n">num</span><span class="p">))</span>
+    def addNum(self, num):
+        if len(self.small) == len(self.large):
+            heappush(self.large, -heappushpop(self.small, -num))
+        else:
+            heappush(self.small, -heappushpop(self.large, num))
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">findMedian</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">small</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">large</span><span class="p">):</span>
-            <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">large</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">small</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">/</span> <span class="mf">2.0</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">large</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    def findMedian(self):
+        if len(self.small) == len(self.large):
+            return float(self.large[0] - self.small[0]) / 2.0
+        else:
+            return float(self.large[0])
 
-<span class="c1"># 18 / 18 test cases passed.</span>
-<span class="c1"># Status: Accepted</span>
-<span class="c1"># Runtime: 388 ms</span>
-</code></pre></div></div><p style="page-break-before: always" ></p>
+#### 18 / 18 test cases passed.
+#### Status: Accepted
+#### Runtime: 388 ms
+</code></pre></div>

@@ -1,7 +1,6 @@
-<div class='cpp-solution'><h2>🔥Most Optimized ||🌟Kadane's Algorithm || Java || C++ || Python || Rust || JavaScript -- Votes: 903</h2><h2>Intuition</h2>
+<div class='cpp-solution'><h4>🔥Most Optimized ||🌟Kadane's Algorithm || Java || C++ || Python || Rust || JavaScript [Votes: 903]</h4><h4>Intuition</h4>
 <p>The problem aims to find the maximum profit that can be obtained by buying and selling a stock. The given solution seems to follow a simple approach of iterating through the prices, keeping track of the minimum buying price, and updating the profit whenever a higher selling price is encountered.</p>
-<p></p>
-<h2>Approach</h2>
+<h4>Approach</h4>
 <ol>
 <li>Initialize variables <code>buy</code> with the first element of the prices array and <code>profit</code> as 0.</li>
 <li>Iterate through the prices starting from the second element.</li>
@@ -9,211 +8,187 @@
 <li>Update the <code>profit</code> if the difference between the current price and the buying price is greater than the current profit.</li>
 <li>Return the final profit.</li>
 </ol>
-<h2>Kadane's Algorithm</h2>
+<h4>Kadane's Algorithm</h4>
 <p>Kadane's Algorithm is a dynamic programming technique used to find the maximum subarray sum in an array of numbers. The algorithm maintains two variables: <code>max_current</code> represents the maximum sum ending at the current position, and <code>max_global</code> represents the maximum subarray sum encountered so far. At each iteration, it updates <code>max_current</code> to include the current element or start a new subarray if the current element is larger than the accumulated sum. The <code>max_global</code> is updated if <code>max_current</code> surpasses its value.</p>
-<h2>Relating with the Approach</h2>
-<p>In the provided approach for finding the maximum profit in stock prices, the algorithm can be seen as a variation of Kadane's Algorithm. Instead of finding the maximum subarray sum directly, it focuses on finding the maximum positive difference between consecutive elements (prices) in the array.</p>
+<h4>Relating with the Approach</h4>
+<p>In the provided approach for finding the maximum profit in stock prices, the algorithm can be seen as a variation of Kadane's Algorithm. Instead of finding the maximum subarray sum directly, it focuses on finding the maximum positive difference between consecutive elements (prices) in the array. </p>
 <p>Here's how the approach relates to Kadane's Algorithm:</p>
 <ol>
 <li><strong>Initialization:</strong></li>
-</ol>
-<ul>
 <li>In Kadane's Algorithm, <code>max_current</code> and <code>max_global</code> are initialized to the first element of the array.</li>
-<li>In the stock profit approach, <code>buy</code> is initialized with the first element of the prices array, and <code>profit</code> is initialized to 0.</li>
-</ul>
-<ol>
-<li><strong>Iteration:</strong></li>
-</ol>
-<ul>
+<li>
+<p>In the stock profit approach, <code>buy</code> is initialized with the first element of the prices array, and <code>profit</code> is initialized to 0.</p>
+</li>
+<li>
+<p><strong>Iteration:</strong></p>
+</li>
 <li>Kadane's Algorithm iterates through the array, updating <code>max_current</code> based on the current element's value and deciding whether to start a new subarray.</li>
-<li>The stock profit approach iterates through the prices array, updating <code>buy</code> when a lower price is encountered and treating the difference between the current price and <code>buy</code> as a potential profit.</li>
-</ul>
-<ol>
-<li><strong>Comparison and Update:</strong></li>
-</ol>
-<ul>
+<li>
+<p>The stock profit approach iterates through the prices array, updating <code>buy</code> when a lower price is encountered and treating the difference between the current price and <code>buy</code> as a potential profit.</p>
+</li>
+<li>
+<p><strong>Comparison and Update:</strong></p>
+</li>
 <li>Kadane's Algorithm compares and updates <code>max_current</code> and <code>max_global</code> at each iteration.</li>
 <li>The stock profit approach compares and updates <code>profit</code> whenever a positive difference between the current price and <code>buy</code> exceeds the current profit.</li>
-</ul>
-<h2>Complexity</h2>
+</ol>
+<h4>Complexity</h4>
 <ul>
 <li>Time complexity: $$O(n)$$, where $$n$$ is the length of the prices array. The algorithm iterates through the array once.</li>
 <li>Space complexity: $$O(1)$$, as only a constant amount of extra space is used.</li>
 </ul>
-<h2>Code</h2>
-<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">java</span><span class="w"> </span>
-<span class="kd">class</span> <span class="nc">Solution</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="nf">maxProfit</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">prices</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">buy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">prices</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span><span class="p">;</span>
-<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">profit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">prices</span><span class="p">.</span><span class="na">length</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">prices</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">buy</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="n">buy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">prices</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="p">;</span>
-<span class="w">            </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">prices</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">buy</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">profit</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="n">profit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">prices</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">buy</span><span class="p">;</span>
-<span class="w">            </span><span class="p">}</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">profit</span><span class="p">;</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
-
-<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">c</span><span class="o">++</span><span class="w"> </span>
-<span class="n">class</span><span class="w"> </span><span class="n">Solution</span><span class="w"> </span><span class="p">{</span>
-<span class="n">public</span><span class="o">:</span>
-<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">maxProfit</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&amp;</span><span class="w"> </span><span class="n">prices</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">buy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">prices</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
-<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">profit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">prices</span><span class="p">.</span><span class="n">size</span><span class="p">();</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">prices</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">buy</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="n">buy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">prices</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
-<span class="w">            </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">prices</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">buy</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">profit</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="n">profit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">prices</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">buy</span><span class="p">;</span>
-<span class="w">            </span><span class="p">}</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">profit</span><span class="p">;</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">};</span>
-</code></pre></div>
-
-<div class="codehilite"><pre><span></span><code><span class="n">Language</span><span class="p">:</span> <span class="n">python</span> 
-<span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="p">:</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">maxProfit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prices</span><span class="p">):</span>
-        <span class="n">buy</span> <span class="o">=</span> <span class="n">prices</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="n">profit</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">prices</span><span class="p">)):</span>
-            <span class="k">if</span> <span class="n">prices</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">buy</span><span class="p">:</span>
-                <span class="n">buy</span> <span class="o">=</span> <span class="n">prices</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
-            <span class="k">elif</span> <span class="n">prices</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">buy</span> <span class="o">&gt;</span> <span class="n">profit</span><span class="p">:</span>
-                <span class="n">profit</span> <span class="o">=</span> <span class="n">prices</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">buy</span>
-        <span class="k">return</span> <span class="n">profit</span>
-</code></pre></div>
-
-<div class="codehilite"><pre><span></span><code><span class="n">Language</span><span class="p">:</span><span class="w"> </span><span class="nc">rust</span><span class="w"> </span>
-<span class="k">impl</span><span class="w"> </span><span class="n">Solution</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="k">fn</span><span class="w"> </span><span class="nf">max_profit</span><span class="p">(</span><span class="n">prices</span><span class="p">:</span><span class="w"> </span><span class="nb">Vec</span><span class="o">&lt;</span><span class="kt">i32</span><span class="o">&gt;</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="kt">i32</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="k">mut</span><span class="w"> </span><span class="n">buy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">prices</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
-<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="k">mut</span><span class="w"> </span><span class="n">profit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="mi">1</span><span class="o">..</span><span class="n">prices</span><span class="p">.</span><span class="n">len</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="n">prices</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">buy</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="n">buy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">prices</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
-<span class="w">            </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">prices</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">buy</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">profit</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="n">profit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">prices</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">buy</span><span class="p">;</span>
-<span class="w">            </span><span class="p">}</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">        </span><span class="n">profit</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
-
-<div class="codehilite"><pre><span></span><code><span class="nx">Language</span><span class="o">:</span><span class="w"> </span><span class="nx">javascript</span><span class="w"> </span>
-<span class="kd">class</span><span class="w"> </span><span class="nx">Solution</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nx">maxProfit</span><span class="p">(</span><span class="nx">prices</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="nx">buy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">prices</span><span class="p">[</span><span class="mf">0</span><span class="p">];</span>
-<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="nx">profit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0</span><span class="p">;</span>
-<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kd">let</span><span class="w"> </span><span class="nx">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">1</span><span class="p">;</span><span class="w"> </span><span class="nx">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="nx">prices</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span><span class="w"> </span><span class="nx">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">prices</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="nx">buy</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="nx">buy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">prices</span><span class="p">[</span><span class="nx">i</span><span class="p">];</span>
-<span class="w">            </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">prices</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nx">buy</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="nx">profit</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="nx">profit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">prices</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nx">buy</span><span class="p">;</span>
-<span class="w">            </span><span class="p">}</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="nx">profit</span><span class="p">;</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
-
-<p></p></div>
-
-
-<div class='python-solution'><h2>[Python , Javascript]  Easy solution with very clear Explanation -- Votes: 2457</h2><p><strong>The question is saying us to find the best day to buy and sell stock, so we will get maiximum profit.</strong></p>
-<p>**Some body might think that we can find min and max number from the array so that we can get the max profit. But here is one catch<br />
-For Example:<br />
-prices=[3,4,1,6]<br />
-min=1<br />
-max=6<br />
-profit=max-min=5 which is correct<br />
+<h4>Code</h4>
+<pre><code class="language-java">class Solution {
+    public int maxProfit(int[] prices) {
+        int buy = prices[0];
+        int profit = 0;
+        for (int i = 1; i &lt; prices.length; i++) {
+            if (prices[i] &lt; buy) {
+                buy = prices[i];
+            } else if (prices[i] - buy &gt; profit) {
+                profit = prices[i] - buy;
+            }
+        }
+        return profit;
+    }
+}
+</code></pre>
+<pre><code class="language-c++">class Solution {
+public:
+    int maxProfit(std::vector&lt;int&gt;&amp; prices) {
+        int buy = prices[0];
+        int profit = 0;
+        for (int i = 1; i &lt; prices.size(); i++) {
+            if (prices[i] &lt; buy) {
+                buy = prices[i];
+            } else if (prices[i] - buy &gt; profit) {
+                profit = prices[i] - buy;
+            }
+        }
+        return profit;
+    }
+};
+</code></pre>
+<pre><code class="language-python">class Solution:
+    def maxProfit(self, prices):
+        buy = prices[0]
+        profit = 0
+        for i in range(1, len(prices)):
+            if prices[i] &lt; buy:
+                buy = prices[i]
+            elif prices[i] - buy &gt; profit:
+                profit = prices[i] - buy
+        return profit
+</code></pre>
+<pre><code class="language-rust">impl Solution {
+    pub fn max_profit(prices: Vec&lt;i32&gt;) -&gt; i32 {
+        let mut buy = prices[0];
+        let mut profit = 0;
+        for i in 1..prices.len() {
+            if prices[i] &lt; buy {
+                buy = prices[i];
+            } else if prices[i] - buy &gt; profit {
+                profit = prices[i] - buy;
+            }
+        }
+        profit
+    }
+}
+</code></pre>
+<pre><code class="language-javascript">class Solution {
+    maxProfit(prices) {
+        let buy = prices[0];
+        let profit = 0;
+        for (let i = 1; i &lt; prices.length; i++) {
+            if (prices[i] &lt; buy) {
+                buy = prices[i];
+            } else if (prices[i] - buy &gt; profit) {
+                profit = prices[i] - buy;
+            }
+        }
+        return profit;
+    }
+}
+</code></pre></div><div class='python-solution'><h4>[Python , Javascript]  Easy solution with very clear Explanation [Votes: 2457]</h4><p><strong>The question is saying us to find the best day to buy and sell stock, so we will get maiximum profit.</strong></p>
+<p>**Some body might think that we can find min and max number from the array so that we can get the max profit. But here is one catch
+For Example:
+prices=[3,4,1,6]
+min=1
+max=6
+profit=max-min=5 which is correct
 in this Example:</p>
-<div class="codehilite"><pre><span></span><code>prices = [7,6,4,3,1]
-</code></pre></div>
-
-<p>min = 1 price at day 6<br />
-max = 7 price at day 1<br />
+<pre><code>prices = [7,6,4,3,1]
+</code></pre>
+<p>min = 1 price at day 6
+max = 7 price at day 1
 max_profit = 7-1 = 6 u can think like this but you can't buy the stock at day 6 and sell it at day 1.**</p>
-<hr />
-<p><strong>So what is the best way to find the max profit lets see<br />
-<ins>Explanation:</ins><br />
-let use initialize Left and Right pointer to first and second position of array<br />
+<p><strong>So what is the best way to find the max profit lets see 
+<ins>Explanation:</ins>
+let use initialize Left and Right pointer to first and second position of array
 Here Left is to buy stock and Right is to sell stock</strong></p>
 <p><code>Then we initialize our max_profit as 0.</code></p>
-<h5>Now we will start our while loop and we will run till our</h5>
-<p><strong>Right pointer less then length of array<br />
-<ins>For Example: </ins><br />
-prices=[7,1,5,3,6,4]<br />
-Note:<br />
-prices[left] --&gt; buy stock<br />
-prices[right] --&gt; sell stock<br />
+<h6># Now we will start our while loop and we will run till our</h6>
+<p><strong>Right pointer less then length of array 
+<ins>For Example: </ins>
+prices=[7,1,5,3,6,4]
+Note:
+prices[left] --&gt; buy stock
+prices[right] --&gt; sell stock
 now we will check price at right and left pointer</strong></p>
-<p><strong>step 1:</strong> <br><br />
-price[left]=7 price[right]=1 profit=-6<br />
+<p><strong>step 1:</strong> <br>
+price[left]=7 price[right]=1 profit=-6
 here price[left] is greater than price[right] so we will move left pointer to the right position and increment our right pointer by 1. We always want our left point to be minimum</p>
-<p><strong>step 2:</strong> <br><br />
-price[left]=1 price[right]=5 profit=4<br />
+<p><strong>step 2:</strong> <br>
+price[left]=1 price[right]=5 profit=4
 here price[left] is less than price[right] which means we will get profit so we will update our max_profit and move our right pointer alone</p>
-<p><strong>step 3:</strong> <br><br />
-price[left]=1 price[right]=3 profit=2<br />
+<p><strong>step 3:</strong> <br>
+price[left]=1 price[right]=3 profit=2
 here price[left] is less than price[right] which means we will get profit so we will check our max_profit previously it</p>
 <p>was 4 now our current profit is 2 so we will check which is maximum and update our max_profit and move our right pointer alone</p>
-<p><strong>step 4:</strong> <br><br />
-price[left]=1 price[right]=6 profit=5<br />
+<p><strong>step 4:</strong> <br>
+price[left]=1 price[right]=6 profit=5
 here price[left] is less than price[right] which means we will get profit so we will check our max_profit previously it was 4 now our current profit is 5 so we will check which is maximum and update our max_profit and move our right pointer alone</p>
-<p><strong>step 5:</strong> <br><br />
-price[left]=1 price[right]=4 profit=3<br />
+<p><strong>step 5:</strong> <br>
+price[left]=1 price[right]=4 profit=3
 same logic as above</p>
-<div class="codehilite"><pre><span></span><code><span class="n">Big</span><span class="w"> </span><span class="n">O</span><span class="w"> </span><span class="o">:</span>
-<span class="n">n</span><span class="o">--&gt;</span><span class="w"> </span><span class="nf">length</span><span class="w"> </span><span class="kr">of</span><span class="w"> </span><span class="n">array</span>
-<span class="n">Time</span><span class="w"> </span><span class="n">Complexity</span><span class="o">:</span><span class="w"> </span><span class="n">O</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
-<span class="n">Space</span><span class="w"> </span><span class="n">Complexity</span><span class="o">:</span><span class="w"> </span><span class="n">O</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-</code></pre></div>
-
+<pre><code>Big O :
+n--&gt; length of array
+Time Complexity: O(n)
+Space Complexity: O(1)
+</code></pre>
 <p>**My Hand Writting will not be good ,please adjust it **</p>
-<p></p>
-<h3>lets go to the solution:</h3>
+<h5>lets go to the solution:</h5>
 <p>python:</p>
-<div class="codehilite"><pre><span></span><code><span class="n">Language</span><span class="p">:</span> <span class="n">python</span> 
-<span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="p">:</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">maxProfit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">prices</span><span class="p">):</span>
-        <span class="n">left</span> <span class="o">=</span> <span class="mi">0</span> <span class="c1">#Buy</span>
-        <span class="n">right</span> <span class="o">=</span> <span class="mi">1</span> <span class="c1">#Sell</span>
-        <span class="n">max_profit</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="k">while</span> <span class="n">right</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">prices</span><span class="p">):</span>
-            <span class="n">currentProfit</span> <span class="o">=</span> <span class="n">prices</span><span class="p">[</span><span class="n">right</span><span class="p">]</span> <span class="o">-</span> <span class="n">prices</span><span class="p">[</span><span class="n">left</span><span class="p">]</span> <span class="c1">#our current Profit</span>
-            <span class="k">if</span> <span class="n">prices</span><span class="p">[</span><span class="n">left</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">prices</span><span class="p">[</span><span class="n">right</span><span class="p">]:</span>
-                <span class="n">max_profit</span> <span class="o">=</span><span class="nb">max</span><span class="p">(</span><span class="n">currentProfit</span><span class="p">,</span><span class="n">max_profit</span><span class="p">)</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">left</span> <span class="o">=</span> <span class="n">right</span>
-            <span class="n">right</span> <span class="o">+=</span> <span class="mi">1</span>
-        <span class="k">return</span> <span class="n">max_profit</span>
-</code></pre></div>
-
+<pre><code class="language-python">class Solution:
+    def maxProfit(self,prices):
+        left = 0 #Buy
+        right = 1 #Sell
+        max_profit = 0
+        while right &lt; len(prices):
+            currentProfit = prices[right] - prices[left] #our current Profit
+            if prices[left] &lt; prices[right]:
+                max_profit =max(currentProfit,max_profit)
+            else:
+                left = right
+            right += 1
+        return max_profit
+</code></pre>
 <p>javascript:</p>
-<div class="codehilite"><pre><span></span><code><span class="nx">Language</span><span class="o">:</span><span class="w"> </span><span class="nx">javascript</span><span class="w"> </span>
-<span class="kd">const</span><span class="w"> </span><span class="nx">maxProfit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="nx">prices</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="kd">let</span><span class="w"> </span><span class="nx">left</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0</span><span class="p">;</span><span class="w"> </span><span class="c1">// Buy</span>
-<span class="w">  </span><span class="kd">let</span><span class="w"> </span><span class="nx">right</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">1</span><span class="p">;</span><span class="w"> </span><span class="c1">// sell</span>
-<span class="w">  </span><span class="kd">let</span><span class="w"> </span><span class="nx">max_profit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0</span><span class="p">;</span>
-<span class="w">  </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="nx">right</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="nx">prices</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">prices</span><span class="p">[</span><span class="nx">left</span><span class="p">]</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="nx">prices</span><span class="p">[</span><span class="nx">right</span><span class="p">])</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="kd">let</span><span class="w"> </span><span class="nx">profit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">prices</span><span class="p">[</span><span class="nx">right</span><span class="p">]</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nx">prices</span><span class="p">[</span><span class="nx">left</span><span class="p">];</span><span class="w"> </span><span class="c1">// our current profit</span>
+<pre><code class="language-javascript">const maxProfit = (prices) =&gt; {
+  let left = 0; // Buy
+  let right = 1; // sell
+  let max_profit = 0;
+  while (right &lt; prices.length) {
+    if (prices[left] &lt; prices[right]) {
+      let profit = prices[right] - prices[left]; // our current profit
 
-<span class="w">      </span><span class="nx">max_profit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">Math</span><span class="p">.</span><span class="nx">max</span><span class="p">(</span><span class="nx">max_profit</span><span class="p">,</span><span class="w"> </span><span class="nx">profit</span><span class="p">);</span>
-<span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="nx">left</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">right</span><span class="p">;</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="w">    </span><span class="nx">right</span><span class="o">++</span><span class="p">;</span>
-<span class="w">  </span><span class="p">}</span>
-<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="nx">max_profit</span><span class="p">;</span>
-<span class="p">};</span>
-</code></pre></div>
-
-<p><code>UPVOTE if you like  , If you have any question, feel free to ask.</code></p></div><p style="page-break-before: always" ></p>
+      max_profit = Math.max(max_profit, profit);
+    } else {
+      left = right;
+    }
+    right++;
+  }
+  return max_profit;
+};
+</code></pre>
+<p><code>UPVOTE if you like  , If you have any question, feel free to ask.</code></p></div>

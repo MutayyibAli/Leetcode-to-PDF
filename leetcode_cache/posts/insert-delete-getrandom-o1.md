@@ -1,0 +1,301 @@
+# Cpp Solution:
+#### PLEASE UPVOTE IF IT HELPED
+
+
+#### Approaches
+(Also explained in the code)
+
+1. The class `RandomizedSet` uses a vector `v` to store the elements and an unordered map `mp` to store the mapping of elements to their indices in the vector.
+1. The `search` function checks if a given value is present in the set by looking it up in the unordered map.
+1. The `insert` function adds a value to the set if it's not already present. It appends the value to the vector and updates the unordered map with its index.
+1. The `remove` function removes a value from the set if it's present. It replaces the value with the last element in the vector, updates the index in the unordered map, and then removes the last element.
+1. The `getRandom` function returns a random element from the vector using the `rand()` function.
+
+
+
+#### Complexity
+- Time complexity:
+$$O(1)$$
+
+    
+
+- Space complexity:
+$$O(n)$$
+    
+
+
+#### Code
+```cpp
+class RandomizedSet {
+    vector<int> v;
+    unordered_map<int,int> mp;
+public:
+   
+    RandomizedSet() {
+    }
+
+    bool search(int val){
+
+         if(mp.find(val)!=mp.end())
+            return true;
+         return false;
+
+    }
+
+    
+    bool insert(int val) {
+
+        if(search(val))
+            return false;
+
+        v.push_back(val);
+        mp[val] = v.size()-1;
+        return true;
+    }
+
+    
+    bool remove(int val) {
+
+        if(!search(val))
+            return false;
+
+       
+        auto it = mp.find(val);
+        v[it->second] = v.back();
+        v.pop_back();
+        mp[v[it->second]] = it->second;
+        mp.erase(val);
+        return true;
+    }
+
+   
+    int getRandom() {
+
+        return v[rand()%v.size()];
+    }
+};
+
+
+
+```
+```Java
+class RandomizedSet {
+    private ArrayList<Integer> list;
+    private Map<Integer, Integer> map;
+
+    public RandomizedSet() {
+        list = new ArrayList<>();
+        map = new HashMap<>();
+    }
+
+    public boolean search(int val) {
+        return map.containsKey(val);
+    }
+
+    public boolean insert(int val) {
+        if (search(val)) return false;
+
+        list.add(val);
+        map.put(val, list.size() - 1);
+        return true;
+    }
+
+    public boolean remove(int val) {
+        if (!search(val)) return false;
+
+        int index = map.get(val);
+        list.set(index, list.get(list.size() - 1));
+        map.put(list.get(index), index);
+        list.remove(list.size() - 1);
+        map.remove(val);
+
+        return true;
+    }
+
+    public int getRandom() {
+        Random rand = new Random();
+        return list.get(rand.nextInt(list.size()));
+    }
+}
+
+
+
+```
+```python3
+import random
+
+class RandomizedSet:
+
+    def __init__(self):
+        self.lst = []
+        self.idx_map = {}
+
+    def search(self, val):
+        return val in self.idx_map
+
+    def insert(self, val):
+        if self.search(val):
+            return False
+
+        self.lst.append(val)
+        self.idx_map[val] = len(self.lst) - 1
+        return True
+
+    def remove(self, val):
+        if not self.search(val):
+            return False
+
+        idx = self.idx_map[val]
+        self.lst[idx] = self.lst[-1]
+        self.idx_map[self.lst[-1]] = idx
+        self.lst.pop()
+        del self.idx_map[val]
+        return True
+
+    def getRandom(self):
+        return random.choice(self.lst)
+
+
+
+```
+```javascript
+class RandomizedSet {
+    constructor() {
+        this.list = [];
+        this.map = new Map();
+    }
+
+    search(val) {
+        return this.map.has(val);
+    }
+
+    insert(val) {
+        if (this.search(val)) return false;
+
+        this.list.push(val);
+        this.map.set(val, this.list.length - 1);
+        return true;
+    }
+
+    remove(val) {
+        if (!this.search(val)) return false;
+
+        const index = this.map.get(val);
+        this.list[index] = this.list[this.list.length - 1];
+        this.map.set(this.list[index], index);
+        this.list.pop();
+        this.map.delete(val);
+        return true;
+    }
+
+    getRandom() {
+        const randomIndex = Math.floor(Math.random() * this.list.length);
+        return this.list[randomIndex];
+    }
+}
+
+
+
+```
+
+
+#### PLEASE UPVOTE IF IT HELPED
+
+
+---
+
+
+# Python Solution:
+In python, creating a simple api for a set() would be a perfect solution if not for the third operation, getRandom(). We know that we can retrieve an item from a set, and not know what that item will be, but that would not be actually random. (This is due to the way python implements sets. In python3, when using integers, elements are popped from the set in the order they appear in the underlying 
+hashtable. Hence, not actually random.)
+
+A set is implemented essentially the same as a dict in python, so the time complexity of add / delete is on average O(1). When it comes to the random function, however, we run into the problem of needing to convert the data into a python list in order to return a random element. That conversion will add a significant overhead to getRandom, thus slowing the whole thing down.
+
+Instead of having to do that type conversion (set to list) we can take an approach that involves maintaining both a list and a dictionary side by side. That might look something like:
+
+```
+data_map == {4: 0, 6: 1, 2: 2, 5: 3}
+data == [4, 6, 2, 5]
+```
+
+Notice that the key in the `data_map` is the element in the list, and the value in the `data_map` is the index the element is at in the list. 
+
+Let's look at the implementation:
+
+```python
+class RandomizedSet:
+
+    def __init__(self):
+        self.data_map = {} #### dictionary, aka map, aka hashtable, aka hashmap
+        self.data = [] #### list aka array
+
+    def insert(self, val: int) -> bool:
+
+        #### the problem indicates we need to return False if the item 
+        #### is already in the RandomizedSet---checking if it's in the
+        #### dictionary is on average O(1) where as
+        #### checking the array is on average O(n)
+        if val in self.data_map:
+            return False
+
+        #### add the element to the dictionary. Setting the value as the 
+        #### length of the list will accurately point to the index of the 
+        #### new element. (len(some_list) is equal to the index of the last item +1)
+        self.data_map[val] = len(self.data)
+
+        #### add to the list
+        self.data.append(val)
+        
+        return True
+
+    def remove(self, val: int) -> bool:
+
+        #### again, if the item is not in the data_map, return False. 
+        #### we check the dictionary instead of the list due to lookup complexity
+        if not val in self.data_map:
+            return False
+
+        #### essentially, we're going to move the last element in the list 
+        #### into the location of the element we want to remove. 
+        #### this is a significantly more efficient operation than the obvious 
+        #### solution of removing the item and shifting the values of every item 
+        #### in the dicitionary to match their new position in the list
+        last_elem_in_list = self.data[-1]
+        index_of_elem_to_remove = self.data_map[val]
+
+        self.data_map[last_elem_in_list] = index_of_elem_to_remove
+        self.data[index_of_elem_to_remove] = last_elem_in_list
+
+        #### change the last element in the list to now be the value of the element 
+        #### we want to remove
+        self.data[-1] = val
+
+        #### remove the last element in the list
+        self.data.pop()
+
+        #### remove the element to be removed from the dictionary
+        self.data_map.pop(val)
+        return True
+
+    def getRandom(self) -> int:
+        #### if running outside of leetcode, you need to `import random`.
+        #### random.choice will randomly select an element from the list of data.
+        return random.choice(self.data)
+```
+
+Notes:
+
+1) this can be made more efficient by removing the variables `last_elem_in_list` and `index_of_elem_to_remove`. I have used this to aid in readability. 
+2) the remove operation might appear complicated so here's a before and after of what the data looks like:
+
+```
+element_to_remove = 7
+
+before:     [4, 7, 9, 3, 5]
+after:      [4, 5, 9, 3]
+
+before:     {4:0, 7:1, 9:2, 3:3, 5:4}
+after:      {4:0, 9:2, 3:3, 5:1}
+```
+
+All we're doing is replacing the element in the list that needs to be removed with the last element in the list. And then we update the values in the dictionary to reflect that.

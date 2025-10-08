@@ -1,158 +1,73 @@
-<div class='cpp-solution'><h2>🔥Easy Solutions in Java 📝, Python 🐍, and C++ 🖥️🧐Look at once 💻 -- Votes: 768</h2><h2>Intuition</h2>
+<div class='cpp-solution'><h4>🔥Easy Solutions in Java 📝, Python 🐍, and C++ 🖥️🧐Look at once 💻 [Votes: 768]</h4><h4>Intuition</h4>
 <!-- Describe your first thoughts on how to solve this problem. -->
-
 <p>To check if a binary tree is symmetric, we need to compare its left subtree and right subtree. To do this, we can traverse the tree recursively and compare the left and right subtrees at each level. If they are symmetric, we continue the traversal. Otherwise, we can immediately return false.</p>
-<h2>Approach</h2>
+<h4>Approach</h4>
 <!-- Describe your approach to solving the problem. -->
-
 <p>We can define a recursive helper function that takes two nodes as input, one from the left subtree and one from the right subtree. The helper function returns true if both nodes are null, or if their values are equal and their subtrees are symmetric.</p>
-<h2>Complexity</h2>
+<h4>Complexity</h4>
 <ul>
 <li>Time complexity:The time complexity of the algorithm is $$O(n)$$, where n is the number of nodes in the binary tree. We need to visit each node once to check if the tree is symmetric.</li>
-<li>Space complexity:<br />
-  The space complexity of the algorithm is $$O(h)$$, where h is the height of the binary tree. In the worst case, the tree can be completely unbalanced, and the recursion stack can go as deep as the height of the tree.</li>
+<li>Space complexity:
+The space complexity of the algorithm is $$O(h)$$, where h is the height of the binary tree. In the worst case, the tree can be completely unbalanced, and the recursion stack can go as deep as the height of the tree.</li>
 </ul>
-<p></p>
-<h2>Please Upvote</h2>
-<div class="codehilite"><pre><span></span><code><span class="nx">Thanks</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="nx">visiting</span><span class="w"> </span><span class="nx">my</span><span class="w"> </span><span class="nx">solution</span><span class="p">.</span><span class="w"> </span><span class="nx">Keep</span><span class="w"> </span><span class="nx">Learning</span>
-<span class="nx">Please</span><span class="w"> </span><span class="nx">give</span><span class="w"> </span><span class="nx">my</span><span class="w"> </span><span class="nx">solution</span><span class="w"> </span><span class="nx">an</span><span class="w"> </span><span class="nx">upvote</span><span class="p">!</span><span class="w"> </span>
-<span class="nx">It</span><span class="err">&#39;</span><span class="nx">s</span><span class="w"> </span><span class="nx">a</span><span class="w"> </span><span class="nx">simple</span><span class="w"> </span><span class="nx">way</span><span class="w"> </span><span class="nx">to</span><span class="w"> </span><span class="nx">show</span><span class="w"> </span><span class="nx">your</span><span class="w"> </span><span class="nx">appreciation</span><span class="w"> </span><span class="k">and</span>
-<span class="nx">keep</span><span class="w"> </span><span class="nx">me</span><span class="w"> </span><span class="nx">motivated</span><span class="p">.</span><span class="w"> </span><span class="nx">Thank</span><span class="w"> </span><span class="nx">you</span><span class="p">!</span><span class="w"> </span>
+<h4>Please Upvote</h4>
+<pre><code>Thanks for visiting my solution. Keep Learning
+Please give my solution an upvote! 
+It's a simple way to show your appreciation and
+keep me motivated. Thank you! 
+</code></pre>
+<h4>Code</h4>
+<pre><code class="language-Java">class Solution {
+    public boolean isSymmetric(TreeNode root) {
+        if (root == null) {
+            return true;
+        }
+        return isMirror(root.left, root.right);
+    }
+
+    private boolean isMirror(TreeNode node1, TreeNode node2) {
+        if (node1 == null &amp;&amp; node2 == null) {
+            return true;
+        }
+        if (node1 == null || node2 == null) {
+            return false;
+        }
+        return node1.val == node2.val &amp;&amp; isMirror(node1.left, node2.right) &amp;&amp; isMirror(node1.right, node2.left);
+    }
+}
+
+</code></pre>
+<pre><code class="language-Python">class Solution(object):
+    def isMirror(self, left, right):
+        if not left and not right:
+            return True
+        if not left or not right:
+            return False
+        return left.val == right.val and self.isMirror(left.left, right.right) and self.isMirror(left.right, right.left)
+
+    def isSymmetric(self, root):
+        if not root:
+            return True
+        return self.isMirror(root.left, root.right)
+
+</code></pre>
+<pre><code class="language-cpp">class Solution {
+public:
+    bool isMirror(TreeNode* left, TreeNode* right) {
+    if (!left &amp;&amp; !right) return true;
+    if (!left || !right) return false;
+    return (left-&gt;val == right-&gt;val) &amp;&amp; isMirror(left-&gt;left, right-&gt;right) &amp;&amp; isMirror(left-&gt;right, right-&gt;left);
+}
+
+bool isSymmetric(TreeNode* root) {
+    if (!root) return true;
+    return isMirror(root-&gt;left, root-&gt;right);
+}
+
+};
+
+
+</code></pre>
+<h4>Please Comment</h4>
+<pre><code>Thanks for visiting my solution comment below if you like it.
 </code></pre></div>
-
-<h2>Code</h2>
-<div class="codehilite"><pre><span></span><code><span class="kd">class</span> <span class="nc">Solution</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">boolean</span><span class="w"> </span><span class="nf">isSymmetric</span><span class="p">(</span><span class="n">TreeNode</span><span class="w"> </span><span class="n">root</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">root</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="kc">true</span><span class="p">;</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">isMirror</span><span class="p">(</span><span class="n">root</span><span class="p">.</span><span class="na">left</span><span class="p">,</span><span class="w"> </span><span class="n">root</span><span class="p">.</span><span class="na">right</span><span class="p">);</span>
-<span class="w">    </span><span class="p">}</span>
-
-<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kt">boolean</span><span class="w"> </span><span class="nf">isMirror</span><span class="p">(</span><span class="n">TreeNode</span><span class="w"> </span><span class="n">node1</span><span class="p">,</span><span class="w"> </span><span class="n">TreeNode</span><span class="w"> </span><span class="n">node2</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">node1</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kc">null</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">node2</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="kc">true</span><span class="p">;</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">node1</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kc">null</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">node2</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="kc">false</span><span class="p">;</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">node1</span><span class="p">.</span><span class="na">val</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">node2</span><span class="p">.</span><span class="na">val</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">isMirror</span><span class="p">(</span><span class="n">node1</span><span class="p">.</span><span class="na">left</span><span class="p">,</span><span class="w"> </span><span class="n">node2</span><span class="p">.</span><span class="na">right</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">isMirror</span><span class="p">(</span><span class="n">node1</span><span class="p">.</span><span class="na">right</span><span class="p">,</span><span class="w"> </span><span class="n">node2</span><span class="p">.</span><span class="na">left</span><span class="p">);</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
-
-<div class="codehilite"><pre><span></span><code><span class="n">Language</span><span class="p">:</span> <span class="n">Python</span> 
-<span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">isMirror</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">):</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">left</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">right</span><span class="p">:</span>
-            <span class="k">return</span> <span class="kc">True</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">left</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">right</span><span class="p">:</span>
-            <span class="k">return</span> <span class="kc">False</span>
-        <span class="k">return</span> <span class="n">left</span><span class="o">.</span><span class="n">val</span> <span class="o">==</span> <span class="n">right</span><span class="o">.</span><span class="n">val</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">isMirror</span><span class="p">(</span><span class="n">left</span><span class="o">.</span><span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="o">.</span><span class="n">right</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">isMirror</span><span class="p">(</span><span class="n">left</span><span class="o">.</span><span class="n">right</span><span class="p">,</span> <span class="n">right</span><span class="o">.</span><span class="n">left</span><span class="p">)</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">isSymmetric</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">root</span><span class="p">):</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">root</span><span class="p">:</span>
-            <span class="k">return</span> <span class="kc">True</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">isMirror</span><span class="p">(</span><span class="n">root</span><span class="o">.</span><span class="n">left</span><span class="p">,</span> <span class="n">root</span><span class="o">.</span><span class="n">right</span><span class="p">)</span>
-</code></pre></div>
-
-<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">C</span><span class="o">++</span><span class="w"> </span>
-<span class="n">class</span><span class="w"> </span><span class="n">Solution</span><span class="w"> </span><span class="p">{</span>
-<span class="n">public</span><span class="o">:</span>
-<span class="w">    </span><span class="kt">bool</span><span class="w"> </span><span class="n">isMirror</span><span class="p">(</span><span class="n">TreeNode</span><span class="o">*</span><span class="w"> </span><span class="n">left</span><span class="p">,</span><span class="w"> </span><span class="n">TreeNode</span><span class="o">*</span><span class="w"> </span><span class="n">right</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">left</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="o">!</span><span class="n">right</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
-<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">left</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="o">!</span><span class="n">right</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="p">(</span><span class="n">left</span><span class="o">-&gt;</span><span class="n">val</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">right</span><span class="o">-&gt;</span><span class="n">val</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">isMirror</span><span class="p">(</span><span class="n">left</span><span class="o">-&gt;</span><span class="n">left</span><span class="p">,</span><span class="w"> </span><span class="n">right</span><span class="o">-&gt;</span><span class="n">right</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">isMirror</span><span class="p">(</span><span class="n">left</span><span class="o">-&gt;</span><span class="n">right</span><span class="p">,</span><span class="w"> </span><span class="n">right</span><span class="o">-&gt;</span><span class="n">left</span><span class="p">);</span>
-<span class="p">}</span>
-
-<span class="kt">bool</span><span class="w"> </span><span class="n">isSymmetric</span><span class="p">(</span><span class="n">TreeNode</span><span class="o">*</span><span class="w"> </span><span class="n">root</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">root</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">isMirror</span><span class="p">(</span><span class="n">root</span><span class="o">-&gt;</span><span class="n">left</span><span class="p">,</span><span class="w"> </span><span class="n">root</span><span class="o">-&gt;</span><span class="n">right</span><span class="p">);</span>
-<span class="p">}</span>
-
-<span class="p">};</span>
-</code></pre></div>
-
-<h2>Please Comment</h2>
-<div class="codehilite"><pre><span></span><code><span class="nv">Thanks</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="nv">visiting</span><span class="w"> </span><span class="nv">my</span><span class="w"> </span><span class="nv">solution</span><span class="w"> </span><span class="nv">comment</span><span class="w"> </span><span class="nv">below</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="nv">you</span><span class="w"> </span><span class="nv">like</span><span class="w"> </span><span class="nv">it</span>.
-</code></pre></div></div>
-
-
-<div class='python-solution'><h2>🔥Easy Solutions in Java 📝, Python 🐍, and C++ 🖥️🧐Look at once 💻 -- Votes: 768</h2><h2>Intuition</h2>
-<!-- Describe your first thoughts on how to solve this problem. -->
-
-<p>To check if a binary tree is symmetric, we need to compare its left subtree and right subtree. To do this, we can traverse the tree recursively and compare the left and right subtrees at each level. If they are symmetric, we continue the traversal. Otherwise, we can immediately return false.</p>
-<h2>Approach</h2>
-<!-- Describe your approach to solving the problem. -->
-
-<p>We can define a recursive helper function that takes two nodes as input, one from the left subtree and one from the right subtree. The helper function returns true if both nodes are null, or if their values are equal and their subtrees are symmetric.</p>
-<h2>Complexity</h2>
-<ul>
-<li>Time complexity:The time complexity of the algorithm is $$O(n)$$, where n is the number of nodes in the binary tree. We need to visit each node once to check if the tree is symmetric.</li>
-<li>Space complexity:<br />
-  The space complexity of the algorithm is $$O(h)$$, where h is the height of the binary tree. In the worst case, the tree can be completely unbalanced, and the recursion stack can go as deep as the height of the tree.</li>
-</ul>
-<p></p>
-<h2>Please Upvote</h2>
-<div class="codehilite"><pre><span></span><code><span class="nx">Thanks</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="nx">visiting</span><span class="w"> </span><span class="nx">my</span><span class="w"> </span><span class="nx">solution</span><span class="p">.</span><span class="w"> </span><span class="nx">Keep</span><span class="w"> </span><span class="nx">Learning</span>
-<span class="nx">Please</span><span class="w"> </span><span class="nx">give</span><span class="w"> </span><span class="nx">my</span><span class="w"> </span><span class="nx">solution</span><span class="w"> </span><span class="nx">an</span><span class="w"> </span><span class="nx">upvote</span><span class="p">!</span><span class="w"> </span>
-<span class="nx">It</span><span class="err">&#39;</span><span class="nx">s</span><span class="w"> </span><span class="nx">a</span><span class="w"> </span><span class="nx">simple</span><span class="w"> </span><span class="nx">way</span><span class="w"> </span><span class="nx">to</span><span class="w"> </span><span class="nx">show</span><span class="w"> </span><span class="nx">your</span><span class="w"> </span><span class="nx">appreciation</span><span class="w"> </span><span class="k">and</span>
-<span class="nx">keep</span><span class="w"> </span><span class="nx">me</span><span class="w"> </span><span class="nx">motivated</span><span class="p">.</span><span class="w"> </span><span class="nx">Thank</span><span class="w"> </span><span class="nx">you</span><span class="p">!</span><span class="w"> </span>
-</code></pre></div>
-
-<h2>Code</h2>
-<div class="codehilite"><pre><span></span><code><span class="kd">class</span> <span class="nc">Solution</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">boolean</span><span class="w"> </span><span class="nf">isSymmetric</span><span class="p">(</span><span class="n">TreeNode</span><span class="w"> </span><span class="n">root</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">root</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="kc">true</span><span class="p">;</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">isMirror</span><span class="p">(</span><span class="n">root</span><span class="p">.</span><span class="na">left</span><span class="p">,</span><span class="w"> </span><span class="n">root</span><span class="p">.</span><span class="na">right</span><span class="p">);</span>
-<span class="w">    </span><span class="p">}</span>
-
-<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kt">boolean</span><span class="w"> </span><span class="nf">isMirror</span><span class="p">(</span><span class="n">TreeNode</span><span class="w"> </span><span class="n">node1</span><span class="p">,</span><span class="w"> </span><span class="n">TreeNode</span><span class="w"> </span><span class="n">node2</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">node1</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kc">null</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">node2</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="kc">true</span><span class="p">;</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">node1</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kc">null</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">node2</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="kc">false</span><span class="p">;</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">node1</span><span class="p">.</span><span class="na">val</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">node2</span><span class="p">.</span><span class="na">val</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">isMirror</span><span class="p">(</span><span class="n">node1</span><span class="p">.</span><span class="na">left</span><span class="p">,</span><span class="w"> </span><span class="n">node2</span><span class="p">.</span><span class="na">right</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">isMirror</span><span class="p">(</span><span class="n">node1</span><span class="p">.</span><span class="na">right</span><span class="p">,</span><span class="w"> </span><span class="n">node2</span><span class="p">.</span><span class="na">left</span><span class="p">);</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
-
-<div class="codehilite"><pre><span></span><code><span class="n">Language</span><span class="p">:</span> <span class="n">Python</span> 
-<span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">isMirror</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">):</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">left</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">right</span><span class="p">:</span>
-            <span class="k">return</span> <span class="kc">True</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">left</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">right</span><span class="p">:</span>
-            <span class="k">return</span> <span class="kc">False</span>
-        <span class="k">return</span> <span class="n">left</span><span class="o">.</span><span class="n">val</span> <span class="o">==</span> <span class="n">right</span><span class="o">.</span><span class="n">val</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">isMirror</span><span class="p">(</span><span class="n">left</span><span class="o">.</span><span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="o">.</span><span class="n">right</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">isMirror</span><span class="p">(</span><span class="n">left</span><span class="o">.</span><span class="n">right</span><span class="p">,</span> <span class="n">right</span><span class="o">.</span><span class="n">left</span><span class="p">)</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">isSymmetric</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">root</span><span class="p">):</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">root</span><span class="p">:</span>
-            <span class="k">return</span> <span class="kc">True</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">isMirror</span><span class="p">(</span><span class="n">root</span><span class="o">.</span><span class="n">left</span><span class="p">,</span> <span class="n">root</span><span class="o">.</span><span class="n">right</span><span class="p">)</span>
-</code></pre></div>
-
-<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">C</span><span class="o">++</span><span class="w"> </span>
-<span class="n">class</span><span class="w"> </span><span class="n">Solution</span><span class="w"> </span><span class="p">{</span>
-<span class="n">public</span><span class="o">:</span>
-<span class="w">    </span><span class="kt">bool</span><span class="w"> </span><span class="n">isMirror</span><span class="p">(</span><span class="n">TreeNode</span><span class="o">*</span><span class="w"> </span><span class="n">left</span><span class="p">,</span><span class="w"> </span><span class="n">TreeNode</span><span class="o">*</span><span class="w"> </span><span class="n">right</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">left</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="o">!</span><span class="n">right</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
-<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">left</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="o">!</span><span class="n">right</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="p">(</span><span class="n">left</span><span class="o">-&gt;</span><span class="n">val</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">right</span><span class="o">-&gt;</span><span class="n">val</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">isMirror</span><span class="p">(</span><span class="n">left</span><span class="o">-&gt;</span><span class="n">left</span><span class="p">,</span><span class="w"> </span><span class="n">right</span><span class="o">-&gt;</span><span class="n">right</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">isMirror</span><span class="p">(</span><span class="n">left</span><span class="o">-&gt;</span><span class="n">right</span><span class="p">,</span><span class="w"> </span><span class="n">right</span><span class="o">-&gt;</span><span class="n">left</span><span class="p">);</span>
-<span class="p">}</span>
-
-<span class="kt">bool</span><span class="w"> </span><span class="n">isSymmetric</span><span class="p">(</span><span class="n">TreeNode</span><span class="o">*</span><span class="w"> </span><span class="n">root</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">root</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">isMirror</span><span class="p">(</span><span class="n">root</span><span class="o">-&gt;</span><span class="n">left</span><span class="p">,</span><span class="w"> </span><span class="n">root</span><span class="o">-&gt;</span><span class="n">right</span><span class="p">);</span>
-<span class="p">}</span>
-
-<span class="p">};</span>
-</code></pre></div>
-
-<h2>Please Comment</h2>
-<div class="codehilite"><pre><span></span><code><span class="nv">Thanks</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="nv">visiting</span><span class="w"> </span><span class="nv">my</span><span class="w"> </span><span class="nv">solution</span><span class="w"> </span><span class="nv">comment</span><span class="w"> </span><span class="nv">below</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="nv">you</span><span class="w"> </span><span class="nv">like</span><span class="w"> </span><span class="nv">it</span>.
-</code></pre></div></div><p style="page-break-before: always" ></p>

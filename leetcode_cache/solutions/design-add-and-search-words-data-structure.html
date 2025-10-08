@@ -1,65 +1,60 @@
-<div class='cpp-solution'><h2>C++ Trie -- Votes: 259</h2><p>This is a vanilla application of Trie. The main difficulty lies in how to deal with the <code>.</code> character. I use a naive solution in this place: each time when I reach a <code>.</code>, I simply traverse all the children of the current node and recursively search the remaining substring starting from each of those children.</p>
-<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">cpp</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">TrieNode</span><span class="w"> </span><span class="p">{</span>
-<span class="k">public</span><span class="o">:</span>
-<span class="w">    </span><span class="kt">bool</span><span class="w"> </span><span class="n">word</span><span class="p">;</span>
-<span class="w">    </span><span class="n">TrieNode</span><span class="o">*</span><span class="w"> </span><span class="n">children</span><span class="p">[</span><span class="mi">26</span><span class="p">];</span>
-<span class="w">    </span><span class="n">TrieNode</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="n">word</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
-<span class="w">        </span><span class="n">memset</span><span class="p">(</span><span class="n">children</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="n">children</span><span class="p">));</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">};</span>
+<div class='cpp-solution'><h4>C++ Trie [Votes: 259]</h4><p>This is a vanilla application of Trie. The main difficulty lies in how to deal with the <code>.</code> character. I use a naive solution in this place: each time when I reach a <code>.</code>, I simply traverse all the children of the current node and recursively search the remaining substring starting from each of those children.</p>
+<p>```cpp
+class TrieNode {
+public:
+    bool word;
+    TrieNode* children[26];
+    TrieNode() {
+        word = false;
+        memset(children, NULL, sizeof(children));
+    }
+};</p>
+<p>class WordDictionary {
+public:
+    /*<em> Initialize your data structure here. </em>/
+    WordDictionary() {</p>
+<pre><code>}
 
-<span class="k">class</span><span class="w"> </span><span class="nc">WordDictionary</span><span class="w"> </span><span class="p">{</span>
-<span class="k">public</span><span class="o">:</span>
-<span class="w">    </span><span class="cm">/** Initialize your data structure here. */</span>
-<span class="w">    </span><span class="n">WordDictionary</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+/** Adds a word into the data structure. */
+void addWord(string word) {
+    TrieNode* node = root;
+    for (char c : word) {
+        if (!node -&gt; children[c - 'a']) {
+            node -&gt; children[c - 'a'] = new TrieNode();
+        }
+        node = node -&gt; children[c - 'a'];
+    }
+    node -&gt; word = true;
+}
 
-<span class="w">    </span><span class="p">}</span>
-
-<span class="w">    </span><span class="cm">/** Adds a word into the data structure. */</span>
-<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="n">addWord</span><span class="p">(</span><span class="n">string</span><span class="w"> </span><span class="n">word</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="n">TrieNode</span><span class="o">*</span><span class="w"> </span><span class="n">node</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">root</span><span class="p">;</span>
-<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">char</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">word</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">node</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">children</span><span class="p">[</span><span class="n">c</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="sc">&#39;a&#39;</span><span class="p">])</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="n">node</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">children</span><span class="p">[</span><span class="n">c</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="sc">&#39;a&#39;</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">TrieNode</span><span class="p">();</span>
-<span class="w">            </span><span class="p">}</span>
-<span class="w">            </span><span class="n">node</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">node</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">children</span><span class="p">[</span><span class="n">c</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="sc">&#39;a&#39;</span><span class="p">];</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">        </span><span class="n">node</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">word</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
-<span class="w">    </span><span class="p">}</span>
-
-<span class="w">    </span><span class="cm">/** Returns if the word is in the data structure. A word could contain the dot character &#39;.&#39; to represent any one letter. */</span>
-<span class="w">    </span><span class="kt">bool</span><span class="w"> </span><span class="n">search</span><span class="p">(</span><span class="n">string</span><span class="w"> </span><span class="n">word</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">search</span><span class="p">(</span><span class="n">word</span><span class="p">.</span><span class="n">c_str</span><span class="p">(),</span><span class="w"> </span><span class="n">root</span><span class="p">);</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="k">private</span><span class="o">:</span>
-<span class="w">    </span><span class="n">TrieNode</span><span class="o">*</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">TrieNode</span><span class="p">();</span>
-
-<span class="w">    </span><span class="kt">bool</span><span class="w"> </span><span class="nf">search</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">word</span><span class="p">,</span><span class="w"> </span><span class="n">TrieNode</span><span class="o">*</span><span class="w"> </span><span class="n">node</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">word</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">node</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">word</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="sc">&#39;.&#39;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="n">node</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">node</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">children</span><span class="p">[</span><span class="n">word</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="sc">&#39;a&#39;</span><span class="p">];</span>
-<span class="w">            </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="n">TrieNode</span><span class="o">*</span><span class="w"> </span><span class="n">tmp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">node</span><span class="p">;</span>
-<span class="w">                </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">26</span><span class="p">;</span><span class="w"> </span><span class="n">j</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                    </span><span class="n">node</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">tmp</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">children</span><span class="p">[</span><span class="n">j</span><span class="p">];</span>
-<span class="w">                    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">search</span><span class="p">(</span><span class="n">word</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">node</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                        </span><span class="k">return</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
-<span class="w">                    </span><span class="p">}</span>
-<span class="w">                </span><span class="p">}</span>
-<span class="w">            </span><span class="p">}</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">node</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">node</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">word</span><span class="p">;</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">};</span>
-</code></pre></div></div>
-
-
-<div class='python-solution'><h2>[Java/C++/Python] A very well detailed EXPLANATION! -- Votes: 437</h2><div class="codehilite"><pre><span></span><code><span class="nv">What</span><span class="w"> </span><span class="nv">the</span><span class="w"> </span><span class="nv">question</span><span class="w"> </span><span class="nv">is</span><span class="w"> </span><span class="nv">saying</span>,<span class="w"> </span>
-<span class="nv">We</span><span class="w"> </span><span class="nv">have</span><span class="w"> </span><span class="nv">to</span><span class="w"> </span><span class="nv">design</span><span class="w"> </span><span class="nv">a</span><span class="w"> </span><span class="nv">data</span><span class="w"> </span><span class="nv">structure</span><span class="w"> </span><span class="nv">that</span><span class="w"> </span><span class="nv">supports</span><span class="w"> </span><span class="nv">adding</span><span class="w"> </span><span class="nv">new</span><span class="w"> </span><span class="nv">words</span><span class="w"> </span><span class="nv">and</span><span class="w"> </span><span class="nv">finding</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="nv">a</span><span class="w"> </span><span class="nv">string</span><span class="w"> </span><span class="nv">matches</span><span class="w"> </span><span class="nv">any</span><span class="w"> </span><span class="nv">previously</span><span class="w"> </span><span class="nv">added</span><span class="w"> </span><span class="nv">string</span>.
-</code></pre></div>
-
+/** Returns if the word is in the data structure. A word could contain the dot character '.' to represent any one letter. */
+bool search(string word) {
+    return search(word.c_str(), root);
+}
+</code></pre>
+<p>private:
+    TrieNode* root = new TrieNode();</p>
+<pre><code>bool search(const char* word, TrieNode* node) {
+    for (int i = 0; word[i] &amp;&amp; node; i++) {
+        if (word[i] != '.') {
+            node = node -&gt; children[word[i] - 'a'];
+        } else {
+            TrieNode* tmp = node;
+            for (int j = 0; j &lt; 26; j++) {
+                node = tmp -&gt; children[j];
+                if (search(word + i + 1, node)) {
+                    return true;
+                }
+            }
+        }
+    }
+    return node &amp;&amp; node -&gt; word;
+}
+</code></pre>
+<p>};
+ ```</p></div><div class='python-solution'><h4>[Java/C++/Python] A very well detailed EXPLANATION! [Votes: 437]</h4><pre><code>What the question is saying, 
+We have to design a data structure that supports adding new words and finding if a string matches any previously added string.
+</code></pre>
 <p><strong>So, to design a DS we only need to support 3 function's for this data structure.</strong></p>
 <ul>
 <li>One is the <strong>constructor</strong> that's gonna intialize the object.</li>
@@ -68,24 +63,20 @@
 </ul>
 <p><strong>The brute force way to solve this problem</strong> is pretty simple, "<em>having a list of words &amp; then just for every search we would just see, if this search match any of the word in input list</em>." <strong>[But it's not an efficient way]</strong></p>
 <p>Let's talk about, <strong>efficient way to solve this problem</strong>. And for that we require <strong>Trie data structure</strong> a.k.a <strong>Prefix tree</strong></p>
-<p>Let's understand <strong>Trie first</strong>,<br />
+<p>Let's understand <strong>Trie first</strong>,
 <strong>Trie</strong> is basically a <strong>tree</strong> that has some kind of <strong>root node</strong> &amp; each node can have up to <strong>26 children in this problem</strong>. Because we have <strong>lower case character from a to z</strong>. So, basically each <strong>node represent's a single character</strong>. And each node could have up to 26 additional children:</p>
-<p></p>
 <p>And basically word in this example means, let's take <strong>"a"</strong> having child <strong>"b" -&gt; with "c"</strong>, so that's will be a <strong>single word</strong>. And if we insert the word <strong>"abc"</strong> in our <strong>trie</strong>, so basically how's it looks like:</p>
-<p></p>
-<p>One additional thing we have to say is, for a particular node such as <strong>"c"</strong> this is the <strong>end of the word</strong>. Because if we <strong>added another word</strong> example:- <strong>"ab"</strong>. So, we don't add them back again as if you notice they are already available to us, we just <strong>gonna re-use</strong> these characters. So, we have 2 word's along this <strong>path "abc" &amp; "ab"</strong><br />
+<p>One additional thing we have to say is, for a particular node such as <strong>"c"</strong> this is the <strong>end of the word</strong>. Because if we <strong>added another word</strong> example:- <strong>"ab"</strong>. So, we don't add them back again as if you notice they are already available to us, we just <strong>gonna re-use</strong> these characters. So, we have 2 word's along this <strong>path "abc" &amp; "ab"</strong>
 Basically, all words start with <strong>"a"</strong> are gonna be here, that's what it make it <strong>efficient</strong>. That's why it's called <strong>prefix tree</strong>.</p>
 <p><code>Now, you have understood how Trie aka Prefix Tree work.</code></p>
-<p>Now let's take an example &amp; build our tree,<br />
+<p>Now let's take an example &amp; build our tree,
 <strong>Input</strong></p>
-<div class="codehilite"><pre><span></span><code><span class="k">[&quot;WordDictionary&quot;,&quot;addWord&quot;,&quot;addWord&quot;,&quot;addWord&quot;,&quot;search&quot;,&quot;search&quot;,&quot;search&quot;,&quot;search&quot;]</span>
-<span class="k">[,[&quot;bad&quot;],[&quot;dad&quot;],[&quot;mad&quot;],[&quot;pad&quot;],[&quot;bad&quot;],[&quot;.ad&quot;],[&quot;b..&quot;]]</span>
-</code></pre></div>
-
+<pre><code>[&quot;WordDictionary&quot;,&quot;addWord&quot;,&quot;addWord&quot;,&quot;addWord&quot;,&quot;search&quot;,&quot;search&quot;,&quot;search&quot;,&quot;search&quot;]
+[[],[&quot;bad&quot;],[&quot;dad&quot;],[&quot;mad&quot;],[&quot;pad&quot;],[&quot;bad&quot;],[&quot;.ad&quot;],[&quot;b..&quot;]]
+</code></pre>
 <p><strong>Output</strong></p>
-<div class="codehilite"><pre><span></span><code>[null,null,null,null,false,true,true,true]
-</code></pre></div>
-
+<pre><code>[null,null,null,null,false,true,true,true]
+</code></pre>
 <ul>
 <li>
 <p>The first word we add is <strong>"bad". "b" -&gt; "a" -&gt; "d"</strong></p>
@@ -97,9 +88,7 @@ Basically, all words start with <strong>"a"</strong> are gonna be here, that's w
 <p>We have one last word before we start searching, this one gonna be <strong>"mad"</strong>. So, we don't have <strong>"m"</strong>, then let's add it: <strong>"m" -&gt; "a" -&gt; "d"</strong></p>
 </li>
 </ul>
-<p></p>
 <p>So far we have <strong>3 word's</strong> and all of them end with different <strong>"d"</strong>. But they all <strong>3 of them have different prefix</strong> that's why they are along different path's.</p>
-<p></p>
 <p><code>Now let's go for searching path:-</code></p>
 <ul>
 <li>
@@ -116,131 +105,123 @@ Basically, all words start with <strong>"a"</strong> are gonna be here, that's w
 </li>
 </ul>
 <p>Now understand this <strong><em>VISUALLY, it's not super hard.</em></strong></p>
-<p></p>
 <p><strong>Now, let's code it up:</strong></p>
 <p><strong>Java</strong></p>
-<div class="codehilite"><pre><span></span><code><span class="nt">class</span><span class="w"> </span><span class="nt">WordDictionary</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="err">private</span><span class="w"> </span><span class="err">WordDictionary</span><span class="w"> </span><span class="err">children</span><span class="p">;</span>
-<span class="w">    </span><span class="err">boolean</span><span class="w"> </span><span class="err">isEndOfWord</span><span class="p">;</span>
-<span class="w">    </span><span class="err">//</span><span class="w"> </span><span class="err">Initialize</span><span class="w"> </span><span class="err">your</span><span class="w"> </span><span class="err">data</span><span class="w"> </span><span class="err">structure</span><span class="w"> </span><span class="err">here.</span><span class="w"> </span>
-<span class="w">    </span><span class="err">public</span><span class="w"> </span><span class="err">WordDictionary()</span><span class="w"> </span><span class="err">{</span>
-<span class="w">        </span><span class="err">children</span><span class="w"> </span><span class="err">=</span><span class="w"> </span><span class="err">new</span><span class="w"> </span><span class="err">WordDictionary</span><span class="cp">[</span><span class="mi">26</span><span class="cp">]</span><span class="p">;</span>
-<span class="w">        </span><span class="err">isEndOfWord</span><span class="w"> </span><span class="err">=</span><span class="w"> </span><span class="err">false</span><span class="p">;</span>
-<span class="w">    </span><span class="p">}</span>
+<pre><code>class WordDictionary {
+    private WordDictionary[] children;
+    boolean isEndOfWord;
+    // Initialize your data structure here. 
+    public WordDictionary() {
+        children = new WordDictionary[26];
+        isEndOfWord = false;
+    }
 
-<span class="w">    </span><span class="o">//</span><span class="w"> </span><span class="nt">Adds</span><span class="w"> </span><span class="nt">a</span><span class="w"> </span><span class="nt">word</span><span class="w"> </span><span class="nt">into</span><span class="w"> </span><span class="nt">the</span><span class="w"> </span><span class="nt">data</span><span class="w"> </span><span class="nt">structure</span><span class="o">.</span><span class="w"> </span>
-<span class="w">    </span><span class="nt">public</span><span class="w"> </span><span class="nt">void</span><span class="w"> </span><span class="nt">addWord</span><span class="o">(</span><span class="nt">String</span><span class="w"> </span><span class="nt">word</span><span class="o">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="err">WordDictionary</span><span class="w"> </span><span class="err">curr</span><span class="w"> </span><span class="err">=</span><span class="w"> </span><span class="err">this</span><span class="p">;</span>
-<span class="w">        </span><span class="err">for(char</span><span class="w"> </span><span class="n">c</span><span class="p">:</span><span class="w"> </span><span class="n">word</span><span class="o">.</span><span class="nf">toCharArray</span><span class="p">())</span><span class="err">{</span>
-<span class="w">            </span><span class="nf">if</span><span class="p">(</span><span class="n">curr</span><span class="err">.</span><span class="n">children</span><span class="cp">[</span><span class="nx">c</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="s1">&#39;a&#39;</span><span class="cp">]</span><span class="w"> </span><span class="err">==</span><span class="w"> </span><span class="n">null</span><span class="p">)</span>
-<span class="w">                </span><span class="n">curr</span><span class="o">.</span><span class="n">children</span><span class="cp">[</span><span class="nx">c</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="s1">&#39;a&#39;</span><span class="cp">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">new</span><span class="w"> </span><span class="nf">WordDictionary</span><span class="p">();</span>
-<span class="w">            </span><span class="err">curr</span><span class="w"> </span><span class="err">=</span><span class="w"> </span><span class="err">curr.children</span><span class="cp">[</span><span class="nx">c</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="s1">&#39;a&#39;</span><span class="cp">]</span><span class="p">;</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">        </span><span class="nt">curr</span><span class="p">.</span><span class="nc">isEndOfWord</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nt">true</span><span class="o">;</span>
-<span class="w">    </span><span class="err">}</span>
+    // Adds a word into the data structure. 
+    public void addWord(String word) {
+        WordDictionary curr = this;
+        for(char c: word.toCharArray()){
+            if(curr.children[c - 'a'] == null)
+                curr.children[c - 'a'] = new WordDictionary();
+            curr = curr.children[c - 'a'];
+        }
+        curr.isEndOfWord = true;
+    }
 
-<span class="w">    </span><span class="o">//</span><span class="w"> </span><span class="nt">Returns</span><span class="w"> </span><span class="nt">if</span><span class="w"> </span><span class="nt">the</span><span class="w"> </span><span class="nt">word</span><span class="w"> </span><span class="nt">is</span><span class="w"> </span><span class="nt">in</span><span class="w"> </span><span class="nt">the</span><span class="w"> </span><span class="nt">data</span><span class="w"> </span><span class="nt">structure</span><span class="o">.</span><span class="w"> </span><span class="nt">A</span><span class="w"> </span><span class="nt">word</span><span class="w"> </span><span class="nt">could</span><span class="w"> </span><span class="nt">contain</span><span class="w"> </span><span class="nt">the</span><span class="w"> </span><span class="nt">dot</span><span class="w"> </span><span class="nt">character</span><span class="w"> </span><span class="s1">&#39;.&#39;</span><span class="w"> </span><span class="nt">to</span><span class="w"> </span><span class="nt">represent</span><span class="w"> </span><span class="nt">any</span><span class="w"> </span><span class="nt">one</span><span class="w"> </span><span class="nt">letter</span><span class="o">.</span><span class="w"> </span>
-<span class="w">    </span><span class="nt">public</span><span class="w"> </span><span class="nt">boolean</span><span class="w"> </span><span class="nt">search</span><span class="o">(</span><span class="nt">String</span><span class="w"> </span><span class="nt">word</span><span class="o">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="err">WordDictionary</span><span class="w"> </span><span class="err">curr</span><span class="w"> </span><span class="err">=</span><span class="w"> </span><span class="err">this</span><span class="p">;</span>
-<span class="w">        </span><span class="err">for(int</span><span class="w"> </span><span class="err">i</span><span class="w"> </span><span class="err">=</span><span class="w"> </span><span class="err">0</span><span class="p">;</span><span class="w"> </span><span class="err">i</span><span class="w"> </span><span class="err">&lt;</span><span class="w"> </span><span class="err">word.length()</span><span class="p">;</span><span class="w"> </span><span class="err">++i){</span>
-<span class="w">            </span><span class="err">char</span><span class="w"> </span><span class="err">c</span><span class="w"> </span><span class="err">=</span><span class="w"> </span><span class="err">word.charAt(i)</span><span class="p">;</span>
-<span class="w">            </span><span class="err">if(c</span><span class="w"> </span><span class="err">==</span><span class="w"> </span><span class="err">&#39;.&#39;){</span>
-<span class="w">                </span><span class="err">for(WordDictionary</span><span class="w"> </span><span class="n">ch</span><span class="p">:</span><span class="w"> </span><span class="n">curr</span><span class="o">.</span><span class="n">children</span><span class="p">)</span>
-<span class="w">                    </span><span class="nf">if</span><span class="p">(</span><span class="n">ch</span><span class="w"> </span><span class="err">!=</span><span class="w"> </span><span class="n">null</span><span class="w"> </span><span class="err">&amp;&amp;</span><span class="w"> </span><span class="n">ch</span><span class="err">.</span><span class="nf">search</span><span class="p">(</span><span class="n">word</span><span class="err">.</span><span class="nf">substring</span><span class="p">(</span><span class="n">i</span><span class="mi">+1</span><span class="p">)))</span><span class="w"> </span><span class="n">return</span><span class="w"> </span><span class="n">true</span><span class="p">;</span>
-<span class="w">                </span><span class="err">return</span><span class="w"> </span><span class="err">false</span><span class="p">;</span>
-<span class="w">            </span><span class="p">}</span>
-<span class="w">            </span><span class="nt">if</span><span class="o">(</span><span class="nt">curr</span><span class="p">.</span><span class="nc">children</span><span class="cp">[</span><span class="nx">c</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="s1">&#39;a&#39;</span><span class="cp">]</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nt">null</span><span class="o">)</span><span class="w"> </span><span class="nt">return</span><span class="w"> </span><span class="nt">false</span><span class="o">;</span>
-<span class="w">            </span><span class="nt">curr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nt">curr</span><span class="p">.</span><span class="nc">children</span><span class="cp">[</span><span class="nx">c</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="s1">&#39;a&#39;</span><span class="cp">]</span><span class="o">;</span>
-<span class="w">        </span><span class="err">}</span>
-<span class="w">        </span><span class="nt">return</span><span class="w"> </span><span class="nt">curr</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="nt">null</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nt">curr</span><span class="p">.</span><span class="nc">isEndOfWord</span><span class="o">;</span>
-<span class="w">    </span><span class="err">}</span>
-<span class="err">}</span>
-</code></pre></div>
+    // Returns if the word is in the data structure. A word could contain the dot character '.' to represent any one letter. 
+    public boolean search(String word) {
+        WordDictionary curr = this;
+        for(int i = 0; i &lt; word.length(); ++i){
+            char c = word.charAt(i);
+            if(c == '.'){
+                for(WordDictionary ch: curr.children)
+                    if(ch != null &amp;&amp; ch.search(word.substring(i+1))) return true;
+                return false;
+            }
+            if(curr.children[c - 'a'] == null) return false;
+            curr = curr.children[c - 'a'];
+        }
+        return curr != null &amp;&amp; curr.isEndOfWord;
+    }
+}
+</code></pre>
+<p><strong>cpp</strong></p>
+<pre><code>class WordDictionary {
+    vector&lt;WordDictionary*&gt; children;
+    bool isEndOfWord;
+public:
+    // Initialize your data structure here. 
+    WordDictionary(): isEndOfWord(false){
+        children = vector&lt;WordDictionary*&gt;(26, nullptr);
+    }
 
-<p><strong>C++</strong></p>
-<div class="codehilite"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="n">WordDictionary</span><span class="w"> </span><span class="err">{</span>
-<span class="w">    </span><span class="n">vector</span><span class="o">&lt;</span><span class="n">WordDictionary</span><span class="o">*&gt;</span><span class="w"> </span><span class="n">children</span><span class="p">;</span>
-<span class="w">    </span><span class="n">bool</span><span class="w"> </span><span class="n">isEndOfWord</span><span class="p">;</span>
-<span class="k">public</span><span class="err">:</span>
-<span class="w">    </span><span class="o">//</span><span class="w"> </span><span class="k">Initialize</span><span class="w"> </span><span class="n">your</span><span class="w"> </span><span class="k">data</span><span class="w"> </span><span class="k">structure</span><span class="w"> </span><span class="n">here</span><span class="p">.</span><span class="w"> </span>
-<span class="w">    </span><span class="n">WordDictionary</span><span class="p">()</span><span class="err">:</span><span class="w"> </span><span class="n">isEndOfWord</span><span class="p">(</span><span class="k">false</span><span class="p">)</span><span class="err">{</span>
-<span class="w">        </span><span class="n">children</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">vector</span><span class="o">&lt;</span><span class="n">WordDictionary</span><span class="o">*&gt;</span><span class="p">(</span><span class="mi">26</span><span class="p">,</span><span class="w"> </span><span class="n">nullptr</span><span class="p">);</span>
-<span class="w">    </span><span class="err">}</span>
+    // Adds a word into the data structure. 
+    void addWord(string word) {
+        WordDictionary *curr = this;
+        for(char c: word){
+            if(curr-&gt;children[c - 'a'] == nullptr)
+                curr-&gt;children[c - 'a'] = new WordDictionary();
+            curr = curr-&gt;children[c - 'a'];
+        }
+        curr-&gt;isEndOfWord = true;
+    }
 
-<span class="w">    </span><span class="o">//</span><span class="w"> </span><span class="n">Adds</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">word</span><span class="w"> </span><span class="k">into</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="k">data</span><span class="w"> </span><span class="k">structure</span><span class="p">.</span><span class="w"> </span>
-<span class="w">    </span><span class="n">void</span><span class="w"> </span><span class="n">addWord</span><span class="p">(</span><span class="n">string</span><span class="w"> </span><span class="n">word</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
-<span class="w">        </span><span class="n">WordDictionary</span><span class="w"> </span><span class="o">*</span><span class="n">curr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">;</span>
-<span class="w">        </span><span class="k">for</span><span class="p">(</span><span class="nc">char</span><span class="w"> </span><span class="nl">c</span><span class="p">:</span><span class="w"> </span><span class="n">word</span><span class="p">)</span><span class="err">{</span>
-<span class="w">            </span><span class="k">if</span><span class="p">(</span><span class="n">curr</span><span class="o">-&gt;</span><span class="n">children</span><span class="o">[</span><span class="n">c - &#39;a&#39;</span><span class="o">]</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">nullptr</span><span class="p">)</span>
-<span class="w">                </span><span class="n">curr</span><span class="o">-&gt;</span><span class="n">children</span><span class="o">[</span><span class="n">c - &#39;a&#39;</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">WordDictionary</span><span class="p">();</span>
-<span class="w">            </span><span class="n">curr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">curr</span><span class="o">-&gt;</span><span class="n">children</span><span class="o">[</span><span class="n">c - &#39;a&#39;</span><span class="o">]</span><span class="p">;</span>
-<span class="w">        </span><span class="err">}</span>
-<span class="w">        </span><span class="n">curr</span><span class="o">-&gt;</span><span class="n">isEndOfWord</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
-<span class="w">    </span><span class="err">}</span>
-
-<span class="w">    </span><span class="o">//</span><span class="w"> </span><span class="k">Returns</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">word</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="k">data</span><span class="w"> </span><span class="k">structure</span><span class="p">.</span><span class="w"> </span><span class="n">A</span><span class="w"> </span><span class="n">word</span><span class="w"> </span><span class="n">could</span><span class="w"> </span><span class="n">contain</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">dot</span><span class="w"> </span><span class="k">character</span><span class="w"> </span><span class="s1">&#39;.&#39;</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="n">represent</span><span class="w"> </span><span class="ow">any</span><span class="w"> </span><span class="n">one</span><span class="w"> </span><span class="n">letter</span><span class="p">.</span><span class="w"> </span>
-<span class="w">    </span><span class="n">bool</span><span class="w"> </span><span class="k">search</span><span class="p">(</span><span class="n">string</span><span class="w"> </span><span class="n">word</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
-<span class="w">        </span><span class="n">WordDictionary</span><span class="w"> </span><span class="o">*</span><span class="n">curr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">;</span>
-<span class="w">        </span><span class="k">for</span><span class="p">(</span><span class="nc">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">word</span><span class="p">.</span><span class="n">length</span><span class="p">();</span><span class="w"> </span><span class="o">++</span><span class="n">i</span><span class="p">)</span><span class="err">{</span>
-<span class="w">            </span><span class="nc">char</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">word</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="p">;</span>
-<span class="w">            </span><span class="k">if</span><span class="p">(</span><span class="n">c</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s1">&#39;.&#39;</span><span class="p">)</span><span class="err">{</span>
-<span class="w">                </span><span class="k">for</span><span class="p">(</span><span class="n">auto</span><span class="w"> </span><span class="nl">ch</span><span class="p">:</span><span class="w"> </span><span class="n">curr</span><span class="o">-&gt;</span><span class="n">children</span><span class="p">)</span>
-<span class="w">                    </span><span class="k">if</span><span class="p">(</span><span class="n">ch</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">ch</span><span class="o">-&gt;</span><span class="k">search</span><span class="p">(</span><span class="n">word</span><span class="p">.</span><span class="n">substr</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)))</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
-<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="k">false</span><span class="p">;</span>
-<span class="w">            </span><span class="err">}</span>
-<span class="w">            </span><span class="k">if</span><span class="p">(</span><span class="n">curr</span><span class="o">-&gt;</span><span class="n">children</span><span class="o">[</span><span class="n">c - &#39;a&#39;</span><span class="o">]</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">nullptr</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="k">false</span><span class="p">;</span>
-<span class="w">            </span><span class="n">curr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">curr</span><span class="o">-&gt;</span><span class="n">children</span><span class="o">[</span><span class="n">c - &#39;a&#39;</span><span class="o">]</span><span class="p">;</span>
-<span class="w">        </span><span class="err">}</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">curr</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">curr</span><span class="o">-&gt;</span><span class="n">isEndOfWord</span><span class="p">;</span>
-<span class="w">    </span><span class="err">}</span>
-<span class="err">}</span><span class="p">;</span>
-</code></pre></div>
-
+    // Returns if the word is in the data structure. A word could contain the dot character '.' to represent any one letter. 
+    bool search(string word) {
+        WordDictionary *curr = this;
+        for(int i = 0; i &lt; word.length(); ++i){
+            char c = word[i];
+            if(c == '.'){
+                for(auto ch: curr-&gt;children)
+                    if(ch &amp;&amp; ch-&gt;search(word.substr(i+1))) return true;
+                return false;
+            }
+            if(curr-&gt;children[c - 'a'] == nullptr) return false;
+            curr = curr-&gt;children[c - 'a'];
+        }
+        return curr &amp;&amp; curr-&gt;isEndOfWord;
+    }
+};
+</code></pre>
 <p><strong>Python</strong></p>
-<div class="codehilite"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nl">WordDictionary</span><span class="p">:</span>
+<pre><code>class WordDictionary:
 
-<span class="w">    </span><span class="n">def</span><span class="w"> </span><span class="n">__init__</span><span class="p">(</span><span class="n">self</span><span class="p">)</span><span class="err">:</span>
+    def __init__(self):
 
-<span class="w">        </span><span class="err">#</span><span class="w"> </span><span class="k">Initialize</span><span class="w"> </span><span class="n">your</span><span class="w"> </span><span class="k">data</span><span class="w"> </span><span class="k">structure</span><span class="w"> </span><span class="n">here</span><span class="p">.</span>
-<span class="w">        </span><span class="n">self</span><span class="p">.</span><span class="n">children</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[</span><span class="n">None</span><span class="o">]*</span><span class="mi">26</span>
-<span class="w">        </span><span class="n">self</span><span class="p">.</span><span class="n">isEndOfWord</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">False</span>
-
-
-<span class="w">    </span><span class="n">def</span><span class="w"> </span><span class="n">addWord</span><span class="p">(</span><span class="n">self</span><span class="p">,</span><span class="w"> </span><span class="nl">word</span><span class="p">:</span><span class="w"> </span><span class="nf">str</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="k">None</span><span class="err">:</span>
-
-<span class="w">        </span><span class="err">#</span><span class="w"> </span><span class="n">Adds</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">word</span><span class="w"> </span><span class="k">into</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="k">data</span><span class="w"> </span><span class="k">structure</span><span class="p">.</span>
-<span class="w">        </span><span class="n">curr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">self</span>
-<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="nl">word</span><span class="p">:</span>
-<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="n">curr</span><span class="p">.</span><span class="n">children</span><span class="o">[</span><span class="n">ord(c) - ord(&#39;a&#39;)</span><span class="o">]</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="k">None</span><span class="err">:</span>
-<span class="w">                </span><span class="n">curr</span><span class="p">.</span><span class="n">children</span><span class="o">[</span><span class="n">ord(c) - ord(&#39;a&#39;)</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">WordDictionary</span><span class="p">()</span>
-<span class="w">            </span><span class="n">curr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">curr</span><span class="p">.</span><span class="n">children</span><span class="o">[</span><span class="n">ord(c) - ord(&#39;a&#39;)</span><span class="o">]</span>
-
-<span class="w">        </span><span class="n">curr</span><span class="p">.</span><span class="n">isEndOfWord</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">True</span><span class="p">;</span>
+        #### Initialize your data structure here.
+        self.children = [None]*26
+        self.isEndOfWord = False
 
 
-<span class="w">    </span><span class="n">def</span><span class="w"> </span><span class="k">search</span><span class="p">(</span><span class="n">self</span><span class="p">,</span><span class="w"> </span><span class="nl">word</span><span class="p">:</span><span class="w"> </span><span class="nf">str</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="nl">bool</span><span class="p">:</span>
+    def addWord(self, word: str) -&gt; None:
 
-<span class="w">        </span><span class="err">#</span><span class="w"> </span><span class="k">Returns</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">word</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="k">data</span><span class="w"> </span><span class="k">structure</span><span class="p">.</span><span class="w"> </span><span class="n">A</span><span class="w"> </span><span class="n">word</span><span class="w"> </span><span class="n">could</span><span class="w"> </span><span class="n">contain</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">dot</span><span class="w"> </span><span class="k">character</span><span class="w"> </span><span class="s1">&#39;.&#39;</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="n">represent</span><span class="w"> </span><span class="ow">any</span><span class="w"> </span><span class="n">one</span><span class="w"> </span><span class="n">letter</span><span class="p">.</span>
-<span class="w">        </span><span class="n">curr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">self</span>
-<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="k">range</span><span class="p">(</span><span class="nf">len</span><span class="p">(</span><span class="n">word</span><span class="p">))</span><span class="err">:</span>
-<span class="w">            </span><span class="n">c</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">word</span><span class="o">[</span><span class="n">i</span><span class="o">]</span>
-<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s1">&#39;.&#39;</span><span class="err">:</span>
-<span class="w">                </span><span class="k">for</span><span class="w"> </span><span class="n">ch</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">curr</span><span class="p">.</span><span class="nl">children</span><span class="p">:</span>
-<span class="w">                    </span><span class="k">if</span><span class="w"> </span><span class="n">ch</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="k">None</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="n">ch</span><span class="p">.</span><span class="k">search</span><span class="p">(</span><span class="n">word</span><span class="o">[</span><span class="n">i+1:</span><span class="o">]</span><span class="p">)</span><span class="err">:</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="k">True</span>
-<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="k">False</span>
+        #### Adds a word into the data structure.
+        curr = self
+        for c in word:
+            if curr.children[ord(c) - ord('a')] == None:
+                curr.children[ord(c) - ord('a')] = WordDictionary()
+            curr = curr.children[ord(c) - ord('a')]
 
-<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="n">curr</span><span class="p">.</span><span class="n">children</span><span class="o">[</span><span class="n">ord(c) - ord(&#39;a&#39;)</span><span class="o">]</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="k">None</span><span class="err">:</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="k">False</span>
-<span class="w">            </span><span class="n">curr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">curr</span><span class="p">.</span><span class="n">children</span><span class="o">[</span><span class="n">ord(c) - ord(&#39;a&#39;)</span><span class="o">]</span>
+        curr.isEndOfWord = True;
 
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">curr</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="k">None</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="n">curr</span><span class="p">.</span><span class="n">isEndOfWord</span>
-</code></pre></div>
 
-<p>ANALYSIS :-</p>
+    def search(self, word: str) -&gt; bool:
+
+        #### Returns if the word is in the data structure. A word could contain the dot character '.' to represent any one letter.
+        curr = self
+        for i in range(len(word)):
+            c = word[i]
+            if c == '.':
+                for ch in curr.children:
+                    if ch != None and ch.search(word[i+1:]): return True
+                return False
+
+            if curr.children[ord(c) - ord('a')] == None: return False
+            curr = curr.children[ord(c) - ord('a')]
+
+        return curr != None and curr.isEndOfWord
+</code></pre>
+<p>ANALYSIS :-
+* <strong>Time Complexity :-</strong> BigO(M) for well defined words, But in worse case BigO(M.26^N)</p>
 <ul>
-<li>
-<p><strong>Time Complexity :-</strong> BigO(M) for well defined words, But in worse case BigO(M.26^N)</p>
-</li>
-<li>
-<p><strong>Space Complexity :-</strong> BigO(1) for well defined words, But for worst case BigO(M)</p>
-</li>
-</ul></div><p style="page-break-before: always" ></p>
+<li><strong>Space Complexity :-</strong> BigO(1) for well defined words, But for worst case BigO(M)</li>
+</ul></div>

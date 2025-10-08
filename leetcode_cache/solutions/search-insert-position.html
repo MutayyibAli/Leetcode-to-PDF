@@ -1,4 +1,4 @@
-<div class='cpp-solution'><h2>Easy and Simple C++ approach | Binary search :) -- Votes: 625</h2><h2>Approach</h2>
+<div class='cpp-solution'><h4>Easy and Simple C++ approach | Binary search :) [Votes: 625]</h4><h4>Approach</h4>
 <ul>
 <li><code>binary seaerch</code> approach is damn easy for this question and also easy to think of it.</li>
 <li>the array is sorted so we just have to fugure out where should it be placed.</li>
@@ -7,7 +7,7 @@
 </ul>
 <!-- Describe your approach to solving the problem. -->
 
-<h2>Complexity</h2>
+<h4>Complexity</h4>
 <ul>
 <li>Time complexity: O(log(n))</li>
 </ul>
@@ -18,115 +18,91 @@
 </ul>
 <!-- Add your space complexity here, e.g. $$O(n)$$ -->
 
-<h3><code>Upvote! It only takes 1 click :)</code></h3>
-<h2>Code</h2>
-<div class="codehilite"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="n">Solution</span><span class="w"> </span><span class="err">{</span>
-<span class="k">public</span><span class="err">:</span>
-<span class="w">    </span><span class="nc">int</span><span class="w"> </span><span class="n">searchInsert</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="nc">int</span><span class="o">&gt;&amp;</span><span class="w"> </span><span class="n">nums</span><span class="p">,</span><span class="w"> </span><span class="nc">int</span><span class="w"> </span><span class="n">target</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
-<span class="w">        </span><span class="nc">int</span><span class="w"> </span><span class="n">low</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>
-<span class="w">        </span><span class="nc">int</span><span class="w"> </span><span class="n">high</span><span class="o">=</span><span class="n">nums</span><span class="p">.</span><span class="k">size</span><span class="p">();</span>
-<span class="w">        </span><span class="nc">int</span><span class="w"> </span><span class="n">mid</span><span class="p">;</span>
-<span class="w">        </span><span class="k">if</span><span class="p">(</span><span class="n">target</span><span class="o">&gt;</span><span class="n">nums</span><span class="o">[</span><span class="n">high-1</span><span class="o">]</span><span class="p">)</span><span class="err">{</span>
-<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="n">high</span><span class="p">;</span>
-<span class="w">        </span><span class="err">}</span>
-<span class="w">        </span><span class="k">while</span><span class="p">(</span><span class="n">low</span><span class="o">&lt;=</span><span class="n">high</span><span class="p">)</span><span class="err">{</span>
-<span class="w">              </span><span class="n">mid</span><span class="o">=</span><span class="p">(</span><span class="n">low</span><span class="o">+</span><span class="n">high</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="p">;</span>
-<span class="w">            </span><span class="k">if</span><span class="p">(</span><span class="n">nums</span><span class="o">[</span><span class="n">mid</span><span class="o">]==</span><span class="n">target</span><span class="p">)</span><span class="err">{</span><span class="w">  </span>
-<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="n">mid</span><span class="p">;</span>
-<span class="w">            </span><span class="err">}</span>
+<h5><code>Upvote! It only takes 1 click :)</code></h5>
+<h4>Code</h4>
+<pre><code>class Solution {
+public:
+    int searchInsert(vector&lt;int&gt;&amp; nums, int target) {
+        int low=0;
+        int high=nums.size();
+        int mid;
+        if(target&gt;nums[high-1]){
+            return high;
+        }
+        while(low&lt;=high){
+              mid=(low+high)/2;
+            if(nums[mid]==target){  
+                return mid;
+            }
 
-<span class="w">            </span><span class="k">if</span><span class="p">(</span><span class="n">target</span><span class="o">&lt;</span><span class="n">nums</span><span class="o">[</span><span class="n">mid</span><span class="o">]</span><span class="p">)</span><span class="err">{</span><span class="w">     </span>
-<span class="w">            </span><span class="n">high</span><span class="o">=</span><span class="n">mid</span><span class="o">-</span><span class="mi">1</span><span class="p">;</span><span class="w">    </span>
-<span class="w">            </span><span class="err">}</span><span class="k">else</span><span class="err">{</span>
-<span class="w">            </span><span class="n">low</span><span class="o">=</span><span class="n">mid</span><span class="o">+</span><span class="mi">1</span><span class="p">;</span><span class="w">        </span>
-<span class="w">            </span><span class="err">}</span>
+            if(target&lt;nums[mid]){     
+            high=mid-1;    
+            }else{
+            low=mid+1;        
+            }
 
-<span class="w">        </span><span class="err">}</span>
-<span class="w">         </span><span class="k">return</span><span class="w">  </span><span class="n">low</span><span class="p">;</span><span class="w">   </span>
-<span class="w">    </span><span class="err">}</span>
-<span class="err">}</span><span class="p">;</span>
-</code></pre></div>
-
-<p></p></div>
-
-
-<div class='python-solution'><h2>【Video】Return middle or left pointer -- Votes: 284</h2><h2>Intuition</h2>
+        }
+         return  low;   
+    }
+};
+</code></pre></div><div class='python-solution'><h4>【Video】Return middle or left pointer [Votes: 284]</h4><h4>Intuition</h4>
 <p>Return middle or left pointer.</p>
-<hr />
-<h2>Solution Video</h2>
+<h4>Solution Video</h4>
 <p>https://youtu.be/NermHA7VkEc</p>
-<h4>⭐️⭐️ Don't forget to subscribe to my channel! ⭐️⭐️</h4>
-<p><strong>■ Subscribe URL</strong><br />
+<h6>⭐️⭐️ Don't forget to subscribe to my channel! ⭐️⭐️</h6>
+<p><strong>■ Subscribe URL</strong>
 http://www.youtube.com/channel/UC9RMNwYTL3SXCP6ShLWVFww?sub_confirmation=1</p>
-<p>Subscribers: 4,247<br />
+<p>Subscribers: 4,247
 Thank you for your support!</p>
-<hr />
-<h2>Approach</h2>
+<h4>Approach</h4>
 <p>The description says "Given a sorted array of distinct integers and ..." and "You must write an algorithm with $$O(log n)$$ runtime complexity".</p>
 <p>So we should solve this question with <code>binary search</code>.</p>
 <p>There are two cases that we should focus on. One is we have the target in the array and the other is we don't have the target in the array.</p>
-<div class="codehilite"><pre><span></span><code><span class="n">Input</span><span class="o">:</span><span class="w"> </span><span class="n">nums</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[</span><span class="mi">1</span><span class="o">,</span><span class="mi">3</span><span class="o">,</span><span class="mi">5</span><span class="o">,</span><span class="mi">6</span><span class="o">],</span><span class="w"> </span><span class="n">target</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">5</span>
-</code></pre></div>
-
+<pre><code>Input: nums = [1,3,5,6], target = 5
+</code></pre>
 <p>First of all, let's see we have the target in the array. Actually this is just typical binary search.</p>
-<hr />
 <p>⭐️ Points</p>
-<div class="codehilite"><pre><span></span><code>middle pointer = (left index + right index) // 2
-</code></pre></div>
-
-<hr />
-<div class="codehilite"><pre><span></span><code><span class="k">[1,3,5,6]</span>
-<span class="w"> </span><span class="na">L M   R  </span>
-</code></pre></div>
-
+<pre><code>middle pointer = (left index + right index) // 2
+</code></pre>
+<pre><code>[1,3,5,6]
+ L M   R  
+</code></pre>
 <p>Now middle number(= <code>M</code>) is less than the <code>target</code>(= 5), so move left pointer(= <code>L</code>) to <code>M + 1</code>.</p>
-<div class="codehilite"><pre><span></span><code><span class="k">[1,3,5,6]</span>
-<span class="w">     </span><span class="na">L R</span>
-<span class="w">     </span><span class="na">M</span>
-</code></pre></div>
-
+<pre><code>[1,3,5,6]
+     L R
+     M
+</code></pre>
 <p>Now middle pointer is at index <code>2</code>. middle number is equal to the target.</p>
-<div class="codehilite"><pre><span></span><code><span class="k">return</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="ss">(</span><span class="o">=</span><span class="w"> </span><span class="nv">middle</span><span class="w"> </span><span class="nv">index</span><span class="ss">)</span>
-</code></pre></div>
-
+<pre><code>return 2 (= middle index)
+</code></pre>
 <p>That is typical case.</p>
-<hr />
 <p>Let's look at the case where the target number is not present.</p>
-<div class="codehilite"><pre><span></span><code><span class="n">Input</span><span class="o">:</span><span class="w"> </span><span class="n">nums</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[</span><span class="mi">1</span><span class="o">,</span><span class="mi">3</span><span class="o">,</span><span class="mi">5</span><span class="o">,</span><span class="mi">6</span><span class="o">],</span><span class="w"> </span><span class="n">target</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span>
-</code></pre></div>
-
-<div class="codehilite"><pre><span></span><code><span class="k">[1,3,5,6]</span>
-<span class="w"> </span><span class="na">L M   R</span>
-</code></pre></div>
-
+<pre><code>Input: nums = [1,3,5,6], target = 2
+</code></pre>
+<pre><code>[1,3,5,6]
+ L M   R
+</code></pre>
 <p>Now middle number is greater than the target, so move <code>R</code> to <code>M - 1</code>.</p>
-<div class="codehilite"><pre><span></span><code><span class="k">[1,3,5,6]</span>
-<span class="w"> </span><span class="na">L</span>
-<span class="w"> </span><span class="na">R</span>
-<span class="w"> </span><span class="na">M</span>
-</code></pre></div>
-
+<pre><code>[1,3,5,6]
+ L
+ R
+ M
+</code></pre>
 <p>Now middle number is less than the target, so move <code>L</code> to <code>M + 1</code>.</p>
-<div class="codehilite"><pre><span></span><code><span class="k">[1,3,5,6]</span>
-<span class="w"> </span><span class="na">R L</span>
-</code></pre></div>
-
+<pre><code>[1,3,5,6]
+ R L
+</code></pre>
 <p>Now <code>L</code> is greater than <code>R</code>. We stop binary search. As a result, we don't find the target.</p>
 <p>The description says "return the index where it would be if it were inserted in order."</p>
 <p>In this case, we should insert the target into index <code>1</code>. As you see, <code>L</code> is now at index <code>1</code>, so</p>
-<div class="codehilite"><pre><span></span><code><span class="k">return</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="ss">(</span><span class="o">=</span><span class="w"> </span><span class="nv">left</span><span class="w"> </span><span class="nv">index</span><span class="ss">)</span>
-</code></pre></div>
-
-<hr />
+<pre><code>return 1 (= left index)
+</code></pre>
 <p>⭐️ Points</p>
 <p>Return left index if you don't find the target.</p>
-<hr />
-<p>Easy!<br />
+<p>Easy!
 Let's see solution codes and step by step algorithm!</p>
-<hr />
 <p>https://youtu.be/bU_dXCOWHls</p>
-<hr />
-<h2>Complexity</h2>
+<h4>Complexity</h4>
 <ul>
 <li>Time complexity: $$O(log n)$$</li>
 </ul>
@@ -137,160 +113,137 @@ Let's see solution codes and step by step algorithm!</p>
 </ul>
 <!-- Add your space complexity here, e.g. $$O(n)$$ -->
 
-<div class="codehilite"><pre><span></span><code><span class="n">Language</span><span class="p">:</span> <span class="n">python</span> 
-<span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="p">:</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">searchInsert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nums</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">target</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-        <span class="n">left</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="n">right</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">nums</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
+<pre><code class="language-python">class Solution:
+    def searchInsert(self, nums: List[int], target: int) -&gt; int:
+        left = 0
+        right = len(nums) - 1
 
-        <span class="k">while</span> <span class="n">left</span> <span class="o">&lt;=</span> <span class="n">right</span><span class="p">:</span>
-            <span class="n">mid</span> <span class="o">=</span> <span class="p">(</span><span class="n">left</span> <span class="o">+</span> <span class="n">right</span><span class="p">)</span> <span class="o">//</span> <span class="mi">2</span>
+        while left &lt;= right:
+            mid = (left + right) // 2
 
-            <span class="k">if</span> <span class="n">nums</span><span class="p">[</span><span class="n">mid</span><span class="p">]</span> <span class="o">==</span> <span class="n">target</span><span class="p">:</span>
-                <span class="k">return</span> <span class="n">mid</span>
-            <span class="k">elif</span> <span class="n">nums</span><span class="p">[</span><span class="n">mid</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">target</span><span class="p">:</span>
-                <span class="n">right</span> <span class="o">=</span> <span class="n">mid</span> <span class="o">-</span> <span class="mi">1</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">left</span> <span class="o">=</span> <span class="n">mid</span> <span class="o">+</span> <span class="mi">1</span>
+            if nums[mid] == target:
+                return mid
+            elif nums[mid] &gt; target:
+                right = mid - 1
+            else:
+                left = mid + 1
 
-        <span class="k">return</span> <span class="n">left</span>
-</code></pre></div>
+        return left
+</code></pre>
+<pre><code class="language-javascript">var searchInsert = function(nums, target) {
+    let left = 0;
+    let right = nums.length - 1;
 
-<div class="codehilite"><pre><span></span><code><span class="nx">Language</span><span class="o">:</span><span class="w"> </span><span class="nx">javascript</span><span class="w"> </span>
-<span class="kd">var</span><span class="w"> </span><span class="nx">searchInsert</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kd">function</span><span class="p">(</span><span class="nx">nums</span><span class="p">,</span><span class="w"> </span><span class="nx">target</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="nx">left</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0</span><span class="p">;</span>
-<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="nx">right</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">nums</span><span class="p">.</span><span class="nx">length</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mf">1</span><span class="p">;</span>
+    while (left &lt;= right) {
+        let mid = Math.floor((left + right) / 2);
 
-<span class="w">    </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="nx">left</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="nx">right</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="nx">mid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">Math</span><span class="p">.</span><span class="nx">floor</span><span class="p">((</span><span class="nx">left</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nx">right</span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mf">2</span><span class="p">);</span>
+        if (nums[mid] === target) {
+            return mid;
+        } else if (nums[mid] &gt; target) {
+            right = mid - 1;
+        } else {
+            left = mid + 1;
+        }
+    }
 
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">nums</span><span class="p">[</span><span class="nx">mid</span><span class="p">]</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="nx">target</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="nx">mid</span><span class="p">;</span>
-<span class="w">        </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">nums</span><span class="p">[</span><span class="nx">mid</span><span class="p">]</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="nx">target</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="nx">right</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">mid</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mf">1</span><span class="p">;</span>
-<span class="w">        </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="nx">left</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">mid</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mf">1</span><span class="p">;</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">    </span><span class="p">}</span>
+    return left;    
+};
+</code></pre>
+<pre><code class="language-java">class Solution {
+    public int searchInsert(int[] nums, int target) {
+        int left = 0;
+        int right = nums.length - 1;
 
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">left</span><span class="p">;</span><span class="w">    </span>
-<span class="p">};</span>
-</code></pre></div>
+        while (left &lt;= right) {
+            int mid = left + (right - left) / 2;
 
-<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">java</span><span class="w"> </span>
-<span class="kd">class</span> <span class="nc">Solution</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="nf">searchInsert</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">nums</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">target</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">left</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">right</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">nums</span><span class="p">.</span><span class="na">length</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+            if (nums[mid] == target) {
+                return mid;
+            } else if (nums[mid] &gt; target) {
+                right = mid - 1;
+            } else {
+                left = mid + 1;
+            }
+        }
 
-<span class="w">        </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">left</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">right</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="kt">int</span><span class="w"> </span><span class="n">mid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">left</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="p">(</span><span class="n">right</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">left</span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">2</span><span class="p">;</span>
+        return left;        
+    }
+}
+</code></pre>
+<pre><code class="language-cpp">class Solution {
+public:
+    int searchInsert(vector&lt;int&gt;&amp; nums, int target) {
+        int left = 0;
+        int right = nums.size() - 1;
 
-<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">nums</span><span class="o">[</span><span class="n">mid</span><span class="o">]</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">target</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="n">mid</span><span class="p">;</span>
-<span class="w">            </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">nums</span><span class="o">[</span><span class="n">mid</span><span class="o">]</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">target</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="n">right</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mid</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
-<span class="w">            </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="n">left</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mid</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
-<span class="w">            </span><span class="p">}</span>
-<span class="w">        </span><span class="p">}</span>
+        while (left &lt;= right) {
+            int mid = left + (right - left) / 2;
 
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">left</span><span class="p">;</span><span class="w">        </span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
+            if (nums[mid] == target) {
+                return mid;
+            } else if (nums[mid] &gt; target) {
+                right = mid - 1;
+            } else {
+                left = mid + 1;
+            }
+        }
 
-<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">C</span><span class="o">++</span><span class="w"> </span>
-<span class="n">class</span><span class="w"> </span><span class="n">Solution</span><span class="w"> </span><span class="p">{</span>
-<span class="n">public</span><span class="o">:</span>
-<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">searchInsert</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&amp;</span><span class="w"> </span><span class="n">nums</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">target</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">left</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">right</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">nums</span><span class="p">.</span><span class="n">size</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
-
-<span class="w">        </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">left</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">right</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="kt">int</span><span class="w"> </span><span class="n">mid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">left</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="p">(</span><span class="n">right</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">left</span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">2</span><span class="p">;</span>
-
-<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">nums</span><span class="p">[</span><span class="n">mid</span><span class="p">]</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">target</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="n">mid</span><span class="p">;</span>
-<span class="w">            </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">nums</span><span class="p">[</span><span class="n">mid</span><span class="p">]</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">target</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="n">right</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mid</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
-<span class="w">            </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="n">left</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mid</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
-<span class="w">            </span><span class="p">}</span>
-<span class="w">        </span><span class="p">}</span>
-
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">left</span><span class="p">;</span><span class="w">        </span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">};</span>
-</code></pre></div>
-
-<h2>Step by Step Algorithm</h2>
-<h5>Initialize Left and Right Pointers</h5>
-<div class="codehilite"><pre><span></span><code><span class="n">Language</span><span class="p">:</span> <span class="n">python</span>
-<span class="n">left</span> <span class="o">=</span> <span class="mi">0</span>
-<span class="n">right</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">nums</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
-</code></pre></div>
-
+        return left;        
+    }
+};
+</code></pre>
+<h4>Step by Step Algorithm</h4>
+<h6># Initialize Left and Right Pointers</h6>
+<pre><code class="language-python">left = 0
+right = len(nums) - 1
+</code></pre>
 <ul>
 <li><strong>Explanation</strong>: We initialize two pointers, <code>left</code> and <code>right</code>. <code>left</code> starts at the beginning of the list (<code>0</code>), and <code>right</code> starts at the end of the list (<code>len(nums) - 1</code>). These pointers help in performing the binary search.</li>
 </ul>
-<h5>Binary Search Loop</h5>
-<div class="codehilite"><pre><span></span><code><span class="n">Language</span><span class="p">:</span> <span class="n">python</span>
-<span class="k">while</span> <span class="n">left</span> <span class="o">&lt;=</span> <span class="n">right</span><span class="p">:</span>
-</code></pre></div>
-
+<h6># Binary Search Loop</h6>
+<pre><code class="language-python">while left &lt;= right:
+</code></pre>
 <ul>
 <li><strong>Explanation</strong>: This <code>while</code> loop continues as long as <code>left</code> is less than or equal to <code>right</code>. The condition ensures that we are still considering a valid portion of the list to search.</li>
 </ul>
-<h5>Calculate Midpoint</h5>
-<div class="codehilite"><pre><span></span><code><span class="n">Language</span><span class="p">:</span> <span class="n">python</span>
-<span class="n">mid</span> <span class="o">=</span> <span class="p">(</span><span class="n">left</span> <span class="o">+</span> <span class="n">right</span><span class="p">)</span> <span class="o">//</span> <span class="mi">2</span>
-</code></pre></div>
-
+<h6># Calculate Midpoint</h6>
+<pre><code class="language-python">mid = (left + right) // 2
+</code></pre>
 <ul>
 <li><strong>Explanation</strong>: Calculate the middle index <code>mid</code> of the current range defined by <code>left</code> and <code>right</code>. The <code>//</code> operator performs integer division.</li>
 </ul>
-<h5>Check if Midpoint is Target</h5>
-<div class="codehilite"><pre><span></span><code><span class="n">Language</span><span class="p">:</span> <span class="n">python</span>
-<span class="k">if</span> <span class="n">nums</span><span class="p">[</span><span class="n">mid</span><span class="p">]</span> <span class="o">==</span> <span class="n">target</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">mid</span>
-</code></pre></div>
-
+<h6># Check if Midpoint is Target</h6>
+<pre><code class="language-python">if nums[mid] == target:
+    return mid
+</code></pre>
 <ul>
 <li><strong>Explanation</strong>: If the element at the midpoint (<code>nums[mid]</code>) is equal to the <code>target</code>, we have found the target, and we return the index <code>mid</code>.</li>
 </ul>
-<h5>Adjust Right Pointer</h5>
-<div class="codehilite"><pre><span></span><code><span class="n">Language</span><span class="p">:</span> <span class="n">python</span>
-<span class="k">elif</span> <span class="n">nums</span><span class="p">[</span><span class="n">mid</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">target</span><span class="p">:</span>
-    <span class="n">right</span> <span class="o">=</span> <span class="n">mid</span> <span class="o">-</span> <span class="mi">1</span>
-</code></pre></div>
-
+<h6># Adjust Right Pointer</h6>
+<pre><code class="language-python">elif nums[mid] &gt; target:
+    right = mid - 1
+</code></pre>
 <ul>
 <li><strong>Explanation</strong>: If the element at the midpoint (<code>nums[mid]</code>) is greater than the <code>target</code>, it means the target must be in the left half of the current range. We adjust the <code>right</code> pointer to <code>mid - 1</code> to narrow the search to the left half.</li>
 </ul>
-<h5>Adjust Left Pointer</h5>
-<div class="codehilite"><pre><span></span><code><span class="n">Language</span><span class="p">:</span> <span class="n">python</span>
-<span class="k">else</span><span class="p">:</span>
-    <span class="n">left</span> <span class="o">=</span> <span class="n">mid</span> <span class="o">+</span> <span class="mi">1</span>
-</code></pre></div>
-
+<h6># Adjust Left Pointer</h6>
+<pre><code class="language-python">else:
+    left = mid + 1
+</code></pre>
 <ul>
 <li><strong>Explanation</strong>: If the element at the midpoint (<code>nums[mid]</code>) is less than the <code>target</code>, it means the target must be in the right half of the current range. We adjust the <code>left</code> pointer to <code>mid + 1</code> to narrow the search to the right half.</li>
 </ul>
-<h5>Return Insertion Point</h5>
-<div class="codehilite"><pre><span></span><code><span class="n">Language</span><span class="p">:</span> <span class="n">python</span>
-<span class="k">return</span> <span class="n">left</span>
-</code></pre></div>
-
+<h6># Return Insertion Point</h6>
+<pre><code class="language-python">return left
+</code></pre>
 <ul>
 <li><strong>Explanation</strong>: If the <code>target</code> is not found in the list, the <code>while</code> loop will terminate when <code>left</code> is greater than <code>right</code>. At this point, <code>left</code> will be the index where the <code>target</code> should be inserted to maintain the sorted order. We return <code>left</code> as the insertion point.</li>
 </ul>
-<hr />
 <p>Thank you for reading my post.</p>
-<h6>⭐️ Subscribe URL</h6>
+<h6>## ⭐️ Subscribe URL</h6>
 <p>http://www.youtube.com/channel/UC9RMNwYTL3SXCP6ShLWVFww?sub_confirmation=1</p>
-<h6>⭐️ Twitter</h6>
+<h6>## ⭐️ Twitter</h6>
 <p>https://twitter.com/CodingNinjaAZ</p>
-<h6>⭐️ My previous video</h6>
-<h2>33 Search in Rotated Sorted Array</h2>
-<p>https://youtu.be/dO9OZJP_Hm8</p></div><p style="page-break-before: always" ></p>
+<h6>## ⭐️ My previous video</h6>
+<h1>33 Search in Rotated Sorted Array</h1>
+<p>https://youtu.be/dO9OZJP_Hm8</p></div>

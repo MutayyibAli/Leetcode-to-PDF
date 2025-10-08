@@ -1,310 +1,138 @@
-<div class='cpp-solution'><h2>✅☑Beats 100% Users || [C++/Java/Python/JavaScript] || EXPLAINED🔥 -- Votes: 307</h2><h2>DO GIVE IT A LIKE IF THAT WAS HELPFUL</h2>
-<hr />
-<p></p>
-<hr />
-<h2>Approaches</h2>
+<div class='cpp-solution'><h4>✅☑Beats 100% Users || [C++/Java/Python/JavaScript] || EXPLAINED🔥 [Votes: 307]</h4><h4>DO GIVE IT A LIKE IF THAT WAS HELPFUL</h4>
+<h4>Approaches</h4>
 <p>(Also explained in the code)</p>
 <ol>
-<li><strong>Common Prefix Identification:</strong></li>
-</ol>
+<li>
+<p><strong>Common Prefix Identification:</strong></p>
 <ul>
 <li>The function iteratively right-shifts both <code>left</code> and <code>right</code> until they become equal, identifying the common prefix of their binary representations.</li>
-</ul>
-<ol>
-<li><strong>Counting Shifts:</strong></li>
-</ol>
-<ul>
-<li>It counts the number of right-shifts performed, storing the count in the variable <code>cnt</code>.</li>
-</ul>
-<ol>
-<li><strong>Bitwise AND Calculation:</strong></li>
-</ol>
-<ul>
-<li>After finding the common prefix, it reconstructs the bitwise AND result by left-shifting the common prefix by <code>cnt</code> bits.</li>
-</ul>
-<div class="codehilite"><pre><span></span><code><span class="n">Language</span><span class="o">:</span><span class="w"> </span><span class="n">left_</span><span class="o">=</span><span class="mi">5</span><span class="n">_and_right_</span><span class="o">=</span><span class="mi">7</span><span class="w"> </span>
-<span class="n">Lets</span><span class="w"> </span><span class="n">manually</span><span class="w"> </span><span class="n">apply</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">operation</span><span class="w"> </span><span class="n">on</span><span class="w"> </span><span class="n">all</span><span class="w"> </span><span class="n">elements</span><span class="w"> </span><span class="n">present</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="n">the</span><span class="w"> </span>
-<span class="n">range</span><span class="w"> </span><span class="mi">5</span><span class="w"> </span><span class="n">and</span><span class="w"> </span><span class="mi">7</span><span class="w"> </span><span class="n">including</span><span class="w"> </span><span class="n">themself</span><span class="o">.</span>
-
-<span class="w">            </span><span class="mi">5</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">101</span>
-<span class="w">            </span><span class="mi">6</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">110</span>
-<span class="w">            </span><span class="mi">7</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">111</span>
-
-<span class="n">AND</span><span class="w"> </span><span class="n">operations</span><span class="o">:</span>
-<span class="w">            </span><span class="mi">0</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span>
-<span class="w">            </span><span class="mi">0</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span>
-<span class="w">            </span><span class="mi">1</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span>
-<span class="w">            </span><span class="mi">1</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span>
-
-<span class="n">With</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">help</span><span class="w"> </span><span class="n">of</span><span class="w"> </span><span class="n">above</span><span class="w"> </span><span class="n">operations</span><span class="w"> </span><span class="n">lets</span><span class="w"> </span><span class="n">perform</span><span class="w"> </span><span class="n">AND</span><span class="w"> </span><span class="n">operations</span><span class="o">.</span>
-
-<span class="w">            </span><span class="mi">101</span><span class="o">(</span><span class="mi">5</span><span class="o">)</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="mi">110</span><span class="o">(</span><span class="mi">6</span><span class="o">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">100</span><span class="o">(</span><span class="mi">4</span><span class="o">)</span>
-
-<span class="w">            </span><span class="mi">100</span><span class="o">(</span><span class="mi">4</span><span class="o">)</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="mi">111</span><span class="o">(</span><span class="mi">7</span><span class="o">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">100</span><span class="o">(</span><span class="mi">4</span><span class="o">)</span>
-
-<span class="w">    </span><span class="n">answer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">4</span>
-
-
-<span class="n">Now</span><span class="w"> </span><span class="n">lets</span><span class="w"> </span><span class="n">apply</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">method</span><span class="w"> </span><span class="n">used</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">code</span><span class="o">:</span>
-
-<span class="n">we</span><span class="w"> </span><span class="n">will</span><span class="w"> </span><span class="n">remove</span><span class="w"> </span><span class="n">last</span><span class="w"> </span><span class="n">digit</span><span class="w"> </span><span class="n">from</span><span class="w"> </span><span class="n">binary</span><span class="w"> </span><span class="n">representation</span><span class="w"> </span><span class="n">of</span><span class="w"> </span><span class="n">both</span><span class="w"> </span><span class="n">left</span>
-<span class="n">and</span><span class="w"> </span><span class="n">right</span><span class="w"> </span><span class="n">number</span><span class="w"> </span><span class="n">until</span><span class="w"> </span><span class="n">we</span><span class="w"> </span><span class="n">reach</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">point</span><span class="w"> </span><span class="n">where</span><span class="w"> </span><span class="n">both</span><span class="w"> </span><span class="n">have</span><span class="w"> </span><span class="n">same</span><span class="w"> </span>
-<span class="n">element</span><span class="w"> </span><span class="n">at</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">same</span><span class="w"> </span><span class="n">position</span><span class="o">.</span>
-<span class="n">And</span><span class="w"> </span><span class="n">will</span><span class="w"> </span><span class="n">also</span><span class="w"> </span><span class="n">keep</span><span class="w"> </span><span class="n">track</span><span class="w"> </span><span class="n">of</span><span class="w"> </span><span class="n">how</span><span class="w"> </span><span class="n">many</span><span class="w"> </span><span class="n">times</span><span class="w"> </span><span class="n">we</span><span class="w"> </span><span class="n">removed</span><span class="w"> </span><span class="n">elements</span><span class="w"> </span>
-<span class="n">by</span><span class="w"> </span><span class="n">keeping</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">count</span><span class="w"> </span><span class="n">of</span><span class="w"> </span><span class="n">it</span><span class="o">.</span>
-
-<span class="n">lets</span><span class="w"> </span><span class="n">apply</span><span class="w"> </span><span class="n">it</span><span class="w"> </span><span class="n">practically</span><span class="o">:</span>
-
-<span class="n">first</span><span class="w"> </span><span class="n">loop</span><span class="o">:</span>
-<span class="w">            </span><span class="mi">101</span><span class="w"> </span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">10</span>
-<span class="w">            </span><span class="mi">111</span><span class="w"> </span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">11</span>
-<span class="w">            </span><span class="n">cnt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span>
-
-<span class="n">Second</span><span class="w"> </span><span class="n">loop</span><span class="o">:</span>
-<span class="w">            </span><span class="mi">10</span><span class="w"> </span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span>
-<span class="w">            </span><span class="mi">11</span><span class="w"> </span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span>
-<span class="w">            </span><span class="n">cnt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span>
-
-<span class="n">Third</span><span class="w"> </span><span class="n">loop</span><span class="o">:</span>
-<span class="w">            </span><span class="mi">1</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span>
-<span class="n">So</span><span class="w"> </span><span class="n">now</span><span class="w"> </span><span class="n">since</span><span class="w"> </span><span class="n">they</span><span class="w"> </span><span class="n">are</span><span class="w"> </span><span class="n">equal</span><span class="w"> </span><span class="n">we</span><span class="w"> </span><span class="n">will</span><span class="w"> </span><span class="n">add</span><span class="w"> </span><span class="n">those</span><span class="w"> </span><span class="n">many</span><span class="w"> </span><span class="mi">0</span><span class="err">&#39;</span><span class="n">s</span><span class="w"> </span><span class="n">at</span><span class="w"> </span><span class="n">the</span><span class="w"> </span>
-<span class="n">end</span><span class="w"> </span><span class="n">of</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">current</span><span class="w"> </span><span class="n">element</span><span class="w"> </span><span class="n">we</span><span class="w"> </span><span class="n">have</span><span class="w"> </span><span class="n">by</span><span class="w"> </span><span class="n">using</span><span class="w"> </span><span class="n">left</span><span class="w"> </span><span class="n">shift</span><span class="w"> </span><span class="n">operator</span><span class="o">.</span>
-
-<span class="w">            </span><span class="mi">1</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">cnt</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="mi">2</span><span class="w">  </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">100</span><span class="o">(</span><span class="mi">4</span><span class="o">)</span><span class="w"> </span>
-
-
-<span class="w">    </span><span class="n">Result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">4</span>
-</code></pre></div>
-
-<p>.</p>
-<div class="codehilite"><pre><span></span><code><span class="n">Language</span><span class="o">:</span><span class="w"> </span><span class="n">NOTE</span><span class="w"> </span>
-<span class="n">In</span><span class="w"> </span><span class="n">both</span><span class="w"> </span><span class="n">right</span><span class="w"> </span><span class="n">and</span><span class="w"> </span><span class="n">left</span><span class="w"> </span><span class="n">shift</span><span class="o">,</span><span class="w"> </span><span class="n">elements</span><span class="w"> </span><span class="n">will</span><span class="w"> </span><span class="n">be</span><span class="w"> </span><span class="n">removed</span><span class="w"> </span><span class="n">and</span><span class="w"> </span><span class="n">added</span><span class="w"> </span>
-<span class="n">from</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">last</span><span class="w"> </span><span class="n">only</span><span class="o">.</span>
-</code></pre></div>
-
-<h2>Complexity</h2>
-<ul>
 <li>
-<p>Time complexity:<br />
-  $$O(1)$$</p>
+<p><strong>Counting Shifts:</strong></p>
 </li>
 <li>
-<p>Space complexity:<br />
-  $$O(1)$$</p>
+<p>It counts the number of right-shifts performed, storing the count in the variable <code>cnt</code>.</p>
+</li>
+<li>
+<p><strong>Bitwise AND Calculation:</strong></p>
+</li>
+<li>
+<p>After finding the common prefix, it reconstructs the bitwise AND result by left-shifting the common prefix by <code>cnt</code> bits.</p>
 </li>
 </ul>
-<h2>Code</h2>
-<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">C</span><span class="o">++</span><span class="w"> </span>
+</li>
+</ol>
+<p>```left_=5_and_right_=7
+Lets manually apply &amp; operation on all elements present in the 
+range 5 and 7 including themself.</p>
+<pre><code>        5 = 101
+        6 = 110
+        7 = 111
+</code></pre>
+<p>AND operations:
+            0 &amp; 0 = 0
+            0 &amp; 1 = 0
+            1 &amp; 0 = 0
+            1 &amp; 1 = 1</p>
+<p>With the help of above operations lets perform AND operations.</p>
+<pre><code>        101(5) &amp; 110(6) = 100(4)
 
-<span class="n">class</span><span class="w"> </span><span class="n">Solution</span><span class="w"> </span><span class="p">{</span>
-<span class="n">public</span><span class="o">:</span>
-<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">rangeBitwiseAnd</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">left</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">right</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">cnt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-<span class="w">        </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">left</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">right</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="n">left</span><span class="w"> </span><span class="o">&gt;&gt;=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
-<span class="w">            </span><span class="n">right</span><span class="w"> </span><span class="o">&gt;&gt;=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
-<span class="w">            </span><span class="n">cnt</span><span class="o">++</span><span class="p">;</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="p">(</span><span class="n">left</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">cnt</span><span class="p">);</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">};</span>
-</code></pre></div>
+        100(4) &amp; 111(7) = 100(4)
 
-<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">Java</span><span class="w"> </span>
-<span class="kd">class</span> <span class="nc">Solution</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="nf">rangeBitwiseAnd</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">left</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">right</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">cnt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-<span class="w">        </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">left</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">right</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="n">left</span><span class="w"> </span><span class="o">&gt;&gt;=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
-<span class="w">            </span><span class="n">right</span><span class="w"> </span><span class="o">&gt;&gt;=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
-<span class="w">            </span><span class="n">cnt</span><span class="o">++</span><span class="p">;</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="p">(</span><span class="n">left</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">cnt</span><span class="p">);</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
+answer = 4
+</code></pre>
+<p>Now lets apply the method used in the code:</p>
+<p>we will remove last digit from binary representation of both left
+and right number until we reach a point where both have same 
+element at the same position.
+And will also keep track of how many times we removed elements 
+by keeping a count of it.</p>
+<p>lets apply it practically:</p>
+<p>first loop:
+            101 &gt;&gt; 1 = 10
+            111 &gt;&gt; 1 = 11
+            cnt = 1</p>
+<p>Second loop:
+            10 &gt;&gt; 1 = 1
+            11 &gt;&gt; 1 = 1
+            cnt = 2</p>
+<p>Third loop:
+            1 == 1 
+So now since they are equal we will add those many 0's at the 
+end of the current element we have by using left shift operator.</p>
+<pre><code>        1 &lt;&lt; cnt  = 1 &lt;&lt; 2  =&gt; 100(4)
 
-<div class="codehilite"><pre><span></span><code><span class="n">Language</span><span class="p">:</span> <span class="n">python3</span> 
-<span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="p">:</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">rangeBitwiseAnd</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">left</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">right</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-        <span class="n">cnt</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="k">while</span> <span class="n">left</span> <span class="o">!=</span> <span class="n">right</span><span class="p">:</span>
-            <span class="n">left</span> <span class="o">&gt;&gt;=</span> <span class="mi">1</span>
-            <span class="n">right</span> <span class="o">&gt;&gt;=</span> <span class="mi">1</span>
-            <span class="n">cnt</span> <span class="o">+=</span> <span class="mi">1</span>
-        <span class="k">return</span> <span class="n">left</span> <span class="o">&lt;&lt;</span> <span class="n">cnt</span>
-</code></pre></div>
 
-<div class="codehilite"><pre><span></span><code><span class="nx">Language</span><span class="o">:</span><span class="w"> </span><span class="nx">javascript</span><span class="w"> </span>
-<span class="kd">var</span><span class="w"> </span><span class="nx">rangeBitwiseAnd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kd">function</span><span class="p">(</span><span class="nx">left</span><span class="p">,</span><span class="w"> </span><span class="nx">right</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="nx">cnt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0</span><span class="p">;</span>
-<span class="w">    </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="nx">left</span><span class="w"> </span><span class="o">!==</span><span class="w"> </span><span class="nx">right</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="nx">left</span><span class="w"> </span><span class="o">&gt;&gt;=</span><span class="w"> </span><span class="mf">1</span><span class="p">;</span>
-<span class="w">        </span><span class="nx">right</span><span class="w"> </span><span class="o">&gt;&gt;=</span><span class="w"> </span><span class="mf">1</span><span class="p">;</span>
-<span class="w">        </span><span class="nx">cnt</span><span class="o">++</span><span class="p">;</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">left</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="nx">cnt</span><span class="p">;</span>
-<span class="p">};</span>
-</code></pre></div>
+Result = 4
+</code></pre>
+<pre><code>.
+```NOTE
+In both right and left shift, elements will be removed and added 
+from the last only.
+</code></pre>
+<h4>Complexity</h4>
+<ul>
+<li>
+<p>Time complexity:
+   $$O(1)$$</p>
+</li>
+<li>
+<p>Space complexity:
+   $$O(1)$$</p>
+</li>
+</ul>
+<h4>Code</h4>
+<pre><code class="language-cpp">class Solution {
+public:
+    int rangeBitwiseAnd(int left, int right) {
+        int cnt = 0;
+        while (left != right) {
+            left &gt;&gt;= 1;
+            right &gt;&gt;= 1;
+            cnt++;
+        }
+        return (left &lt;&lt; cnt);
+    }
+};
 
-<hr />
-<h2>DO GIVE IT A LIKE IF THAT WAS HELPFUL</h2>
-<hr />
-<hr />
+
+</code></pre>
+<pre><code class="language-Java">class Solution {
+    public int rangeBitwiseAnd(int left, int right) {
+        int cnt = 0;
+        while (left != right) {
+            left &gt;&gt;= 1;
+            right &gt;&gt;= 1;
+            cnt++;
+        }
+        return (left &lt;&lt; cnt);
+    }
+}
+
+
+</code></pre>
+<pre><code class="language-python3">class Solution:
+    def rangeBitwiseAnd(self, left: int, right: int) -&gt; int:
+        cnt = 0
+        while left != right:
+            left &gt;&gt;= 1
+            right &gt;&gt;= 1
+            cnt += 1
+        return left &lt;&lt; cnt
+
+
+</code></pre>
+<pre><code class="language-javascript">var rangeBitwiseAnd = function(left, right) {
+    let cnt = 0;
+    while (left !== right) {
+        left &gt;&gt;= 1;
+        right &gt;&gt;= 1;
+        cnt++;
+    }
+    return left &lt;&lt; cnt;
+};
+
+
+
+</code></pre>
+<h4>DO GIVE IT A LIKE IF THAT WAS HELPFUL</h4>
 <hr /></div>
-
-
-<div class='python-solution'><h2>✅☑Beats 100% Users || [C++/Java/Python/JavaScript] || EXPLAINED🔥 -- Votes: 307</h2><h2>DO GIVE IT A LIKE IF THAT WAS HELPFUL</h2>
-<hr />
-<p></p>
-<hr />
-<h2>Approaches</h2>
-<p>(Also explained in the code)</p>
-<ol>
-<li><strong>Common Prefix Identification:</strong></li>
-</ol>
-<ul>
-<li>The function iteratively right-shifts both <code>left</code> and <code>right</code> until they become equal, identifying the common prefix of their binary representations.</li>
-</ul>
-<ol>
-<li><strong>Counting Shifts:</strong></li>
-</ol>
-<ul>
-<li>It counts the number of right-shifts performed, storing the count in the variable <code>cnt</code>.</li>
-</ul>
-<ol>
-<li><strong>Bitwise AND Calculation:</strong></li>
-</ol>
-<ul>
-<li>After finding the common prefix, it reconstructs the bitwise AND result by left-shifting the common prefix by <code>cnt</code> bits.</li>
-</ul>
-<div class="codehilite"><pre><span></span><code><span class="n">Language</span><span class="o">:</span><span class="w"> </span><span class="n">left_</span><span class="o">=</span><span class="mi">5</span><span class="n">_and_right_</span><span class="o">=</span><span class="mi">7</span><span class="w"> </span>
-<span class="n">Lets</span><span class="w"> </span><span class="n">manually</span><span class="w"> </span><span class="n">apply</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">operation</span><span class="w"> </span><span class="n">on</span><span class="w"> </span><span class="n">all</span><span class="w"> </span><span class="n">elements</span><span class="w"> </span><span class="n">present</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="n">the</span><span class="w"> </span>
-<span class="n">range</span><span class="w"> </span><span class="mi">5</span><span class="w"> </span><span class="n">and</span><span class="w"> </span><span class="mi">7</span><span class="w"> </span><span class="n">including</span><span class="w"> </span><span class="n">themself</span><span class="o">.</span>
-
-<span class="w">            </span><span class="mi">5</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">101</span>
-<span class="w">            </span><span class="mi">6</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">110</span>
-<span class="w">            </span><span class="mi">7</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">111</span>
-
-<span class="n">AND</span><span class="w"> </span><span class="n">operations</span><span class="o">:</span>
-<span class="w">            </span><span class="mi">0</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span>
-<span class="w">            </span><span class="mi">0</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span>
-<span class="w">            </span><span class="mi">1</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span>
-<span class="w">            </span><span class="mi">1</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span>
-
-<span class="n">With</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">help</span><span class="w"> </span><span class="n">of</span><span class="w"> </span><span class="n">above</span><span class="w"> </span><span class="n">operations</span><span class="w"> </span><span class="n">lets</span><span class="w"> </span><span class="n">perform</span><span class="w"> </span><span class="n">AND</span><span class="w"> </span><span class="n">operations</span><span class="o">.</span>
-
-<span class="w">            </span><span class="mi">101</span><span class="o">(</span><span class="mi">5</span><span class="o">)</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="mi">110</span><span class="o">(</span><span class="mi">6</span><span class="o">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">100</span><span class="o">(</span><span class="mi">4</span><span class="o">)</span>
-
-<span class="w">            </span><span class="mi">100</span><span class="o">(</span><span class="mi">4</span><span class="o">)</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="mi">111</span><span class="o">(</span><span class="mi">7</span><span class="o">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">100</span><span class="o">(</span><span class="mi">4</span><span class="o">)</span>
-
-<span class="w">    </span><span class="n">answer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">4</span>
-
-
-<span class="n">Now</span><span class="w"> </span><span class="n">lets</span><span class="w"> </span><span class="n">apply</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">method</span><span class="w"> </span><span class="n">used</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">code</span><span class="o">:</span>
-
-<span class="n">we</span><span class="w"> </span><span class="n">will</span><span class="w"> </span><span class="n">remove</span><span class="w"> </span><span class="n">last</span><span class="w"> </span><span class="n">digit</span><span class="w"> </span><span class="n">from</span><span class="w"> </span><span class="n">binary</span><span class="w"> </span><span class="n">representation</span><span class="w"> </span><span class="n">of</span><span class="w"> </span><span class="n">both</span><span class="w"> </span><span class="n">left</span>
-<span class="n">and</span><span class="w"> </span><span class="n">right</span><span class="w"> </span><span class="n">number</span><span class="w"> </span><span class="n">until</span><span class="w"> </span><span class="n">we</span><span class="w"> </span><span class="n">reach</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">point</span><span class="w"> </span><span class="n">where</span><span class="w"> </span><span class="n">both</span><span class="w"> </span><span class="n">have</span><span class="w"> </span><span class="n">same</span><span class="w"> </span>
-<span class="n">element</span><span class="w"> </span><span class="n">at</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">same</span><span class="w"> </span><span class="n">position</span><span class="o">.</span>
-<span class="n">And</span><span class="w"> </span><span class="n">will</span><span class="w"> </span><span class="n">also</span><span class="w"> </span><span class="n">keep</span><span class="w"> </span><span class="n">track</span><span class="w"> </span><span class="n">of</span><span class="w"> </span><span class="n">how</span><span class="w"> </span><span class="n">many</span><span class="w"> </span><span class="n">times</span><span class="w"> </span><span class="n">we</span><span class="w"> </span><span class="n">removed</span><span class="w"> </span><span class="n">elements</span><span class="w"> </span>
-<span class="n">by</span><span class="w"> </span><span class="n">keeping</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">count</span><span class="w"> </span><span class="n">of</span><span class="w"> </span><span class="n">it</span><span class="o">.</span>
-
-<span class="n">lets</span><span class="w"> </span><span class="n">apply</span><span class="w"> </span><span class="n">it</span><span class="w"> </span><span class="n">practically</span><span class="o">:</span>
-
-<span class="n">first</span><span class="w"> </span><span class="n">loop</span><span class="o">:</span>
-<span class="w">            </span><span class="mi">101</span><span class="w"> </span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">10</span>
-<span class="w">            </span><span class="mi">111</span><span class="w"> </span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">11</span>
-<span class="w">            </span><span class="n">cnt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span>
-
-<span class="n">Second</span><span class="w"> </span><span class="n">loop</span><span class="o">:</span>
-<span class="w">            </span><span class="mi">10</span><span class="w"> </span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span>
-<span class="w">            </span><span class="mi">11</span><span class="w"> </span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span>
-<span class="w">            </span><span class="n">cnt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span>
-
-<span class="n">Third</span><span class="w"> </span><span class="n">loop</span><span class="o">:</span>
-<span class="w">            </span><span class="mi">1</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span>
-<span class="n">So</span><span class="w"> </span><span class="n">now</span><span class="w"> </span><span class="n">since</span><span class="w"> </span><span class="n">they</span><span class="w"> </span><span class="n">are</span><span class="w"> </span><span class="n">equal</span><span class="w"> </span><span class="n">we</span><span class="w"> </span><span class="n">will</span><span class="w"> </span><span class="n">add</span><span class="w"> </span><span class="n">those</span><span class="w"> </span><span class="n">many</span><span class="w"> </span><span class="mi">0</span><span class="err">&#39;</span><span class="n">s</span><span class="w"> </span><span class="n">at</span><span class="w"> </span><span class="n">the</span><span class="w"> </span>
-<span class="n">end</span><span class="w"> </span><span class="n">of</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">current</span><span class="w"> </span><span class="n">element</span><span class="w"> </span><span class="n">we</span><span class="w"> </span><span class="n">have</span><span class="w"> </span><span class="n">by</span><span class="w"> </span><span class="n">using</span><span class="w"> </span><span class="n">left</span><span class="w"> </span><span class="n">shift</span><span class="w"> </span><span class="n">operator</span><span class="o">.</span>
-
-<span class="w">            </span><span class="mi">1</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">cnt</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="mi">2</span><span class="w">  </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">100</span><span class="o">(</span><span class="mi">4</span><span class="o">)</span><span class="w"> </span>
-
-
-<span class="w">    </span><span class="n">Result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">4</span>
-</code></pre></div>
-
-<p>.</p>
-<div class="codehilite"><pre><span></span><code><span class="n">Language</span><span class="o">:</span><span class="w"> </span><span class="n">NOTE</span><span class="w"> </span>
-<span class="n">In</span><span class="w"> </span><span class="n">both</span><span class="w"> </span><span class="n">right</span><span class="w"> </span><span class="n">and</span><span class="w"> </span><span class="n">left</span><span class="w"> </span><span class="n">shift</span><span class="o">,</span><span class="w"> </span><span class="n">elements</span><span class="w"> </span><span class="n">will</span><span class="w"> </span><span class="n">be</span><span class="w"> </span><span class="n">removed</span><span class="w"> </span><span class="n">and</span><span class="w"> </span><span class="n">added</span><span class="w"> </span>
-<span class="n">from</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">last</span><span class="w"> </span><span class="n">only</span><span class="o">.</span>
-</code></pre></div>
-
-<h2>Complexity</h2>
-<ul>
-<li>
-<p>Time complexity:<br />
-  $$O(1)$$</p>
-</li>
-<li>
-<p>Space complexity:<br />
-  $$O(1)$$</p>
-</li>
-</ul>
-<h2>Code</h2>
-<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">C</span><span class="o">++</span><span class="w"> </span>
-
-<span class="n">class</span><span class="w"> </span><span class="n">Solution</span><span class="w"> </span><span class="p">{</span>
-<span class="n">public</span><span class="o">:</span>
-<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">rangeBitwiseAnd</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">left</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">right</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">cnt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-<span class="w">        </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">left</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">right</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="n">left</span><span class="w"> </span><span class="o">&gt;&gt;=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
-<span class="w">            </span><span class="n">right</span><span class="w"> </span><span class="o">&gt;&gt;=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
-<span class="w">            </span><span class="n">cnt</span><span class="o">++</span><span class="p">;</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="p">(</span><span class="n">left</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">cnt</span><span class="p">);</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">};</span>
-</code></pre></div>
-
-<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">Java</span><span class="w"> </span>
-<span class="kd">class</span> <span class="nc">Solution</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="nf">rangeBitwiseAnd</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">left</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">right</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">cnt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-<span class="w">        </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">left</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">right</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="n">left</span><span class="w"> </span><span class="o">&gt;&gt;=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
-<span class="w">            </span><span class="n">right</span><span class="w"> </span><span class="o">&gt;&gt;=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
-<span class="w">            </span><span class="n">cnt</span><span class="o">++</span><span class="p">;</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="p">(</span><span class="n">left</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">cnt</span><span class="p">);</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
-
-<div class="codehilite"><pre><span></span><code><span class="n">Language</span><span class="p">:</span> <span class="n">python3</span> 
-<span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="p">:</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">rangeBitwiseAnd</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">left</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">right</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-        <span class="n">cnt</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="k">while</span> <span class="n">left</span> <span class="o">!=</span> <span class="n">right</span><span class="p">:</span>
-            <span class="n">left</span> <span class="o">&gt;&gt;=</span> <span class="mi">1</span>
-            <span class="n">right</span> <span class="o">&gt;&gt;=</span> <span class="mi">1</span>
-            <span class="n">cnt</span> <span class="o">+=</span> <span class="mi">1</span>
-        <span class="k">return</span> <span class="n">left</span> <span class="o">&lt;&lt;</span> <span class="n">cnt</span>
-</code></pre></div>
-
-<div class="codehilite"><pre><span></span><code><span class="nx">Language</span><span class="o">:</span><span class="w"> </span><span class="nx">javascript</span><span class="w"> </span>
-<span class="kd">var</span><span class="w"> </span><span class="nx">rangeBitwiseAnd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kd">function</span><span class="p">(</span><span class="nx">left</span><span class="p">,</span><span class="w"> </span><span class="nx">right</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="nx">cnt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0</span><span class="p">;</span>
-<span class="w">    </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="nx">left</span><span class="w"> </span><span class="o">!==</span><span class="w"> </span><span class="nx">right</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="nx">left</span><span class="w"> </span><span class="o">&gt;&gt;=</span><span class="w"> </span><span class="mf">1</span><span class="p">;</span>
-<span class="w">        </span><span class="nx">right</span><span class="w"> </span><span class="o">&gt;&gt;=</span><span class="w"> </span><span class="mf">1</span><span class="p">;</span>
-<span class="w">        </span><span class="nx">cnt</span><span class="o">++</span><span class="p">;</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">left</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="nx">cnt</span><span class="p">;</span>
-<span class="p">};</span>
-</code></pre></div>
-
-<hr />
-<h2>DO GIVE IT A LIKE IF THAT WAS HELPFUL</h2>
-<hr />
-<hr />
-<hr /></div><p style="page-break-before: always" ></p>

@@ -1,67 +1,51 @@
-<div class='cpp-solution'><h2>🥇 C++ | PYTHON  ||  EXPLAINED  ||  ; ] -- Votes: 90</h2><p><strong>UPVOTE IF HELPFuuL</strong></p>
+<div class='cpp-solution'><h4>🥇 C++ | PYTHON  ||  EXPLAINED  ||  ; ] [Votes: 90]</h4><p><strong>UPVOTE IF HELPFuuL</strong></p>
 <p><strong>APPROACH</strong></p>
-<p>Any sort of traversal would work here.<br />
-While traversing the tree, keep a variable that stores the maximum value till now in the path.<br />
+<p>Any sort of traversal would work here.
+While traversing the tree, keep a variable that stores the maximum value till now in the path.
 Compare it with node value to decide whether it is a ood node or not.</p>
-<p><strong>BASE CASE</strong></p>
-<ul>
-<li>Return <code>0</code> , whenever <code>root == NULL</code></li>
-</ul>
-<p><strong>RECURSIVE CALL</strong></p>
-<ul>
-<li>Call the funtion for both <code>root-&gt;left</code> and <code>root-&gt;right</code> and changing the max value to <code>max(max_till_now,root-&gt;val)</code></li>
-</ul>
-<p><strong>SELF-WORK</strong></p>
-<ul>
-<li>Get answer recursively for next nodes.</li>
-<li>If <code>root-&gt;val &gt; max_value_till_now</code> increment the answer by one.</li>
-</ul>
+<p><strong>BASE CASE</strong>
+* Return <code>0</code>, whenever <code>root == NULL</code></p>
+<p><strong>RECURSIVE CALL</strong>
+* Call the funtion for both <code>root-&gt;left</code> and <code>root-&gt;right</code> and changing the max value to <code>max(max_till_now,root-&gt;val)</code></p>
+<p><strong>SELF-WORK</strong>
+* Get answer recursively for next nodes.
+* If <code>root-&gt;val &gt; max_value_till_now</code> increment the answer by one.</p>
 <p><strong>UPVOTE IF HELPFuuL</strong></p>
-<p><strong>C++</strong></p>
-<div class="codehilite"><pre><span></span><code><span class="nt">class</span><span class="w"> </span><span class="nt">Solution</span><span class="w"> </span><span class="p">{</span>
-<span class="n">public</span><span class="p">:</span>
+<p><strong>cpp</strong></p>
+<pre><code>class Solution {
+public:
 
-<span class="w">    </span><span class="n">int</span><span class="w"> </span><span class="nf">solve</span><span class="p">(</span><span class="n">TreeNode</span><span class="o">*</span><span class="w"> </span><span class="n">root</span><span class="p">,</span><span class="n">int</span><span class="w"> </span><span class="n">hi</span><span class="p">)</span><span class="err">{</span>
-<span class="w">        </span><span class="n">if</span><span class="w"> </span><span class="p">(</span><span class="n">root</span><span class="p">)</span><span class="err">{</span>
-<span class="w">            </span><span class="n">int</span><span class="w"> </span><span class="n">k</span><span class="o">=</span><span class="nf">solve</span><span class="p">(</span><span class="n">root</span><span class="o">-</span><span class="err">&gt;</span><span class="kc">left</span><span class="p">,</span><span class="w"> </span><span class="nf">max</span><span class="p">(</span><span class="n">hi</span><span class="p">,</span><span class="n">root</span><span class="o">-</span><span class="err">&gt;</span><span class="n">val</span><span class="p">))</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nf">solve</span><span class="p">(</span><span class="n">root</span><span class="o">-</span><span class="err">&gt;</span><span class="kc">right</span><span class="p">,</span><span class="w"> </span><span class="nf">max</span><span class="p">(</span><span class="n">hi</span><span class="p">,</span><span class="n">root</span><span class="o">-</span><span class="err">&gt;</span><span class="n">val</span><span class="p">));</span>
-<span class="w">            </span><span class="err">if</span><span class="w"> </span><span class="err">(root-&gt;val&gt;=hi){</span>
-<span class="w">                </span><span class="err">k++</span><span class="p">;</span>
-<span class="w">            </span><span class="p">}</span>
-<span class="w">            </span><span class="nt">return</span><span class="w"> </span><span class="nt">k</span><span class="o">;</span>
-<span class="w">        </span><span class="err">}</span>
-<span class="w">        </span><span class="nt">return</span><span class="w"> </span><span class="nt">0</span><span class="o">;</span>
-<span class="w">    </span><span class="err">}</span>
-<span class="w">    </span><span class="nt">int</span><span class="w"> </span><span class="nt">goodNodes</span><span class="o">(</span><span class="nt">TreeNode</span><span class="o">*</span><span class="w"> </span><span class="nt">root</span><span class="o">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="err">return</span><span class="w"> </span><span class="err">solve(root,-10001)</span><span class="p">;</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="err">}</span><span class="o">;</span>
-</code></pre></div>
-
+    int solve(TreeNode* root,int hi){
+        if (root){
+            int k=solve(root-&gt;left, max(hi,root-&gt;val)) + solve(root-&gt;right, max(hi,root-&gt;val));
+            if (root-&gt;val&gt;=hi){
+                k++;
+            }
+            return k;
+        }
+        return 0;
+    }
+    int goodNodes(TreeNode* root) {
+        return solve(root,-10001);
+    }
+};
+</code></pre>
 <p><strong>PYTHON</strong></p>
-<div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="n">Solution:</span>
-    <span class="n">def</span> <span class="n">goodNodes</span>(<span class="nb">self</span>, <span class="n">root:</span> <span class="n">TreeNode</span>) -&gt; <span class="n">int:</span>
-        <span class="n">def</span> <span class="n">solve</span>(<span class="n">root</span>,<span class="nb">val</span>):
-            <span class="k">if</span> <span class="n">root:</span>
-                <span class="n">k</span> = <span class="n">solve</span>(<span class="n">root</span>.<span class="n">left</span>, <span class="nb">max</span>(<span class="nb">val</span>,<span class="n">root</span>.<span class="nb">val</span>)) + <span class="n">solve</span>(<span class="n">root</span>.<span class="nb">right</span>, <span class="nb">max</span>(<span class="nb">val</span>,<span class="n">root</span>.<span class="nb">val</span>))
-                <span class="k">if</span> <span class="n">root</span>.<span class="nb">val</span> &gt;= <span class="n">val:</span>
-                    <span class="n">k</span>+=<span class="mi">1</span>
-                <span class="k">return</span> <span class="n">k</span>
-            <span class="k">return</span> <span class="mi">0</span>
-        <span class="k">return</span> <span class="n">solve</span>(<span class="n">root</span>,<span class="n">root</span>.<span class="nb">val</span>)
-</code></pre></div>
-
-<p></p></div>
-
-
-<div class='python-solution'><h2>✔️C++ | Python | C🔥97% DFS✅Detailed graph explantion | Beginner-friendly | Easy to understand ^_^ -- Votes: 163</h2><p><strong>Idea:</strong></p>
-<ol>
-<li>DFS through every path, and keep tracking of biggest value(curMax) in the path.</li>
-<li>If current node is <code>&gt;=</code> the biggest value in the path, we add the answer by one.</li>
-</ol>
-<p>Here's an example to show how the code works:<br />
-<br />
-(In <strong>Python</strong>, we use list as a global valuable)</p>
+<pre><code>class Solution:
+    def goodNodes(self, root: TreeNode) -&gt; int:
+        def solve(root,val):
+            if root:
+                k = solve(root.left, max(val,root.val)) + solve(root.right, max(val,root.val))
+                if root.val &gt;= val:
+                    k+=1
+                return k
+            return 0
+        return solve(root,root.val)
+</code></pre></div><div class='python-solution'><h4>✔️C++ | Python | C🔥97% DFS✅Detailed graph explantion | Beginner-friendly | Easy to understand ^_^ [Votes: 163]</h4><p><strong>Idea:</strong>
+1. DFS through every path, and keep tracking of biggest value(curMax) in the path.
+2. If current node is <code>&gt;=</code> the biggest value in the path, we add the answer by one.</p>
+<p>Here's an example to show how the code works:</p>
+<p>(In <strong>Python</strong>, we use list as a global valuable)</p>
 <iframe src="https://leetcode.com/playground/EunmHB7o/shared" frameBorder="0" width="1000" height="400"></iframe>
 
-<p><strong>Please UPVOTE if you LIKE!!!</strong><br />
-</p></div><p style="page-break-before: always" ></p>
+<p><strong>Please UPVOTE if you LIKE!!!</strong></p></div>

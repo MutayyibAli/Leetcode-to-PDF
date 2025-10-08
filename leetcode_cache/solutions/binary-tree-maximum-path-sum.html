@@ -1,140 +1,129 @@
-<div class='cpp-solution'><h2>C++ solution O(n) with detailed explanation -- Votes: 445</h2><div class="codehilite"><pre><span></span><code><span class="nv">The</span> <span class="s s-Atom">way</span> <span class="s s-Atom">to</span> <span class="s s-Atom">think</span> <span class="s s-Atom">of</span> <span class="s s-Atom">a</span> <span class="s s-Atom">solution</span> <span class="s s-Atom">to</span> <span class="s s-Atom">this</span> <span class="o">is</span> <span class="s s-Atom">that</span> <span class="s s-Atom">when</span> <span class="s s-Atom">we</span> <span class="s s-Atom">are</span> <span class="s s-Atom">looking</span> <span class="s s-Atom">a</span> <span class="s s-Atom">path</span> <span class="s s-Atom">in</span> <span class="s s-Atom">a</span> <span class="s s-Atom">tree</span> <span class="s s-Atom">its</span> <span class="s s-Atom">unidirectional</span> <span class="s s-Atom">and</span> <span class="s s-Atom">cannot</span> <span class="s s-Atom">retrace</span> <span class="s s-Atom">back</span> <span class="s s-Atom">what</span> <span class="s s-Atom">i</span> <span class="s s-Atom">mean</span> <span class="s s-Atom">by</span> <span class="s s-Atom">that</span> <span class="s s-Atom">is</span><span class="p">:</span>
-    <span class="k">_</span>
-  <span class="o">/</span> <span class="mi">1</span> <span class="s s-Atom">\</span> 
- <span class="o">/</span> <span class="o">/</span> <span class="s s-Atom">\</span> <span class="s s-Atom">\</span> <span class="s s-Atom">&lt;-----path</span> <span class="s s-Atom">that</span> <span class="s s-Atom">goes</span> <span class="s s-Atom">like</span> <span class="s s-Atom">a</span> <span class="s s-Atom">depth</span> <span class="s s-Atom">first</span> <span class="s s-Atom">search</span> <span class="s s-Atom">without</span> <span class="s s-Atom">backtracking</span>
-<span class="o">/</span> <span class="mi">2</span>   <span class="mi">3</span> <span class="s s-Atom">v</span>  
+<div class='cpp-solution'><h4>C++ solution O(n) with detailed explanation [Votes: 445]</h4><pre><code>The way to think of a solution to this is that when we are looking a path in a tree its unidirectional and cannot retrace back what i mean by that is:
+    _
+  / 1 \ 
+ / / \ \ &lt;-----path that goes like a depth first search without backtracking
+/ 2   3 v  
 
-<span class="nv">So</span> <span class="s s-Atom">a</span> <span class="s s-Atom">way</span> <span class="s s-Atom">to</span> <span class="s s-Atom">solve</span> <span class="s s-Atom">this</span> <span class="o">is</span> <span class="s s-Atom">that</span> <span class="s s-Atom">if</span> <span class="s s-Atom">i</span> <span class="s s-Atom">am</span> <span class="s s-Atom">at</span> <span class="s s-Atom">a</span> <span class="s s-Atom">node</span> <span class="s s-Atom">i</span> <span class="s s-Atom">can</span> <span class="s s-Atom">choose</span> <span class="s s-Atom">a</span> <span class="s s-Atom">left</span> <span class="s s-Atom">or</span> <span class="s s-Atom">right</span> <span class="s s-Atom">subtree</span> <span class="s s-Atom">but</span> <span class="s s-Atom">if</span> <span class="s s-Atom">i</span> <span class="s s-Atom">choose</span> <span class="s s-Atom">both</span> <span class="s s-Atom">this</span> <span class="o">is</span> <span class="s s-Atom">the</span> <span class="s s-Atom">only</span> <span class="s s-Atom">subtree</span> <span class="s s-Atom">that</span> <span class="s s-Atom">will</span> <span class="s s-Atom">contain</span> <span class="s s-Atom">my</span> <span class="s s-Atom">maximum</span>
+So a way to solve this is that if i am at a node i can choose a left or right subtree but if i choose both this is the only subtree that will contain my maximum
 
-<span class="nv">I</span> <span class="s s-Atom">first</span> <span class="s s-Atom">set</span> <span class="s s-Atom">my</span> <span class="s s-Atom">max_sum</span> <span class="s s-Atom">to</span> <span class="nv">INT_MIN</span><span class="p">.</span>
-<span class="nv">I</span> <span class="s s-Atom">can</span> <span class="s s-Atom">do</span> <span class="s s-Atom">either</span> <span class="s s-Atom">either</span> <span class="s s-Atom">of</span> <span class="s s-Atom">the</span> <span class="s s-Atom">options</span> <span class="s s-Atom">presented</span><span class="p">:</span>
-<span class="mf">1.</span><span class="nv">I</span> <span class="s s-Atom">can</span> <span class="s s-Atom">choose</span> <span class="s s-Atom">to</span> <span class="s s-Atom">take</span> <span class="s s-Atom">up</span> <span class="s s-Atom">the</span> <span class="s s-Atom">left</span> <span class="s s-Atom">subtree</span> <span class="s s-Atom">or</span> <span class="s s-Atom">drop</span> <span class="s s-Atom">it</span><span class="p">.</span>
-<span class="mf">2.</span><span class="nv">I</span> <span class="s s-Atom">can</span> <span class="s s-Atom">either</span> <span class="s s-Atom">choose</span> <span class="s s-Atom">to</span> <span class="s s-Atom">take</span> <span class="s s-Atom">up</span> <span class="s s-Atom">the</span> <span class="s s-Atom">right</span> <span class="s s-Atom">subtree</span> <span class="s s-Atom">or</span> <span class="s s-Atom">drop</span> <span class="s s-Atom">it</span><span class="p">.</span>
-<span class="mf">3.</span><span class="nv">I</span> <span class="s s-Atom">check</span> <span class="s s-Atom">for</span> <span class="s s-Atom">a</span> <span class="s s-Atom">possibility</span> <span class="s s-Atom">whether</span> <span class="s s-Atom">if</span> <span class="s s-Atom">i</span> <span class="s s-Atom">were</span> <span class="s s-Atom">to</span> <span class="s s-Atom">take</span> <span class="s s-Atom">both</span> <span class="s s-Atom">left</span> <span class="s s-Atom">subtree</span> <span class="s s-Atom">and</span> <span class="s s-Atom">right</span> <span class="s s-Atom">subtree</span> <span class="s s-Atom">would</span> <span class="s s-Atom">that</span> <span class="s s-Atom">beat</span> <span class="s s-Atom">my</span> <span class="s s-Atom">current</span> <span class="s s-Atom">max_sum</span><span class="nb">?</span>
-<span class="nv">Lets</span> <span class="s s-Atom">consider</span>
-   <span class="o">-</span><span class="mi">10</span>
-   <span class="o">/</span> <span class="s s-Atom">\</span>
-  <span class="mi">9</span>  <span class="mi">20</span>
-    <span class="o">/</span>  <span class="s s-Atom">\</span>
-   <span class="mi">15</span>   <span class="mi">7</span>
-<span class="nv">I</span> <span class="s s-Atom">do</span> <span class="s s-Atom">my</span> <span class="s s-Atom">postorder</span> <span class="s s-Atom">traversal</span> <span class="s s-Atom">with</span> <span class="s s-Atom">a</span> <span class="s s-Atom">bit</span> <span class="s s-Atom">of</span> <span class="s s-Atom">variation</span><span class="p">:</span><span class="o">-</span>
+I first set my max_sum to INT_MIN.
+I can do either either of the options presented:
+1.I can choose to take up the left subtree or drop it.
+2.I can either choose to take up the right subtree or drop it.
+3.I check for a possibility whether if i were to take both left subtree and right subtree would that beat my current max_sum?
+Lets consider
+   -10
+   / \
+  9  20
+    /  \
+   15   7
+I do my postorder traversal with a bit of variation:-
 
-<span class="s s-Atom">int</span> <span class="s s-Atom">l</span><span class="o">=</span><span class="nf">max</span><span class="p">(</span><span class="nf">max_gain</span><span class="p">(</span><span class="s s-Atom">root-&gt;left</span><span class="p">),</span><span class="mi">0</span><span class="p">);</span>
-<span class="s s-Atom">int</span> <span class="s s-Atom">r</span><span class="o">=</span><span class="nf">max</span><span class="p">(</span><span class="nf">max_gain</span><span class="p">(</span><span class="s s-Atom">root-&gt;right</span><span class="p">),</span><span class="mi">0</span><span class="p">);</span>
-<span class="nv">But</span> <span class="s s-Atom">why</span><span class="nb">?</span>
-<span class="nv">This</span> <span class="o">is</span> <span class="s s-Atom">because</span> <span class="nv">I</span> <span class="s s-Atom">have</span> <span class="s s-Atom">the</span> <span class="s s-Atom">option</span> <span class="s s-Atom">to</span> <span class="s s-Atom">choose</span> <span class="s s-Atom">the</span> <span class="s s-Atom">left</span> <span class="s s-Atom">or</span> <span class="s s-Atom">right</span> <span class="s s-Atom">subtree</span> <span class="s s-Atom">or</span> <span class="s s-Atom">whether</span> <span class="s s-Atom">i</span> <span class="s s-Atom">will</span> <span class="s s-Atom">just</span> <span class="s s-Atom">settle</span> <span class="s s-Atom">with</span> <span class="s s-Atom">my</span> <span class="s s-Atom">root</span> <span class="nb">val</span><span class="s s-Atom">ue</span><span class="p">.</span>
+int l=max(max_gain(root-&gt;left),0);
+int r=max(max_gain(root-&gt;right),0);
+But why?
+This is because I have the option to choose the left or right subtree or whether i will just settle with my root value.
 
-<span class="nv">So</span> <span class="nv">I</span> <span class="s s-Atom">do</span> <span class="s s-Atom">my</span> <span class="s s-Atom">regular</span> <span class="s s-Atom">postorder</span> <span class="s s-Atom">traversal</span> <span class="s s-Atom">and</span> <span class="s s-Atom">do</span> <span class="s s-Atom">the</span> <span class="s s-Atom">above</span> <span class="s s-Atom">steps</span>
-<span class="nv">I</span> <span class="s s-Atom">hit</span> <span class="mi">9</span>
+So I do my regular postorder traversal and do the above steps
+I hit 9
 
-    <span class="mi">9</span>
-   <span class="o">/</span> <span class="s s-Atom">\</span>
-<span class="nv">NULL</span>  <span class="nv">NULL</span>
+    9
+   / \
+NULL  NULL
 
-<span class="s s-Atom">int</span> <span class="s s-Atom">l</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="s s-Atom">r</span><span class="o">=</span><span class="mi">0</span><span class="p">(</span><span class="nv">Base</span> <span class="s s-Atom">condition</span><span class="p">)</span>
-<span class="s s-Atom">i</span> <span class="s s-Atom">store</span> <span class="s s-Atom">the</span> <span class="nb">val</span><span class="s s-Atom">ue</span> <span class="s s-Atom">of</span> <span class="mi">9</span><span class="o">+</span><span class="mi">0</span><span class="o">+</span><span class="mi">0</span> <span class="s s-Atom">in</span> <span class="s s-Atom">a</span> <span class="s s-Atom">variable</span>
-<span class="nv">Then</span> <span class="s s-Atom">check</span> <span class="s s-Atom">if</span> <span class="s s-Atom">this</span> <span class="o">is</span> <span class="s s-Atom">greater</span> <span class="s s-Atom">than</span> <span class="s s-Atom">maxsum</span> <span class="s s-Atom">or</span> <span class="o">not</span> <span class="o">is</span> <span class="s s-Atom">so</span> <span class="s s-Atom">i</span> <span class="s s-Atom">update</span> <span class="s s-Atom">it</span><span class="p">.</span>
-<span class="nv">As</span> <span class="s s-Atom">my</span> <span class="s s-Atom">max_sum</span> <span class="s s-Atom">was</span> <span class="nv">INT_MIN</span> <span class="s s-Atom">it</span> <span class="s s-Atom">gets</span> <span class="s s-Atom">updated</span> <span class="s s-Atom">to</span> <span class="mi">9</span>
+int l=0,r=0(Base condition)
+i store the value of 9+0+0 in a variable
+Then check if this is greater than maxsum or not is so i update it.
+As my max_sum was INT_MIN it gets updated to 9
 
-<span class="nv">Now</span> <span class="s s-Atom">we</span> <span class="s s-Atom">explore</span> <span class="s s-Atom">the</span> <span class="s s-Atom">right</span> <span class="s s-Atom">tree</span> <span class="s s-Atom">of</span> <span class="s s-Atom">root</span> <span class="s s-Atom">which</span> <span class="s s-Atom">reaches</span> <span class="mi">15</span>
+Now we explore the right tree of root which reaches 15
 
-    <span class="mi">15</span>
-   <span class="o">/</span> <span class="s s-Atom">\</span>
-<span class="nv">NULL</span>  <span class="nv">NULL</span>
+    15
+   / \
+NULL  NULL
 
-<span class="s s-Atom">int</span> <span class="s s-Atom">l</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="s s-Atom">r</span><span class="o">=</span><span class="mi">0</span><span class="p">(</span><span class="nv">Base</span> <span class="s s-Atom">condition</span><span class="p">)</span>
-<span class="s s-Atom">i</span> <span class="s s-Atom">store</span> <span class="s s-Atom">the</span> <span class="nb">val</span><span class="s s-Atom">ue</span> <span class="s s-Atom">of</span> <span class="mi">9</span><span class="o">+</span><span class="mi">0</span><span class="o">+</span><span class="mi">0</span> <span class="s s-Atom">in</span> <span class="s s-Atom">a</span> <span class="s s-Atom">variable</span>
-<span class="nv">Then</span> <span class="s s-Atom">check</span> <span class="s s-Atom">if</span> <span class="s s-Atom">this</span> <span class="o">is</span> <span class="s s-Atom">greater</span> <span class="s s-Atom">than</span> <span class="s s-Atom">maxsum</span> <span class="s s-Atom">or</span> <span class="o">not</span> <span class="o">is</span> <span class="s s-Atom">so</span> <span class="s s-Atom">i</span> <span class="s s-Atom">update</span> <span class="s s-Atom">it</span><span class="p">.</span>
-<span class="nv">As</span> <span class="s s-Atom">my</span> <span class="s s-Atom">max_sum</span> <span class="s s-Atom">was</span> <span class="mi">9</span> <span class="s s-Atom">it</span> <span class="s s-Atom">gets</span> <span class="s s-Atom">updated</span> <span class="s s-Atom">to</span> <span class="mi">15</span>
+int l=0,r=0(Base condition)
+i store the value of 9+0+0 in a variable
+Then check if this is greater than maxsum or not is so i update it.
+As my max_sum was 9 it gets updated to 15
 
-<span class="nv">Similarly</span> <span class="s s-Atom">with</span> <span class="mi">7</span> <span class="s s-Atom">but</span> <span class="mi">7</span> <span class="s s-Atom">doesnt</span> <span class="s s-Atom">beat</span> <span class="s s-Atom">the</span> <span class="s s-Atom">max_sum</span> <span class="s s-Atom">so</span> <span class="s s-Atom">nothing</span> <span class="s s-Atom">happens</span><span class="p">.</span>
+Similarly with 7 but 7 doesnt beat the max_sum so nothing happens.
 
-<span class="nv">Now</span> <span class="s s-Atom">we</span> <span class="s s-Atom">backtrack</span> <span class="mi">20</span>
-<span class="s s-Atom">here</span> <span class="s s-Atom">int</span> <span class="s s-Atom">r</span><span class="o">=</span><span class="mi">7</span><span class="p">(</span><span class="s s-Atom">as</span> <span class="mi">7</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)</span>
-     <span class="s s-Atom">int</span> <span class="s s-Atom">l</span><span class="o">=</span><span class="mi">15</span><span class="p">(</span><span class="s s-Atom">as</span> <span class="mi">15</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)</span>
- <span class="s s-Atom">now</span> <span class="s s-Atom">i</span> <span class="s s-Atom">check</span> <span class="s s-Atom">whether</span> <span class="mi">20</span><span class="o">+</span><span class="mi">15</span><span class="o">+</span><span class="mi">7</span><span class="p">(</span><span class="s s-Atom">considering</span> <span class="s s-Atom">this</span> <span class="s s-Atom">subtree</span> <span class="s s-Atom">to</span> <span class="s s-Atom">be</span> <span class="s s-Atom">my</span> <span class="s s-Atom">maximum</span><span class="p">)</span>
- <span class="s s-Atom">as</span> <span class="mi">42</span><span class="o">&gt;</span><span class="mi">15</span> <span class="s s-Atom">max_sum</span><span class="o">=</span><span class="mi">42</span>
- <span class="nv">Now</span> <span class="s s-Atom">what</span> <span class="s s-Atom">if</span> <span class="s s-Atom">we</span> <span class="s s-Atom">dont</span> <span class="s s-Atom">consider</span> <span class="s s-Atom">this</span> <span class="s s-Atom">subtree</span><span class="nb">?</span>
+Now we backtrack 20
+here int r=7(as 7&gt;0)
+     int l=15(as 15&gt;0)
+ now i check whether 20+15+7(considering this subtree to be my maximum)
+ as 42&gt;15 max_sum=42
+ Now what if we dont consider this subtree?
 
- <span class="nv">Then</span> <span class="s s-Atom">we</span> <span class="s s-Atom">choose</span> <span class="mi">20</span> <span class="s s-Atom">and</span> <span class="s s-Atom">maximum</span> <span class="s s-Atom">of</span> <span class="s s-Atom">its</span> <span class="s s-Atom">left</span> <span class="s s-Atom">or</span> <span class="s s-Atom">right</span> <span class="s s-Atom">subtree</span>
- <span class="s s-Atom">so</span> <span class="s s-Atom">we</span> <span class="s s-Atom">send</span> <span class="s s-Atom">return</span> <span class="s s-Atom">root-&gt;</span><span class="nb">val</span><span class="o">+</span><span class="nf">max</span><span class="p">(</span><span class="s s-Atom">l</span><span class="p">,</span><span class="s s-Atom">r</span><span class="p">)</span> <span class="s s-Atom">to</span> <span class="s s-Atom">our</span> <span class="s s-Atom">recursion</span> <span class="s s-Atom">stack</span>
- <span class="s s-Atom">so</span> <span class="s s-Atom">when</span> <span class="s s-Atom">i</span> <span class="s s-Atom">reach</span> <span class="s s-Atom">the</span> <span class="s s-Atom">root</span> <span class="s s-Atom">it</span> <span class="s s-Atom">would</span> <span class="s s-Atom">be</span> <span class="s s-Atom">like</span> <span class="s s-Atom">this</span>
-           <span class="o">-</span><span class="mi">10</span>
-           <span class="o">/</span>  <span class="s s-Atom">\</span>    <span class="s s-Atom">&lt;----</span><span class="nv">I</span> <span class="s s-Atom">considered</span> <span class="mi">15</span> <span class="s s-Atom">and</span> <span class="mi">20</span> <span class="s s-Atom">because</span> <span class="s s-Atom">its</span> <span class="s s-Atom">along</span> <span class="s s-Atom">a</span> <span class="s s-Atom">path</span> <span class="s s-Atom">and</span> <span class="o">is</span> <span class="s s-Atom">greater</span> <span class="s s-Atom">than</span> <span class="mi">20</span><span class="o">+</span><span class="mi">7</span>
-          <span class="mi">9</span>    <span class="mi">35</span>
-  <span class="s s-Atom">int</span> <span class="s s-Atom">l</span><span class="o">=</span><span class="mi">9</span>
-      <span class="s s-Atom">r</span><span class="o">=</span><span class="mi">35</span>
-      <span class="s s-Atom">check</span> <span class="s s-Atom">whether</span> <span class="mi">9</span><span class="o">+</span><span class="mi">35</span><span class="s s-Atom">+-</span><span class="mi">10</span><span class="o">=</span><span class="mi">34</span> <span class="s s-Atom">beats</span> <span class="s s-Atom">max_sum</span>
-      <span class="mi">34</span><span class="o">&lt;</span><span class="mi">42</span> <span class="s s-Atom">so</span> <span class="s s-Atom">nothing</span> <span class="s s-Atom">happens</span> <span class="s s-Atom">and</span> <span class="s s-Atom">we</span> <span class="s s-Atom">return</span> <span class="o">-</span><span class="mi">10</span><span class="o">+</span><span class="nf">max</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span><span class="mi">35</span><span class="p">)</span><span class="o">=</span><span class="mi">25</span> <span class="s s-Atom">to</span> <span class="s s-Atom">the</span> <span class="s s-Atom">caller</span> <span class="s s-Atom">after</span> <span class="s s-Atom">which</span> <span class="s s-Atom">we</span> <span class="s s-Atom">break</span> <span class="s s-Atom">out</span> <span class="s s-Atom">of</span> <span class="s s-Atom">the</span> <span class="s s-Atom">helper</span> <span class="s s-Atom">function</span> <span class="s s-Atom">and</span> <span class="s s-Atom">we</span> <span class="s s-Atom">get</span> <span class="s s-Atom">max_sum</span> <span class="s s-Atom">as</span> <span class="mf">42.</span>
+ Then we choose 20 and maximum of its left or right subtree
+ so we send return root-&gt;val+max(l,r) to our recursion stack
+ so when i reach the root it would be like this
+           -10
+           /  \    &lt;----I considered 15 and 20 because its along a path and is greater than 20+7
+          9    35
+  int l=9
+      r=35
+      check whether 9+35+-10=34 beats max_sum
+      34&lt;42 so nothing happens and we return -10+max(9,35)=25 to the caller after which we break out of the helper function and we get max_sum as 42.
 
-    <span class="s s-Atom">int</span> <span class="s s-Atom">max_sum</span><span class="o">=</span><span class="nv">INT_MIN</span><span class="p">;</span>
-    <span class="s s-Atom">int</span> <span class="nf">max_gain</span><span class="p">(</span><span class="nv">TreeNode</span><span class="o">*</span> <span class="s s-Atom">root</span><span class="p">)</span>
-    <span class="p">{</span>
-        <span class="nf">if</span><span class="p">(!</span><span class="s s-Atom">root</span><span class="p">)</span><span class="s s-Atom">return</span> <span class="mi">0</span><span class="p">;</span>
-        <span class="s s-Atom">int</span> <span class="s s-Atom">l</span><span class="o">=</span><span class="nf">max</span><span class="p">(</span><span class="nf">max_gain</span><span class="p">(</span><span class="s s-Atom">root-&gt;left</span><span class="p">),</span><span class="mi">0</span><span class="p">);</span>
-        <span class="s s-Atom">int</span> <span class="s s-Atom">r</span><span class="o">=</span><span class="nf">max</span><span class="p">(</span><span class="nf">max_gain</span><span class="p">(</span><span class="s s-Atom">root-&gt;right</span><span class="p">),</span><span class="mi">0</span><span class="p">);</span>
-        <span class="s s-Atom">int</span> <span class="s s-Atom">new_price</span><span class="o">=</span><span class="s s-Atom">root-&gt;</span><span class="nb">val</span><span class="o">+</span><span class="s s-Atom">l</span><span class="o">+</span><span class="s s-Atom">r</span><span class="p">;</span>
-        <span class="s s-Atom">max_sum</span><span class="o">=</span><span class="nf">max</span><span class="p">(</span><span class="s s-Atom">max_sum</span><span class="p">,</span><span class="s s-Atom">new_price</span><span class="p">);</span>
-        <span class="s s-Atom">return</span> <span class="s s-Atom">root-&gt;</span><span class="nb">val</span><span class="o">+</span><span class="nf">max</span><span class="p">(</span><span class="s s-Atom">l</span><span class="p">,</span><span class="s s-Atom">r</span><span class="p">);</span>
-    <span class="p">}</span>
-    <span class="s s-Atom">int</span> <span class="nf">maxPathSum</span><span class="p">(</span><span class="nv">TreeNode</span><span class="o">*</span> <span class="s s-Atom">root</span><span class="p">)</span> <span class="p">{</span>
-        <span class="nf">max_gain</span><span class="p">(</span><span class="s s-Atom">root</span><span class="p">);</span>
-        <span class="s s-Atom">return</span> <span class="s s-Atom">max_sum</span><span class="p">;</span>
-    <span class="p">}</span>
-</code></pre></div></div>
-
-
-<div class='python-solution'><h2>[Python] Recursion stack thinking process diagram -- Votes: 2794</h2><p>This problem requires quite a bit of quirky thinking steps. Take it slow until you fully grasp it.</p>
-<h2><strong>Basics</strong></h2>
-<p></p>
-<h2><strong>Base cases</strong></h2>
-<p></p>
-<h2><strong>Important Observations</strong></h2>
+    int max_sum=INT_MIN;
+    int max_gain(TreeNode* root)
+    {
+        if(!root)return 0;
+        int l=max(max_gain(root-&gt;left),0);
+        int r=max(max_gain(root-&gt;right),0);
+        int new_price=root-&gt;val+l+r;
+        max_sum=max(max_sum,new_price);
+        return root-&gt;val+max(l,r);
+    }
+    int maxPathSum(TreeNode* root) {
+        max_gain(root);
+        return max_sum;
+    }
+</code></pre></div><div class='python-solution'><h4>[Python] Recursion stack thinking process diagram [Votes: 2794]</h4><p>This problem requires quite a bit of quirky thinking steps. Take it slow until you fully grasp it.</p>
+<h4><strong>Basics</strong></h4>
+<h4><strong>Base cases</strong></h4>
+<h4><strong>Important Observations</strong></h4>
 <ul>
 <li>
 <p>These important observations are very important to understand <code>Line 9</code> and <code>Line 10</code> in the code.</p>
-</li>
-<li>
-<p>For example, in the code (<code>Line 9</code>), we do something like <code>max(get_max_gain(node.left), 0)</code>. The important part is: why do we take maximum value between 0 and maximum gain we can get from left branch? Why 0?</p>
-</li>
-<li>
-<p>Check the two images below first.<br />
-<br />
-</p>
+<ul>
+<li>For example, in the code (<code>Line 9</code>), we do something like <code>max(get_max_gain(node.left), 0)</code>. The important part is: why do we take maximum value between 0 and maximum gain we can get from left branch? Why 0?</li>
+<li>Check the two images below first.</li>
+</ul>
 </li>
 <li>
 <p>The important thing is "We can only get any sort of gain IF our branches are not below zero. If they are below zero, why do we even bother considering them? Just pick 0 in that case. Therefore, we do <code>max(&lt;some gain we might get or not&gt;, 0)</code>.</p>
 </li>
 </ul>
-<h2><strong>Going down the recursion stack for one example</strong></h2>
-<p><br />
-<br />
-</p>
+<h4><strong>Going down the recursion stack for one example</strong></h4>
 <ul>
-<li>Because of this, we do <code>Line 12</code> and <code>Line 13</code>. It is important to understand the different between looking for the maximum path INVOLVING the current node in process and what we return for the node which starts the recursion stack. <code>Line 12</code> and <code>Line 13</code> takes care of the former issue and <code>Line 15</code> (and the image below) takes care of the latter issue.</li>
-</ul>
-<p></p>
-<ul>
-<li>Because of this fact, we have to return like <code>Line 15</code>. For our example, for node 1, which is the recursion call that node 3 does for <code>max(get_max_gain(node.left), 0)</code>, node 1 cannot include both node 6 and node 7 for a path to include node 3. Therefore, we can only pick the max gain from left path or right path of node 1.</li>
+<li>
+<p>Because of this, we do <code>Line 12</code> and <code>Line 13</code>. It is important to understand the different between looking for the maximum path INVOLVING the current node in process and what we return for the node which starts the recursion stack. <code>Line 12</code> and <code>Line 13</code> takes care of the former issue and <code>Line 15</code> (and the image below) takes care of the latter issue.</p>
+</li>
+<li>
+<p>Because of this fact, we have to return like <code>Line 15</code>. For our example, for node 1, which is the recursion call that node 3 does for <code>max(get_max_gain(node.left), 0)</code>, node 1 cannot include both node 6 and node 7 for a path to include node 3. Therefore, we can only pick the max gain from left path or right path of node 1.</p>
+</li>
 </ul>
 <p><strong>Python</strong></p>
-<div class="codehilite"><pre><span></span><code><span class="mf">1.</span> <span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="p">:</span>
-<span class="mf">2.</span>     <span class="k">def</span><span class="w"> </span><span class="nf">maxPathSum</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">root</span><span class="p">:</span> <span class="n">TreeNode</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-<span class="mf">3.</span>      <span class="n">max_path</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;-inf&quot;</span><span class="p">)</span> <span class="c1"># placeholder to be updated</span>
-<span class="mf">4.</span>      <span class="k">def</span><span class="w"> </span><span class="nf">get_max_gain</span><span class="p">(</span><span class="n">node</span><span class="p">):</span>
-<span class="mf">5.</span>          <span class="k">nonlocal</span> <span class="n">max_path</span> <span class="c1"># This tells that max_path is not a local variable</span>
-<span class="mf">6.</span>          <span class="k">if</span> <span class="n">node</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-<span class="mf">7.</span>              <span class="k">return</span> <span class="mi">0</span>
-<span class="mf">8.</span>              
-<span class="mf">9.</span>          <span class="n">gain_on_left</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">get_max_gain</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">left</span><span class="p">),</span> <span class="mi">0</span><span class="p">)</span> <span class="c1"># Read the part important observations</span>
-<span class="mf">10.</span>         <span class="n">gain_on_right</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">get_max_gain</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">right</span><span class="p">),</span> <span class="mi">0</span><span class="p">)</span>  <span class="c1"># Read the part important observations</span>
-<span class="mf">11.</span>             
-<span class="mf">12.</span>         <span class="n">current_max_path</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">val</span> <span class="o">+</span> <span class="n">gain_on_left</span> <span class="o">+</span> <span class="n">gain_on_right</span> <span class="c1"># Read first three images of going down the recursion stack</span>
-<span class="mf">13.</span>         <span class="n">max_path</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">max_path</span><span class="p">,</span> <span class="n">current_max_path</span><span class="p">)</span> <span class="c1"># Read first three images of going down the recursion stack</span>
-<span class="mf">14.</span>             
-<span class="mf">15.</span>         <span class="k">return</span> <span class="n">node</span><span class="o">.</span><span class="n">val</span> <span class="o">+</span> <span class="nb">max</span><span class="p">(</span><span class="n">gain_on_left</span><span class="p">,</span> <span class="n">gain_on_right</span><span class="p">)</span> <span class="c1"># Read the last image of going down the recursion stack</span>
-<span class="mf">16.</span>             
-<span class="mf">17.</span>             
-<span class="mf">18.</span>     <span class="n">get_max_gain</span><span class="p">(</span><span class="n">root</span><span class="p">)</span> <span class="c1"># Starts the recursion chain</span>
-<span class="mf">19.</span>     <span class="k">return</span> <span class="n">max_path</span>     
-</code></pre></div></div><p style="page-break-before: always" ></p>
+<pre><code class="language-python">1. class Solution:
+2.     def maxPathSum(self, root: TreeNode) -&gt; int:
+3.      max_path = float(&quot;-inf&quot;) #### placeholder to be updated
+4.      def get_max_gain(node):
+5.          nonlocal max_path #### This tells that max_path is not a local variable
+6.          if node is None:
+7.              return 0
+8.              
+9.          gain_on_left = max(get_max_gain(node.left), 0) #### Read the part important observations
+10.         gain_on_right = max(get_max_gain(node.right), 0)  #### Read the part important observations
+11.             
+12.         current_max_path = node.val + gain_on_left + gain_on_right #### Read first three images of going down the recursion stack
+13.         max_path = max(max_path, current_max_path) #### Read first three images of going down the recursion stack
+14.             
+15.         return node.val + max(gain_on_left, gain_on_right) #### Read the last image of going down the recursion stack
+16.             
+17.             
+18.     get_max_gain(root) #### Starts the recursion chain
+19.     return max_path     
+</code></pre></div>

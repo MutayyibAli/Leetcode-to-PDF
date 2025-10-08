@@ -1,7 +1,7 @@
-<div class='cpp-solution'><h2>Easy Solution with Simple Explanation (Using Two Pointer) -- Votes: 727</h2><h3><strong><em>Please Upvote my solution, if you find it helpful ;)</em></strong></h3>
-<h2>Intuition</h2>
+<div class='cpp-solution'><h4>Easy Solution with Simple Explanation (Using Two Pointer) [Votes: 727]</h4><h5><strong><em>Please Upvote my solution, if you find it helpful ;)</em></strong></h5>
+<h4>Intuition</h4>
 <p>The goal of the problem is to reverse the order of vowels in a given string while keeping the non-vowel characters in their original positions. To achieve this, we can use two pointers technique: one pointer starting from the beginning of the string and another starting from the end. We will move these pointers towards each other, swapping the vowels they point to until they meet in the middle of the string.</p>
-<h2>Approach</h2>
+<h4>Approach</h4>
 <ol>
 <li>
 <p>Convert the input string s to an array of characters word. This step is necessary because strings are immutable in Java, and we need to modify the vowels' positions.</p>
@@ -16,11 +16,9 @@
 <p>Use a while loop to iterate until start is no longer less than end. This loop ensures that the pointers will not cross each other, and we process the characters in the middle of the string only once.</p>
 </li>
 </ol>
-<p><strong>Inside the loop:</strong></p>
+<p><strong>Inside the loop:</strong>
+1. Move the start pointer towards the end of the string until it points to a vowel character. We do this by using the indexOf method to find the index of the character in the vowels string. If the character is not a vowel, we keep moving the start pointer.</p>
 <ol>
-<li>
-<p>Move the start pointer towards the end of the string until it points to a vowel character. We do this by using the indexOf method to find the index of the character in the vowels string. If the character is not a vowel, we keep moving the start pointer.</p>
-</li>
 <li>
 <p>Similarly, move the end pointer towards the beginning of the string until it points to a vowel character. Again, we use the indexOf method to check if the character is a vowel and keep moving the end pointer if it is not.</p>
 </li>
@@ -32,269 +30,111 @@
 </li>
 </ol>
 <p>After the loop finishes, the word array will contain the string with the reversed vowels. Convert the character array back to a String and return the result.</p>
-<h2>Complexity</h2>
+<h4>Complexity</h4>
 <ul>
 <li>
-<p>Time complexity:<br />
-  The time complexity of this solution is $$O(n)$$, where n is the length of the input string s. The two pointers start and end move towards each other, and each character is processed once.</p>
+<p>Time complexity:
+The time complexity of this solution is $$O(n)$$, where n is the length of the input string s. The two pointers start and end move towards each other, and each character is processed once.</p>
 </li>
 <li>
-<p>Space complexity:<br />
-  The space complexity of this solution is $$O(n)$$ because we create a character array word to store the characters of the input string. The space used is proportional to the length of the input string. Other than that, we use a constant amount of extra space for the vowels string and a few integer variables, which doesn't depend on the input size.</p>
+<p>Space complexity:
+The space complexity of this solution is $$O(n)$$ because we create a character array word to store the characters of the input string. The space used is proportional to the length of the input string. Other than that, we use a constant amount of extra space for the vowels string and a few integer variables, which doesn't depend on the input size.</p>
 </li>
 </ul>
-<h2>Code</h2>
-<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">java</span><span class="w"> </span>
-<span class="kd">class</span> <span class="nc">Solution</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="nf">reverseVowels</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">s</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="kt">char</span><span class="w"> </span><span class="n">word</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">s</span><span class="p">.</span><span class="na">toCharArray</span><span class="p">();</span>
-<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">start</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">end</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">s</span><span class="p">.</span><span class="na">length</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
-<span class="w">        </span><span class="n">String</span><span class="w"> </span><span class="n">vowels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;aeiouAEIOU&quot;</span><span class="p">;</span>
+<h4>Code</h4>
+<pre><code class="language-java">class Solution {
+    public String reverseVowels(String s) {
+        char[] word = s.toCharArray();
+        int start = 0;
+        int end = s.length() - 1;
+        String vowels = &quot;aeiouAEIOU&quot;;
 
-<span class="w">        </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">start</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">end</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="c1">// Move start pointer until it points to a vowel</span>
-<span class="w">            </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">start</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">end</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">vowels</span><span class="p">.</span><span class="na">indexOf</span><span class="p">(</span><span class="n">word</span><span class="o">[</span><span class="n">start</span><span class="o">]</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="n">start</span><span class="o">++</span><span class="p">;</span>
-<span class="w">            </span><span class="p">}</span>
+        while (start &lt; end) {
+            // Move start pointer until it points to a vowel
+            while (start &lt; end &amp;&amp; vowels.indexOf(word[start]) == -1) {
+                start++;
+            }
 
-<span class="w">            </span><span class="c1">// Move end pointer until it points to a vowel</span>
-<span class="w">            </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">start</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">end</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">vowels</span><span class="p">.</span><span class="na">indexOf</span><span class="p">(</span><span class="n">word</span><span class="o">[</span><span class="n">end</span><span class="o">]</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="n">end</span><span class="o">--</span><span class="p">;</span>
-<span class="w">            </span><span class="p">}</span>
+            // Move end pointer until it points to a vowel
+            while (start &lt; end &amp;&amp; vowels.indexOf(word[end]) == -1) {
+                end--;
+            }
 
-<span class="w">            </span><span class="c1">// Swap the vowels</span>
-<span class="w">            </span><span class="kt">char</span><span class="w"> </span><span class="n">temp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">word</span><span class="o">[</span><span class="n">start</span><span class="o">]</span><span class="p">;</span>
-<span class="w">            </span><span class="n">word</span><span class="o">[</span><span class="n">start</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">word</span><span class="o">[</span><span class="n">end</span><span class="o">]</span><span class="p">;</span>
-<span class="w">            </span><span class="n">word</span><span class="o">[</span><span class="n">end</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">temp</span><span class="p">;</span>
+            // Swap the vowels
+            char temp = word[start];
+            word[start] = word[end];
+            word[end] = temp;
 
-<span class="w">            </span><span class="c1">// Move the pointers towards each other</span>
-<span class="w">            </span><span class="n">start</span><span class="o">++</span><span class="p">;</span>
-<span class="w">            </span><span class="n">end</span><span class="o">--</span><span class="p">;</span>
-<span class="w">        </span><span class="p">}</span>
+            // Move the pointers towards each other
+            start++;
+            end--;
+        }
 
-<span class="w">        </span><span class="n">String</span><span class="w"> </span><span class="n">answer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">String</span><span class="p">(</span><span class="n">word</span><span class="p">);</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">answer</span><span class="p">;</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
+        String answer = new String(word);
+        return answer;
+    }
+}
+</code></pre>
+<pre><code class="language-python">class Solution(object):
+    def reverseVowels(self, s):
+        #### Convert the input string to a character array.
+        word = list(s)
+        start = 0
+        end = len(s) - 1
+        vowels = &quot;aeiouAEIOU&quot;
 
-<div class="codehilite"><pre><span></span><code><span class="n">Language</span><span class="p">:</span> <span class="n">python</span> 
-<span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">reverseVowels</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">s</span><span class="p">):</span>
-        <span class="c1"># Convert the input string to a character array.</span>
-        <span class="n">word</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
-        <span class="n">start</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="n">end</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
-        <span class="n">vowels</span> <span class="o">=</span> <span class="s2">&quot;aeiouAEIOU&quot;</span>
+        #### Loop until the start pointer is no longer less than the end pointer.
+        while start &lt; end:
+            #### Move the start pointer towards the end until it points to a vowel.
+            while start &lt; end and vowels.find(word[start]) == -1:
+                start += 1
 
-        <span class="c1"># Loop until the start pointer is no longer less than the end pointer.</span>
-        <span class="k">while</span> <span class="n">start</span> <span class="o">&lt;</span> <span class="n">end</span><span class="p">:</span>
-            <span class="c1"># Move the start pointer towards the end until it points to a vowel.</span>
-            <span class="k">while</span> <span class="n">start</span> <span class="o">&lt;</span> <span class="n">end</span> <span class="ow">and</span> <span class="n">vowels</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">word</span><span class="p">[</span><span class="n">start</span><span class="p">])</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
-                <span class="n">start</span> <span class="o">+=</span> <span class="mi">1</span>
+            #### Move the end pointer towards the start until it points to a vowel.
+            while start &lt; end and vowels.find(word[end]) == -1:
+                end -= 1
 
-            <span class="c1"># Move the end pointer towards the start until it points to a vowel.</span>
-            <span class="k">while</span> <span class="n">start</span> <span class="o">&lt;</span> <span class="n">end</span> <span class="ow">and</span> <span class="n">vowels</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">word</span><span class="p">[</span><span class="n">end</span><span class="p">])</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
-                <span class="n">end</span> <span class="o">-=</span> <span class="mi">1</span>
+            #### Swap the vowels found at the start and end positions.
+            word[start], word[end] = word[end], word[start]
 
-            <span class="c1"># Swap the vowels found at the start and end positions.</span>
-            <span class="n">word</span><span class="p">[</span><span class="n">start</span><span class="p">],</span> <span class="n">word</span><span class="p">[</span><span class="n">end</span><span class="p">]</span> <span class="o">=</span> <span class="n">word</span><span class="p">[</span><span class="n">end</span><span class="p">],</span> <span class="n">word</span><span class="p">[</span><span class="n">start</span><span class="p">]</span>
+            #### Move the pointers towards each other for the next iteration.
+            start += 1
+            end -= 1
 
-            <span class="c1"># Move the pointers towards each other for the next iteration.</span>
-            <span class="n">start</span> <span class="o">+=</span> <span class="mi">1</span>
-            <span class="n">end</span> <span class="o">-=</span> <span class="mi">1</span>
+        #### Convert the character array back to a string and return the result.
+        return &quot;&quot;.join(word)
+</code></pre>
+<pre><code class="language-cpp">class Solution {
+public:
+    string reverseVowels(string s) {
+        // Convert the input string to a character array.
+        string word = s;
+        int start = 0;
+        int end = s.length() - 1;
+        string vowels = &quot;aeiouAEIOU&quot;;
 
-        <span class="c1"># Convert the character array back to a string and return the result.</span>
-        <span class="k">return</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">word</span><span class="p">)</span>
-</code></pre></div>
+        // Loop until the start pointer is no longer less than the end pointer.
+        while (start &lt; end) {
+            // Move the start pointer towards the end until it points to a vowel.
+            while (start &lt; end &amp;&amp; vowels.find(word[start]) == string::npos) {
+                start++;
+            }
 
-<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">C</span><span class="o">++</span><span class="w"> </span>
-<span class="n">class</span><span class="w"> </span><span class="n">Solution</span><span class="w"> </span><span class="p">{</span>
-<span class="n">public</span><span class="o">:</span>
-<span class="w">    </span><span class="n">string</span><span class="w"> </span><span class="n">reverseVowels</span><span class="p">(</span><span class="n">string</span><span class="w"> </span><span class="n">s</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="c1">// Convert the input string to a character array.</span>
-<span class="w">        </span><span class="n">string</span><span class="w"> </span><span class="n">word</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">s</span><span class="p">;</span>
-<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">start</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">end</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">s</span><span class="p">.</span><span class="n">length</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
-<span class="w">        </span><span class="n">string</span><span class="w"> </span><span class="n">vowels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;aeiouAEIOU&quot;</span><span class="p">;</span>
+            // Move the end pointer towards the start until it points to a vowel.
+            while (start &lt; end &amp;&amp; vowels.find(word[end]) == string::npos) {
+                end--;
+            }
 
-<span class="w">        </span><span class="c1">// Loop until the start pointer is no longer less than the end pointer.</span>
-<span class="w">        </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">start</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">end</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="c1">// Move the start pointer towards the end until it points to a vowel.</span>
-<span class="w">            </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">start</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">end</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">vowels</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="n">word</span><span class="p">[</span><span class="n">start</span><span class="p">])</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">string</span><span class="o">::</span><span class="n">npos</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="n">start</span><span class="o">++</span><span class="p">;</span>
-<span class="w">            </span><span class="p">}</span>
+            // Swap the vowels found at the start and end positions.
+            swap(word[start], word[end]);
 
-<span class="w">            </span><span class="c1">// Move the end pointer towards the start until it points to a vowel.</span>
-<span class="w">            </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">start</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">end</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">vowels</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="n">word</span><span class="p">[</span><span class="n">end</span><span class="p">])</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">string</span><span class="o">::</span><span class="n">npos</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="n">end</span><span class="o">--</span><span class="p">;</span>
-<span class="w">            </span><span class="p">}</span>
+            // Move the pointers towards each other for the next iteration.
+            start++;
+            end--;
+        }
 
-<span class="w">            </span><span class="c1">// Swap the vowels found at the start and end positions.</span>
-<span class="w">            </span><span class="n">swap</span><span class="p">(</span><span class="n">word</span><span class="p">[</span><span class="n">start</span><span class="p">],</span><span class="w"> </span><span class="n">word</span><span class="p">[</span><span class="n">end</span><span class="p">]);</span>
-
-<span class="w">            </span><span class="c1">// Move the pointers towards each other for the next iteration.</span>
-<span class="w">            </span><span class="n">start</span><span class="o">++</span><span class="p">;</span>
-<span class="w">            </span><span class="n">end</span><span class="o">--</span><span class="p">;</span>
-<span class="w">        </span><span class="p">}</span>
-
-<span class="w">        </span><span class="c1">// Return the modified string.</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">word</span><span class="p">;</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">};</span>
-</code></pre></div>
-
-<h3><strong><em>Please Upvote my solution, if you find it helpful ;)</em></strong></h3>
-<p></p></div>
-
-
-<div class='python-solution'><h2>Easy Solution with Simple Explanation (Using Two Pointer) -- Votes: 727</h2><h3><strong><em>Please Upvote my solution, if you find it helpful ;)</em></strong></h3>
-<h2>Intuition</h2>
-<p>The goal of the problem is to reverse the order of vowels in a given string while keeping the non-vowel characters in their original positions. To achieve this, we can use two pointers technique: one pointer starting from the beginning of the string and another starting from the end. We will move these pointers towards each other, swapping the vowels they point to until they meet in the middle of the string.</p>
-<h2>Approach</h2>
-<ol>
-<li>
-<p>Convert the input string s to an array of characters word. This step is necessary because strings are immutable in Java, and we need to modify the vowels' positions.</p>
-</li>
-<li>
-<p>Initialize two pointers, start and end, to the first and last characters of the string, respectively.</p>
-</li>
-<li>
-<p>Create a String variable vowels containing all the vowel characters (both lowercase and uppercase).</p>
-</li>
-<li>
-<p>Use a while loop to iterate until start is no longer less than end. This loop ensures that the pointers will not cross each other, and we process the characters in the middle of the string only once.</p>
-</li>
-</ol>
-<p><strong>Inside the loop:</strong></p>
-<ol>
-<li>
-<p>Move the start pointer towards the end of the string until it points to a vowel character. We do this by using the indexOf method to find the index of the character in the vowels string. If the character is not a vowel, we keep moving the start pointer.</p>
-</li>
-<li>
-<p>Similarly, move the end pointer towards the beginning of the string until it points to a vowel character. Again, we use the indexOf method to check if the character is a vowel and keep moving the end pointer if it is not.</p>
-</li>
-<li>
-<p>Swap the vowels found at the start and end positions in the word array.</p>
-</li>
-<li>
-<p>Move the start pointer one step ahead and the end pointer one step back to continue searching for more vowels.</p>
-</li>
-</ol>
-<p>After the loop finishes, the word array will contain the string with the reversed vowels. Convert the character array back to a String and return the result.</p>
-<h2>Complexity</h2>
-<ul>
-<li>
-<p>Time complexity:<br />
-  The time complexity of this solution is $$O(n)$$, where n is the length of the input string s. The two pointers start and end move towards each other, and each character is processed once.</p>
-</li>
-<li>
-<p>Space complexity:<br />
-  The space complexity of this solution is $$O(n)$$ because we create a character array word to store the characters of the input string. The space used is proportional to the length of the input string. Other than that, we use a constant amount of extra space for the vowels string and a few integer variables, which doesn't depend on the input size.</p>
-</li>
-</ul>
-<h2>Code</h2>
-<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">java</span><span class="w"> </span>
-<span class="kd">class</span> <span class="nc">Solution</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="nf">reverseVowels</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">s</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="kt">char</span><span class="w"> </span><span class="n">word</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">s</span><span class="p">.</span><span class="na">toCharArray</span><span class="p">();</span>
-<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">start</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">end</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">s</span><span class="p">.</span><span class="na">length</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
-<span class="w">        </span><span class="n">String</span><span class="w"> </span><span class="n">vowels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;aeiouAEIOU&quot;</span><span class="p">;</span>
-
-<span class="w">        </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">start</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">end</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="c1">// Move start pointer until it points to a vowel</span>
-<span class="w">            </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">start</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">end</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">vowels</span><span class="p">.</span><span class="na">indexOf</span><span class="p">(</span><span class="n">word</span><span class="o">[</span><span class="n">start</span><span class="o">]</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="n">start</span><span class="o">++</span><span class="p">;</span>
-<span class="w">            </span><span class="p">}</span>
-
-<span class="w">            </span><span class="c1">// Move end pointer until it points to a vowel</span>
-<span class="w">            </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">start</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">end</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">vowels</span><span class="p">.</span><span class="na">indexOf</span><span class="p">(</span><span class="n">word</span><span class="o">[</span><span class="n">end</span><span class="o">]</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="n">end</span><span class="o">--</span><span class="p">;</span>
-<span class="w">            </span><span class="p">}</span>
-
-<span class="w">            </span><span class="c1">// Swap the vowels</span>
-<span class="w">            </span><span class="kt">char</span><span class="w"> </span><span class="n">temp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">word</span><span class="o">[</span><span class="n">start</span><span class="o">]</span><span class="p">;</span>
-<span class="w">            </span><span class="n">word</span><span class="o">[</span><span class="n">start</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">word</span><span class="o">[</span><span class="n">end</span><span class="o">]</span><span class="p">;</span>
-<span class="w">            </span><span class="n">word</span><span class="o">[</span><span class="n">end</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">temp</span><span class="p">;</span>
-
-<span class="w">            </span><span class="c1">// Move the pointers towards each other</span>
-<span class="w">            </span><span class="n">start</span><span class="o">++</span><span class="p">;</span>
-<span class="w">            </span><span class="n">end</span><span class="o">--</span><span class="p">;</span>
-<span class="w">        </span><span class="p">}</span>
-
-<span class="w">        </span><span class="n">String</span><span class="w"> </span><span class="n">answer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">String</span><span class="p">(</span><span class="n">word</span><span class="p">);</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">answer</span><span class="p">;</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
-
-<div class="codehilite"><pre><span></span><code><span class="n">Language</span><span class="p">:</span> <span class="n">python</span> 
-<span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">reverseVowels</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">s</span><span class="p">):</span>
-        <span class="c1"># Convert the input string to a character array.</span>
-        <span class="n">word</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
-        <span class="n">start</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="n">end</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
-        <span class="n">vowels</span> <span class="o">=</span> <span class="s2">&quot;aeiouAEIOU&quot;</span>
-
-        <span class="c1"># Loop until the start pointer is no longer less than the end pointer.</span>
-        <span class="k">while</span> <span class="n">start</span> <span class="o">&lt;</span> <span class="n">end</span><span class="p">:</span>
-            <span class="c1"># Move the start pointer towards the end until it points to a vowel.</span>
-            <span class="k">while</span> <span class="n">start</span> <span class="o">&lt;</span> <span class="n">end</span> <span class="ow">and</span> <span class="n">vowels</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">word</span><span class="p">[</span><span class="n">start</span><span class="p">])</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
-                <span class="n">start</span> <span class="o">+=</span> <span class="mi">1</span>
-
-            <span class="c1"># Move the end pointer towards the start until it points to a vowel.</span>
-            <span class="k">while</span> <span class="n">start</span> <span class="o">&lt;</span> <span class="n">end</span> <span class="ow">and</span> <span class="n">vowels</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">word</span><span class="p">[</span><span class="n">end</span><span class="p">])</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
-                <span class="n">end</span> <span class="o">-=</span> <span class="mi">1</span>
-
-            <span class="c1"># Swap the vowels found at the start and end positions.</span>
-            <span class="n">word</span><span class="p">[</span><span class="n">start</span><span class="p">],</span> <span class="n">word</span><span class="p">[</span><span class="n">end</span><span class="p">]</span> <span class="o">=</span> <span class="n">word</span><span class="p">[</span><span class="n">end</span><span class="p">],</span> <span class="n">word</span><span class="p">[</span><span class="n">start</span><span class="p">]</span>
-
-            <span class="c1"># Move the pointers towards each other for the next iteration.</span>
-            <span class="n">start</span> <span class="o">+=</span> <span class="mi">1</span>
-            <span class="n">end</span> <span class="o">-=</span> <span class="mi">1</span>
-
-        <span class="c1"># Convert the character array back to a string and return the result.</span>
-        <span class="k">return</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">word</span><span class="p">)</span>
-</code></pre></div>
-
-<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">C</span><span class="o">++</span><span class="w"> </span>
-<span class="n">class</span><span class="w"> </span><span class="n">Solution</span><span class="w"> </span><span class="p">{</span>
-<span class="n">public</span><span class="o">:</span>
-<span class="w">    </span><span class="n">string</span><span class="w"> </span><span class="n">reverseVowels</span><span class="p">(</span><span class="n">string</span><span class="w"> </span><span class="n">s</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="c1">// Convert the input string to a character array.</span>
-<span class="w">        </span><span class="n">string</span><span class="w"> </span><span class="n">word</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">s</span><span class="p">;</span>
-<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">start</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">end</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">s</span><span class="p">.</span><span class="n">length</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
-<span class="w">        </span><span class="n">string</span><span class="w"> </span><span class="n">vowels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;aeiouAEIOU&quot;</span><span class="p">;</span>
-
-<span class="w">        </span><span class="c1">// Loop until the start pointer is no longer less than the end pointer.</span>
-<span class="w">        </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">start</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">end</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="c1">// Move the start pointer towards the end until it points to a vowel.</span>
-<span class="w">            </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">start</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">end</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">vowels</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="n">word</span><span class="p">[</span><span class="n">start</span><span class="p">])</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">string</span><span class="o">::</span><span class="n">npos</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="n">start</span><span class="o">++</span><span class="p">;</span>
-<span class="w">            </span><span class="p">}</span>
-
-<span class="w">            </span><span class="c1">// Move the end pointer towards the start until it points to a vowel.</span>
-<span class="w">            </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">start</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">end</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">vowels</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="n">word</span><span class="p">[</span><span class="n">end</span><span class="p">])</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">string</span><span class="o">::</span><span class="n">npos</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="n">end</span><span class="o">--</span><span class="p">;</span>
-<span class="w">            </span><span class="p">}</span>
-
-<span class="w">            </span><span class="c1">// Swap the vowels found at the start and end positions.</span>
-<span class="w">            </span><span class="n">swap</span><span class="p">(</span><span class="n">word</span><span class="p">[</span><span class="n">start</span><span class="p">],</span><span class="w"> </span><span class="n">word</span><span class="p">[</span><span class="n">end</span><span class="p">]);</span>
-
-<span class="w">            </span><span class="c1">// Move the pointers towards each other for the next iteration.</span>
-<span class="w">            </span><span class="n">start</span><span class="o">++</span><span class="p">;</span>
-<span class="w">            </span><span class="n">end</span><span class="o">--</span><span class="p">;</span>
-<span class="w">        </span><span class="p">}</span>
-
-<span class="w">        </span><span class="c1">// Return the modified string.</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">word</span><span class="p">;</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">};</span>
-</code></pre></div>
-
-<h3><strong><em>Please Upvote my solution, if you find it helpful ;)</em></strong></h3>
-<p></p></div><p style="page-break-before: always" ></p>
+        // Return the modified string.
+        return word;
+    }
+};
+</code></pre>
+<h5><strong><em>Please Upvote my solution, if you find it helpful ;)</em></strong></h5></div>

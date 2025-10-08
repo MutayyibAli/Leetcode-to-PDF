@@ -1,172 +1,72 @@
-<div class='cpp-solution'><h2>Image Explanation🏆- [Fastest & Easiest - With Dry Run :) ] - C++/Java/Python -- Votes: 75</h2><h2>Video Solution (<code>Aryan Mittal</code>) - Link in LeetCode Profile</h2>
-<p><code>Smallest Number in Infinite Set</code> by <code>Aryan Mittal</code><br />
-</p>
-<h2>Approach &amp; Intution</h2>
-<p><br />
-<br />
-<br />
-<br />
-<br />
-<br />
-</p>
-<h2>Code</h2>
-<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">C</span><span class="o">++</span><span class="w"> </span>
-<span class="n">class</span><span class="w"> </span><span class="n">SmallestInfiniteSet</span><span class="w"> </span><span class="p">{</span>
-<span class="n">public</span><span class="o">:</span>
-<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">cur</span><span class="p">;</span>
-<span class="w">    </span><span class="n">set</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="w"> </span><span class="n">s</span><span class="p">;</span>
-<span class="w">    </span><span class="n">SmallestInfiniteSet</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="n">cur</span><span class="o">=</span><span class="mi">1</span><span class="p">;</span>
-<span class="w">    </span><span class="p">}</span>
+<div class='cpp-solution'><h4>Image Explanation🏆- [Fastest & Easiest - With Dry Run :) ] - C++/Java/Python [Votes: 75]</h4><h4>Video Solution (<code>Aryan Mittal</code>) - Link in LeetCode Profile</h4>
+<p><code>Smallest Number in Infinite Set</code> by <code>Aryan Mittal</code></p>
+<h4>Approach &amp; Intution</h4>
+<h4>Code</h4>
+<pre><code class="language-cpp">class SmallestInfiniteSet {
+public:
+    int cur;
+    set&lt;int&gt; s;
+    SmallestInfiniteSet() {
+        cur=1;
+    }
 
-<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">popSmallest</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="k">if</span><span class="p">(</span><span class="n">s</span><span class="p">.</span><span class="n">size</span><span class="p">()){</span>
-<span class="w">            </span><span class="kt">int</span><span class="w"> </span><span class="n">res</span><span class="o">=*</span><span class="n">s</span><span class="p">.</span><span class="n">begin</span><span class="p">();</span><span class="w"> </span><span class="n">s</span><span class="p">.</span><span class="n">erase</span><span class="p">(</span><span class="n">res</span><span class="p">);</span>
-<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="n">res</span><span class="p">;</span>
-<span class="w">        </span><span class="p">}</span><span class="k">else</span><span class="p">{</span>
-<span class="w">            </span><span class="n">cur</span><span class="o">++</span><span class="p">;</span>
-<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="n">cur</span><span class="mi">-1</span><span class="p">;</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">    </span><span class="p">}</span>
+    int popSmallest() {
+        if(s.size()){
+            int res=*s.begin(); s.erase(res);
+            return res;
+        }else{
+            cur++;
+            return cur-1;
+        }
+    }
 
-<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="n">addBack</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">num</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="k">if</span><span class="p">(</span><span class="n">cur</span><span class="o">&gt;</span><span class="n">num</span><span class="p">)</span><span class="w"> </span><span class="n">s</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">num</span><span class="p">);</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">};</span>
+    void addBack(int num) {
+        if(cur&gt;num) s.insert(num);
+    }
+};
+</code></pre>
+<pre><code class="language-Java">class SmallestInfiniteSet {
+    int cur;
+    Set&lt;Integer&gt; s;
+
+    public SmallestInfiniteSet() {
+        cur = 1;
+        s = new HashSet&lt;&gt;();
+    }
+
+    public int popSmallest() {
+        if (!s.isEmpty()) {
+            int res = Collections.min(s);
+            s.remove(res);
+            return res;
+        } else {
+            cur++;
+            return cur - 1;
+        }
+    }
+
+    public void addBack(int num) {
+        if (cur &gt; num) {
+            s.add(num);
+        }
+    }
+}
+</code></pre>
+<pre><code class="language-Python">class SmallestInfiniteSet:
+    def __init__(self):
+        self.cur = 1
+        self.s = set()
+
+    def popSmallest(self):
+        if self.s:
+            res = min(self.s)
+            self.s.remove(res)
+            return res
+        else:
+            self.cur += 1
+            return self.cur - 1
+
+    def addBack(self, num):
+        if self.cur &gt; num:
+            self.s.add(num) 
 </code></pre></div>
-
-<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">Java</span><span class="w"> </span>
-<span class="kd">class</span> <span class="nc">SmallestInfiniteSet</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">cur</span><span class="p">;</span>
-<span class="w">    </span><span class="n">Set</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span><span class="w"> </span><span class="n">s</span><span class="p">;</span>
-
-<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="nf">SmallestInfiniteSet</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="n">cur</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
-<span class="w">        </span><span class="n">s</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">HashSet</span><span class="o">&lt;&gt;</span><span class="p">();</span>
-<span class="w">    </span><span class="p">}</span>
-
-<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="nf">popSmallest</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">s</span><span class="p">.</span><span class="na">isEmpty</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="kt">int</span><span class="w"> </span><span class="n">res</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Collections</span><span class="p">.</span><span class="na">min</span><span class="p">(</span><span class="n">s</span><span class="p">);</span>
-<span class="w">            </span><span class="n">s</span><span class="p">.</span><span class="na">remove</span><span class="p">(</span><span class="n">res</span><span class="p">);</span>
-<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="n">res</span><span class="p">;</span>
-<span class="w">        </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="n">cur</span><span class="o">++</span><span class="p">;</span>
-<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="n">cur</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">    </span><span class="p">}</span>
-
-<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">addBack</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">num</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">cur</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">num</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="n">s</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="n">num</span><span class="p">);</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
-
-<div class="codehilite"><pre><span></span><code><span class="n">Language</span><span class="p">:</span> <span class="n">Python</span> 
-<span class="k">class</span><span class="w"> </span><span class="nc">SmallestInfiniteSet</span><span class="p">:</span>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">cur</span> <span class="o">=</span> <span class="mi">1</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">s</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">popSmallest</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">s</span><span class="p">:</span>
-            <span class="n">res</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">s</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">s</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
-            <span class="k">return</span> <span class="n">res</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">cur</span> <span class="o">+=</span> <span class="mi">1</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">cur</span> <span class="o">-</span> <span class="mi">1</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">addBack</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num</span><span class="p">):</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cur</span> <span class="o">&gt;</span> <span class="n">num</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">s</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">num</span><span class="p">)</span> 
-</code></pre></div></div>
-
-
-<div class='python-solution'><h2>Image Explanation🏆- [Fastest & Easiest - With Dry Run :) ] - C++/Java/Python -- Votes: 75</h2><h2>Video Solution (<code>Aryan Mittal</code>) - Link in LeetCode Profile</h2>
-<p><code>Smallest Number in Infinite Set</code> by <code>Aryan Mittal</code><br />
-</p>
-<h2>Approach &amp; Intution</h2>
-<p><br />
-<br />
-<br />
-<br />
-<br />
-<br />
-</p>
-<h2>Code</h2>
-<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">C</span><span class="o">++</span><span class="w"> </span>
-<span class="n">class</span><span class="w"> </span><span class="n">SmallestInfiniteSet</span><span class="w"> </span><span class="p">{</span>
-<span class="n">public</span><span class="o">:</span>
-<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">cur</span><span class="p">;</span>
-<span class="w">    </span><span class="n">set</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="w"> </span><span class="n">s</span><span class="p">;</span>
-<span class="w">    </span><span class="n">SmallestInfiniteSet</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="n">cur</span><span class="o">=</span><span class="mi">1</span><span class="p">;</span>
-<span class="w">    </span><span class="p">}</span>
-
-<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">popSmallest</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="k">if</span><span class="p">(</span><span class="n">s</span><span class="p">.</span><span class="n">size</span><span class="p">()){</span>
-<span class="w">            </span><span class="kt">int</span><span class="w"> </span><span class="n">res</span><span class="o">=*</span><span class="n">s</span><span class="p">.</span><span class="n">begin</span><span class="p">();</span><span class="w"> </span><span class="n">s</span><span class="p">.</span><span class="n">erase</span><span class="p">(</span><span class="n">res</span><span class="p">);</span>
-<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="n">res</span><span class="p">;</span>
-<span class="w">        </span><span class="p">}</span><span class="k">else</span><span class="p">{</span>
-<span class="w">            </span><span class="n">cur</span><span class="o">++</span><span class="p">;</span>
-<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="n">cur</span><span class="mi">-1</span><span class="p">;</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">    </span><span class="p">}</span>
-
-<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="n">addBack</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">num</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="k">if</span><span class="p">(</span><span class="n">cur</span><span class="o">&gt;</span><span class="n">num</span><span class="p">)</span><span class="w"> </span><span class="n">s</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">num</span><span class="p">);</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">};</span>
-</code></pre></div>
-
-<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">Java</span><span class="w"> </span>
-<span class="kd">class</span> <span class="nc">SmallestInfiniteSet</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">cur</span><span class="p">;</span>
-<span class="w">    </span><span class="n">Set</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span><span class="w"> </span><span class="n">s</span><span class="p">;</span>
-
-<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="nf">SmallestInfiniteSet</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="n">cur</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
-<span class="w">        </span><span class="n">s</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">HashSet</span><span class="o">&lt;&gt;</span><span class="p">();</span>
-<span class="w">    </span><span class="p">}</span>
-
-<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="nf">popSmallest</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">s</span><span class="p">.</span><span class="na">isEmpty</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="kt">int</span><span class="w"> </span><span class="n">res</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Collections</span><span class="p">.</span><span class="na">min</span><span class="p">(</span><span class="n">s</span><span class="p">);</span>
-<span class="w">            </span><span class="n">s</span><span class="p">.</span><span class="na">remove</span><span class="p">(</span><span class="n">res</span><span class="p">);</span>
-<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="n">res</span><span class="p">;</span>
-<span class="w">        </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="n">cur</span><span class="o">++</span><span class="p">;</span>
-<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="n">cur</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">    </span><span class="p">}</span>
-
-<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">addBack</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">num</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">cur</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">num</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="n">s</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="n">num</span><span class="p">);</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
-
-<div class="codehilite"><pre><span></span><code><span class="n">Language</span><span class="p">:</span> <span class="n">Python</span> 
-<span class="k">class</span><span class="w"> </span><span class="nc">SmallestInfiniteSet</span><span class="p">:</span>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">cur</span> <span class="o">=</span> <span class="mi">1</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">s</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">popSmallest</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">s</span><span class="p">:</span>
-            <span class="n">res</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">s</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">s</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
-            <span class="k">return</span> <span class="n">res</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">cur</span> <span class="o">+=</span> <span class="mi">1</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">cur</span> <span class="o">-</span> <span class="mi">1</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">addBack</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num</span><span class="p">):</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cur</span> <span class="o">&gt;</span> <span class="n">num</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">s</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">num</span><span class="p">)</span> 
-</code></pre></div></div><p style="page-break-before: always" ></p>

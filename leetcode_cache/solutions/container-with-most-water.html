@@ -1,44 +1,40 @@
-<div class='cpp-solution'><h2>✅Best Method 🔥 || C++ || JAVA || PYTHON || Beginner Friendly🔥🔥🔥 -- Votes: 1385</h2><h2>Intuition:</h2>
-<p>The two-pointer technique starts with the widest container and moves the pointers inward based on the comparison of heights.<br />
+<div class='cpp-solution'><h4>✅Best Method 🔥 || C++ || JAVA || PYTHON || Beginner Friendly🔥🔥🔥 [Votes: 1385]</h4><h4>Intuition:</h4>
+<p>The two-pointer technique starts with the widest container and moves the pointers inward based on the comparison of heights. 
 Increasing the width of the container can only lead to a larger area if the height of the new boundary is greater. By moving the pointers towards the center, we explore containers with the potential for greater areas.</p>
-<h2>Explanation:</h2>
+<h4>Explanation:</h4>
 <ol>
 <li>Initialize the variables:</li>
-</ol>
-<ul>
 <li><code>left</code> to represent the left pointer, starting at the beginning of the container (index 0).</li>
 <li><code>right</code> to represent the right pointer, starting at the end of the container (index <code>height.size() - 1</code>).</li>
-<li><code>maxArea</code> to keep track of the maximum area found, initially set to 0.</li>
-</ul>
-<ol>
+<li>
+<p><code>maxArea</code> to keep track of the maximum area found, initially set to 0.</p>
+</li>
 <li>
 <p>Enter a loop using the condition <code>left &lt; right</code>, which means the pointers have not crossed each other yet.</p>
 </li>
 <li>
 <p>Calculate the current area:</p>
 </li>
-</ol>
-<ul>
 <li>Use the <code>min</code> function to find the minimum height between the <code>left</code> and <code>right</code> pointers.</li>
 <li>Multiply the minimum height by the width, which is the difference between the indices of the pointers: <code>(right - left)</code>.</li>
-<li>Store this value in the <code>currentArea</code> variable.</li>
-</ul>
-<ol>
-<li>Update the maximum area:</li>
-</ol>
-<ul>
+<li>
+<p>Store this value in the <code>currentArea</code> variable.</p>
+</li>
+<li>
+<p>Update the maximum area:</p>
+</li>
 <li>Use the <code>max</code> function to compare the <code>currentArea</code> with the <code>maxArea</code>.</li>
-<li>If the <code>currentArea</code> is greater than the <code>maxArea</code>, update <code>maxArea</code> with the <code>currentArea</code>.</li>
-</ul>
-<ol>
-<li>Move the pointers inward: (Explained in detail below)</li>
-</ol>
-<ul>
+<li>
+<p>If the <code>currentArea</code> is greater than the <code>maxArea</code>, update <code>maxArea</code> with the <code>currentArea</code>.</p>
+</li>
+<li>
+<p>Move the pointers inward: (Explained in detail below)</p>
+</li>
 <li>Check if the height at the <code>left</code> pointer is smaller than the height at the <code>right</code> pointer.</li>
 <li>If so, increment the <code>left</code> pointer, moving it towards the center of the container.</li>
-<li>Otherwise, decrement the <code>right</code> pointer, also moving it towards the center.</li>
-</ul>
-<ol>
+<li>
+<p>Otherwise, decrement the <code>right</code> pointer, also moving it towards the center.</p>
+</li>
 <li>
 <p>Repeat steps 3 to 5 until the pointers meet (<code>left &gt;= right</code>), indicating that all possible containers have been explored.</p>
 </li>
@@ -46,233 +42,84 @@ Increasing the width of the container can only lead to a larger area if the heig
 <p>Return the <code>maxArea</code>, which represents the maximum area encountered among all the containers.</p>
 </li>
 </ol>
-<h2>Update the maximum area:</h2>
+<h4>Update the maximum area:</h4>
 <p>The purpose of this condition is to determine which pointer to move inward, either the left pointer (<code>i</code>) or the right pointer (<code>j</code>), based on the comparison of heights at their respective positions.</p>
 <p>Imagine you have two containers represented by the heights at the left and right pointers. The condition checks which container has a smaller height and moves the pointer corresponding to that container.</p>
 <ol>
 <li>If <code>height[i] &gt; height[j]</code>:</li>
-</ol>
-<ul>
 <li>This means that the height of the left container is greater than the height of the right container.</li>
 <li>Moving the right pointer (<code>j</code>) would not increase the potential area because the height of the right container is the limiting factor.</li>
-<li>So, to explore containers with the possibility of greater areas, we need to move the right pointer inward by decrementing <code>j</code>.</li>
-</ul>
-<ol>
-<li>If <code>height[i] &lt;= height[j]</code>:</li>
-</ol>
-<ul>
+<li>
+<p>So, to explore containers with the possibility of greater areas, we need to move the right pointer inward by decrementing <code>j</code>.</p>
+</li>
+<li>
+<p>If <code>height[i] &lt;= height[j]</code>:</p>
+</li>
 <li>This means that the height of the left container is less than or equal to the height of the right container.</li>
 <li>Moving the left pointer (<code>i</code>) would not increase the potential area because the height of the left container is the limiting factor.</li>
 <li>So, to explore containers with the possibility of greater areas, we need to move the left pointer inward by incrementing <code>i</code>.</li>
-</ul>
-<p>By making these pointer movements, we ensure that we are always exploring containers with the potential for larger areas. The approach is based on the observation that increasing the width of the container can only lead to a larger area if the height of the new boundary is greater.<br />
+</ol>
+<p>By making these pointer movements, we ensure that we are always exploring containers with the potential for larger areas. The approach is based on the observation that increasing the width of the container can only lead to a larger area if the height of the new boundary is greater.
 By following this condition and moving the pointers accordingly, the algorithm explores all possible containers and finds the one with the maximum area.</p>
-<h2>Code</h2>
-<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">C</span><span class="o">++</span><span class="w"> </span>
-<span class="n">class</span><span class="w"> </span><span class="n">Solution</span><span class="w"> </span><span class="p">{</span>
-<span class="n">public</span><span class="o">:</span>
-<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">maxArea</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&amp;</span><span class="w"> </span><span class="n">height</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">left</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">right</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">height</span><span class="p">.</span><span class="n">size</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
-<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">maxArea</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<h4>Code</h4>
+<pre><code class="language-cpp">class Solution {
+public:
+    int maxArea(vector&lt;int&gt;&amp; height) {
+        int left = 0;
+        int right = height.size() - 1;
+        int maxArea = 0;
 
-<span class="w">        </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">left</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">right</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="kt">int</span><span class="w"> </span><span class="n">currentArea</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">min</span><span class="p">(</span><span class="n">height</span><span class="p">[</span><span class="n">left</span><span class="p">],</span><span class="w"> </span><span class="n">height</span><span class="p">[</span><span class="n">right</span><span class="p">])</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="p">(</span><span class="n">right</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">left</span><span class="p">);</span>
-<span class="w">            </span><span class="n">maxArea</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">max</span><span class="p">(</span><span class="n">maxArea</span><span class="p">,</span><span class="w"> </span><span class="n">currentArea</span><span class="p">);</span>
+        while (left &lt; right) {
+            int currentArea = min(height[left], height[right]) * (right - left);
+            maxArea = max(maxArea, currentArea);
 
-<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">height</span><span class="p">[</span><span class="n">left</span><span class="p">]</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">height</span><span class="p">[</span><span class="n">right</span><span class="p">])</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="n">left</span><span class="o">++</span><span class="p">;</span>
-<span class="w">            </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="n">right</span><span class="o">--</span><span class="p">;</span>
-<span class="w">            </span><span class="p">}</span>
-<span class="w">        </span><span class="p">}</span>
+            if (height[left] &lt; height[right]) {
+                left++;
+            } else {
+                right--;
+            }
+        }
 
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">maxArea</span><span class="p">;</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">};</span>
-</code></pre></div>
+        return maxArea;
+    }
+};
+</code></pre>
+<pre><code class="language-Java">class Solution {
+    public int maxArea(int[] height) {
+        int left = 0;
+        int right = height.length - 1;
+        int maxArea = 0;
 
-<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">Java</span><span class="w"> </span>
-<span class="kd">class</span> <span class="nc">Solution</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="nf">maxArea</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">height</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">left</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">right</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">height</span><span class="p">.</span><span class="na">length</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
-<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">maxArea</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+        while (left &lt; right) {
+            int currentArea = Math.min(height[left], height[right]) * (right - left);
+            maxArea = Math.max(maxArea, currentArea);
 
-<span class="w">        </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">left</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">right</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="kt">int</span><span class="w"> </span><span class="n">currentArea</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Math</span><span class="p">.</span><span class="na">min</span><span class="p">(</span><span class="n">height</span><span class="o">[</span><span class="n">left</span><span class="o">]</span><span class="p">,</span><span class="w"> </span><span class="n">height</span><span class="o">[</span><span class="n">right</span><span class="o">]</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="p">(</span><span class="n">right</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">left</span><span class="p">);</span>
-<span class="w">            </span><span class="n">maxArea</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Math</span><span class="p">.</span><span class="na">max</span><span class="p">(</span><span class="n">maxArea</span><span class="p">,</span><span class="w"> </span><span class="n">currentArea</span><span class="p">);</span>
+            if (height[left] &lt; height[right]) {
+                left++;
+            } else {
+                right--;
+            }
+        }
 
-<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">height</span><span class="o">[</span><span class="n">left</span><span class="o">]</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">height</span><span class="o">[</span><span class="n">right</span><span class="o">]</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="n">left</span><span class="o">++</span><span class="p">;</span>
-<span class="w">            </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="n">right</span><span class="o">--</span><span class="p">;</span>
-<span class="w">            </span><span class="p">}</span>
-<span class="w">        </span><span class="p">}</span>
+        return maxArea;
+    }
+}
+</code></pre>
+<pre><code class="language-Python3">class Solution:
+    def maxArea(self, height: List[int]) -&gt; int:
+        left = 0
+        right = len(height) - 1
+        maxArea = 0
 
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">maxArea</span><span class="p">;</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
+        while left &lt; right:
+            currentArea = min(height[left], height[right]) * (right - left)
+            maxArea = max(maxArea, currentArea)
 
-<div class="codehilite"><pre><span></span><code><span class="n">Language</span><span class="p">:</span> <span class="n">Python3</span> 
-<span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="p">:</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">maxArea</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">height</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-        <span class="n">left</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="n">right</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">height</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
-        <span class="n">maxArea</span> <span class="o">=</span> <span class="mi">0</span>
+            if height[left] &lt; height[right]:
+                left += 1
+            else:
+                right -= 1
 
-        <span class="k">while</span> <span class="n">left</span> <span class="o">&lt;</span> <span class="n">right</span><span class="p">:</span>
-            <span class="n">currentArea</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">height</span><span class="p">[</span><span class="n">left</span><span class="p">],</span> <span class="n">height</span><span class="p">[</span><span class="n">right</span><span class="p">])</span> <span class="o">*</span> <span class="p">(</span><span class="n">right</span> <span class="o">-</span> <span class="n">left</span><span class="p">)</span>
-            <span class="n">maxArea</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">maxArea</span><span class="p">,</span> <span class="n">currentArea</span><span class="p">)</span>
-
-            <span class="k">if</span> <span class="n">height</span><span class="p">[</span><span class="n">left</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">height</span><span class="p">[</span><span class="n">right</span><span class="p">]:</span>
-                <span class="n">left</span> <span class="o">+=</span> <span class="mi">1</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">right</span> <span class="o">-=</span> <span class="mi">1</span>
-
-        <span class="k">return</span> <span class="n">maxArea</span>
-</code></pre></div>
-
-<p></p>
+        return maxArea
+</code></pre>
 <p><strong>If you found my solution helpful, I would greatly appreciate your upvote, as it would motivate me to continue sharing more solutions.</strong></p></div>
-
-
-<div class='python-solution'><h2>✅Best Method 🔥 || C++ || JAVA || PYTHON || Beginner Friendly🔥🔥🔥 -- Votes: 1385</h2><h2>Intuition:</h2>
-<p>The two-pointer technique starts with the widest container and moves the pointers inward based on the comparison of heights.<br />
-Increasing the width of the container can only lead to a larger area if the height of the new boundary is greater. By moving the pointers towards the center, we explore containers with the potential for greater areas.</p>
-<h2>Explanation:</h2>
-<ol>
-<li>Initialize the variables:</li>
-</ol>
-<ul>
-<li><code>left</code> to represent the left pointer, starting at the beginning of the container (index 0).</li>
-<li><code>right</code> to represent the right pointer, starting at the end of the container (index <code>height.size() - 1</code>).</li>
-<li><code>maxArea</code> to keep track of the maximum area found, initially set to 0.</li>
-</ul>
-<ol>
-<li>
-<p>Enter a loop using the condition <code>left &lt; right</code>, which means the pointers have not crossed each other yet.</p>
-</li>
-<li>
-<p>Calculate the current area:</p>
-</li>
-</ol>
-<ul>
-<li>Use the <code>min</code> function to find the minimum height between the <code>left</code> and <code>right</code> pointers.</li>
-<li>Multiply the minimum height by the width, which is the difference between the indices of the pointers: <code>(right - left)</code>.</li>
-<li>Store this value in the <code>currentArea</code> variable.</li>
-</ul>
-<ol>
-<li>Update the maximum area:</li>
-</ol>
-<ul>
-<li>Use the <code>max</code> function to compare the <code>currentArea</code> with the <code>maxArea</code>.</li>
-<li>If the <code>currentArea</code> is greater than the <code>maxArea</code>, update <code>maxArea</code> with the <code>currentArea</code>.</li>
-</ul>
-<ol>
-<li>Move the pointers inward: (Explained in detail below)</li>
-</ol>
-<ul>
-<li>Check if the height at the <code>left</code> pointer is smaller than the height at the <code>right</code> pointer.</li>
-<li>If so, increment the <code>left</code> pointer, moving it towards the center of the container.</li>
-<li>Otherwise, decrement the <code>right</code> pointer, also moving it towards the center.</li>
-</ul>
-<ol>
-<li>
-<p>Repeat steps 3 to 5 until the pointers meet (<code>left &gt;= right</code>), indicating that all possible containers have been explored.</p>
-</li>
-<li>
-<p>Return the <code>maxArea</code>, which represents the maximum area encountered among all the containers.</p>
-</li>
-</ol>
-<h2>Update the maximum area:</h2>
-<p>The purpose of this condition is to determine which pointer to move inward, either the left pointer (<code>i</code>) or the right pointer (<code>j</code>), based on the comparison of heights at their respective positions.</p>
-<p>Imagine you have two containers represented by the heights at the left and right pointers. The condition checks which container has a smaller height and moves the pointer corresponding to that container.</p>
-<ol>
-<li>If <code>height[i] &gt; height[j]</code>:</li>
-</ol>
-<ul>
-<li>This means that the height of the left container is greater than the height of the right container.</li>
-<li>Moving the right pointer (<code>j</code>) would not increase the potential area because the height of the right container is the limiting factor.</li>
-<li>So, to explore containers with the possibility of greater areas, we need to move the right pointer inward by decrementing <code>j</code>.</li>
-</ul>
-<ol>
-<li>If <code>height[i] &lt;= height[j]</code>:</li>
-</ol>
-<ul>
-<li>This means that the height of the left container is less than or equal to the height of the right container.</li>
-<li>Moving the left pointer (<code>i</code>) would not increase the potential area because the height of the left container is the limiting factor.</li>
-<li>So, to explore containers with the possibility of greater areas, we need to move the left pointer inward by incrementing <code>i</code>.</li>
-</ul>
-<p>By making these pointer movements, we ensure that we are always exploring containers with the potential for larger areas. The approach is based on the observation that increasing the width of the container can only lead to a larger area if the height of the new boundary is greater.<br />
-By following this condition and moving the pointers accordingly, the algorithm explores all possible containers and finds the one with the maximum area.</p>
-<h2>Code</h2>
-<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">C</span><span class="o">++</span><span class="w"> </span>
-<span class="n">class</span><span class="w"> </span><span class="n">Solution</span><span class="w"> </span><span class="p">{</span>
-<span class="n">public</span><span class="o">:</span>
-<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">maxArea</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&amp;</span><span class="w"> </span><span class="n">height</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">left</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">right</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">height</span><span class="p">.</span><span class="n">size</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
-<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">maxArea</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-
-<span class="w">        </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">left</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">right</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="kt">int</span><span class="w"> </span><span class="n">currentArea</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">min</span><span class="p">(</span><span class="n">height</span><span class="p">[</span><span class="n">left</span><span class="p">],</span><span class="w"> </span><span class="n">height</span><span class="p">[</span><span class="n">right</span><span class="p">])</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="p">(</span><span class="n">right</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">left</span><span class="p">);</span>
-<span class="w">            </span><span class="n">maxArea</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">max</span><span class="p">(</span><span class="n">maxArea</span><span class="p">,</span><span class="w"> </span><span class="n">currentArea</span><span class="p">);</span>
-
-<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">height</span><span class="p">[</span><span class="n">left</span><span class="p">]</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">height</span><span class="p">[</span><span class="n">right</span><span class="p">])</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="n">left</span><span class="o">++</span><span class="p">;</span>
-<span class="w">            </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="n">right</span><span class="o">--</span><span class="p">;</span>
-<span class="w">            </span><span class="p">}</span>
-<span class="w">        </span><span class="p">}</span>
-
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">maxArea</span><span class="p">;</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">};</span>
-</code></pre></div>
-
-<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">Java</span><span class="w"> </span>
-<span class="kd">class</span> <span class="nc">Solution</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="nf">maxArea</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">height</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">left</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">right</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">height</span><span class="p">.</span><span class="na">length</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
-<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">maxArea</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-
-<span class="w">        </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">left</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">right</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="kt">int</span><span class="w"> </span><span class="n">currentArea</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Math</span><span class="p">.</span><span class="na">min</span><span class="p">(</span><span class="n">height</span><span class="o">[</span><span class="n">left</span><span class="o">]</span><span class="p">,</span><span class="w"> </span><span class="n">height</span><span class="o">[</span><span class="n">right</span><span class="o">]</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="p">(</span><span class="n">right</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">left</span><span class="p">);</span>
-<span class="w">            </span><span class="n">maxArea</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Math</span><span class="p">.</span><span class="na">max</span><span class="p">(</span><span class="n">maxArea</span><span class="p">,</span><span class="w"> </span><span class="n">currentArea</span><span class="p">);</span>
-
-<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">height</span><span class="o">[</span><span class="n">left</span><span class="o">]</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">height</span><span class="o">[</span><span class="n">right</span><span class="o">]</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="n">left</span><span class="o">++</span><span class="p">;</span>
-<span class="w">            </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="n">right</span><span class="o">--</span><span class="p">;</span>
-<span class="w">            </span><span class="p">}</span>
-<span class="w">        </span><span class="p">}</span>
-
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">maxArea</span><span class="p">;</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
-
-<div class="codehilite"><pre><span></span><code><span class="n">Language</span><span class="p">:</span> <span class="n">Python3</span> 
-<span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="p">:</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">maxArea</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">height</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-        <span class="n">left</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="n">right</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">height</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
-        <span class="n">maxArea</span> <span class="o">=</span> <span class="mi">0</span>
-
-        <span class="k">while</span> <span class="n">left</span> <span class="o">&lt;</span> <span class="n">right</span><span class="p">:</span>
-            <span class="n">currentArea</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">height</span><span class="p">[</span><span class="n">left</span><span class="p">],</span> <span class="n">height</span><span class="p">[</span><span class="n">right</span><span class="p">])</span> <span class="o">*</span> <span class="p">(</span><span class="n">right</span> <span class="o">-</span> <span class="n">left</span><span class="p">)</span>
-            <span class="n">maxArea</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">maxArea</span><span class="p">,</span> <span class="n">currentArea</span><span class="p">)</span>
-
-            <span class="k">if</span> <span class="n">height</span><span class="p">[</span><span class="n">left</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">height</span><span class="p">[</span><span class="n">right</span><span class="p">]:</span>
-                <span class="n">left</span> <span class="o">+=</span> <span class="mi">1</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">right</span> <span class="o">-=</span> <span class="mi">1</span>
-
-        <span class="k">return</span> <span class="n">maxArea</span>
-</code></pre></div>
-
-<p></p>
-<p><strong>If you found my solution helpful, I would greatly appreciate your upvote, as it would motivate me to continue sharing more solutions.</strong></p></div><p style="page-break-before: always" ></p>

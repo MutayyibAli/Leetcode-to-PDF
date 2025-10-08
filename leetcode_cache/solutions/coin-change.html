@@ -1,93 +1,72 @@
-<div class='cpp-solution'><h2>[C++] DP solution explained, ~100% Time, 100% Space -- Votes: 660</h2><p>Okay, this is probably the second most famous classic problem introducing the concepts of dynamic programming, second only to Fibonacci numbers generation.</p>
+<div class='cpp-solution'><h4>[C++] DP solution explained, ~100% Time, 100% Space [Votes: 660]</h4><p>Okay, this is probably the second most famous classic problem introducing the concepts of dynamic programming, second only to Fibonacci numbers generation.</p>
 <p>And in order to proceed, we really need to lay down the result step by step.</p>
 <p>I opted to do so using an array instead of a vector and the differences in both speed and consumed memory were relevant, but I invite you to experiment with it and see with your own eyes how this works.</p>
 <p>That said, the core logic: let's assume we have a series of memory cells storing how many coins are needed as a minimum to get there, safely considering that for the first, matching the amount of <code>0</code>, we actually have <code>0</code> options, while the initial value of all the others is going to be <code>INT_MAX</code>. Since we want to compute up to <code>amount</code>, and we have a <code>0</code> value for simplicity <code>amount + 1</code> cells are how many we need.</p>
 <p>It is much easier to go with an example and I am confident most people will find it more understandable as they proceed reading.</p>
 <p>So, for our aforementioned example, let's assume having as coins <code>[1, 2, 5]</code> and wishing to get up to the amount of <code>6</code> with the required mininum numbers of coins, we will have this starting situation for our array:</p>
-<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">cpp</span>
-<span class="p">{</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">INT_MAX</span><span class="p">,</span><span class="w"> </span><span class="n">INT_MAX</span><span class="p">,</span><span class="w"> </span><span class="n">INT_MAX</span><span class="p">,</span><span class="w"> </span><span class="n">INT_MAX</span><span class="p">,</span><span class="w"> </span><span class="n">INT_MAX</span><span class="p">,</span><span class="w"> </span><span class="n">INT_MAX</span><span class="p">}</span>
-</code></pre></div>
-
+<pre><code class="language-cpp">{0, INT_MAX, INT_MAX, INT_MAX, INT_MAX, INT_MAX, INT_MAX}
+</code></pre>
 <p>And we move then with our loop to the second cell, with index <code>i == 1</code>, our first <code>INT_MAX</code> to parse: we loop through the coins and we see we can go back only with the first coin (<code>c == 1</code>, since in order to get there, we can make one move, plus what it took to get to <code>i - c</code> positions before. This is definitely less than <code>INT_MAX</code>, so we update our array, which now is:</p>
-<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">cpp</span>
-<span class="p">{</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">INT_MAX</span><span class="p">,</span><span class="w"> </span><span class="n">INT_MAX</span><span class="p">,</span><span class="w"> </span><span class="n">INT_MAX</span><span class="p">,</span><span class="w"> </span><span class="n">INT_MAX</span><span class="p">,</span><span class="w"> </span><span class="n">INT_MAX</span><span class="p">}</span>
-</code></pre></div>
-
+<pre><code class="language-cpp">{0, 1, INT_MAX, INT_MAX, INT_MAX, INT_MAX, INT_MAX}
+</code></pre>
 <p>Not too clear? Okay, let's move to index <code>i == 2</code> and things should possibly simplify a bit: this time we have two coins that are <code>&lt;= i</code>, <code>1</code> and <code>2</code>: we know that to get to a total of two coins, we can take either what is needed to make one coin (the cell we just computed to have value <code>1</code> in the previous iteration) plus one with <code>c == 1</code> or what is needed to make zero coins (initially set to <code>0</code>) plus one with <code>c == 2</code>. Again, we will not use <code>c == 5</code> because, for now, we cannot go back 5 positions. Updated situation:</p>
-<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">cpp</span>
-<span class="p">{</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">INT_MAX</span><span class="p">,</span><span class="w"> </span><span class="n">INT_MAX</span><span class="p">,</span><span class="w"> </span><span class="n">INT_MAX</span><span class="p">,</span><span class="w"> </span><span class="n">INT_MAX</span><span class="p">}</span>
-</code></pre></div>
-
+<pre><code class="language-cpp">{0, 1, 1, INT_MAX, INT_MAX, INT_MAX, INT_MAX}
+</code></pre>
 <p>Now, what happens with <code>i == 3</code>? Well, whether we go back one cell or two, the value is the same and we add one (ie: we can make <code>3</code> either as <code>1 + 2</code> or <code>2 + 1</code>: it doesn't matter), so we have:</p>
-<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">cpp</span>
-<span class="p">{</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="n">INT_MAX</span><span class="p">,</span><span class="w"> </span><span class="n">INT_MAX</span><span class="p">,</span><span class="w"> </span><span class="n">INT_MAX</span><span class="p">}</span>
-</code></pre></div>
-
+<pre><code class="language-cpp">{0, 1, 1, 2, INT_MAX, INT_MAX, INT_MAX}
+</code></pre>
 <p>Now: <code>i == 4</code>: we can go back again only by one cell or two, and we quickly notice that going back by two is more conveient (ie: <code>2 + 2</code> uses less coins than <code>1 + 2 + 1</code>, the latter being an option if we went back by only one step):</p>
-<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">cpp</span>
-<span class="p">{</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="n">INT_MAX</span><span class="p">,</span><span class="w"> </span><span class="n">INT_MAX</span><span class="p">}</span>
-</code></pre></div>
-
+<pre><code class="language-cpp">{0, 1, 1, 2, 2, INT_MAX, INT_MAX}
+</code></pre>
 <p>Finally with <code>i == 5</code> we can also use the last and more "powerful" coin, going back up to five slots; if you followed me up to here, you will see probably soon that using this very coin is the most convenient option: to have a value of <code>5</code>, we just need one coin (with the same value) plus the coins we needed to have a value of <code>0</code> (zero coins, indeed); definitely better than having a coin more than the one necessary to get either a value of <code>3</code> or <code>4</code> (that would be <code>3</code> coins in both cases), so we have now:</p>
-<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">cpp</span>
-<span class="p">{</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">INT_MAX</span><span class="p">}</span>
-</code></pre></div>
-
+<pre><code class="language-cpp">{0, 1, 1, 2, 2, 1, INT_MAX}
+</code></pre>
 <p>Last step, with <code>i == 6</code>, we can quickly compute that while going back by two cells would cost us a grand total of <code>3</code> coins, either going back by one or five will cost us only two (ie: we can get to <code>6</code> either as <code>5 + 1</code> or <code>1 + 5</code>, respectively), so we have:</p>
-<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">cpp</span>
-<span class="p">{</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">}</span>
-</code></pre></div>
-
+<pre><code class="language-cpp">{0, 1, 1, 2, 2, 1, 2}
+</code></pre>
 <p>And we can return the value of the last cell as the correct result.</p>
 <p>My code below does the same with an extra bit of logic: when I backtrack and encounter a cell with value still equal to <code>INT_MAX</code> it means that the same cell was never reached before, so I skip it.</p>
 <p>If in the end my final cell has a value of <code>INT_MAX</code>, I replace it with <code>-1</code> as required in the specs, otherwise I return its properly computed value.</p>
 <p>The code:</p>
-<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">cpp</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="w"> </span><span class="p">{</span>
-<span class="k">public</span><span class="o">:</span>
-<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">coinChange</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&amp;</span><span class="w"> </span><span class="n">coins</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">n</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="c1">// creating the base dp array, with first value set to 0</span>
-<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">dp</span><span class="p">[</span><span class="o">++</span><span class="n">n</span><span class="p">];</span>
-<span class="w">        </span><span class="n">dp</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-<span class="w">        </span><span class="c1">// more convenient to have the coins sorted</span>
-<span class="w">        </span><span class="n">sort</span><span class="p">(</span><span class="n">begin</span><span class="p">(</span><span class="n">coins</span><span class="p">),</span><span class="w"> </span><span class="n">end</span><span class="p">(</span><span class="n">coins</span><span class="p">));</span>
-<span class="w">        </span><span class="c1">// populating our dp array</span>
-<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">n</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="c1">// setting dp[0] base value to 1, 0 for all the rest</span>
-<span class="w">            </span><span class="n">dp</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">INT_MAX</span><span class="p">;</span>
-<span class="w">            </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">c</span><span class="o">:</span><span class="w"> </span><span class="n">coins</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="k">break</span><span class="p">;</span>
-<span class="w">                </span><span class="c1">// if it was a previously not reached cell, we do not add use it</span>
-<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">dp</span><span class="p">[</span><span class="n">i</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">c</span><span class="p">]</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">INT_MAX</span><span class="p">)</span><span class="w"> </span><span class="n">dp</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">min</span><span class="p">(</span><span class="n">dp</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">dp</span><span class="p">[</span><span class="n">i</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">c</span><span class="p">]);</span>
-<span class="w">            </span><span class="p">}</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">dp</span><span class="p">[</span><span class="o">--</span><span class="n">n</span><span class="p">]</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">INT_MAX</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="mi">-1</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">dp</span><span class="p">[</span><span class="n">n</span><span class="p">];</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">};</span>
-</code></pre></div></div>
-
-
-<div class='python-solution'><h2>【Video】Keep minimum number of coins to make up each amount -- Votes: 324</h2><h2>Intuition</h2>
+<pre><code class="language-cpp">class Solution {
+public:
+    int coinChange(vector&lt;int&gt;&amp; coins, int n) {
+        // creating the base dp array, with first value set to 0
+        int dp[++n];
+        dp[0] = 0;
+        // more convenient to have the coins sorted
+        sort(begin(coins), end(coins));
+        // populating our dp array
+        for (int i = 1; i &lt; n; i++) {
+            // setting dp[0] base value to 1, 0 for all the rest
+            dp[i] = INT_MAX;
+            for (int c: coins) {
+                if (i - c &lt; 0) break;
+                // if it was a previously not reached cell, we do not add use it
+                if (dp[i - c] != INT_MAX) dp[i] = min(dp[i], 1 + dp[i - c]);
+            }
+        }
+        return dp[--n] == INT_MAX ? -1 : dp[n];
+    }
+};
+</code></pre></div><div class='python-solution'><h4>【Video】Keep minimum number of coins to make up each amount [Votes: 324]</h4><h4>Intuition</h4>
 <p>Keep minimum number of coins to make up each amount</p>
-<h2>Solution Video</h2>
+<h4>Solution Video</h4>
 <p>https://youtu.be/IrHPiwWUTKw</p>
-<h4>⭐️⭐️ Don't forget to subscribe to my channel! ⭐️⭐️</h4>
-<p><strong>■ Subscribe URL</strong><br />
+<h6>⭐️⭐️ Don't forget to subscribe to my channel! ⭐️⭐️</h6>
+<p><strong>■ Subscribe URL</strong>
 http://www.youtube.com/channel/UC9RMNwYTL3SXCP6ShLWVFww?sub_confirmation=1</p>
-<p>Subscribers: 4,765<br />
+<p>Subscribers: 4,765
 Thank you for your support!</p>
-<hr />
-<h2>Approach</h2>
+<h4>Approach</h4>
 <p>There are several ways to create amount with coins and we need to find minimum number of coins to make up amount. This is my rule of thumbs. When we have many ways to do something and find minimum(or maximum) number of something, there is possibility that the question is solved by Dynamic Programming.</p>
 <p>I'll explain how to solve this question by Dynamic Programming.</p>
-<div class="codehilite"><pre><span></span><code><span class="n">Input</span><span class="o">:</span><span class="w"> </span><span class="n">coins</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[</span><span class="mi">1</span><span class="o">,</span><span class="mi">2</span><span class="o">,</span><span class="mi">5</span><span class="o">],</span><span class="w"> </span><span class="n">amount</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">11</span>
-</code></pre></div>
-
+<pre><code>Input: coins = [1,2,5], amount = 11
+</code></pre>
 <p>First of all, I create array for Dynamic Programing.</p>
-<div class="codehilite"><pre><span></span><code> 0 ,1 ,2 ,3 ,4 ,5 ,6 ,7 ,8 ,9 ,10,11(= index)
+<pre><code> 0 ,1 ,2 ,3 ,4 ,5 ,6 ,7 ,8 ,9 ,10,11(= index)
 [0,12,12,12,12,12,12,12,12,12,12,12]
-</code></pre></div>
-
+</code></pre>
 <p>We use each index number as amount. index <code>1</code> means amount <code>1</code>. index <code>5</code> means amount <code>5</code>.</p>
 <p><strong>We will keep minimum number of coins to make up each amount.</strong></p>
 <p>We initialize each value with <code>12</code> which is <code>amount + 1</code>. You can put any number greater than <code>amount</code> or negative number such as <code>-1</code>(impossible number). In the end, if we still have <code>12</code>, <strong>that means we didn't find combination to make up the target amount, so return <code>-1</code>.</strong></p>
@@ -95,221 +74,198 @@ Thank you for your support!</p>
 <p>Let's see one by one.</p>
 <p>At index <code>1</code>, we try to create amount <code>1</code> with the coins and check all possible combinations and find minimum number of coins.</p>
 <p>If we use <code>coin 1</code> to make up amount <code>1</code>, what amount should we have before we use <strong>one coin 1</strong>? It's <code>zero</code>.</p>
-<hr />
 <p>⭐️ Points</p>
-<p>Formula is</p>
-<div class="codehilite"><pre><span></span><code>amount = current amount - current value of coin
-</code></pre></div>
+<p>Formula is </p>
+<pre><code>amount = current amount - current value of coin
+```In this case,
 
-<hr />
-<p>In this case,</p>
-<div class="codehilite"><pre><span></span><code><span class="mf">1</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mf">1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0</span>
-
-<span class="o">-</span><span class="w"> </span><span class="n">first</span><span class="w"> </span><span class="mf">1</span><span class="w"> </span><span class="n">is</span><span class="w"> </span><span class="n">current</span><span class="w"> </span><span class="n">amount</span>
-<span class="o">-</span><span class="w"> </span><span class="n">second</span><span class="w"> </span><span class="mf">1</span><span class="w"> </span><span class="n">is</span><span class="w"> </span><span class="n">current</span><span class="w"> </span><span class="nb">val</span><span class="n">ue</span><span class="w"> </span><span class="n">of</span><span class="w"> </span><span class="n">coin</span>
-<span class="o">-</span><span class="w"> </span><span class="mf">0</span><span class="w"> </span><span class="n">is</span><span class="w"> </span><span class="n">amount</span><span class="w"> </span><span class="n">we</span><span class="w"> </span><span class="n">need</span><span class="w"> </span><span class="kr">if</span><span class="w"> </span><span class="n">we</span><span class="w"> </span><span class="n">use</span><span class="w"> </span><span class="kr">on</span><span class="n">e</span><span class="w"> </span><span class="n">coin</span><span class="w"> </span><span class="mf">1</span>
-<span class="kr">to</span><span class="w"> </span><span class="n">make</span><span class="w"> </span><span class="n">up</span><span class="w"> </span><span class="n">amount</span><span class="w"> </span><span class="mf">1</span><span class="w"> </span><span class="n">this</span><span class="w"> </span><span class="n">time</span>
-</code></pre></div>
-
-<p>So, we should check index <code>0</code>, but no coin because we don't need to use any coins to make up amount <code>0</code>.</p>
-<p>That's why total of coins to make up <code>amount 1</code> this time is</p>
-<div class="codehilite"><pre><span></span><code>number of coin added this time + number of coins to make up amount 0
-= amount 1
-
-1 + 0 = 1
-</code></pre></div>
-
-<p>We need <code>one coin 1</code> to make up <code>amount 1</code>. In the end,</p>
-<div class="codehilite"><pre><span></span><code><span class="mf">12</span><span class="w"> </span><span class="n">vs</span><span class="w"> </span><span class="mf">1</span>
-</code></pre></div>
-
-<p>which is minimum number of coins? it's <code>1</code>, so update <code>index 1</code>.</p>
-<div class="codehilite"><pre><span></span><code> 0,1 ,2 ,3 ,4 ,5 ,6 ,7 ,8 ,9 ,10,11(= index)
-[0,1,12,12,12,12,12,12,12,12,12,12]
-</code></pre></div>
-
-<p>We have to check cases where we use <code>coin 2</code> and <code>coin 5</code> this time but obviously we cannot create <code>amount 1</code> with <code>coin 2</code> and <code>coin 5</code>, so skip them. That means we need to check this condition below before we update the array.</p>
-<div class="codehilite"><pre><span></span><code>current amount - current value of coin &gt;= 0
-</code></pre></div>
-
-<p>Let's think about <code>amount 2</code>. Every time we check all possible cases.</p>
-<p>If we use <code>coin 1</code> this time, we need</p>
-<div class="codehilite"><pre><span></span><code>current amount - current value of coin &gt;= 0
-= 2 - 1 &gt;= 0 
-</code></pre></div>
-
-<p>So, it's time to update the array.</p>
-<p>We use <code>one coin 1</code> this time and we should have <code>amount 1</code> if we create <code>amount 2</code> with <code>one coin 1</code>.</p>
-<div class="codehilite"><pre><span></span><code><span class="mf">2</span><span class="p">(</span><span class="n">current</span><span class="w"> </span><span class="n">amount</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mf">1</span><span class="p">(</span><span class="nb">val</span><span class="n">ue</span><span class="w"> </span><span class="n">of</span><span class="w"> </span><span class="n">coin</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">1</span><span class="w"> </span><span class="n">amount</span>
-</code></pre></div>
-
-<p>We need <code>amount 1</code> <strong>that means we need mininum number of coins to make up amount 1.</strong> Check <code>index 1</code> and we have one coin as minimum number of coins to make up <code>amount 1</code>, then add <code>one coin 1</code> this time to make up <code>amount 2</code>. Total should be</p>
-<div class="codehilite"><pre><span></span><code><span class="mf">1</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mf">1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">2</span><span class="w"> </span><span class="n">coins</span>
-</code></pre></div>
-
-<p>Update <code>index 2</code></p>
-<div class="codehilite"><pre><span></span><code> 0,1,2 ,3 ,4 ,5 ,6 ,7 ,8 ,9 ,10,11(= index)
-[0,1,2,12,12,12,12,12,12,12,12,12]
-</code></pre></div>
-
-<p>The next coin is <code>coin 2</code>. If we use <strong>one coin 2</strong> this time, we need</p>
-<div class="codehilite"><pre><span></span><code><span class="mf">2</span><span class="p">(</span><span class="n">current</span><span class="w"> </span><span class="n">amount</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mf">2</span><span class="p">(</span><span class="n">current</span><span class="w"> </span><span class="nb">val</span><span class="n">ue</span><span class="w"> </span><span class="n">of</span><span class="w"> </span><span class="n">coin</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0</span><span class="p">(</span><span class="n">amount</span><span class="p">)</span>
-</code></pre></div>
-
-<p>Check <code>0 amount</code>. No coin to make up <code>amount 0</code> <strong>that means we need only one coin 2 to make up amount 2.</strong></p>
-<div class="codehilite"><pre><span></span><code><span class="mf">0</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mf">1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">1</span>
-</code></pre></div>
-
-<p>Check <code>index 2</code> and take minimum number of coins to make up <code>amount 2</code>.</p>
-<div class="codehilite"><pre><span></span><code><span class="mf">2</span><span class="w"> </span><span class="n">vs</span><span class="w"> </span><span class="mf">1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">1</span>
-</code></pre></div>
-
-<div class="codehilite"><pre><span></span><code> 0,1,2 ,3 ,4 ,5 ,6 ,7 ,8 ,9 ,10,11(= index)
-[0,1,1,12,12,12,12,12,12,12,12,12]
-</code></pre></div>
-
-<p>The next coin is <code>coin 5</code>, skip it because we cannot create <code>amount 2</code> with <code>coin 5</code>. We don't meet this condition.</p>
-<div class="codehilite"><pre><span></span><code>current amount - current value of coin &gt;= 0
-= 2 - 5 = -3
-</code></pre></div>
-
-<p>I hope you can understand how it works. I will stop my explanation because too long.</p>
-<p>In the end, target amount is <code>11</code> which is the last index. If the value of the last index is <code>12</code>, that means we didn't find combination to make up <code>amount 11</code>. If we have different number from <code>12</code>, that is minimum number of coins to make up <code>amount 11</code>.</p>
-<p>Easy!<br />
-Let's see solution codes and step by step algorithm!</p>
-<hr />
-<p>https://youtu.be/bU_dXCOWHls</p>
-<hr />
-<h2>Complexity</h2>
+</code></pre>
+<p>1 - 1 = 0</p>
 <ul>
-<li>
-<p>Time complexity: $$O(a * c)$$<br />
-<code>a</code> is number of amount and <code>c</code> is number of coins</p>
-</li>
-<li>
-<p>Space complexity: $$O(a)$$</p>
-</li>
+<li>first 1 is current amount</li>
+<li>second 1 is current value of coin</li>
+<li>0 is amount we need if we use one coin 1
+to make up amount 1 this time</li>
 </ul>
-<div class="codehilite"><pre><span></span><code><span class="n">Language</span><span class="p">:</span> <span class="n">python</span> 
-<span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="p">:</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">coinChange</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">coins</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">amount</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-        <span class="n">min_coins</span> <span class="o">=</span> <span class="p">[</span><span class="n">amount</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">amount</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
-        <span class="n">min_coins</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+<pre><code>So, we should check index `0`, but no coin because we don't need to use any coins to make up amount `0`.
 
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">amount</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
-            <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">coins</span><span class="p">:</span>
-                <span class="k">if</span> <span class="n">i</span> <span class="o">-</span> <span class="n">c</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">:</span>
-                    <span class="n">min_coins</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">min_coins</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">min_coins</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="n">c</span><span class="p">])</span>
+That's why total of coins to make up `amount 1` this time is
 
-        <span class="k">return</span> <span class="n">min_coins</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="k">if</span> <span class="n">min_coins</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="n">amount</span> <span class="o">+</span> <span class="mi">1</span> <span class="k">else</span> <span class="o">-</span><span class="mi">1</span>
-</code></pre></div>
+</code></pre>
+<p>number of coin added this time + number of coins to make up amount 0
+= amount 1</p>
+<p>1 + 0 = 1</p>
+<pre><code>We need `one coin 1` to make up `amount 1`. In the end,
 
-<div class="codehilite"><pre><span></span><code><span class="nx">Language</span><span class="o">:</span><span class="w"> </span><span class="nx">javascript</span><span class="w"> </span>
-<span class="kd">var</span><span class="w"> </span><span class="nx">coinChange</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kd">function</span><span class="p">(</span><span class="nx">coins</span><span class="p">,</span><span class="w"> </span><span class="nx">amount</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="nx">minCoins</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nb">Array</span><span class="p">(</span><span class="nx">amount</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mf">1</span><span class="p">).</span><span class="nx">fill</span><span class="p">(</span><span class="nx">amount</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mf">1</span><span class="p">);</span>
-<span class="w">    </span><span class="nx">minCoins</span><span class="p">[</span><span class="mf">0</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0</span><span class="p">;</span>
+</code></pre>
+<p>12 vs 1</p>
+<pre><code>which is minimum number of coins? it's `1`, so update `index 1`.
 
-<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kd">let</span><span class="w"> </span><span class="nx">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">1</span><span class="p">;</span><span class="w"> </span><span class="nx">i</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="nx">amount</span><span class="p">;</span><span class="w"> </span><span class="nx">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kd">let</span><span class="w"> </span><span class="nx">j</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0</span><span class="p">;</span><span class="w"> </span><span class="nx">j</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="nx">coins</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span><span class="w"> </span><span class="nx">j</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">i</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nx">coins</span><span class="p">[</span><span class="nx">j</span><span class="p">]</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mf">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="nx">minCoins</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">Math</span><span class="p">.</span><span class="nx">min</span><span class="p">(</span><span class="nx">minCoins</span><span class="p">[</span><span class="nx">i</span><span class="p">],</span><span class="w"> </span><span class="mf">1</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nx">minCoins</span><span class="p">[</span><span class="nx">i</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nx">coins</span><span class="p">[</span><span class="nx">j</span><span class="p">]]);</span>
-<span class="w">            </span><span class="p">}</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">    </span><span class="p">}</span>
+</code></pre>
+<p>0,1 ,2 ,3 ,4 ,5 ,6 ,7 ,8 ,9 ,10,11(= index)
+[0,1,12,12,12,12,12,12,12,12,12,12]</p>
+<pre><code>We have to check cases where we use `coin 2` and `coin 5` this time but obviously we cannot create `amount 1` with `coin 2` and `coin 5`, so skip them. That means we need to check this condition below before we update the array.
+</code></pre>
+<p>current amount - current value of coin &gt;= 0</p>
+<pre><code>
+Let's think about `amount 2`. Every time we check all possible cases.
 
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">minCoins</span><span class="p">[</span><span class="nx">amount</span><span class="p">]</span><span class="w"> </span><span class="o">!==</span><span class="w"> </span><span class="nx">amount</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mf">1</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="nx">minCoins</span><span class="p">[</span><span class="nx">amount</span><span class="p">]</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="o">-</span><span class="mf">1</span><span class="p">;</span><span class="w">    </span>
-<span class="p">};</span>
-</code></pre></div>
+If we use `coin 1` this time, we need
 
-<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">java</span><span class="w"> </span>
-<span class="kd">class</span> <span class="nc">Solution</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="nf">coinChange</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">coins</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">amount</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">minCoins</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="kt">int</span><span class="o">[</span><span class="n">amount</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="o">]</span><span class="p">;</span>
-<span class="w">        </span><span class="n">Arrays</span><span class="p">.</span><span class="na">fill</span><span class="p">(</span><span class="n">minCoins</span><span class="p">,</span><span class="w"> </span><span class="n">amount</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span>
-<span class="w">        </span><span class="n">minCoins</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+</code></pre>
+<p>current amount - current value of coin &gt;= 0
+= 2 - 1 &gt;= 0 </p>
+<pre><code>So, it's time to update the array.
 
-<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">amount</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">coins</span><span class="p">.</span><span class="na">length</span><span class="p">;</span><span class="w"> </span><span class="n">j</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">coins</span><span class="o">[</span><span class="n">j</span><span class="o">]</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                    </span><span class="n">minCoins</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Math</span><span class="p">.</span><span class="na">min</span><span class="p">(</span><span class="n">minCoins</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">minCoins</span><span class="o">[</span><span class="n">i</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">coins</span><span class="o">[</span><span class="n">j</span><span class="o">]]</span><span class="p">);</span>
-<span class="w">                </span><span class="p">}</span>
-<span class="w">            </span><span class="p">}</span>
-<span class="w">        </span><span class="p">}</span>
+We use `one coin 1` this time and we should have `amount 1` if we create `amount 2` with `one coin 1`.
+</code></pre>
+<p>2(current amount) - 1(value of coin) = 1 amount</p>
+<pre><code>We need `amount 1` **that means we need mininum number of coins to make up amount 1.** Check `index 1` and we have one coin as minimum number of coins to make up `amount 1`, then add `one coin 1` this time to make up `amount 2`. Total should be
 
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">minCoins</span><span class="o">[</span><span class="n">amount</span><span class="o">]</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">amount</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">minCoins</span><span class="o">[</span><span class="n">amount</span><span class="o">]</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="o">-</span><span class="mi">1</span><span class="p">;</span><span class="w">        </span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
+</code></pre>
+<p>1 + 1 = 2 coins</p>
+<pre><code>Update `index 2`
+</code></pre>
+<p>0,1,2 ,3 ,4 ,5 ,6 ,7 ,8 ,9 ,10,11(= index)
+[0,1,2,12,12,12,12,12,12,12,12,12]</p>
+<pre><code>The next coin is `coin 2`. If we use **one coin 2** this time, we need
 
-<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">C</span><span class="o">++</span><span class="w"> </span>
-<span class="n">class</span><span class="w"> </span><span class="n">Solution</span><span class="w"> </span><span class="p">{</span>
-<span class="n">public</span><span class="o">:</span>
-<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">coinChange</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&amp;</span><span class="w"> </span><span class="n">coins</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">amount</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="w"> </span><span class="n">minCoins</span><span class="p">(</span><span class="n">amount</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">amount</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span>
-<span class="w">        </span><span class="n">minCoins</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+</code></pre>
+<p>2(current amount) - 2(current value of coin) = 0(amount)</p>
+<pre><code>Check `0 amount`. No coin to make up `amount 0` **that means we need only one coin 2 to make up amount 2.**
+</code></pre>
+<p>0 + 1 = 1</p>
+<pre><code>Check `index 2` and take minimum number of coins to make up `amount 2`.
 
-<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">amount</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">coins</span><span class="p">.</span><span class="n">size</span><span class="p">();</span><span class="w"> </span><span class="n">j</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">coins</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                    </span><span class="n">minCoins</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">min</span><span class="p">(</span><span class="n">minCoins</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">minCoins</span><span class="p">[</span><span class="n">i</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">coins</span><span class="p">[</span><span class="n">j</span><span class="p">]]);</span>
-<span class="w">                </span><span class="p">}</span>
-<span class="w">            </span><span class="p">}</span>
-<span class="w">        </span><span class="p">}</span>
+</code></pre>
+<p>2 vs 1 = 1</p>
+<pre><code></code></pre>
+<p>0,1,2 ,3 ,4 ,5 ,6 ,7 ,8 ,9 ,10,11(= index)
+[0,1,1,12,12,12,12,12,12,12,12,12]</p>
+<pre><code>The next coin is `coin 5`, skip it because we cannot create `amount 2` with `coin 5`. We don't meet this condition.
 
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">minCoins</span><span class="p">[</span><span class="n">amount</span><span class="p">]</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">amount</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">minCoins</span><span class="p">[</span><span class="n">amount</span><span class="p">]</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="mi">-1</span><span class="p">;</span><span class="w">        </span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">};</span>
-</code></pre></div>
+</code></pre>
+<p>current amount - current value of coin &gt;= 0
+= 2 - 5 = -3</p>
+<pre><code>I hope you can understand how it works. I will stop my explanation because too long.
 
-<h3>Step by Step Algorithm</h3>
+In the end, target amount is `11` which is the last index. If the value of the last index is `12`, that means we didn't find combination to make up `amount 11`. If we have different number from `12`, that is minimum number of coins to make up `amount 11`.
+
+Easy!
+Let's see solution codes and step by step algorithm!
+
+https://youtu.be/bU_dXCOWHls
+
+#### Complexity
+- Time complexity: $$O(a * c)$$
+`a` is number of amount and `c` is number of coins
+
+- Space complexity: $$O(a)$$
+
+```python
+class Solution:
+    def coinChange(self, coins: List[int], amount: int) -&gt; int:
+        min_coins = [amount + 1] * (amount + 1)
+        min_coins[0] = 0
+
+        for i in range(1, amount + 1):
+            for c in coins:
+                if i - c &gt;= 0:
+                    min_coins[i] = min(min_coins[i], 1 + min_coins[i - c])
+
+        return min_coins[-1] if min_coins[-1] != amount + 1 else -1
+</code></pre>
+<pre><code class="language-javascript">var coinChange = function(coins, amount) {
+    let minCoins = new Array(amount + 1).fill(amount + 1);
+    minCoins[0] = 0;
+
+    for (let i = 1; i &lt;= amount; i++) {
+        for (let j = 0; j &lt; coins.length; j++) {
+            if (i - coins[j] &gt;= 0) {
+                minCoins[i] = Math.min(minCoins[i], 1 + minCoins[i - coins[j]]);
+            }
+        }
+    }
+
+    return minCoins[amount] !== amount + 1 ? minCoins[amount] : -1;    
+};
+</code></pre>
+<pre><code class="language-java">class Solution {
+    public int coinChange(int[] coins, int amount) {
+        int[] minCoins = new int[amount + 1];
+        Arrays.fill(minCoins, amount + 1);
+        minCoins[0] = 0;
+
+        for (int i = 1; i &lt;= amount; i++) {
+            for (int j = 0; j &lt; coins.length; j++) {
+                if (i - coins[j] &gt;= 0) {
+                    minCoins[i] = Math.min(minCoins[i], 1 + minCoins[i - coins[j]]);
+                }
+            }
+        }
+
+        return minCoins[amount] != amount + 1 ? minCoins[amount] : -1;        
+    }
+}
+</code></pre>
+<pre><code class="language-cpp">class Solution {
+public:
+    int coinChange(vector&lt;int&gt;&amp; coins, int amount) {
+        vector&lt;int&gt; minCoins(amount + 1, amount + 1);
+        minCoins[0] = 0;
+
+        for (int i = 1; i &lt;= amount; i++) {
+            for (int j = 0; j &lt; coins.size(); j++) {
+                if (i - coins[j] &gt;= 0) {
+                    minCoins[i] = min(minCoins[i], 1 + minCoins[i - coins[j]]);
+                }
+            }
+        }
+
+        return minCoins[amount] != amount + 1 ? minCoins[amount] : -1;        
+    }
+};
+</code></pre>
+<h5>Step by Step Algorithm</h5>
 <ol>
-<li><strong>Initialize <code>min_coins</code> array</strong>:<br />
-   - Create an array <code>min_coins</code> of length <code>amount + 1</code>, initialized with each element set to <code>amount + 1</code>.<br />
-   - Set <code>min_coins[0]</code> to <code>0</code>, as it takes zero coins to make up an amount of zero.</li>
+<li><strong>Initialize <code>min_coins</code> array</strong>:</li>
+<li>Create an array <code>min_coins</code> of length <code>amount + 1</code>, initialized with each element set to <code>amount + 1</code>.</li>
+<li>Set <code>min_coins[0]</code> to <code>0</code>, as it takes zero coins to make up an amount of zero.</li>
 </ol>
-<div class="codehilite"><pre><span></span><code><span class="n">Language</span><span class="p">:</span> <span class="n">python</span>
-<span class="n">min_coins</span> <span class="o">=</span> <span class="p">[</span><span class="n">amount</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">amount</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
-<span class="n">min_coins</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
-</code></pre></div>
-
-<ol start="2">
-<li><strong>Iterate over each amount</strong>:<br />
-   - Start a loop from 1 to <code>amount</code> (inclusive) to represent each amount from 1 to <code>amount</code>.<br />
-   - For each amount <code>i</code>, iterate over each coin denomination <code>c</code> in the <code>coins</code> list.</li>
+<pre><code class="language-python">min_coins = [amount + 1] * (amount + 1)
+min_coins[0] = 0
+</code></pre>
+<ol>
+<li><strong>Iterate over each amount</strong>:</li>
+<li>Start a loop from 1 to <code>amount</code> (inclusive) to represent each amount from 1 to <code>amount</code>.</li>
+<li>For each amount <code>i</code>, iterate over each coin denomination <code>c</code> in the <code>coins</code> list.</li>
 </ol>
-<div class="codehilite"><pre><span></span><code><span class="n">Language</span><span class="p">:</span> <span class="n">python</span>
-<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">amount</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
-    <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">coins</span><span class="p">:</span>
-</code></pre></div>
-
-<ol start="3">
-<li><strong>Calculate the minimum number of coins</strong>:<br />
-   - Check if the current amount <code>i</code> minus the coin denomination <code>c</code> is greater than or equal to 0.<br />
-   - If it is, update <code>min_coins[i]</code> to the minimum of its current value and <code>1 + min_coins[i - c]</code>.<ul>
+<pre><code class="language-python">for i in range(1, amount + 1):
+    for c in coins:
+</code></pre>
+<ol>
+<li><strong>Calculate the minimum number of coins</strong>:</li>
+<li>Check if the current amount <code>i</code> minus the coin denomination <code>c</code> is greater than or equal to 0.</li>
+<li>If it is, update <code>min_coins[i]</code> to the minimum of its current value and <code>1 + min_coins[i - c]</code>.<ul>
 <li><code>1 + min_coins[i - c]</code> represents taking one coin of denomination <code>c</code> and the minimum number of coins required to make up the remaining amount <code>i - c</code>.</li>
 </ul>
 </li>
 </ol>
-<div class="codehilite"><pre><span></span><code><span class="n">Language</span><span class="p">:</span> <span class="n">python</span>
-<span class="k">if</span> <span class="n">i</span> <span class="o">-</span> <span class="n">c</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">:</span>
-    <span class="n">min_coins</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">min_coins</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">min_coins</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="n">c</span><span class="p">])</span>
-</code></pre></div>
-
-<ol start="4">
-<li><strong>Return the result</strong>:<br />
-   - After updating <code>min_coins</code> for all amounts from 1 to <code>amount</code>, return <code>min_coins[-1]</code> if it's not equal to <code>amount + 1</code>.<br />
-   - If <code>min_coins[-1]</code> is still <code>amount + 1</code>, it means the amount cannot be made up by any combination of coins, so return <code>-1</code>.</li>
+<pre><code class="language-python">if i - c &gt;= 0:
+    min_coins[i] = min(min_coins[i], 1 + min_coins[i - c])
+</code></pre>
+<ol>
+<li><strong>Return the result</strong>:</li>
+<li>After updating <code>min_coins</code> for all amounts from 1 to <code>amount</code>, return <code>min_coins[-1]</code> if it's not equal to <code>amount + 1</code>.</li>
+<li>If <code>min_coins[-1]</code> is still <code>amount + 1</code>, it means the amount cannot be made up by any combination of coins, so return <code>-1</code>.</li>
 </ol>
-<div class="codehilite"><pre><span></span><code><span class="n">Language</span><span class="p">:</span> <span class="n">python</span>
-<span class="k">return</span> <span class="n">min_coins</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="k">if</span> <span class="n">min_coins</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="n">amount</span> <span class="o">+</span> <span class="mi">1</span> <span class="k">else</span> <span class="o">-</span><span class="mi">1</span>
-</code></pre></div>
-
+<pre><code class="language-python">return min_coins[-1] if min_coins[-1] != amount + 1 else -1
+</code></pre>
 <p>This algorithm uses dynamic programming to compute the minimum number of coins required to make up each amount from 1 to <code>amount</code>, ultimately providing the minimum number of coins required to make up the total amount.</p>
-<hr />
 <p>Thank you for reading my post.</p>
-<h3>⭐️ Subscribe URL</h3>
+<h5>⭐️ Subscribe URL</h5>
 <p>http://www.youtube.com/channel/UC9RMNwYTL3SXCP6ShLWVFww?sub_confirmation=1</p>
-<h3>⭐️ Twitter</h3>
+<h5>⭐️ Twitter</h5>
 <p>https://twitter.com/CodingNinjaAZ</p>
-<h3>⭐️ My previous video</h3>
-<p>https://youtu.be/CijisxopxqM</p></div><p style="page-break-before: always" ></p>
+<h5>⭐️ My previous video</h5>
+<p>https://youtu.be/CijisxopxqM</p></div>

@@ -1,6 +1,6 @@
-<div class='cpp-solution'><h2>✅Beats 100% || C++ || JAVA || PYTHON || Beginner Friendly🔥🔥🔥 -- Votes: 107</h2><h2>Intuition:</h2>
+<div class='cpp-solution'><h4>✅Beats 100% || C++ || JAVA || PYTHON || Beginner Friendly🔥🔥🔥 [Votes: 107]</h4><h4>Intuition:</h4>
 <p>To find the highest altitude, we need to calculate the cumulative sum of the altitude gains at each step. Starting from the initial altitude of 0, we keep adding the gain at each step to the current altitude. The highest altitude reached during this process is the answer we are looking for.</p>
-<h2>Approach:</h2>
+<h4>Approach:</h4>
 <ol>
 <li>Initialize two variables: <code>maxAltitude</code> and <code>currentAltitude</code> to keep track of the maximum altitude encountered so far and the current altitude, respectively. Set both variables to 0.</li>
 <li>Iterate over the <code>gain</code> vector, starting from the first element.</li>
@@ -11,116 +11,45 @@
 <li>Return the value of <code>maxAltitude</code> as the result.</li>
 </ol>
 <p>This approach ensures that we keep track of the maximum altitude encountered during the traversal and avoids unnecessary modifications to the input vector. By iterating over the <code>gain</code> vector only once, the solution is efficient and provides the correct result.</p>
-<h2>Code</h2>
-<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">C</span><span class="o">++</span><span class="w"> </span>
-<span class="n">class</span><span class="w"> </span><span class="n">Solution</span><span class="w"> </span><span class="p">{</span>
-<span class="n">public</span><span class="o">:</span>
-<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">largestAltitude</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&amp;</span><span class="w"> </span><span class="n">gain</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">maxAltitude</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">currentAltitude</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<h4>Code</h4>
+<pre><code class="language-cpp">class Solution {
+public:
+    int largestAltitude(vector&lt;int&gt;&amp; gain) {
+        int maxAltitude = 0;
+        int currentAltitude = 0;
 
-<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">gain</span><span class="p">.</span><span class="n">size</span><span class="p">();</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="n">currentAltitude</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">gain</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
-<span class="w">            </span><span class="n">maxAltitude</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">max</span><span class="p">(</span><span class="n">maxAltitude</span><span class="p">,</span><span class="w"> </span><span class="n">currentAltitude</span><span class="p">);</span>
-<span class="w">        </span><span class="p">}</span>
+        for (int i = 0; i &lt; gain.size(); i++) {
+            currentAltitude += gain[i];
+            maxAltitude = max(maxAltitude, currentAltitude);
+        }
 
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">maxAltitude</span><span class="p">;</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">};</span>
-</code></pre></div>
+        return maxAltitude;
+    }
+};
+</code></pre>
+<pre><code class="language-Java">class Solution {
+    public int largestAltitude(int[] gain) {
+        int maxAltitude = 0;
+        int currentAltitude = 0;
 
-<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">Java</span><span class="w"> </span>
-<span class="kd">class</span> <span class="nc">Solution</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="nf">largestAltitude</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">gain</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">maxAltitude</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">currentAltitude</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+        for (int i = 0; i &lt; gain.length; i++) {
+            currentAltitude += gain[i];
+            maxAltitude = Math.max(maxAltitude, currentAltitude);
+        }
 
-<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">gain</span><span class="p">.</span><span class="na">length</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="n">currentAltitude</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">gain</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="p">;</span>
-<span class="w">            </span><span class="n">maxAltitude</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Math</span><span class="p">.</span><span class="na">max</span><span class="p">(</span><span class="n">maxAltitude</span><span class="p">,</span><span class="w"> </span><span class="n">currentAltitude</span><span class="p">);</span>
-<span class="w">        </span><span class="p">}</span>
+        return maxAltitude;
+    }
+}
+</code></pre>
+<pre><code class="language-Python3">class Solution:
+    def largestAltitude(self, gain: List[int]) -&gt; int:
+        maxAltitude = 0
+        currentAltitude = 0
 
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">maxAltitude</span><span class="p">;</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
+        for g in gain:
+            currentAltitude += g
+            maxAltitude = max(maxAltitude, currentAltitude)
 
-<div class="codehilite"><pre><span></span><code><span class="n">Language</span><span class="p">:</span> <span class="n">Python3</span> 
-<span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="p">:</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">largestAltitude</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gain</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-        <span class="n">maxAltitude</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="n">currentAltitude</span> <span class="o">=</span> <span class="mi">0</span>
-
-        <span class="k">for</span> <span class="n">g</span> <span class="ow">in</span> <span class="n">gain</span><span class="p">:</span>
-            <span class="n">currentAltitude</span> <span class="o">+=</span> <span class="n">g</span>
-            <span class="n">maxAltitude</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">maxAltitude</span><span class="p">,</span> <span class="n">currentAltitude</span><span class="p">)</span>
-
-        <span class="k">return</span> <span class="n">maxAltitude</span>
-</code></pre></div>
-
-<p></p>
+        return maxAltitude
+</code></pre>
 <p><strong>If you found my solution helpful, I would greatly appreciate your upvote, as it would motivate me to continue sharing more solutions.</strong></p></div>
-
-
-<div class='python-solution'><h2>✅Beats 100% || C++ || JAVA || PYTHON || Beginner Friendly🔥🔥🔥 -- Votes: 107</h2><h2>Intuition:</h2>
-<p>To find the highest altitude, we need to calculate the cumulative sum of the altitude gains at each step. Starting from the initial altitude of 0, we keep adding the gain at each step to the current altitude. The highest altitude reached during this process is the answer we are looking for.</p>
-<h2>Approach:</h2>
-<ol>
-<li>Initialize two variables: <code>maxAltitude</code> and <code>currentAltitude</code> to keep track of the maximum altitude encountered so far and the current altitude, respectively. Set both variables to 0.</li>
-<li>Iterate over the <code>gain</code> vector, starting from the first element.</li>
-<li>At each step, update the <code>currentAltitude</code> by adding the gain of the current step.</li>
-<li>Compare the <code>currentAltitude</code> with the <code>maxAltitude</code>. If it is greater, update <code>maxAltitude</code> to the new value.</li>
-<li>Repeat steps 3-4 for all elements in the <code>gain</code> vector.</li>
-<li>Once the iteration is complete, <code>maxAltitude</code> will hold the highest altitude reached.</li>
-<li>Return the value of <code>maxAltitude</code> as the result.</li>
-</ol>
-<p>This approach ensures that we keep track of the maximum altitude encountered during the traversal and avoids unnecessary modifications to the input vector. By iterating over the <code>gain</code> vector only once, the solution is efficient and provides the correct result.</p>
-<h2>Code</h2>
-<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">C</span><span class="o">++</span><span class="w"> </span>
-<span class="n">class</span><span class="w"> </span><span class="n">Solution</span><span class="w"> </span><span class="p">{</span>
-<span class="n">public</span><span class="o">:</span>
-<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">largestAltitude</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&amp;</span><span class="w"> </span><span class="n">gain</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">maxAltitude</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">currentAltitude</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-
-<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">gain</span><span class="p">.</span><span class="n">size</span><span class="p">();</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="n">currentAltitude</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">gain</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
-<span class="w">            </span><span class="n">maxAltitude</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">max</span><span class="p">(</span><span class="n">maxAltitude</span><span class="p">,</span><span class="w"> </span><span class="n">currentAltitude</span><span class="p">);</span>
-<span class="w">        </span><span class="p">}</span>
-
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">maxAltitude</span><span class="p">;</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">};</span>
-</code></pre></div>
-
-<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">Java</span><span class="w"> </span>
-<span class="kd">class</span> <span class="nc">Solution</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="nf">largestAltitude</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">gain</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">maxAltitude</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">currentAltitude</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-
-<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">gain</span><span class="p">.</span><span class="na">length</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="n">currentAltitude</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">gain</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="p">;</span>
-<span class="w">            </span><span class="n">maxAltitude</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Math</span><span class="p">.</span><span class="na">max</span><span class="p">(</span><span class="n">maxAltitude</span><span class="p">,</span><span class="w"> </span><span class="n">currentAltitude</span><span class="p">);</span>
-<span class="w">        </span><span class="p">}</span>
-
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">maxAltitude</span><span class="p">;</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
-
-<div class="codehilite"><pre><span></span><code><span class="n">Language</span><span class="p">:</span> <span class="n">Python3</span> 
-<span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="p">:</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">largestAltitude</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gain</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-        <span class="n">maxAltitude</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="n">currentAltitude</span> <span class="o">=</span> <span class="mi">0</span>
-
-        <span class="k">for</span> <span class="n">g</span> <span class="ow">in</span> <span class="n">gain</span><span class="p">:</span>
-            <span class="n">currentAltitude</span> <span class="o">+=</span> <span class="n">g</span>
-            <span class="n">maxAltitude</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">maxAltitude</span><span class="p">,</span> <span class="n">currentAltitude</span><span class="p">)</span>
-
-        <span class="k">return</span> <span class="n">maxAltitude</span>
-</code></pre></div>
-
-<p></p>
-<p><strong>If you found my solution helpful, I would greatly appreciate your upvote, as it would motivate me to continue sharing more solutions.</strong></p></div><p style="page-break-before: always" ></p>

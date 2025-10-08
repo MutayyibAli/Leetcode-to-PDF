@@ -1,7 +1,7 @@
-<div class='cpp-solution'><h2>Easy Solution using HashMap -- Votes: 352</h2><h3><strong><em>Please Upvote my solution, if you find it helpful ;)</em></strong></h3>
-<h2>Intuition</h2>
+<div class='cpp-solution'><h4>Easy Solution using HashMap [Votes: 352]</h4><h5><strong><em>Please Upvote my solution, if you find it helpful ;)</em></strong></h5>
+<h4>Intuition</h4>
 <p>The goal is to determine whether it is possible to construct the ransom note using characters from the magazine. To achieve this, we need to count the occurrences of each character in the magazine and check if there are enough occurrences to form the ransom note.</p>
-<h2>Approach</h2>
+<h4>Approach</h4>
 <ol>
 <li>Create a HashMap called dictionary to store the character counts in the magazine.</li>
 <li>Iterate through each character in the magazine string.</li>
@@ -13,234 +13,104 @@
 <li>If a character is not present in the dictionary or its count is 0, return false.</li>
 <li>If all characters in the ransom note have been checked successfully, return true.</li>
 </ol>
-<h2>Complexity</h2>
+<h4>Complexity</h4>
 <ul>
 <li>
-<p>Time complexity:<br />
-  The time complexity of the solution is $$O(m + n)$$, where m is the length of the magazine string and n is the length of the ransom note string. This is because we iterate through each character in both strings once.</p>
+<p>Time complexity:
+The time complexity of the solution is $$O(m + n)$$, where m is the length of the magazine string and n is the length of the ransom note string. This is because we iterate through each character in both strings once.</p>
 </li>
 <li>
-<p>Space complexity:<br />
-  The space complexity is $$O(m)$$, where m is the number of unique characters in the magazine string. This is because we store the character counts in the dictionary HashMap.</p>
+<p>Space complexity:
+The space complexity is $$O(m)$$, where m is the number of unique characters in the magazine string. This is because we store the character counts in the dictionary HashMap.</p>
 </li>
 </ul>
-<h2>Code</h2>
-<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">java</span><span class="w"> </span>
-<span class="kd">class</span> <span class="nc">Solution</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">boolean</span><span class="w"> </span><span class="nf">canConstruct</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">ransomNote</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">magazine</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<h4>Code</h4>
+<pre><code class="language-java">class Solution {
+    public boolean canConstruct(String ransomNote, String magazine) {
 
-<span class="w">        </span><span class="c1">// Create a HashMap to store character counts</span>
-<span class="w">        </span><span class="n">HashMap</span><span class="o">&lt;</span><span class="n">Character</span><span class="p">,</span><span class="w"> </span><span class="n">Integer</span><span class="o">&gt;</span><span class="w"> </span><span class="n">dictionary</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">HashMap</span><span class="o">&lt;&gt;</span><span class="p">();</span>
+        // Create a HashMap to store character counts
+        HashMap&lt;Character, Integer&gt; dictionary = new HashMap&lt;&gt;();
 
-<span class="w">        </span><span class="c1">// Iterate through the characters in the magazine</span>
-<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">magazine</span><span class="p">.</span><span class="na">length</span><span class="p">();</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="kt">char</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">magazine</span><span class="p">.</span><span class="na">charAt</span><span class="p">(</span><span class="n">i</span><span class="p">);</span>
+        // Iterate through the characters in the magazine
+        for (int i = 0; i &lt; magazine.length(); i++) {
+            char c = magazine.charAt(i);
 
-<span class="w">            </span><span class="c1">// If the character is not present in the HashMap, add it with count 1</span>
-<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">dictionary</span><span class="p">.</span><span class="na">containsKey</span><span class="p">(</span><span class="n">c</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="n">dictionary</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="n">c</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span>
-<span class="w">            </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="c1">// If the character is already present, increment its count by 1</span>
-<span class="w">                </span><span class="n">dictionary</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="n">c</span><span class="p">,</span><span class="w"> </span><span class="n">dictionary</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">c</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span>
-<span class="w">            </span><span class="p">}</span>
-<span class="w">        </span><span class="p">}</span>
+            // If the character is not present in the HashMap, add it with count 1
+            if (!dictionary.containsKey(c)) {
+                dictionary.put(c, 1);
+            } else {
+                // If the character is already present, increment its count by 1
+                dictionary.put(c, dictionary.get(c) + 1);
+            }
+        }
 
-<span class="w">        </span><span class="c1">// Iterate through the characters in the ransom note</span>
-<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">ransomNote</span><span class="p">.</span><span class="na">length</span><span class="p">();</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="kt">char</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ransomNote</span><span class="p">.</span><span class="na">charAt</span><span class="p">(</span><span class="n">i</span><span class="p">);</span>
+        // Iterate through the characters in the ransom note
+        for (int i = 0; i &lt; ransomNote.length(); i++) {
+            char c = ransomNote.charAt(i);
 
-<span class="w">            </span><span class="c1">// If the character is present in the HashMap and its count is greater than 0,</span>
-<span class="w">            </span><span class="c1">// decrement its count by 1</span>
-<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">dictionary</span><span class="p">.</span><span class="na">containsKey</span><span class="p">(</span><span class="n">c</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">dictionary</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">c</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="n">dictionary</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="n">c</span><span class="p">,</span><span class="w"> </span><span class="n">dictionary</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">c</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span>
-<span class="w">            </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="c1">// If the character is not present or its count is 0, return false</span>
-<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="kc">false</span><span class="p">;</span>
-<span class="w">            </span><span class="p">}</span>
-<span class="w">        </span><span class="p">}</span>
+            // If the character is present in the HashMap and its count is greater than 0,
+            // decrement its count by 1
+            if (dictionary.containsKey(c) &amp;&amp; dictionary.get(c) &gt; 0) {
+                dictionary.put(c, dictionary.get(c) - 1);
+            } else {
+                // If the character is not present or its count is 0, return false
+                return false;
+            }
+        }
 
-<span class="w">        </span><span class="c1">// All characters in the ransom note have been processed successfully,</span>
-<span class="w">        </span><span class="c1">// so the ransom note can be formed from the magazine</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="kc">true</span><span class="p">;</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
+        // All characters in the ransom note have been processed successfully,
+        // so the ransom note can be formed from the magazine
+        return true;
+    }
+}
 
-<div class="codehilite"><pre><span></span><code><span class="n">Language</span><span class="p">:</span> <span class="n">python</span> 
-<span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">canConstruct</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ransomNote</span><span class="p">,</span> <span class="n">magazine</span><span class="p">):</span>
-        <span class="c1"># Create a dictionary to store character counts</span>
-        <span class="n">dictionary</span> <span class="o">=</span> <span class="p">{}</span>
+</code></pre>
+<pre><code class="language-python">class Solution(object):
+    def canConstruct(self, ransomNote, magazine):
+        #### Create a dictionary to store character counts
+        dictionary = {}
 
-        <span class="c1"># Iterate through the magazine and count characters</span>
-        <span class="k">for</span> <span class="n">char</span> <span class="ow">in</span> <span class="n">magazine</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">char</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">dictionary</span><span class="p">:</span>
-                <span class="n">dictionary</span><span class="p">[</span><span class="n">char</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">dictionary</span><span class="p">[</span><span class="n">char</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+        #### Iterate through the magazine and count characters
+        for char in magazine:
+            if char not in dictionary:
+                dictionary[char] = 1
+            else:
+                dictionary[char] += 1
 
-        <span class="c1"># Iterate through the ransom note and check character counts</span>
-        <span class="k">for</span> <span class="n">char</span> <span class="ow">in</span> <span class="n">ransomNote</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">char</span> <span class="ow">in</span> <span class="n">dictionary</span> <span class="ow">and</span> <span class="n">dictionary</span><span class="p">[</span><span class="n">char</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-                <span class="n">dictionary</span><span class="p">[</span><span class="n">char</span><span class="p">]</span> <span class="o">-=</span> <span class="mi">1</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="k">return</span> <span class="kc">False</span>
+        #### Iterate through the ransom note and check character counts
+        for char in ransomNote:
+            if char in dictionary and dictionary[char] &gt; 0:
+                dictionary[char] -= 1
+            else:
+                return False
 
-        <span class="k">return</span> <span class="kc">True</span>
-</code></pre></div>
+        return True
+</code></pre>
+<pre><code class="language-cpp">class Solution {
+public:
+    bool canConstruct(string ransomNote, string magazine) {
+        unordered_map&lt;char, int&gt; dictionary;
 
-<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">C</span><span class="o">++</span><span class="w"> </span>
-<span class="n">class</span><span class="w"> </span><span class="n">Solution</span><span class="w"> </span><span class="p">{</span>
-<span class="n">public</span><span class="o">:</span>
-<span class="w">    </span><span class="kt">bool</span><span class="w"> </span><span class="n">canConstruct</span><span class="p">(</span><span class="n">string</span><span class="w"> </span><span class="n">ransomNote</span><span class="p">,</span><span class="w"> </span><span class="n">string</span><span class="w"> </span><span class="n">magazine</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="n">unordered_map</span><span class="o">&lt;</span><span class="kt">char</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="o">&gt;</span><span class="w"> </span><span class="n">dictionary</span><span class="p">;</span>
+        // Iterate through the magazine and count characters
+        for (char c : magazine) {
+            if (dictionary.find(c) == dictionary.end()) {
+                dictionary[c] = 1;
+            } else {
+                dictionary[c]++;
+            }
+        }
 
-<span class="w">        </span><span class="c1">// Iterate through the magazine and count characters</span>
-<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">char</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">magazine</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">dictionary</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="n">c</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">dictionary</span><span class="p">.</span><span class="n">end</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="n">dictionary</span><span class="p">[</span><span class="n">c</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
-<span class="w">            </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="n">dictionary</span><span class="p">[</span><span class="n">c</span><span class="p">]</span><span class="o">++</span><span class="p">;</span>
-<span class="w">            </span><span class="p">}</span>
-<span class="w">        </span><span class="p">}</span>
+        // Iterate through the ransom note and check character counts
+        for (char c : ransomNote) {
+            if (dictionary.find(c) != dictionary.end() &amp;&amp; dictionary[c] &gt; 0) {
+                dictionary[c]--;
+            } else {
+                return false;
+            }
+        }
 
-<span class="w">        </span><span class="c1">// Iterate through the ransom note and check character counts</span>
-<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">char</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">ransomNote</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">dictionary</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="n">c</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">dictionary</span><span class="p">.</span><span class="n">end</span><span class="p">()</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">dictionary</span><span class="p">[</span><span class="n">c</span><span class="p">]</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="n">dictionary</span><span class="p">[</span><span class="n">c</span><span class="p">]</span><span class="o">--</span><span class="p">;</span>
-<span class="w">            </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
-<span class="w">            </span><span class="p">}</span>
-<span class="w">        </span><span class="p">}</span>
-
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">};</span>
-</code></pre></div>
-
-<h3><strong><em>Please Upvote my solution, if you find it helpful ;)</em></strong></h3>
-<p></p></div>
-
-
-<div class='python-solution'><h2>Easy Solution using HashMap -- Votes: 352</h2><h3><strong><em>Please Upvote my solution, if you find it helpful ;)</em></strong></h3>
-<h2>Intuition</h2>
-<p>The goal is to determine whether it is possible to construct the ransom note using characters from the magazine. To achieve this, we need to count the occurrences of each character in the magazine and check if there are enough occurrences to form the ransom note.</p>
-<h2>Approach</h2>
-<ol>
-<li>Create a HashMap called dictionary to store the character counts in the magazine.</li>
-<li>Iterate through each character in the magazine string.</li>
-<li>If the character is not present in the dictionary, add it with a count of 1.</li>
-<li>If the character is already present, increment its count by 1.</li>
-<li>Iterate through each character in the ransom note string.</li>
-<li>Check if the character is present in the dictionary and its count is greater than 0.</li>
-<li>If both conditions are satisfied, decrement the count of the character in the dictionary.</li>
-<li>If a character is not present in the dictionary or its count is 0, return false.</li>
-<li>If all characters in the ransom note have been checked successfully, return true.</li>
-</ol>
-<h2>Complexity</h2>
-<ul>
-<li>
-<p>Time complexity:<br />
-  The time complexity of the solution is $$O(m + n)$$, where m is the length of the magazine string and n is the length of the ransom note string. This is because we iterate through each character in both strings once.</p>
-</li>
-<li>
-<p>Space complexity:<br />
-  The space complexity is $$O(m)$$, where m is the number of unique characters in the magazine string. This is because we store the character counts in the dictionary HashMap.</p>
-</li>
-</ul>
-<h2>Code</h2>
-<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">java</span><span class="w"> </span>
-<span class="kd">class</span> <span class="nc">Solution</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">boolean</span><span class="w"> </span><span class="nf">canConstruct</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">ransomNote</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">magazine</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-
-<span class="w">        </span><span class="c1">// Create a HashMap to store character counts</span>
-<span class="w">        </span><span class="n">HashMap</span><span class="o">&lt;</span><span class="n">Character</span><span class="p">,</span><span class="w"> </span><span class="n">Integer</span><span class="o">&gt;</span><span class="w"> </span><span class="n">dictionary</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">HashMap</span><span class="o">&lt;&gt;</span><span class="p">();</span>
-
-<span class="w">        </span><span class="c1">// Iterate through the characters in the magazine</span>
-<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">magazine</span><span class="p">.</span><span class="na">length</span><span class="p">();</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="kt">char</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">magazine</span><span class="p">.</span><span class="na">charAt</span><span class="p">(</span><span class="n">i</span><span class="p">);</span>
-
-<span class="w">            </span><span class="c1">// If the character is not present in the HashMap, add it with count 1</span>
-<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">dictionary</span><span class="p">.</span><span class="na">containsKey</span><span class="p">(</span><span class="n">c</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="n">dictionary</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="n">c</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span>
-<span class="w">            </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="c1">// If the character is already present, increment its count by 1</span>
-<span class="w">                </span><span class="n">dictionary</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="n">c</span><span class="p">,</span><span class="w"> </span><span class="n">dictionary</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">c</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span>
-<span class="w">            </span><span class="p">}</span>
-<span class="w">        </span><span class="p">}</span>
-
-<span class="w">        </span><span class="c1">// Iterate through the characters in the ransom note</span>
-<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">ransomNote</span><span class="p">.</span><span class="na">length</span><span class="p">();</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="kt">char</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ransomNote</span><span class="p">.</span><span class="na">charAt</span><span class="p">(</span><span class="n">i</span><span class="p">);</span>
-
-<span class="w">            </span><span class="c1">// If the character is present in the HashMap and its count is greater than 0,</span>
-<span class="w">            </span><span class="c1">// decrement its count by 1</span>
-<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">dictionary</span><span class="p">.</span><span class="na">containsKey</span><span class="p">(</span><span class="n">c</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">dictionary</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">c</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="n">dictionary</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="n">c</span><span class="p">,</span><span class="w"> </span><span class="n">dictionary</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">c</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span>
-<span class="w">            </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="c1">// If the character is not present or its count is 0, return false</span>
-<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="kc">false</span><span class="p">;</span>
-<span class="w">            </span><span class="p">}</span>
-<span class="w">        </span><span class="p">}</span>
-
-<span class="w">        </span><span class="c1">// All characters in the ransom note have been processed successfully,</span>
-<span class="w">        </span><span class="c1">// so the ransom note can be formed from the magazine</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="kc">true</span><span class="p">;</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
-
-<div class="codehilite"><pre><span></span><code><span class="n">Language</span><span class="p">:</span> <span class="n">python</span> 
-<span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">canConstruct</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ransomNote</span><span class="p">,</span> <span class="n">magazine</span><span class="p">):</span>
-        <span class="c1"># Create a dictionary to store character counts</span>
-        <span class="n">dictionary</span> <span class="o">=</span> <span class="p">{}</span>
-
-        <span class="c1"># Iterate through the magazine and count characters</span>
-        <span class="k">for</span> <span class="n">char</span> <span class="ow">in</span> <span class="n">magazine</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">char</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">dictionary</span><span class="p">:</span>
-                <span class="n">dictionary</span><span class="p">[</span><span class="n">char</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">dictionary</span><span class="p">[</span><span class="n">char</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
-
-        <span class="c1"># Iterate through the ransom note and check character counts</span>
-        <span class="k">for</span> <span class="n">char</span> <span class="ow">in</span> <span class="n">ransomNote</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">char</span> <span class="ow">in</span> <span class="n">dictionary</span> <span class="ow">and</span> <span class="n">dictionary</span><span class="p">[</span><span class="n">char</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-                <span class="n">dictionary</span><span class="p">[</span><span class="n">char</span><span class="p">]</span> <span class="o">-=</span> <span class="mi">1</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="k">return</span> <span class="kc">False</span>
-
-        <span class="k">return</span> <span class="kc">True</span>
-</code></pre></div>
-
-<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">C</span><span class="o">++</span><span class="w"> </span>
-<span class="n">class</span><span class="w"> </span><span class="n">Solution</span><span class="w"> </span><span class="p">{</span>
-<span class="n">public</span><span class="o">:</span>
-<span class="w">    </span><span class="kt">bool</span><span class="w"> </span><span class="n">canConstruct</span><span class="p">(</span><span class="n">string</span><span class="w"> </span><span class="n">ransomNote</span><span class="p">,</span><span class="w"> </span><span class="n">string</span><span class="w"> </span><span class="n">magazine</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="n">unordered_map</span><span class="o">&lt;</span><span class="kt">char</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="o">&gt;</span><span class="w"> </span><span class="n">dictionary</span><span class="p">;</span>
-
-<span class="w">        </span><span class="c1">// Iterate through the magazine and count characters</span>
-<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">char</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">magazine</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">dictionary</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="n">c</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">dictionary</span><span class="p">.</span><span class="n">end</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="n">dictionary</span><span class="p">[</span><span class="n">c</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
-<span class="w">            </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="n">dictionary</span><span class="p">[</span><span class="n">c</span><span class="p">]</span><span class="o">++</span><span class="p">;</span>
-<span class="w">            </span><span class="p">}</span>
-<span class="w">        </span><span class="p">}</span>
-
-<span class="w">        </span><span class="c1">// Iterate through the ransom note and check character counts</span>
-<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">char</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">ransomNote</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">dictionary</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="n">c</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">dictionary</span><span class="p">.</span><span class="n">end</span><span class="p">()</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">dictionary</span><span class="p">[</span><span class="n">c</span><span class="p">]</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="n">dictionary</span><span class="p">[</span><span class="n">c</span><span class="p">]</span><span class="o">--</span><span class="p">;</span>
-<span class="w">            </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
-<span class="w">            </span><span class="p">}</span>
-<span class="w">        </span><span class="p">}</span>
-
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">};</span>
-</code></pre></div>
-
-<h3><strong><em>Please Upvote my solution, if you find it helpful ;)</em></strong></h3>
-<p></p></div><p style="page-break-before: always" ></p>
+        return true;
+    }
+};
+</code></pre>
+<h5><strong><em>Please Upvote my solution, if you find it helpful ;)</em></strong></h5></div>

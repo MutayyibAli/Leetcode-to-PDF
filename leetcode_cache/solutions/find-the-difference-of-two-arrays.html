@@ -1,85 +1,76 @@
-<div class='cpp-solution'><h2>Easy Solution C++ 🔥 Explained 🔥 Using Sets -- Votes: 283</h2><h2>**PLEASE UPVOTE **</h2>
-<h2>Intuition</h2>
+<div class='cpp-solution'><h4>Easy Solution C++ 🔥 Explained 🔥 Using Sets [Votes: 283]</h4><h4>**PLEASE UPVOTE **</h4>
+<h4>Intuition</h4>
 <ul>
 <li>
-<h6>To solve this problem, we can create two sets: set1 and set2. We can then iterate through nums1 and add each integer to set1. Similarly, we can iterate through nums2 and add each integer to set2.</h6>
+<h6>## To solve this problem, we can create two sets: set1 and set2. We can then iterate through nums1 and add each integer to set1. Similarly, we can iterate through nums2 and add each integer to set2.</h6>
 </li>
 <li>
-<h6>Next, we can take the set difference between set1 and set2 to obtain the distinct integers in nums1 that are not present in nums2. Similarly, we can take the set difference between set2 and set1 to obtain the distinct integers in nums2 that are not present in nums1.</h6>
+<h6>## Next, we can take the set difference between set1 and set2 to obtain the distinct integers in nums1 that are not present in nums2. Similarly, we can take the set difference between set2 and set1 to obtain the distinct integers in nums2 that are not present in nums1.</h6>
 </li>
 <li>
-<h6>Finally, we can return the results in the form of a Vector of size 2, where the first element is the vector of distinct integers in nums1 that are not present in nums2, and the second element is the vector of distinct integers in nums2 that are not present in nums1.</h6>
+<h6>## Finally, we can return the results in the form of a Vector of size 2, where the first element is the vector of distinct integers in nums1 that are not present in nums2, and the second element is the vector of distinct integers in nums2 that are not present in nums1.</h6>
 </li>
 </ul>
 <!-- Describe your first thoughts on how to solve this problem. -->
 
-<h2>Complexity</h2>
+<h4>Complexity</h4>
 <ul>
 <li>
-<h4>Time complexity: O(M+N)</h4>
+<h6>Time complexity: O(M+N)</h6>
 </li>
 </ul>
 <!-- Add your time complexity here, e.g. $$O(n)$$ -->
 
 <ul>
 <li>
-<h4>Space complexity: O(M+N)</h4>
+<h6>Space complexity: O(M+N)</h6>
 </li>
 </ul>
 <!-- Add your space complexity here, e.g. $$O(n)$$ -->
 
-<h2>**PLEASE UPVOTE **</h2>
-<h2>Code</h2>
-<div class="codehilite"><pre><span></span><code><span class="nt">class</span><span class="w"> </span><span class="nt">Solution</span><span class="w"> </span><span class="p">{</span>
-<span class="n">public</span><span class="p">:</span>
-<span class="w">    </span><span class="n">vector</span><span class="o">&lt;</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">int</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="nf">findDifference</span><span class="p">(</span><span class="n">vector</span><span class="err">&lt;</span><span class="n">int</span><span class="err">&gt;&amp;</span><span class="w"> </span><span class="n">nums1</span><span class="p">,</span><span class="w"> </span><span class="n">vector</span><span class="err">&lt;</span><span class="n">int</span><span class="err">&gt;&amp;</span><span class="w"> </span><span class="n">nums2</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
-<span class="w">        </span><span class="n">unordered_set</span><span class="o">&lt;</span><span class="n">int</span><span class="o">&gt;</span><span class="w"> </span><span class="nf">set1</span><span class="p">(</span><span class="n">nums1</span><span class="err">.</span><span class="nf">begin</span><span class="p">(),</span><span class="w"> </span><span class="n">nums1</span><span class="err">.</span><span class="kc">end</span><span class="err">(</span><span class="p">));</span>
-<span class="w">        </span><span class="err">unordered_set&lt;int&gt;</span><span class="w"> </span><span class="err">set2(nums2.begin(),</span><span class="w"> </span><span class="err">nums2.end())</span><span class="p">;</span>
+<h4>**PLEASE UPVOTE **</h4>
+<h4>Code</h4>
+<pre><code>class Solution {
+public:
+    vector&lt;vector&lt;int&gt;&gt; findDifference(vector&lt;int&gt;&amp; nums1, vector&lt;int&gt;&amp; nums2) {
+        unordered_set&lt;int&gt; set1(nums1.begin(), nums1.end());
+        unordered_set&lt;int&gt; set2(nums2.begin(), nums2.end());
 
-<span class="w">        </span><span class="err">vector&lt;int&gt;</span><span class="w"> </span><span class="err">distinct_nums1,</span><span class="w"> </span><span class="err">distinct_nums2</span><span class="p">;</span>
-<span class="w">        </span><span class="err">for</span><span class="w"> </span><span class="err">(int</span><span class="w"> </span><span class="n">num</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">set1</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
-<span class="w">            </span><span class="n">if</span><span class="w"> </span><span class="p">(</span><span class="n">set2</span><span class="o">.</span><span class="nf">count</span><span class="p">(</span><span class="n">num</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
-<span class="w">                </span><span class="n">distinct_nums1</span><span class="o">.</span><span class="nf">push_back</span><span class="p">(</span><span class="n">num</span><span class="p">);</span>
-<span class="w">            </span><span class="p">}</span>
-<span class="w">        </span><span class="err">}</span>
+        vector&lt;int&gt; distinct_nums1, distinct_nums2;
+        for (int num : set1) {
+            if (set2.count(num) == 0) {
+                distinct_nums1.push_back(num);
+            }
+        }
 
-<span class="w">        </span><span class="nt">for</span><span class="w"> </span><span class="o">(</span><span class="nt">int</span><span class="w"> </span><span class="nt">num</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="nt">set2</span><span class="o">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="err">if</span><span class="w"> </span><span class="err">(set1.count(num)</span><span class="w"> </span><span class="err">==</span><span class="w"> </span><span class="err">0)</span><span class="w"> </span><span class="err">{</span>
-<span class="w">                </span><span class="err">distinct_nums2.push_back(num)</span><span class="p">;</span>
-<span class="w">            </span><span class="p">}</span>
-<span class="w">        </span><span class="err">}</span>
+        for (int num : set2) {
+            if (set1.count(num) == 0) {
+                distinct_nums2.push_back(num);
+            }
+        }
 
-<span class="w">        </span><span class="nt">return</span><span class="w"> </span><span class="p">{</span><span class="err">distinct_nums1,</span><span class="w"> </span><span class="err">distinct_nums2</span><span class="p">}</span><span class="o">;</span>
-<span class="w">    </span><span class="err">}</span>
-<span class="err">}</span><span class="o">;</span>
-</code></pre></div>
+        return {distinct_nums1, distinct_nums2};
+    }
+};
 
-<p></p></div>
-
-
-<div class='python-solution'><h2>💯Efficient Set Approach for Finding Difference in Two Arrays -- Votes: 31</h2><h2>Intuition</h2>
+</code></pre></div><div class='python-solution'><h4>💯Efficient Set Approach for Finding Difference in Two Arrays [Votes: 31]</h4><h4>Intuition</h4>
 <ul>
 <li>Imagine nums1 and nums2 as two sets of marbles. You want to find the marbles that are on only one table, not on both.</li>
-<li>The unordered sets act like hash tables, allowing for quick checks to see if a specific marble exists in the other set.</li>
+<li>The unordered sets act like hash tables, allowing for quick checks to see if a specific marble exists in the other set. </li>
 <li>We iterate through each marble in one set, checking if it's present in the other set. If not, it's unique and gets added to the result.</li>
 </ul>
-<h2>Approach</h2>
+<h4>Approach</h4>
 <!-- Describe your approach to solving the problem. -->
-
-<ol>
-<li><strong><em>Populate Unordered Sets:</em></strong><br />
-   - We insert the elements from nums1 and nums2 into s1 and s2 respectively, using their iterators.</li>
-<li><strong><em>Find Elements Unique to nums1:</em></strong><br />
-   - We iterate through each element (num) in nums1.<br />
-   - For each num:<ul>
-<li>We use find(num) in s2 to check if num exists in the other set (nums2).</li>
-<li>If find(num) == s2.end() (meaning num is not found in s2), it's unique to nums1. We add it to the first sub-vector in ans.</li>
-</ul>
-</li>
-<li><strong><em>Find Elements Unique to nums2:</em></strong><br />
-   - We repeat the process for nums2. We iterate through each element (num) and check if it exists in s1. If it doesn't, it's unique to nums2 and is added to the second sub-vector in ans.</li>
-</ol>
-<h2>Complexity</h2>
+<p>1) <strong><em>Populate Unordered Sets:</em></strong> 
+    - We insert the elements from nums1 and nums2 into s1 and s2 respectively, using their iterators.
+2) <strong><em>Find Elements Unique to nums1:</em></strong>
+    - We iterate through each element (num) in nums1.
+    - For each num:
+        - We use find(num) in s2 to check if num exists in the other set (nums2).
+        - If find(num) == s2.end() (meaning num is not found in s2), it's unique to nums1. We add it to the first sub-vector in ans.
+3) <strong><em>Find Elements Unique to nums2:</em></strong>
+    - We repeat the process for nums2. We iterate through each element (num) and check if it exists in s1. If it doesn't, it's unique to nums2 and is added to the second sub-vector in ans.</p>
+<h4>Complexity</h4>
 <ul>
 <li>Time complexity: <strong><em>O(n + m)</em></strong></li>
 </ul>
@@ -90,108 +81,102 @@
 </ul>
 <!-- Add your space complexity here, e.g. $$O(n)$$ -->
 
-<h2>Code</h2>
-<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">cpp</span><span class="w"> </span>
-<span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="w"> </span><span class="p">{</span>
-<span class="k">public</span><span class="o">:</span>
-<span class="w">    </span><span class="n">vector</span><span class="o">&lt;</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="n">findDifference</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&amp;</span><span class="w"> </span><span class="n">nums1</span><span class="p">,</span><span class="w"> </span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&amp;</span><span class="w"> </span><span class="n">nums2</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="n">set</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="w"> </span><span class="n">s1</span><span class="p">,</span><span class="n">s2</span><span class="p">;</span>
-<span class="w">        </span><span class="n">vector</span><span class="o">&lt;</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="n">ans</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
-<span class="w">        </span><span class="k">for</span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">nums1</span><span class="p">){</span>
-<span class="w">            </span><span class="n">s1</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">i</span><span class="p">);</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">        </span><span class="k">for</span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">nums2</span><span class="p">){</span>
-<span class="w">            </span><span class="n">s2</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">i</span><span class="p">);</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">        </span><span class="k">for</span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">s1</span><span class="p">){</span>
-<span class="w">            </span><span class="k">if</span><span class="p">(</span><span class="n">s2</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">s2</span><span class="p">.</span><span class="n">end</span><span class="p">()){</span>
-<span class="w">                </span><span class="n">ans</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="n">push_back</span><span class="p">(</span><span class="n">i</span><span class="p">);</span>
-<span class="w">            </span><span class="p">}</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">        </span><span class="k">for</span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">s2</span><span class="p">){</span>
-<span class="w">            </span><span class="k">if</span><span class="p">(</span><span class="n">s1</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">s1</span><span class="p">.</span><span class="n">end</span><span class="p">()){</span>
-<span class="w">                </span><span class="n">ans</span><span class="p">[</span><span class="mi">1</span><span class="p">].</span><span class="n">push_back</span><span class="p">(</span><span class="n">i</span><span class="p">);</span>
-<span class="w">            </span><span class="p">}</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">ans</span><span class="p">;</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">};</span>
-</code></pre></div>
+<h4>Code</h4>
+<pre><code class="language-cpp">class Solution {
+public:
+    vector&lt;vector&lt;int&gt;&gt; findDifference(vector&lt;int&gt;&amp; nums1, vector&lt;int&gt;&amp; nums2) {
+        set&lt;int&gt; s1,s2;
+        vector&lt;vector&lt;int&gt;&gt; ans(2);
+        for(auto i : nums1){
+            s1.insert(i);
+        }
+        for(auto i : nums2){
+            s2.insert(i);
+        }
+        for(auto i : s1){
+            if(s2.find(i) == s2.end()){
+                ans[0].push_back(i);
+            }
+        }
+        for(auto i : s2){
+            if(s1.find(i) == s1.end()){
+                ans[1].push_back(i);
+            }
+        }
+        return ans;
+    }
+};
+</code></pre>
+<pre><code class="language-python">class Solution:
+    def findDifference(self, nums1, nums2):
+        s1, s2 = set(nums1), set(nums2)
+        ans = [[], []]
 
-<div class="codehilite"><pre><span></span><code><span class="n">Language</span><span class="p">:</span> <span class="n">python</span> 
-<span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="p">:</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">findDifference</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nums1</span><span class="p">,</span> <span class="n">nums2</span><span class="p">):</span>
-        <span class="n">s1</span><span class="p">,</span> <span class="n">s2</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">nums1</span><span class="p">),</span> <span class="nb">set</span><span class="p">(</span><span class="n">nums2</span><span class="p">)</span>
-        <span class="n">ans</span> <span class="o">=</span> <span class="p">[,</span> <span class="p">]</span>
+        for i in s1:
+            if i not in s2:
+                ans[0].append(i)
 
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">s1</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">i</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">s2</span><span class="p">:</span>
-                <span class="n">ans</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+        for i in s2:
+            if i not in s1:
+                ans[1].append(i)
 
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">s2</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">i</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">s1</span><span class="p">:</span>
-                <span class="n">ans</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+        return ans
 
-        <span class="k">return</span> <span class="n">ans</span>
-</code></pre></div>
+</code></pre>
+<pre><code class="language-java">import java.util.*;
 
-<div class="codehilite"><pre><span></span><code><span class="nl">Language</span><span class="p">:</span><span class="w"> </span><span class="n">java</span><span class="w"> </span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">java.util.*</span><span class="p">;</span>
+class Solution {
+    public List&lt;List&lt;Integer&gt;&gt; findDifference(int[] nums1, int[] nums2) {
+        Set&lt;Integer&gt; s1 = new HashSet&lt;&gt;();
+        Set&lt;Integer&gt; s2 = new HashSet&lt;&gt;();
+        List&lt;List&lt;Integer&gt;&gt; ans = new ArrayList&lt;&gt;();
+        ans.add(new ArrayList&lt;&gt;());
+        ans.add(new ArrayList&lt;&gt;());
 
-<span class="kd">class</span> <span class="nc">Solution</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">List</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="nf">findDifference</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">nums1</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">nums2</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="n">Set</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span><span class="w"> </span><span class="n">s1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">HashSet</span><span class="o">&lt;&gt;</span><span class="p">();</span>
-<span class="w">        </span><span class="n">Set</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span><span class="w"> </span><span class="n">s2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">HashSet</span><span class="o">&lt;&gt;</span><span class="p">();</span>
-<span class="w">        </span><span class="n">List</span><span class="o">&lt;</span><span class="n">List</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="n">ans</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ArrayList</span><span class="o">&lt;&gt;</span><span class="p">();</span>
-<span class="w">        </span><span class="n">ans</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">ArrayList</span><span class="o">&lt;&gt;</span><span class="p">());</span>
-<span class="w">        </span><span class="n">ans</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">ArrayList</span><span class="o">&lt;&gt;</span><span class="p">());</span>
+        for (int i : nums1) {
+            s1.add(i);
+        }
 
-<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">nums1</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="n">s1</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="n">i</span><span class="p">);</span>
-<span class="w">        </span><span class="p">}</span>
+        for (int i : nums2) {
+            s2.add(i);
+        }
 
-<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">nums2</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="n">s2</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="n">i</span><span class="p">);</span>
-<span class="w">        </span><span class="p">}</span>
+        for (int i : s1) {
+            if (!s2.contains(i)) {
+                ans.get(0).add(i);
+            }
+        }
 
-<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">s1</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">s2</span><span class="p">.</span><span class="na">contains</span><span class="p">(</span><span class="n">i</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="n">ans</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="mi">0</span><span class="p">).</span><span class="na">add</span><span class="p">(</span><span class="n">i</span><span class="p">);</span>
-<span class="w">            </span><span class="p">}</span>
-<span class="w">        </span><span class="p">}</span>
+        for (int i : s2) {
+            if (!s1.contains(i)) {
+                ans.get(1).add(i);
+            }
+        }
 
-<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">s2</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">s1</span><span class="p">.</span><span class="na">contains</span><span class="p">(</span><span class="n">i</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="n">ans</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="mi">1</span><span class="p">).</span><span class="na">add</span><span class="p">(</span><span class="n">i</span><span class="p">);</span>
-<span class="w">            </span><span class="p">}</span>
-<span class="w">        </span><span class="p">}</span>
+        return ans;
+    }
+}
 
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">ans</span><span class="p">;</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
+</code></pre>
+<pre><code class="language-javascript">var findDifference = function(nums1, nums2) {
+    let s1 = new Set(nums1);
+    let s2 = new Set(nums2);
+    let ans = [[], []];
 
-<div class="codehilite"><pre><span></span><code><span class="nx">Language</span><span class="o">:</span><span class="w"> </span><span class="nx">javascript</span><span class="w"> </span>
-<span class="kd">var</span><span class="w"> </span><span class="nx">findDifference</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kd">function</span><span class="p">(</span><span class="nx">nums1</span><span class="p">,</span><span class="w"> </span><span class="nx">nums2</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="nx">s1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nb">Set</span><span class="p">(</span><span class="nx">nums1</span><span class="p">);</span>
-<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="nx">s2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nb">Set</span><span class="p">(</span><span class="nx">nums2</span><span class="p">);</span>
-<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="nx">ans</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[,</span><span class="w"> </span><span class="p">];</span>
+    for (let i of s1) {
+        if (!s2.has(i)) {
+            ans[0].push(i);
+        }
+    }
 
-<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kd">let</span><span class="w"> </span><span class="nx">i</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="nx">s1</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nx">s2</span><span class="p">.</span><span class="nx">has</span><span class="p">(</span><span class="nx">i</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="nx">ans</span><span class="p">[</span><span class="mf">0</span><span class="p">].</span><span class="nx">push</span><span class="p">(</span><span class="nx">i</span><span class="p">);</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">    </span><span class="p">}</span>
+    for (let i of s2) {
+        if (!s1.has(i)) {
+            ans[1].push(i);
+        }
+    }
 
-<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kd">let</span><span class="w"> </span><span class="nx">i</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="nx">s2</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nx">s1</span><span class="p">.</span><span class="nx">has</span><span class="p">(</span><span class="nx">i</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="nx">ans</span><span class="p">[</span><span class="mf">1</span><span class="p">].</span><span class="nx">push</span><span class="p">(</span><span class="nx">i</span><span class="p">);</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">    </span><span class="p">}</span>
+    return ans;
+};
 
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">ans</span><span class="p">;</span>
-<span class="p">};</span>
-</code></pre></div>
-
-<p>PLEASE UPVOTE !!!</p>
-<p></p></div><p style="page-break-before: always" ></p>
+</code></pre>
+<p>PLEASE UPVOTE !!! </p></div>
