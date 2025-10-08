@@ -81,7 +81,7 @@ def fetch_ai_response(prompt):
         PrintHelper.clear_last_lines(1)
     except Exception:
         PrintHelper.clear_last_lines(1)
-        return False
+        return "<ERROR>"
 
     return response.text
 
@@ -108,6 +108,9 @@ def cache_ai_explanation(question):
     )
 
     response = fetch_ai_response(prompt)
+    if response == "<ERROR>":
+        PrintHelper.print_error(f"Failed to generate AI explanation for {question}.")
+        return False
     explanation = helper.markdown_to_html(response)
 
     # Prepare ai explanation HTML
@@ -442,7 +445,8 @@ def make_pdf(option):
     pdf = weasyprint.HTML(string=finalHtml).write_pdf()
 
     # Save PDF
-    filename = f"leetcode-{State.file_name}.pdf"
+
+    filename = f"{State.file_name}_{'_'.join(option)}.pdf"
     with open(filename, "wb") as f:
         f.write(pdf)
 

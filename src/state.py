@@ -17,7 +17,7 @@ class State:
 
     @classmethod
     def get_lines(cls, filepath):
-        cls.file_name = filepath[len(".txt/") :]
+        cls.file_name = filepath[: len(".txt")]
         try:
             file_path = os.path.join("questions_lists", filepath)
             with open(file_path) as f:

@@ -1,0 +1,107 @@
+<div class='ai-explanation'><h3>List of All Approaches</h3>
+<ol>
+<li>Brute Force Approach (Filter and Reverse)</li>
+<li>Two-Pointer Approach</li>
+</ol>
+<h3>Brute Force Approach (Filter and Reverse)</h3>
+<p>This approach involves two main steps. First, we process the input string to create a new, clean string that contains only lowercase alphanumeric characters. Second, we check if this new string is a palindrome.</p>
+<ol>
+<li>Create an empty string, let's call it <code>filtered_s</code>.</li>
+<li>Iterate through each character of the input string <code>s</code>.</li>
+<li>For each character, check if it is alphanumeric.</li>
+<li>If it is, convert it to lowercase and append it to <code>filtered_s</code>.</li>
+<li>After building <code>filtered_s</code>, create a reversed copy of it.</li>
+<li>Compare <code>filtered_s</code> with its reversed version. If they are identical, the string is a palindrome and we return <code>true</code>; otherwise, we return <code>false</code>.</li>
+</ol>
+<p>The time complexity is O(N) as we iterate through the string to filter it and then again to reverse/compare it. The space complexity is O(N) to store the filtered string.</p>
+<pre><code class="language-cpp">#include &lt;string&gt;
+#include &lt;vector&gt;
+#include &lt;cctype&gt;
+#include &lt;algorithm&gt;
+
+class Solution {
+public:
+    bool isPalindrome(std::string s) {
+        std::string filtered_s;
+        for (char c : s) {
+            if (std::isalnum(c)) {
+                filtered_s += std::tolower(c);
+            }
+        }
+
+        std::string reversed_s = filtered_s;
+        std::reverse(reversed_s.begin(), reversed_s.end());
+
+        return filtered_s == reversed_s;
+    }
+};
+</code></pre>
+<h3>Two-Pointer Approach</h3>
+<p>This is a more optimized approach that avoids using extra space. We use two pointers, one starting from the beginning of the string and one from the end, moving towards the center. We compare characters while simultaneously filtering out non-alphanumeric ones.</p>
+<ol>
+<li>Initialize two pointers: <code>start</code> at the beginning of the string (index 0) and <code>end</code> at the end (<code>s.size() - 1</code>).</li>
+<li>Loop as long as <code>start</code> is less than <code>end</code>.</li>
+<li>Inside the loop, advance the <code>start</code> pointer forward if its current character is not alphanumeric.</li>
+<li>Similarly, move the <code>end</code> pointer backward if its current character is not alphanumeric.</li>
+<li>Once both pointers point to alphanumeric characters, compare them after converting both to lowercase.</li>
+<li>If the characters are not equal, the string is not a palindrome, so return <code>false</code>.</li>
+<li>If they are equal, move <code>start</code> one step forward and <code>end</code> one step backward to check the next pair.</li>
+<li>If the loop completes without finding any mismatches, it means the string is a palindrome, so return <code>true</code>.</li>
+</ol>
+<p>The time complexity is O(N) because each pointer traverses the string at most once. The space complexity is O(1) since we only use a constant amount of extra space for the pointers.</p>
+<pre><code class="language-cpp">#include &lt;string&gt;
+#include &lt;cctype&gt;
+
+class Solution {
+public:
+    bool isPalindrome(std::string s) {
+       int start = 0;
+       int end = s.size() - 1;
+       while(start &lt; end){
+           // Skip non-alphanumeric characters from the left
+           while(start &lt; end &amp;&amp; !isalnum(s[start])) {
+               start++;
+           }
+           // Skip non-alphanumeric characters from the right
+           while(start &lt; end &amp;&amp; !isalnum(s[end])) {
+               end--;
+           }
+
+           // Compare the lowercase versions of the characters
+           if(tolower(s[start]) != tolower(s[end])) {
+               return false;
+           }
+
+           // Move pointers inward
+           start++;
+           end--;
+       }
+       return true;
+    }
+};
+</code></pre>
+<h3>Pythonic Solution</h3>
+<p>This solution implements the optimal Two-Pointer approach in a clean and idiomatic Python style.</p>
+<pre><code class="language-python">class Solution:
+    def isPalindrome(self, s: str) -&gt; bool:
+        l, r = 0, len(s) - 1
+
+        while l &lt; r:
+            # Move left pointer to the next alphanumeric character
+            while l &lt; r and not s[l].isalnum():
+                l += 1
+
+            # Move right pointer to the previous alphanumeric character
+            while l &lt; r and not s[r].isalnum():
+                r -= 1
+
+            # Compare characters (case-insensitive)
+            if s[l].lower() != s[r].lower():
+                return False
+
+            # Move pointers towards the center
+            l += 1
+            r -= 1
+
+        return True
+</code></pre></div>
