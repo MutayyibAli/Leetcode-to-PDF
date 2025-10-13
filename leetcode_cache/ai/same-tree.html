@@ -1,0 +1,121 @@
+<div class='ai-explanation'><h3>List of all the approaches to solution</h3>
+<ol>
+<li>Brute Force / Recursive Approach (Depth-First Search)</li>
+<li>Iterative Approach (Breadth-First Search)</li>
+</ol>
+<hr />
+<h3>Brute Force / Recursive Approach (Depth-First Search)</h3>
+<p>This approach directly translates the definition of "same tree" into a recursive function. Two trees are the same if their root nodes have the same value, their left subtrees are the same, and their right subtrees are the same. This naturally leads to a recursive, depth-first comparison.</p>
+<ol>
+<li><strong>Base Case 1:</strong> If both nodes <code>p</code> and <code>q</code> are <code>nullptr</code>, it means we've reached the end of a branch on both trees simultaneously. This part is identical, so return <code>true</code>.</li>
+<li><strong>Base Case 2:</strong> If one of the nodes is <code>nullptr</code> but the other is not, or if their values are different, the trees are not identical. In this case, return <code>false</code>.</li>
+<li><strong>Recursive Step:</strong> If the current nodes are valid and their values match, the overall result depends on their children. Recursively call the function for the left subtrees (<code>p-&gt;left</code>, <code>q-&gt;left</code>) and the right subtrees (<code>p-&gt;right</code>, <code>q-&gt;right</code>). The trees are only the same if both of these recursive calls return <code>true</code>.</li>
+</ol>
+<p>This method traverses both trees in a pre-order fashion, comparing them node by node. The time complexity is O(N) where N is the minimum number of nodes in the two trees, and the space complexity is O(H) where H is the minimum height of the two trees, due to the recursion stack.</p>
+<pre><code class="language-cpp">/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    bool isSameTree(TreeNode* p, TreeNode* q) {
+        // 1. If both nodes are NULL, they are identical.
+        if (p == nullptr &amp;&amp; q == nullptr) {
+            return true;
+        }
+        // 2. If one node is NULL or values differ, they are not identical.
+        if (p == nullptr || q == nullptr || p-&gt;val != q-&gt;val) {
+            return false;
+        }
+        // 3. Recursively check the left and right subtrees.
+        return isSameTree(p-&gt;left, q-&gt;left) &amp;&amp; isSameTree(p-&gt;right, q-&gt;right);
+    }
+};
+</code></pre>
+<hr />
+<h3>Iterative Approach (Breadth-First Search)</h3>
+<p>Instead of recursion, we can use an iterative approach with a queue to perform a level-by-level comparison, which is a form of Breadth-First Search (BFS). This avoids deep recursion and potential stack overflow issues for highly skewed trees.</p>
+<ol>
+<li>Initialize a queue and add the root nodes <code>p</code> and <code>q</code> as a pair.</li>
+<li>Loop as long as the queue is not empty.</li>
+<li>In each iteration, dequeue a pair of nodes (<code>node1</code> from tree <code>p</code>, <code>node2</code> from tree <code>q</code>).</li>
+<li><strong>Check for sameness:</strong><ul>
+<li>If both <code>node1</code> and <code>node2</code> are <code>nullptr</code>, they match. Continue to the next pair in the queue.</li>
+<li>If one of the nodes is <code>nullptr</code> or their values are different, the trees are not the same. Return <code>false</code>.</li>
+</ul>
+</li>
+<li>If the nodes match, enqueue their children as pairs for future comparison: first the pair of left children (<code>node1-&gt;left</code>, <code>node2-&gt;left</code>) and then the pair of right children (<code>node1-&gt;right</code>, <code>node2-&gt;right</code>).</li>
+<li>If the loop completes without returning <code>false</code>, it means every corresponding pair of nodes was identical. Return <code>true</code>.</li>
+</ol>
+<p>The time complexity is O(N) where N is the minimum number of nodes. The space complexity is O(W) where W is the maximum width of the trees, as the queue can hold up to all nodes at the widest level.</p>
+<pre><code class="language-cpp">/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+#include &lt;queue&gt;
+#include &lt;utility&gt;
+
+class Solution {
+public:
+    bool isSameTree(TreeNode* p, TreeNode* q) {
+        std::queue&lt;std::pair&lt;TreeNode*, TreeNode*&gt;&gt; check_queue;
+        check_queue.push({p, q});
+
+        while (!check_queue.empty()) {
+            auto [node1, node2] = check_queue.front();
+            check_queue.pop();
+
+            if (!node1 &amp;&amp; !node2) {
+                continue;
+            }
+
+            if (!node1 || !node2 || node1-&gt;val != node2-&gt;val) {
+                return false;
+            }
+
+            check_queue.push({node1-&gt;left, node2-&gt;left});
+            check_queue.push({node1-&gt;right, node2-&gt;right});
+        }
+
+        return true;
+    }
+};
+</code></pre>
+<hr />
+<h3>Pythonic Solution (Best Approach)</h3>
+<p>The recursive approach is not only efficient but also highly expressive and idiomatic in Python. It's considered the best approach due to its clarity and conciseness, directly mirroring the problem's recursive nature.</p>
+<pre><code class="language-python"># Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+class Solution:
+    def isSameTree(self, p: Optional[TreeNode], q: Optional[TreeNode]) -&gt; bool:
+        # If both nodes are None, they are identical.
+        if not p and not q:
+            return True
+
+        # If one of the nodes is None or their values are different,
+        # they are not identical.
+        if not p or not q or p.val != q.val:
+            return False
+
+        # Recursively check if both left and right subtrees are identical.
+        return self.isSameTree(p.left, q.left) and self.isSameTree(p.right, q.right)
+
+</code></pre></div>

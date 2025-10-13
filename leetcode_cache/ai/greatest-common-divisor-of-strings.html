@@ -1,0 +1,107 @@
+<div class='ai-explanation'><h3>List of Approaches</h3>
+<ol>
+<li>Brute Force Approach</li>
+<li>GCD of Lengths Approach</li>
+</ol>
+<hr />
+<h3>1. Brute Force Approach</h3>
+<p>This approach iterates through all possible common prefixes of the two strings, from the longest to the shortest. For each potential prefix, it checks if both <code>str1</code> and <code>str2</code> can be formed by concatenating that prefix multiple times. The first (and thus longest) prefix that satisfies this condition for both strings is the greatest common divisor string.</p>
+<p><strong>Step-by-step explanation:</strong>
+1.  Determine the minimum length between <code>str1</code> and <code>str2</code>. The greatest common divisor string cannot be longer than this.
+2.  Iterate from this minimum length down to 1. Let the current length be <code>l</code>.
+3.  In each iteration, create a candidate prefix string of length <code>l</code> from <code>str1</code>.
+4.  Check if this candidate prefix can form <code>str1</code>:
+    *   The length of <code>str1</code> must be divisible by <code>l</code>.
+    *   A new string constructed by repeating the prefix <code>len(str1) / l</code> times must be equal to <code>str1</code>.
+5.  Check if this candidate prefix can also form <code>str2</code>:
+    *   The length of <code>str2</code> must be divisible by <code>l</code>.
+    *   A new string constructed by repeating the prefix <code>len(str2) / l</code> times must be equal to <code>str2</code>.
+6.  If the prefix divides both strings, it is the largest one found so far (due to the descending loop), so we can immediately return it.
+7.  If the loop completes without finding a common divisor, return an empty string.</p>
+<p>This approach has a time complexity of O(min(n, m) * (n+m)) and a space complexity of O(n+m), where n and m are the lengths of the two strings.</p>
+<pre><code class="language-cpp">#include &lt;string&gt;
+#include &lt;algorithm&gt;
+
+class Solution {
+public:
+    std::string gcdOfStrings(std::string str1, std::string str2) {
+        int len1 = str1.length();
+        int len2 = str2.length();
+
+        for (int i = std::min(len1, len2); i &gt;= 1; --i) {
+            // Check if i is a common divisor of the lengths
+            if (len1 % i == 0 &amp;&amp; len2 % i == 0) {
+                std::string prefix = str1.substr(0, i);
+                std::string temp1 = &quot;&quot;, temp2 = &quot;&quot;;
+
+                // Construct what str1 should be if it's made of the prefix
+                for (int j = 0; j &lt; len1 / i; ++j) {
+                    temp1 += prefix;
+                }
+
+                // Construct what str2 should be
+                for (int j = 0; j &lt; len2 / i; ++j) {
+                    temp2 += prefix;
+                }
+
+                // If both match, we found the GCD string
+                if (temp1 == str1 &amp;&amp; temp2 == str2) {
+                    return prefix;
+                }
+            }
+        }
+
+        return &quot;&quot;;
+    }
+};
+</code></pre>
+<hr />
+<h3>2. GCD of Lengths Approach</h3>
+<p>This is a more efficient and elegant approach based on a mathematical property. If two strings <code>str1</code> and <code>str2</code> have a common string divisor <code>x</code>, then <code>str1</code> is formed by repeating <code>x</code> <code>p</code> times and <code>str2</code> is formed by repeating <code>x</code> <code>q</code> times. Consequently, <code>str1 + str2</code> (which is <code>x</code> repeated <code>p+q</code> times) must be identical to <code>str2 + str1</code> (which is <code>x</code> repeated <code>q+p</code> times). This gives us a crucial check: if <code>str1 + str2 != str2 + str1</code>, no such common divisor exists. If they are equal, a common divisor is guaranteed to exist. The length of the largest such divisor string will be the greatest common divisor (GCD) of the lengths of <code>str1</code> and <code>str2</code>.</p>
+<p><strong>Step-by-step explanation:</strong>
+1.  Concatenate the strings in both orders: <code>str1 + str2</code> and <code>str2 + str1</code>.
+2.  If the two resulting strings are not equal, it's impossible to have a common string divisor. Return an empty string.
+3.  If they are equal, a common divisor exists. The problem is now reduced to finding the length of the base string.
+4.  The length of the greatest common divisor string will be the greatest common divisor of the lengths of <code>str1</code> and <code>str2</code>.
+5.  Calculate <code>g = gcd(str1.length(), str2.length())</code>.
+6.  The answer is the prefix of either string of length <code>g</code>. Return <code>str1.substr(0, g)</code>.</p>
+<p>This approach has a time complexity of O(n+m) due to string concatenation and a space complexity of O(n+m) to store the concatenated strings.</p>
+<pre><code class="language-cpp">#include &lt;string&gt;
+#include &lt;numeric&gt; // Required for std::gcd in C++17
+
+class Solution {
+public:
+    std::string gcdOfStrings(std::string str1, std::string str2) {
+        // If a common divisor exists, concatenating them in different orders
+        // should result in the same string.
+        if (str1 + str2 != str2 + str1) {
+            return &quot;&quot;;
+        }
+
+        // If they are compatible, the GCD string length will be the GCD
+        // of their lengths. The string itself is the prefix of that length.
+        int gcd_len = std::gcd(str1.length(), str2.length());
+        return str1.substr(0, gcd_len);
+    }
+};
+</code></pre>
+<hr />
+<h3>Pythonic Solution (Best Approach)</h3>
+<p>The GCD of Lengths approach is the most efficient and translates to a very clean and concise Python solution.</p>
+<pre><code class="language-python">import math
+
+class Solution:
+    def gcdOfStrings(self, str1: str, str2: str) -&gt; str:
+        # Check if the strings have a common repeating pattern.
+        # This is true if and only if concatenating them in both
+        # orders yields the same result.
+        if str1 + str2 != str2 + str1:
+            return &quot;&quot;
+
+        # If they do, the greatest common divisor string has a length
+        # equal to the GCD of the lengths of the input strings.
+        gcd_length = math.gcd(len(str1), len(str2))
+
+        # The GCD string is the prefix of this calculated length.
+        return str1[:gcd_length]
+</code></pre></div>

@@ -1,0 +1,216 @@
+<div class='ai-explanation'><h3>List of Approaches</h3>
+<ol>
+<li>Brute Force Approach (Using a Copy of the Board)</li>
+<li>In-place Approach with Extra States</li>
+<li>In-place Approach with Bit Manipulation</li>
+</ol>
+<hr />
+<h3>Brute Force Approach (Using a Copy of the Board)</h3>
+<p>This approach follows the problem description directly by using a separate copy of the board to calculate the next state. This ensures that the state of any cell is computed based on the original states of all its neighbors, fulfilling the "simultaneous" update requirement.</p>
+<ol>
+<li>Create an exact copy of the input <code>board</code>. This copy will serve as a reference to the original state of the grid for the current generation.</li>
+<li>Iterate through every cell <code>(i, j)</code> of the board.</li>
+<li>For each cell, count its live neighbors by examining the 8 adjacent cells in the <em>copied</em> board. This prevents using partially updated information from the current generation.</li>
+<li>Apply the four Game of Life rules based on the cell's original state (from the copy) and its live neighbor count.</li>
+<li>Update the value of the cell <code>(i, j)</code> in the <em>original</em> <code>board</code> with its calculated next state.</li>
+<li>After iterating through all cells, the original <code>board</code> will hold the complete next state.</li>
+</ol>
+<p>The time complexity is O(m * n) as we visit each cell once, and the space complexity is O(m * n) for the extra copy of the board.</p>
+<pre><code class="language-cpp">class Solution {
+public:
+    void gameOfLife(vector&lt;vector&lt;int&gt;&gt;&amp; board) {
+        int m = board.size();
+        int n = board[0].size();
+        vector&lt;vector&lt;int&gt;&gt; board_copy = board;
+
+        int dr[] = {-1, -1, -1, 0, 0, 1, 1, 1};
+        int dc[] = {-1, 0, 1, -1, 1, -1, 0, 1};
+
+        for (int i = 0; i &lt; m; ++i) {
+            for (int j = 0; j &lt; n; ++j) {
+                int live_neighbors = 0;
+                for (int k = 0; k &lt; 8; ++k) {
+                    int r = i + dr[k];
+                    int c = j + dc[k];
+                    if (r &gt;= 0 &amp;&amp; r &lt; m &amp;&amp; c &gt;= 0 &amp;&amp; c &lt; n &amp;&amp; board_copy[r][c] == 1) {
+                        live_neighbors++;
+                    }
+                }
+
+                // Rule 1 &amp; 3: A live cell dies
+                if (board_copy[i][j] == 1 &amp;&amp; (live_neighbors &lt; 2 || live_neighbors &gt; 3)) {
+                    board[i][j] = 0;
+                }
+                // Rule 4: A dead cell becomes live
+                if (board_copy[i][j] == 0 &amp;&amp; live_neighbors == 3) {
+                    board[i][j] = 1;
+                }
+                // Rule 2: A live cell with 2 or 3 live neighbors lives on. (No change needed)
+            }
+        }
+    }
+};
+</code></pre>
+<hr />
+<h3>In-place Approach with Extra States</h3>
+<p>To solve the problem in-place as suggested by the follow-up, we can modify the board by using additional states to encode the transitions. This avoids using extra memory proportional to the board size.</p>
+<ol>
+<li>Instead of just <code>0</code> (dead) and <code>1</code> (live), we introduce two new temporary states:<ul>
+<li>State <code>2</code>: A cell that was live (<code>1</code>) but will become dead (<code>0</code>).</li>
+<li>State <code>3</code>: A cell that was dead (<code>0</code>) but will become live (<code>1</code>).</li>
+</ul>
+</li>
+<li>Perform a first pass over the board. For each cell <code>(i, j)</code>:<ul>
+<li>Count its live neighbors. A neighbor is considered originally live if its current value is <code>1</code> (live, no change yet) or <code>2</code> (was live, marked to die).</li>
+<li>Apply the rules: if a live cell (<code>1</code>) needs to die, change it to <code>2</code>. If a dead cell (<code>0</code>) needs to become live, change it to <code>3</code>.</li>
+</ul>
+</li>
+<li>After the first pass, the board contains a mix of states <code>0, 1, 2, 3</code>.</li>
+<li>Perform a second pass to finalize the board. Convert all cells with state <code>2</code> to <code>0</code> and all cells with state <code>3</code> to <code>1</code>.</li>
+</ol>
+<p>This approach modifies the board in-place, resulting in a time complexity of O(m * n) for the two passes and a space complexity of O(1).</p>
+<pre><code class="language-cpp">class Solution {
+public:
+    void gameOfLife(vector&lt;vector&lt;int&gt;&gt;&amp; board) {
+        int m = board.size();
+        int n = board[0].size();
+
+        int dr[] = {-1, -1, -1, 0, 0, 1, 1, 1};
+        int dc[] = {-1, 0, 1, -1, 1, -1, 0, 1};
+
+        // First pass: mark transitions
+        for (int i = 0; i &lt; m; ++i) {
+            for (int j = 0; j &lt; n; ++j) {
+                int live_neighbors = 0;
+                for (int k = 0; k &lt; 8; ++k) {
+                    int r = i + dr[k];
+                    int c = j + dc[k];
+                    // A cell was originally live if its state is 1 or 2
+                    if (r &gt;= 0 &amp;&amp; r &lt; m &amp;&amp; c &gt;= 0 &amp;&amp; c &lt; n &amp;&amp; (board[r][c] == 1 || board[r][c] == 2)) {
+                        live_neighbors++;
+                    }
+                }
+
+                if (board[i][j] == 1 &amp;&amp; (live_neighbors &lt; 2 || live_neighbors &gt; 3)) {
+                    board[i][j] = 2; // Was 1, will be 0
+                }
+                if (board[i][j] == 0 &amp;&amp; live_neighbors == 3) {
+                    board[i][j] = 3; // Was 0, will be 1
+                }
+            }
+        }
+
+        // Second pass: finalize states
+        for (int i = 0; i &lt; m; ++i) {
+            for (int j = 0; j &lt; n; ++j) {
+                if (board[i][j] == 2) board[i][j] = 0;
+                if (board[i][j] == 3) board[i][j] = 1;
+            }
+        }
+    }
+};
+</code></pre>
+<hr />
+<h3>In-place Approach with Bit Manipulation</h3>
+<p>This is the most optimized in-place solution. It cleverly uses the bits of the integer values in the board to store both the current and next states simultaneously within each cell.</p>
+<ol>
+<li>We use the first bit of each number to store the current state and the second bit to store the next state.<ul>
+<li><code>[Next State][Current State]</code></li>
+<li><code>01</code> (1): Was live, will be dead.</li>
+<li><code>11</code> (3): Was live, will stay live.</li>
+<li><code>10</code> (2): Was dead, will be live.</li>
+<li><code>00</code> (0): Was dead, will stay dead.</li>
+</ul>
+</li>
+<li>Iterate through the board in the first pass. For each cell <code>(i, j)</code>:<ul>
+<li>Count its live neighbors. The original state of a neighbor <code>(r, c)</code> can be extracted by checking its first bit using a bitwise AND: <code>board[r][c] &amp; 1</code>.</li>
+<li>Based on the rules, if the cell <code>(i, j)</code> should be live in the next generation, set its second bit to <code>1</code> using a bitwise OR: <code>board[i][j] |= 2</code>.</li>
+</ul>
+</li>
+<li>After the first pass, each cell holds both its original state (in the first bit) and its next state (in the second bit).</li>
+<li>Perform a second pass. For each cell, right-shift its value by one bit (<code>board[i][j] &gt;&gt;= 1</code>). This action discards the old state and promotes the new state to the first bit, finalizing the board update.</li>
+</ol>
+<p>This efficient method has a time complexity of O(m * n) and an optimal space complexity of O(1).</p>
+<pre><code class="language-cpp">class Solution {
+public:
+    void gameOfLife(vector&lt;vector&lt;int&gt;&gt;&amp; board) {
+        int m = board.size(), n = m ? board[0].size() : 0;
+        for (int i = 0; i &lt; m; ++i) {
+            for (int j = 0; j &lt; n; ++j) {
+                int count = 0;
+                // Check all 8 neighbors and the cell itself
+                for (int I = max(i - 1, 0); I &lt; min(i + 2, m); ++I) {
+                    for (int J = max(j - 1, 0); J &lt; min(j + 2, n); ++J) {
+                        count += board[I][J] &amp; 1;
+                    }
+                }
+                // The count includes the cell itself.
+                // A cell becomes live if:
+                // 1. It's a dead cell with 3 live neighbors (count = 3).
+                // 2. It's a live cell with 2 or 3 live neighbors (count-self = 2 or 3 =&gt; count = 3 or 4).
+                // This is simplified to: (count == 3) for both cases, or (count - board[i][j] == 3).
+                // In our count logic, 'count - (board[i][j] &amp; 1)' gives live neighbors.
+                int live_neighbors = count - (board[i][j] &amp; 1);
+
+                // If current cell is live and has 2 or 3 neighbors, it lives on.
+                if ((board[i][j] &amp; 1) &amp;&amp; (live_neighbors == 2 || live_neighbors == 3)) {
+                    board[i][j] |= 2; // Set 2nd bit to 1
+                }
+                // If current cell is dead and has 3 neighbors, it becomes live.
+                if (!(board[i][j] &amp; 1) &amp;&amp; live_neighbors == 3) {
+                    board[i][j] |= 2; // Set 2nd bit to 1
+                }
+            }
+        }
+        // Second pass to finalize the board state
+        for (int i = 0; i &lt; m; ++i) {
+            for (int j = 0; j &lt; n; ++j) {
+                board[i][j] &gt;&gt;= 1;
+            }
+        }
+    }
+};
+</code></pre>
+<hr />
+<h3>Pythonic Solution (Best Approach)</h3>
+<p>The best approach is the in-place bit manipulation. This Python solution implements that logic for an efficient O(1) space solution.</p>
+<pre><code class="language-python">class Solution:
+    def gameOfLife(self, board: list[list[int]]) -&gt; None:
+        &quot;&quot;&quot;
+        Modifies the board in-place to represent the next state of the game.
+        &quot;&quot;&quot;
+        if not board or not board[0]:
+            return
+
+        m, n = len(board), len(board[0])
+
+        # Directions to check the 8 neighbors
+        directions = [(-1, -1), (-1, 0), (-1, 1), (0, -1), (0, 1), (1, -1), (1, 0), (1, 1)]
+
+        # First pass: Compute next state and store it in the second bit
+        for i in range(m):
+            for j in range(n):
+                live_neighbors = 0
+                for dr, dc in directions:
+                    r, c = i + dr, j + dc
+                    if 0 &lt;= r &lt; m and 0 &lt;= c &lt; n:
+                        # Check the original state (LSB) of the neighbor
+                        if board[r][c] &amp; 1:
+                            live_neighbors += 1
+
+                # Get current cell's original state
+                current_state = board[i][j] &amp; 1
+
+                # Rule 2 &amp; 4: When does a cell become or stay live?
+                # A live cell stays live if it has 2 or 3 live neighbors.
+                if current_state == 1 and (live_neighbors == 2 or live_neighbors == 3):
+                    board[i][j] |= 2  # Set the 2nd bit
+                # A dead cell becomes live if it has exactly 3 live neighbors.
+                if current_state == 0 and live_neighbors == 3:
+                    board[i][j] |= 2  # Set the 2nd bit
+
+        # Second pass: Update the board to the next state
+        for i in range(m):
+            for j in range(n):
+                board[i][j] &gt;&gt;= 1
+</code></pre></div>

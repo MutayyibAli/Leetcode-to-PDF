@@ -1,0 +1,143 @@
+<div class='ai-explanation'><h3>List of all the approaches to solution</h3>
+<ol>
+<li>Brute Force Approach</li>
+<li>Greedy Approach with Sorting and Priority Queue</li>
+</ol>
+<hr />
+<h3>Brute Force Approach</h3>
+<h4>Explanation</h4>
+<p>The brute-force approach simulates the decision-making process directly. We have to select <code>k</code> projects, so we can run a loop <code>k</code> times. In each iteration of the loop, we decide which single project to undertake next. The best choice at any step is the most profitable project that we can currently afford.</p>
+<ol>
+<li>Repeat the process <code>k</code> times to select at most <code>k</code> projects.</li>
+<li>In each iteration, scan through all projects to find potential candidates.</li>
+<li>A project is a candidate if it hasn't been chosen yet and its required capital is less than or equal to our current capital <code>w</code>.</li>
+<li>Among all candidate projects, select the one with the highest profit.</li>
+<li>If no affordable project is found, we cannot proceed, so we stop early.</li>
+<li>If a project is selected, add its profit to <code>w</code> and mark it as "used" to prevent it from being selected again.</li>
+<li>After the loop finishes, return the final capital <code>w</code>.</li>
+</ol>
+<p>This method is too slow for large inputs because for each of the <code>k</code> projects, we iterate through all <code>n</code> projects, leading to a quadratic time complexity. The time complexity is O(k * n) and space complexity is O(n).</p>
+<h4>Code</h4>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;algorithm&gt;
+
+class Solution {
+public:
+    int findMaximizedCapital(int k, int w, std::vector&lt;int&gt;&amp; profits, std::vector&lt;int&gt;&amp; capital) {
+        int n = profits.size();
+        std::vector&lt;bool&gt; used(n, false);
+
+        for (int i = 0; i &lt; k; ++i) {
+            int best_project_idx = -1;
+            int max_profit = -1;
+
+            // Find the most profitable affordable project
+            for (int j = 0; j &lt; n; ++j) {
+                if (!used[j] &amp;&amp; capital[j] &lt;= w) {
+                    if (profits[j] &gt; max_profit) {
+                        max_profit = profits[j];
+                        best_project_idx = j;
+                    }
+                }
+            }
+
+            if (best_project_idx == -1) {
+                break; // No affordable projects left
+            }
+
+            w += profits[best_project_idx];
+            used[best_project_idx] = true;
+        }
+        return w;
+    }
+};
+</code></pre>
+<hr />
+<h3>Greedy Approach with Sorting and Priority Queue</h3>
+<h4>Explanation</h4>
+<p>This approach optimizes the brute-force method. The core idea remains greedy: at each step, pick the most profitable project you can afford. The inefficiency in the brute-force method comes from repeatedly searching for all affordable projects. We can improve this by first sorting the projects by their capital requirements. This way, as our capital <code>w</code> increases, more projects become available in a predictable order.</p>
+<p>We use a max-heap (priority queue in C++) to maintain the set of all projects we can currently afford. The heap will always give us the most profitable one instantly.</p>
+<ol>
+<li>Create a vector of pairs, where each pair holds the <code>capital</code> and <code>profit</code> for a project.</li>
+<li>Sort this vector of projects based on their <code>capital</code> requirement in ascending order.</li>
+<li>Initialize a max-heap to store the profits of affordable projects.</li>
+<li>Iterate <code>k</code> times, as we can perform at most <code>k</code> projects.</li>
+<li>In each iteration, add all projects that are now affordable with the current capital <code>w</code> into the max-heap. Since the projects are sorted by capital, we can do this with a pointer, avoiding re-scans.</li>
+<li>If the max-heap is empty, it means there are no affordable projects, so we break the loop.</li>
+<li>Otherwise, select the most profitable project by taking the top element from the max-heap, add its profit to <code>w</code>, and remove it from the heap.</li>
+<li>Return the final capital <code>w</code> after the loop.</li>
+</ol>
+<p>The time complexity is dominated by sorting, making it O(n log n). The heap operations take O(k log n). Thus, the total time complexity is O(n log n + k log n), and the space complexity is O(n) for storing projects and the heap.</p>
+<h4>Code</h4>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;queue&gt;
+#include &lt;algorithm&gt;
+
+class Solution {
+public:
+    int findMaximizedCapital(int k, int w, std::vector&lt;int&gt;&amp; profits, std::vector&lt;int&gt;&amp; capital) {
+        int n = profits.size();
+        std::vector&lt;std::pair&lt;int, int&gt;&gt; projects(n);
+        for (int i = 0; i &lt; n; i++) {
+            projects[i] = {capital[i], profits[i]};
+        }
+
+        // Sort projects by capital requirement
+        std::sort(projects.begin(), projects.end());
+
+        int i = 0;
+        // Max-heap to store profits of affordable projects
+        std::priority_queue&lt;int&gt; maximizeCapital; 
+
+        while (k--) {
+            // Push all newly affordable projects into the max-heap
+            while (i &lt; n &amp;&amp; projects[i].first &lt;= w) {
+                maximizeCapital.push(projects[i].second);
+                i++;
+            }
+
+            // If no projects are affordable, we can't continue
+            if (maximizeCapital.empty()) {
+                break;
+            }
+
+            // Select the most profitable project
+            w += maximizeCapital.top();
+            maximizeCapital.pop();
+        }
+        return w;
+    }
+};
+</code></pre>
+<hr />
+<h3>Pythonic Solution (Best Approach)</h3>
+<pre><code class="language-python">import heapq
+
+class Solution:
+    def findMaximizedCapital(self, k: int, w: int, profits: list[int], capital: list[int]) -&gt; int:
+        n = len(profits)
+        # Create a list of projects (capital, profit) and sort by capital
+        projects = sorted(zip(capital, profits))
+
+        # Min-heap to simulate a max-heap for profits. We'll store negative profits.
+        max_profit_heap = []
+        project_idx = 0
+
+        for _ in range(k):
+            # Add all affordable projects to the max-heap
+            while project_idx &lt; n and projects[project_idx][0] &lt;= w:
+                # Push negative profit to simulate a max-heap
+                heapq.heappush(max_profit_heap, -projects[project_idx][1])
+                project_idx += 1
+
+            # If no affordable projects are available, we stop
+            if not max_profit_heap:
+                break
+
+            # Greedily pick the most profitable project
+            # heappop gives the smallest element (-profit), so we add its negation
+            w += -heapq.heappop(max_profit_heap)
+
+        return w
+
+</code></pre></div>

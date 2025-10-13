@@ -1,0 +1,102 @@
+<div class='ai-explanation'><h3>List of Approaches</h3>
+<ol>
+<li>Brute Force Approach</li>
+<li>Optimized Approach: Find Maximum First</li>
+</ol>
+<hr />
+<h3>Brute Force Approach</h3>
+<h4>Explanation</h4>
+<p>This approach directly simulates the condition for each kid. For every kid, we'll calculate their potential number of candies after receiving the extra ones. Then, we'll compare this new amount with the candy count of every other kid to see if it's the greatest.</p>
+<ol>
+<li>Initialize an empty boolean vector, <code>result</code>, to store the answers.</li>
+<li>Iterate through each kid <code>i</code> in the <code>candies</code> array.</li>
+<li>For each kid <code>i</code>, calculate their potential candy count: <code>potential_candies = candies[i] + extraCandies</code>.</li>
+<li>Assume this kid can have the greatest number of candies by setting a flag <code>is_greatest</code> to <code>true</code>.</li>
+<li>Start a second (nested) loop to iterate through every kid <code>j</code> in the <code>candies</code> array.</li>
+<li>Inside the nested loop, check if <code>potential_candies &lt; candies[j]</code>. If this is true, it means another kid has more candies, so kid <code>i</code> cannot have the greatest amount. Set <code>is_greatest</code> to <code>false</code> and break the inner loop.</li>
+<li>After the inner loop finishes, the <code>is_greatest</code> flag will correctly indicate if kid <code>i</code> can have the greatest number of candies. Add this boolean value to the <code>result</code> vector.</li>
+<li>After iterating through all the kids, return the <code>result</code> vector.</li>
+</ol>
+<p>This method is inefficient because for each kid, we re-scan the entire array. The time complexity is O(N<sup>2</sup>) and the space complexity is O(N) for the result array.</p>
+<h4>C++ Code</h4>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;numeric&gt;
+
+class Solution {
+public:
+    std::vector&lt;bool&gt; kidsWithCandies(std::vector&lt;int&gt;&amp; candies, int extraCandies) {
+        int n = candies.size();
+        std::vector&lt;bool&gt; result;
+        result.reserve(n); // Pre-allocate memory for efficiency
+
+        for (int i = 0; i &lt; n; ++i) {
+            int potentialCandies = candies[i] + extraCandies;
+            bool isGreatest = true;
+            for (int j = 0; j &lt; n; ++j) {
+                if (potentialCandies &lt; candies[j]) {
+                    isGreatest = false;
+                    break;
+                }
+            }
+            result.push_back(isGreatest);
+        }
+        return result;
+    }
+};
+</code></pre>
+<hr />
+<h3>Optimized Approach: Find Maximum First</h3>
+<h4>Explanation</h4>
+<p>The key observation to optimize the solution is that a kid only needs to have a candy count greater than or equal to the <em>current maximum</em> in the group to be considered as having the "greatest" number. We don't need to compare with every other kid individually in a nested loop.</p>
+<ol>
+<li>First, find the maximum number of candies any kid has before distributing the extra ones. This can be done by iterating through the <code>candies</code> array once. Let's store this value in <code>max_candies</code>.</li>
+<li>Initialize a boolean vector <code>result</code> with the same size as <code>candies</code>.</li>
+<li>Iterate through the <code>candies</code> array a second time.</li>
+<li>For each kid <code>i</code>, check if their current candy count plus the extra candies is greater than or equal to <code>max_candies</code> (i.e., <code>candies[i] + extraCandies &gt;= max_candies</code>).</li>
+<li>Store the result of this comparison (<code>true</code> or <code>false</code>) in the corresponding position in the <code>result</code> vector.</li>
+<li>After the loop completes, return the <code>result</code> vector.</li>
+</ol>
+<p>This approach consists of two separate passes over the array, making it much more efficient. The time complexity is O(N) and the space complexity is O(N) for the result array.</p>
+<h4>C++ Code</h4>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;algorithm&gt; // For max_element
+
+class Solution {
+public:
+    std::vector&lt;bool&gt; kidsWithCandies(std::vector&lt;int&gt;&amp; candies, int extraCandies) {
+        // Step 1: Find the maximum number of candies any kid has.
+        int max_candies = 0;
+        for (int candy : candies) {
+            if (candy &gt; max_candies) {
+                max_candies = candy;
+            }
+        }
+        // An alternative using the standard library:
+        // int max_candies = *std::max_element(candies.begin(), candies.end());
+
+        std::vector&lt;bool&gt; result;
+        result.reserve(candies.size()); // Pre-allocate memory for efficiency
+
+        // Step 2 &amp; 3: Check each kid against the max_candies.
+        for (int candy : candies) {
+            result.push_back(candy + extraCandies &gt;= max_candies);
+        }
+
+        return result;
+    }
+};
+</code></pre>
+<hr />
+<h3>Pythonic Solution (Best Approach)</h3>
+<p>This solution implements the "Find Maximum First" approach using Python's concise syntax. We first find the maximum value in the list and then use a list comprehension to efficiently generate the final boolean list.</p>
+<pre><code class="language-python">class Solution:
+    def kidsWithCandies(self, candies: list[int], extraCandies: int) -&gt; list[bool]:
+        # Find the maximum number of candies any kid currently has.
+        max_candies = max(candies)
+
+        # Use a list comprehension for a clean and efficient solution.
+        # For each kid's candy count, it checks if adding extraCandies
+        # makes it greater than or equal to the maximum.
+        return [candy + extraCandies &gt;= max_candies for candy in candies]
+
+</code></pre></div>

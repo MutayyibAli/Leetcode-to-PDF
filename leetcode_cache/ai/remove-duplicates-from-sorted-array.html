@@ -1,0 +1,117 @@
+<div class='ai-explanation'><h3>List of All Approaches</h3>
+<ol>
+<li>Brute Force Approach (Using an extra array)</li>
+<li>Two Pointers Approach</li>
+</ol>
+<hr />
+<h3>1. Brute Force Approach (Using an extra array)</h3>
+<p>This approach prioritizes simplicity over efficiency and constraints. We can iterate through the original array and store only the unique elements in a separate, temporary array. After identifying all unique elements, we copy them from the temporary array back into the original array.</p>
+<h4>Step-by-step Explanation:</h4>
+<ol>
+<li>Handle the edge case where the input array <code>nums</code> is empty. If so, return 0.</li>
+<li>Create a temporary vector, <code>temp</code>, and add the first element of <code>nums</code> to it, as it is always considered unique.</li>
+<li>Iterate through the <code>nums</code> array starting from the second element (index 1).</li>
+<li>For each element, compare it with the last element added to the <code>temp</code> vector.</li>
+<li>If the current element from <code>nums</code> is different, it's a new unique element, so add it to <code>temp</code>.</li>
+<li>After the loop finishes, <code>temp</code> will contain all the unique elements in the correct order.</li>
+<li>Copy all elements from <code>temp</code> back into the beginning of the <code>nums</code> array.</li>
+<li>Return the size of <code>temp</code>, which is the count of unique elements, <code>k</code>.</li>
+</ol>
+<p>This approach is straightforward but violates the in-place (<code>O(1)</code> extra space) constraint of the problem. The time complexity is O(N) due to two separate passes over the data, and the space complexity is O(N) in the worst case where all elements are unique.</p>
+<h4>C++ Code:</h4>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;iostream&gt;
+
+class Solution {
+public:
+    int removeDuplicates(std::vector&lt;int&gt;&amp; nums) {
+        if (nums.empty()) {
+            return 0;
+        }
+
+        std::vector&lt;int&gt; temp;
+        temp.push_back(nums[0]);
+
+        for (int i = 1; i &lt; nums.size(); ++i) {
+            if (nums[i] != temp.back()) {
+                temp.push_back(nums[i]);
+            }
+        }
+
+        for (int i = 0; i &lt; temp.size(); ++i) {
+            nums[i] = temp[i];
+        }
+
+        return temp.size();
+    }
+};
+</code></pre>
+<hr />
+<h3>2. Two Pointers Approach</h3>
+<p>This is the optimal, in-place solution that meets all problem constraints. The core idea is to use two pointers. A "fast" pointer (<code>i</code>) iterates through the entire array, and a "slow" pointer (<code>j</code>) marks the position for the next unique element. Since the array is sorted, duplicates will always be adjacent, making this approach efficient.</p>
+<h4>Step-by-step Explanation:</h4>
+<ol>
+<li>If the array has fewer than two elements, no duplicates are possible, so we return its size.</li>
+<li>Initialize a "slow" pointer <code>j</code> to 1. This pointer represents the length of the subarray with unique elements. The first element <code>nums[0]</code> is always unique and is considered part of the result.</li>
+<li>Initialize a "fast" pointer <code>i</code> to 1. This pointer will scan the array to find new elements.</li>
+<li>Iterate with the fast pointer <code>i</code> from the second element to the end of the array.</li>
+<li>At each step, compare the element at the fast pointer <code>nums[i]</code> with its preceding element <code>nums[i - 1]</code>.</li>
+<li>If <code>nums[i]</code> is different from <code>nums[i - 1]</code>, it means we've found a new unique element.</li>
+<li>Place this unique element at the position indicated by the slow pointer: <code>nums[j] = nums[i]</code>.</li>
+<li>Then, increment the slow pointer <code>j</code> to expand the unique subarray.</li>
+<li>If <code>nums[i]</code> is the same as <code>nums[i - 1]</code>, it's a duplicate. We do nothing and simply move the fast pointer <code>i</code> forward, effectively skipping the duplicate.</li>
+<li>After the loop, <code>j</code> holds the number of unique elements, which is the new logical length of the array. Return <code>j</code>.</li>
+</ol>
+<p>This algorithm makes a single pass through the array, resulting in a time complexity of O(N) and uses no extra space, giving it a space complexity of O(1).</p>
+<h4>C++ Code:</h4>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+
+class Solution {
+public:
+    int removeDuplicates(std::vector&lt;int&gt;&amp; nums) {
+        if (nums.size() == 0) {
+            return 0;
+        }
+
+        int j = 1; // Pointer for the next position to place a unique element
+        for (int i = 1; i &lt; nums.size(); i++) {
+            // If the current element is different from the previous one
+            if (nums[i] != nums[i - 1]) {
+                // Place the new unique element at the j-th position
+                nums[j] = nums[i];
+                j++; // Move the unique element pointer forward
+            }
+        }
+        return j; // j is the number of unique elements
+    }
+};
+</code></pre>
+<hr />
+<h3>Pythonic Solution (Best Approach)</h3>
+<p>The two-pointer approach is implemented concisely in Python. The logic remains the same: one pointer scans the array, and another keeps track of where to place the next unique element.</p>
+<pre><code class="language-python">from typing import List
+
+class Solution:
+    def removeDuplicates(self, nums: List[int]) -&gt; int:
+        # If the list is empty, there are no elements to process.
+        if not nums:
+            return 0
+
+        # 'k' will be the index where the next unique element should be placed.
+        # It starts at 1 because the first element is always unique.
+        k = 1
+
+        # Iterate through the list starting from the second element.
+        for i in range(1, len(nums)):
+            # If the current element is different from the previous one,
+            # it's a unique element.
+            if nums[i] != nums[i - 1]:
+                # Place the unique element at the position 'k'.
+                nums[k] = nums[i]
+                # Increment 'k' to point to the next available slot.
+                k += 1
+
+        # 'k' is the count of unique elements.
+        return k
+
+</code></pre></div>

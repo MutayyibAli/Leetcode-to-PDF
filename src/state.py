@@ -17,17 +17,22 @@ class State:
 
     @classmethod
     def get_lines(cls, filepath):
-        cls.file_name = filepath[: len(".txt")]
+        cls.file_name = filepath[: -len(".txt")]
         try:
             file_path = os.path.join("questions_lists", filepath)
             with open(file_path) as f:
-                cls.lines = f.read().strip().split("\n")
+                all_lines = f.read().strip().split("\n")
         except FileNotFoundError:
             PrintHelper.print_error(f"ERROR: {filepath} not found.")
             sys.exit(1)
 
         # Remove duplicates
-        cls.lines = list(dict.fromkeys(cls.lines))
+        all_lines = list(dict.fromkeys(all_lines))
+
+        # Filter valid lines (questions and headings)
+        for line in all_lines:
+            if State.is_question(line) or State.is_heading(line):
+                cls.lines.append(line)
 
         cls.update_selected_questions()
 

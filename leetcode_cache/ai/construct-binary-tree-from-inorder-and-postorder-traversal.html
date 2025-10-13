@@ -1,0 +1,183 @@
+<div class='ai-explanation'><h3>List of all the approaches to solution</h3>
+<ol>
+<li>Brute Force Recursive Approach</li>
+<li>Optimized Recursive Approach with Hash Map</li>
+</ol>
+<hr />
+<h3>1. Brute Force Recursive Approach</h3>
+<h4>Explanation</h4>
+<p>This approach uses recursion to construct the tree. The key idea comes from the properties of postorder and inorder traversals:
+1.  The last element in a postorder traversal is always the root of the tree (or subtree).
+2.  In an inorder traversal, all elements to the left of the root form the left subtree, and all elements to the right form the right subtree.</p>
+<p>The steps are as follows:
+1.  Define a recursive helper function that takes the start and end indices for the current <code>inorder</code> and <code>postorder</code> subarrays.
+2.  The base case for the recursion is when the start index is greater than the end index, in which case we return <code>nullptr</code>.
+3.  Identify the root of the current subtree, which is the last element of the <code>postorder</code> subarray (<code>postorder[postEnd]</code>). Create a new <code>TreeNode</code> for this root.
+4.  Perform a linear scan through the current <code>inorder</code> subarray to find the index of the root's value. This index splits the <code>inorder</code> array into left and right subtrees.
+5.  Calculate the number of elements in the left subtree. This is needed to determine the correct boundaries for the <code>postorder</code> subarrays for the recursive calls.
+6.  Recursively call the helper function to build the left subtree using the left part of the <code>inorder</code> subarray and the corresponding part of the <code>postorder</code> subarray.
+7.  Recursively call the helper function to build the right subtree using the right part of the <code>inorder</code> subarray and the remaining part of the <code>postorder</code> subarray.
+8.  Link the constructed left and right subtrees to the root and return it.</p>
+<p>The main bottleneck is the linear search for the root in the <code>inorder</code> array at each step. This leads to a quadratic time complexity in the worst case.</p>
+<p>The time complexity is O(N²) for a skewed tree, and the space complexity is O(N) for the recursion stack in the worst case.</p>
+<h4>C++ Code Snippet</h4>
+<pre><code class="language-cpp">/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    TreeNode* buildTree(vector&lt;int&gt;&amp; inorder, vector&lt;int&gt;&amp; postorder) {
+        return build(inorder, 0, inorder.size() - 1, postorder, 0, postorder.size() - 1);
+    }
+
+private:
+    TreeNode* build(vector&lt;int&gt;&amp; inorder, int inStart, int inEnd, 
+                    vector&lt;int&gt;&amp; postorder, int postStart, int postEnd) {
+        if (inStart &gt; inEnd || postStart &gt; postEnd) {
+            return nullptr;
+        }
+
+        // The root is the last element in the current postorder subarray
+        int rootVal = postorder[postEnd];
+        TreeNode* root = new TreeNode(rootVal);
+
+        // Find root's index in the inorder subarray (linear scan)
+        int rootIndex = 0;
+        for (int i = inStart; i &lt;= inEnd; ++i) {
+            if (inorder[i] == rootVal) {
+                rootIndex = i;
+                break;
+            }
+        }
+
+        int leftSubtreeSize = rootIndex - inStart;
+
+        // Recursively build the left subtree
+        root-&gt;left = build(inorder, inStart, rootIndex - 1, 
+                           postorder, postStart, postStart + leftSubtreeSize - 1);
+
+        // Recursively build the right subtree
+        root-&gt;right = build(inorder, rootIndex + 1, inEnd, 
+                            postorder, postStart + leftSubtreeSize, postEnd - 1);
+
+        return root;
+    }
+};
+</code></pre>
+<hr />
+<h3>2. Optimized Recursive Approach with Hash Map</h3>
+<h4>Explanation</h4>
+<p>This approach optimizes the brute-force method by eliminating the repeated linear search. The O(N) search for the root's index in the <code>inorder</code> array at each recursive step is replaced with an O(1) lookup.</p>
+<ol>
+<li>Before starting the recursion, create a hash map (or <code>unordered_map</code> in C++) to store the mapping of each value in the <code>inorder</code> array to its index. This pre-processing step takes O(N) time.</li>
+<li>The recursive helper function is similar to the one in the brute-force approach, but it also takes the hash map as a parameter.</li>
+<li>Inside the recursive function, identify the root from the end of the <code>postorder</code> subarray.</li>
+<li>Instead of a linear scan, use the hash map to find the index of the root in the <code>inorder</code> array in O(1) average time.</li>
+<li>The rest of the logic for calculating subtree sizes and making recursive calls for the left and right subtrees remains the same.</li>
+</ol>
+<p>By using a hash map, we reduce the work done at each node to constant time, making the overall algorithm much more efficient.</p>
+<p>The time complexity is O(N) as we visit each node once, and the space complexity is O(N) to store the hash map and the recursion stack.</p>
+<h4>C++ Code Snippet</h4>
+<pre><code class="language-cpp">/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    TreeNode* buildTree(vector&lt;int&gt;&amp; inorder, vector&lt;int&gt;&amp; postorder) {
+        unordered_map&lt;int, int&gt; inMap;
+        for (int i = 0; i &lt; inorder.size(); ++i) {
+            inMap[inorder[i]] = i;
+        }
+        return build(inorder, 0, inorder.size() - 1, postorder, 0, postorder.size() - 1, inMap);
+    }
+
+private:
+    TreeNode* build(vector&lt;int&gt;&amp; inorder, int inStart, int inEnd, 
+                    vector&lt;int&gt;&amp; postorder, int postStart, int postEnd, 
+                    unordered_map&lt;int, int&gt;&amp; inMap) {
+        if (inStart &gt; inEnd || postStart &gt; postEnd) {
+            return nullptr;
+        }
+
+        int rootVal = postorder[postEnd];
+        TreeNode* root = new TreeNode(rootVal);
+
+        // Find root's index in inorder using the hash map in O(1)
+        int rootIndex = inMap[rootVal];
+        int leftSubtreeSize = rootIndex - inStart;
+
+        // Recursively build the left subtree
+        root-&gt;left = build(inorder, inStart, rootIndex - 1, 
+                           postorder, postStart, postStart + leftSubtreeSize - 1, 
+                           inMap);
+
+        // Recursively build the right subtree
+        root-&gt;right = build(inorder, rootIndex + 1, inEnd, 
+                            postorder, postStart + leftSubtreeSize, postEnd - 1, 
+                            inMap);
+
+        return root;
+    }
+};
+</code></pre>
+<hr />
+<h3>Pythonic Solution (Best Approach)</h3>
+<p>This solution implements the optimized approach using a dictionary as a hash map and a helper function to perform the recursion. We iterate through the <code>postorder</code> array from right to left using an index variable. A crucial detail is to build the right subtree first, as the element preceding the current root in the <code>postorder</code> array is the root of the right subtree.</p>
+<pre><code class="language-python"># Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+from typing import List, Optional
+
+class Solution:
+    def buildTree(self, inorder: List[int], postorder: List[int]) -&gt; Optional[TreeNode]:
+        # Create a hash map for O(1) lookups of inorder indices
+        inorder_map = {val: i for i, val in enumerate(inorder)}
+
+        # An index to traverse the postorder array from the end
+        self.postorder_index = len(postorder) - 1
+
+        def build_helper(in_left, in_right):
+            # Base case: no elements to construct the tree
+            if in_left &gt; in_right:
+                return None
+
+            # The current root value is at the current postorder_index
+            root_val = postorder[self.postorder_index]
+            root = TreeNode(root_val)
+
+            # Decrement postorder_index to move to the root of the next subtree
+            self.postorder_index -= 1
+
+            # Find the root's index in the inorder traversal from the map
+            inorder_root_index = inorder_map[root_val]
+
+            # Recursively build the right subtree first. This is because we are
+            # iterating through postorder from right-to-left. The element to the
+            # left of the current root in postorder is the root of the right subtree.
+            root.right = build_helper(inorder_root_index + 1, in_right)
+            root.left = build_helper(in_left, inorder_root_index - 1)
+
+            return root
+
+        return build_helper(0, len(inorder) - 1)
+
+</code></pre></div>

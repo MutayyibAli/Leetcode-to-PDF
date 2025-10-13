@@ -1,0 +1,174 @@
+<div class='ai-explanation'><h3>List of all the approaches to solution</h3>
+<ol>
+<li>Brute Force Approach</li>
+<li>Two-step Binary Search Approach</li>
+<li>Single Binary Search Approach (Optimal)</li>
+</ol>
+<hr />
+<h3>1. Brute Force Approach</h3>
+<p>This approach involves iterating through every element in the 2D matrix and comparing it with the target value.</p>
+<p><strong>Step-by-step explanation:</strong>
+1.  Use a <code>for</code> loop to iterate through each row of the matrix, from index <code>0</code> to <code>m-1</code>.
+2.  Inside this loop, use a nested <code>for</code> loop to iterate through each column of the current row, from index <code>0</code> to <code>n-1</code>.
+3.  At each position <code>(row, col)</code>, check if <code>matrix[row][col]</code> is equal to the <code>target</code>.
+4.  If a match is found, immediately return <code>true</code>.
+5.  If the loops complete without finding the target, it means the target is not in the matrix, so return <code>false</code>.</p>
+<p>This method is simple to understand but inefficient, as it does not utilize the sorted properties of the matrix. The time complexity is O(m * n) and the space complexity is O(1).</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+
+class Solution {
+public:
+    bool searchMatrix(std::vector&lt;std::vector&lt;int&gt;&gt;&amp; matrix, int target) {
+        if (matrix.empty() || matrix[0].empty()) {
+            return false;
+        }
+        int m = matrix.size();
+        int n = matrix[0].size();
+
+        for (int i = 0; i &lt; m; ++i) {
+            for (int j = 0; j &lt; n; ++j) {
+                if (matrix[i][j] == target) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+};
+</code></pre>
+<hr />
+<h3>2. Two-step Binary Search Approach</h3>
+<p>This approach leverages the sorted nature of the matrix more effectively. First, we find the correct row that could potentially contain the target, and then we perform a binary search within that specific row.</p>
+<p><strong>Step-by-step explanation:</strong>
+1.  <strong>Find the potential row:</strong> Since the first element of each row is greater than the last element of the previous row, the first column is sorted. Perform a binary search on the first column elements to identify which row the <code>target</code> would belong to. The target row <code>r</code> is the one where <code>matrix[r][0] &lt;= target</code> and <code>target &lt;= matrix[r][n-1]</code>.
+2.  <strong>Handle edge cases:</strong> If the target is smaller than the first element of the matrix or larger than the last, it cannot be present, so return <code>false</code>.
+3.  <strong>Search within the row:</strong> Once the correct row is identified, perform a standard binary search on the elements of that row to find the <code>target</code>.
+4.  If the target is found in the second binary search, return <code>true</code>. Otherwise, return <code>false</code>.</p>
+<p>The time complexity is O(log m + log n) and the space complexity is O(1).</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;algorithm&gt;
+
+class Solution {
+public:
+    bool searchMatrix(std::vector&lt;std::vector&lt;int&gt;&gt;&amp; matrix, int target) {
+        if (matrix.empty() || matrix[0].empty()) {
+            return false;
+        }
+        int m = matrix.size();
+        int n = matrix[0].size();
+
+        // Step 1: Binary search to find the correct row
+        int top = 0, bottom = m - 1;
+        int targetRow = -1;
+        while (top &lt;= bottom) {
+            int mid = top + (bottom - top) / 2;
+            if (target &gt;= matrix[mid][0] &amp;&amp; target &lt;= matrix[mid][n - 1]) {
+                targetRow = mid;
+                break;
+            } else if (target &lt; matrix[mid][0]) {
+                bottom = mid - 1;
+            } else {
+                top = mid + 1;
+            }
+        }
+
+        if (targetRow == -1) {
+            return false; // No suitable row found
+        }
+
+        // Step 2: Binary search within the identified row
+        int left = 0, right = n - 1;
+        while (left &lt;= right) {
+            int mid = left + (right - left) / 2;
+            if (matrix[targetRow][mid] == target) {
+                return true;
+            } else if (matrix[targetRow][mid] &lt; target) {
+                left = mid + 1;
+            } else {
+                right = mid - 1;
+            }
+        }
+
+        return false;
+    }
+};
+</code></pre>
+<hr />
+<h3>3. Single Binary Search Approach (Optimal)</h3>
+<p>This is the most efficient approach and meets the problem's time complexity requirement. It treats the 2D matrix as a single, conceptually flattened, sorted 1D array and performs one binary search over it.</p>
+<p><strong>Step-by-step explanation:</strong>
+1.  <strong>Conceptualize as a 1D array:</strong> View the <code>m x n</code> matrix as a sorted array of <code>m * n</code> elements. The index in this virtual array ranges from <code>0</code> to <code>m * n - 1</code>.
+2.  <strong>Initialize pointers:</strong> Set a <code>left</code> pointer to <code>0</code> and a <code>right</code> pointer to <code>m * n - 1</code>.
+3.  <strong>Perform binary search:</strong> While <code>left</code> is less than or equal to <code>right</code>:
+    a. Calculate the middle index <code>mid = left + (right - left) / 2</code>.
+    b. Convert this 1D <code>mid</code> index back to 2D matrix coordinates: <code>row = mid / n</code> and <code>col = mid % n</code>.
+    c. Get the value at this position: <code>mid_val = matrix[row][col]</code>.
+    d. If <code>mid_val</code> equals <code>target</code>, the element is found, so return <code>true</code>.
+    e. If <code>mid_val</code> is less than <code>target</code>, the target must be in the right half, so update <code>left = mid + 1</code>.
+    f. If <code>mid_val</code> is greater than <code>target</code>, the target must be in the left half, so update <code>right = mid - 1</code>.
+4.  If the loop finishes without finding the target, return <code>false</code>.</p>
+<p>The time complexity is O(log(m * n)) and the space complexity is O(1).</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+
+class Solution {
+public:
+    bool searchMatrix(std::vector&lt;std::vector&lt;int&gt;&gt;&amp; matrix, int target) {
+        if (matrix.empty() || matrix[0].empty()) {
+            return false;
+        }
+        int m = matrix.size();
+        int n = matrix[0].size();
+        int left = 0, right = m * n - 1;
+
+        while (left &lt;= right) {
+            int mid = left + (right - left) / 2;
+            // Convert 1D index 'mid' to 2D coordinates
+            int mid_val = matrix[mid / n][mid % n];
+
+            if (mid_val == target) {
+                return true;
+            } else if (mid_val &lt; target) {
+                left = mid + 1;
+            } else {
+                right = mid - 1;
+            }
+        }
+        return false;
+    }
+};
+</code></pre>
+<hr />
+<h3>Pythonic Solution (Best Approach)</h3>
+<p>This solution implements the optimal single binary search approach in Python. It's concise and efficient, taking full advantage of the matrix's properties.</p>
+<pre><code class="language-python">from typing import List
+
+class Solution:
+    def searchMatrix(self, matrix: List[List[int]], target: int) -&gt; bool:
+        &quot;&quot;&quot;
+        Searches for a target value in an m x n matrix with sorted rows and
+        where the first integer of each row is greater than the last of the previous.
+        This is solved by treating the matrix as a flattened sorted array and
+        performing a single binary search.
+        &quot;&quot;&quot;
+        if not matrix or not matrix[0]:
+            return False
+
+        rows, cols = len(matrix), len(matrix[0])
+        left, right = 0, rows * cols - 1
+
+        while left &lt;= right:
+            mid_idx = (left + right) // 2
+            # divmod is a clean way to get quotient (row) and remainder (col)
+            row, col = divmod(mid_idx, cols)
+            mid_element = matrix[row][col]
+
+            if mid_element == target:
+                return True
+            elif mid_element &lt; target:
+                left = mid_idx + 1
+            else:
+                right = mid_idx - 1
+
+        return False
+
+</code></pre></div>

@@ -1,0 +1,111 @@
+<div class='ai-explanation'><h3>List of all the approaches to solution</h3>
+<ol>
+<li>Brute Force Approach</li>
+<li>Brian Kernighan's Algorithm Approach</li>
+<li>Finding Common Prefix (Right Shift) Approach</li>
+</ol>
+<hr />
+<h3>Brute Force Approach</h3>
+<h4>Explanation</h4>
+<p>The most straightforward approach is to simulate the process directly. We can initialize a result variable with the value of <code>left</code> and then iterate through all the numbers from <code>left + 1</code> to <code>right</code>, performing a bitwise AND operation with the result in each step. This approach is easy to understand but is too slow for the given constraints, as the range <code>(right - left)</code> can be very large.</p>
+<p><strong>Step-by-step:</strong>
+1. Initialize a variable <code>result</code> with the starting number <code>left</code>.
+2. Loop through the numbers from <code>left + 1</code> to <code>right</code>.
+3. In each iteration, update <code>result</code> by performing a bitwise AND with the current number (<code>result = result &amp; current_number</code>).
+4. If <code>left</code> and <code>right</code> are equal, the loop won't run, and the result is just <code>left</code>.
+5. After the loop finishes, <code>result</code> will hold the bitwise AND of all numbers in the range.</p>
+<p>This approach will result in a "Time Limit Exceeded" error on most platforms for large ranges. The time complexity is O(N) where N is the number of elements in the range (<code>right - left + 1</code>), and the space complexity is O(1).</p>
+<h4>C++ Code</h4>
+<pre><code class="language-cpp">class Solution {
+public:
+    int rangeBitwiseAnd(int left, int right) {
+        if (left == 0) {
+            return 0;
+        }
+        int result = left;
+        for (long long i = left + 1; i &lt;= right; ++i) {
+            result &amp;= i;
+            // Optimization: if result becomes 0, it will stay 0
+            if (result == 0) {
+                break;
+            }
+        }
+        return result;
+    }
+};
+</code></pre>
+<hr />
+<h3>Brian Kernighan's Algorithm Approach</h3>
+<h4>Explanation</h4>
+<p>This approach uses a clever bit manipulation trick. The core idea is that the bitwise AND of the range <code>[left, right]</code> is simply the common prefix of <code>left</code> and <code>right</code>. Any bits that differ between <code>left</code> and <code>right</code> will eventually be flipped to <code>0</code> by some number within the range. The operation <code>n &amp; (n - 1)</code> is famous for turning off the rightmost set bit of a number <code>n</code>. We can repeatedly apply this operation to <code>right</code> as long as <code>right</code> is greater than <code>left</code>. Each application effectively clears a bit that would not have survived the ANDing process across the entire range. The loop terminates when <code>right</code> becomes less than or equal to <code>left</code>, at which point <code>right</code> will hold the value of the common prefix.</p>
+<p><strong>Step-by-step:</strong>
+1. Check if <code>right</code> is greater than <code>left</code>.
+2. If it is, update <code>right</code> by setting it to <code>right &amp; (right - 1)</code>. This clears the rightmost <code>1</code> bit of <code>right</code>.
+3. Repeat step 2 until <code>right</code> is no longer greater than <code>left</code>.
+4. The final value of <code>right</code> is the common prefix of all numbers in the original range, which is the desired result.</p>
+<p>The time complexity is O(log N) or O(1) as it depends on the number of set bits to be cleared, which is at most the total number of bits in an integer (32). The space complexity is O(1).</p>
+<h4>C++ Code</h4>
+<pre><code class="language-cpp">class Solution {
+public:
+    int rangeBitwiseAnd(int left, int right) {
+        while (right &gt; left) {
+            right = right &amp; (right - 1);
+        }
+        return right;
+    }
+};
+</code></pre>
+<hr />
+<h3>Finding Common Prefix (Right Shift) Approach</h3>
+<h4>Explanation</h4>
+<p>This is the most optimal and intuitive approach based on the properties of bitwise AND. The result of ANDing all numbers in a range <code>[left, right]</code> is their common binary prefix followed by zeros. This is because for any bit position where <code>left</code> and <code>right</code> have different bits, there must be at least one number in the range that will have a <code>0</code> at that bit position, forcing the final result to have a <code>0</code> there as well.</p>
+<p>We can find this common prefix by repeatedly shifting both <code>left</code> and <code>right</code> one bit to the right until they become equal. We count the number of shifts performed. The final equal value is the common prefix. To get the final answer, we shift this common prefix back to the left by the number of shifts we counted, effectively padding it with zeros.</p>
+<p><strong>Step-by-step:</strong>
+1. Initialize a shift counter <code>count</code> to 0.
+2. While <code>left</code> is not equal to <code>right</code>, right-shift both <code>left</code> and <code>right</code> by one (<code>left &gt;&gt;= 1; right &gt;&gt;= 1;</code>) and increment the <code>count</code>.
+3. When the loop terminates, <code>left</code> (or <code>right</code>) holds the common binary prefix.
+4. To get the final result, left-shift the common prefix (<code>left</code>) by <code>count</code> positions (<code>left &lt;&lt; count</code>). This appends <code>count</code> zeros to the prefix.</p>
+<p>The time complexity is O(log N) or O(1) because the numbers are at most 32-bit integers, so the loop runs a maximum of 32 times. The space complexity is O(1).</p>
+<h4>C++ Code</h4>
+<pre><code class="language-cpp">class Solution {
+public:
+    int rangeBitwiseAnd(int left, int right) {
+        int count = 0;
+        while (left != right) {
+            left &gt;&gt;= 1;
+            right &gt;&gt;= 1;
+            count++;
+        }
+        return (left &lt;&lt; count);
+    }
+};
+</code></pre>
+<hr />
+<h3>Pythonic Solution (Best Approach)</h3>
+<pre><code class="language-python">class Solution:
+    def rangeBitwiseAnd(self, left: int, right: int) -&gt; int:
+        &quot;&quot;&quot;
+        This solution finds the common prefix of the binary representations of left and right.
+        The bitwise AND of all numbers in the range [left, right] will be this common
+        prefix followed by zeros.
+
+        Example: left = 5 (101), right = 7 (111)
+
+        1. left=5, right=7, shifts=0. They are not equal.
+           left becomes 2 (10), right becomes 3 (11), shifts becomes 1.
+        2. left=2, right=3, shifts=1. They are not equal.
+           left becomes 1 (1), right becomes 1 (1), shifts becomes 2.
+        3. left=1, right=1. They are equal. Loop terminates.
+
+        The common prefix is 1. We shifted 2 times.
+        Result is the prefix (1) shifted left by 2: 1 &lt;&lt; 2 = 4 (100).
+        &quot;&quot;&quot;
+        shifts = 0
+        while left != right:
+            left &gt;&gt;= 1
+            right &gt;&gt;= 1
+            shifts += 1
+
+        return left &lt;&lt; shifts
+
+</code></pre></div>

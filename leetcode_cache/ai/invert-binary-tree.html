@@ -1,0 +1,130 @@
+<div class='ai-explanation'><h3>List of Approaches</h3>
+<ol>
+<li>Recursive Depth-First Search (DFS)</li>
+<li>Iterative Breadth-First Search (BFS)</li>
+</ol>
+<hr />
+<h3>Approach 1: Recursive Depth-First Search (DFS)</h3>
+<p>This approach uses recursion to traverse the tree. The core idea is to invert the subtrees of a node before swapping the node's own children. This can be thought of as a post-order traversal.</p>
+<ol>
+<li><strong>Base Case:</strong> If the current node is <code>NULL</code>, there is nothing to invert, so we simply return <code>NULL</code>.</li>
+<li><strong>Recurse:</strong> Make a recursive call to invert the left subtree.</li>
+<li><strong>Recurse:</strong> Make another recursive call to invert the right subtree.</li>
+<li><strong>Swap:</strong> After the left and right subtrees have been inverted, swap the left and right child pointers of the current node.</li>
+<li><strong>Return:</strong> Return the pointer to the current node.</li>
+</ol>
+<p>This process starts from the leaves and moves up to the root, ensuring the entire tree is inverted. The time complexity is O(N) as we visit every node once, and the space complexity is O(H) for the recursion stack, where H is the height of the tree (which is O(N) in the worst-case scenario of a skewed tree).</p>
+<pre><code class="language-cpp">/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    TreeNode* invertTree(TreeNode* root) {
+        // Base case: if the node is null, return it.
+        if (root == NULL) {
+            return NULL;
+        }
+
+        // Recursively invert the left and right subtrees.
+        invertTree(root-&gt;left);
+        invertTree(root-&gt;right);
+
+        // Swap the left and right children of the current node.
+        TreeNode* temp = root-&gt;left;
+        root-&gt;left = root-&gt;right;
+        root-&gt;right = temp;
+
+        return root;
+    }
+};
+</code></pre>
+<hr />
+<h3>Approach 2: Iterative Breadth-First Search (BFS)</h3>
+<p>This approach uses a queue to traverse the tree level by level, swapping the children of each node it encounters. This avoids recursion and the potential for stack overflow on very deep trees.</p>
+<ol>
+<li><strong>Initialization:</strong> If the root is <code>NULL</code>, return it. Otherwise, create a queue and push the root node into it.</li>
+<li><strong>Level-Order Traversal:</strong> Loop while the queue is not empty.</li>
+<li><strong>Process Node:</strong> In each iteration, dequeue a node (let's call it <code>current</code>).</li>
+<li><strong>Swap:</strong> Swap the left and right children of the <code>current</code> node.</li>
+<li><strong>Enqueue Children:</strong> If the <code>current</code> node's left child is not <code>NULL</code>, enqueue it. If its right child is not <code>NULL</code>, enqueue it as well.</li>
+<li><strong>Return:</strong> After the loop finishes, all nodes will have been processed, and the original root is returned.</li>
+</ol>
+<p>The time complexity is O(N) because each node is visited exactly once. The space complexity is O(W), where W is the maximum width of the tree, for storing nodes in the queue (which is O(N) in the worst case of a complete binary tree).</p>
+<pre><code class="language-cpp">#include &lt;queue&gt;
+
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    TreeNode* invertTree(TreeNode* root) {
+        if (root == NULL) {
+            return NULL;
+        }
+
+        std::queue&lt;TreeNode*&gt; q;
+        q.push(root);
+
+        while (!q.empty()) {
+            TreeNode* current = q.front();
+            q.pop();
+
+            // Swap the children
+            TreeNode* temp = current-&gt;left;
+            current-&gt;left = current-&gt;right;
+            current-&gt;right = temp;
+
+            // Enqueue children if they exist
+            if (current-&gt;left != NULL) {
+                q.push(current-&gt;left);
+            }
+            if (current-&gt;right != NULL) {
+                q.push(current-&gt;right);
+            }
+        }
+        return root;
+    }
+};
+</code></pre>
+<hr />
+<h3>Pythonic Solution (Recursive DFS)</h3>
+<p>The recursive DFS approach is often considered the most elegant and "pythonic" for tree problems due to its conciseness. A one-line swap in Python makes the code very readable.</p>
+<pre><code class="language-python"># Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+
+class Solution:
+    def invertTree(self, root: Optional[TreeNode]) -&gt; Optional[TreeNode]:
+        # Base case: if the node is None, we're done.
+        if not root:
+            return None
+
+        # Recursively invert the left and right subtrees.
+        self.invertTree(root.left)
+        self.invertTree(root.right)
+
+        # Swap the children of the current node.
+        root.left, root.right = root.right, root.left
+
+        return root
+
+</code></pre></div>

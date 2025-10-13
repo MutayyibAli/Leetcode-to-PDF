@@ -1,0 +1,125 @@
+<div class='ai-explanation'><h3>List of Approaches to Solution</h3>
+<ol>
+<li>Brute Force Approach (Integer Conversion)</li>
+<li>Schoolbook Addition Simulation Approach</li>
+</ol>
+<h3>Brute Force Approach (Integer Conversion)</h3>
+<p>This approach converts the binary strings into integers, performs the addition using standard arithmetic, and then converts the result back into a binary string. While conceptually simple, this method is impractical for the given constraints in languages with fixed-size integer types (like C++ or Java), as the numbers represented by strings up to 10<sup>4</sup> characters long will cause an overflow.</p>
+<ol>
+<li>Convert the binary string <code>a</code> to its integer equivalent.</li>
+<li>Convert the binary string <code>b</code> to its integer equivalent.</li>
+<li>Add the two integers to get a decimal sum.</li>
+<li>Convert the decimal sum back to a binary string.</li>
+<li>This approach fails for inputs longer than ~64 bits in C++ because standard integer types like <code>unsigned long long</code> cannot hold larger values.</li>
+</ol>
+<p>This approach has a time complexity of O(N+M) where N and M are the lengths of the strings and a space complexity of O(max(N,M)) for the resulting string.</p>
+<pre><code class="language-cpp">#include &lt;string&gt;
+#include &lt;algorithm&gt;
+
+// NOTE: This solution only works for small inputs (up to 64 bits)
+// and will fail the test cases with larger strings due to integer overflow.
+class Solution {
+public:
+    string addBinary(string a, string b) {
+        // This is a conceptual implementation that will overflow.
+        // For a full solution, a BigInt library would be needed.
+        unsigned long long num1 = 0;
+        unsigned long long num2 = 0;
+        try {
+           num1 = std::stoull(a, nullptr, 2);
+           num2 = std::stoull(b, nullptr, 2);
+        } catch (const std::out_of_range&amp; oor) {
+            // Handle error: string is too long to fit in unsigned long long
+            // For the purpose of this problem, this approach is not viable.
+            return &quot;Error: Input string too large.&quot;;
+        }
+
+
+        unsigned long long sum = num1 + num2;
+
+        if (sum == 0) return &quot;0&quot;;
+
+        std::string result = &quot;&quot;;
+        while (sum &gt; 0) {
+            result += (sum % 2) + '0';
+            sum /= 2;
+        }
+        std::reverse(result.begin(), result.end());
+        return result;
+    }
+};
+</code></pre>
+<h3>Schoolbook Addition Simulation Approach</h3>
+<p>This method mimics the way humans add numbers by hand, column by column, from right to left, while keeping track of a carry. It works for arbitrarily large binary strings, making it the robust and correct solution for this problem.</p>
+<ol>
+<li>Initialize two pointers, <code>i</code> and <code>j</code>, to point to the last character of strings <code>a</code> and <code>b</code> respectively.</li>
+<li>Initialize a <code>carry</code> variable to <code>0</code> and an empty string <code>ans</code> to store the result.</li>
+<li>Loop as long as there are digits left in either string (<code>i &gt;= 0</code> or <code>j &gt;= 0</code>) or if there is a remaining <code>carry</code>.</li>
+<li>In each iteration, calculate the <code>sum</code> of the current bits and the <code>carry</code>. If a pointer has moved past the beginning of its string, its value is considered <code>0</code>.</li>
+<li>The new bit to be added to the result is <code>sum % 2</code>.</li>
+<li>The new <code>carry</code> for the next-most-significant bit is <code>sum / 2</code>.</li>
+<li>Since we are building the result string from right to left, the characters are appended.</li>
+<li>After the loop, the <code>ans</code> string is in reverse order, so it must be reversed before being returned.</li>
+</ol>
+<p>This approach has a time complexity of O(max(|a|, |b|)) and a space complexity of O(max(|a|, |b|)) for the result string.</p>
+<pre><code class="language-cpp">#include &lt;string&gt;
+#include &lt;algorithm&gt;
+
+class Solution {
+ public:
+  string addBinary(string a, string b) {
+    string ans;
+    int carry = 0;
+    int i = a.length() - 1;
+    int j = b.length() - 1;
+
+    while (i &gt;= 0 || j &gt;= 0 || carry) {
+      int sum = carry;
+      if (i &gt;= 0) {
+        sum += a[i--] - '0';
+      }
+      if (j &gt;= 0) {
+        sum += b[j--] - '0';
+      }
+      ans += (sum % 2) + '0';
+      carry = sum / 2;
+    }
+
+    reverse(ans.begin(), ans.end());
+    return ans;
+  }
+};
+</code></pre>
+<h3>Pythonic Solution for Best Approach</h3>
+<p>The best and most robust approach is the <strong>Schoolbook Addition Simulation</strong>. The following Python code implements this logic concisely. It uses a list to build the result efficiently before joining it into a string.</p>
+<pre><code class="language-python">class Solution:
+  def addBinary(self, a: str, b: str) -&gt; str:
+    result = []
+    carry = 0
+    i = len(a) - 1
+    j = len(b) - 1
+
+    while i &gt;= 0 or j &gt;= 0 or carry:
+      # Calculate sum for the current position
+      current_sum = carry
+      if i &gt;= 0:
+        current_sum += int(a[i])
+        i -= 1
+      if j &gt;= 0:
+        current_sum += int(b[j])
+        j -= 1
+
+      # Determine the bit for the result and the new carry
+      result.append(str(current_sum % 2))
+      carry = current_sum // 2
+
+    # The result list is in reverse order, so reverse it and join
+    return &quot;&quot;.join(reversed(result))
+
+# A more &quot;cheaty&quot; but extremely Pythonic solution using built-in BigInts
+# This works because Python integers have arbitrary precision.
+# class Solution:
+#   def addBinary(self, a: str, b: str) -&gt; str:
+#     sum_int = int(a, 2) + int(b, 2)
+#     return bin(sum_int)[2:]
+</code></pre></div>

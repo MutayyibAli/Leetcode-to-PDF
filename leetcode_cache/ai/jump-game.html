@@ -1,0 +1,180 @@
+<div class='ai-explanation'><h3>List of Approaches</h3>
+<ol>
+<li>Brute Force Approach (Recursion)</li>
+<li>Dynamic Programming Approach (Top-Down Memoization)</li>
+<li>Dynamic Programming Approach (Bottom-Up)</li>
+<li>Greedy Approach (Forward Traversal)</li>
+<li>Greedy Approach (Backward Traversal)</li>
+</ol>
+<hr />
+<h3>1. Brute Force Approach (Recursion)</h3>
+<p>This approach explores every possible jump path from the starting index. We define a recursive function that checks if the end can be reached from a given position. From the current position, we try to jump to every possible next position and recursively call the function for each of them.</p>
+<p><strong>Step-by-step explanation:</strong>
+1.  Define a recursive helper function <code>canJumpFrom(position, nums)</code>.
+2.  The base case: If <code>position</code> is the last index (<code>nums.size() - 1</code>), it means we've reached the end, so return <code>true</code>.
+3.  From the current <code>position</code>, determine the furthest index we can jump to: <code>furthestJump = position + nums[position]</code>.
+4.  Iterate through all possible next positions from <code>position + 1</code> up to <code>furthestJump</code>.
+5.  For each <code>nextPosition</code>, make a recursive call <code>canJumpFrom(nextPosition, nums)</code>. If any of these calls return <code>true</code>, it means a path exists, so we return <code>true</code> immediately.
+6.  If the loop completes without finding a valid path, it's impossible to reach the end from the current <code>position</code>, so return <code>false</code>.
+7.  The initial call to the function will be <code>canJumpFrom(0, nums)</code>.</p>
+<p>This approach is very inefficient as it recomputes the same subproblems multiple times, leading to a Time Limit Exceeded error on most platforms. The time complexity is exponential, O(2^n), and the space complexity is O(n) for the recursion stack depth.</p>
+<pre><code class="language-cpp">class Solution {
+public:
+    bool canJump(vector&lt;int&gt;&amp; nums) {
+        return canJumpFromPosition(0, nums);
+    }
+private:
+    bool canJumpFromPosition(int position, vector&lt;int&gt;&amp; nums) {
+        if (position == nums.size() - 1) {
+            return true;
+        }
+
+        int furthestJump = min((int)nums.size() - 1, position + nums[position]);
+        for (int nextPosition = furthestJump; nextPosition &gt; position; nextPosition--) {
+            if (canJumpFromPosition(nextPosition, nums)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+};
+</code></pre>
+<h3>2. Dynamic Programming Approach (Top-Down Memoization)</h3>
+<p>This approach optimizes the brute-force recursion by using memoization to store the results of subproblems. We use a status array to keep track of whether an index is 'GOOD' (can reach the end), 'BAD' (cannot reach the end), or 'UNKNOWN'. This prevents redundant calculations for the same index.</p>
+<p><strong>Step-by-step explanation:</strong>
+1.  Create a memoization array, <code>memo</code>, of the same size as <code>nums</code> and initialize all states to <code>UNKNOWN</code>. The last index can be marked <code>GOOD</code>.
+2.  In the recursive function, before any computation, check the <code>memo</code> array for the current <code>position</code>.
+3.  If <code>memo[position]</code> is not <code>UNKNOWN</code>, return <code>true</code> if it's <code>GOOD</code> and <code>false</code> if it's <code>BAD</code>.
+4.  If the state is <code>UNKNOWN</code>, perform the same logic as the brute-force approach: iterate through all possible next jumps.
+5.  If a path is found, mark <code>memo[position]</code> as <code>GOOD</code> before returning <code>true</code>.
+6.  If no path is found after checking all jumps, mark <code>memo[position]</code> as <code>BAD</code> before returning <code>false</code>.</p>
+<p>Each index's state is computed only once. For each state, we iterate up to <code>nums[i]</code> steps. This gives a time complexity of O(n^2) and a space complexity of O(n) for the memoization table and recursion stack.</p>
+<pre><code class="language-cpp">enum Status { UNKNOWN, GOOD, BAD };
+
+class Solution {
+public:
+    bool canJump(vector&lt;int&gt;&amp; nums) {
+        memo.assign(nums.size(), UNKNOWN);
+        memo[nums.size() - 1] = GOOD;
+        return canJumpFromPosition(0, nums);
+    }
+private:
+    vector&lt;Status&gt; memo;
+    bool canJumpFromPosition(int position, vector&lt;int&gt;&amp; nums) {
+        if (memo[position] != UNKNOWN) {
+            return memo[position] == GOOD;
+        }
+
+        int furthestJump = min((int)nums.size() - 1, position + nums[position]);
+        for (int nextPosition = furthestJump; nextPosition &gt; position; nextPosition--) {
+            if (canJumpFromPosition(nextPosition, nums)) {
+                memo[position] = GOOD;
+                return true;
+            }
+        }
+
+        memo[position] = BAD;
+        return false;
+    }
+};
+</code></pre>
+<h3>3. Dynamic Programming Approach (Bottom-Up)</h3>
+<p>This approach eliminates recursion by building the solution iteratively. We use a DP array, where <code>dp[i]</code> is <code>true</code> if the last index can be reached from index <code>i</code>. We start from the end of the array and work our way backward.</p>
+<p><strong>Step-by-step explanation:</strong>
+1.  Create a boolean DP array <code>dp</code> of size <code>n</code> (the size of <code>nums</code>).
+2.  Initialize the last element <code>dp[n-1]</code> to <code>true</code>, as it's our destination.
+3.  Iterate backward from the second-to-last index (<code>n-2</code>) to the first index (<code>0</code>).
+4.  For each index <code>i</code>, we want to determine if <code>dp[i]</code> should be <code>true</code>. This happens if we can jump from <code>i</code> to any index <code>j</code> that is already marked as <code>true</code> in our <code>dp</code> array.
+5.  So, for each <code>i</code>, we check all reachable indices <code>j</code> (from <code>i+1</code> to <code>i + nums[i]</code>). If we find any <code>j</code> such that <code>dp[j]</code> is <code>true</code>, we can set <code>dp[i]</code> to <code>true</code> and break the inner loop (since we've found a valid path).
+6.  The final answer is the value of <code>dp[0]</code>.</p>
+<p>This approach still has a nested loop structure, resulting in a time complexity of O(n^2) and a space complexity of O(n) for the DP array.</p>
+<pre><code class="language-cpp">class Solution {
+public:
+    bool canJump(vector&lt;int&gt;&amp; nums) {
+        int n = nums.size();
+        if (n &lt;= 1) return true;
+
+        vector&lt;bool&gt; dp(n, false);
+        dp[n - 1] = true;
+
+        for (int i = n - 2; i &gt;= 0; i--) {
+            int furthestJump = min(n - 1, i + nums[i]);
+            for (int j = i + 1; j &lt;= furthestJump; j++) {
+                if (dp[j]) {
+                    dp[i] = true;
+                    break;
+                }
+            }
+        }
+        return dp[0];
+    }
+};
+</code></pre>
+<h3>4. Greedy Approach (Forward Traversal)</h3>
+<p>This is an optimized O(n) approach. Instead of checking which paths lead to the end, we can simply track the maximum index that is reachable at any point. We iterate through the array and update this maximum reachable index.</p>
+<p><strong>Step-by-step explanation:</strong>
+1.  Initialize a variable <code>max_reach</code> to 0. This will store the farthest index we can get to.
+2.  Iterate through the array with an index <code>i</code>.
+3.  At each step, first check if the current index <code>i</code> is reachable. If <code>i &gt; max_reach</code>, it means we got stuck at a previous index and cannot proceed to <code>i</code>, so we return <code>false</code>.
+4.  If <code>i</code> is reachable, update <code>max_reach</code> to the maximum of its current value and the farthest we can jump from <code>i</code> (i.e., <code>i + nums[i]</code>).
+5.  If <code>max_reach</code> ever becomes greater than or equal to the last index (<code>n-1</code>), it means the end is reachable, and we can return <code>true</code>.
+6.  If the loop completes without <code>max_reach</code> covering the end, it means it's not possible (which is covered by the <code>i &gt; max_reach</code> check).</p>
+<p>This single-pass approach provides a time complexity of O(n) and a space complexity of O(1).</p>
+<pre><code class="language-cpp">class Solution {
+public:
+    bool canJump(vector&lt;int&gt;&amp; nums) {
+        int n = nums.size();
+        int max_reach = 0;
+        for (int i = 0; i &lt; n; ++i) {
+            if (i &gt; max_reach) {
+                return false; // We are stuck and cannot reach index i
+            }
+            max_reach = max(max_reach, i + nums[i]);
+        }
+        return true; // If the loop completes, the end was reachable
+    }
+};
+</code></pre>
+<h3>5. Greedy Approach (Backward Traversal)</h3>
+<p>This is another highly efficient greedy approach that is often considered very intuitive. We start from the destination and work backward, checking if the start is a "good" position from which the goal is reachable.</p>
+<p><strong>Step-by-step explanation:</strong>
+1.  Initialize a <code>goal</code> variable to the last index of the array (<code>nums.size() - 1</code>).
+2.  Iterate backward through the array, from the second-to-last element (<code>i = nums.size() - 2</code>) down to the first element (<code>i = 0</code>).
+3.  At each position <code>i</code>, check if it's possible to reach the current <code>goal</code> from <code>i</code>. The condition for this is <code>i + nums[i] &gt;= goal</code>.
+4.  If the condition is met, it means we have found a new, closer position from which we can definitely reach the end. We update our <code>goal</code> to this new position <code>i</code>.
+5.  After the loop finishes, we simply check if our <code>goal</code> has been moved all the way to the starting index <code>0</code>. If <code>goal == 0</code>, it means the start index can reach the end.</p>
+<p>This approach involves a single pass through the array, resulting in a time complexity of O(n) and a space complexity of O(1).</p>
+<pre><code class="language-cpp">class Solution {
+public:
+    bool canJump(vector&lt;int&gt;&amp; nums) {
+        int goal = nums.size() - 1;
+        for (int i = nums.size() - 2; i &gt;= 0; i--) {
+            if (i + nums[i] &gt;= goal) {
+                goal = i;
+            }
+        }
+        return goal == 0;
+    }
+};
+</code></pre>
+<h3>Pythonic Solution (Best Approach)</h3>
+<p>The best approach is the Greedy one (either forward or backward) due to its O(n) time and O(1) space complexity. The backward traversal is particularly elegant.</p>
+<pre><code class="language-python">class Solution:
+    def canJump(self, nums: list[int]) -&gt; bool:
+        &quot;&quot;&quot;
+        Greedy approach working backward from the goal.
+        &quot;&quot;&quot;
+        goal = len(nums) - 1
+
+        # Iterate from the second to last element to the first
+        for i in range(len(nums) - 2, -1, -1):
+            # If we can reach the current goal from index i,
+            # then index i becomes our new, closer goal.
+            if i + nums[i] &gt;= goal:
+                goal = i
+
+        # If we managed to move the goal all the way to the start (index 0),
+        # it means a path exists.
+        return goal == 0
+</code></pre></div>

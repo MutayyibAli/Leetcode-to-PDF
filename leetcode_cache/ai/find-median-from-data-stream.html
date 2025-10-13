@@ -1,0 +1,189 @@
+<div class='ai-explanation'><h3>List of Approaches</h3>
+<ol>
+<li>Brute Force Approach (Store and Sort)</li>
+<li>Insertion Sort Approach (Keep Sorted)</li>
+<li>Two Heaps Approach</li>
+</ol>
+<hr />
+<h3>1. Brute Force Approach (Store and Sort)</h3>
+<p>This is the most straightforward solution. We store all the numbers in a dynamic array. Whenever the median is requested, we sort the entire array and find the middle element(s).</p>
+<p><strong>Step-by-step explanation:</strong>
+1.  Use a <code>std::vector</code> to store all the numbers from the data stream.
+2.  <strong><code>addNum(num)</code>:</strong> Simply append the new number to the end of the vector.
+3.  <strong><code>findMedian()</code>:</strong>
+    a. Sort the entire vector.
+    b. Get the size <code>n</code> of the vector.
+    c. If <code>n</code> is odd, the median is the element at the middle index <code>n / 2</code>.
+    d. If <code>n</code> is even, the median is the average of the two middle elements at indices <code>n / 2 - 1</code> and <code>n / 2</code>.</p>
+<p>The <code>addNum</code> operation is fast, but <code>findMedian</code> is slow because it requires re-sorting all the elements every time it's called. This approach is inefficient for a large number of <code>findMedian</code> calls. The time complexity for <code>addNum</code> is O(1) on average, while <code>findMedian</code> is O(N log N) where N is the number of elements. Space complexity is O(N).</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;algorithm&gt;
+
+class MedianFinder {
+private:
+    std::vector&lt;int&gt; store;
+
+public:
+    MedianFinder() {}
+
+    void addNum(int num) {
+        store.push_back(num);
+    }
+
+    double findMedian() {
+        // Sort the vector to find the median
+        std::sort(store.begin(), store.end());
+
+        int n = store.size();
+        if (n % 2 != 0) {
+            // Odd number of elements: return the middle one
+            return (double)store[n / 2];
+        } else {
+            // Even number of elements: return the average of the two middle ones
+            return (double)(store[n / 2 - 1] + store[n / 2]) / 2.0;
+        }
+    }
+};
+</code></pre>
+<hr />
+<h3>2. Insertion Sort Approach (Keep Sorted)</h3>
+<p>We can improve upon the brute-force approach by keeping the list of numbers sorted at all times. When a new number is added, we insert it into its correct sorted position.</p>
+<p><strong>Step-by-step explanation:</strong>
+1.  Maintain a <code>std::vector</code> that is always kept in sorted order.
+2.  <strong><code>addNum(num)</code>:</strong>
+    a. Use binary search (e.g., <code>std::lower_bound</code>) to find the correct insertion position for the new number <code>num</code>. This takes O(log N) time.
+    b. Insert <code>num</code> at that position. This operation requires shifting subsequent elements, which takes O(N) time.
+3.  <strong><code>findMedian()</code>:</strong>
+    a. Since the vector is always sorted, we can directly access the middle element(s).
+    b. The logic to calculate the median is the same as before, but it now runs in constant time.</p>
+<p>This approach makes <code>findMedian</code> very fast, but shifts the complexity to the <code>addNum</code> operation. The time complexity for <code>addNum</code> is O(N) and <code>findMedian</code> is O(1). Space complexity is O(N).</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;algorithm&gt; // For std::lower_bound
+
+class MedianFinder {
+private:
+    std::vector&lt;int&gt; store;
+
+public:
+    MedianFinder() {}
+
+    void addNum(int num) {
+        if (store.empty()) {
+            store.push_back(num);
+        } else {
+            // Find the correct position to insert the new number to keep the vector sorted
+            auto it = std::lower_bound(store.begin(), store.end(), num);
+            store.insert(it, num);
+        }
+    }
+
+    double findMedian() {
+        int n = store.size();
+        if (n % 2 != 0) {
+            // Odd number of elements
+            return (double)store[n / 2];
+        } else {
+            // Even number of elements
+            return (double)(store[n / 2 - 1] + store[n / 2]) / 2.0;
+        }
+    }
+};
+</code></pre>
+<hr />
+<h3>3. Two Heaps Approach</h3>
+<p>This is the most efficient solution. The core idea is to divide the numbers into two halves and store them in two heaps: a max-heap for the smaller half and a min-heap for the larger half. This allows us to quickly access the middle element(s).</p>
+<p><strong>Step-by-step explanation:</strong>
+1.  Initialize two heaps:
+    *   A max-heap (<code>maxHeap</code>) to store the smaller half of the numbers.
+    *   A min-heap (<code>minHeap</code>) to store the larger half of the numbers.
+2.  Maintain a size invariant: <code>maxHeap.size()</code> is either equal to or one greater than <code>minHeap.size()</code>. This keeps the heaps balanced.
+3.  <strong><code>addNum(num)</code>:</strong>
+    a. Always push the new number <code>num</code> into the <code>maxHeap</code>.
+    b. To maintain the heap property (all elements in <code>maxHeap</code> &lt;= all elements in <code>minHeap</code>), move the largest element from <code>maxHeap</code> (its top) to <code>minHeap</code>.
+    c. Rebalance the sizes. If <code>minHeap</code> now has more elements than <code>maxHeap</code>, move the smallest element from <code>minHeap</code> (its top) back to <code>maxHeap</code>. This restores the size invariant.
+4.  <strong><code>findMedian()</code>:</strong>
+    a. If the total number of elements is odd, the <code>maxHeap</code> will have one more element. The median is simply the top of the <code>maxHeap</code>.
+    b. If the total number of elements is even, both heaps have the same size. The median is the average of the tops of both heaps.</p>
+<p>This approach provides an excellent balance of complexities. The time complexity for <code>addNum</code> is O(log N) due to heap operations, and <code>findMedian</code> is O(1). Space complexity is O(N).</p>
+<pre><code class="language-cpp">#include &lt;queue&gt;
+#include &lt;vector&gt;
+
+class MedianFinder {
+private:
+    // Max-heap to store the smaller half of the numbers
+    std::priority_queue&lt;int&gt; maxHeap; 
+    // Min-heap to store the larger half of the numbers
+    std::priority_queue&lt;int, std::vector&lt;int&gt;, std::greater&lt;int&gt;&gt; minHeap; 
+
+public:
+    MedianFinder() {}
+
+    void addNum(int num) {
+        // 1. Add to max-heap
+        maxHeap.push(num);
+
+        // 2. Balance by moving the largest from max-heap to min-heap
+        minHeap.push(maxHeap.top());
+        maxHeap.pop();
+
+        // 3. Maintain size invariant: max-heap can have at most one more element
+        if (maxHeap.size() &lt; minHeap.size()) {
+            maxHeap.push(minHeap.top());
+            minHeap.pop();
+        }
+    }
+
+    double findMedian() {
+        // If total numbers is odd, the median is at the top of the max-heap
+        if (maxHeap.size() &gt; minHeap.size()) {
+            return maxHeap.top();
+        }
+        // If total numbers is even, the median is the average of the two tops
+        else {
+            return (maxHeap.top() + minHeap.top()) / 2.0;
+        }
+    }
+};
+</code></pre>
+<hr />
+<h3>Pythonic Solution (Two Heaps Approach)</h3>
+<p>Python's <code>heapq</code> module provides a min-heap. We can simulate a max-heap by storing the negative of the numbers. This solution cleverly uses <code>heappushpop</code> to combine operations and maintain balance concisely. The invariant here is that <code>len(large)</code> is either equal to or one greater than <code>len(small)</code>.</p>
+<pre><code class="language-python">from heapq import *
+
+class MedianFinder:
+    def __init__(self):
+        &quot;&quot;&quot;
+        initialize your data structure here.
+        'small' is a max-heap (implemented with negative numbers in a min-heap)
+        'large' is a min-heap
+        &quot;&quot;&quot;
+        self.small = []  # Stores the smaller half of numbers
+        self.large = []  # Stores the larger half of numbers
+
+    def addNum(self, num: int) -&gt; None:
+        # We maintain the invariant that len(large) &gt;= len(small)
+        # and len(large) - len(small) is at most 1.
+
+        if len(self.small) == len(self.large):
+            # If sizes are equal, the new element must make 'large' larger.
+            # We push the new number to 'small' and then move the largest
+            # element from 'small' to 'large'.
+            # -heappushpop(heap, -item) is equivalent to pushing item onto a max-heap
+            # and then popping the max, returning the popped value.
+            heappush(self.large, -heappushpop(self.small, -num))
+        else:
+            # If 'large' is larger, the new element must make sizes equal.
+            # We push the new number to 'large' and then move the smallest
+            # element from 'large' to 'small'.
+            heappush(self.small, -heappushpop(self.large, num))
+
+    def findMedian(self) -&gt; float:
+        if len(self.small) == len(self.large):
+            # Even number of elements, median is average of two middle values.
+            # -self.small[0] retrieves the max element from the 'small' half.
+            return (self.large[0] - self.small[0]) / 2.0
+        else:
+            # Odd number of elements, 'large' heap has the extra element, which is the median.
+            return float(self.large[0])
+
+</code></pre></div>

@@ -1,0 +1,202 @@
+<div class='ai-explanation'><h3>List of Approaches</h3>
+<ol>
+<li>Brute Force (Recursion)</li>
+<li>Top-Down Dynamic Programming (Memoization)</li>
+<li>Bottom-Up Dynamic Programming (Tabulation)</li>
+<li>Space-Optimized Bottom-Up Dynamic Programming</li>
+</ol>
+<hr />
+<h3>Brute Force (Recursion)</h3>
+<p>This approach directly translates the problem statement into a recursive function. For each house, we decide whether to rob it or skip it.</p>
+<ol>
+<li>Define a recursive function, say <code>solve(i)</code>, that calculates the maximum money we can rob starting from house <code>i</code> to the end of the street.</li>
+<li>At house <code>i</code>, we have two choices:<ul>
+<li><strong>Rob house <code>i</code></strong>: We get <code>nums[i]</code> money. Since we cannot rob the adjacent house <code>i+1</code>, we must skip it and recursively call the function for house <code>i+2</code>. The total is <code>nums[i] + solve(i + 2)</code>.</li>
+<li><strong>Skip house <code>i</code></strong>: We get 0 money from this house and move to the next one, <code>i+1</code>. The total is <code>solve(i + 1)</code>.</li>
+</ul>
+</li>
+<li>The function <code>solve(i)</code> returns the maximum of these two choices.</li>
+<li>The base case for the recursion is when <code>i</code> is out of bounds (i.e., <code>i &gt;= nums.size()</code>), in which case we can't rob any more houses, so we return 0.</li>
+<li>This method is inefficient because it repeatedly solves the same subproblems.
+This approach has a time complexity of O(2^N) due to the branching recursive calls and a space complexity of O(N) for the recursion stack depth.</li>
+</ol>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;algorithm&gt;
+
+class Solution {
+public:
+    int rob(std::vector&lt;int&gt;&amp; nums) {
+        return solve(nums, 0);
+    }
+private:
+    int solve(std::vector&lt;int&gt;&amp; nums, int i) {
+        // Base case: If we are past the last house, we can't rob anymore.
+        if (i &gt;= nums.size()) {
+            return 0;
+        }
+
+        // Option 1: Rob the current house and skip the next one.
+        int rob_current = nums[i] + solve(nums, i + 2);
+
+        // Option 2: Skip the current house and move to the next one.
+        int skip_current = solve(nums, i + 1);
+
+        // Return the maximum of the two options.
+        return std::max(rob_current, skip_current);
+    }
+};
+</code></pre>
+<hr />
+<h3>Top-Down Dynamic Programming (Memoization)</h3>
+<p>This approach optimizes the brute-force recursion by using a memoization table (an array) to store the results of subproblems that have already been solved, thus avoiding redundant calculations.</p>
+<ol>
+<li>Create a memoization array, <code>memo</code>, of the same size as <code>nums</code>, and initialize it with a special value (e.g., -1) to indicate that the subproblems have not been solved yet.</li>
+<li>Use the same recursive structure as the brute-force approach.</li>
+<li>Before computing the result for <code>solve(i)</code>, check if <code>memo[i]</code> already contains a valid result (i.e., not -1). If so, return it directly.</li>
+<li>If the result is not in the memoization table, compute it recursively as before.</li>
+<li>Store the newly computed result in <code>memo[i]</code> before returning it.
+This ensures that each subproblem is solved only once. This approach has a time complexity of O(N) and a space complexity of O(N) for the memoization table and recursion stack.</li>
+</ol>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;algorithm&gt;
+
+class Solution {
+public:
+    int rob(std::vector&lt;int&gt;&amp; nums) {
+        std::vector&lt;int&gt; memo(nums.size(), -1);
+        return solve(nums, 0, memo);
+    }
+private:
+    int solve(std::vector&lt;int&gt;&amp; nums, int i, std::vector&lt;int&gt;&amp; memo) {
+        if (i &gt;= nums.size()) {
+            return 0;
+        }
+
+        // If we have already solved this subproblem, return the stored result.
+        if (memo[i] != -1) {
+            return memo[i];
+        }
+
+        int rob_current = nums[i] + solve(nums, i + 2, memo);
+        int skip_current = solve(nums, i + 1, memo);
+
+        // Store the result before returning.
+        memo[i] = std::max(rob_current, skip_current);
+        return memo[i];
+    }
+};
+</code></pre>
+<hr />
+<h3>Bottom-Up Dynamic Programming (Tabulation)</h3>
+<p>This approach solves the problem iteratively by building up the solution from the base cases. We use a DP array where <code>dp[i]</code> stores the maximum amount of money that can be robbed from the first <code>i</code> houses.</p>
+<ol>
+<li>Create a DP array, <code>dp</code>, of size <code>n</code> (where <code>n</code> is the number of houses). <code>dp[i]</code> will store the maximum amount robbed up to house <code>i</code>.</li>
+<li>Handle the base cases:<ul>
+<li>If there are no houses, the result is 0.</li>
+<li><code>dp[0] = nums[0]</code> (If there's only one house, we rob it).</li>
+<li><code>dp[1] = max(nums[0], nums[1])</code> (With two houses, we rob the one with more money).</li>
+</ul>
+</li>
+<li>Iterate from the third house (<code>i = 2</code>) to the end. For each house <code>i</code>, the maximum money we can have is either:<ul>
+<li>The maximum money from robbing up to the previous house <code>i-1</code> (which means we skip house <code>i</code>). This value is <code>dp[i-1]</code>.</li>
+<li>The money from house <code>i</code> plus the maximum money from robbing up to house <code>i-2</code> (since we cannot rob <code>i-1</code>). This value is <code>nums[i] + dp[i-2]</code>.</li>
+</ul>
+</li>
+<li>The value of <code>dp[i]</code> is the maximum of these two options: <code>dp[i] = max(dp[i-1], nums[i] + dp[i-2])</code>.</li>
+<li>The final answer is the value in the last element of the DP array, <code>dp[n-1]</code>.
+This approach has a time complexity of O(N) and a space complexity of O(N) for the DP array.</li>
+</ol>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;algorithm&gt;
+
+class Solution {
+public:
+    int rob(std::vector&lt;int&gt;&amp; nums) {
+        int n = nums.size();
+        if (n == 0) return 0;
+        if (n == 1) return nums[0];
+
+        std::vector&lt;int&gt; dp(n);
+        dp[0] = nums[0];
+        dp[1] = std::max(nums[0], nums[1]);
+
+        for (int i = 2; i &lt; n; i++) {
+            // max(skip current house, rob current house)
+            dp[i] = std::max(dp[i-1], dp[i-2] + nums[i]);
+        }
+
+        return dp[n-1];
+    }
+};
+</code></pre>
+<hr />
+<h3>Space-Optimized Bottom-Up Dynamic Programming</h3>
+<p>This is the most optimal approach. We can see that the calculation of <code>dp[i]</code> in the bottom-up approach only depends on the previous two values, <code>dp[i-1]</code> and <code>dp[i-2]</code>. Therefore, we don't need to store the entire DP array. We can use two variables to keep track of the necessary previous states.</p>
+<ol>
+<li>Initialize two variables, <code>rob</code> and <code>norob</code>, to 0. <code>rob</code> will track the maximum money if the previous house was robbed, and <code>norob</code> will track the maximum money if the previous house was not robbed.</li>
+<li>Iterate through each house's money <code>num</code> in the <code>nums</code> array.</li>
+<li>In each iteration, we calculate the new values for robbing or not robbing the <em>current</em> house:<ul>
+<li><code>newRob</code>: The max profit if we rob the current house. This is only possible if we did <em>not</em> rob the previous one. So, <code>newRob = norob + num</code>.</li>
+<li><code>newNoRob</code>: The max profit if we don't rob the current house. In this case, we can take the maximum profit from the previous step, regardless of whether we robbed the previous house or not. So, <code>newNoRob = max(rob, norob)</code>.</li>
+</ul>
+</li>
+<li>Update <code>rob</code> and <code>norob</code> with <code>newRob</code> and <code>newNoRob</code> for the next iteration.</li>
+<li>After iterating through all houses, the maximum amount of money is the maximum of the final <code>rob</code> and <code>norob</code> values.
+This approach has a time complexity of O(N) and a space complexity of O(1).</li>
+</ol>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;algorithm&gt;
+
+class Solution {
+public:
+    int rob(std::vector&lt;int&gt;&amp; nums) {
+        int rob = 0;    // max money if we rob the previous house
+        int norob = 0;  // max money if we do not rob the previous house
+
+        for (int i = 0; i &lt; nums.size(); i++) {
+            // If we rob the current house, we must not have robbed the previous one.
+            int newRob = norob + nums[i];
+
+            // If we don't rob the current house, we can take the max of robbing or not robbing the previous one.
+            int newNoRob = std::max(norob, rob);
+
+            // Update for the next iteration
+            rob = newRob;
+            norob = newNoRob;
+        }
+
+        // The final answer is the max of the last states.
+        return std::max(rob, norob);
+    }
+};
+</code></pre>
+<hr />
+<h3>Pythonic Solution (Best Approach)</h3>
+<p>The space-optimized bottom-up dynamic programming approach is the most efficient. Python's tuple unpacking makes the implementation very concise and elegant.</p>
+<pre><code class="language-python">class Solution:
+  def rob(self, nums: list[int]) -&gt; int:
+    &quot;&quot;&quot;
+    Calculates the maximum amount of money that can be robbed using
+    space-optimized dynamic programming.
+
+    Args:
+      nums: A list of integers representing the amount of money in each house.
+
+    Returns:
+      The maximum amount of money that can be robbed.
+    &quot;&quot;&quot;
+
+    # rob_prev: max money if we robbed the previous house
+    # norob_prev: max money if we did NOT rob the previous house
+    rob_prev, norob_prev = 0, 0
+
+    for num in nums:
+      # The new state is calculated based on the previous state.
+      # new_rob = norob_prev + num (must not have robbed previous)
+      # new_norob = max(rob_prev, norob_prev) (can take max of previous states)
+      # We use tuple unpacking for a clean, simultaneous update.
+      rob_prev, norob_prev = norob_prev + num, max(rob_prev, norob_prev)
+
+    return max(rob_prev, norob_prev)
+
+</code></pre></div>

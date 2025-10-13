@@ -1,0 +1,164 @@
+<div class='ai-explanation'><h3>Approaches to Solution</h3>
+<ol>
+<li><strong>Brute Force Approach (Full Tree Traversal)</strong></li>
+<li><strong>Recursive Approach (Utilizing BST Properties)</strong></li>
+<li><strong>Iterative Approach (Utilizing BST Properties)</strong></li>
+</ol>
+<hr />
+<h3>1. Brute Force Approach (Full Tree Traversal)</h3>
+<p>This approach ignores the special properties of a Binary Search Tree and treats it like a regular binary tree. We can perform a standard traversal, such as Pre-order Depth-First Search (DFS), visiting every node until we find the one with the target value or exhaust all nodes.</p>
+<ol>
+<li>Start the traversal from the <code>root</code> node.</li>
+<li>At each node, check if its value is equal to the target <code>val</code>.</li>
+<li>If a match is found, return the current node.</li>
+<li>If the current node is <code>null</code> or its value doesn't match, recursively traverse its left and right children.</li>
+<li>If the entire tree is traversed and no match is found, return <code>null</code>.</li>
+</ol>
+<p>This method is inefficient as it doesn't take advantage of the ordered nature of a BST. The time complexity is O(N) where N is the number of nodes, and the space complexity is O(H) for the recursion stack, where H is the height of the tree (O(N) in the worst-case skewed tree).</p>
+<pre><code class="language-cpp">/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    TreeNode* searchBST(TreeNode* root, int val) {
+        if (root == nullptr || root-&gt;val == val) {
+            return root;
+        }
+
+        // Search in the left subtree
+        TreeNode* leftResult = searchBST(root-&gt;left, val);
+        if (leftResult != nullptr) {
+            return leftResult;
+        }
+
+        // If not found in left, search in the right subtree
+        return searchBST(root-&gt;right, val);
+    }
+};
+</code></pre>
+<hr />
+<h3>2. Recursive Approach (Utilizing BST Properties)</h3>
+<p>A more efficient solution leverages the core property of a BST: for any node, all values in its left subtree are smaller, and all values in its right subtree are larger. This allows us to eliminate half of the remaining tree at each step.</p>
+<ol>
+<li><strong>Base Cases:</strong><ul>
+<li>If the current node is <code>null</code>, the value is not in the tree, so return <code>null</code>.</li>
+<li>If the current node's value equals the target <code>val</code>, we have found the node. Return it.</li>
+</ul>
+</li>
+<li><strong>Recursive Step:</strong><ul>
+<li>If <code>val</code> is less than the current node's value, the target must be in the left subtree. Recursively call the search function on the left child.</li>
+<li>If <code>val</code> is greater than the current node's value, the target must be in the right subtree. Recursively call the search function on the right child.</li>
+</ul>
+</li>
+</ol>
+<p>The time complexity is O(H), where H is the height of the tree. For a balanced BST, this is O(log N), and for a skewed tree, it's O(N). The space complexity is O(H) due to the recursion call stack.</p>
+<pre><code class="language-cpp">/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    TreeNode* searchBST(TreeNode* root, int val) {
+        // Base case: if root is null or the value is found
+        if (root == nullptr || root-&gt;val == val) {
+            return root;
+        }
+
+        // If val is smaller, search in the left subtree
+        if (val &lt; root-&gt;val) {
+            return searchBST(root-&gt;left, val);
+        } 
+        // If val is larger, search in the right subtree
+        else {
+            return searchBST(root-&gt;right, val);
+        }
+    }
+};
+</code></pre>
+<hr />
+<h3>3. Iterative Approach (Utilizing BST Properties)</h3>
+<p>This approach uses the same BST logic as the recursive solution but implements it with a loop, which avoids the overhead of recursion and reduces space usage. This is generally the most optimal solution.</p>
+<ol>
+<li>Start with a pointer, <code>current</code>, initialized to the <code>root</code> of the tree.</li>
+<li>Use a <code>while</code> loop that continues as long as <code>current</code> is not <code>null</code> and its value does not match the target <code>val</code>.</li>
+<li>Inside the loop, compare <code>val</code> with <code>current-&gt;val</code>.<ul>
+<li>If <code>val</code> is smaller, move the <code>current</code> pointer to its left child (<code>current = current-&gt;left</code>).</li>
+<li>If <code>val</code> is larger, move the <code>current</code> pointer to its right child (<code>current = current-&gt;right</code>).</li>
+</ul>
+</li>
+<li>The loop terminates when either the node is found or <code>current</code> becomes <code>null</code> (meaning the value is not in the tree).</li>
+<li>Return the final <code>current</code> pointer.</li>
+</ol>
+<p>The time complexity is O(H), which is O(log N) for a balanced tree and O(N) for a skewed tree. The space complexity is O(1) as we only use a few pointers.</p>
+<pre><code class="language-cpp">/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    TreeNode* searchBST(TreeNode* root, int val) {
+        TreeNode* current = root;
+
+        // Loop until we find the value or reach a null pointer
+        while (current != nullptr &amp;&amp; current-&gt;val != val) {
+            // Decide whether to go left or right
+            if (val &lt; current-&gt;val) {
+                current = current-&gt;left;
+            } else {
+                current = current-&gt;right;
+            }
+        }
+
+        return current;
+    }
+};
+</code></pre>
+<hr />
+<h3>Pythonic Solution (Best Approach: Iterative)</h3>
+<p>The iterative approach is optimal due to its O(1) space complexity. The Python implementation is clean and directly follows the logic.</p>
+<pre><code class="language-python"># Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+
+class Solution:
+    def searchBST(self, root: Optional[TreeNode], val: int) -&gt; Optional[TreeNode]:
+        &quot;&quot;&quot;
+        Searches for a value in a BST iteratively.
+        &quot;&quot;&quot;
+        current = root
+
+        # Traverse the tree until the node is found or we fall off the tree
+        while current and current.val != val:
+            if val &lt; current.val:
+                current = current.left
+            else:
+                current = current.right
+
+        return current
+
+</code></pre></div>

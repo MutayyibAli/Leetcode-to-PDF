@@ -1,0 +1,187 @@
+<div class='ai-explanation'><h3>List of all the approaches to solution</h3>
+<ol>
+<li>Brute Force Approach: Level Order Traversal (BFS) with Queue</li>
+<li>Optimal Approach: Level Order Traversal with Constant Space</li>
+</ol>
+<hr />
+<h3>Brute Force Approach: Level Order Traversal (BFS) with Queue</h3>
+<p>This approach uses a standard Breadth-First Search (BFS) to traverse the tree level by level. A queue is used to keep track of nodes at each level. A <code>NULL</code> marker is pushed into the queue to signify the end of a level, which helps in connecting the <code>next</code> pointers correctly.</p>
+<p><strong>Step-by-step explanation:</strong>
+1.  If the <code>root</code> is <code>NULL</code>, return immediately.
+2.  Initialize a queue and push the <code>root</code> node followed by a <code>NULL</code> node. The <code>NULL</code> acts as a level separator.
+3.  Loop as long as the queue contains more than one element (i.e., it's not just the final <code>NULL</code> marker).
+4.  Dequeue a node, let's call it <code>curr</code>.
+5.  If <code>curr</code> is <code>NULL</code>, it means we have finished traversing the current level. Push another <code>NULL</code> to the queue to mark the end of the next level, and continue to the next iteration.
+6.  If <code>curr</code> is not <code>NULL</code>, set its <code>next</code> pointer to the node at the front of the queue. The front of the queue is either the next node on the same level or <code>NULL</code> if <code>curr</code> is the last node of the level.
+7.  If <code>curr</code> has a left child, enqueue it.
+8.  If <code>curr</code> has a right child, enqueue it.
+9.  After the loop terminates, all <code>next</code> pointers will be correctly populated. Return the <code>root</code>.</p>
+<p>This process ensures that each node's <code>next</code> pointer is set to the subsequent node in the level-order traversal, and the last node of each level points to <code>NULL</code>.</p>
+<p>The time complexity is O(N) since each node is visited once, and the space complexity is O(W) where W is the maximum width of the tree, which can be O(N) in the worst case for a complete binary tree.</p>
+<pre><code class="language-cpp">/*
+// Definition for a Node.
+class Node {
+public:
+    int val;
+    Node* left;
+    Node* right;
+    Node* next;
+
+    Node() : val(0), left(NULL), right(NULL), next(NULL) {}
+
+    Node(int _val) : val(_val), left(NULL), right(NULL), next(NULL) {}
+
+    Node(int _val, Node* _left, Node* _right, Node* _next)
+        : val(_val), left(_left), right(_right), next(_next) {}
+};
+*/
+
+#include &lt;queue&gt;
+
+class Solution {
+public:
+    Node* connect(Node* root) {
+        if (!root) {
+            return nullptr;
+        }
+
+        std::queue&lt;Node*&gt; q;
+        q.push(root);
+
+        while (!q.empty()) {
+            int levelSize = q.size();
+            Node* prev = nullptr;
+            for (int i = 0; i &lt; levelSize; ++i) {
+                Node* curr = q.front();
+                q.pop();
+
+                if (prev) {
+                    prev-&gt;next = curr;
+                }
+                prev = curr;
+
+                if (curr-&gt;left) {
+                    q.push(curr-&gt;left);
+                }
+                if (curr-&gt;right) {
+                    q.push(curr-&gt;right);
+                }
+            }
+        }
+        return root;
+    }
+};
+</code></pre>
+<hr />
+<h3>Optimal Approach: Level Order Traversal with Constant Space</h3>
+<p>This approach improves upon the BFS method by eliminating the extra space required for the queue. It leverages the <code>next</code> pointers that have already been established on the parent level to traverse it like a linked list. While traversing the parent level, we can establish the <code>next</code> pointers for all the nodes in the child level.</p>
+<p><strong>Step-by-step explanation:</strong>
+1.  Initialize <code>level_start</code> to the <code>root</code> of the tree. This pointer will always point to the first node of the current level being processed.
+2.  The main loop continues as long as <code>level_start</code> is not <code>NULL</code>.
+3.  Inside the loop, create a <code>dummy</code> node to act as a placeholder for the start of the next level. A <code>tail</code> pointer will be used to build the linked list for the child level.
+4.  Initialize a <code>curr</code> pointer to <code>level_start</code> to iterate through the nodes of the current level using their <code>next</code> pointers.
+5.  In an inner loop (while <code>curr</code> is not <code>NULL</code>):
+    *   If <code>curr</code> has a left child, connect it to the <code>tail</code> of the new level (<code>tail-&gt;next = curr-&gt;left</code>) and then advance the <code>tail</code> (<code>tail = tail-&gt;next</code>).
+    *   If <code>curr</code> has a right child, do the same: connect it (<code>tail-&gt;next = curr-&gt;right</code>) and advance the <code>tail</code>.
+    *   Move to the next node in the current level: <code>curr = curr-&gt;next</code>.
+6.  After the inner loop completes, the <code>next</code> level is fully connected, and its starting node is <code>dummy-&gt;next</code>. Update <code>level_start = dummy-&gt;next</code> to move to the next level.
+7.  Repeat until all levels are processed.</p>
+<p>This method processes the tree level by level without any auxiliary data structure that grows with the input size.</p>
+<p>The time complexity is O(N) as each node is visited a constant number of times. The space complexity is O(1) as we only use a few extra pointers.</p>
+<pre><code class="language-cpp">/*
+// Definition for a Node.
+class Node {
+public:
+    int val;
+    Node* left;
+    Node* right;
+    Node* next;
+
+    Node() : val(0), left(NULL), right(NULL), next(NULL) {}
+
+    Node(int _val) : val(_val), left(NULL), right(NULL), next(NULL) {}
+
+    Node(int _val, Node* _left, Node* _right, Node* _next)
+        : val(_val), left(_left), right(_right), next(_next) {}
+};
+*/
+
+class Solution {
+public:
+    Node* connect(Node* root) {
+        if (!root) {
+            return nullptr;
+        }
+
+        Node* level_start = root;
+        while (level_start) {
+            Node dummy(0);
+            Node* tail = &amp;dummy;
+            Node* curr = level_start;
+
+            while (curr) {
+                if (curr-&gt;left) {
+                    tail-&gt;next = curr-&gt;left;
+                    tail = tail-&gt;next;
+                }
+                if (curr-&gt;right) {
+                    tail-&gt;next = curr-&gt;right;
+                    tail = tail-&gt;next;
+                }
+                curr = curr-&gt;next;
+            }
+            level_start = dummy.next;
+        }
+        return root;
+    }
+};
+</code></pre>
+<hr />
+<h3>Pythonic solution for best approach</h3>
+<pre><code class="language-python">&quot;&quot;&quot;
+# Definition for a Node.
+class Node:
+    def __init__(self, val: int = 0, left: 'Node' = None, right: 'Node' = None, next: 'Node' = None):
+        self.val = val
+        self.left = left
+        self.right = right
+        self.next = next
+&quot;&quot;&quot;
+
+class Solution:
+    def connect(self, root: 'Node') -&gt; 'Node':
+        if not root:
+            return None
+
+        # level_start is the first node of the current level
+        level_start = root
+
+        while level_start:
+            # dummy node to handle the start of the next level
+            dummy = Node(0)
+            # tail pointer to build the next level's connections
+            tail = dummy
+
+            # curr iterates through nodes in the current level
+            curr = level_start
+
+            while curr:
+                # Link left child if it exists
+                if curr.left:
+                    tail.next = curr.left
+                    tail = tail.next
+
+                # Link right child if it exists
+                if curr.right:
+                    tail.next = curr.right
+                    tail = tail.next
+
+                # Move to the next node in the current level
+                curr = curr.next
+
+            # Move to the start of the next level, which is linked by the dummy node
+            level_start = dummy.next
+
+        return root
+
+</code></pre></div>

@@ -1,0 +1,153 @@
+<div class='ai-explanation'><h3>List of All Approaches</h3>
+<ol>
+<li>Brute Force Approach (Manual Parsing)</li>
+<li>Optimized Approach (Using Stack and String Splitting)</li>
+</ol>
+<hr />
+<h3>1. Brute Force Approach (Manual Parsing)</h3>
+<p>This approach manually iterates through the input path string character by character to extract the components (directory/file names) between the slashes. It uses a stack to keep track of the directories in the canonical path.</p>
+<p><strong>Step-by-step Explanation:</strong>
+1.  Initialize a stack of strings, <code>st</code>, to store the valid directory names that form the canonical path.
+2.  Iterate through the input <code>path</code> string using an index <code>i</code>.
+3.  In the loop, first skip any leading slashes (<code>/</code>).
+4.  After the slashes, extract the next component name. Create a temporary string <code>temp</code> and read characters into it until you hit another <code>/</code> or the end of the string.
+5.  Once a component <code>temp</code> is extracted, process it based on the rules:
+    *   If <code>temp</code> is <code>.</code> (current directory) or is empty (due to multiple slashes), do nothing and continue.
+    *   If <code>temp</code> is <code>..</code> (parent directory), pop an element from the stack <code>st</code> if it's not empty. This effectively moves up one directory level.
+    *   Otherwise, <code>temp</code> is a valid directory/file name, so push it onto the stack <code>st</code>.
+6.  After iterating through the entire path, the stack <code>st</code> will contain the components of the simplified path in reverse order.
+7.  Build the final result string <code>res</code>. Pop elements from the stack one by one and prepend them to <code>res</code>, separated by slashes (e.g., <code>res = "/" + st.top() + res</code>).
+8.  If the resulting string <code>res</code> is empty (meaning the path simplifies to the root), return <code>/</code>. Otherwise, return <code>res</code>.</p>
+<p>This method has a time complexity of O(N) because we traverse the string once, and a space complexity of O(N) for the stack in the worst-case scenario (e.g., <code>/a/b/c/...</code>).</p>
+<pre><code class="language-cpp">#include &lt;string&gt;
+#include &lt;vector&gt;
+#include &lt;stack&gt;
+
+class Solution {
+public:
+    string simplifyPath(string path) {
+        stack&lt;string&gt; st;
+        string res;
+
+        for(int i = 0; i &lt; path.size(); ++i) {
+            // Skip consecutive slashes
+            if(path[i] == '/') {
+                continue;
+            }
+
+            // Extract the component between slashes
+            string temp;
+            while(i &lt; path.size() &amp;&amp; path[i] != '/') {
+                temp += path[i];
+                ++i;
+            }
+
+            // Process the component
+            if(temp == &quot;.&quot;) {
+                continue; // Ignore current directory
+            } else if(temp == &quot;..&quot;) {
+                if(!st.empty()) {
+                    st.pop(); // Go to parent directory
+                }
+            } else {
+                st.push(temp); // Enter a new directory
+            }
+        }
+
+        // Build the result string from the stack
+        while(!st.empty()) {
+            res = &quot;/&quot; + st.top() + res;
+            st.pop();
+        }
+
+        // Handle the edge case of an empty path (root directory)
+        if(res.size() == 0) {
+            return &quot;/&quot;;
+        }
+
+        return res;
+    }
+};
+</code></pre>
+<hr />
+<h3>2. Optimized Approach (Using Stack and String Splitting)</h3>
+<p>This approach is more concise and idiomatic. Instead of manually parsing, it uses a built-in mechanism like <code>stringstream</code> to split the path string by the <code>/</code> delimiter. This tokenization simplifies the logic significantly.</p>
+<p><strong>Step-by-step Explanation:</strong>
+1.  Initialize a <code>stringstream</code> with the input <code>path</code>.
+2.  Initialize a stack of strings, <code>s</code>, to hold the directory components.
+3.  Use <code>getline</code> to read from the <code>stringstream</code>, using <code>/</code> as the delimiter. This will extract each component one by one.
+4.  For each extracted component <code>dir</code>:
+    *   If <code>dir</code> is empty (from <code>//</code>) or is <code>.</code>, ignore it.
+    *   If <code>dir</code> is <code>..</code>, pop from the stack <code>s</code> if it is not empty.
+    *   Otherwise, <code>dir</code> is a valid name, so push it onto the stack <code>s</code>.
+5.  After processing all components, build the final canonical path.
+6.  Create an empty result string <code>res</code>.
+7.  Pop elements from the stack and prepend them to <code>res</code>, each preceded by a <code>/</code>.
+8.  If the final result <code>res</code> is empty, it means the path is the root directory, so return <code>/</code>. Otherwise, return <code>res</code>.</p>
+<p>The time complexity is O(N) as splitting the string and processing tokens takes linear time. The space complexity is also O(N) to store the tokens and the stack.</p>
+<pre><code class="language-cpp">#include &lt;string&gt;
+#include &lt;vector&gt;
+#include &lt;stack&gt;
+#include &lt;sstream&gt;
+
+class Solution {
+public:
+    string simplifyPath(string path) {
+        stack&lt;string&gt; s;
+        stringstream ss(path);
+        string dir;
+
+        // Split path by '/' and process each component
+        while (getline(ss, dir, '/')) {
+            if (dir.empty() || dir == &quot;.&quot;) {
+                continue;
+            } else if (dir == &quot;..&quot;) {
+                if (!s.empty()) {
+                    s.pop();
+                }
+            } else {
+                s.push(dir);
+            }
+        }
+
+        // Reconstruct the path from the stack
+        string res;
+        while (!s.empty()) {
+            res = &quot;/&quot; + s.top() + res;
+            s.pop();
+        }
+
+        return res.empty() ? &quot;/&quot; : res;
+    }
+};
+</code></pre>
+<hr />
+<h3>Pythonic Solution (Best Approach)</h3>
+<p>The best approach utilizes Python's built-in string methods, which makes the code extremely clean and readable. A list is used as a stack to store the directory components.</p>
+<pre><code class="language-python">class Solution:
+    def simplifyPath(self, path: str) -&gt; str:
+        # Split the path by &quot;/&quot;
+        # This handles cases like &quot;/home//foo/&quot; correctly,
+        # resulting in ['', 'home', '', 'foo', '']
+        components = path.split('/')
+
+        # Use a list as a stack
+        stack = []
+
+        for component in components:
+            # If component is '..', pop from stack if not empty
+            if component == &quot;..&quot;:
+                if stack:
+                    stack.pop()
+            # Ignore '.' and empty strings ''
+            elif component == &quot;.&quot; or not component:
+                continue
+            # Otherwise, it's a valid directory name, push to stack
+            else:
+                stack.append(component)
+
+        # Join the components in the stack with '/' and prepend a leading '/'
+        # to form the canonical path.
+        return &quot;/&quot; + &quot;/&quot;.join(stack)
+
+</code></pre></div>

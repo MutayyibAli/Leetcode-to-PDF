@@ -1,0 +1,159 @@
+<div class='ai-explanation'><h3>List of Approaches</h3>
+<ol>
+<li>Brute Force Approach</li>
+<li>Hash Map Approach</li>
+<li>Sorting Approach</li>
+<li>Boyer-Moore Voting Algorithm</li>
+</ol>
+<hr />
+<h3>1. Brute Force Approach</h3>
+<p>This approach iterates through each element of the array and, for each element, counts its total occurrences by iterating through the array again. If the count of any element exceeds <code>n / 2</code>, it is returned as the majority element.</p>
+<p><strong>Step-by-step explanation:</strong>
+1.  Loop through the array from the first to the last element. Let's call the current element <code>candidate</code>.
+2.  For each <code>candidate</code>, initialize a <code>count</code> to 0.
+3.  Start a second, nested loop to iterate through the entire array again.
+4.  In the inner loop, if an element matches the <code>candidate</code>, increment the <code>count</code>.
+5.  After the inner loop completes, check if <code>count</code> is greater than <code>nums.size() / 2</code>.
+6.  If it is, you have found the majority element. Return the <code>candidate</code>.</p>
+<p>This method is straightforward but inefficient due to the nested loops. The time complexity is O(n²) and the space complexity is O(1).</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;cmath&gt;
+
+class Solution {
+public:
+    int majorityElement(std::vector&lt;int&gt;&amp; nums) {
+        int majority_count = nums.size() / 2;
+        for (int candidate : nums) {
+            int count = 0;
+            for (int element : nums) {
+                if (element == candidate) {
+                    count++;
+                }
+            }
+            if (count &gt; majority_count) {
+                return candidate;
+            }
+        }
+        // As per the problem statement, a majority element always exists,
+        // so this part should not be reached.
+        return -1;
+    }
+};
+</code></pre>
+<hr />
+<h3>2. Hash Map Approach</h3>
+<p>This approach uses a hash map to store the frequency of each element in the array. By traversing the array once, we can count all occurrences efficiently and then find the element with a count greater than <code>n / 2</code>.</p>
+<p><strong>Step-by-step explanation:</strong>
+1.  Initialize a hash map (e.g., <code>std::unordered_map</code> in C++) to store elements as keys and their frequencies as values.
+2.  Iterate through the input array <code>nums</code>.
+3.  For each element, increment its count in the hash map.
+4.  After counting, iterate through the key-value pairs in the hash map.
+5.  Return the key whose associated value (frequency) is greater than <code>nums.size() / 2</code>.</p>
+<p>This approach improves the time complexity significantly compared to the brute-force method. The time complexity is O(n) because we iterate through the array once and then through the map (which has at most n distinct elements). The space complexity is O(n) in the worst case where all elements are distinct.</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;unordered_map&gt;
+
+class Solution {
+public:
+    int majorityElement(std::vector&lt;int&gt;&amp; nums) {
+        std::unordered_map&lt;int, int&gt; counts;
+        int n = nums.size();
+        for (int num : nums) {
+            counts[num]++;
+        }
+
+        for (auto const&amp; [num, count] : counts) {
+            if (count &gt; n / 2) {
+                return num;
+            }
+        }
+        // As per the problem statement, a majority element always exists.
+        return -1;
+    }
+};
+</code></pre>
+<hr />
+<h3>3. Sorting Approach</h3>
+<p>The intuition here is that if an element appears more than <code>n / 2</code> times, it will always be the middle element after the array is sorted.</p>
+<p><strong>Step-by-step explanation:</strong>
+1.  Sort the input array <code>nums</code> in non-decreasing order.
+2.  The size of the array is <code>n</code>. The index of the middle element is <code>n / 2</code>.
+3.  Since the majority element occurs more than half the time, it is guaranteed to be at this middle position.
+4.  Return the element at index <code>n / 2</code>.</p>
+<p>This approach is simple to implement but its performance depends on the sorting algorithm used. The time complexity is O(n log n) and the space complexity is O(1) or O(log n) depending on the implementation of the sort function.</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;algorithm&gt;
+
+class Solution {
+public:
+    int majorityElement(std::vector&lt;int&gt;&amp; nums) {
+        std::sort(nums.begin(), nums.end());
+        int n = nums.size();
+        return nums[n/2];
+    }
+};
+</code></pre>
+<hr />
+<h3>4. Boyer-Moore Voting Algorithm</h3>
+<p>This is the most optimal approach, solving the problem in linear time and constant space. The algorithm works by finding a candidate for the majority element. It maintains a <code>count</code> which is incremented for the current <code>candidate</code> and decremented for other elements.</p>
+<p><strong>Step-by-step explanation:</strong>
+1.  Initialize two variables: <code>candidate</code> to store a potential majority element and <code>count</code> to 0.
+2.  Iterate through the array <code>nums</code>.
+3.  If <code>count</code> is 0, it means we need a new candidate, so we set the current element <code>num</code> as the <code>candidate</code> and set <code>count</code> to 1.
+4.  If the current element <code>num</code> is the same as the <code>candidate</code>, we increment <code>count</code>.
+5.  If <code>num</code> is different from the <code>candidate</code>, we decrement <code>count</code>.
+6.  The idea is that occurrences of the majority element will be more than all other elements combined, so it will successfully "outvote" them and remain the candidate at the end.
+7.  After the loop finishes, the <code>candidate</code> variable will hold the majority element.</p>
+<p>This algorithm is highly efficient. The time complexity is O(n) as it involves a single pass through the array, and the space complexity is O(1).</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+
+class Solution {
+public:
+    int majorityElement(std::vector&lt;int&gt;&amp; nums) {
+        int count = 0;
+        int candidate = 0;
+
+        for (int num : nums) {
+            if (count == 0) {
+                candidate = num;
+            }
+
+            if (num == candidate) {
+                count++;
+            } else {
+                count--;
+            }
+        }
+        return candidate;
+    }
+};
+</code></pre>
+<hr />
+<h3>Pythonic Solution (Boyer-Moore Voting Algorithm)</h3>
+<pre><code class="language-python">from typing import List
+
+class Solution:
+    def majorityElement(self, nums: List[int]) -&gt; int:
+        &quot;&quot;&quot;
+        Finds the majority element using the Boyer-Moore Voting Algorithm.
+
+        The algorithm finds a candidate for the majority element in a single pass.
+        It maintains a count which is incremented for the current candidate and
+        decremented for other elements. When the count reaches zero, a new
+        candidate is chosen from the current element.
+        &quot;&quot;&quot;
+        count = 0
+        candidate = None
+
+        for num in nums:
+            if count == 0:
+                candidate = num
+
+            if num == candidate:
+                count += 1
+            else:
+                count -= 1
+
+        return candidate
+
+</code></pre></div>

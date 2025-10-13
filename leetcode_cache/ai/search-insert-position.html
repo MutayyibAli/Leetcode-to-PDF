@@ -1,0 +1,95 @@
+<div class='ai-explanation'><h3>List of Approaches</h3>
+<ol>
+<li>Brute Force Approach</li>
+<li>Binary Search Approach</li>
+</ol>
+<hr />
+<h3>1. Brute Force Approach</h3>
+<p>This approach involves a linear scan of the array to find the target or its insertion position.</p>
+<p><strong>Step-by-step explanation:</strong>
+1.  Iterate through the array from the first element to the last.
+2.  At each index <code>i</code>, check if the element <code>nums[i]</code> is greater than or equal to the <code>target</code>.
+3.  If it is, the <code>target</code> has been found or its correct insertion spot has been located. Return the current index <code>i</code>.
+4.  If the loop completes without finding a suitable position (meaning the <code>target</code> is larger than all elements in the array), the <code>target</code> should be inserted at the very end. Return the size of the array.</p>
+<p>This approach is simple to understand but inefficient for large arrays, failing to meet the <code>O(log n)</code> time complexity requirement. Time complexity is O(n) as we might iterate through the entire array, and space complexity is O(1).</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+
+class Solution {
+public:
+    int searchInsert(std::vector&lt;int&gt;&amp; nums, int target) {
+        for (int i = 0; i &lt; nums.size(); ++i) {
+            if (nums[i] &gt;= target) {
+                return i;
+            }
+        }
+        // If the target is greater than all elements, insert at the end.
+        return nums.size();
+    }
+};
+</code></pre>
+<hr />
+<h3>2. Binary Search Approach</h3>
+<p>Since the array is sorted and the problem requires an <code>O(log n)</code> solution, Binary Search is the ideal approach. The core idea is to repeatedly divide the search interval in half.</p>
+<p><strong>Step-by-step explanation:</strong>
+1.  Initialize two pointers: <code>left</code> pointing to the start of the array (index 0) and <code>right</code> pointing to the end (index <code>nums.size() - 1</code>).
+2.  While the search space is valid (<code>left &lt;= right</code>), calculate the middle index <code>mid</code>.
+3.  Compare the element at the middle index, <code>nums[mid]</code>, with the <code>target</code>:
+    *   If <code>nums[mid]</code> is equal to <code>target</code>, the value is found. Return <code>mid</code>.
+    *   If <code>nums[mid]</code> is less than <code>target</code>, the <code>target</code> must be in the right half of the current search space. Discard the left half by moving the <code>left</code> pointer to <code>mid + 1</code>.
+    *   If <code>nums[mid]</code> is greater than <code>target</code>, the <code>target</code> must be in the left half. Discard the right half by moving the <code>right</code> pointer to <code>mid - 1</code>.
+4.  If the loop finishes, the <code>target</code> was not found in the array. The <code>left</code> pointer will now be at the index where the <code>target</code> should be inserted to maintain the sorted order. Return <code>left</code>.</p>
+<p>This algorithm efficiently finds the target or its insertion point by halving the search space in each iteration. Time complexity is O(log n), and space complexity is O(1).</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+
+class Solution {
+public:
+    int searchInsert(std::vector&lt;int&gt;&amp; nums, int target) {
+        int left = 0;
+        int right = nums.size() - 1;
+
+        while (left &lt;= right) {
+            // Use (left + right) / 2 carefully to avoid overflow
+            int mid = left + (right - left) / 2;
+
+            if (nums[mid] == target) {
+                return mid;
+            } else if (nums[mid] &lt; target) {
+                left = mid + 1;
+            } else {
+                right = mid - 1;
+            }
+        }
+
+        // At this point, `left` is the insertion position.
+        return left;
+    }
+};
+</code></pre>
+<hr />
+<h3>Pythonic Solution (Binary Search Approach)</h3>
+<p>The logic is identical to the C++ Binary Search approach, implemented using Python's syntax.</p>
+<pre><code class="language-python">from typing import List
+
+class Solution:
+    def searchInsert(self, nums: List[int], target: int) -&gt; int:
+        &quot;&quot;&quot;
+        Finds the index of the target in a sorted array, or the index where it
+        would be inserted.
+        &quot;&quot;&quot;
+        left, right = 0, len(nums) - 1
+
+        while left &lt;= right:
+            # Calculate the middle index
+            mid = (left + right) // 2
+
+            if nums[mid] == target:
+                return mid
+            elif nums[mid] &lt; target:
+                left = mid + 1
+            else:
+                right = mid - 1
+
+        # If the target is not found, `left` is the correct insertion point.
+        return left
+
+</code></pre></div>

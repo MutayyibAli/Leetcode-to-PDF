@@ -1,0 +1,145 @@
+<div class='ai-explanation'><h3>List of Approaches</h3>
+<ol>
+<li>Brute Force Approach: Backtracking (Recursive DFS)</li>
+<li>Dynamic Programming Approach</li>
+</ol>
+<hr />
+<h3>1. Brute Force Approach: Backtracking (Recursive DFS)</h3>
+<p>This is the most intuitive and common approach for "find all combinations" problems. We use a recursive function (Depth-First Search) to explore all possible combinations. We build a combination step-by-step, and at each step, we decide whether to include a candidate number. To avoid duplicate combinations (e.g., <code>[2,3]</code> and <code>[3,2]</code>), we ensure that we only pick the current candidate or subsequent candidates in the list, never a previous one.</p>
+<h4>Step-by-step Explanation:</h4>
+<ol>
+<li>Define a recursive helper function, say <code>backtrack</code>, that takes the current combination, the remaining target sum, and a starting index as arguments.</li>
+<li><strong>Base Case 1:</strong> If the remaining target sum is <code>0</code>, we have found a valid combination. Add a copy of the current combination to our results list and return.</li>
+<li><strong>Base Case 2:</strong> If the remaining target sum is less than <code>0</code>, this path is invalid, so we stop exploring and return.</li>
+<li><strong>Recursive Step:</strong> Iterate through the <code>candidates</code> array starting from the <code>startIndex</code>. For each candidate:
+    a.  Add the candidate to the <code>currentCombination</code>.
+    b.  Make a recursive call to <code>backtrack</code> with the updated remaining target (<code>target - candidate</code>). Crucially, we pass the same <code>startIndex</code> (<code>i</code>) to the next call, allowing the same number to be chosen again.
+    c.  After the recursive call returns, <strong>backtrack</strong> by removing the candidate from <code>currentCombination</code>. This allows us to explore other paths (e.g., choosing the next candidate in the list instead).</li>
+<li>The initial call to the function will be with an empty combination, the full target, and a starting index of <code>0</code>.</li>
+</ol>
+<p>The time complexity is exponential, <code>O(N^(T/M))</code>, where <code>N</code> is the number of candidates, <code>T</code> is the target, and <code>M</code> is the smallest candidate value. The space complexity is <code>O(T/M)</code> due to the recursion stack depth.</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;numeric&gt;
+
+class Solution {
+public:
+    std::vector&lt;std::vector&lt;int&gt;&gt; combinationSum(std::vector&lt;int&gt;&amp; candidates, int target) {
+        std::vector&lt;std::vector&lt;int&gt;&gt; result;
+        std::vector&lt;int&gt; currentCombination;
+        backtrack(result, currentCombination, candidates, target, 0);
+        return result;
+    }
+
+private:
+    void backtrack(std::vector&lt;std::vector&lt;int&gt;&gt;&amp; result, std::vector&lt;int&gt;&amp; currentCombination,
+                   std::vector&lt;int&gt;&amp; candidates, int remainingTarget, int startIndex) {
+        // Base case: if the remaining target is 0, we found a valid combination
+        if (remainingTarget == 0) {
+            result.push_back(currentCombination);
+            return;
+        }
+
+        // Base case: if the remaining target is negative, this path is invalid
+        if (remainingTarget &lt; 0) {
+            return;
+        }
+
+        // Explore all possibilities from the current start index
+        for (int i = startIndex; i &lt; candidates.size(); ++i) {
+            // 1. Choose the candidate
+            currentCombination.push_back(candidates[i]);
+
+            // 2. Recurse. Pass 'i' to allow reusing the same element.
+            backtrack(result, currentCombination, candidates, remainingTarget - candidates[i], i);
+
+            // 3. Backtrack (un-choose the candidate)
+            currentCombination.pop_back();
+        }
+    }
+};
+</code></pre>
+<h3>2. Dynamic Programming Approach</h3>
+<p>This approach builds solutions for all sums from <code>1</code> to <code>target</code> in a bottom-up manner. We use a DP table where <code>dp[i]</code> stores a list of all combinations that sum up to <code>i</code>.</p>
+<h4>Step-by-step Explanation:</h4>
+<ol>
+<li>Create a DP table, <code>dp</code>, of size <code>target + 1</code>. <code>dp[i]</code> will be a vector of vectors, storing all combinations for the sum <code>i</code>.</li>
+<li>Initialize <code>dp[0]</code> with one empty combination <code>{{}}</code>. This signifies that there's one way to make a sum of 0 (by choosing no numbers).</li>
+<li>Iterate through each <code>candidate</code> in the input array.</li>
+<li>For each <code>candidate</code>, iterate through sums <code>j</code> from the <code>candidate</code>'s value up to the <code>target</code>.</li>
+<li>For each sum <code>j</code>, we can form new combinations by taking all existing combinations for the sum <code>j - candidate</code> (which are stored in <code>dp[j - candidate]</code>) and appending the current <code>candidate</code> to each of them.</li>
+<li>Add these newly formed combinations to <code>dp[j]</code>.</li>
+<li>After iterating through all candidates, <code>dp[target]</code> will contain the complete list of unique combinations.</li>
+</ol>
+<p>While clever, this approach can be very memory-intensive as it stores all combinations for all intermediate sums. The time complexity is difficult to express simply but is roughly <code>O(N * T * K)</code> and the space complexity is <code>O(T * K_avg * L_avg)</code>, where <code>K</code> is the number of combinations, which can be large.</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+
+class Solution {
+public:
+    std::vector&lt;std::vector&lt;int&gt;&gt; combinationSum(std::vector&lt;int&gt;&amp; candidates, int target) {
+        // dp[i] will store all combinations that sum to i
+        std::vector&lt;std::vector&lt;std::vector&lt;int&gt;&gt;&gt; dp(target + 1);
+
+        // Base case: There is one way to make sum 0, which is by choosing no elements.
+        dp[0].push_back({});
+
+        // Iterate through each candidate
+        for (int candidate : candidates) {
+            // For each candidate, update the dp table for sums it can contribute to
+            for (int j = candidate; j &lt;= target; ++j) {
+                // For each existing combination that sums to j - candidate...
+                for (const auto&amp; combination : dp[j - candidate]) {
+                    // ...create a new combination by adding the current candidate
+                    std::vector&lt;int&gt; newCombination = combination;
+                    newCombination.push_back(candidate);
+                    dp[j].push_back(newCombination);
+                }
+            }
+        }
+
+        return dp[target];
+    }
+};
+</code></pre>
+<hr />
+<h3>Pythonic Solution (Best Approach)</h3>
+<p>The backtracking approach is generally preferred for its lower memory usage and intuitive structure for this type of problem. The Python solution below implements this by passing a start index to the recursive function to avoid duplicate combinations and slicing overhead.</p>
+<pre><code class="language-python">from typing import List
+
+class Solution:
+    def combinationSum(self, candidates: List[int], target: int) -&gt; List[List[int]]:
+        &quot;&quot;&quot;
+        Finds all unique combinations in candidates where the numbers sum to target.
+        This solution uses a backtracking (DFS) approach.
+        &quot;&quot;&quot;
+        result = []
+
+        def backtrack(start_index: int, current_combination: List[int], current_sum: int):
+            # Base case: A valid combination is found
+            if current_sum == target:
+                # Append a copy of the combination to the result
+                result.append(list(current_combination))
+                return
+
+            # Pruning: If the sum exceeds the target, stop exploring this path
+            if current_sum &gt; target:
+                return
+
+            # Iterate through candidates starting from the current index
+            for i in range(start_index, len(candidates)):
+                candidate = candidates[i]
+
+                # 1. Choose: Add the candidate to the current path
+                current_combination.append(candidate)
+
+                # 2. Explore: Recurse with the updated sum.
+                # Pass 'i' as the next start_index to allow reusing the same element.
+                backtrack(i, current_combination, current_sum + candidate)
+
+                # 3. Backtrack: Remove the candidate to explore other possibilities
+                current_combination.pop()
+
+        # Start the backtracking process
+        backtrack(0, [], 0)
+        return result
+
+</code></pre></div>

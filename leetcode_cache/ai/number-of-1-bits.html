@@ -1,0 +1,86 @@
+<div class='ai-explanation'><h3>List of Approaches</h3>
+<ol>
+<li>Brute Force Approach: Checking Each Bit</li>
+<li>Optimized Approach: Brian Kernighan's Algorithm</li>
+</ol>
+<hr />
+<h3>Brute Force Approach: Checking Each Bit</h3>
+<p>This method iterates through each bit of the integer to check if it is a '1'. It uses a bitwise AND operation to check the least significant bit (LSB) and then right-shifts the number to check the next bit. The loop continues until all bits have been checked (i.e., the number becomes zero).</p>
+<ol>
+<li>Initialize a counter variable, <code>count</code>, to zero.</li>
+<li>Start a loop that continues as long as <code>n</code> is greater than zero.</li>
+<li>Inside the loop, use the expression <code>n &amp; 1</code> to check if the LSB of <code>n</code> is a '1'.</li>
+<li>Add the result (which is either 0 or 1) to <code>count</code>.</li>
+<li>Right-shift <code>n</code> by one position (<code>n &gt;&gt;= 1</code>) to move the next bit to the LSB position for the next iteration.</li>
+<li>Once the loop finishes, <code>count</code> will hold the total number of set bits. Return <code>count</code>.</li>
+</ol>
+<p>The time complexity is O(k) where k is the number of bits in the integer (e.g., 32), and the space complexity is O(1).</p>
+<pre><code class="language-cpp">#include &lt;cstdint&gt;
+
+class Solution {
+public:
+    int hammingWeight(uint32_t n) {
+        int count = 0;
+        while (n != 0) {
+            // Check if the least significant bit is 1
+            if (n &amp; 1) {
+                count++;
+            }
+            // Right shift to check the next bit
+            n = n &gt;&gt; 1;
+        }
+        return count;
+    }
+};
+</code></pre>
+<hr />
+<h3>Optimized Approach: Brian Kernighan's Algorithm</h3>
+<p>This is a clever bit manipulation trick that is more efficient than checking every bit. The core idea is that the operation <code>n &amp; (n - 1)</code> unsets the rightmost set bit ('1') of a number. By repeatedly applying this operation and counting the iterations, we can find the number of set bits. The loop runs exactly as many times as there are '1's in the number.</p>
+<ol>
+<li>Initialize a counter variable, <code>count</code>, to zero.</li>
+<li>Start a loop that continues as long as <code>n</code> is not zero.</li>
+<li>In each iteration, update <code>n</code> by performing <code>n = n &amp; (n - 1)</code>. This operation clears the rightmost '1'.</li>
+<li>Increment the <code>count</code>.</li>
+<li>The loop terminates when <code>n</code> becomes 0, meaning all set bits have been cleared.</li>
+<li>Return the final <code>count</code>.</li>
+</ol>
+<p>The time complexity is O(m) where m is the number of set bits, which is more efficient than the brute-force approach for numbers with few set bits. The space complexity is O(1).</p>
+<pre><code class="language-cpp">#include &lt;cstdint&gt;
+
+class Solution {
+public:
+    int hammingWeight(uint32_t n) {
+        int count = 0;
+        while (n != 0) {
+            // This operation unsets the rightmost set bit
+            n = n &amp; (n - 1);
+            count++;
+        }
+        return count;
+    }
+};
+</code></pre>
+<hr />
+<h3>Pythonic Solution (Best Approach)</h3>
+<p>The most efficient and elegant algorithmic approach is Brian Kernighan's algorithm. A more direct Pythonic way is to convert the number to a binary string and count the '1's, but the bit manipulation method is a better demonstration of the underlying computer science principle.</p>
+<pre><code class="language-python">class Solution:
+    def hammingWeight(self, n: int) -&gt; int:
+        &quot;&quot;&quot;
+        This solution uses the Brian Kernighan's algorithm.
+        The expression n &amp; (n - 1) clears the least significant set bit.
+        The loop runs as many times as there are set bits.
+        &quot;&quot;&quot;
+        count = 0
+        while n:
+            n &amp;= (n - 1)
+            count += 1
+        return count
+
+# An even more &quot;Pythonic&quot; but potentially less performant way for very large numbers
+# due to string conversion overhead, though highly readable:
+#
+# class Solution:
+#     def hammingWeight(self, n: int) -&gt; int:
+#         return bin(n).count('1')
+
+</code></pre></div>

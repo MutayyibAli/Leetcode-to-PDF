@@ -1,0 +1,114 @@
+<div class='ai-explanation'><h3>List of all the approaches to solution</h3>
+<ol>
+<li>Brute Force Approach</li>
+<li>Greedy One-Pass Approach</li>
+</ol>
+<hr />
+<h3>Brute Force Approach</h3>
+<p>This approach exhaustively checks every gas station as a potential starting point. For each station, it simulates the journey to see if a full circle can be completed.</p>
+<p><strong>Step-by-step explanation:</strong>
+1.  Iterate through each gas station from index <code>i = 0</code> to <code>n-1</code>, treating each as a potential starting point.
+2.  For each starting station <code>i</code>, initialize a variable <code>tank</code> to 0. This variable will track the amount of gas in the car.
+3.  Simulate the journey by making <code>n</code> stops, starting from <code>i</code> and wrapping around the circuit (e.g., from <code>i</code> to <code>i+1</code>, ..., <code>n-1</code>, <code>0</code>, ..., <code>i-1</code>).
+4.  At each station <code>j</code> in the simulated path, update the tank by adding the gas from that station and subtracting the cost to get to the next one: <code>tank += gas[j] - cost[j]</code>.
+5.  If at any point <code>tank</code> becomes negative, it's impossible to reach the next station. This means <code>i</code> is not a valid starting point. We break the inner simulation loop and try the next potential starting station <code>i+1</code>.
+6.  If the simulation completes all <code>n</code> stops without the <code>tank</code> ever becoming negative, it means <code>i</code> is a valid starting point. Since the solution is guaranteed to be unique, we can immediately return <code>i</code>.
+7.  If the outer loop finishes without finding any valid starting point, it means no solution exists, so we return -1.</p>
+<p>The time complexity is O(N<sup>2</sup>) because for each of the N starting points, we might simulate a journey of N steps. The space complexity is O(1).</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+
+class Solution {
+public:
+    int canCompleteCircuit(std::vector&lt;int&gt;&amp; gas, std::vector&lt;int&gt;&amp; cost) {
+        int n = gas.size();
+        for (int i = 0; i &lt; n; ++i) {
+            int tank = 0;
+            bool possible = true;
+            for (int j = 0; j &lt; n; ++j) {
+                int current_station = (i + j) % n;
+                tank += gas[current_station] - cost[current_station];
+                if (tank &lt; 0) {
+                    possible = false;
+                    break;
+                }
+            }
+            if (possible) {
+                return i;
+            }
+        }
+        return -1;
+    }
+};
+</code></pre>
+<hr />
+<h3>Greedy One-Pass Approach</h3>
+<p>This optimal approach solves the problem in a single pass by using a greedy strategy. It relies on two key insights:
+1.  A journey is only possible if the total amount of gas available is greater than or equal to the total cost of travel.
+2.  If you start at station <code>A</code> and run out of gas before reaching station <code>B</code>, then no station between <code>A</code> and <code>B</code> can be a valid starting point either.</p>
+<p><strong>Step-by-step explanation:</strong>
+1.  First, check if a solution is possible at all. If <code>sum(gas)</code> is less than <code>sum(cost)</code>, it's impossible to complete the circuit, so return -1. This check can be integrated into a single loop for efficiency.
+2.  Initialize <code>total_tank = 0</code> (to track the overall gas-cost balance), <code>current_tank = 0</code> (to track gas for the current journey segment), and <code>start_station = 0</code>.
+3.  Iterate through all stations from <code>i = 0</code> to <code>n-1</code>.
+4.  In each iteration, update both <code>total_tank</code> and <code>current_tank</code> with the net gain from that station: <code>gas[i] - cost[i]</code>.
+5.  If <code>current_tank</code> drops below zero at station <code>i</code>, it signifies that we cannot reach station <code>i+1</code> from the current <code>start_station</code>.
+6.  Because of the second insight, we know that no station from our current <code>start_station</code> up to <code>i</code> can be a valid starting point. Therefore, we must pick a new potential starting point, which is <code>i + 1</code>.
+7.  When this happens, we reset <code>current_tank</code> to 0 and update <code>start_station</code> to <code>i + 1</code>.
+8.  After the loop finishes, the <code>total_tank</code> will represent the overall balance. If it's non-negative, a solution exists, and the <code>start_station</code> we've found is the guaranteed unique answer. If <code>total_tank</code> is negative, no solution exists.</p>
+<p>This approach has a time complexity of O(N) as it involves a single pass through the arrays and a space complexity of O(1).</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;numeric&gt;
+
+class Solution {
+public:
+    int canCompleteCircuit(std::vector&lt;int&gt;&amp; gas, std::vector&lt;int&gt;&amp; cost) {
+        int n = gas.size();
+        int total_gas = 0;
+        int total_cost = 0;
+        int current_gas = 0;
+        int start_station = 0;
+
+        for (int i = 0; i &lt; n; i++) {
+            total_gas += gas[i];
+            total_cost += cost[i];
+
+            current_gas += gas[i] - cost[i];
+
+            if (current_gas &lt; 0) {
+                // If we run out of gas, this can't be the start.
+                // The next possible start is the station after this one.
+                start_station = i + 1;
+                // Reset the tank for the new journey segment.
+                current_gas = 0;
+            }
+        }
+
+        return (total_gas &lt; total_cost) ? -1 : start_station;     
+    }
+};
+</code></pre>
+<hr />
+<h3>Pythonic Solution (Greedy One-Pass Approach)</h3>
+<pre><code class="language-python">from typing import List
+
+class Solution:
+    def canCompleteCircuit(self, gas: List[int], cost: List[int]) -&gt; int:
+        # Condition 1: If total gas is less than total cost, it's impossible.
+        if sum(gas) &lt; sum(cost):
+            return -1
+
+        # Condition 2: Find the starting point using the greedy approach.
+        tank = 0
+        start_index = 0
+        for i in range(len(gas)):
+            tank += gas[i] - cost[i]
+
+            # If tank becomes negative, we can't reach station i+1
+            # from the current start_index. The new potential start
+            # must be i+1.
+            if tank &lt; 0:
+                tank = 0
+                start_index = i + 1
+
+        return start_index
+
+</code></pre></div>

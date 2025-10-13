@@ -1,0 +1,254 @@
+<div class='ai-explanation'><h3>List of Approaches</h3>
+<ol>
+<li>Brute Force Approach (Recursion)</li>
+<li>Memoization Approach (Top-Down DP)</li>
+<li>Tabulation Approach (Bottom-Up DP)</li>
+<li>Space-Optimized DP Approach (Best)</li>
+</ol>
+<hr />
+<h3>Brute Force Approach (Recursion)</h3>
+<p>This approach explores all possible transactions. For each day, we make a decision based on whether we are currently holding a stock or not.</p>
+<ol>
+<li>Define a recursive function, say <code>solve(index, can_buy)</code>, which returns the maximum profit from <code>day index</code> to the end. The <code>can_buy</code> boolean indicates if we are allowed to buy a stock (i.e., we are not currently holding one).</li>
+<li><strong>Base Case:</strong> If <code>index</code> goes beyond the number of days, we can't make any more profit, so return 0.</li>
+<li><strong>Recursive Step:</strong><ul>
+<li>If we <code>can_buy</code>: We have two choices:<ul>
+<li><strong>Buy:</strong> Buy the stock at <code>prices[index]</code>. The profit changes by <code>-prices[index]</code>. We then move to the next day, and now we cannot buy (we must sell). The profit is <code>-prices[index] + solve(index + 1, false)</code>.</li>
+<li><strong>Skip:</strong> Do nothing. Move to the next day, and we can still buy. The profit is <code>solve(index + 1, true)</code>.</li>
+<li>Return the maximum of these two choices.</li>
+</ul>
+</li>
+<li>If we <code>!can_buy</code> (must sell): We have two choices:<ul>
+<li><strong>Sell:</strong> Sell the stock at <code>prices[index]</code> and pay the transaction <code>fee</code>. The profit changes by <code>+prices[index] - fee</code>. We then move to the next day, and now we can buy again. The profit is <code>prices[index] - fee + solve(index + 1, true)</code>.</li>
+<li><strong>Hold:</strong> Do nothing. Move to the next day, and we still must sell. The profit is <code>solve(index + 1, false)</code>.</li>
+<li>Return the maximum of these two choices.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>The initial call is <code>solve(0, true)</code>.</li>
+</ol>
+<p>This approach re-computes the same subproblems multiple times, leading to an exponential time complexity. It has a time complexity of O(2^N) and a space complexity of O(N) due to the recursion stack.</p>
+<pre><code class="language-cpp">class Solution {
+public:
+    int solve(int index, bool can_buy, vector&lt;int&gt;&amp; prices, int fee) {
+        // Base case: If we've run out of days, no more profit can be made.
+        if (index &gt;= prices.size()) {
+            return 0;
+        }
+
+        int max_profit = 0;
+        if (can_buy) {
+            // Option 1: Buy the stock on the current day.
+            int buy_profit = -prices[index] + solve(index + 1, false, prices, fee);
+            // Option 2: Skip buying today.
+            int skip_profit = solve(index + 1, true, prices, fee);
+            max_profit = max(buy_profit, skip_profit);
+        } else { // We must sell or hold.
+            // Option 1: Sell the stock on the current day.
+            int sell_profit = prices[index] - fee + solve(index + 1, true, prices, fee);
+            // Option 2: Hold the stock.
+            int hold_profit = solve(index + 1, false, prices, fee);
+            max_profit = max(sell_profit, hold_profit);
+        }
+        return max_profit;
+    }
+
+    int maxProfit(vector&lt;int&gt;&amp; prices, int fee) {
+        return solve(0, true, prices, fee);
+    }
+};
+</code></pre>
+<hr />
+<h3>Memoization Approach (Top-Down DP)</h3>
+<p>To optimize the brute-force approach, we can use memoization to store the results of subproblems that have already been solved. This avoids redundant computations.</p>
+<ol>
+<li>Create a 2D DP table, <code>dp[n][2]</code>, where <code>n</code> is the number of days. <code>dp[i][0]</code> will store the max profit starting from day <code>i</code> given that we must sell (or hold), and <code>dp[i][1]</code> will store the max profit given that we can buy (or skip). Initialize the table with a value like -1 to indicate that a state has not been computed.</li>
+<li>Use the same recursive structure as the brute force approach.</li>
+<li>Before computing the result for a state <code>(index, can_buy)</code>, first check if <code>dp[index][can_buy]</code> is already computed. If it is, return the stored value.</li>
+<li>Otherwise, compute the result as in the brute-force approach and store it in <code>dp[index][can_buy]</code> before returning.</li>
+</ol>
+<p>This approach computes each subproblem only once. It has a time complexity of O(N) and a space complexity of O(N) for the DP table and recursion stack.</p>
+<pre><code class="language-cpp">class Solution {
+public:
+    int solve(int index, bool can_buy, vector&lt;int&gt;&amp; prices, int fee, vector&lt;vector&lt;int&gt;&gt;&amp; dp) {
+        if (index &gt;= prices.size()) {
+            return 0;
+        }
+
+        if (dp[index][can_buy] != -1) {
+            return dp[index][can_buy];
+        }
+
+        int max_profit = 0;
+        if (can_buy) {
+            int buy_profit = -prices[index] + solve(index + 1, false, prices, fee, dp);
+            int skip_profit = solve(index + 1, true, prices, fee, dp);
+            max_profit = max(buy_profit, skip_profit);
+        } else {
+            int sell_profit = prices[index] - fee + solve(index + 1, true, prices, fee, dp);
+            int hold_profit = solve(index + 1, false, prices, fee, dp);
+            max_profit = max(sell_profit, hold_profit);
+        }
+
+        return dp[index][can_buy] = max_profit;
+    }
+
+    int maxProfit(vector&lt;int&gt;&amp; prices, int fee) {
+        int n = prices.size();
+        vector&lt;vector&lt;int&gt;&gt; dp(n, vector&lt;int&gt;(2, -1));
+        return solve(0, true, prices, fee, dp);
+    }
+};
+</code></pre>
+<hr />
+<h3>Tabulation Approach (Bottom-Up DP)</h3>
+<p>This approach builds the solution iteratively, removing recursion. We use a DP table to store the maximum profit at each day for the two possible states: holding a stock or not holding a stock.</p>
+<ol>
+<li>Create a 2D DP table <code>dp[n+1][2]</code>. <code>dp[i][0]</code> represents the max profit up to day <code>i-1</code> ending with no stock. <code>dp[i][1]</code> represents the max profit up to day <code>i-1</code> ending with a stock.</li>
+<li>Initialize the states for day 0. <code>dp[0][0] = 0</code> (0 profit, no stock) and <code>dp[0][1] = -infinity</code> (an impossible state to start with a stock).</li>
+<li>Iterate from day <code>i = 1</code> to <code>n</code>. For each day, calculate the max profit for both states:<ul>
+<li><code>dp[i][0]</code> (no stock today): This can be achieved in two ways:<ol>
+<li>We had no stock yesterday and did nothing: <code>dp[i-1][0]</code>.</li>
+<li>We had a stock yesterday and sold it today: <code>dp[i-1][1] + prices[i-1] - fee</code>.
+So, <code>dp[i][0] = max(dp[i-1][0], dp[i-1][1] + prices[i-1] - fee)</code>.</li>
+</ol>
+</li>
+<li><code>dp[i][1]</code> (stock today): This can be achieved in two ways:<ol>
+<li>We had a stock yesterday and held it: <code>dp[i-1][1]</code>.</li>
+<li>We had no stock yesterday and bought one today: <code>dp[i-1][0] - prices[i-1]</code>.
+So, <code>dp[i][1] = max(dp[i-1][1], dp[i-1][0] - prices[i-1])</code>.</li>
+</ol>
+</li>
+</ul>
+</li>
+<li>After the loop, the maximum profit will be in <code>dp[n][0]</code>, as it's always more profitable to end without holding any stock.</li>
+</ol>
+<p>This approach has a time complexity of O(N) and a space complexity of O(N) for the DP table.</p>
+<pre><code class="language-cpp">class Solution {
+public:
+    int maxProfit(vector&lt;int&gt;&amp; prices, int fee) {
+        int n = prices.size();
+        if (n == 0) return 0;
+
+        vector&lt;vector&lt;int&gt;&gt; dp(n + 1, vector&lt;int&gt;(2, 0));
+
+        // Base case, though not strictly necessary with this loop structure.
+        // On day 0, profit with no stock is 0. Profit with stock is -price.
+        // Let's adjust the loop to be more intuitive.
+
+        // dp[i][0]: max profit on day i, ending with no stock
+        // dp[i][1]: max profit on day i, ending with a stock
+        vector&lt;vector&lt;int&gt;&gt; dp_alt(n, vector&lt;int&gt;(2, 0));
+
+        dp_alt[0][0] = 0;
+        dp_alt[0][1] = -prices[0];
+
+        for (int i = 1; i &lt; n; ++i) {
+            // Max profit with no stock today
+            dp_alt[i][0] = max(dp_alt[i-1][0], dp_alt[i-1][1] + prices[i] - fee);
+            // Max profit with a stock today
+            dp_alt[i][1] = max(dp_alt[i-1][1], dp_alt[i-1][0] - prices[i]);
+        }
+
+        return dp_alt[n-1][0];
+    }
+};
+</code></pre>
+<hr />
+<h3>Space-Optimized DP Approach (Best)</h3>
+<p>Observing the tabulation approach, we can see that the calculation for day <code>i</code> only depends on the results from day <code>i-1</code>. This allows us to optimize the space complexity from O(N) to O(1) by only keeping track of the previous day's states.</p>
+<ol>
+<li>Initialize two variables:<ul>
+<li><code>sell</code> (or <code>cash</code>): Represents the maximum profit if we end the day with no stock. Initialize to <code>0</code>.</li>
+<li><code>buy</code> (or <code>hold</code>): Represents the maximum profit if we end the day holding a stock. Initialize to a very small number like <code>INT_MIN</code> or <code>-prices[0]</code> for the first day.</li>
+</ul>
+</li>
+<li>Iterate through the <code>prices</code> array. For each <code>price</code>:<ul>
+<li>Store the previous <code>sell</code> state in a temporary variable, e.g., <code>prev_sell</code>.</li>
+<li>Update <code>sell</code>: The new max profit with no stock is the maximum of (a) not doing anything (keeping the previous <code>sell</code> profit) and (b) selling the stock we were holding (<code>buy + price - fee</code>).</li>
+<li>Update <code>buy</code>: The new max profit with a stock is the maximum of (a) not doing anything (keeping the previous <code>buy</code> profit) and (b) buying a stock today (using the profit from <code>prev_sell</code> and paying <code>price</code>).</li>
+</ul>
+</li>
+<li>The logic can be simplified by carefully ordering the updates. Let <code>buy</code> represent the max profit ending in a "hold" state and <code>sell</code> represent the max profit ending in a "cash" (no stock) state.<ul>
+<li>For each price, the new <code>buy</code> state is the better of holding (<code>buy</code>) or buying from a cash state (<code>sell - price</code>).</li>
+<li>The new <code>sell</code> state is the better of being in cash (<code>sell</code>) or selling from a hold state (<code>buy + price - fee</code>).</li>
+</ul>
+</li>
+<li>After iterating through all prices, the final answer is <code>sell</code>, as it's always optimal to have sold all stocks by the last day.</li>
+</ol>
+<p>This approach has a time complexity of O(N) and a space complexity of O(1).</p>
+<pre><code class="language-cpp">class Solution {
+public:
+    int maxProfit(vector&lt;int&gt;&amp; prices, int fee) {
+        // 'buy' represents the max profit if we end the day holding a stock.
+        // It's initialized to a very low number to ensure we buy on the first possible day.
+        int buy = INT_MIN;
+
+        // 'sell' represents the max profit if we end the day with no stock.
+        // It's initialized to 0, as we start with no stock and no profit.
+        int sell = 0;
+
+        for (int price : prices) {
+            int prev_buy = buy;
+            // The max profit of holding a stock today is either:
+            // 1. We already held a stock (prev_buy).
+            // 2. We had no stock and bought one today (sell - price).
+            buy = max(buy, sell - price);
+
+            // The max profit of not holding a stock today is either:
+            // 1. We had no stock yesterday and did nothing (sell).
+            // 2. We held a stock yesterday and sold it today (prev_buy + price - fee).
+            sell = max(sell, prev_buy + price - fee);
+        }
+
+        return sell;
+    }
+};
+</code></pre>
+<p><em>Note: A clever implementation avoids the temporary variable as shown in the Python solution below, which works due to the properties of the <code>max</code> function.</em></p>
+<h3>Pythonic Solution (Best Approach)</h3>
+<pre><code class="language-python">import math
+
+class Solution:
+    def maxProfit(self, prices: list[int], fee: int) -&gt; int:
+        &quot;&quot;&quot;
+        Calculates the maximum profit using a space-optimized dynamic programming approach.
+
+        At any day, we can either be holding a stock or not holding a stock.
+
+        - `cash`: The maximum profit we could have if we do NOT hold a stock at the end of the day.
+        - `hold`: The maximum profit we could have if we DO hold a stock at the end of the day.
+
+        Initialization:
+        - `cash` starts at 0. We begin with no money and no stock.
+        - `hold` starts at -infinity, as it's impossible to hold a stock without buying it first.
+
+        Transitions for each day's price:
+        - To update `cash`: We either did nothing (so profit is the same as yesterday's `cash`),
+          or we sold the stock we were holding (yesterday's `hold` + current `price` - `fee`).
+        - To update `hold`: We either did nothing (so profit is the same as yesterday's `hold`),
+          or we bought a stock (yesterday's `cash` - current `price`).
+
+        The final answer is `cash`, as it's always better to end with no stock liability.
+        &quot;&quot;&quot;
+        cash = 0
+        hold = -math.inf
+
+        for price in prices:
+            # We must use a temporary variable for the old cash value
+            # because the new 'hold' calculation depends on the old 'cash'.
+            prev_cash = cash
+
+            # Max profit if we don't have a stock today:
+            # - either we didn't have one yesterday (cash)
+            # - or we sold the one we had yesterday (hold + price - fee)
+            cash = max(cash, hold + price - fee)
+
+            # Max profit if we have a stock today:
+            # - either we had one yesterday (hold)
+            # - or we bought one today (prev_cash - price)
+            hold = max(hold, prev_cash - price)
+
+        return cash
+</code></pre></div>

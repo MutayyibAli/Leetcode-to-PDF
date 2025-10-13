@@ -1,0 +1,197 @@
+<div class='ai-explanation'><h3>List of all the approaches to solution</h3>
+<ol>
+<li>Brute Force Approach (Sorting)</li>
+<li>Max-Heap Approach</li>
+<li>Min-Heap Approach</li>
+<li>Quickselect Approach</li>
+</ol>
+<h3>Brute Force Approach (Sorting)</h3>
+<p>The most intuitive way to solve this problem is to sort the array first. Once the array is sorted, the k-th largest element can be easily found. We can sort the array in descending order and pick the element at index <code>k-1</code>, or sort in ascending order and pick the element at index <code>n-k</code> (where <code>n</code> is the number of elements).</p>
+<ol>
+<li>Sort the input array <code>nums</code> in descending order.</li>
+<li>The k-th largest element will be at the <code>(k-1)</code>th index (0-indexed).</li>
+<li>Return <code>nums[k-1]</code>.</li>
+</ol>
+<p>This approach has a time complexity of O(N log N) due to sorting and a space complexity of O(1) if sorting is done in-place.</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;algorithm&gt;
+#include &lt;functional&gt;
+
+class Solution {
+public:
+    int findKthLargest(std::vector&lt;int&gt;&amp; nums, int k) {
+        // Sort the array in descending order
+        std::sort(nums.begin(), nums.end(), std::greater&lt;int&gt;());
+        // The k-th largest element is at index k-1
+        return nums[k - 1];
+    }
+};
+</code></pre>
+<h3>Max-Heap Approach</h3>
+<p>A max-heap is a data structure where the root element is always the largest. We can leverage this property to find the k-th largest element.</p>
+<ol>
+<li>Build a max-heap (in C++, <code>std::priority_queue</code> is a max-heap by default) containing all elements from the <code>nums</code> array.</li>
+<li>The root of the heap will be the largest element in the array.</li>
+<li>To find the k-th largest element, we remove the top element from the heap <code>k-1</code> times.</li>
+<li>After the removals, the element at the top of the heap is the k-th largest element.</li>
+</ol>
+<p>The time complexity is O(N) to build the heap and O(k log N) to pop <code>k-1</code> elements, resulting in O(N + k log N). The space complexity is O(N) to store the heap.</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;queue&gt;
+
+class Solution {
+public:
+    int findKthLargest(std::vector&lt;int&gt;&amp; nums, int k) {
+        // Create a max-heap from the vector elements
+        std::priority_queue&lt;int&gt; pq(nums.begin(), nums.end());
+
+        // Pop the largest k-1 elements
+        for (int i = 0; i &lt; k - 1; ++i) {
+            pq.pop();
+        }
+
+        // The top element is now the k-th largest
+        return pq.top();
+    }
+};
+</code></pre>
+<h3>Min-Heap Approach</h3>
+<p>This is a more optimized heap-based solution, especially when <code>k</code> is much smaller than <code>N</code>. We maintain a min-heap of size <code>k</code> that stores the <code>k</code> largest elements encountered so far.</p>
+<ol>
+<li>Create a min-heap.</li>
+<li>Iterate through each number in the <code>nums</code> array.</li>
+<li>Push the current number onto the min-heap.</li>
+<li>If the size of the heap exceeds <code>k</code>, remove the smallest element (the root of the min-heap).</li>
+<li>By the end of the iteration, the heap contains the <code>k</code> largest elements from the array.</li>
+<li>The root of the min-heap is the smallest among these <code>k</code> elements, which is the k-th largest element in the entire array.</li>
+</ol>
+<p>The time complexity is O(N log k) because we process N elements, and each heap operation (push/pop) takes O(log k) time. The space complexity is O(k) to store the elements in the heap.</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;queue&gt;
+#include &lt;functional&gt;
+
+class Solution {
+public:
+    int findKthLargest(std::vector&lt;int&gt;&amp; nums, int k) {
+        // Create a min-heap
+        std::priority_queue&lt;int, std::vector&lt;int&gt;, std::greater&lt;int&gt;&gt; pq;
+
+        for (int num : nums) {
+            pq.push(num);
+            // If the heap size is greater than k, pop the smallest element
+            if (pq.size() &gt; k) {
+                pq.pop();
+            }
+        }
+
+        // The top of the min-heap is the k-th largest element
+        return pq.top();
+    }
+};
+</code></pre>
+<h3>Quickselect Approach</h3>
+<p>This approach is based on the partitioning logic of the Quicksort algorithm. Instead of recurring for both sides of the pivot, it only recurs for the side that contains the k-th largest element. This reduces the average time complexity significantly.</p>
+<ol>
+<li>The k-th largest element is equivalent to the (N-k)-th smallest element. We'll search for the element that would be at index <code>target = N - k</code> in a sorted array.</li>
+<li>Choose a pivot element and partition the array around it. After partitioning, the pivot is in its final sorted position, <code>pivot_index</code>.</li>
+<li>Compare <code>pivot_index</code> with our <code>target</code> index:<ul>
+<li>If <code>pivot_index == target</code>, the pivot is the k-th largest element.</li>
+<li>If <code>pivot_index &lt; target</code>, the k-th largest element must be in the right subarray. Adjust the search range to the right of the pivot.</li>
+<li>If <code>pivot_index &gt; target</code>, the k-th largest element must be in the left subarray. Adjust the search range to the left of the pivot.</li>
+</ul>
+</li>
+<li>Repeat the process on the smaller subarray until the element is found. Choosing a random pivot helps avoid the worst-case scenario.</li>
+</ol>
+<p>The time complexity is O(N) on average and O(N^2) in the worst case. The space complexity is O(1) as the partitioning is done in-place.</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;algorithm&gt;
+
+class Solution {
+public:
+    int findKthLargest(std::vector&lt;int&gt;&amp; nums, int k) {
+        int left = 0, right = nums.size() - 1;
+        // The k-th largest element is at index (nums.size() - k) in a sorted array
+        int target_index = nums.size() - k;
+
+        while (left &lt;= right) {
+            int pivot_index = partition(nums, left, right);
+            if (pivot_index == target_index) {
+                return nums[pivot_index];
+            } else if (pivot_index &lt; target_index) {
+                left = pivot_index + 1;
+            } else {
+                right = pivot_index - 1;
+            }
+        }
+        return -1; // Should not be reached
+    }
+
+private:
+    int partition(std::vector&lt;int&gt;&amp; nums, int left, int right) {
+        // Using rightmost element as pivot
+        int pivot_value = nums[right];
+        int store_index = left;
+        for (int i = left; i &lt; right; ++i) {
+            if (nums[i] &lt; pivot_value) {
+                std::swap(nums[store_index], nums[i]);
+                store_index++;
+            }
+        }
+        std::swap(nums[store_index], nums[right]);
+        return store_index;
+    }
+};
+</code></pre>
+<h3>Pythonic solution for the best approach</h3>
+<p>The Quickselect algorithm provides the best average-case performance. A pythonic way to implement this involves a helper function for partitioning and a loop to narrow down the search space. To make the solution robust against the worst-case scenario, a random pivot is chosen in each step.</p>
+<pre><code class="language-python">import random
+from typing import List
+
+class Solution:
+    def findKthLargest(self, nums: List[int], k: int) -&gt; int:
+        &quot;&quot;&quot;
+        Finds the k-th largest element using the Quickselect algorithm.
+        &quot;&quot;&quot;
+
+        # The k-th largest element is the (n-k)-th smallest element.
+        # We are looking for the element at index n-k in the sorted array.
+        target_index = len(nums) - k
+        left, right = 0, len(nums) - 1
+
+        while left &lt;= right:
+            # Choose a random pivot to avoid worst-case O(n^2) performance
+            pivot_idx = random.randint(left, right)
+
+            # Partition the array and get the final position of the pivot
+            final_pivot_idx = self._partition(nums, left, right, pivot_idx)
+
+            if final_pivot_idx == target_index:
+                return nums[final_pivot_idx]
+            elif final_pivot_idx &lt; target_index:
+                # The target is in the right subarray
+                left = final_pivot_idx + 1
+            else:
+                # The target is in the left subarray
+                right = final_pivot_idx - 1
+
+    def _partition(self, nums: List[int], left: int, right: int, pivot_idx: int) -&gt; int:
+        &quot;&quot;&quot;
+        Partitions a subarray around a pivot using the Lomuto partition scheme.
+        &quot;&quot;&quot;
+        pivot_value = nums[pivot_idx]
+
+        # 1. Move pivot to end
+        nums[pivot_idx], nums[right] = nums[right], nums[pivot_idx]
+
+        store_index = left
+        # 2. Move all smaller elements to the left
+        for i in range(left, right):
+            if nums[i] &lt; pivot_value:
+                nums[store_index], nums[i] = nums[i], nums[store_index]
+                store_index += 1
+
+        # 3. Move pivot to its final sorted position
+        nums[right], nums[store_index] = nums[store_index], nums[right]
+
+        return store_index
+</code></pre></div>

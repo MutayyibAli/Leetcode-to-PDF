@@ -1,0 +1,156 @@
+<div class='ai-explanation'><h3>List of all the approaches to solution</h3>
+<ol>
+<li>Brute Force Approach</li>
+<li>Recursive Approach with Array Slicing</li>
+<li>Recursive Approach with Pointers (Divide and Conquer)</li>
+</ol>
+<hr />
+<h3>Brute Force Approach</h3>
+<p>A brute-force method would involve generating all possible Binary Search Trees (BSTs) from the given numbers and then checking each one to see if it's height-balanced. One way to generate all BSTs is to try every permutation of the input array and build a BST by inserting elements in that order. However, the number of permutations is N!, making this approach computationally infeasible for all but the smallest inputs. Therefore, this method is purely theoretical and not practical.</p>
+<ul>
+<li><strong>Time Complexity:</strong> O(N! * N) or worse, where N is the number of elements in the array.</li>
+<li><strong>Space Complexity:</strong> O(N) to store the tree and recursion stack.</li>
+</ul>
+<hr />
+<h3>Recursive Approach with Array Slicing</h3>
+<p>This approach uses a "divide and conquer" strategy. To create a height-balanced BST, we should pick the middle element of the sorted array as the root. This naturally divides the remaining elements into two halves of roughly equal size, which will form the left and right subtrees. The left subtree is built from the left half of the array, and the right subtree is built from the right half. We apply this logic recursively. This version implements the logic by creating new subarrays (slices) for each recursive call.</p>
+<ol>
+<li><strong>Base Case:</strong> If the input array is empty, return <code>nullptr</code> as there is no tree to create.</li>
+<li><strong>Find the Middle:</strong> Determine the middle index of the current array.</li>
+<li><strong>Create Root:</strong> Create a new <code>TreeNode</code> with the value of the middle element. This will be the root of the current subtree.</li>
+<li><strong>Recursive Calls:</strong><ul>
+<li>Recursively call the function on the left part of the array (from the beginning up to, but not including, the middle element). The result is assigned as the root's left child.</li>
+<li>Recursively call the function on the right part of the array (from the element after the middle to the end). The result is assigned as the root's right child.</li>
+</ul>
+</li>
+<li><strong>Return Root:</strong> Return the newly created root node.</li>
+</ol>
+<p>This approach is intuitive but less efficient because creating array slices at each step is costly in both time and space.</p>
+<p>The time complexity is O(N log N) because at each level of recursion, we process N elements in total through slicing, and the depth of recursion is log N. The space complexity is also O(N log N) due to the storage of new slices at each level of the recursion.</p>
+<pre><code class="language-cpp">/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    TreeNode* sortedArrayToBST(vector&lt;int&gt;&amp; nums) {
+        if (nums.empty()) {
+            return nullptr;
+        }
+
+        int mid = nums.size() / 2;
+        TreeNode* root = new TreeNode(nums[mid]);
+
+        // Create left subarray and recursively build left subtree
+        vector&lt;int&gt; left_sub(nums.begin(), nums.begin() + mid);
+        root-&gt;left = sortedArrayToBST(left_sub);
+
+        // Create right subarray and recursively build right subtree
+        vector&lt;int&gt; right_sub(nums.begin() + mid + 1, nums.end());
+        root-&gt;right = sortedArrayToBST(right_sub);
+
+        return root;
+    }
+};
+</code></pre>
+<hr />
+<h3>Recursive Approach with Pointers (Divide and Conquer)</h3>
+<p>This is the optimal approach. It uses the same divide and conquer logic as the previous method but avoids the overhead of creating new subarrays. Instead of slicing the array, we pass <code>left</code> and <code>right</code> pointers (indices) to our recursive helper function. These pointers define the segment of the original array that the current recursive call should operate on.</p>
+<ol>
+<li><strong>Helper Function:</strong> Create a helper function that takes the array and two indices, <code>left</code> and <code>right</code>, as arguments.</li>
+<li><strong>Base Case:</strong> If <code>left</code> is greater than <code>right</code>, it means the current segment is empty, so we return <code>nullptr</code>.</li>
+<li><strong>Find the Middle:</strong> Calculate the middle index <code>mid = left + (right - left) / 2</code>. This prevents potential integer overflow for very large arrays.</li>
+<li><strong>Create Root:</strong> Create a new <code>TreeNode</code> with the value <code>nums[mid]</code>.</li>
+<li><strong>Recursive Calls:</strong><ul>
+<li>Recursively call the helper function for the left subtree, using the segment from <code>left</code> to <code>mid - 1</code>. Assign the result to <code>root-&gt;left</code>.</li>
+<li>Recursively call the helper function for the right subtree, using the segment from <code>mid + 1</code> to <code>right</code>. Assign the result to <code>root-&gt;right</code>.</li>
+</ul>
+</li>
+<li><strong>Return Root:</strong> Return the created root node. The initial call from the main function will be with <code>(nums, 0, nums.size() - 1)</code>.</li>
+</ol>
+<p>By passing indices instead of creating new arrays, we process each element only once. The time complexity is O(N) since each element is visited once to create a node. The space complexity is O(log N) due to the recursion stack depth, which is logarithmic for a balanced tree.</p>
+<pre><code class="language-cpp">/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    TreeNode* sortedArrayToBST(vector&lt;int&gt;&amp; nums) {
+        return buildBST(nums, 0, nums.size() - 1);
+    }
+
+private:
+    TreeNode* buildBST(vector&lt;int&gt;&amp; nums, int left, int right) {
+        // Base case: if the segment is invalid, return null
+        if (left &gt; right) {
+            return nullptr;
+        }
+
+        // Find the middle element to be the root
+        int mid = left + (right - left) / 2;
+        TreeNode* root = new TreeNode(nums[mid]);
+
+        // Recursively build the left and right subtrees
+        root-&gt;left = buildBST(nums, left, mid - 1);
+        root-&gt;right = buildBST(nums, mid + 1, right);
+
+        return root;
+    }
+};
+</code></pre>
+<hr />
+<h3>Pythonic Solution (Best Approach)</h3>
+<p>The most Pythonic and efficient solution mirrors the optimal C++ approach using pointers (indices). A helper function is defined, which takes <code>left</code> and <code>right</code> indices to specify the portion of the array to be converted into a BST. This avoids the costly slicing operation of the more naive Python solution.</p>
+<pre><code class="language-python"># Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+
+class Solution:
+    def sortedArrayToBST(self, nums: list[int]) -&gt; TreeNode:
+        &quot;&quot;&quot;
+        Converts a sorted array to a height-balanced binary search tree.
+        &quot;&quot;&quot;
+
+        def build_bst(left: int, right: int) -&gt; TreeNode:
+            &quot;&quot;&quot;
+            Helper function to build the tree from a subarray defined by indices.
+            &quot;&quot;&quot;
+            # Base case: if the pointers cross, the subarray is empty.
+            if left &gt; right:
+                return None
+
+            # Choose the middle element as the root to maintain balance.
+            # Using (left + right) // 2 is fine here, but mid = left + (right - left) // 2
+            # is safer against overflow in other languages.
+            mid = (left + right) // 2
+
+            # Create the root node
+            root = TreeNode(nums[mid])
+
+            # Recursively build the left and right subtrees
+            root.left = build_bst(left, mid - 1)
+            root.right = build_bst(mid + 1, right)
+
+            return root
+
+        # Initial call to build the tree from the entire array
+        return build_bst(0, len(nums) - 1)
+
+</code></pre></div>

@@ -1,0 +1,172 @@
+<div class='ai-explanation'><h3>List of all the approaches to solution</h3>
+<ol>
+<li>Brute Force Approach (Linear Scan)</li>
+<li>Optimized Approach (Binary Search)</li>
+</ol>
+<hr />
+<h3>Brute Force Approach</h3>
+<p>This approach involves iterating through the array and checking each element to see if it's a peak. A peak element is one that is greater than both of its neighbors. We need to handle the edge cases for the first and last elements, considering that <code>nums[-1]</code> and <code>nums[n]</code> are negative infinity.</p>
+<p>A more clever linear scan leverages the property that <code>nums[i] != nums[i+1]</code>. We can simply iterate through the array and find the first element <code>nums[i]</code> which is greater than its next element <code>nums[i+1]</code>. This <code>nums[i]</code> must be a peak. Why? Because we know <code>nums[i] &gt; nums[i+1]</code>. If <code>i=0</code>, it's a peak because <code>nums[-1]</code> is <code>-∞</code>. If <code>i &gt; 0</code>, since we haven't returned yet, it implies <code>nums[i-1] &lt; nums[i]</code>, making <code>nums[i]</code> a peak. If the loop finishes without finding such an element, it means the array is strictly increasing, so the last element must be the peak.</p>
+<p><strong>Step-by-step explanation:</strong>
+1.  Handle the base case: If the array has only one element, return index 0.
+2.  Iterate from the first element <code>i = 0</code> to the second-to-last element <code>i = n-2</code>.
+3.  In each iteration, check if <code>nums[i]</code> is greater than <code>nums[i+1]</code>.
+4.  If it is, we have found a peak. The element <code>nums[i]</code> is on a "downslope", and since we reached it from the left, the slope before it must have been "upsloping" or it's the start of the array. Thus, <code>nums[i]</code> is a peak, and we can return its index <code>i</code>.
+5.  If the loop completes, it means the entire array is sorted in ascending order. In this case, the last element is the peak. Return <code>n-1</code>.</p>
+<p>This approach has a time complexity of O(N) and a space complexity of O(1).</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;algorithm&gt;
+
+class Solution {
+public:
+    int findPeakElement(std::vector&lt;int&gt;&amp; nums) {
+        int n = nums.size();
+        // If the array has only one element, it's a peak
+        if (n == 1) {
+            return 0;
+        }
+
+        // Iterate through the array to find the first element that is
+        // greater than its right neighbor.
+        for (int i = 0; i &lt; n - 1; i++) {
+            if (nums[i] &gt; nums[i + 1]) {
+                // This element is a peak because the element to its left
+                // (if it exists) must be smaller (otherwise we would have
+                // returned earlier), and the element to its right is smaller.
+                return i;
+            }
+        }
+
+        // If the loop completes, the array is in strictly increasing order,
+        // so the last element is the peak.
+        return n - 1;
+    }
+};
+</code></pre>
+<p><em>An even simpler O(N) solution is to find the index of the maximum element in the array. Since all adjacent elements are different, the maximum element will always be greater than its neighbors and thus will be a peak.</em></p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;algorithm&gt;
+
+class Solution {
+public:
+    int findPeakElement(std::vector&lt;int&gt;&amp; nums) {
+        // The max_element function returns an iterator to the largest element.
+        // Subtracting the beginning iterator gives its index.
+        return std::max_element(nums.begin(), nums.end()) - nums.begin();
+    }
+};
+</code></pre>
+<hr />
+<h3>Optimized Approach (Binary Search)</h3>
+<p>The problem requires an <code>O(log n)</code> solution, which strongly suggests using binary search. The key insight is that for any given element <code>nums[mid]</code>, we can determine which half of the array is guaranteed to contain a peak.</p>
+<p>Let's compare <code>nums[mid]</code> with its right neighbor <code>nums[mid+1]</code>:
+-   If <code>nums[mid] &lt; nums[mid+1]</code>, we are on an "uphill" slope. This guarantees that there must be a peak to the right of <code>mid</code>, because the sequence can't go up forever (as <code>nums[n]</code> is <code>-∞</code>). So, we can safely discard the left half and continue our search in the right half <code>[mid + 1, high]</code>.
+-   If <code>nums[mid] &gt; nums[mid+1]</code>, we are on a "downhill" slope. This means <code>nums[mid]</code> itself could be a peak, or there is a peak to its left. In either case, a peak is guaranteed to exist in the left half including <code>mid</code>. So, we can discard the right half and search in <code>[low, mid]</code>.</p>
+<p>We can repeat this process until our search space is reduced to a single element, which will be a peak.</p>
+<h4>1. Iterative Binary Search</h4>
+<p><strong>Step-by-step explanation:</strong>
+1.  Initialize two pointers, <code>low = 0</code> and <code>high = nums.size() - 1</code>.
+2.  Loop as long as <code>low &lt; high</code>. This ensures the search space has at least two elements.
+3.  Calculate the middle index <code>mid = low + (high - low) / 2</code> to avoid potential overflow.
+4.  Compare <code>nums[mid]</code> with its right neighbor <code>nums[mid + 1]</code>.
+5.  If <code>nums[mid] &lt; nums[mid+1]</code>, a peak must be in the right half. So, update <code>low = mid + 1</code>.
+6.  Otherwise (<code>nums[mid] &gt; nums[mid+1]</code>), a peak is in the left half (including <code>mid</code>). So, update <code>high = mid</code>.
+7.  When the loop terminates, <code>low</code> and <code>high</code> will be equal, pointing to a peak element. Return <code>low</code>.</p>
+<p>This approach has a time complexity of O(log N) and a space complexity of O(1).</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+
+class Solution {
+public:
+    int findPeakElement(std::vector&lt;int&gt;&amp; nums) {
+        int low = 0;
+        int high = nums.size() - 1;
+
+        while (low &lt; high) {
+            int mid = low + (high - low) / 2;
+            // If the middle element is on an &quot;uphill&quot; slope
+            if (nums[mid] &lt; nums[mid + 1]) {
+                // A peak must be on the right side
+                low = mid + 1;
+            } 
+            // If the middle element is on a &quot;downhill&quot; slope
+            else {
+                // The peak is on the left side (including mid)
+                high = mid;
+            }
+        }
+
+        // When low == high, we have found a peak
+        return low;
+    }
+};
+</code></pre>
+<h4>2. Recursive Binary Search</h4>
+<p><strong>Step-by-step explanation:</strong>
+The logic is identical to the iterative approach but implemented using recursion.</p>
+<ol>
+<li>Create a recursive helper function that takes <code>nums</code>, <code>low</code>, and <code>high</code> as arguments.</li>
+<li>The base case for the recursion is when <code>low == high</code>. In this case, we've found a peak, so return <code>low</code>.</li>
+<li>Calculate <code>mid</code> and compare <code>nums[mid]</code> with <code>nums[mid+1]</code>.</li>
+<li>If <code>nums[mid] &lt; nums[mid+1]</code>, make a recursive call on the right half: <code>search(nums, mid + 1, high)</code>.</li>
+<li>Otherwise, make a recursive call on the left half: <code>search(nums, low, mid)</code>.</li>
+</ol>
+<p>This approach has a time complexity of O(log N) and a space complexity of O(log N) due to the recursion stack.</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+
+class Solution {
+private:
+    int recursive_binary_search(std::vector&lt;int&gt;&amp; nums, int low, int high) {
+        // Base case: when the search space has only one element
+        if (low == high) {
+            return low;
+        }
+
+        int mid = low + (high - low) / 2;
+
+        // If mid is on an &quot;uphill&quot; slope, search in the right half
+        if (nums[mid] &lt; nums[mid + 1]) {
+            return recursive_binary_search(nums, mid + 1, high);
+        } 
+        // Otherwise, search in the left half (including mid)
+        else {
+            return recursive_binary_search(nums, low, mid);
+        }
+    }
+
+public:
+    int findPeakElement(std::vector&lt;int&gt;&amp; nums) {
+        return recursive_binary_search(nums, 0, nums.size() - 1);
+    }
+};
+</code></pre>
+<hr />
+<h3>Pythonic solution for Best Approach</h3>
+<p>The best approach is the iterative binary search due to its optimal <code>O(log N)</code> time complexity and <code>O(1)</code> space complexity.</p>
+<pre><code class="language-python">from typing import List
+
+class Solution:
+  def findPeakElement(self, nums: List[int]) -&gt; int:
+    &quot;&quot;&quot;
+    Finds a peak element using iterative binary search.
+    A peak element is an element that is strictly greater than its neighbors.
+    The function guarantees to find a peak by repeatedly halving the search space.
+    &quot;&quot;&quot;
+    low, high = 0, len(nums) - 1
+
+    while low &lt; high:
+      # Find the middle element
+      mid = low + (high - low) // 2
+
+      # If the element to the right of mid is greater, we are on an
+      # ascending slope. This means a peak must exist on the right side.
+      if nums[mid] &lt; nums[mid + 1]:
+        low = mid + 1
+      # Otherwise, we are on a descending slope. The current element
+      # could be a peak, or a peak exists to the left.
+      else:
+        high = mid
+
+    # When the loop terminates, low and high pointers converge to a peak element.
+    return low
+
+</code></pre></div>

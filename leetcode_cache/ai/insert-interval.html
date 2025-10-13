@@ -1,0 +1,122 @@
+<div class='ai-explanation'><h3><strong>List of Approaches</strong></h3>
+<ol>
+<li>Brute Force Approach (Insert, Sort, and Merge)</li>
+<li>Single Pass (Greedy) Approach</li>
+</ol>
+<hr />
+<h3><strong>1. Brute Force Approach (Insert, Sort, and Merge)</strong></h3>
+<p>This approach first adds the <code>newInterval</code> to the list of <code>intervals</code>. Then, it sorts the entire collection of intervals based on their start times. Finally, it iterates through the sorted list, merging any overlapping intervals to produce the final result. This leverages the standard solution for the "Merge Intervals" problem after the initial insertion and sort.</p>
+<p><strong>Step-by-step explanation:</strong>
+1.  Append the <code>newInterval</code> to the <code>intervals</code> list.
+2.  Sort the combined list of intervals based on their starting points.
+3.  Initialize an empty list <code>merged</code> and add the first interval from the sorted list to it.
+4.  Iterate through the rest of the sorted intervals.
+5.  For each interval, compare it with the last interval in <code>merged</code>.
+    - If they overlap (i.e., <code>current_interval.start &lt;= last_merged_interval.end</code>), update the end of the <code>last_merged_interval</code> to be the maximum of the two interval ends.
+    - If they do not overlap, simply add the current interval to the <code>merged</code> list.
+6.  Return the <code>merged</code> list.</p>
+<p>This approach is simple to understand but less efficient because it doesn't take advantage of the initially sorted nature of the input <code>intervals</code>.
+The time complexity is O(N log N) due to the sorting step, and the space complexity is O(N) to store the sorted list and the result.</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;algorithm&gt;
+
+class Solution {
+public:
+    vector&lt;vector&lt;int&gt;&gt; insert(vector&lt;vector&lt;int&gt;&gt;&amp; intervals, vector&lt;int&gt;&amp; newInterval) {
+        // Step 1: Add the new interval
+        intervals.push_back(newInterval);
+
+        // Step 2: Sort all intervals by their start time
+        std::sort(intervals.begin(), intervals.end());
+
+        // Step 3 &amp; 4: Merge overlapping intervals
+        vector&lt;vector&lt;int&gt;&gt; merged;
+        if (intervals.empty()) {
+            return merged;
+        }
+
+        merged.push_back(intervals[0]);
+
+        for (int i = 1; i &lt; intervals.size(); ++i) {
+            // Step 5: Compare and merge or add
+            if (intervals[i][0] &lt;= merged.back()[1]) {
+                // Overlap exists, merge them
+                merged.back()[1] = std::max(merged.back()[1], intervals[i][1]);
+            } else {
+                // No overlap, add the new interval
+                merged.push_back(intervals[i]);
+            }
+        }
+
+        return merged;
+    }
+};
+</code></pre>
+<hr />
+<h3><strong>2. Single Pass (Greedy) Approach)</strong></h3>
+<p>This is a more optimal approach that iterates through the intervals just once. Since the initial list is sorted, we can handle the problem by dividing it into three distinct phases: intervals that come before the <code>newInterval</code>, intervals that overlap with it, and intervals that come after it.</p>
+<p><strong>Step-by-step explanation:</strong>
+1.  Initialize an empty result vector <code>res</code>.
+2.  <strong>Phase 1 (Before):</strong> Iterate through the <code>intervals</code> list. Add all intervals that end before <code>newInterval</code> begins (<code>interval[1] &lt; newInterval[0]</code>) to <code>res</code>. These intervals are guaranteed not to overlap.
+3.  <strong>Phase 2 (Merge):</strong> Continue iterating. For any interval that overlaps with <code>newInterval</code> (<code>interval[0] &lt;= newInterval[1]</code>), merge it into <code>newInterval</code> by updating <code>newInterval</code>'s start to the minimum of the two starts and its end to the maximum of the two ends. Repeat this until you find an interval that doesn't overlap.
+4.  After the merging phase, add the updated <code>newInterval</code> to <code>res</code>.
+5.  <strong>Phase 3 (After):</strong> Add all the remaining intervals from the input list to <code>res</code>. These intervals are guaranteed to start after the merged <code>newInterval</code> ends.
+6.  Return <code>res</code>.</p>
+<p>The time complexity is O(N) as it involves a single pass through the list, and the space complexity is O(N) for the result vector.</p>
+<pre><code class="language-cpp">class Solution {
+public:
+   vector&lt;vector&lt;int&gt;&gt; insert(vector&lt;vector&lt;int&gt;&gt;&amp; intervals, vector&lt;int&gt;&amp; newInterval) {
+        int n = intervals.size(), i = 0;
+        vector&lt;vector&lt;int&gt;&gt; res;
+
+        // Phase 1: Add all intervals ending before newInterval starts
+        while(i &lt; n &amp;&amp; intervals[i][1] &lt; newInterval[0]){
+            res.push_back(intervals[i]);
+            i++;
+        }                           
+
+        // Phase 2: Merge all overlapping intervals with newInterval
+        while(i &lt; n &amp;&amp; newInterval[1] &gt;= intervals[i][0]){
+            newInterval[0] = min(newInterval[0], intervals[i][0]);
+            newInterval[1] = max(newInterval[1], intervals[i][1]);
+            i++;
+        }
+        res.push_back(newInterval);
+
+        // Phase 3: Add all remaining intervals
+        while(i &lt; n){
+            res.push_back(intervals[i]);
+            i++;
+        }
+
+        return res;
+    }
+};
+</code></pre>
+<hr />
+<h3><strong>Pythonic Solution (Best Approach)</strong></h3>
+<p>This Python solution implements the optimal single-pass approach in a clean and readable way. It constructs three lists: <code>left</code> for intervals before the new one, <code>right</code> for intervals after, and merges the <code>newInterval</code> with any overlapping intervals found in the middle.</p>
+<pre><code class="language-python">from typing import List
+
+class Solution:
+    def insert(self, intervals: List[List[int]], newInterval: List[int]) -&gt; List[List[int]]:
+        left = []
+        right = []
+
+        start, end = newInterval[0], newInterval[1]
+
+        for i in intervals:
+            # Current interval is completely to the left of newInterval
+            if i[1] &lt; start:
+                left.append(i)
+            # Current interval is completely to the right of newInterval
+            elif i[0] &gt; end:
+                right.append(i)
+            # There is an overlap, so merge with newInterval
+            else:
+                start = min(start, i[0])
+                end = max(end, i[1])
+
+        # Combine the left part, the merged interval, and the right part
+        return left + [[start, end]] + right
+</code></pre></div>

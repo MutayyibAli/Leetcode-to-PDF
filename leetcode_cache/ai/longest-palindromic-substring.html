@@ -1,0 +1,256 @@
+<div class='ai-explanation'><h3>List of all the approaches to solution</h3>
+<ul>
+<li>Brute Force Approach</li>
+<li>Expand Around Center Approach</li>
+<li>Dynamic Programming Approach</li>
+<li>Manacher's Algorithm Approach</li>
+</ul>
+<h3>Brute Force Approach</h3>
+<p>This is the most straightforward approach. We generate every possible substring of the given string and then check if that substring is a palindrome. We keep track of the longest palindromic substring found so far and return it at the end.</p>
+<ol>
+<li>Use two nested loops to iterate through all possible starting (<code>i</code>) and ending (<code>j</code>) indices of a substring.</li>
+<li>For each substring <code>s.substr(i, j-i+1)</code>, create a helper function <code>isPalindrome</code> to check if it's a palindrome. This check can be done by comparing the character at the beginning with the character at the end, moving inwards.</li>
+<li>Maintain a variable <code>max_str</code> to store the longest palindrome found. If the current substring is a palindrome and its length is greater than the length of <code>max_str</code>, update <code>max_str</code>.</li>
+<li>After checking all substrings, return <code>max_str</code>.</li>
+</ol>
+<p>This approach has a time complexity of O(n³) because there are O(n²) substrings and checking each one takes O(n) time, with a space complexity of O(1).</p>
+<pre><code class="language-cpp">class Solution {
+public:
+    std::string longestPalindrome(std::string s) {
+        if (s.length() &lt;= 1) {
+            return s;
+        }
+
+        int max_len = 1;
+        std::string max_str = s.substr(0, 1);
+
+        for (int i = 0; i &lt; s.length(); ++i) {
+            for (int j = i + 1; j &lt; s.length(); ++j) {
+                int len = j - i + 1;
+                if (len &gt; max_len &amp;&amp; isPalindrome(s.substr(i, len))) {
+                    max_len = len;
+                    max_str = s.substr(i, len);
+                }
+            }
+        }
+
+        return max_str;
+    }
+
+private:
+    bool isPalindrome(const std::string&amp; str) {
+        int left = 0;
+        int right = str.length() - 1;
+        while (left &lt; right) {
+            if (str[left] != str[right]) {
+                return false;
+            }
+            ++left;
+            --right;
+        }
+        return true;
+    }
+};
+</code></pre>
+<h3>Expand Around Center Approach</h3>
+<p>A palindrome is symmetric around its center. This approach leverages this property by considering every possible character or space between characters as a potential center of a palindrome and expanding outwards.</p>
+<ol>
+<li>Iterate through the string with an index <code>i</code> from <code>0</code> to <code>n-1</code>.</li>
+<li>For each index <code>i</code>, consider two possibilities for a palindrome's center:<ul>
+<li>The character <code>s[i]</code> itself (for odd-length palindromes like "aba").</li>
+<li>The space between <code>s[i]</code> and <code>s[i+1]</code> (for even-length palindromes like "abba").</li>
+</ul>
+</li>
+<li>Create a helper function that takes a center (defined by a <code>left</code> and <code>right</code> pointer) and expands outwards as long as <code>s[left] == s[right]</code> and the pointers are within the string's bounds.</li>
+<li>Call this helper for both the odd and even cases for each index <code>i</code>.</li>
+<li>Keep track of the longest palindrome found across all expansions and return it.</li>
+</ol>
+<p>This approach has a time complexity of O(n²) because for each of the <code>2n-1</code> centers, we might expand up to <code>n/2</code> steps. The space complexity is O(1).</p>
+<pre><code class="language-cpp">class Solution {
+public:
+    std::string longestPalindrome(std::string s) {
+        if (s.length() &lt;= 1) {
+            return s;
+        }
+
+        std::string max_str = s.substr(0, 1);
+
+        for (int i = 0; i &lt; s.length() - 1; i++) {
+            // Odd length palindrome
+            std::string odd = expand_from_center(s, i, i);
+            if (odd.length() &gt; max_str.length()) {
+                max_str = odd;
+            }
+
+            // Even length palindrome
+            std::string even = expand_from_center(s, i, i + 1);
+            if (even.length() &gt; max_str.length()) {
+                max_str = even;
+            }
+        }
+
+        return max_str;
+    }
+private:
+    std::string expand_from_center(const std::string&amp; s, int left, int right) {
+        while (left &gt;= 0 &amp;&amp; right &lt; s.length() &amp;&amp; s[left] == s[right]) {
+            left--;
+            right++;
+        }
+        // Return the valid palindrome substring before the loop broke
+        return s.substr(left + 1, right - left - 1);
+    }
+};
+</code></pre>
+<h3>Dynamic Programming Approach</h3>
+<p>This approach avoids re-computing whether a substring is a palindrome by storing the results for smaller substrings in a table. A substring <code>s[i..j]</code> is a palindrome if its endpoints <code>s[i]</code> and <code>s[j]</code> are the same and the inner substring <code>s[i+1..j-1]</code> is also a palindrome.</p>
+<ol>
+<li>Create a 2D boolean table <code>dp[n][n]</code>, where <code>dp[i][j]</code> will be <code>true</code> if the substring from index <code>i</code> to <code>j</code> is a palindrome.</li>
+<li>Initialize the table. All substrings of length 1 are palindromes (<code>dp[i][i] = true</code>).</li>
+<li>Iterate through substring lengths from 2 to <code>n</code>. For each length, iterate through all possible start indices <code>i</code>.</li>
+<li>Calculate the end index <code>j</code> based on <code>i</code> and the current length.</li>
+<li>Apply the transition formula: <code>dp[i][j] = (s[i] == s[j]) &amp;&amp; (length == 2 || dp[i+1][j-1])</code>.</li>
+<li>While filling the table, if <code>dp[i][j]</code> is true, check if the current palindrome is the longest found so far and update the result.</li>
+</ol>
+<p>This method has a time complexity of O(n²) to fill the <code>dp</code> table and a space complexity of O(n²) for the table itself.</p>
+<pre><code class="language-cpp">class Solution {
+public:
+    std::string longestPalindrome(std::string s) {
+        if (s.length() &lt;= 1) {
+            return s;
+        }
+        int n = s.length();
+        int max_len = 1;
+        int start = 0;
+        std::vector&lt;std::vector&lt;bool&gt;&gt; dp(n, std::vector&lt;bool&gt;(n, false));
+
+        // Substrings of length 1
+        for (int i = 0; i &lt; n; ++i) {
+            dp[i][i] = true;
+        }
+
+        // Substrings of length 2 and more
+        for (int len = 2; len &lt;= n; ++len) {
+            for (int i = 0; i &lt;= n - len; ++i) {
+                int j = i + len - 1;
+                if (s[i] == s[j]) {
+                    if (len == 2 || dp[i + 1][j - 1]) {
+                        dp[i][j] = true;
+                        if (len &gt; max_len) {
+                            max_len = len;
+                            start = i;
+                        }
+                    }
+                }
+            }
+        }
+        return s.substr(start, max_len);
+    }
+};
+</code></pre>
+<h3>Manacher's Algorithm Approach</h3>
+<p>This is a highly optimized, linear-time algorithm specifically designed for this problem. It avoids redundant comparisons by using palindrome properties and symmetry.</p>
+<ol>
+<li>Transform the input string to handle even-length palindromes uniformly. Insert a special character (e.g., '#') between each character and at the ends. For example, <code>s = "babad"</code> becomes <code>T = "#b#a#b#a#d#"</code>.</li>
+<li>Create an array <code>P</code> where <code>P[i]</code> stores the radius of the palindrome centered at <code>T[i]</code>. The length of the palindrome is <code>2 * P[i] + 1</code>.</li>
+<li>Iterate through the transformed string <code>T</code>, maintaining the <code>center</code> and <code>right</code> boundary of the palindrome that extends furthest to the right.</li>
+<li>For each position <code>i</code>, use the symmetry with respect to the current <code>center</code> to find an initial "safe" radius for the palindrome at <code>i</code>, avoiding redundant character comparisons.</li>
+<li>Expand from this safe radius to find the actual full radius of the palindrome centered at <code>i</code>.</li>
+<li>If the palindrome at <code>i</code> extends beyond the current <code>right</code> boundary, update <code>center</code> and <code>right</code>.</li>
+<li>The maximum value in the <code>P</code> array will correspond to the longest palindrome. Convert its radius and center back to indices in the original string <code>s</code>.</li>
+</ol>
+<p>This algorithm achieves an optimal time complexity of O(n) and uses O(n) space for the transformed string and the radii array.</p>
+<pre><code class="language-cpp">#include &lt;string&gt;
+#include &lt;vector&gt;
+#include &lt;algorithm&gt;
+
+class Solution {
+public:
+    std::string longestPalindrome(std::string s) {
+        if (s.length() &lt;= 1) return s;
+
+        // 1. Transform s into T.
+        // For example, s = &quot;abba&quot;, T = &quot;^#a#b#b#a#$&quot;.
+        // ^ and $ are sentinels to avoid bounds checking.
+        std::string T = &quot;^&quot;;
+        for (char c : s) {
+            T += &quot;#&quot;;
+            T += c;
+        }
+        T += &quot;#$&quot;;
+
+        int n = T.length();
+        std::vector&lt;int&gt; P(n, 0);
+        int C = 0, R = 0;
+
+        // 2. Main loop to compute P array
+        for (int i = 1; i &lt; n - 1; i++) {
+            int i_mirror = 2 * C - i; // equals to C - (i-C)
+
+            if (R &gt; i) {
+                P[i] = std::min(R - i, P[i_mirror]);
+            } else {
+                P[i] = 0;
+            }
+
+            // Attempt to expand palindrome centered at i
+            while (T[i + 1 + P[i]] == T[i - 1 - P[i]]) {
+                P[i]++;
+            }
+
+            // If palindrome centered at i expand past R,
+            // adjust center based on expanded palindrome.
+            if (i + P[i] &gt; R) {
+                C = i;
+                R = i + P[i];
+            }
+        }
+
+        // 3. Find the maximum element in P.
+        int max_len = 0;
+        int center_index = 0;
+        for (int i = 1; i &lt; n - 1; i++) {
+            if (P[i] &gt; max_len) {
+                max_len = P[i];
+                center_index = i;
+            }
+        }
+
+        // 4. Convert back to original string's coordinates.
+        int start = (center_index - max_len) / 2;
+        return s.substr(start, max_len);
+    }
+};
+</code></pre>
+<h3>Pythonic solution for best approach</h3>
+<p>The <strong>Expand Around Center</strong> approach offers an excellent balance of performance and implementation simplicity. It's significantly better than brute force, avoids the high space complexity of Dynamic Programming, and is much easier to understand and code correctly than Manacher's algorithm, making it a preferred solution in many practical scenarios like coding interviews.</p>
+<pre><code class="language-python">class Solution:
+    def longestPalindrome(self, s: str) -&gt; str:
+        &quot;&quot;&quot;
+        Finds the longest palindromic substring using the expand around center method.
+        &quot;&quot;&quot;
+        if not s or len(s) &lt; 1:
+            return &quot;&quot;
+
+        start_index = 0
+        max_length = 1
+
+        def expand_around_center(left: int, right: int):
+            nonlocal start_index, max_length
+            while left &gt;= 0 and right &lt; len(s) and s[left] == s[right]:
+                current_len = right - left + 1
+                if current_len &gt; max_length:
+                    max_length = current_len
+                    start_index = left
+                left -= 1
+                right += 1
+
+        for i in range(len(s)):
+            # Odd length palindromes, e.g., &quot;racecar&quot;
+            expand_around_center(i, i)
+            # Even length palindromes, e.g., &quot;aabbaa&quot;
+            expand_around_center(i, i + 1)
+
+        return s[start_index : start_index + max_length]
+
+</code></pre></div>

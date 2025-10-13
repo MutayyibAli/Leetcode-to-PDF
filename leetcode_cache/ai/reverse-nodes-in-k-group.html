@@ -1,0 +1,181 @@
+<div class='ai-explanation'><h3>List of Approaches</h3>
+<ol>
+<li>Recursive Approach</li>
+<li>Iterative Approach with a Dummy Node</li>
+</ol>
+<hr />
+<h3>1. Recursive Approach</h3>
+<p>This approach breaks the problem down into smaller, similar subproblems. The core idea is to reverse the first <code>k</code> nodes and then recursively call the function on the rest of the list. The result of the recursive call is then linked to the tail of the currently reversed group.</p>
+<ol>
+<li><strong>Check for Base Case</strong>: First, traverse <code>k</code> nodes from the current <code>head</code>. If the list has fewer than <code>k</code> nodes, we don't need to reverse anything, so we return the original <code>head</code>.</li>
+<li><strong>Reverse the first k-group</strong>: Use a standard iterative approach with three pointers (<code>prev</code>, <code>curr</code>, <code>nxt</code>) to reverse the first <code>k</code> nodes. After this loop, <code>prev</code> will be the new head of this group.</li>
+<li><strong>Recursive Call</strong>: The original <code>head</code> of this group is now its tail. Its <code>next</code> pointer should point to the head of the next processed segment. We find this by recursively calling <code>reverseKGroup</code> on the rest of the list, which starts at <code>curr</code> (the <code>k+1</code>-th node).</li>
+<li><strong>Connect Groups</strong>: Set <code>head-&gt;next</code> to the result of the recursive call.</li>
+<li><strong>Return New Head</strong>: Return <code>prev</code>, which is the new head of the fully processed list segment.</li>
+</ol>
+<p>The time complexity is O(N) as each node is visited a constant number of times. The space complexity is O(N/k) due to the recursion call stack depth.</p>
+<pre><code class="language-cpp">/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* reverseKGroup(ListNode* head, int k) {
+        // 1. Check if there are at least k nodes left
+        ListNode* cursor = head;
+        for(int i = 0; i &lt; k; i++){
+            if(cursor == nullptr) return head;
+            cursor = cursor-&gt;next;
+        }
+
+        // 2. Reverse the first k nodes
+        ListNode* curr = head;
+        ListNode* prev = nullptr;
+        ListNode* nxt = nullptr;
+        for(int i = 0; i &lt; k; i++){
+            nxt = curr-&gt;next;
+            curr-&gt;next = prev;
+            prev = curr;
+            curr = nxt;
+        }
+
+        // 3. head is now the tail of the reversed group.
+        //    Connect it to the result of the recursive call on the rest of the list.
+        //    curr is the head of the next group.
+        head-&gt;next = reverseKGroup(curr, k);
+
+        // 4. prev is the new head of the reversed group
+        return prev;
+    }
+};
+</code></pre>
+<hr />
+<h3>2. Iterative Approach with a Dummy Node</h3>
+<p>This approach avoids recursion, thus achieving O(1) space complexity. We use a <code>dummy</code> node to simplify handling the head of the list. We iterate through the list, and for each segment, we check if it's long enough, reverse it if it is, and then connect it back to the main list.</p>
+<ol>
+<li><strong>Initialization</strong>: Create a <code>dummy</code> node that points to the <code>head</code>. This helps manage the case where the head of the list itself changes. Use a pointer <code>before</code> that will always point to the node <em>before</em> the current k-group starts. Initially, <code>before</code> points to <code>dummy</code>.</li>
+<li><strong>Iterate and Check</strong>: Start a <code>while</code> loop that continues as long as there are groups to process. In each iteration, first check if there are at least <code>k</code> nodes available for reversal starting from the current position. If not, the remaining nodes are left as they are, so we can exit the loop.</li>
+<li><strong>Reverse k-group</strong>: If there are enough nodes, perform an in-place reversal of the <code>k</code> nodes. We need pointers to manage the connections:<ul>
+<li><code>before</code>: The node before the current group.</li>
+<li><code>after</code>: The first node of the current group (which will become the tail).</li>
+<li><code>curr</code>, <code>prev</code>, <code>nxt</code>: Standard pointers for reversing the list segment.</li>
+</ul>
+</li>
+<li><strong>Reconnect List</strong>: After reversing the k-group, the connections must be updated:<ul>
+<li>The <code>next</code> of the <code>before</code> node should now point to the new head of the reversed group (<code>prev</code>).</li>
+<li>The <code>next</code> of the tail of the reversed group (<code>after</code>) should point to the start of the next group (<code>curr</code>).</li>
+</ul>
+</li>
+<li><strong>Update Pointers for Next Iteration</strong>: Move the <code>before</code> pointer to the end of the group we just reversed (<code>after</code>). The start of the next group (<code>after</code>) is now <code>curr</code>.</li>
+<li><strong>Return Result</strong>: Once the loop finishes, return <code>dummy-&gt;next</code>, which points to the new head of the modified list.</li>
+</ol>
+<p>The time complexity is O(N) since we traverse each node a constant number of times. The space complexity is O(1) as we only use a few extra pointers.</p>
+<pre><code class="language-cpp">/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* reverseKGroup(ListNode* head, int k) {
+        if (head == nullptr || k == 1) return head;
+
+        ListNode* dummy = new ListNode(0);
+        dummy-&gt;next = head;
+
+        ListNode* before = dummy;
+        ListNode* after = head;
+        ListNode* curr = nullptr;
+        ListNode* prev = nullptr;
+        ListNode* nxt = nullptr;
+
+        while(true){
+            // Check if there are k nodes to reverse
+            ListNode* cursor = after;
+            for(int i = 0; i &lt; k; i++){
+                if(cursor == nullptr) return dummy-&gt;next;
+                cursor = cursor-&gt;next;
+            }
+
+            // Reverse k nodes
+            curr = after;
+            prev = before;
+            for(int i = 0; i &lt; k; i++){
+                nxt = curr-&gt;next;
+                curr-&gt;next = prev;
+                prev = curr;
+                curr = nxt;
+            }
+
+            // Reconnect the list
+            after-&gt;next = curr;
+            before-&gt;next = prev;
+
+            // Move pointers for the next iteration
+            before = after;
+            after = curr;
+        }
+    }
+};
+</code></pre>
+<hr />
+<h3>Pythonic Solution (Iterative)</h3>
+<p>This Python solution implements the optimal iterative approach. It uses a <code>dummy</code> node to simplify edge cases with the head. The <code>jump</code> pointer acts as the connection point from the previous group to the current one. <code>l</code> and <code>r</code> pointers are used to define the current k-group window. The reversal logic is concisely handled within the loop.</p>
+<pre><code class="language-python"># Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, val=0, next=None):
+#         self.val = val
+#         self.next = next
+class Solution:
+    def reverseKGroup(self, head: Optional[ListNode], k: int) -&gt; Optional[ListNode]:
+        if not head or k == 1:
+            return head
+
+        dummy = ListNode(0)
+        dummy.next = head
+
+        # jump is the node before the current k-group
+        jump = dummy
+        l = r = head
+
+        while True:
+            count = 0
+            # Move r to the (k+1)-th node of the group
+            while r and count &lt; k:
+                r = r.next
+                count += 1
+
+            # If a full k-group is found
+            if count == k:
+                # Reverse the k-group from l to r (exclusive)
+                prev, curr = r, l
+                for _ in range(k):
+                    # Standard reversal logic
+                    temp_next = curr.next
+                    curr.next = prev
+                    prev = curr
+                    curr = temp_next
+
+                # Reconnect the reversed group
+                # jump.next now points to the new head of the group (prev)
+                jump.next = prev
+                # The new jump is the tail of the just-reversed group (l)
+                jump = l
+                # The start of the next group is r
+                l = r
+            else:
+                # Not enough nodes left, so we are done
+                return dummy.next
+
+</code></pre></div>

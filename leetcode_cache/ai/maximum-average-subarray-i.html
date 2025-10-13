@@ -1,0 +1,104 @@
+<div class='ai-explanation'><h3>List of Approaches</h3>
+<ol>
+<li>Brute Force Approach</li>
+<li>Sliding Window Approach</li>
+</ol>
+<hr />
+<h3>Brute Force Approach</h3>
+<h4>Explanation</h4>
+<p>This method involves iterating through every possible contiguous subarray of length <code>k</code>, calculating its sum, and keeping track of the maximum sum found.</p>
+<ol>
+<li>Initialize a variable <code>maxSum</code> to a very small number to ensure any valid sum will be greater.</li>
+<li>Start an outer loop that iterates from the beginning of the array up to the last possible starting point for a subarray of length <code>k</code> (i.e., <code>n-k</code>).</li>
+<li>Inside this loop, for each starting index <code>i</code>, run a nested loop <code>k</code> times to calculate the sum of the subarray <code>nums[i]</code> through <code>nums[i+k-1]</code>.</li>
+<li>After calculating the <code>currentSum</code> for the subarray, compare it with <code>maxSum</code> and update <code>maxSum</code> if <code>currentSum</code> is larger.</li>
+<li>Once all possible subarrays have been checked, the maximum average is <code>maxSum / k</code>.
+This approach is straightforward but inefficient due to redundant calculations, as overlapping elements are summed multiple times. The time complexity is O(n*k) and the space complexity is O(1).</li>
+</ol>
+<h4>C++ Code</h4>
+<pre><code class="language-cpp">class Solution {
+public:
+    double findMaxAverage(vector&lt;int&gt;&amp; nums, int k) {
+        // Initialize maxSum to negative infinity to handle negative numbers in the array.
+        double maxSum = -1.0/0.0; 
+        int n = nums.size();
+
+        // Iterate through all possible starting points of a subarray of length k.
+        for (int i = 0; i &lt;= n - k; ++i) {
+            double currentSum = 0;
+            // Calculate the sum of the current subarray of length k.
+            for (int j = 0; j &lt; k; ++j) {
+                currentSum += nums[i + j];
+            }
+            // Update maxSum if the current subarray's sum is greater.
+            maxSum = max(maxSum, currentSum);
+        }
+
+        return maxSum / k;
+    }
+};
+</code></pre>
+<hr />
+<h3>Sliding Window Approach</h3>
+<h4>Explanation</h4>
+<p>This is an optimized approach that avoids recalculating the sum for each subarray. We maintain a "window" of size <code>k</code> and slide it across the array one element at a time, efficiently updating the sum.</p>
+<ol>
+<li>Calculate the sum of the first <code>k</code> elements. This will be our initial <code>currentSum</code> and <code>maxSum</code>.</li>
+<li>Iterate through the array from index <code>k</code> to the end.</li>
+<li>In each iteration, update the <code>currentSum</code> by adding the new element entering the window (<code>nums[i]</code>) and subtracting the element leaving the window (<code>nums[i-k]</code>). This "slides" the window one position to the right.</li>
+<li>Compare the updated <code>currentSum</code> with <code>maxSum</code> and update <code>maxSum</code> if <code>currentSum</code> is larger.</li>
+<li>After the loop completes, <code>maxSum</code> will hold the maximum sum of any contiguous subarray of length <code>k</code>.</li>
+<li>Return <code>maxSum / k</code>.
+This method iterates through the array only once, leading to a significantly better time complexity of O(n) with a space complexity of O(1).</li>
+</ol>
+<h4>C++ Code</h4>
+<pre><code class="language-cpp">class Solution {
+public:
+    double findMaxAverage(vector&lt;int&gt;&amp; nums, int k) {
+        double currSum = 0;
+
+        // Calculate the sum of the initial window of size k.
+        for (int i = 0; i &lt; k; i++) {
+            currSum += nums[i];
+        }
+
+        // Initialize maxSum with the sum of the first window.
+        double maxSum = currSum;
+
+        // Slide the window from the k-th element to the end of the array.
+        for (int i = k; i &lt; nums.size(); i++) {
+            // Update the sum by adding the new element and removing the old one.
+            currSum += nums[i] - nums[i - k];
+
+            // Update the maximum sum found so far.
+            maxSum = max(maxSum, currSum);
+        }
+
+        // Return the maximum average.
+        return maxSum / k;
+    }
+};
+</code></pre>
+<hr />
+<h3>Pythonic Solution (Sliding Window)</h3>
+<pre><code class="language-python">from typing import List
+
+class Solution:
+    def findMaxAverage(self, nums: List[int], k: int) -&gt; float:
+
+        # Calculate the sum of the first window and initialize maxSum
+        curr_sum = max_sum = sum(nums[:k])
+
+        # Slide the window across the rest of the array
+        for i in range(k, len(nums)):
+
+            # Update the current sum by adding the new element 
+            # and subtracting the element that's left the window
+            curr_sum += nums[i] - nums[i - k]
+
+            # Update the maximum sum if the new window's sum is greater
+            max_sum = max(max_sum, curr_sum)
+
+        # The result is the maximum sum divided by k
+        return max_sum / k
+</code></pre></div>

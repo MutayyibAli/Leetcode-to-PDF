@@ -1,0 +1,230 @@
+<div class='ai-explanation'><h3>List of approaches:</h3>
+<ol>
+<li>Brute Force Approach (Recursion)</li>
+<li>Dynamic Programming with Memoization (Top-Down)</li>
+<li>Dynamic Programming with 2D Array (Bottom-Up)</li>
+<li>Dynamic Programming with 1D Array (Space Optimized)</li>
+<li>Dynamic Programming In-Place (Most Space Optimized)</li>
+</ol>
+<hr />
+<h3>1. Brute Force Approach (Recursion)</h3>
+<p>This approach explores every possible path from the top-left to the bottom-right corner. A recursive function calculates the minimum path sum starting from a given cell <code>(i, j)</code>. From any cell, we can only move right or down. The function recursively calls itself for both possible moves and takes the minimum sum. This method is inefficient because it recalculates the minimum path sum for the same cells multiple times.</p>
+<p><strong>Step-by-step explanation:</strong>
+1.  Define a recursive function <code>solve(grid, i, j)</code> that returns the minimum path sum from cell <code>(i, j)</code> to the bottom-right corner.
+2.  The base case is the destination cell <code>(m-1, n-1)</code>. If <code>i</code> and <code>j</code> point to this cell, return its value <code>grid[i][j]</code>.
+3.  If the function is called for a cell that is out of the grid's bounds, return a very large value (infinity) to signify an invalid path.
+4.  For any other cell <code>(i, j)</code>, the minimum path sum is <code>grid[i][j]</code> plus the minimum of the sums returned by the recursive calls for the cell below <code>solve(grid, i+1, j)</code> and the cell to the right <code>solve(grid, i, j+1)</code>.
+5.  The initial call to start the process is <code>solve(grid, 0, 0)</code>.</p>
+<p>The time complexity is O(2^(m+n)) due to the exponential number of paths, and the space complexity is O(m+n) for the recursion stack depth.</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;algorithm&gt;
+#include &lt;climits&gt;
+
+class Solution {
+public:
+    int minPathSum(std::vector&lt;std::vector&lt;int&gt;&gt;&amp; grid) {
+        return solve(grid, 0, 0);
+    }
+
+private:
+    int solve(const std::vector&lt;std::vector&lt;int&gt;&gt;&amp; grid, int i, int j) {
+        int m = grid.size();
+        int n = grid[0].size();
+
+        // Base case: If we reach the destination
+        if (i == m - 1 &amp;&amp; j == n - 1) {
+            return grid[i][j];
+        }
+
+        // If we go out of bounds, return a large value
+        if (i &gt;= m || j &gt;= n) {
+            return INT_MAX;
+        }
+
+        // Recursively find the minimum path sum by moving down or right
+        long long path_down = solve(grid, i + 1, j);
+        long long path_right = solve(grid, i, j + 1);
+
+        return grid[i][j] + std::min(path_down, path_right);
+    }
+};
+</code></pre>
+<hr />
+<h3>2. Dynamic Programming with Memoization (Top-Down)</h3>
+<p>This approach optimizes the brute-force recursion by storing the results of subproblems in a memoization table (a 2D array). This avoids redundant computations for the same cell, a technique known as memoization or top-down dynamic programming.</p>
+<p><strong>Step-by-step explanation:</strong>
+1.  Create a 2D <code>memo</code> table of the same dimensions as the <code>grid</code>, initialized with a special value (e.g., -1) to indicate that the subproblem has not been solved yet.
+2.  In the recursive function <code>solve(grid, i, j, memo)</code>, first check if <code>memo[i][j]</code> has already been computed. If so, return the stored value.
+3.  If not, compute the result as in the brute-force approach.
+4.  Before returning the computed result, store it in <code>memo[i][j]</code> so it can be reused later.</p>
+<p>This ensures that the minimum path sum for each cell is calculated only once. The time complexity is O(m<em>n) and the space complexity is O(m</em>n) for the memoization table and the recursion stack.</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;algorithm&gt;
+#include &lt;climits&gt;
+
+class Solution {
+public:
+    int minPathSum(std::vector&lt;std::vector&lt;int&gt;&gt;&amp; grid) {
+        int m = grid.size();
+        int n = grid[0].size();
+        std::vector&lt;std::vector&lt;int&gt;&gt; memo(m, std::vector&lt;int&gt;(n, -1));
+        return solve(grid, 0, 0, memo);
+    }
+
+private:
+    int solve(const std::vector&lt;std::vector&lt;int&gt;&gt;&amp; grid, int i, int j, std::vector&lt;std::vector&lt;int&gt;&gt;&amp; memo) {
+        int m = grid.size();
+        int n = grid[0].size();
+
+        if (i == m - 1 &amp;&amp; j == n - 1) {
+            return grid[i][j];
+        }
+
+        if (i &gt;= m || j &gt;= n) {
+            return INT_MAX;
+        }
+
+        if (memo[i][j] != -1) {
+            return memo[i][j];
+        }
+
+        long long path_down = solve(grid, i + 1, j, memo);
+        long long path_right = solve(grid, i, j + 1, memo);
+
+        memo[i][j] = grid[i][j] + std::min(path_down, path_right);
+        return memo[i][j];
+    }
+};
+</code></pre>
+<hr />
+<h3>3. Dynamic Programming with 2D Array (Bottom-Up)</h3>
+<p>This is a bottom-up dynamic programming approach that iteratively fills a 2D <code>dp</code> table. <code>dp[i][j]</code> stores the minimum path sum from <code>(0, 0)</code> to <code>(i, j)</code>. The solution is built up from the top-left corner to the bottom-right corner.</p>
+<p><strong>Step-by-step explanation:</strong>
+1.  Create a 2D <code>dp</code> array of the same size as the <code>grid</code>.
+2.  Initialize the top-left cell: <code>dp[0][0] = grid[0][0]</code>.
+3.  Fill the first row: Since we can only move right, <code>dp[0][j] = dp[0][j-1] + grid[0][j]</code>.
+4.  Fill the first column: Since we can only move down, <code>dp[i][0] = dp[i-1][0] + grid[i][0]</code>.
+5.  Iterate through the rest of the grid. For each cell <code>(i, j)</code>, the minimum path sum is the value of the cell plus the minimum of the sums from the cell above and the cell to the left: <code>dp[i][j] = min(dp[i-1][j], dp[i][j-1]) + grid[i][j]</code>.
+6.  The final answer is the value in the bottom-right cell, <code>dp[m-1][n-1]</code>.</p>
+<p>The time complexity is O(m<em>n) and the space complexity is O(m</em>n) for the 2D DP table.</p>
+<pre><code class="language-cpp">class Solution {
+public:
+    int minPathSum(std::vector&lt;std::vector&lt;int&gt;&gt;&amp; grid) {
+        int m = grid.size();
+        int n = grid[0].size(); 
+        std::vector&lt;std::vector&lt;int&gt;&gt; dp(m, std::vector&lt;int&gt;(n, grid[0][0]));
+
+        for (int i = 1; i &lt; m; i++)
+            dp[i][0] = dp[i - 1][0] + grid[i][0];
+
+        for (int j = 1; j &lt; n; j++)
+            dp[0][j] = dp[0][j - 1] + grid[0][j];
+
+        for (int i = 1; i &lt; m; i++)
+            for (int j = 1; j &lt; n; j++)
+                dp[i][j]  = std::min(dp[i - 1][j], dp[i][j - 1]) + grid[i][j];
+
+        return dp[m - 1][n - 1];
+    }
+};
+</code></pre>
+<hr />
+<h3>4. Dynamic Programming with 1D Array (Space Optimized)</h3>
+<p>We can optimize the space complexity of the bottom-up approach. To calculate the minimum path sum for any cell, we only need information from the previous row (or column). This allows us to use a 1D array to store the DP state, reducing space usage. The code below iterates column by column using a 1D array of size <code>m</code>.</p>
+<p><strong>Step-by-step explanation:</strong>
+1.  Create a 1D array <code>dp</code> of size <code>m</code> (number of rows).
+2.  Initialize <code>dp</code> with the path sums for the first column. <code>dp[0]</code> is <code>grid[0][0]</code>, and <code>dp[i] = dp[i-1] + grid[i][0]</code> for the rest.
+3.  Iterate through the remaining columns from <code>j = 1</code> to <code>n-1</code>.
+4.  For each column, update the <code>dp</code> array.
+    *   First, update <code>dp[0]</code> for the current column <code>j</code>: <code>dp[0] += grid[0][j]</code>.
+    *   Then, for the other rows <code>i = 1</code> to <code>m-1</code>, the new <code>dp[i]</code> is <code>grid[i][j]</code> plus the minimum of the path from above (the old <code>dp[i]</code>) and the path from the left (the new <code>dp[i-1]</code>). The update rule is <code>dp[i] = min(dp[i], dp[i-1]) + grid[i][j]</code>.
+5.  After iterating through all columns, <code>dp[m-1]</code> will hold the final answer.</p>
+<p>The time complexity is O(m*n) and the space complexity is O(m) (or O(min(m, n)) if we choose the smaller dimension for our DP array).</p>
+<pre><code class="language-cpp">class Solution {
+public:
+    int minPathSum(std::vector&lt;std::vector&lt;int&gt;&gt;&amp; grid) {
+        int m = grid.size();
+        int n = grid[0].size();
+        std::vector&lt;int&gt; dp(m, grid[0][0]);
+
+        for (int i = 1; i &lt; m; i++)
+            dp[i] = dp[i - 1] + grid[i][0]; 
+
+        for (int j = 1; j &lt; n; j++) {
+            dp[0] += grid[0][j]; 
+            for (int i = 1; i &lt; m; i++)
+                dp[i] = std::min(dp[i - 1], dp[i]) + grid[i][j];
+        }
+
+        return dp[m - 1];
+    }
+};
+</code></pre>
+<hr />
+<h3>5. Dynamic Programming In-Place (Most Space Optimized)</h3>
+<p>If modifying the input grid is allowed, we can achieve the most optimal space complexity. We can use the grid itself as our DP table, eliminating the need for any extra space.</p>
+<p><strong>Step-by-step explanation:</strong>
+1.  The logic is identical to the 2D DP approach, but we update the <code>grid</code> values in place. <code>grid[i][j]</code> will be updated to store the minimum path sum to reach that cell.
+2.  First, pre-process the first row by accumulating sums from left to right: <code>grid[0][j] += grid[0][j-1]</code>.
+3.  Then, pre-process the first column by accumulating sums from top to bottom: <code>grid[i][0] += grid[i-1][0]</code>.
+4.  Iterate through the rest of the grid cells <code>(i, j)</code>. Update the value with the sum of the current cell's original value and the minimum of the values from the cell above (<code>grid[i-1][j]</code>) and the cell to the left (<code>grid[i][j-1]</code>).
+5.  The value in the bottom-right cell <code>grid[m-1][n-1]</code> will contain the final minimum path sum.</p>
+<p>The time complexity is O(m*n) and the space complexity is O(1) (as we are not using any extra space proportional to the input size).</p>
+<pre><code class="language-cpp">class Solution {
+public:
+    int minPathSum(std::vector&lt;std::vector&lt;int&gt;&gt;&amp; grid) {
+        int m = grid.size();
+        int n = grid[0].size();
+
+        // Update first column
+        for (int i = 1; i &lt; m; i++) {
+            grid[i][0] += grid[i-1][0];
+        }
+
+        // Update first row
+        for (int j = 1; j &lt; n; j++) {
+            grid[0][j] += grid[0][j-1];
+        }
+
+        // Update the rest of the grid
+        for (int i = 1; i &lt; m; i++) {
+            for (int j = 1; j &lt; n; j++) {
+                grid[i][j] += std::min(grid[i-1][j], grid[i][j-1]);
+            }
+        }
+
+        return grid[m-1][n-1];
+    }
+};
+</code></pre>
+<hr />
+<h3>Pythonic Solution (In-Place DP)</h3>
+<pre><code class="language-python">from typing import List
+
+class Solution:
+    def minPathSum(self, grid: List[List[int]]) -&gt; int:
+        &quot;&quot;&quot;
+        Finds the minimum path sum from top-left to bottom-right in a grid.
+        This solution uses dynamic programming and modifies the grid in-place
+        to store the minimum path sum to reach each cell.
+        &quot;&quot;&quot;
+        m, n = len(grid), len(grid[0])
+
+        # Update the first row (can only be reached from the left)
+        for j in range(1, n):
+            grid[0][j] += grid[0][j-1]
+
+        # Update the first column (can only be reached from above)
+        for i in range(1, m):
+            grid[i][0] += grid[i-1][0]
+
+        # Update the rest of the grid by taking the minimum of the path
+        # from the top or from the left.
+        for i in range(1, m):
+            for j in range(1, n):
+                grid[i][j] += min(grid[i-1][j], grid[i][j-1])
+
+        # The bottom-right corner will contain the minimum path sum
+        return grid[m-1][n-1]
+
+</code></pre></div>

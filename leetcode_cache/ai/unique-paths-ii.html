@@ -1,0 +1,286 @@
+<div class='ai-explanation'><h3>List of all the approaches to solution</h3>
+<ol>
+<li>Brute Force Approach (Recursion)</li>
+<li>Memoization Approach (Top-Down DP)</li>
+<li>Tabulation Approach (Bottom-Up DP with O(m*n) space)</li>
+<li>Space-Optimized DP Approach (O(n) space)</li>
+<li>In-place DP Approach (O(1) extra space)</li>
+</ol>
+<hr />
+<h3>Brute Force Approach (Recursion)</h3>
+<p>This approach uses a recursive function to explore all possible paths from a given cell <code>(i, j)</code> to the bottom-right corner. The function calculates the number of paths by summing the paths from the cell below <code>(i+1, j)</code> and the cell to the right <code>(i, j+1)</code>.</p>
+<h4>Steps:</h4>
+<ol>
+<li>Define a recursive function, say <code>countPaths(i, j)</code>, that takes the current row <code>i</code> and column <code>j</code>.</li>
+<li><strong>Base Cases:</strong><ul>
+<li>If <code>(i, j)</code> is out of bounds or is an obstacle (<code>obstacleGrid[i][j] == 1</code>), there are no paths from here, so return <code>0</code>.</li>
+<li>If <code>(i, j)</code> is the destination (bottom-right corner), we have found one valid path, so return <code>1</code>.</li>
+</ul>
+</li>
+<li><strong>Recursive Step:</strong> The number of paths from <code>(i, j)</code> is the sum of paths from the cell below and the cell to the right: <code>countPaths(i + 1, j) + countPaths(i, j + 1)</code>.</li>
+<li>The initial call to the function will be <code>countPaths(0, 0)</code>.</li>
+</ol>
+<p>This approach is inefficient because it recomputes the number of paths for the same cells multiple times.</p>
+<p>This approach has a time complexity of <code>O(2^(m+n))</code> and a space complexity of <code>O(m+n)</code> for the recursion stack.</p>
+<pre><code class="language-cpp">class Solution {
+public:
+    int uniquePathsWithObstacles(vector&lt;vector&lt;int&gt;&gt;&amp; obstacleGrid) {
+        int m = obstacleGrid.size();
+        int n = obstacleGrid[0].size();
+        if (obstacleGrid[0][0] == 1) {
+            return 0;
+        }
+        return countPaths(obstacleGrid, 0, 0, m, n);
+    }
+
+private:
+    int countPaths(vector&lt;vector&lt;int&gt;&gt;&amp; grid, int i, int j, int m, int n) {
+        // If out of bounds or on an obstacle, return 0
+        if (i &gt;= m || j &gt;= n || grid[i][j] == 1) {
+            return 0;
+        }
+        // If at the destination, return 1
+        if (i == m - 1 &amp;&amp; j == n - 1) {
+            return 1;
+        }
+        // Recur for right and down movements
+        return countPaths(grid, i + 1, j, m, n) + countPaths(grid, i, j + 1, m, n);
+    }
+};
+</code></pre>
+<hr />
+<h3>Memoization Approach (Top-Down DP)</h3>
+<p>This is an optimization of the brute-force approach. We use a 2D array (a memoization table) to store the results of subproblems that have already been solved. This avoids redundant calculations for the same cell.</p>
+<h4>Steps:</h4>
+<ol>
+<li>Create a 2D <code>memo</code> table of the same size as the grid, initialized with a special value (e.g., -1) to indicate that the state has not been computed yet.</li>
+<li>Modify the recursive function <code>countPaths(i, j)</code>.</li>
+<li>Before any computation, check if <code>memo[i][j]</code> is not -1. If it is, it means we have already computed the result for this cell, so we return the stored value.</li>
+<li>If the result is not in the <code>memo</code> table, compute it using the same recursive logic as the brute-force approach.</li>
+<li>Before returning the computed result, store it in <code>memo[i][j]</code> for future use.</li>
+</ol>
+<p>This approach has a time complexity of <code>O(m*n)</code> and a space complexity of <code>O(m*n)</code> for the memoization table and recursion stack.</p>
+<pre><code class="language-cpp">class Solution {
+public:
+    int uniquePathsWithObstacles(vector&lt;vector&lt;int&gt;&gt;&amp; obstacleGrid) {
+        int m = obstacleGrid.size();
+        int n = obstacleGrid[0].size();
+        if (obstacleGrid[0][0] == 1) {
+            return 0;
+        }
+        vector&lt;vector&lt;int&gt;&gt; memo(m, vector&lt;int&gt;(n, -1));
+        return countPaths(obstacleGrid, 0, 0, m, n, memo);
+    }
+
+private:
+    int countPaths(vector&lt;vector&lt;int&gt;&gt;&amp; grid, int i, int j, int m, int n, vector&lt;vector&lt;int&gt;&gt;&amp; memo) {
+        if (i &gt;= m || j &gt;= n || grid[i][j] == 1) {
+            return 0;
+        }
+        if (i == m - 1 &amp;&amp; j == n - 1) {
+            return 1;
+        }
+        if (memo[i][j] != -1) {
+            return memo[i][j];
+        }
+
+        memo[i][j] = countPaths(grid, i + 1, j, m, n, memo) + countPaths(grid, i, j + 1, m, n, memo);
+        return memo[i][j];
+    }
+};
+</code></pre>
+<hr />
+<h3>Tabulation Approach (Bottom-Up DP with O(m*n) space)</h3>
+<p>This approach solves the problem iteratively by building up a DP table from the starting cell <code>(0,0)</code>. Each cell <code>dp[i][j]</code> in the table stores the number of unique paths to reach that cell from the start.</p>
+<h4>Steps:</h4>
+<ol>
+<li>Create a 2D DP table <code>dp</code> of size <code>m x n</code>, initialized to 0s.</li>
+<li>Handle the starting cell <code>(0,0)</code>: If <code>obstacleGrid[0][0]</code> is not an obstacle, set <code>dp[0][0] = 1</code>. Otherwise, no paths are possible, and the result is 0.</li>
+<li>Initialize the first row: For each cell <code>(0, j)</code>, if it's not an obstacle and the cell to its left <code>(0, j-1)</code> is reachable (<code>dp[0][j-1] == 1</code>), set <code>dp[0][j] = 1</code>. Once an obstacle is met, all subsequent cells in the row are unreachable.</li>
+<li>Initialize the first column similarly: For each cell <code>(i, 0)</code>, if it's not an obstacle and the cell above it <code>(i-1, 0)</code> is reachable, set <code>dp[i][0] = 1</code>.</li>
+<li>Iterate through the rest of the grid from <code>(1, 1)</code> to <code>(m-1, n-1)</code>.</li>
+<li>For each cell <code>(i, j)</code>:<ul>
+<li>If <code>obstacleGrid[i][j]</code> is an obstacle, <code>dp[i][j]</code> remains 0.</li>
+<li>Otherwise, the number of paths is the sum of paths from the cell above and the cell to the left: <code>dp[i][j] = dp[i-1][j] + dp[i][j-1]</code>. Use <code>long long</code> for <code>dp</code> values to prevent potential overflow, although problem constraints state the result fits in an <code>int</code>.</li>
+</ul>
+</li>
+<li>The final answer is the value in the bottom-right cell, <code>dp[m-1][n-1]</code>.</li>
+</ol>
+<p>This approach has a time complexity of <code>O(m*n)</code> and a space complexity of <code>O(m*n)</code>.</p>
+<pre><code class="language-cpp">class Solution {
+public:
+    int uniquePathsWithObstacles(vector&lt;vector&lt;int&gt;&gt;&amp; obstacleGrid) {
+        int m = obstacleGrid.size();
+        int n = obstacleGrid[0].size();
+
+        if (obstacleGrid[0][0] == 1) {
+            return 0;
+        }
+
+        vector&lt;vector&lt;long long&gt;&gt; dp(m, vector&lt;long long&gt;(n, 0));
+
+        dp[0][0] = 1;
+
+        // Fill first column
+        for (int i = 1; i &lt; m; ++i) {
+            if (obstacleGrid[i][0] == 0) {
+                dp[i][0] = dp[i-1][0];
+            }
+        }
+
+        // Fill first row
+        for (int j = 1; j &lt; n; ++j) {
+            if (obstacleGrid[0][j] == 0) {
+                dp[0][j] = dp[0][j-1];
+            }
+        }
+
+        // Fill the rest of the grid
+        for (int i = 1; i &lt; m; ++i) {
+            for (int j = 1; j &lt; n; ++j) {
+                if (obstacleGrid[i][j] == 0) {
+                    dp[i][j] = dp[i-1][j] + dp[i][j-1];
+                }
+            }
+        }
+
+        return dp[m-1][n-1];
+    }
+};
+</code></pre>
+<hr />
+<h3>Space-Optimized DP Approach (O(n) space)</h3>
+<p>We can optimize the space complexity of the tabulation approach. To compute the number of paths for the current row, we only need the values from the previous row and the current row. This can be reduced to using a single 1D array of size <code>n</code> (the number of columns).</p>
+<h4>Steps:</h4>
+<ol>
+<li>Create a 1D DP array <code>dp</code> of size <code>n</code>, initialized to 0s.</li>
+<li>Process the first row of the grid. Iterate from <code>j=0</code> to <code>n-1</code>. If <code>obstacleGrid[0][j]</code> is not an obstacle, set <code>dp[j] = 1</code>. If an obstacle is encountered, break the loop as all subsequent cells in that row are unreachable.</li>
+<li>Iterate through the rest of the grid rows, from <code>i=1</code> to <code>m-1</code>.</li>
+<li>For each row <code>i</code>:<ul>
+<li>First, update <code>dp[0]</code>. If <code>obstacleGrid[i][0]</code> is an obstacle, <code>dp[0]</code> becomes 0.</li>
+<li>Then, iterate from <code>j=1</code> to <code>n-1</code>:<ul>
+<li>If <code>obstacleGrid[i][j]</code> is an obstacle, set <code>dp[j] = 0</code>.</li>
+<li>Otherwise, update <code>dp[j]</code> by adding the paths from the left: <code>dp[j] = dp[j] + dp[j-1]</code>. At this point, <code>dp[j]</code> still holds the value from the previous row (paths from above), and <code>dp[j-1]</code> holds the updated value for the current row (paths from the left).</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>After iterating through all rows, the answer is the last element of the DP array, <code>dp[n-1]</code>.</li>
+</ol>
+<p>This approach has a time complexity of <code>O(m*n)</code> and a space complexity of <code>O(n)</code>.</p>
+<pre><code class="language-cpp">class Solution {
+public:
+    int uniquePathsWithObstacles(vector&lt;vector&lt;int&gt;&gt;&amp; obstacleGrid) {
+        int m = obstacleGrid.size();
+        int n = obstacleGrid[0].size();
+
+        if (obstacleGrid[0][0] == 1) return 0;
+
+        vector&lt;long long&gt; dp(n, 0);
+        dp[0] = 1;
+
+        for (int i = 0; i &lt; m; ++i) {
+            for (int j = 0; j &lt; n; ++j) {
+                if (obstacleGrid[i][j] == 1) {
+                    dp[j] = 0;
+                } else if (j &gt; 0) {
+                    dp[j] += dp[j - 1];
+                }
+            }
+        }
+        return dp[n - 1];
+    }
+};
+</code></pre>
+<hr />
+<h3>In-place DP Approach (O(1) extra space)</h3>
+<p>If modifying the input grid is allowed, we can use the grid itself as our DP table, reducing the extra space complexity to <code>O(1)</code>. The number of paths to each cell will be stored directly in the grid.</p>
+<h4>Steps:</h4>
+<ol>
+<li>Check the starting cell <code>(0,0)</code>. If it's an obstacle, return <code>0</code>. Otherwise, set <code>obstacleGrid[0][0] = 1</code> to represent one path to reach the starting cell.</li>
+<li>Initialize the first column. For each cell <code>(i, 0)</code>, it can only be reached from <code>(i-1, 0)</code>. So, if <code>obstacleGrid[i][0]</code> is an obstacle or <code>obstacleGrid[i-1][0]</code> is 0 (unreachable), set <code>obstacleGrid[i][0] = 0</code>. Otherwise, set it to 1.</li>
+<li>Initialize the first row similarly. For <code>(0, j)</code>, if it's an obstacle or <code>(0, j-1)</code> is unreachable, set <code>obstacleGrid[0][j] = 0</code>. Otherwise, set it to 1.</li>
+<li>Iterate through the rest of the grid from <code>(1,1)</code>.</li>
+<li>For each cell <code>(i, j)</code>:<ul>
+<li>If <code>obstacleGrid[i][j]</code> was originally an obstacle (value 1), set its path count to <code>0</code>.</li>
+<li>Otherwise, set its path count to the sum of paths from above and from the left: <code>obstacleGrid[i-1][j] + obstacleGrid[i][j-1]</code>.</li>
+</ul>
+</li>
+<li>The final result is the value at <code>obstacleGrid[m-1][n-1]</code>.</li>
+</ol>
+<p>This approach has a time complexity of <code>O(m*n)</code> and a space complexity of <code>O(1)</code>.</p>
+<pre><code class="language-cpp">class Solution {
+public:
+    int uniquePathsWithObstacles(vector&lt;vector&lt;int&gt;&gt;&amp; obstacleGrid) {
+        int m = obstacleGrid.size();
+        int n = obstacleGrid[0].size();
+
+        // Use a 64-bit integer to avoid overflow during summation.
+        // We will cast back to int at the end.
+        vector&lt;vector&lt;long long&gt;&gt; grid(m, vector&lt;long long&gt;(n));
+        for(int i = 0; i &lt; m; ++i) {
+            for(int j = 0; j &lt; n; ++j) {
+                grid[i][j] = obstacleGrid[i][j];
+            }
+        }
+
+        if (grid[0][0] == 1) return 0;
+        grid[0][0] = 1;
+
+        // Fill first column
+        for (int i = 1; i &lt; m; i++) {
+            grid[i][0] = (grid[i][0] == 0 &amp;&amp; grid[i - 1][0] == 1) ? 1 : 0;
+        }
+
+        // Fill first row
+        for (int j = 1; j &lt; n; j++) {
+            grid[0][j] = (grid[0][j] == 0 &amp;&amp; grid[0][j - 1] == 1) ? 1 : 0;
+        }
+
+        // Fill the rest of the grid
+        for (int i = 1; i &lt; m; i++) {
+            for (int j = 1; j &lt; n; j++) {
+                if (grid[i][j] == 1) {
+                    grid[i][j] = 0;
+                } else {
+                    grid[i][j] = grid[i - 1][j] + grid[i][j - 1];
+                }
+            }
+        }
+
+        return grid[m - 1][n - 1];
+    }
+};
+</code></pre>
+<hr />
+<h3>Pythonic Solution (Best Approach)</h3>
+<p>The space-optimized <code>O(n)</code> DP approach is generally considered the best because it is highly efficient and does not modify the input array, which is a good practice.</p>
+<pre><code class="language-python">class Solution:
+    def uniquePathsWithObstacles(self, obstacleGrid: list[list[int]]) -&gt; int:
+        &quot;&quot;&quot;
+        Calculates the number of unique paths with obstacles using O(n) space DP.
+        &quot;&quot;&quot;
+        if not obstacleGrid or not obstacleGrid[0] or obstacleGrid[0][0] == 1:
+            return 0
+
+        m, n = len(obstacleGrid), len(obstacleGrid[0])
+
+        # dp array represents the number of ways to reach each cell in the current row.
+        dp = [0] * n
+        dp[0] = 1
+
+        for i in range(m):
+            for j in range(n):
+                if obstacleGrid[i][j] == 1:
+                    # This cell is an obstacle, no paths can go through it.
+                    dp[j] = 0
+                elif j &gt; 0:
+                    # Number of paths to (i,j) is sum of paths from top (dp[j])
+                    # and paths from left (dp[j-1]).
+                    # dp[j] already has the value from the row above.
+                    # dp[j-1] has the updated value for the current row.
+                    dp[j] += dp[j-1]
+
+        return dp[-1]
+
+</code></pre></div>

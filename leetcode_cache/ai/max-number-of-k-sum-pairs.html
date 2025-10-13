@@ -1,0 +1,145 @@
+<div class='ai-explanation'><h3>List of all the approaches to solution</h3>
+<ul>
+<li>Brute Force Approach</li>
+<li>Two Pointers Approach</li>
+<li>Hash Map (Frequency Counter) Approach</li>
+</ul>
+<h3>Brute Force Approach</h3>
+<p>This approach involves checking every possible pair of numbers in the array to see if they sum up to <code>k</code>. To ensure that each number is used at most once, we can use a boolean <code>used</code> array to keep track of the indices of the numbers that have already been part of a successful pair.</p>
+<ol>
+<li>Initialize a counter for operations to <code>0</code> and a boolean array <code>used</code> of the same size as <code>nums</code>, with all values set to <code>false</code>.</li>
+<li>Iterate through the array with an outer loop from index <code>i = 0</code> to <code>n-1</code>.</li>
+<li>Inside, start an inner loop from index <code>j = i+1</code> to <code>n-1</code>.</li>
+<li>Within the inner loop, check if both <code>nums[i]</code> and <code>nums[j]</code> have not been used yet (i.e., <code>!used[i]</code> and <code>!used[j]</code>).</li>
+<li>If their sum equals <code>k</code>, increment the operations counter, mark both indices as used (<code>used[i] = true</code>, <code>used[j] = true</code>), and break the inner loop to find a pair for the next <code>i</code>.</li>
+<li>Return the total count of operations.
+This approach is too slow for the given constraints due to its quadratic time complexity but is a straightforward starting point. It has a time complexity of O(N<sup>2</sup>) and a space complexity of O(N).</li>
+</ol>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+
+class Solution {
+public:
+    int maxOperations(std::vector&lt;int&gt;&amp; nums, int k) {
+        int operations = 0;
+        int n = nums.size();
+        std::vector&lt;bool&gt; used(n, false);
+        for (int i = 0; i &lt; n; ++i) {
+            if (used[i]) continue;
+            for (int j = i + 1; j &lt; n; ++j) {
+                if (used[j]) continue;
+                if (nums[i] + nums[j] == k) {
+                    operations++;
+                    used[i] = true;
+                    used[j] = true;
+                    break; // Found a pair for nums[i], move to the next i
+                }
+            }
+        }
+        return operations;
+    }
+};
+</code></pre>
+<h3>Two Pointers Approach</h3>
+<p>A more efficient approach involves sorting the array first. Once sorted, we can use two pointers, one at the beginning (<code>left</code>) and one at the end (<code>right</code>), and move them towards each other to find pairs that sum to <code>k</code>.</p>
+<ol>
+<li>Sort the input array <code>nums</code> in non-decreasing order.</li>
+<li>Initialize an <code>operations</code> counter to <code>0</code>.</li>
+<li>Initialize two pointers: <code>left</code> at the start of the array (<code>0</code>) and <code>right</code> at the end (<code>nums.size() - 1</code>).</li>
+<li>Loop as long as <code>left</code> is less than <code>right</code>.</li>
+<li>Calculate the sum of the elements at the two pointers: <code>currentSum = nums[left] + nums[right]</code>.</li>
+<li>If <code>currentSum</code> equals <code>k</code>, we have found a valid pair. Increment <code>operations</code>, and move both pointers inward (<code>left++</code>, <code>right--</code>) to look for new pairs.</li>
+<li>If <code>currentSum</code> is less than <code>k</code>, we need a larger sum, so we move the <code>left</code> pointer one step to the right (<code>left++</code>).</li>
+<li>If <code>currentSum</code> is greater than <code>k</code>, we need a smaller sum, so we move the <code>right</code> pointer one step to the left (<code>right--</code>).</li>
+<li>Return the final <code>operations</code> count.
+The time complexity is dominated by the sorting step, resulting in O(N log N), and the space complexity is O(1) or O(log N) depending on the sort implementation.</li>
+</ol>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;algorithm&gt;
+
+class Solution {
+public:
+    int maxOperations(std::vector&lt;int&gt;&amp; nums, int k) {
+        std::sort(nums.begin(), nums.end());
+        int operations = 0;
+        int left = 0;
+        int right = nums.size() - 1;
+        while (left &lt; right) {
+            int currentSum = nums[left] + nums[right];
+            if (currentSum == k) {
+                operations++;
+                left++;
+                right--;
+            } else if (currentSum &lt; k) {
+                left++;
+            } else { // currentSum &gt; k
+                right--;
+            }
+        }
+        return operations;
+    }
+};
+</code></pre>
+<h3>Hash Map (Frequency Counter) Approach</h3>
+<p>This is the most time-efficient approach. We can iterate through the array once and use a hash map to keep track of the frequency of numbers we've seen. For each number, we check if its complement (<code>k - num</code>) is already in the map.</p>
+<ol>
+<li>Initialize an <code>operations</code> counter to <code>0</code>.</li>
+<li>Create a hash map (or frequency map) to store the counts of each number.</li>
+<li>Iterate through each number <code>num</code> in the <code>nums</code> array.</li>
+<li>For each <code>num</code>, calculate its required complement: <code>complement = k - num</code>.</li>
+<li>Check if the <code>complement</code> exists in the hash map with a count greater than <code>0</code>.</li>
+<li>If it does, we've found a pair. Increment <code>operations</code> and decrement the count of the <code>complement</code> in the map.</li>
+<li>If it doesn't, it means we haven't found a pair for the current <code>num</code> yet. Store <code>num</code> in the hash map by incrementing its count.</li>
+<li>After iterating through all numbers, return the <code>operations</code> count.
+This approach has a time complexity of O(N) as it requires a single pass through the array, and a space complexity of O(N) to store the frequency map.</li>
+</ol>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;unordered_map&gt;
+
+class Solution {
+public:
+    int maxOperations(std::vector&lt;int&gt;&amp; nums, int k) {
+        std::unordered_map&lt;int, int&gt; freq;
+        int operations = 0;
+        for (int num : nums) {
+            int complement = k - num;
+            if (freq.count(complement) &amp;&amp; freq[complement] &gt; 0) {
+                // Found a pair
+                operations++;
+                freq[complement]--;
+            } else {
+                // No pair found, store current number
+                freq[num]++;
+            }
+        }
+        return operations;
+    }
+};
+</code></pre>
+<h3>Pythonic solution for best approach</h3>
+<p>The best approach in terms of time complexity is the Hash Map method. A Pythonic implementation can effectively use <code>collections.Counter</code> to handle the frequency counting, leading to concise and readable code.</p>
+<pre><code class="language-python">from collections import Counter
+from typing import List
+
+class Solution:
+    def maxOperations(self, nums: List[int], k: int) -&gt; int:
+        &quot;&quot;&quot;
+        This solution uses a hash map (Counter) to achieve O(N) time complexity.
+        &quot;&quot;&quot;
+        freq = Counter()
+        operations = 0
+
+        for num in nums:
+            complement = k - num
+            # Check if the complement exists and has a positive count
+            if freq[complement] &gt; 0:
+                # A pair is found
+                operations += 1
+                # Use up one count of the complement
+                freq[complement] -= 1
+            else:
+                # No complement found, so add the current number to the map
+                freq[num] += 1
+
+        return operations
+
+</code></pre></div>

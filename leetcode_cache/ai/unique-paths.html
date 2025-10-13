@@ -1,0 +1,194 @@
+<div class='ai-explanation'><h3>List of all the approaches to solution</h3>
+<ol>
+<li>Brute Force Approach (Recursive)</li>
+<li>Dynamic Programming - Memoization (Top-Down)</li>
+<li>Dynamic Programming - Tabulation (Bottom-Up 2D DP)</li>
+<li>Dynamic Programming - Space Optimized (Bottom-Up 1D DP)</li>
+<li>Combinatorial Approach</li>
+</ol>
+<hr />
+<h3>1. Brute Force Approach (Recursive)</h3>
+<p>This approach uses a simple recursion to explore all possible paths. We define a function that calculates the number of paths from a given cell <code>(i, j)</code> to the destination <code>(m-1, n-1)</code>.</p>
+<ol>
+<li><strong>Base Cases:</strong><ul>
+<li>If the robot reaches the destination cell <code>(m-1, n-1)</code>, it means we've found one valid path. So, we return 1.</li>
+<li>If the robot goes out of the grid boundaries (i.e., <code>i &gt;= m</code> or <code>j &gt;= n</code>), it's an invalid path. So, we return 0.</li>
+</ul>
+</li>
+<li><strong>Recursive Step:</strong><ul>
+<li>From any cell <code>(i, j)</code>, the robot can either move down to <code>(i+1, j)</code> or right to <code>(i, j+1)</code>.</li>
+<li>The total number of unique paths from <code>(i, j)</code> is the sum of the unique paths from the cell below it and the cell to its right.</li>
+<li>The initial call would be from the starting cell <code>(0, 0)</code>.</li>
+</ul>
+</li>
+</ol>
+<p>This method is inefficient because it recalculates the number of paths for the same cells multiple times.</p>
+<p>The time complexity is exponential, <code>O(2^(m+n))</code>, as it explores every possible path. The space complexity is <code>O(m+n)</code> due to the recursion depth.</p>
+<pre><code class="language-cpp">class Solution {
+public:
+    int countPaths(int i, int j, int m, int n) {
+        // Base case: If we reach the destination, we found one path.
+        if (i == m - 1 &amp;&amp; j == n - 1) {
+            return 1;
+        }
+        // Base case: If we go out of bounds, this is not a valid path.
+        if (i &gt;= m || j &gt;= n) {
+            return 0;
+        }
+        // Recursive step: Sum of paths from moving down and moving right.
+        return countPaths(i + 1, j, m, n) + countPaths(i, j + 1, m, n);
+    }
+
+    int uniquePaths(int m, int n) {
+        return countPaths(0, 0, m, n);
+    }
+};
+</code></pre>
+<hr />
+<h3>2. Dynamic Programming - Memoization (Top-Down)</h3>
+<p>This approach optimizes the brute-force recursion by storing the results of subproblems in a memoization table (a 2D array). This avoids redundant calculations for the same cell.</p>
+<ol>
+<li><strong>Initialization:</strong> Create an <code>m x n</code> DP table (e.g., <code>memo</code>) and initialize all its cells with a value indicating they haven't been computed yet (e.g., -1).</li>
+<li><strong>Recursive Logic with Memoization:</strong><ul>
+<li>Before computing the number of paths for a cell <code>(i, j)</code>, check if <code>memo[i][j]</code> already has a computed value. If so, return it directly.</li>
+<li>If not, compute the result recursively as in the brute-force approach.</li>
+<li>Store the computed result in <code>memo[i][j]</code> before returning it.</li>
+</ul>
+</li>
+</ol>
+<p>The time complexity is <code>O(m*n)</code> because each cell is computed only once. The space complexity is <code>O(m*n)</code> for the memoization table and the recursion stack.</p>
+<pre><code class="language-cpp">class Solution {
+public:
+    int countPaths(int i, int j, int m, int n, vector&lt;vector&lt;int&gt;&gt;&amp; memo) {
+        if (i == m - 1 &amp;&amp; j == n - 1) {
+            return 1;
+        }
+        if (i &gt;= m || j &gt;= n) {
+            return 0;
+        }
+        // If the result is already computed, return it.
+        if (memo[i][j] != -1) {
+            return memo[i][j];
+        }
+        // Compute and store the result before returning.
+        memo[i][j] = countPaths(i + 1, j, m, n, memo) + countPaths(i, j + 1, m, n, memo);
+        return memo[i][j];
+    }
+
+    int uniquePaths(int m, int n) {
+        vector&lt;vector&lt;int&gt;&gt; memo(m, vector&lt;int&gt;(n, -1));
+        return countPaths(0, 0, m, n, memo);
+    }
+};
+</code></pre>
+<hr />
+<h3>3. Dynamic Programming - Tabulation (Bottom-Up 2D DP)</h3>
+<p>This is a bottom-up DP approach. We build a 2D DP table <code>dp[m][n]</code> where <code>dp[i][j]</code> stores the number of unique paths to reach cell <code>(i, j)</code>.</p>
+<ol>
+<li><strong>State Definition:</strong> <code>dp[i][j]</code> = number of unique paths from <code>(0,0)</code> to <code>(i,j)</code>.</li>
+<li><strong>Base Cases:</strong> The robot can only reach any cell in the first row or first column in one way (by moving only right or only down, respectively). So, we initialize <code>dp[i][0] = 1</code> for all rows <code>i</code>, and <code>dp[0][j] = 1</code> for all columns <code>j</code>.</li>
+<li><strong>Recurrence Relation:</strong> For any other cell <code>(i, j)</code>, the robot can arrive either from the cell above, <code>(i-1, j)</code>, or from the cell to the left, <code>(i, j-1)</code>. Therefore, the number of paths to <code>(i, j)</code> is the sum of paths to these two cells: <code>dp[i][j] = dp[i-1][j] + dp[i][j-1]</code>.</li>
+<li><strong>Final Answer:</strong> We fill the <code>dp</code> table iteratively, and the final answer is the value in the bottom-right cell, <code>dp[m-1][n-1]</code>.</li>
+</ol>
+<p>The time complexity is <code>O(m*n)</code> due to the nested loops. The space complexity is <code>O(m*n)</code> for the 2D DP table.</p>
+<pre><code class="language-cpp">class Solution {
+public:
+    int uniquePaths(int m, int n) {
+        vector&lt;vector&lt;int&gt;&gt; dp(m, vector&lt;int&gt;(n, 1));
+        for (int i = 1; i &lt; m; i++) {
+            for (int j = 1; j &lt; n; j++) {
+                // Number of paths to current cell is sum of paths from cell above and cell to the left.
+                dp[i][j] = dp[i - 1][j] + dp[i][j - 1];
+            }
+        }
+        return dp[m - 1][n - 1];
+    }
+};
+</code></pre>
+<hr />
+<h3>4. Dynamic Programming - Space Optimized (Bottom-Up 1D DP)</h3>
+<p>We can optimize the space complexity of the tabulation approach. Notice that to calculate the values for the current row <code>i</code>, we only need the values from the previous row <code>i-1</code> and the current row's already computed values. This means we don't need to store the entire 2D table.</p>
+<ol>
+<li><strong>Initialization:</strong> Create a 1D array <code>dp</code> of size <code>n</code> and initialize all its elements to 1. This represents the number of paths to reach each cell in the first row.</li>
+<li><strong>Iteration:</strong><ul>
+<li>Iterate from the second row (<code>i = 1</code>) to the last row (<code>m-1</code>).</li>
+<li>For each row, iterate from the second column (<code>j = 1</code>) to the last column (<code>n-1</code>).</li>
+<li>The update rule becomes <code>dp[j] = dp[j] + dp[j-1]</code>. Here, <code>dp[j]</code> on the right side represents the value from the previous row (<code>dp[i-1][j]</code>), and <code>dp[j-1]</code> represents the value from the current row's previous column (<code>dp[i][j-1]</code>).</li>
+</ul>
+</li>
+<li><strong>Final Answer:</strong> After iterating through all the rows, the last element <code>dp[n-1]</code> will hold the final result.</li>
+</ol>
+<p>The time complexity remains <code>O(m*n)</code>. The space complexity is reduced to <code>O(n)</code>.</p>
+<pre><code class="language-cpp">class Solution {
+public:
+    int uniquePaths(int m, int n) {
+        vector&lt;int&gt; dp(n, 1);
+        for (int i = 1; i &lt; m; i++) {
+            for (int j = 1; j &lt; n; j++) {
+                // dp[j] holds the value from the previous row (i-1)
+                // dp[j-1] holds the newly computed value for the current row (i)
+                dp[j] = dp[j] + dp[j - 1];
+            }
+        }
+        return dp[n - 1];
+    }
+};
+</code></pre>
+<hr />
+<h3>5. Combinatorial Approach</h3>
+<p>This problem can be framed as a combinatorial question, which provides the most efficient solution.</p>
+<ol>
+<li><strong>Problem Reframing:</strong> To get from the top-left <code>(0,0)</code> to the bottom-right <code>(m-1, n-1)</code>, the robot must make a total of <code>(m-1)</code> down moves and <code>(n-1)</code> right moves. The total number of moves is fixed: <code>Total Moves = (m-1) + (n-1) = m + n - 2</code>.</li>
+<li><strong>Combinatorial Logic:</strong> The problem is equivalent to finding the number of ways to arrange these moves. Out of <code>m + n - 2</code> total moves, we need to choose <code>m-1</code> positions for the 'down' moves (the rest will be 'right' moves). This is a classic combination problem.</li>
+<li><strong>Formula:</strong> The number of unique paths is given by the binomial coefficient "N choose K", which is <code>C(N, K) = N! / (K! * (N-K)!)</code>.
+    Here, <code>N = m + n - 2</code> and <code>K = m - 1</code> (or <code>n - 1</code>, the result is the same).
+    So, the answer is <code>C(m+n-2, m-1)</code>.</li>
+<li><strong>Calculation:</strong> To avoid overflow with large factorials, we can compute this iteratively: <code>C(N, K) = (N * (N-1) * ... * (N-K+1)) / K!</code>.</li>
+</ol>
+<p>The time complexity is <code>O(min(m, n))</code> to compute the combination. The space complexity is <code>O(1)</code>.</p>
+<pre><code class="language-cpp">class Solution {
+public:
+    int uniquePaths(int m, int n) {
+        int N = m + n - 2;
+        int k = m - 1; // or n - 1
+        long long res = 1;
+
+        // Calculate C(N, k) = N! / (k! * (N-k)!)
+        // which is (N * (N-1) * ... * (N-k+1)) / k!
+        for (int i = 1; i &lt;= k; ++i) {
+            res = res * (N - i + 1) / i;
+        }
+        return (int)res;
+    }
+};
+</code></pre>
+<hr />
+<h3>Pythonic solution for best approach</h3>
+<p>The best approach is the combinatorial one due to its <code>O(min(m, n))</code> time and <code>O(1)</code> space complexity. Python's <code>math</code> library has a built-in function <code>math.comb</code> that computes "n choose k" efficiently and safely.</p>
+<pre><code class="language-python">import math
+
+class Solution:
+    def uniquePaths(self, m: int, n: int) -&gt; int:
+        &quot;&quot;&quot;
+        Calculates the number of unique paths using a combinatorial approach.
+
+        To reach the destination (m-1, n-1) from (0,0), the robot must make
+        a total of (m-1) down moves and (n-1) right moves.
+        The total number of moves is (m-1) + (n-1) = m + n - 2.
+
+        The problem is equivalent to choosing (m-1) positions for the down moves
+        out of a total of (m + n - 2) available positions.
+        This is a combination problem C(m + n - 2, m - 1).
+        &quot;&quot;&quot;
+        if m == 1 or n == 1:
+            return 1
+
+        # Total number of moves
+        total_moves = m + n - 2
+        # Number of 'down' moves (or 'right' moves, the result is symmetric)
+        down_moves = m - 1
+
+        # Use math.comb(n, k) to calculate &quot;n choose k&quot;
+        return math.comb(total_moves, down_moves)
+
+</code></pre></div>

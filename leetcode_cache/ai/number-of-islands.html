@@ -1,0 +1,252 @@
+<div class='ai-explanation'><h3>List of Approaches</h3>
+<ol>
+<li>Depth-First Search (DFS)</li>
+<li>Breadth-First Search (BFS)</li>
+<li>Union-Find (Disjoint Set Union)</li>
+</ol>
+<hr />
+<h3>1. Depth-First Search (DFS)</h3>
+<p>This approach treats the grid as a graph where each '1' is a node. We iterate through every cell of the grid. If we find a cell containing '1', we know we've found a part of an island. We then increment our island counter. To ensure we don't count this same island again, we launch a DFS from this cell. The DFS explores all connected land cells (horizontally and vertically) and "sinks" them by changing their value from '1' to '0'. This effectively marks the entire island as visited. We continue scanning the grid until all cells have been checked.</p>
+<p><strong>Step-by-step:</strong>
+1. Initialize an <code>islands</code> counter to zero.
+2. Iterate through each cell <code>(i, j)</code> of the grid.
+3. If <code>grid[i][j]</code> is '1':
+    a. Increment the <code>islands</code> counter.
+    b. Call a <code>dfs</code> helper function to find and "sink" all parts of the current island.
+4. The <code>dfs(i, j)</code> function works as follows:
+    a. Check for base cases: if the current cell is out of bounds or is water ('0'), simply return.
+    b. Mark the current cell <code>grid[i][j]</code> as visited by changing it to '0'.
+    c. Recursively call <code>dfs</code> for all four adjacent neighbors (up, down, left, right).
+5. After the loops complete, return the total <code>islands</code> count.</p>
+<p>This approach has a time complexity of O(M * N) since each cell is visited exactly once and a space complexity of O(M * N) in the worst case due to the recursion stack depth.</p>
+<pre><code class="language-cpp">class Solution {
+public:
+    int numIslands(vector&lt;vector&lt;char&gt;&gt;&amp; grid) {
+        if (grid.empty() || grid[0].empty()) {
+            return 0;
+        }
+        int m = grid.size();
+        int n = grid[0].size();
+        int islands = 0;
+        for (int i = 0; i &lt; m; i++) {
+            for (int j = 0; j &lt; n; j++) {
+                if (grid[i][j] == '1') {
+                    islands++;
+                    dfs(grid, i, j);
+                }
+            }
+        }
+        return islands;
+    }
+
+private:
+    void dfs(vector&lt;vector&lt;char&gt;&gt;&amp; grid, int i, int j) {
+        int m = grid.size();
+        int n = grid[0].size();
+        if (i &lt; 0 || i &gt;= m || j &lt; 0 || j &gt;= n || grid[i][j] == '0') {
+            return;
+        }
+
+        grid[i][j] = '0'; // Mark as visited
+
+        dfs(grid, i - 1, j);
+        dfs(grid, i + 1, j);
+        dfs(grid, i, j - 1);
+        dfs(grid, i, j + 1);
+    }
+};
+</code></pre>
+<hr />
+<h3>2. Breadth-First Search (BFS)</h3>
+<p>Similar to the DFS approach, this method iterates through the grid to find the start of an island. When a '1' is found, the island count is incremented. Instead of using recursion (DFS), we use a queue to perform a Breadth-First Search (BFS). The starting land cell is added to a queue. Then, we process the queue, exploring neighbors level by level. Each visited land cell is marked ('0') to prevent it from being counted again. This process continues until the entire island has been traversed and "sunk".</p>
+<p><strong>Step-by-step:</strong>
+1. Initialize an <code>islands</code> counter to zero.
+2. Iterate through each cell <code>(i, j)</code> of the grid.
+3. If <code>grid[i][j]</code> is '1':
+    a. Increment the <code>islands</code> counter.
+    b. Create a queue and add the coordinates <code>(i, j)</code> to it.
+    c. Mark <code>grid[i][j]</code> as visited by changing it to '0'.
+    d. While the queue is not empty:
+        i. Dequeue a cell <code>(r, c)</code>.
+        ii. For each of its four neighbors <code>(nr, nc)</code>:
+        iii. If the neighbor is within bounds and is a '1', mark it as '0' and enqueue it.
+4. After the loops complete, return the <code>islands</code> count.</p>
+<p>This approach has a time complexity of O(M * N) as each cell is visited at most a constant number of times. The space complexity is O(min(M, N)) because in the worst-case, the queue will hold at most the number of cells in the smaller dimension of the grid.</p>
+<pre><code class="language-cpp">#include &lt;queue&gt;
+
+class Solution {
+public:
+    int numIslands(vector&lt;vector&lt;char&gt;&gt;&amp; grid) {
+        if (grid.empty() || grid[0].empty()) {
+            return 0;
+        }
+        int m = grid.size();
+        int n = grid[0].size();
+        int islands = 0;
+
+        for (int i = 0; i &lt; m; i++) {
+            for (int j = 0; j &lt; n; j++) {
+                if (grid[i][j] == '1') {
+                    islands++;
+                    grid[i][j] = '0'; // Mark as visited
+                    queue&lt;pair&lt;int, int&gt;&gt; todo;
+                    todo.push({i, j});
+
+                    while (!todo.empty()) {
+                        pair&lt;int, int&gt; p = todo.front();
+                        todo.pop();
+
+                        int r = p.first;
+                        int c = p.second;
+
+                        // Check neighbors
+                        if (r - 1 &gt;= 0 &amp;&amp; grid[r - 1][c] == '1') {
+                            grid[r - 1][c] = '0';
+                            todo.push({r - 1, c});
+                        }
+                        if (r + 1 &lt; m &amp;&amp; grid[r + 1][c] == '1') {
+                            grid[r + 1][c] = '0';
+                            todo.push({r + 1, c});
+                        }
+                        if (c - 1 &gt;= 0 &amp;&amp; grid[r][c - 1] == '1') {
+                            grid[r][c - 1] = '0';
+                            todo.push({r, c - 1});
+                        }
+                        if (c + 1 &lt; n &amp;&amp; grid[r][c + 1] == '1') {
+                            grid[r][c + 1] = '0';
+                            todo.push({r, c + 1});
+                        }
+                    }
+                }
+            }
+        }
+        return islands;
+    }
+};
+</code></pre>
+<hr />
+<h3>3. Union-Find (Disjoint Set Union)</h3>
+<p>This approach is ideal for problems involving connected components. We can model the grid as a set of disjoint sets. Initially, we count every land cell ('1') as a separate island (or set). Then, we iterate through the grid. For each land cell, we check its neighbors (to the right and down is sufficient to avoid double-checking). If a neighbor is also land, we "union" their sets. The <code>union</code> operation merges two sets if they are not already merged and decrements the total island count. After checking all cells, the final count represents the number of disjoint sets, which is the number of islands.</p>
+<p><strong>Step-by-step:</strong>
+1. Initialize a Union-Find data structure for all <code>M*N</code> cells.
+2. Initialize an <code>islands</code> count to the total number of '1's in the grid.
+3. For each cell <code>(i, j)</code> in the grid that is '1':
+    a. Check its right neighbor <code>(i, j+1)</code>. If it's also a '1', perform a <code>union</code> operation on the sets for <code>(i,j)</code> and <code>(i,j+1)</code>. If they were in different sets, the <code>union</code> function decrements the <code>islands</code> count.
+    b. Check its bottom neighbor <code>(i+1, j)</code>. If it's also a '1', perform a <code>union</code> on their sets, decrementing <code>islands</code> if they were separate.
+4. Return the final <code>islands</code> count.</p>
+<p>The time complexity is nearly linear, O(M * N * α(M*N)), where α is the very slow-growing inverse Ackermann function, making it very efficient. The space complexity is O(M * N) for storing the parent pointers of the Union-Find structure.</p>
+<pre><code class="language-cpp">class UnionFind {
+private:
+    vector&lt;int&gt; parent;
+    vector&lt;int&gt; rank;
+    int count;
+
+public:
+    UnionFind(vector&lt;vector&lt;char&gt;&gt;&amp; grid) {
+        int m = grid.size();
+        int n = grid[0].size();
+        count = 0;
+        parent.resize(m * n);
+        rank.assign(m * n, 0);
+        for (int i = 0; i &lt; m; ++i) {
+            for (int j = 0; j &lt; n; ++j) {
+                if (grid[i][j] == '1') {
+                    int id = i * n + j;
+                    parent[id] = id;
+                    count++;
+                }
+            }
+        }
+    }
+
+    int find(int i) {
+        if (parent[i] == i) return i;
+        return parent[i] = find(parent[i]); // Path compression
+    }
+
+    void unite(int i, int j) {
+        int root_i = find(i);
+        int root_j = find(j);
+        if (root_i != root_j) {
+            if (rank[root_i] &lt; rank[root_j]) {
+                parent[root_i] = root_j;
+            } else if (rank[root_i] &gt; rank[root_j]) {
+                parent[root_j] = root_i;
+            } else {
+                parent[root_j] = root_i;
+                rank[root_i]++;
+            }
+            count--;
+        }
+    }
+
+    int getCount() const {
+        return count;
+    }
+};
+
+class Solution {
+public:
+    int numIslands(vector&lt;vector&lt;char&gt;&gt;&amp; grid) {
+        if (grid.empty() || grid[0].empty()) {
+            return 0;
+        }
+        int m = grid.size();
+        int n = grid[0].size();
+        UnionFind uf(grid);
+
+        for (int i = 0; i &lt; m; ++i) {
+            for (int j = 0; j &lt; n; ++j) {
+                if (grid[i][j] == '1') {
+                    grid[i][j] = '0'; // Mark as visited to avoid re-checking
+                    int id1 = i * n + j;
+                    if (i + 1 &lt; m &amp;&amp; grid[i + 1][j] == '1') {
+                        uf.unite(id1, (i + 1) * n + j);
+                    }
+                    if (j + 1 &lt; n &amp;&amp; grid[i][j + 1] == '1') {
+                        uf.unite(id1, i * n + (j + 1));
+                    }
+                }
+            }
+        }
+        return uf.getCount();
+    }
+};
+</code></pre>
+<hr />
+<h3>Pythonic Solution (DFS)</h3>
+<p>The DFS approach is often considered the "best" for its simplicity and elegance, especially when implemented recursively. The Python solution below is clean and idiomatic. It uses a helper function for the DFS traversal. To avoid using extra space for a <code>visited</code> set, it modifies the grid in-place by changing '1's to a different character like '#', effectively marking them as visited.</p>
+<pre><code class="language-python">class Solution:
+    def numIslands(self, grid: list[list[str]]) -&gt; int:
+        if not grid or not grid[0]:
+            return 0
+
+        rows, cols = len(grid), len(grid[0])
+        island_count = 0
+
+        def dfs(r, c):
+            # Base cases for recursion termination:
+            # 1. Out of bounds
+            # 2. Cell is water ('0')
+            if not (0 &lt;= r &lt; rows and 0 &lt;= c &lt; cols and grid[r][c] == '1'):
+                return
+
+            # Mark the current cell as visited by changing its value
+            grid[r][c] = '#'
+
+            # Explore neighbors recursively
+            dfs(r + 1, c)
+            dfs(r - 1, c)
+            dfs(r, c + 1)
+            dfs(r, c - 1)
+
+        for r in range(rows):
+            for c in range(cols):
+                # If we find a '1', it's the start of a new island
+                if grid[r][c] == '1':
+                    dfs(r, c)
+                    island_count += 1
+
+        return island_count
+
+</code></pre></div>

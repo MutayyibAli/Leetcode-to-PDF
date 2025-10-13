@@ -1,0 +1,180 @@
+<div class='ai-explanation'><h3>List of Approaches</h3>
+<ol>
+<li>Brute Force Approach</li>
+<li>Recursive Approach</li>
+</ol>
+<hr />
+<h3>Brute Force Approach</h3>
+<p>This approach involves deconstructing the tree into a sorted list, modifying the list, and then reconstructing a new, balanced tree. It's straightforward but inefficient as it doesn't modify the tree in-place.</p>
+<ol>
+<li><strong>Traverse and Store:</strong> Perform an in-order traversal of the Binary Search Tree. This will yield a sorted list of all the node values.</li>
+<li><strong>Remove Key:</strong> Find and remove the specified <code>key</code> from the sorted list. If the key is not found, the tree doesn't need to be changed, and we can stop.</li>
+<li><strong>Reconstruct BST:</strong> Build a new, balanced Binary Search Tree from the modified sorted list. A common way to do this is to recursively use the middle element of the current list segment as the root, the left half for the left subtree, and the right half for the right subtree.</li>
+</ol>
+<p>The time complexity is O(N) for traversal and reconstruction, and the space complexity is O(N) to store the node values and for the recursion stack during reconstruction.</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;algorithm&gt;
+
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    // Helper to get nodes in-order
+    void inorderTraversal(TreeNode* root, std::vector&lt;int&gt;&amp; nodes) {
+        if (!root) return;
+        inorderTraversal(root-&gt;left, nodes);
+        nodes.push_back(root-&gt;val);
+        inorderTraversal(root-&gt;right, nodes);
+    }
+
+    // Helper to build a balanced BST from a sorted array
+    TreeNode* sortedArrayToBST(const std::vector&lt;int&gt;&amp; nodes, int start, int end) {
+        if (start &gt; end) return nullptr;
+        int mid = start + (end - start) / 2;
+        TreeNode* node = new TreeNode(nodes[mid]);
+        node-&gt;left = sortedArrayToBST(nodes, start, mid - 1);
+        node-&gt;right = sortedArrayToBST(nodes, mid + 1, end);
+        return node;
+    }
+
+    TreeNode* deleteNode(TreeNode* root, int key) {
+        if (!root) return nullptr;
+
+        // 1. Traverse and store
+        std::vector&lt;int&gt; nodes;
+        inorderTraversal(root, nodes);
+
+        // 2. Remove key
+        auto it = std::find(nodes.begin(), nodes.end(), key);
+        if (it == nodes.end()) {
+            return root; // Key not found, return original tree
+        }
+        nodes.erase(it);
+
+        // 3. Reconstruct BST
+        return sortedArrayToBST(nodes, 0, nodes.size() - 1);
+    }
+};
+</code></pre>
+<hr />
+<h3>Recursive Approach</h3>
+<p>This is the standard and efficient approach that modifies the tree in-place. It recursively searches for the node and then handles its deletion based on the number of children it has, ensuring the BST properties are maintained.</p>
+<ol>
+<li><strong>Search for the Node:</strong> Recursively traverse the tree. If the <code>key</code> is less than the current node's value, go left. If it's greater, go right. The recursive call's return value is assigned back to the parent's child pointer (<code>root-&gt;left</code> or <code>root-&gt;right</code>), which correctly updates the tree structure after deletion.</li>
+<li><strong>Node Found (<code>key == root-&gt;val</code>):</strong> Once the node to be deleted is found, there are three cases:<ul>
+<li><strong>Case 1: No Children (Leaf Node):</strong> The node can be simply removed. Return <code>nullptr</code> to the parent, effectively disconnecting it.</li>
+<li><strong>Case 2: One Child:</strong> The node is replaced by its only child. Return the child node to the parent.</li>
+<li><strong>Case 3: Two Children:</strong> To maintain the BST property, we replace the node's value with either its in-order successor (the smallest value in the right subtree) or its in-order predecessor (the largest value in the left subtree).<ul>
+<li>Find the replacement node (e.g., the in-order predecessor by going left once, then right as far as possible).</li>
+<li>Copy the replacement node's value into the current node.</li>
+<li>Recursively call <code>deleteNode</code> on the subtree where the replacement node was found to remove that original replacement node (which now has at most one child).</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<p>The time complexity is O(H) where H is the height of the tree because in the worst case we traverse from the root to a leaf. The space complexity is O(H) due to the recursion call stack.</p>
+<pre><code class="language-cpp">/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    TreeNode* deleteNode(TreeNode* root, int key) {
+        if (!root) return nullptr;
+
+        // Search for the node to delete
+        if (key &lt; root-&gt;val) {
+            root-&gt;left = deleteNode(root-&gt;left, key);
+        } else if (key &gt; root-&gt;val) {
+            root-&gt;right = deleteNode(root-&gt;right, key);
+        } else {
+            // Node with the key is found
+
+            // Case 1 &amp; 2: Node has 0 or 1 child
+            if (!root-&gt;left) {
+                TreeNode* temp = root-&gt;right;
+                delete root;
+                return temp;
+            } else if (!root-&gt;right) {
+                TreeNode* temp = root-&gt;left;
+                delete root;
+                return temp;
+            }
+
+            // Case 3: Node has two children
+            // Find the in-order predecessor (largest in the left subtree)
+            TreeNode* temp = root-&gt;left;
+            while (temp-&gt;right != nullptr) {
+                temp = temp-&gt;right;
+            }
+
+            // Copy the predecessor's value to this node
+            root-&gt;val = temp-&gt;val;
+
+            // Delete the in-order predecessor from the left subtree
+            root-&gt;left = deleteNode(root-&gt;left, temp-&gt;val);
+        }
+        return root;
+    }
+};
+</code></pre>
+<hr />
+<h3>Pythonic Solution (Best Approach)</h3>
+<p>The best approach is the recursive one. The Python solution below implements this logic cleanly, using helper functions to find the successor (smallest node in the right subtree) and predecessor (largest node in the left subtree). When a node with two children is to be deleted, it replaces its value with its successor's value and then recursively deletes the successor.</p>
+<pre><code class="language-python"># Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+class Solution:
+    def deleteNode(self, root: Optional[TreeNode], key: int) -&gt; Optional[TreeNode]:
+        if not root:
+            return None
+
+        # Search for the node
+        if key &gt; root.val:
+            root.right = self.deleteNode(root.right, key)
+        elif key &lt; root.val:
+            root.left = self.deleteNode(root.left, key)
+        else:
+            # Node found, handle deletion cases
+
+            # Case 1 &amp; 2: Node with one or zero children
+            if not root.left:
+                return root.right
+            if not root.right:
+                return root.left
+
+            # Case 3: Node with two children
+            # Find the in-order successor (smallest value in the right subtree)
+            temp = root.right
+            while temp.left:
+                temp = temp.left
+
+            # Replace node's value with successor's value
+            root.val = temp.val
+
+            # Recursively delete the successor from the right subtree
+            root.right = self.deleteNode(root.right, root.val)
+
+        return root
+
+</code></pre></div>

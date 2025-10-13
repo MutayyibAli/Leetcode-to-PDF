@@ -1,0 +1,164 @@
+<div class='ai-explanation'><h3>List of Approaches</h3>
+<ol>
+<li>Brute Force Approach (DFS)</li>
+<li>Breadth-First Search (BFS)</li>
+</ol>
+<h3>Brute Force Approach (DFS)</h3>
+<p>This approach models the problem as a graph traversal and uses Depth-First Search (DFS) to explore every possible mutation path from <code>startGene</code> to <code>endGene</code>. We use a recursive function that tries to move from the current gene to any valid, unvisited gene in the bank that is one mutation away. A global variable keeps track of the minimum mutation count found so far. To avoid getting stuck in cycles, we use a <code>visited</code> set for the current path, and we backtrack by removing the gene from the set after exploring all its neighbors. While this approach can find a solution, it's not guaranteed to be the shortest path unless all paths are explored, which is highly inefficient.</p>
+<p>The time complexity is exponential in the worst case, as it may explore a large number of paths, roughly O(N!), where N is the number of genes in the bank. The space complexity is O(N*L) for the recursion stack and the visited set, where L is the length of the gene string.</p>
+<pre><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;vector&gt;
+#include &lt;string&gt;
+#include &lt;unordered_set&gt;
+#include &lt;algorithm&gt;
+#include &lt;climits&gt;
+
+using namespace std;
+
+class Solution {
+private:
+    // Helper to check if two genes differ by exactly one character
+    bool isOneMutation(const string&amp; s1, const string&amp; s2) {
+        int diff = 0;
+        for (size_t i = 0; i &lt; s1.length(); ++i) {
+            if (s1[i] != s2[i]) {
+                diff++;
+            }
+        }
+        return diff == 1;
+    }
+
+    void dfs(const string&amp; currentGene, const string&amp; endGene, const vector&lt;string&gt;&amp; bank, 
+             unordered_set&lt;string&gt;&amp; visited, int count, int&amp; min_mutations) {
+
+        // If we found the end gene, update the minimum mutations
+        if (currentGene == endGene) {
+            min_mutations = min(min_mutations, count);
+            return;
+        }
+
+        // Pruning: if current path is already longer than a known path, stop exploring
+        if (count &gt;= min_mutations) {
+            return;
+        }
+
+        // Explore all possible next mutations from the bank
+        for (const string&amp; nextGene : bank) {
+            // Check if it's a valid next step: not visited and is one mutation away
+            if (visited.find(nextGene) == visited.end() &amp;&amp; isOneMutation(currentGene, nextGene)) {
+                visited.insert(nextGene);
+                dfs(nextGene, endGene, bank, visited, count + 1, min_mutations);
+                visited.erase(nextGene); // Backtrack for other paths
+            }
+        }
+    }
+
+public:
+    int minMutation(string startGene, string endGene, vector&lt;string&gt;&amp; bank) {
+        int min_mutations = INT_MAX;
+        unordered_set&lt;string&gt; visited;
+
+        dfs(startGene, endGene, bank, visited, 0, min_mutations);
+
+        return (min_mutations == INT_MAX) ? -1 : min_mutations;
+    }
+};
+</code></pre>
+<h3>Breadth-First Search (BFS)</h3>
+<p>This problem can be perfectly modeled as finding the shortest path in an unweighted graph. The gene strings (<code>startGene</code> and the genes in <code>bank</code>) are the nodes, and an edge exists between two nodes if they are one mutation apart. Breadth-First Search (BFS) is the ideal algorithm for this, as it explores the graph level by level, guaranteeing that the first time we reach the <code>endGene</code>, it will be through the minimum number of mutations.</p>
+<p>The process starts by adding the <code>startGene</code> to a queue with a distance of 0. We use a set or map to keep track of visited genes to avoid redundant processing. In a loop, we dequeue a gene, find all its valid neighbors (unvisited genes in the bank that are one mutation away), and enqueue them with an incremented distance. The search ends when the <code>endGene</code> is reached or the queue is empty.</p>
+<p>The time complexity is O(N^2 * L) where N is the number of genes in the bank and L is the length of a gene string, because for each of the N genes, we might iterate through the entire bank. The space complexity is O(N * L) to store the queue and visited information.</p>
+<pre><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;vector&gt;
+#include &lt;string&gt;
+#include &lt;queue&gt;
+#include &lt;map&gt;
+
+using namespace std;
+
+class Solution {
+public:
+  int minMutation(string start, string end, vector&lt;string&gt;&amp; b) {
+    // A map to store the distance from start and also acts as a visited set.
+    map&lt;string, int&gt; dist;
+    dist[start] = 0;
+
+    // Queue for the BFS traversal.
+    queue&lt;string&gt; q;
+    q.push(start);
+
+    while (!q.empty()) {
+      string u = q.front();
+      q.pop();
+
+      // Iterate through every gene in the bank to find potential neighbors.
+      for (const string&amp; v : b) {
+        // If this gene has already been visited, skip it.
+        if (dist.count(v)) continue;
+
+        // Check if gene 'v' is one mutation away from gene 'u'.
+        int cnt = 0;
+        for (int i = 0; i &lt; 8; i++) {
+          if (u[i] != v[i]) {
+            cnt++;
+          }
+        }
+
+        if (cnt == 1) {
+          // If it's a valid mutation, record its distance and add it to the queue.
+          dist[v] = dist[u] + 1;
+          q.push(v);
+        }
+      }
+    }
+
+    // After the BFS, if the end gene is in our distance map, return its distance.
+    // Otherwise, it was not reachable, so return -1.
+    if (dist.count(end)) {
+      return dist[end];
+    } else {
+      return -1;
+    }
+  }
+};
+</code></pre>
+<h3>Pythonic Solution (Best Approach - BFS)</h3>
+<p>The most pythonic and often efficient BFS approach generates all possible one-character mutations from the current gene and checks if they exist in the <code>bank</code>. This avoids iterating through the entire bank for each gene. We use a <code>deque</code> for an efficient queue and sets for O(1) average time complexity lookups of the <code>bank</code> and <code>seen</code> genes. This strategy is particularly effective when the gene length and alphabet size are small, while the bank size could be large.</p>
+<pre><code class="language-python">from collections import deque
+
+class Solution:
+    def minMutation(self, startGene: str, endGene: str, bank: list[str]) -&gt; int:
+        # Use a set for efficient O(1) lookups.
+        bank_set = set(bank)
+        if endGene not in bank_set:
+            return -1
+
+        # Queue for BFS: stores (current_gene, number_of_mutations)
+        queue = deque([(startGene, 0)])
+        # Set to keep track of visited genes to avoid cycles.
+        seen = {startGene}
+
+        while queue:
+            current_gene, mutations = queue.popleft()
+
+            if current_gene == endGene:
+                return mutations
+
+            # Try changing each character of the current gene.
+            for i in range(len(current_gene)):
+                # Try all possible characters 'A', 'C', 'G', 'T'.
+                for char in &quot;ACGT&quot;:
+                    if current_gene[i] == char:
+                        continue
+
+                    # Form the new mutated gene string.
+                    next_gene = current_gene[:i] + char + current_gene[i+1:]
+
+                    # If the new gene is valid (in bank) and not seen, process it.
+                    if next_gene in bank_set and next_gene not in seen:
+                        seen.add(next_gene)
+                        queue.append((next_gene, mutations + 1))
+
+        # If the queue becomes empty and we haven't found the endGene, it's not possible.
+        return -1
+</code></pre></div>

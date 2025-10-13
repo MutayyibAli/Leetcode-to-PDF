@@ -1,0 +1,173 @@
+<div class='ai-explanation'><h3>List of all the approaches to solution</h3>
+<ol>
+<li>Topological Sort using BFS (Repeated Scanning)</li>
+<li>Cycle Detection using DFS</li>
+</ol>
+<hr />
+<h3>1. Topological Sort using BFS (Repeated Scanning)</h3>
+<p>This approach models the courses and prerequisites as a directed graph, where an edge from course <code>u</code> to <code>v</code> means <code>u</code> is a prerequisite for <code>v</code>. The problem then becomes equivalent to checking if the graph is a Directed Acyclic Graph (DAG). A valid course schedule exists if and only if there are no cycles.</p>
+<p>This algorithm, a variation of Kahn's algorithm for topological sorting, works by identifying courses that have no prerequisites (in-degree of 0). These courses can be taken first. We "remove" them from the graph and update the in-degrees of the courses that depend on them. We repeat this process. If we can successfully "remove" all courses, it means a valid order exists and there are no cycles. This specific implementation repeatedly scans the list of all courses to find one with an in-degree of 0, which is less efficient than using a queue.</p>
+<p><strong>Step-by-step explanation:</strong>
+1.  <strong>Build Graph:</strong> Represent the courses as nodes and prerequisites as directed edges. For a prerequisite <code>[a, b]</code>, create an edge from <code>b</code> to <code>a</code> (<code>b</code> -&gt; <code>a</code>). An adjacency list is a suitable representation.
+2.  <strong>Calculate In-degrees:</strong> Create an array <code>degrees</code> to store the in-degree (number of incoming edges/prerequisites) for each course.
+3.  <strong>Iterative Removal:</strong> Loop <code>numCourses</code> times. In each iteration:
+    a. Find a course <code>j</code> that has an in-degree of 0.
+    b. If no such course can be found, it means every remaining course has a prerequisite among the other remaining courses, which implies a cycle. Return <code>false</code>.
+    c. If a course <code>j</code> is found, mark it as processed to avoid selecting it again (e.g., by setting its degree to -1).
+    d. For each neighbor <code>v</code> of course <code>j</code> (i.e., for each course that has <code>j</code> as a prerequisite), decrement its in-degree.
+4.  <strong>Final Result:</strong> If the loop completes, it means we have successfully processed all <code>numCourses</code> in a valid topological order. Return <code>true</code>.</p>
+<p>The main inefficiency comes from step 3a, which requires scanning the entire <code>degrees</code> array in every iteration.</p>
+<p>This approach has a time complexity of O(V² + E) and a space complexity of O(V + E), where V is the number of courses and E is the number of prerequisites.</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;utility&gt;
+
+class Solution {
+public:
+    bool canFinish(int numCourses, std::vector&lt;std::vector&lt;int&gt;&gt;&amp; prerequisites) {
+        // Step 1: Build the graph and compute in-degrees
+        std::vector&lt;std::vector&lt;int&gt;&gt; adj(numCourses);
+        std::vector&lt;int&gt; degrees(numCourses, 0);
+        for (const auto&amp; p : prerequisites) {
+            adj[p[1]].push_back(p[0]);
+            degrees[p[0]]++;
+        }
+
+        // Step 3: Iteratively find and remove nodes with 0 in-degree
+        for (int i = 0; i &lt; numCourses; ++i) {
+            int j = 0;
+            // 3a. Find a course with 0 in-degree
+            for (; j &lt; numCourses; ++j) {
+                if (degrees[j] == 0) {
+                    break;
+                }
+            }
+
+            // 3b. If no such course is found, there is a cycle
+            if (j == numCourses) {
+                return false;
+            }
+
+            // 3c. Mark as processed
+            degrees[j] = -1; 
+
+            // 3d. Decrement in-degree of its neighbors
+            for (int neighbor : adj[j]) {
+                degrees[neighbor]--;
+            }
+        }
+
+        // Step 4: If loop completes, all courses can be finished
+        return true;
+    }
+};
+</code></pre>
+<hr />
+<h3>2. Cycle Detection using DFS</h3>
+<p>This is a more efficient approach that also models the problem as a graph. The core idea is to use Depth-First Search (DFS) to traverse the graph and detect cycles. A cycle is detected if, during a traversal, we encounter a node that is currently in our recursion stack (i.e., an ancestor in the current DFS path).</p>
+<p>To implement this, we maintain the state of each node in one of three categories:
+1.  <strong>Unvisited:</strong> The node has not been visited yet.
+2.  <strong>Visiting:</strong> The node is currently in the recursion stack for the ongoing DFS traversal.
+3.  <strong>Visited:</strong> The node and all its descendants have been fully explored, and no cycle was found in its subgraph.</p>
+<p><strong>Step-by-step explanation:</strong>
+1.  <strong>Build Graph:</strong> Create an adjacency list representation of the graph, where an edge <code>b</code> -&gt; <code>a</code> exists for prerequisite <code>[a, b]</code>.
+2.  <strong>Initialize State:</strong> Create a state array (e.g., <code>visit</code>) to track the status of each node. Initialize all to <code>unvisited</code>.
+3.  <strong>Iterate and Traverse:</strong> Loop through each course from <code>0</code> to <code>numCourses - 1</code>. If a course is <code>unvisited</code>, start a DFS traversal from it.
+4.  <strong>DFS Logic:</strong> Inside the recursive DFS function for a node <code>u</code>:
+    a. Mark <code>u</code> as <code>visiting</code>. This adds it to the current recursion path.
+    b. For each neighbor <code>v</code> of <code>u</code>:
+        i. If <code>v</code> is in the <code>visiting</code> state, we have found a back edge, which means there is a cycle. Return <code>false</code>.
+        ii. If <code>v</code> is <code>unvisited</code>, recursively call DFS on <code>v</code>. If the recursive call returns <code>false</code>, it means a cycle was found downstream, so propagate the <code>false</code> result up.
+    c. If the loop over neighbors completes without finding a cycle, mark <code>u</code> as <code>visited</code> and remove it from the current recursion path (by changing its state from <code>visiting</code> to <code>visited</code>).
+    d. Return <code>true</code> to indicate that the subgraph starting from <code>u</code> is acyclic.
+5.  <strong>Final Result:</strong> If any DFS call returns <code>false</code>, a cycle exists, and we return <code>false</code> immediately. If all courses are traversed without detecting a cycle, return <code>true</code>.</p>
+<p>This approach has a time complexity of O(V + E) and a space complexity of O(V + E), where V is the number of courses and E is the number of prerequisites.</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+
+class Solution {
+public:
+    bool canFinish(int numCourses, std::vector&lt;std::vector&lt;int&gt;&gt;&amp; prerequisites) {
+        std::vector&lt;std::vector&lt;int&gt;&gt; adj = buildGraph(numCourses, prerequisites);
+        std::vector&lt;int&gt; visit(numCourses, 0); // 0: unvisited, 1: visiting, 2: visited
+
+        for (int i = 0; i &lt; numCourses; ++i) {
+            if (visit[i] == 0) { // If unvisited
+                if (!isAcyclic(adj, visit, i)) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+private:
+    std::vector&lt;std::vector&lt;int&gt;&gt; buildGraph(int numCourses, const std::vector&lt;std::vector&lt;int&gt;&gt;&amp; prerequisites) {
+        std::vector&lt;std::vector&lt;int&gt;&gt; adj(numCourses);
+        for (const auto&amp; p : prerequisites) {
+            adj[p[1]].push_back(p[0]);
+        }
+        return adj;
+    }
+
+    bool isAcyclic(const std::vector&lt;std::vector&lt;int&gt;&gt;&amp; adj, std::vector&lt;int&gt;&amp; visit, int node) {
+        visit[node] = 1; // Mark as visiting
+
+        for (int neighbor : adj[node]) {
+            if (visit[neighbor] == 1) { // Cycle detected
+                return false;
+            }
+            if (visit[neighbor] == 0) { // If unvisited, start DFS
+                if (!isAcyclic(adj, visit, neighbor)) {
+                    return false;
+                }
+            }
+        }
+
+        visit[node] = 2; // Mark as visited
+        return true;
+    }
+};
+</code></pre>
+<hr />
+<h3>Pythonic Solution (Cycle Detection using DFS)</h3>
+<p>This Python solution implements the optimal DFS-based cycle detection approach. It uses a single list <code>visit</code> to store three states for each node: <code>0</code> for unvisited, <code>-1</code> for currently visiting (in the recursion stack), and <code>1</code> for completely visited (known to be part of an acyclic subgraph). This is a concise way to handle the node states required for cycle detection in a directed graph. The graph is built with <code>y -&gt; x</code> for prerequisite <code>[x, y]</code>.</p>
+<pre><code class="language-python">from collections import defaultdict
+
+class Solution:
+    def canFinish(self, numCourses: int, prerequisites: list[list[int]]) -&gt; bool:
+        &quot;&quot;&quot;
+        Detects if a cycle exists in the directed graph using DFS.
+        &quot;&quot;&quot;
+        # Build adjacency list
+        graph = defaultdict(list)
+        for course, prereq in prerequisites:
+            graph[prereq].append(course)
+
+        # visit states: 0 = unvisited, -1 = visiting, 1 = visited
+        visit = [0] * numCourses
+
+        def has_cycle(course: int) -&gt; bool:
+            # If we encounter a node that is currently in the recursion stack, we have a cycle.
+            if visit[course] == -1:
+                return True
+            # If this node has been fully processed and found to be part of an acyclic path, no need to check again.
+            if visit[course] == 1:
+                return False
+
+            # Mark the current node as visiting
+            visit[course] = -1
+
+            # Recurse on all neighbors
+            for neighbor in graph[course]:
+                if has_cycle(neighbor):
+                    return True
+
+            # Mark the current node as fully visited (and acyclic) after checking all its descendants
+            visit[course] = 1
+            return False
+
+        # Check for cycles starting from each course
+        for i in range(numCourses):
+            if has_cycle(i):
+                return False
+
+        return True
+</code></pre></div>

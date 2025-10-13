@@ -1,0 +1,205 @@
+<div class='ai-explanation'><h3>List of Approaches</h3>
+<ol>
+<li>Brute Force Approach (Using extra space for coordinates)</li>
+<li>Better Approach (Using Marker Arrays)</li>
+<li>Optimal Approach (In-place using first row/column)</li>
+</ol>
+<hr />
+<h3>Brute Force Approach (Using extra space for coordinates)</h3>
+<p>This approach involves two passes over the matrix. In the first pass, we identify and store the coordinates of all cells that contain a zero. In the second pass, we iterate through our stored coordinates and, for each coordinate <code>(r, c)</code>, we set the entire row <code>r</code> and column <code>c</code> to zero. This avoids the problem of prematurely zeroing out cells that would then cause other rows/columns to be zeroed incorrectly.</p>
+<ol>
+<li>Create a list or vector to store the <code>(row, column)</code> pairs of all elements that are zero.</li>
+<li>Iterate through the entire matrix. If <code>matrix[i][j]</code> is 0, add the pair <code>(i, j)</code> to our list.</li>
+<li>Iterate through the list of stored zero-coordinates.</li>
+<li>For each pair <code>(r, c)</code>, iterate through the matrix and set the entire row <code>r</code> to 0.</li>
+<li>Similarly, for each pair <code>(r, c)</code>, iterate through the matrix and set the entire column <code>c</code> to 0.</li>
+</ol>
+<p>This approach is correct but uses extra space proportional to the number of zeros in the matrix, which in the worst case can be O(m*n). The time complexity is high due to the repeated zeroing of rows and columns.</p>
+<p>The time complexity is O((M<em>N) * (M+N)) and space complexity is O(M</em>N) in the worst case.</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;utility&gt;
+
+class Solution {
+public:
+    void setZeroes(std::vector&lt;std::vector&lt;int&gt;&gt;&amp; matrix) {
+        int m = matrix.size();
+        if (m == 0) return;
+        int n = matrix[0].size();
+
+        std::vector&lt;std::pair&lt;int, int&gt;&gt; zero_coords;
+
+        // Step 1 &amp; 2: Find all zero coordinates
+        for (int i = 0; i &lt; m; ++i) {
+            for (int j = 0; j &lt; n; ++j) {
+                if (matrix[i][j] == 0) {
+                    zero_coords.push_back({i, j});
+                }
+            }
+        }
+
+        // Step 3-5: Set rows and columns to zero
+        for (const auto&amp; coord : zero_coords) {
+            int r = coord.first;
+            int c = coord.second;
+
+            // Set row to zero
+            for (int j = 0; j &lt; n; ++j) {
+                matrix[r][j] = 0;
+            }
+            // Set column to zero
+            for (int i = 0; i &lt; m; ++i) {
+                matrix[i][c] = 0;
+            }
+        }
+    }
+};
+</code></pre>
+<hr />
+<h3>Better Approach (Using Marker Arrays)</h3>
+<p>This approach improves upon the brute-force method by reducing the space complexity. Instead of storing the coordinates of every zero, we only need to know <em>which rows</em> and <em>which columns</em> need to be zeroed out. We can use two boolean arrays for this: one for rows and one for columns.</p>
+<ol>
+<li>Create a boolean array <code>zero_rows</code> of size <code>m</code> (number of rows) and another <code>zero_cols</code> of size <code>n</code> (number of columns). Initialize both with <code>false</code>.</li>
+<li>Traverse the matrix. If <code>matrix[i][j]</code> is 0, set <code>zero_rows[i] = true</code> and <code>zero_cols[j] = true</code>.</li>
+<li>Traverse the matrix a second time. For each cell <code>matrix[i][j]</code>, if <code>zero_rows[i]</code> is <code>true</code> or <code>zero_cols[j]</code> is <code>true</code>, update <code>matrix[i][j]</code> to 0.</li>
+</ol>
+<p>This approach uses two passes over the matrix and avoids redundant operations.</p>
+<p>The time complexity is O(M * N) and space complexity is O(M + N).</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+
+class Solution {
+public:
+    void setZeroes(std::vector&lt;std::vector&lt;int&gt;&gt;&amp; matrix) {
+        int m = matrix.size();
+        if (m == 0) return;
+        int n = matrix[0].size();
+
+        std::vector&lt;bool&gt; zero_rows(m, false);
+        std::vector&lt;bool&gt; zero_cols(n, false);
+
+        // Step 1 &amp; 2: Mark which rows and columns have zeros
+        for (int i = 0; i &lt; m; ++i) {
+            for (int j = 0; j &lt; n; ++j) {
+                if (matrix[i][j] == 0) {
+                    zero_rows[i] = true;
+                    zero_cols[j] = true;
+                }
+            }
+        }
+
+        // Step 3: Set elements to zero based on marks
+        for (int i = 0; i &lt; m; ++i) {
+            for (int j = 0; j &lt; n; ++j) {
+                if (zero_rows[i] || zero_cols[j]) {
+                    matrix[i][j] = 0;
+                }
+            }
+        }
+    }
+};
+</code></pre>
+<hr />
+<h3>Optimal Approach (In-place using first row/column)</h3>
+<p>To achieve a constant space solution, we can repurpose the first row and first column of the matrix itself to act as our marker arrays.</p>
+<ol>
+<li>The cell <code>matrix[0][0]</code> is an edge case because it's part of both the first row and the first column. We'll use a separate boolean variable, <code>is_col0_zero</code>, to track if the first column needs to be zeroed. The first row's zero-status can be tracked by <code>matrix[0][0]</code>.</li>
+<li>First pass: Iterate through the matrix to mark the first row and column.<ul>
+<li>If any element in the first column (<code>matrix[i][0]</code>) is 0, set <code>is_col0_zero</code> to <code>true</code>.</li>
+<li>For the rest of the matrix (from the second column onwards), if <code>matrix[i][j]</code> is 0, mark its corresponding first-row and first-column cells by setting <code>matrix[0][j] = 0</code> and <code>matrix[i][0] = 0</code>.</li>
+</ul>
+</li>
+<li>Second pass: Iterate through the matrix from the second row and second column (<code>i=1</code> to <code>m-1</code>, <code>j=1</code> to <code>n-1</code>). If its corresponding marker in the first row (<code>matrix[0][j]</code>) or first column (<code>matrix[i][0]</code>) is 0, set <code>matrix[i][j] = 0</code>.</li>
+<li>Third pass: Update the first row. If <code>matrix[0][0]</code> is 0, it means the entire first row must be set to 0.</li>
+<li>Fourth pass: Update the first column. If <code>is_col0_zero</code> is <code>true</code>, set the entire first column to 0.</li>
+</ol>
+<p>This logic can be implemented concisely. The C++ code below does the marking and updating in two passes, processing the matrix from bottom-right to top-left in the second pass to avoid overwriting markers before they are used.</p>
+<p>The time complexity is O(M * N) and space complexity is O(1).</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+
+class Solution {
+public:
+    void setZeroes(std::vector&lt;std::vector&lt;int&gt;&gt;&amp; matrix) {
+        int rows = matrix.size();
+        int cols = matrix[0].size();
+        int col0 = 1; // Corresponds to is_col0_zero, 1 means false, 0 means true
+
+        // Step 1 &amp; 2: Use first row and column as markers
+        for (int i = 0; i &lt; rows; i++) {
+            // Check if first column needs to be zeroed
+            if (matrix[i][0] == 0) {
+                col0 = 0;
+            }
+            // Mark first row and column for inner matrix elements
+            for (int j = 1; j &lt; cols; j++) {
+                if (matrix[i][j] == 0) {
+                    matrix[i][0] = 0;
+                    matrix[0][j] = 0;
+                }
+            }
+        }
+
+        // Step 3-5: Set zeros based on markers, starting from the end
+        // to avoid overwriting markers in the first row/column
+        for (int i = rows - 1; i &gt;= 0; i--) {
+            for (int j = cols - 1; j &gt;= 1; j--) {
+                if (matrix[i][0] == 0 || matrix[0][j] == 0) {
+                    matrix[i][j] = 0;
+                }
+            }
+            // Update first column
+            if (col0 == 0) {
+                matrix[i][0] = 0;
+            }
+        }
+    }
+};
+</code></pre>
+<hr />
+<h3>Pythonic Solution (Best Approach)</h3>
+<p>The optimal O(1) space solution in Python is similar to the C++ version but can be written more explicitly using two boolean flags for clarity, one for the first row and one for the first column. This makes the logic easy to follow.</p>
+<pre><code class="language-python">from typing import List
+
+class Solution:
+    def setZeroes(self, matrix: List[List[int]]) -&gt; None:
+        &quot;&quot;&quot;
+        Do not return anything, modify matrix in-place instead.
+        &quot;&quot;&quot;
+        m = len(matrix)
+        n = len(matrix[0])
+
+        first_row_has_zero = False
+        first_col_has_zero = False
+
+        # 1. Check if the first row and first column have any zeros
+        for j in range(n):
+            if matrix[0][j] == 0:
+                first_row_has_zero = True
+                break
+
+        for i in range(m):
+            if matrix[i][0] == 0:
+                first_col_has_zero = True
+                break
+
+        # 2. Use the first row and column to mark zeros for the rest of the matrix
+        for i in range(1, m):
+            for j in range(1, n):
+                if matrix[i][j] == 0:
+                    matrix[i][0] = 0
+                    matrix[0][j] = 0
+
+        # 3. Set cells to zero based on markers in the first row and column
+        for i in range(1, m):
+            for j in range(1, n):
+                if matrix[i][0] == 0 or matrix[0][j] == 0:
+                    matrix[i][j] = 0
+
+        # 4. Set the first row to zero if needed
+        if first_row_has_zero:
+            for j in range(n):
+                matrix[0][j] = 0
+
+        # 5. Set the first column to zero if needed
+        if first_col_has_zero:
+            for i in range(m):
+                matrix[i][0] = 0
+</code></pre></div>

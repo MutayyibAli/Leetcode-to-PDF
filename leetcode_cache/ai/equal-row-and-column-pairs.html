@@ -1,0 +1,118 @@
+<div class='ai-explanation'><h3>List of all the approaches to solution</h3>
+<ol>
+<li>Brute Force Approach</li>
+<li>Hash Map Approach</li>
+</ol>
+<hr />
+<h3>Brute Force Approach</h3>
+<p>This approach involves a straightforward comparison of every row with every column.</p>
+<ol>
+<li>Initialize a counter <code>count</code> to 0.</li>
+<li>Iterate through each row <code>i</code> of the grid.</li>
+<li>Inside the row loop, iterate through each column <code>j</code> of the grid.</li>
+<li>For each pair of row <code>i</code> and column <code>j</code>, compare them element by element. This requires a third loop, say with index <code>k</code>, checking if <code>grid[i][k]</code> equals <code>grid[k][j]</code>.</li>
+<li>If all <code>n</code> elements of the row and column are identical, increment the <code>count</code>.</li>
+<li>After all loops complete, <code>count</code> will hold the total number of equal pairs.</li>
+</ol>
+<p>This method is simple to understand but inefficient for larger grids due to the three nested loops. The time complexity is O(n³) and the space complexity is O(1).</p>
+<pre><code class="language-cpp">class Solution {
+public:
+    int equalPairs(vector&lt;vector&lt;int&gt;&gt;&amp; grid) {
+        int n = grid.size();
+        int count = 0;
+
+        for (int i = 0; i &lt; n; ++i) { // Iterate through each row
+            for (int j = 0; j &lt; n; ++j) { // Iterate through each column
+                bool isEqual = true;
+                // Compare row i with column j element by element
+                for (int k = 0; k &lt; n; ++k) {
+                    if (grid[i][k] != grid[k][j]) {
+                        isEqual = false;
+                        break;
+                    }
+                }
+                if (isEqual) {
+                    count++;
+                }
+            }
+        }
+        return count;
+    }
+};
+</code></pre>
+<hr />
+<h3>Hash Map Approach</h3>
+<p>To optimize the comparison process, we can use a hash map to store the frequency of each unique row. Then, we can iterate through the columns, check if they exist as a row in our map, and add their frequency to our total count.</p>
+<ol>
+<li>Create a hash map (like <code>std::map</code> or <code>std::unordered_map</code>) to store a row (represented as a <code>vector&lt;int&gt;</code>) and its frequency.</li>
+<li>Iterate through each row of the <code>grid</code> and populate the hash map. For each row, increment its count in the map.</li>
+<li>Initialize a counter <code>ans</code> to 0.</li>
+<li>Iterate through each column index <code>j</code> from <code>0</code> to <code>n-1</code>.</li>
+<li>For each column <code>j</code>, construct a temporary vector by collecting all elements <code>grid[i][j]</code> for <code>i</code> from <code>0</code> to <code>n-1</code>.</li>
+<li>Look up this column vector in the hash map. The value associated with this key is the number of rows that are identical to the current column.</li>
+<li>Add this value to the <code>ans</code>.</li>
+<li>After iterating through all columns, return <code>ans</code>.</li>
+</ol>
+<p>This approach significantly reduces the time complexity by avoiding repeated comparisons. The time complexity is O(n²) and the space complexity is O(n²) to store the rows in the hash map.</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;map&gt;
+
+class Solution {
+public:
+    int equalPairs(vector&lt;vector&lt;int&gt;&gt;&amp; grid) {
+        int ans = 0;
+        // A map to store row vectors and their frequencies.
+        // std::map is used here, std::unordered_map would require a custom hash for vectors.
+        map&lt;vector&lt;int&gt;, int&gt; row_counts;
+
+        // Populate the map with rows and their counts.
+        for (int i = 0; i &lt; grid.size(); i++) {
+            row_counts[grid[i]]++;
+        }
+
+        // Iterate through columns.
+        for (int i = 0; i &lt; grid[0].size(); i++) {
+            vector&lt;int&gt; col_vector;
+            // Construct the vector for the current column.
+            for (int j = 0; j &lt; grid.size(); j++) {
+                col_vector.push_back(grid[j][i]);
+            }
+            // Add the number of times this column appeared as a row.
+            // map[key] returns 0 if the key doesn't exist.
+            ans += row_counts[col_vector];
+        }
+
+        return ans;
+    }
+};
+</code></pre>
+<hr />
+<h3>Pythonic Solution (Best Approach)</h3>
+<p>The optimal approach can be implemented very concisely in Python by using the <code>Counter</code> class from the <code>collections</code> module and the <code>zip</code> function for matrix transposition. The logic is to count the frequencies of all rows and all columns separately, then find the matching patterns.</p>
+<ol>
+<li>First, create a frequency map of all columns. <code>zip(*grid)</code> cleverly transposes the grid, and <code>Counter</code> counts the occurrences of each unique column (represented as a tuple).</li>
+<li>Next, create a frequency map of all rows. We use <code>map(tuple, grid)</code> to convert each row (list) into a tuple so it can be hashed by <code>Counter</code>.</li>
+<li>Finally, iterate through the unique patterns in one of the maps (e.g., the column map). For each pattern, multiply its frequency as a column by its frequency as a row. The sum of these products gives the total number of equal pairs.</li>
+</ol>
+<pre><code class="language-python">from collections import Counter
+from typing import List
+
+class Solution:
+    def equalPairs(self, grid: List[List[int]]) -&gt; int:
+        # Counter requires hashable items, so we convert rows (lists) to tuples.
+        row_counts = Counter(map(tuple, grid))
+
+        # zip(*grid) efficiently transposes the matrix, giving an iterator of columns as tuples.
+        col_counts = Counter(zip(*grid))
+
+        count = 0
+        # Iterate through the unique rows and their counts.
+        for row_tuple, num_rows in row_counts.items():
+            # Get the number of times this same tuple appears as a column (defaults to 0 if not found).
+            num_cols = col_counts[row_tuple]
+            # Each of the num_rows identical rows forms a pair with each of the num_cols identical columns.
+            count += num_rows * num_cols
+
+        return count
+
+</code></pre></div>

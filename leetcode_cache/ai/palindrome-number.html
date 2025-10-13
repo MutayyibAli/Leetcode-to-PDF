@@ -1,0 +1,91 @@
+<div class='ai-explanation'><h3>List of Approaches</h3>
+<ul>
+<li>Brute Force Approach: Reversing the Entire Number</li>
+<li>Optimized Approach: Reversing Half of the Number</li>
+</ul>
+<h3>Brute Force Approach: Reversing the Entire Number</h3>
+<p>This approach determines if a number is a palindrome by generating its reverse and comparing it to the original number. To handle potential integer overflow when reversing, a larger data type (like <code>long long</code> in C++) is used for the reversed number.</p>
+<ol>
+<li>First, handle the base case: negative numbers cannot be palindromes, so return <code>false</code> if the input <code>x</code> is less than 0.</li>
+<li>Initialize a <code>long long</code> variable <code>reversed</code> to 0 to store the reversed number.</li>
+<li>Create a temporary variable <code>temp</code> with the value of <code>x</code> to avoid modifying the original number.</li>
+<li>Loop until <code>temp</code> becomes 0. In each iteration:<ul>
+<li>Extract the last digit of <code>temp</code> using the modulo operator (<code>temp % 10</code>).</li>
+<li>Append this digit to <code>reversed</code> by multiplying <code>reversed</code> by 10 and adding the digit.</li>
+<li>Remove the last digit from <code>temp</code> using integer division (<code>temp / 10</code>).</li>
+</ul>
+</li>
+<li>After the loop, compare the <code>reversed</code> number with the original <code>x</code>. If they are equal, the number is a palindrome.
+The time complexity is O(log10(n)) as we process each digit of the number once, and the space complexity is O(1).</li>
+</ol>
+<pre><code class="language-cpp">class Solution {
+public:
+    bool isPalindrome(int x) {
+        if (x &lt; 0) {
+            return false;
+        }
+
+        long long reversed = 0;
+        long long temp = x;
+
+        while (temp != 0) {
+            int digit = temp % 10;
+            reversed = reversed * 10 + digit;
+            temp /= 10;
+        }
+
+        return (reversed == x);
+    }
+};
+</code></pre>
+<h3>Optimized Approach: Reversing Half of the Number</h3>
+<p>This method improves upon the first approach by only reversing the second half of the number. This cleverly avoids the integer overflow issue, as the reversed half will never exceed the value of the original number.</p>
+<ol>
+<li>Handle edge cases that cannot be palindromes: negative numbers, and any number that ends in 0 but is not 0 itself (e.g., 10, 120).</li>
+<li>Initialize an integer <code>reversed</code> to 0. This will store the reversed second half of the number.</li>
+<li>Use a <code>while</code> loop that runs as long as <code>x</code> is greater than <code>reversed</code>. This condition ensures we stop at the middle of the number.<ul>
+<li>Extract the last digit of <code>x</code> (<code>x % 10</code>).</li>
+<li>Append it to <code>reversed</code> (<code>reversed = reversed * 10 + x % 10</code>).</li>
+<li>Remove the last digit from <code>x</code> (<code>x /= 10</code>).</li>
+</ul>
+</li>
+<li>After the loop, we compare the first half (<code>x</code>) with the reversed second half (<code>reversed</code>).<ul>
+<li>If the original number has an even number of digits, <code>x</code> and <code>reversed</code> will be equal (e.g., for <code>1221</code>, <code>x</code> becomes <code>12</code>, <code>reversed</code> becomes <code>12</code>).</li>
+<li>If the original number has an odd number of digits, the middle digit will be left on <code>x</code>. We can ignore it for the palindrome check by comparing <code>x</code> with <code>reversed / 10</code> (e.g., for <code>12321</code>, <code>x</code> becomes <code>123</code>, <code>reversed</code> becomes <code>12</code>. Loop stops. <code>x</code> becomes <code>12</code>, <code>reversed</code> becomes <code>123</code>. Then we compare <code>x</code> (<code>12</code>) with <code>reversed/10</code> (<code>12</code>)). The final check combines both cases: <code>return (x == reversed) || (x == reversed / 10)</code>.
+The time complexity is O(log10(n)) since we iterate through half the digits, and the space complexity is O(1).</li>
+</ul>
+</li>
+</ol>
+<pre><code class="language-cpp">class Solution {
+public:
+    bool isPalindrome(int x) {
+        if (x &lt; 0 || (x != 0 &amp;&amp; x % 10 == 0)) {
+            return false;
+        }
+
+        int reversed = 0;
+        while (x &gt; reversed) {
+            reversed = reversed * 10 + x % 10;
+            x /= 10;
+        }
+
+        return (x == reversed) || (x == reversed / 10);
+    }
+};
+</code></pre>
+<h3>Pythonic Solution (Optimized Approach)</h3>
+<pre><code class="language-python">class Solution:
+    def isPalindrome(self, x: int) -&gt; bool:
+        # Negative numbers and numbers ending in 0 (but not 0 itself) are not palindromes.
+        if x &lt; 0 or (x % 10 == 0 and x != 0):
+            return False
+
+        reversed_num = 0
+        while x &gt; reversed_num:
+            reversed_num = reversed_num * 10 + x % 10
+            x //= 10
+
+        # For numbers with an even number of digits, x == reversed_num.
+        # For odd, the middle digit is on reversed_num, so we check x == reversed_num // 10.
+        return x == reversed_num or x == reversed_num // 10
+</code></pre></div>

@@ -1,0 +1,196 @@
+<div class='ai-explanation'><h3>List of all the approaches to solution</h3>
+<ol>
+<li>Brute Force Approach (Recursion)</li>
+<li>Dynamic Programming Approach (Memoization)</li>
+<li>Dynamic Programming Approach (Tabulation with Space Optimization)</li>
+<li>Greedy Approach (Simple One-Pass)</li>
+</ol>
+<hr />
+<h3>Brute Force Approach</h3>
+<p>This approach explores all possible transactions. We define a recursive function that, for each day, decides what action to take based on whether we are currently holding a stock or not.</p>
+<ol>
+<li><strong>State:</strong> The state of our recursion is determined by the current <code>day</code> and a boolean <code>holding</code> which is true if we own a stock and false otherwise.</li>
+<li><strong>Base Case:</strong> If we have considered all the days (<code>day &gt;= prices.size()</code>), no more profit can be made, so we return 0.</li>
+<li><strong>Recursive Step:</strong><ul>
+<li>If we are <strong>holding</strong> a stock on the current <code>day</code>: We can either sell it (gaining <code>prices[day]</code>) and transition to a state of not holding, or we can hold it and move to the next day. We choose the option that yields maximum profit.</li>
+<li>If we are <strong>not holding</strong> a stock: We can either buy one (costing <code>prices[day]</code>) and transition to a state of holding, or we can skip buying and move to the next day. We again choose the option that maximizes profit.</li>
+</ul>
+</li>
+<li><strong>Initial Call:</strong> We start on day 0, not holding any stock.</li>
+</ol>
+<p>This method is exhaustive but very slow due to re-computing the same subproblems multiple times. The time complexity is exponential, <code>O(2^n)</code>, and the space complexity is <code>O(n)</code> due to the recursion depth.</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;algorithm&gt;
+
+class Solution {
+public:
+    int solve(int day, bool holding, std::vector&lt;int&gt;&amp; prices) {
+        // Base case: If we've run out of days, no more profit can be made.
+        if (day &gt;= prices.size()) {
+            return 0;
+        }
+
+        // If we are holding a stock, we can either sell it today or hold it.
+        if (holding) {
+            int sell_profit = prices[day] + solve(day + 1, false);
+            int hold_profit = solve(day + 1, true);
+            return std::max(sell_profit, hold_profit);
+        } 
+        // If we are not holding a stock, we can either buy one today or skip.
+        else {
+            int buy_profit = -prices[day] + solve(day + 1, true);
+            int skip_profit = solve(day + 1, false);
+            return std::max(buy_profit, skip_profit);
+        }
+    }
+
+    int maxProfit(std::vector&lt;int&gt;&amp; prices) {
+        return solve(0, false, prices);
+    }
+};
+</code></pre>
+<hr />
+<h3>Dynamic Programming Approach (Memoization)</h3>
+<p>The brute-force approach has many overlapping subproblems. We can optimize it by storing the results of each state (<code>day</code>, <code>holding</code>) in a memoization table (a 2D array <code>dp</code>) so that we compute each subproblem only once.</p>
+<ol>
+<li><strong>Memoization Table:</strong> Create a 2D array <code>dp[n][2]</code> where <code>n</code> is the number of days. <code>dp[i][0]</code> stores the max profit from day <code>i</code> onwards if we are not holding a stock, and <code>dp[i][1]</code> stores the max profit if we are holding one. Initialize it with a sentinel value (e.g., -1) to mark states that haven't been computed.</li>
+<li><strong>Recursive Logic:</strong> The recursive logic is the same as the brute-force approach.</li>
+<li><strong>Check and Store:</strong> Before computing the result for a state, check if it's already in the <code>dp</code> table. If it is, return the stored value. Otherwise, compute the result, store it in the table, and then return it.</li>
+</ol>
+<p>This top-down DP approach reduces the time complexity to <code>O(n)</code> because each state is computed only once. The space complexity is <code>O(n)</code> for the memoization table and recursion stack.</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;algorithm&gt;
+
+class Solution {
+public:
+    int dp[30001][2];
+
+    int solve(int day, bool holding, std::vector&lt;int&gt;&amp; prices) {
+        if (day &gt;= prices.size()) {
+            return 0;
+        }
+
+        if (dp[day][holding] != -1) {
+            return dp[day][holding];
+        }
+
+        int profit = 0;
+        if (holding) {
+            int sell_profit = prices[day] + solve(day + 1, false, prices);
+            int hold_profit = solve(day + 1, true, prices);
+            profit = std::max(sell_profit, hold_profit);
+        } else {
+            int buy_profit = -prices[day] + solve(day + 1, true, prices);
+            int skip_profit = solve(day + 1, false, prices);
+            profit = std::max(buy_profit, skip_profit);
+        }
+
+        return dp[day][holding] = profit;
+    }
+
+    int maxProfit(std::vector&lt;int&gt;&amp; prices) {
+        for(int i = 0; i &lt; prices.size(); ++i) {
+            dp[i][0] = dp[i][1] = -1;
+        }
+        return solve(0, false, prices);
+    }
+};
+</code></pre>
+<hr />
+<h3>Dynamic Programming Approach (Tabulation with Space Optimization)</h3>
+<p>We can convert the memoized solution to a bottom-up iterative approach, which also allows for space optimization. We can think of this as a state machine with two states: <code>hold</code> (we have a stock) and <code>cash</code> (we don't have a stock). We iterate through the days and calculate the maximum profit for each state.</p>
+<ol>
+<li><strong>State Variables:</strong> We only need two variables: <code>hold</code> for the maximum profit if we end the day with a stock, and <code>cash</code> for the maximum profit if we end the day with cash.</li>
+<li><strong>Initialization:</strong><ul>
+<li><code>cash = 0</code>: On day 0, if we do nothing, our profit is 0.</li>
+<li><code>hold = -prices[0]</code>: If we buy on day 0, our profit is the negative of the price.</li>
+</ul>
+</li>
+<li><strong>Iteration:</strong> Loop through the prices from the second day (<code>i = 1</code> to <code>n-1</code>).<ul>
+<li>For each day <code>i</code>, calculate the new <code>cash</code> and <code>hold</code> values.</li>
+<li>The new <code>cash</code> value is the maximum of:<ul>
+<li>Keeping the old <code>cash</code> (doing nothing).</li>
+<li>Selling the stock we were holding (<code>hold + prices[i]</code>).</li>
+</ul>
+</li>
+<li>The new <code>hold</code> value is the maximum of:<ul>
+<li>Keeping the stock we were holding (the old <code>hold</code> value).</li>
+<li>Buying a stock with our <code>cash</code> (<code>cash - prices[i]</code>).</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>Result:</strong> After iterating through all the prices, the maximum profit is in the <code>cash</code> variable, as we cannot end with a stock that isn't sold.</li>
+</ol>
+<p>The calculation for <code>hold</code> depends on the <code>cash</code> value from the <em>previous</em> day, so we store it in a temporary variable before updating <code>cash</code>. This approach has a time complexity of <code>O(n)</code> and a space complexity of <code>O(1)</code>.</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;algorithm&gt;
+
+class Solution {
+public:
+    int maxProfit(std::vector&lt;int&gt;&amp; prices) {
+        if (prices.empty()) {
+            return 0;
+        }
+
+        int cash = 0;
+        int hold = -prices[0];
+
+        for (size_t i = 1; i &lt; prices.size(); ++i) {
+            int prev_cash = cash;
+            cash = std::max(cash, hold + prices[i]);
+            hold = std::max(hold, prev_cash - prices[i]);
+        }
+
+        return cash;
+    }
+};
+</code></pre>
+<hr />
+<h3>Greedy Approach (Simple One-Pass)</h3>
+<p>This is the most intuitive and efficient approach for this specific problem. The key insight is that the total profit is the sum of all positive price changes between consecutive days.</p>
+<ol>
+<li><strong>Logic:</strong> A transaction that spans multiple days (e.g., buy on day <code>i</code>, sell on day <code>j</code>) can be broken down into a series of smaller, day-to-day transactions. For example, the profit <code>prices[j] - prices[i]</code> is equal to <code>(prices[i+1] - prices[i]) + (prices[i+2] - prices[i+1]) + ... + (prices[j] - prices[j-1])</code>. The problem allows us to sell and buy on the same day, which makes this decomposition valid.</li>
+<li><strong>Algorithm:</strong><ul>
+<li>Initialize a <code>total_profit</code> variable to 0.</li>
+<li>Iterate through the <code>prices</code> array from the second day (<code>i = 1</code>).</li>
+<li>For each day, if the current price <code>prices[i]</code> is greater than the previous day's price <code>prices[i-1]</code>, it represents a profitable one-day transaction.</li>
+<li>Add the difference <code>prices[i] - prices[i-1]</code> to <code>total_profit</code>.</li>
+</ul>
+</li>
+<li><strong>Result:</strong> The <code>total_profit</code> after the loop is the maximum possible profit.</li>
+</ol>
+<p>This approach is greedy because we take every opportunity to make a profit, no matter how small. It works because we are accumulating all the upward trends in the stock price. The time complexity is <code>O(n)</code> for a single pass, and the space complexity is <code>O(1)</code>.</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;numeric&gt;
+
+class Solution {
+public:
+    int maxProfit(std::vector&lt;int&gt;&amp; prices) {
+        int total_profit = 0;
+        for (size_t i = 1; i &lt; prices.size(); ++i) {
+            if (prices[i] &gt; prices[i-1]) {
+                total_profit += prices[i] - prices[i-1];
+            }
+        }
+        return total_profit;
+    }
+};
+</code></pre>
+<hr />
+<h3>Pythonic Solution (Best Approach)</h3>
+<p>The best approach is the Greedy One-Pass method due to its simplicity and efficiency. A Pythonic implementation can achieve this concisely using a generator expression within the <code>sum()</code> function.</p>
+<pre><code class="language-python">from typing import List
+
+class Solution:
+    def maxProfit(self, prices: List[int]) -&gt; int:
+        &quot;&quot;&quot;
+        Calculates the maximum profit by summing up all positive differences
+        between consecutive days' prices. This is equivalent to buying on a
+        valley and selling on the next peak.
+        &quot;&quot;&quot;
+        # A generator expression creates an iterator of profits from day-to-day increases.
+        # sum() then adds up all these profits for the final result.
+        return sum(prices[i] - prices[i-1] for i in range(1, len(prices)) if prices[i] &gt; prices[i-1])
+
+</code></pre></div>

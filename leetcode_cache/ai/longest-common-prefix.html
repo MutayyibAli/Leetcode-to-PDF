@@ -1,0 +1,207 @@
+<div class='ai-explanation'><h3>List of Approaches</h3>
+<ol>
+<li>Brute Force Approach (Horizontal Scanning)</li>
+<li>Vertical Scanning Approach</li>
+<li>Sorting Approach</li>
+<li>Trie (Prefix Tree) Approach</li>
+</ol>
+<hr />
+<h3>1. Brute Force Approach (Horizontal Scanning)</h3>
+<p>This approach iterates through the strings, maintaining a <code>prefix</code> variable. It initializes the <code>prefix</code> to be the first string in the array. Then, for every other string in the array, it checks if it starts with the current <code>prefix</code>. If not, it shortens the <code>prefix</code> by removing the last character and checks again. This continues until the <code>prefix</code> is found or it becomes empty. The final <code>prefix</code> after checking all strings is the longest common prefix.</p>
+<p><strong>Step-by-step Explanation:</strong>
+1.  If the input list is empty, return an empty string <code>""</code>.
+2.  Initialize a variable <code>prefix</code> with the first string of the list (<code>strs[0]</code>).
+3.  Iterate through the list of strings starting from the second string (<code>i = 1</code>).
+4.  Inside the loop, use a <code>while</code> loop to check if the current string <code>strs[i]</code> has <code>prefix</code> as its prefix.
+5.  If not, shorten <code>prefix</code> by one character from the end. If <code>prefix</code> becomes empty, no common prefix exists, so return <code>""</code>.
+6.  After the outer loop finishes, the value of <code>prefix</code> is the longest common prefix among all strings.</p>
+<p>The time complexity is O(S) where S is the sum of all characters in all strings, and the space complexity is O(1).</p>
+<pre><code class="language-cpp">#include &lt;string&gt;
+#include &lt;vector&gt;
+
+class Solution {
+public:
+    std::string longestCommonPrefix(std::vector&lt;std::string&gt;&amp; strs) {
+        if (strs.empty()) {
+            return &quot;&quot;;
+        }
+        std::string prefix = strs[0];
+        for (int i = 1; i &lt; strs.size(); i++) {
+            // str.find(prefix) returns 0 if prefix is found at the beginning
+            while (strs[i].find(prefix) != 0) {
+                prefix = prefix.substr(0, prefix.length() - 1);
+                if (prefix.empty()) {
+                    return &quot;&quot;;
+                }
+            }
+        }
+        return prefix;
+    }
+};
+</code></pre>
+<hr />
+<h3>2. Vertical Scanning Approach</h3>
+<p>Instead of comparing string by string (horizontally), this method compares character by character down the "columns". It iterates through the characters of the first string. For each character, it checks if that character exists at the same position in all other strings. The moment a mismatch is found or a string is shorter than the current character index, the common prefix has been found, and we can return the substring up to that point.</p>
+<p><strong>Step-by-step Explanation:</strong>
+1.  If the input list is empty, return <code>""</code>.
+2.  Iterate through the characters of the first string using an index <code>i</code> from <code>0</code> to <code>length - 1</code>.
+3.  For each character <code>c</code> at <code>strs[0][i]</code>, iterate through all other strings in the list (from <code>j = 1</code> to <code>size - 1</code>).
+4.  Check if the current string <code>strs[j]</code> is shorter than index <code>i</code> or if <code>strs[j][i]</code> is not equal to <code>c</code>.
+5.  If either condition is true, it means the common prefix ends at index <code>i-1</code>. Return the substring of the first string from <code>0</code> to <code>i</code>.
+6.  If the outer loop completes, the entire first string is the common prefix, so return <code>strs[0]</code>.</p>
+<p>The time complexity is O(S) where S is the sum of all characters in all strings, and the space complexity is O(1).</p>
+<pre><code class="language-cpp">#include &lt;string&gt;
+#include &lt;vector&gt;
+
+class Solution {
+public:
+    std::string longestCommonPrefix(std::vector&lt;std::string&gt;&amp; strs) {
+        if (strs.empty()) {
+            return &quot;&quot;;
+        }
+        for (int i = 0; i &lt; strs[0].length(); i++) {
+            char c = strs[0][i];
+            for (int j = 1; j &lt; strs.size(); j++) {
+                if (i == strs[j].length() || strs[j][i] != c) {
+                    return strs[0].substr(0, i);
+                }
+            }
+        }
+        return strs[0];
+    }
+};
+</code></pre>
+<hr />
+<h3>3. Sorting Approach</h3>
+<p>This is a clever approach that leverages lexicographical sorting. After sorting the array of strings, the longest common prefix for all strings will be the common prefix between the very first and the very last string in the sorted array. This is because any common prefix must be present in the lexicographically smallest and largest strings.</p>
+<p><strong>Step-by-step Explanation:</strong>
+1.  If the input list is empty, return <code>""</code>.
+2.  Sort the array of strings lexicographically.
+3.  Take the first string (<code>first = strs[0]</code>) and the last string (<code>last = strs.back()</code>) from the sorted array.
+4.  Iterate from <code>i = 0</code> up to the length of the shorter of these two strings.
+5.  Compare characters <code>first[i]</code> and <code>last[i]</code>. If they are not the same, the common prefix ends at <code>i-1</code>. Return the substring up to that point.
+6.  If they match, continue.
+7.  If the loop finishes, the entire shorter string is a common prefix.</p>
+<p>The time complexity is dominated by sorting, making it O(m * n log n) where n is the number of strings and m is the average string length. The space complexity is typically O(log n) to O(n) depending on the sort implementation.</p>
+<pre><code class="language-cpp">#include &lt;string&gt;
+#include &lt;vector&gt;
+#include &lt;algorithm&gt;
+
+class Solution {
+public:
+    std::string longestCommonPrefix(std::vector&lt;std::string&gt;&amp; v) {
+        if (v.empty()) {
+            return &quot;&quot;;
+        }
+        std::string ans = &quot;&quot;;
+        sort(v.begin(), v.end());
+        std::string first = v[0];
+        std::string last = v.back();
+        for (int i = 0; i &lt; std::min(first.size(), last.size()); i++) {
+            if (first[i] != last[i]) {
+                return ans;
+            }
+            ans += first[i];
+        }
+        return ans;
+    }
+};
+</code></pre>
+<hr />
+<h3>4. Trie (Prefix Tree) Approach</h3>
+<p>A Trie is a tree-like data structure perfect for solving problems involving prefixes. We can insert all the strings into a Trie. Then, to find the longest common prefix, we traverse the Trie from the root, following the path where each node has only one child. The path from the root to the point where a node has more than one child (or no children) represents the longest common prefix.</p>
+<p><strong>Step-by-step Explanation:</strong>
+1.  Create a Trie data structure. Each node should store its children and a count of how many children it has.
+2.  Insert all strings from the input array into the Trie. If any string is empty, the LCP is <code>""</code>.
+3.  Traverse the Trie starting from the root.
+4.  Initialize an empty string for the prefix.
+5.  As long as the current node is not the end of a word and has exactly one child, append the corresponding character to the prefix and move to that child.
+6.  The traversal stops when a node has more than one child or marks the end of a word. The accumulated string is the LCP.</p>
+<p>The time complexity is O(S) where S is the sum of all characters in all strings (for building the Trie and traversing it). The space complexity is O(S) to store the Trie.</p>
+<pre><code class="language-cpp">#include &lt;string&gt;
+#include &lt;vector&gt;
+
+class TrieNode {
+public:
+    TrieNode* children[26];
+    bool isEndOfWord;
+    int childCount;
+
+    TrieNode() {
+        for (int i = 0; i &lt; 26; i++) children[i] = nullptr;
+        isEndOfWord = false;
+        childCount = 0;
+    }
+};
+
+class Solution {
+public:
+    void insert(TrieNode* root, const std::string&amp; key) {
+        TrieNode* pCrawl = root;
+        for (char ch : key) {
+            int index = ch - 'a';
+            if (!pCrawl-&gt;children[index]) {
+                pCrawl-&gt;children[index] = new TrieNode();
+                pCrawl-&gt;childCount++;
+            }
+            pCrawl = pCrawl-&gt;children[index];
+        }
+        pCrawl-&gt;isEndOfWord = true;
+    }
+
+    std::string longestCommonPrefix(std::vector&lt;std::string&gt;&amp; strs) {
+        if (strs.empty()) return &quot;&quot;;
+
+        TrieNode* root = new TrieNode();
+        for (const std::string&amp; s : strs) {
+            if (s.empty()) return &quot;&quot;;
+            insert(root, s);
+        }
+
+        std::string prefix = &quot;&quot;;
+        TrieNode* pCrawl = root;
+        while (pCrawl &amp;&amp; !pCrawl-&gt;isEndOfWord &amp;&amp; pCrawl-&gt;childCount == 1) {
+            int nextIndex = -1;
+            for (int i = 0; i &lt; 26; ++i) {
+                if (pCrawl-&gt;children[i] != nullptr) {
+                    nextIndex = i;
+                    break;
+                }
+            }
+            prefix += (char)('a' + nextIndex);
+            pCrawl = pCrawl-&gt;children[nextIndex];
+        }
+        return prefix;
+    }
+};
+</code></pre>
+<hr />
+<h3>Pythonic Solution (Best Approach - Vertical Scanning)</h3>
+<p>The Vertical Scanning approach is optimal for this problem, offering O(S) time complexity with O(1) space complexity. It is efficient and does not require complex data structures or modifications to the input array.</p>
+<pre><code class="language-python">from typing import List
+
+class Solution:
+    def longestCommonPrefix(self, strs: List[str]) -&gt; str:
+        &quot;&quot;&quot;
+        Finds the longest common prefix string amongst an array of strings
+        using the vertical scanning approach.
+        &quot;&quot;&quot;
+        if not strs:
+            return &quot;&quot;
+
+        # Iterate through the indices of the first string's characters.
+        # enumerate provides both the index (i) and the character (char).
+        for i, char in enumerate(strs[0]):
+            # For each character, check the rest of the strings.
+            for other_str in strs[1:]:
+                # The common prefix is broken if:
+                # 1. The other string is shorter than the current prefix length (i).
+                # 2. The characters at the current position don't match.
+                if i &gt;= len(other_str) or other_str[i] != char:
+                    # Return the prefix found so far.
+                    return strs[0][:i]
+
+        # If the loop completes, the entire first string is the common prefix.
+        return strs[0]
+
+</code></pre></div>

@@ -1,0 +1,140 @@
+<div class='ai-explanation'><h3>List of all the approaches to solution</h3>
+<ol>
+<li>Brute Force Approach (Iterating through bits)</li>
+<li>Optimized Bitwise Approach</li>
+</ol>
+<hr />
+<h3>Brute Force Approach (Iterating through bits)</h3>
+<p>This approach iterates through each bit of the numbers <code>a</code>, <code>b</code>, and <code>c</code> from the least significant bit to the most significant bit. For each bit position, it checks if the condition <code>(a_i | b_i) == c_i</code> is met. If not, it calculates the minimum flips required for that specific bit and adds it to a running total.</p>
+<h4>Step-by-step Explanation:</h4>
+<ol>
+<li>Initialize a counter for flips to zero, <code>flips = 0</code>.</li>
+<li>Loop as long as any of the numbers <code>a</code>, <code>b</code>, or <code>c</code> are greater than zero. This ensures all relevant bits are processed.</li>
+<li>In each iteration, extract the least significant bit (LSB) of each number. This can be done using the bitwise AND operator with 1 (e.g., <code>a_bit = a &amp; 1</code>).</li>
+<li><strong>Case 1: The target bit in <code>c</code> is 1 (<code>c_bit == 1</code>).</strong></li>
+<li>We need <code>a_bit | b_bit</code> to be 1.</li>
+<li>If <code>a_bit</code> is 0 and <code>b_bit</code> is 0, their OR is 0. We need one flip to change either <code>a_bit</code> or <code>b_bit</code> to 1. So, we add 1 to <code>flips</code>.</li>
+<li>Otherwise, <code>a_bit | b_bit</code> is already 1, so no flips are needed.</li>
+<li><strong>Case 2: The target bit in <code>c</code> is 0 (<code>c_bit == 0</code>).</strong></li>
+<li>We need <code>a_bit | b_bit</code> to be 0. This requires both <code>a_bit</code> and <code>b_bit</code> to be 0.</li>
+<li>If <code>a_bit</code> is 1, it must be flipped. Add 1 to <code>flips</code>.</li>
+<li>If <code>b_bit</code> is 1, it must be flipped. Add 1 to <code>flips</code>.</li>
+<li>The total flips for this bit position is the sum of <code>a_bit</code> and <code>b_bit</code>.</li>
+<li>After processing the LSB, right-shift all three numbers (<code>a &gt;&gt;= 1</code>, <code>b &gt;&gt;= 1</code>, <code>c &gt;&gt;= 1</code>) to move to the next bit position.</li>
+<li>Once the loop finishes, <code>flips</code> will hold the total minimum number of flips required.</li>
+</ol>
+<p>The time complexity is O(L) where L is the number of bits in the largest number (at most 32), and the space complexity is O(1).</p>
+<pre><code class="language-cpp">#include &lt;algorithm&gt;
+
+class Solution {
+public:
+    int minFlips(int a, int b, int c) {
+        int flips = 0;
+        while (a &gt; 0 || b &gt; 0 || c &gt; 0) {
+            int bit_a = a &amp; 1;
+            int bit_b = b &amp; 1;
+            int bit_c = c &amp; 1;
+
+            if (bit_c == 0) {
+                // If c's bit is 0, both a's and b's bits must be 0.
+                // Number of flips is the number of 1s in a's and b's bits.
+                flips += (bit_a + bit_b);
+            } else { // bit_c == 1
+                // If c's bit is 1, we need at least one 1 in a or b.
+                // If both are 0, we need one flip.
+                if (bit_a == 0 &amp;&amp; bit_b == 0) {
+                    flips += 1;
+                }
+            }
+
+            // Move to the next bit
+            a &gt;&gt;= 1;
+            b &gt;&gt;= 1;
+            c &gt;&gt;= 1;
+        }
+        return flips;
+    }
+};
+</code></pre>
+<hr />
+<h3>Optimized Bitwise Approach</h3>
+<p>This approach avoids an explicit loop by using clever bitwise operations to count all necessary flips at once. It first identifies all bit positions where <code>a | b</code> does not match <code>c</code>, and then adds an extra count for the specific cases that require two flips.</p>
+<h4>Step-by-step Explanation:</h4>
+<ol>
+<li>
+<p><strong>Identify all mismatched bits:</strong> A flip is required at any bit position <code>i</code> where <code>(a_i | b_i)</code> is not equal to <code>c_i</code>. We can find all such positions simultaneously using the XOR operator: <code>mismatches = (a | b) ^ c</code>. Each set bit (1) in <code>mismatches</code> represents a position that requires at least one flip. The initial count of flips is the number of set bits in <code>mismatches</code>, which can be found using a popcount function (<code>__builtin_popcount</code> in GCC/Clang).</p>
+</li>
+<li>
+<p><strong>Identify bits requiring a second flip:</strong> A single bit position needs two flips only in one specific scenario: when the target bit in <code>c</code> is <code>0</code>, but the corresponding bits in both <code>a</code> and <code>b</code> are <code>1</code>. In this case, both <code>a</code>'s bit and <code>b</code>'s bit must be flipped from <code>1</code> to <code>0</code>.</p>
+</li>
+<li>
+<p><strong>Calculate the additional flips:</strong> To find these "double-flip" positions, we need to identify bits that satisfy two conditions:
+    a. The bit is set in both <code>a</code> and <code>b</code> (found with <code>a &amp; b</code>).
+    b. The bit is a mismatch position (found with <code>mismatches</code>).
+    We can combine these conditions with a bitwise AND: <code>double_flips = (a &amp; b) &amp; mismatches</code>. Each set bit in <code>double_flips</code> represents a position that needs one additional flip.</p>
+</li>
+<li>
+<p><strong>Calculate the total:</strong> The total number of flips is the sum of flips from step 1 and the additional flips from step 3: <code>popcount(mismatches) + popcount(double_flips)</code>.</p>
+</li>
+</ol>
+<p>This can be expressed in a single line: <code>__builtin_popcount((a | b) ^ c) + __builtin_popcount((a &amp; b) &amp; ((a | b) ^ c))</code>.</p>
+<p>The time complexity is O(1) as bitwise operations and popcount on fixed-size integers are constant time operations. The space complexity is O(1).</p>
+<pre><code class="language-cpp">#include &lt;numeric&gt; // For std::popcount in C++20
+
+class Solution {
+public:
+    int minFlips(int a, int b, int c) {
+        // Find bits where (a | b) differs from c. These need at least one flip.
+        int mismatches = (a | b) ^ c;
+
+        // Find bits where an extra flip is needed.
+        // This occurs when c's bit is 0, but both a's and b's bits are 1.
+        // These are the bits set in (a &amp; b) that are also part of the mismatches.
+        int double_flips = (a &amp; b) &amp; mismatches;
+
+        // Total flips = (all mismatched bits) + (extra flips for the 1&amp;1-&gt;0 case)
+        // __builtin_popcount is a GCC/Clang extension. std::popcount is C++20.
+        return __builtin_popcount(mismatches) + __builtin_popcount(double_flips);
+    }
+};
+
+// A more compact version of the same logic:
+class SolutionCompact {
+public:
+    int minFlips(int a, int b, int c) {
+        // Let m = (a | b) ^ c.
+        // The first term counts all bits that need flipping.
+        // The second term (a &amp; b &amp; m) finds bits where a=1, b=1, and (a|b)!=c.
+        // This is only true when a=1, b=1, c=0, which is the double-flip case.
+        return __builtin_popcount((a | b) ^ c) + __builtin_popcount(a &amp; b &amp; ((a | b) ^ c));
+    }
+};
+</code></pre>
+<hr />
+<h3>Pythonic Solution (Best Approach)</h3>
+<p>The optimized bitwise approach can be implemented concisely in Python. The logic remains identical: count all mismatched bits, then add the count of bits that require a second flip. Python 3.10+ provides the convenient <code>int.bit_count()</code> method for counting set bits.</p>
+<pre><code class="language-python">class Solution:
+  def minFlips(self, a: int, b: int, c: int) -&gt; int:
+    &quot;&quot;&quot;
+    Calculates the minimum flips to make (a OR b) == c using bitwise operations.
+    &quot;&quot;&quot;
+
+    # Mismatched bits: positions where (a | b) is different from c.
+    # Each of these bits requires at least one flip.
+    mismatches = (a | b) ^ c
+
+    # Double-flip bits: positions where an additional flip is needed.
+    # This happens only when a's bit is 1, b's bit is 1, and c's bit is 0.
+    # A bit is a mismatch in this case, so we can find these positions
+    # by ANDing (a &amp; b) with the mismatches mask.
+    double_flips = (a &amp; b) &amp; mismatches
+
+    # The total flips is the sum of all mismatched bits plus the extra flips required.
+    return mismatches.bit_count() + double_flips.bit_count()
+
+# An even more compact one-liner using the walrus operator (:=), available in Python 3.8+
+class SolutionOneLiner:
+  def minFlips(self, a: int, b: int, c: int) -&gt; int:
+    return (mismatches := (a | b) ^ c).bit_count() + ((a &amp; b) &amp; mismatches).bit_count()
+
+</code></pre></div>

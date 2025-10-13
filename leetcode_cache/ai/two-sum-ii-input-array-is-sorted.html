@@ -1,0 +1,143 @@
+<div class='ai-explanation'><h3>List of Approaches</h3>
+<ol>
+<li>Brute Force Approach</li>
+<li>Hash Map Approach</li>
+<li>Binary Search Approach</li>
+<li>Two Pointers Approach</li>
+</ol>
+<hr />
+<h3>1. Brute Force Approach</h3>
+<p>This naive approach involves checking every possible pair of numbers in the array to see if they sum up to the target. We use two nested loops: the outer loop iterates from the first element to the second-to-last, and the inner loop iterates from the element after the current outer loop element to the end. For each pair, we check if their sum equals the target. Since the problem guarantees exactly one solution, we will eventually find the correct pair and return their 1-based indices.</p>
+<p>This method does not utilize the fact that the input array is sorted. It has a time complexity of O(n²) and a space complexity of O(1).</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+
+class Solution {
+public:
+    std::vector&lt;int&gt; twoSum(std::vector&lt;int&gt;&amp; numbers, int target) {
+        int n = numbers.size();
+        for (int i = 0; i &lt; n; ++i) {
+            for (int j = i + 1; j &lt; n; ++j) {
+                if (numbers[i] + numbers[j] == target) {
+                    // Return 1-based indices
+                    return {i + 1, j + 1};
+                }
+            }
+        }
+        // According to the problem statement, a solution always exists,
+        // so this part of the code will not be reached.
+        return {}; 
+    }
+};
+</code></pre>
+<hr />
+<h3>2. Hash Map Approach</h3>
+<p>A more efficient approach for the general "Two Sum" problem is to use a hash map (or dictionary). We iterate through the array once. For each element <code>num</code>, we calculate its required complement (<code>target - num</code>). We then check if this complement already exists in our hash map. If it does, we have found our pair and can return the indices. If not, we add the current number and its index to the map for future lookups.</p>
+<p>While this approach is time-efficient, it does not use the sorted property of the array and crucially, it violates the problem's constraint of using only constant extra space. The time complexity is O(n) due to a single pass, and the space complexity is O(n) for the hash map.</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;unordered_map&gt;
+
+class Solution {
+public:
+    std::vector&lt;int&gt; twoSum(std::vector&lt;int&gt;&amp; numbers, int target) {
+        std::unordered_map&lt;int, int&gt; num_map;
+        for (int i = 0; i &lt; numbers.size(); ++i) {
+            int complement = target - numbers[i];
+            if (num_map.count(complement)) {
+                // Return 1-based indices
+                return {num_map[complement] + 1, i + 1};
+            }
+            num_map[numbers[i]] = i;
+        }
+        return {}; // Not reachable
+    }
+};
+</code></pre>
+<hr />
+<h3>3. Binary Search Approach</h3>
+<p>This approach takes advantage of the sorted nature of the input array. We iterate through the array with a single loop, fixing one number <code>numbers[i]</code>. For each fixed number, the second number we need is <code>complement = target - numbers[i]</code>. Since the rest of the array (from index <code>i+1</code> onwards) is also sorted, we can efficiently search for this <code>complement</code> using binary search. If the complement is found, we return the indices.</p>
+<p>This approach is better than brute force but not optimal. The outer loop runs <code>n</code> times, and each binary search takes O(log n) time. The overall time complexity is O(n log n), and the space complexity is O(1).</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+
+class Solution {
+public:
+    std::vector&lt;int&gt; twoSum(std::vector&lt;int&gt;&amp; numbers, int target) {
+        for (int i = 0; i &lt; numbers.size(); ++i) {
+            int complement = target - numbers[i];
+            int low = i + 1;
+            int high = numbers.size() - 1;
+
+            while (low &lt;= high) {
+                int mid = low + (high - low) / 2;
+                if (numbers[mid] == complement) {
+                    return {i + 1, mid + 1};
+                } else if (numbers[mid] &lt; complement) {
+                    low = mid + 1;
+                } else {
+                    high = mid - 1;
+                }
+            }
+        }
+        return {}; // Not reachable
+    }
+};
+</code></pre>
+<hr />
+<h3>4. Two Pointers Approach</h3>
+<p>This is the most optimal solution, fully utilizing the sorted property of the array and meeting the constant space constraint. We initialize two pointers, <code>left</code> at the beginning of the array (index 0) and <code>right</code> at the end. We then check the sum of the values at these two pointers.
+- If <code>numbers[left] + numbers[right]</code> equals the <code>target</code>, we've found the solution.
+- If the sum is less than the <code>target</code>, it means we need a larger sum. We can achieve this by moving the <code>left</code> pointer to the right (<code>left++</code>), as the array is sorted.
+- If the sum is greater than the <code>target</code>, we need a smaller sum. We move the <code>right</code> pointer to the left (<code>right--</code>).
+We repeat this process until the pointers cross, but since a solution is guaranteed, we will find it before that.</p>
+<p>This approach is highly efficient because, in each step, we discard at least one element. The time complexity is O(n), and the space complexity is O(1).</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+
+class Solution {
+public:
+    std::vector&lt;int&gt; twoSum(std::vector&lt;int&gt;&amp; numbers, int target) {
+        int left = 0;
+        int right = numbers.size() - 1;
+
+        while (left &lt; right) {
+            int sum = numbers[left] + numbers[right];
+
+            if (sum == target) {
+                return {left + 1, right + 1};
+            } else if (sum &lt; target) {
+                left++;
+            } else { // sum &gt; target
+                right--;
+            }
+        }
+
+        return {}; // Not reachable
+    }
+};
+</code></pre>
+<hr />
+<h3>Pythonic Solution (Two Pointers Approach)</h3>
+<p>The two-pointers technique is the best approach for this problem. The Python implementation is concise and efficient. It initializes pointers at both ends of the list and moves them inward based on their sum compared to the target, converging on the solution in a single pass.</p>
+<pre><code class="language-python">from typing import List
+
+class Solution:
+    def twoSum(self, numbers: List[int], target: int) -&gt; List[int]:
+        &quot;&quot;&quot;
+        Finds two numbers in a sorted list that add up to a target.
+        This solution uses the two-pointers technique.
+        &quot;&quot;&quot;
+        left, right = 0, len(numbers) - 1
+
+        while left &lt; right:
+            current_sum = numbers[left] + numbers[right]
+
+            if current_sum == target:
+                # Return 1-based indices as required
+                return [left + 1, right + 1]
+            elif current_sum &lt; target:
+                # The sum is too small, need a larger number
+                # Move the left pointer to the right
+                left += 1
+            else: # current_sum &gt; target
+                # The sum is too large, need a smaller number
+                # Move the right pointer to the left
+                right -= 1
+</code></pre></div>

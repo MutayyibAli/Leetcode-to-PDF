@@ -1,0 +1,141 @@
+<div class='ai-explanation'><h3>List of Approaches</h3>
+<ol>
+<li>Brute Force Approach (Using Extra Space)</li>
+<li>Two Pointers (In-place) Approach</li>
+</ol>
+<h3>1. Brute Force Approach (Using Extra Space)</h3>
+<p>This approach involves creating an auxiliary data structure, like a string or another vector, to build the compressed result. We iterate through the input array, count consecutive characters, and append the character and its count (if greater than 1) to our new structure. Finally, we copy the result back into the original array. While intuitive, this method violates the problem's constraint of using only constant extra space.</p>
+<p><strong>Step-by-step Explanation:</strong>
+1.  Initialize an empty string <code>s</code> to store the compressed result.
+2.  Iterate through the input array <code>chars</code> with an index <code>i</code>.
+3.  For each character <code>chars[i]</code>, use a nested loop with index <code>j</code> to count how many times it repeats consecutively. The count will be <code>j - i</code>.
+4.  Append the character <code>chars[i]</code> to <code>s</code>.
+5.  If the count is greater than 1, convert the count to a string and append it to <code>s</code>.
+6.  Update the outer loop index <code>i</code> to <code>j</code> to start processing the next new character.
+7.  After the loop finishes, copy the characters from the result string <code>s</code> back into the beginning of the <code>chars</code> array.
+8.  Return the length of the string <code>s</code>.</p>
+<p>The time complexity is O(N) as we iterate through the array, and the space complexity is O(N) to store the compressed string, which does not meet the problem's constraints.</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;string&gt;
+#include &lt;algorithm&gt;
+
+class Solution {
+public:
+    int compress(std::vector&lt;char&gt;&amp; chars) {
+        if (chars.empty()) {
+            return 0;
+        }
+        std::string s = &quot;&quot;;
+        int n = chars.size();
+        for (int i = 0; i &lt; n;) {
+            char currentChar = chars[i];
+            int count = 0;
+            int j = i;
+            while (j &lt; n &amp;&amp; chars[j] == currentChar) {
+                count++;
+                j++;
+            }
+            s += currentChar;
+            if (count &gt; 1) {
+                s += std::to_string(count);
+            }
+            i = j;
+        }
+
+        for (int i = 0; i &lt; s.length(); ++i) {
+            chars[i] = s[i];
+        }
+
+        return s.length();
+    }
+};
+</code></pre>
+<h3>2. Two Pointers (In-place) Approach</h3>
+<p>This is the optimal approach that meets the O(1) space constraint. We use two pointers: a <code>read</code> pointer to iterate through the original array and a <code>write</code> pointer to place the compressed characters and their counts back into the same array. This allows us to overwrite the array as we process it without needing extra storage.</p>
+<p><strong>Step-by-step Explanation:</strong>
+1.  Initialize a <code>write_idx</code> to 0. This pointer will track the next available position in <code>chars</code> for writing the compressed data.
+2.  Initialize a <code>read_idx</code> <code>i</code> to 0. This pointer will scan through the input <code>chars</code> array.
+3.  Loop through the <code>chars</code> array from <code>i = 0</code> to the end.
+4.  Inside the loop, identify a group of consecutive identical characters. Use a second pointer <code>j</code> starting from <code>i</code> to find the end of this group (where <code>chars[j] != chars[i]</code>).
+5.  The count of the character <code>chars[i]</code> is <code>j - i</code>.
+6.  Write the character <code>chars[i]</code> at the position <code>chars[write_idx]</code> and increment <code>write_idx</code>.
+7.  If the count is greater than 1, convert the count to a string. Iterate through the digits of this string, writing each digit to <code>chars[write_idx]</code> and incrementing <code>write_idx</code> for each one.
+8.  Move the <code>read_idx</code> <code>i</code> to <code>j</code> to start scanning for the next group of characters.
+9.  After the loop completes, <code>write_idx</code> will hold the new length of the compressed array. Return <code>write_idx</code>.</p>
+<p>The time complexity is O(N) because both the read and write pointers traverse the array at most once. The space complexity is O(1) as we perform the compression in-place.</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;string&gt;
+#include &lt;algorithm&gt;
+
+class Solution {
+public:
+    int compress(std::vector&lt;char&gt;&amp; chars) {
+        int write_idx = 0;
+        int n = chars.size();
+
+        for (int i = 0; i &lt; n;) {
+            const char letter = chars[i];
+            int j = i;
+            // Find the end of the consecutive group of 'letter'
+            while (j &lt; n &amp;&amp; chars[j] == letter) {
+                j++;
+            }
+
+            int count = j - i;
+
+            // Write the character
+            chars[write_idx++] = letter;
+
+            // If count is &gt; 1, write the count as characters
+            if (count &gt; 1) {
+                std::string count_str = std::to_string(count);
+                for (char c : count_str) {
+                    chars[write_idx++] = c;
+                }
+            }
+            // Move to the next new character
+            i = j;
+        }
+
+        return write_idx;
+    }
+};
+</code></pre>
+<h3>Pythonic Solution (Best Approach)</h3>
+<pre><code class="language-python">from typing import List
+
+class Solution:
+  def compress(self, chars: List[str]) -&gt; int:
+    # write_idx is the pointer for the position to write the compressed character and its count
+    # read_idx is the pointer to scan through the original array
+    write_idx = 0
+    read_idx = 0
+    n = len(chars)
+
+    while read_idx &lt; n:
+      current_char = chars[read_idx]
+      count = 0
+
+      # Count consecutive occurrences of current_char
+      # search_idx will find the end of the current group
+      search_idx = read_idx
+      while search_idx &lt; n and chars[search_idx] == current_char:
+        count += 1
+        search_idx += 1
+
+      # Write the character
+      chars[write_idx] = current_char
+      write_idx += 1
+
+      # If count is more than 1, write the count
+      if count &gt; 1:
+        for digit in str(count):
+          chars[write_idx] = digit
+          write_idx += 1
+
+      # Move read_idx to the next new character
+      read_idx = search_idx
+
+    return write_idx
+
+</code></pre></div>

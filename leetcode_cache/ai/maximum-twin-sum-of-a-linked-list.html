@@ -1,0 +1,166 @@
+<div class='ai-explanation'><h3>List of all the approaches to solution</h3>
+<ol>
+<li>Brute Force Approach (Using an Array)</li>
+<li>In-place Reversal Approach (Two Pointers)</li>
+</ol>
+<hr />
+<h3>Brute Force Approach (Using an Array)</h3>
+<p>This approach converts the linked list into a more accessible data structure like an array (or a vector in C++). Once the values are in an array, we can easily access any element by its index, which simplifies finding twin pairs.</p>
+<ol>
+<li><strong>Store Values:</strong> Traverse the entire linked list from the head to the end. Store the value of each node in a dynamic array (e.g., <code>std::vector</code>).</li>
+<li><strong>Initialize Pointers:</strong> Create two integer pointers, <code>left</code> starting at the beginning of the array (index 0) and <code>right</code> starting at the end (index <code>n-1</code>, where <code>n</code> is the size of the array).</li>
+<li><strong>Calculate Twin Sums:</strong> Initialize a variable <code>max_sum</code> to store the maximum twin sum found.</li>
+<li><strong>Iterate and Compare:</strong> Loop while <code>left</code> is less than <code>right</code>. In each iteration:<ul>
+<li>Calculate the twin sum: <code>current_sum = values[left] + values[right]</code>.</li>
+<li>Update <code>max_sum = max(max_sum, current_sum)</code>.</li>
+<li>Move the pointers closer to the center: <code>left++</code> and <code>right--</code>.</li>
+</ul>
+</li>
+<li><strong>Return Result:</strong> After the loop finishes, <code>max_sum</code> will hold the maximum twin sum.</li>
+</ol>
+<p>This method is straightforward but requires extra memory to store the entire list. Its time complexity is O(N) for traversing the list and O(N) for iterating through the array, and its space complexity is O(N) for the array.</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;algorithm&gt;
+
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
+public:
+    int pairSum(ListNode* head) {
+        // 1. Store list values in a vector
+        std::vector&lt;int&gt; values;
+        ListNode* current = head;
+        while (current != nullptr) {
+            values.push_back(current-&gt;val);
+            current = current-&gt;next;
+        }
+
+        // 2. Use two pointers to find max twin sum
+        int left = 0;
+        int right = values.size() - 1;
+        int maxSum = 0;
+
+        while (left &lt; right) {
+            int currentSum = values[left] + values[right];
+            maxSum = std::max(maxSum, currentSum);
+            left++;
+            right--;
+        }
+
+        return maxSum;
+    }
+};
+</code></pre>
+<hr />
+<h3>In-place Reversal Approach (Two Pointers)</h3>
+<p>This is the optimal approach as it solves the problem without using extra space. The core idea is to reverse the second half of the linked list. This way, we can iterate through the first half and the reversed second half simultaneously to find the twin sums.</p>
+<ol>
+<li><strong>Find the Middle:</strong> Use the "slow and fast pointer" technique to find the middle of the linked list. The <code>slow</code> pointer moves one step at a time, while the <code>fast</code> pointer moves two steps. When <code>fast</code> reaches the end of the list, <code>slow</code> will be at the beginning of the second half.</li>
+<li><strong>Reverse Second Half:</strong> Reverse the portion of the linked list starting from the <code>slow</code> pointer. After reversal, a new pointer (e.g., <code>prev</code>) will point to the head of the reversed second half.</li>
+<li><strong>Calculate Twin Sums:</strong> Initialize two pointers: one at the original <code>head</code> of the list (for the first half) and the other at the <code>prev</code> pointer (for the reversed second half).</li>
+<li><strong>Iterate and Compare:</strong> Traverse both halves simultaneously.<ul>
+<li>Calculate the sum of the values pointed to by the two pointers.</li>
+<li>Update a <code>max_sum</code> variable with the maximum sum found.</li>
+<li>Move both pointers one step forward.</li>
+</ul>
+</li>
+<li><strong>Return Result:</strong> The loop continues until the pointer for the second half becomes null. The final <code>max_sum</code> is the result.</li>
+</ol>
+<p>This approach has a time complexity of O(N) as it involves three passes over parts of the list (finding middle, reversing, and summing), and a space complexity of O(1) as it only uses a few extra pointers.</p>
+<pre><code class="language-cpp">/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
+public:
+    int pairSum(ListNode* head) {
+        ListNode* slow = head;
+        ListNode* fast = head;
+
+        // 1. Find the middle of the linked list
+        while (fast &amp;&amp; fast-&gt;next) {
+            slow = slow-&gt;next;
+            fast = fast-&gt;next-&gt;next;
+        }
+
+        // 2. Reverse the second half of the list
+        ListNode* prev = nullptr;
+        ListNode* nextNode = nullptr;
+        while (slow) {
+            nextNode = slow-&gt;next;
+            slow-&gt;next = prev;
+            prev = slow;
+            slow = nextNode;
+        }
+
+        // 3. Calculate twin sums and find the maximum
+        ListNode* first_half = head;
+        ListNode* second_half_reversed = prev;
+        int maxSum = 0;
+
+        while (second_half_reversed) {
+            maxSum = std::max(maxSum, first_half-&gt;val + second_half_reversed-&gt;val);
+            first_half = first_half-&gt;next;
+            second_half_reversed = second_half_reversed-&gt;next;
+        }
+
+        return maxSum;
+    }
+};
+</code></pre>
+<hr />
+<h3>Pythonic solution for best approach only</h3>
+<pre><code class="language-python">from typing import Optional
+
+# Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, val=0, next=None):
+#         self.val = val
+#         self.next = next
+
+class Solution:
+    def pairSum(self, head: Optional[ListNode]) -&gt; int:
+        slow, fast = head, head
+
+        # 1. Find the middle of the linked list
+        while fast and fast.next:
+            slow = slow.next
+            fast = fast.next.next
+
+        # 2. Reverse the second half of the list
+        # slow is now at the head of the second half
+        prev = None
+        curr = slow
+        while curr:
+            # Pythonic tuple swapping for concise reversal
+            curr.next, prev, curr = prev, curr, curr.next
+
+        # 3. Calculate twin sums and find the maximum
+        # prev is now the head of the reversed second half
+        first_half = head
+        second_half_reversed = prev
+        max_sum = 0
+
+        while second_half_reversed:
+            current_sum = first_half.val + second_half_reversed.val
+            max_sum = max(max_sum, current_sum)
+            first_half = first_half.next
+            second_half_reversed = second_half_reversed.next
+
+        return max_sum
+
+</code></pre></div>

@@ -1,0 +1,190 @@
+<div class='ai-explanation'><h3>List of all the approaches to solution</h3>
+<ol>
+<li>Brute Force Approach: Recursive Traversal (DFS)</li>
+<li>Brute Force Approach: Level-Order Traversal (BFS)</li>
+<li>Optimized Approach using Tree Properties</li>
+</ol>
+<hr />
+<h3>Brute Force Approach: Recursive Traversal (DFS)</h3>
+<p>This is a straightforward approach that works for any binary tree, not just a complete one. It doesn't use the special properties of a complete binary tree. The idea is to perform a standard recursive traversal (like pre-order). For any given node, the total number of nodes in the subtree rooted at it is <code>1</code> (for the node itself) plus the number of nodes in its left subtree, plus the number of nodes in its right subtree.</p>
+<ol>
+<li>If the current node is <code>NULL</code>, it contributes 0 nodes to the count. This is the base case.</li>
+<li>Otherwise, the count is <code>1</code> for the current node.</li>
+<li>Recursively call the function for the left child to count nodes in the left subtree.</li>
+<li>Recursively call the function for the right child to count nodes in the right subtree.</li>
+<li>Return the sum: <code>1 + countNodes(left) + countNodes(right)</code>.</li>
+</ol>
+<p>This approach visits every single node in the tree once. The space complexity comes from the recursion stack, which in the case of a complete binary tree will have a maximum depth equal to the tree's height.</p>
+<p>The time complexity is O(N) where N is the number of nodes, and the space complexity is O(log N) due to the recursion stack depth.</p>
+<pre><code class="language-cpp">/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    int countNodes(TreeNode* root) {
+        if (root == nullptr) {
+            return 0;
+        }
+        return 1 + countNodes(root-&gt;left) + countNodes(root-&gt;right);
+    }
+};
+</code></pre>
+<hr />
+<h3>Brute Force Approach: Level-Order Traversal (BFS)</h3>
+<p>Similar to the DFS approach, this method traverses every node in the tree but does so iteratively, level by level. It uses a queue data structure to keep track of nodes to visit.</p>
+<ol>
+<li>Initialize a counter to 0. If the root is <code>NULL</code>, return 0.</li>
+<li>Create a queue and add the root node to it.</li>
+<li>While the queue is not empty:
+    a. Dequeue a node.
+    b. Increment the counter.
+    c. If the dequeued node has a left child, enqueue it.
+    d. If the dequeued node has a right child, enqueue it.</li>
+<li>After the loop finishes, the counter will hold the total number of nodes.</li>
+</ol>
+<p>This approach also visits every node once. The space complexity is determined by the maximum number of nodes at any level in the queue, which for a complete tree can be up to N/2.</p>
+<p>The time complexity is O(N) where N is the number of nodes, and the space complexity is O(N) in the worst case.</p>
+<pre><code class="language-cpp">#include &lt;queue&gt;
+
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    int countNodes(TreeNode* root) {
+        if (root == nullptr) {
+            return 0;
+        }
+
+        int count = 0;
+        std::queue&lt;TreeNode*&gt; q;
+        q.push(root);
+
+        while (!q.empty()) {
+            TreeNode* current = q.front();
+            q.pop();
+            count++;
+
+            if (current-&gt;left != nullptr) {
+                q.push(current-&gt;left);
+            }
+            if (current-&gt;right != nullptr) {
+                q.push(current-&gt;right);
+            }
+        }
+        return count;
+    }
+};
+</code></pre>
+<hr />
+<h3>Optimized Approach using Tree Properties</h3>
+<p>This approach leverages the fact that the tree is <strong>complete</strong>. This allows us to find subtrees that are <strong>perfect</strong> (or full) and calculate their node count in O(log N) time instead of traversing them. A perfect binary tree of height <code>h</code> has <code>2^h - 1</code> nodes.</p>
+<ol>
+<li>For a given node, calculate the height of the tree by following the path of left children (<code>left_height</code>).</li>
+<li>Similarly, calculate the height by following the path of right children (<code>right_height</code>).</li>
+<li>If <code>left_height</code> equals <code>right_height</code>, it means the subtree rooted at the current node is a <strong>perfect</strong> binary tree. We can calculate the number of nodes directly as <code>(2^left_height) - 1</code> and stop the recursion for this branch.</li>
+<li>If <code>left_height</code> is not equal to <code>right_height</code>, the subtree is complete but not perfect. In this case, we recursively call the function for its left and right children and add 1 for the current node: <code>1 + countNodes(left) + countNodes(right)</code>.</li>
+<li>The key optimization is that at each step, we are guaranteed that at least one of the recursive calls will terminate quickly on a perfect subtree. This avoids traversing the entire tree. The recursion will only follow the path down to the last, incomplete level.</li>
+</ol>
+<p>The time complexity is O((log N)^2) because at each node in the recursion path (length O(log N)), we compute the height, which takes O(log N). The space complexity is O(log N) for the recursion stack.</p>
+<pre><code class="language-cpp">#include &lt;cmath&gt;
+
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    int countNodes(TreeNode* root) {
+        if (root == nullptr) {
+            return 0;
+        }
+
+        int left_height = 0;
+        TreeNode* l = root;
+        while (l) {
+            left_height++;
+            l = l-&gt;left;
+        }
+
+        int right_height = 0;
+        TreeNode* r = root;
+        while (r) {
+            right_height++;
+            r = r-&gt;right;
+        }
+
+        if (left_height == right_height) {
+            // It's a perfect binary tree
+            return pow(2, left_height) - 1;
+        }
+
+        // It's a complete but not perfect tree, recurse
+        return 1 + countNodes(root-&gt;left) + countNodes(root-&gt;right);
+    }
+};
+</code></pre>
+<hr />
+<h3>Pythonic Solution (Best Approach)</h3>
+<p>The Python solution below implements the same logic as the optimized C++ approach but in a slightly different and clearer way. Instead of comparing the leftmost and rightmost path heights of the <em>same</em> tree, it compares the heights of the left and right <em>subtrees</em>. If they are equal, the left subtree must be perfect. If they are different, the right subtree must be perfect. This allows us to calculate the nodes of one subtree instantly and only recurse on the other.</p>
+<pre><code class="language-python"># Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+
+class Solution:
+    def get_height(self, node: TreeNode) -&gt; int:
+        &quot;&quot;&quot;Calculates the height of a complete tree by only traversing left.&quot;&quot;&quot;
+        height = 0
+        while node:
+            height += 1
+            node = node.left
+        return height
+
+    def countNodes(self, root: TreeNode) -&gt; int:
+        if not root:
+            return 0
+
+        left_height = self.get_height(root.left)
+        right_height = self.get_height(root.right)
+
+        if left_height == right_height:
+            # The left subtree is a perfect binary tree of height `left_height`.
+            # Its nodes are 2^left_height - 1. Add 1 for the root.
+            # Total nodes = (2**left_height - 1) + 1 + countNodes(root.right)
+            # which simplifies to 2**left_height + countNodes(root.right)
+            return (1 &lt;&lt; left_height) + self.countNodes(root.right)
+        else:
+            # This implies left_height = right_height + 1.
+            # The right subtree is a perfect binary tree of height `right_height`.
+            # Its nodes are 2^right_height - 1. Add 1 for the root.
+            # Total nodes = 1 + countNodes(root.left) + (2**right_height - 1)
+            # which simplifies to 2**right_height + countNodes(root.left)
+            return (1 &lt;&lt; right_height) + self.countNodes(root.left)
+
+</code></pre></div>

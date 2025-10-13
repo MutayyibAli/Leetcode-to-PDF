@@ -1,0 +1,145 @@
+<div class='ai-explanation'><h3>List of Approaches</h3>
+<ol>
+<li>Brute Force Approach (Using Recursion)</li>
+<li>Stack-Based Approach</li>
+</ol>
+<hr />
+<h3>Brute Force Approach (Using Recursion)</h3>
+<p>This approach naturally handles the nested structure of the encoded string by defining a recursive function. A global pointer or a reference to an index is used to keep track of the current position in the string across recursive calls.</p>
+<ol>
+<li>Initialize an empty string <code>result</code> to build the decoded string for the current level.</li>
+<li>Iterate through the input string <code>s</code> starting from the current index.</li>
+<li>If the character is a letter, append it to <code>result</code>.</li>
+<li>If the character is a digit, parse the full number <code>k</code> (which can have multiple digits).</li>
+<li>If the character is <code>'[',</code> make a recursive call. The function will return the decoded string from within the brackets.</li>
+<li>Append the string returned by the recursive call to <code>result</code> <code>k</code> times.</li>
+<li>If the character is <code>']'</code>, it signifies the end of the current recursive level. Return the <code>result</code> string built so far.</li>
+</ol>
+<p>The time complexity is O(M) where M is the length of the final decoded string, as we essentially construct the final string. The space complexity is O(D) for the recursion call stack, where D is the maximum nesting depth of the brackets.</p>
+<pre><code class="language-cpp">class Solution {
+    int index = 0; // Global index to track position in string s
+public:
+    string decodeString(string s) {
+        string result = &quot;&quot;;
+
+        while (index &lt; s.length() &amp;&amp; s[index] != ']') {
+            if (!isdigit(s[index])) {
+                result += s[index++];
+            } else {
+                int k = 0;
+                // Build the number k
+                while (index &lt; s.length() &amp;&amp; isdigit(s[index])) {
+                    k = k * 10 + (s[index++] - '0');
+                }
+
+                // Skip the opening bracket '['
+                index++;
+
+                // Recursive call to decode the substring
+                string decoded_string = decodeString(s);
+
+                // Skip the closing bracket ']'
+                index++;
+
+                // Append the decoded string k times
+                while (k-- &gt; 0) {
+                    result += decoded_string;
+                }
+            }
+        }
+        return result;
+    }
+};
+</code></pre>
+<hr />
+<h3>Stack-Based Approach</h3>
+<p>This iterative approach uses a stack to keep track of the strings and repeat counts of the outer scopes. It's often more efficient than recursion as it avoids potential stack overflow with deep nesting.</p>
+<ol>
+<li>Iterate through the input string <code>s</code>. Maintain a stack to store intermediate results.</li>
+<li>If the current character is not <code>']'</code>, push it onto the stack.</li>
+<li>If the current character is <code>']'</code>:
+    a. Pop characters from the stack and prepend them to an <code>encoded_string</code> until <code>'['</code> is encountered.
+    b. Pop the <code>'['</code>.
+    c. Pop digits from the stack and prepend them to a <code>number_string</code> to form the repeat count <code>k</code>.
+    d. Convert the <code>number_string</code> to an integer.
+    e. Push the <code>encoded_string</code> back onto the stack character by character <code>k</code> times.</li>
+<li>After the loop finishes, pop all remaining characters from the stack and concatenate them to form the final decoded string.</li>
+</ol>
+<p>The time complexity is O(M) where M is the length of the final decoded string, as each character is processed a constant number of times. The space complexity is O(M) in the worst case, as the stack might hold a significant portion of the decoded string.</p>
+<pre><code class="language-cpp">#include &lt;stack&gt;
+#include &lt;string&gt;
+#include &lt;cctype&gt;
+
+class Solution {
+public:
+    string decodeString(string s) {
+        stack&lt;char&gt; st;
+        for (char ch : s) {
+            if (ch != ']') {
+                st.push(ch);
+            } else {
+                // Step 1: Get the encoded string
+                string current_str = &quot;&quot;;
+                while (st.top() != '[') {
+                    current_str = st.top() + current_str;
+                    st.pop();
+                }
+                st.pop(); // Pop '['
+
+                // Step 2: Get the repeat count k
+                string number = &quot;&quot;;
+                while (!st.empty() &amp;&amp; isdigit(st.top())) {
+                    number = st.top() + number;
+                    st.pop();
+                }
+                int k = stoi(number);
+
+                // Step 3: Push the decoded string back to the stack
+                while (k--) {
+                    for (char c : current_str) {
+                        st.push(c);
+                    }
+                }
+            }
+        }
+
+        // Final step: Build the result from the stack
+        string result = &quot;&quot;;
+        while (!st.empty()) {
+            result = st.top() + result;
+            st.pop();
+        }
+        return result;
+    }
+};
+</code></pre>
+<hr />
+<h3>Pythonic Solution (Best Approach)</h3>
+<p>The stack-based approach is generally considered the best. The following Python solution implements this logic elegantly. It uses a stack to store the state (the string built so far and the repeat count) whenever a new nested encoding <code>[</code> begins.</p>
+<pre><code class="language-python">class Solution:
+    def decodeString(self, s: str) -&gt; str:
+        stack = []
+        current_num = 0
+        current_string = &quot;&quot;
+
+        for char in s:
+            if char.isdigit():
+                current_num = current_num * 10 + int(char)
+            elif char == '[':
+                # Push the current state to the stack and reset
+                stack.append(current_string)
+                stack.append(current_num)
+                current_string = &quot;&quot;
+                current_num = 0
+            elif char == ']':
+                # Pop the previous state and apply the repetition
+                num = stack.pop()
+                prev_string = stack.pop()
+                current_string = prev_string + num * current_string
+            else:
+                # Append letter to the current string
+                current_string += char
+
+        return current_string
+
+</code></pre></div>

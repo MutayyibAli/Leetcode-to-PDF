@@ -1,0 +1,107 @@
+<div class='ai-explanation'><h3>List of all the approaches to solution</h3>
+<ol>
+<li>Brute Force Approach</li>
+<li>Two Pointer Approach</li>
+</ol>
+<h3>Brute Force Approach</h3>
+<p>This approach considers every possible pair of vertical lines to form a container and calculates the area for each one. It keeps track of the maximum area found so far and returns it after checking all pairs.</p>
+<ol>
+<li>Initialize a variable <code>max_area</code> to 0 to store the maximum water the container can hold.</li>
+<li>Use a nested loop to iterate through all possible pairs of lines. The outer loop pointer <code>i</code> will go from the start of the array to the end.</li>
+<li>The inner loop pointer <code>j</code> will go from <code>i + 1</code> to the end of the array.</li>
+<li>For each pair of lines <code>(i, j)</code>, calculate the area. The width is the distance between the lines, <code>j - i</code>. The height is limited by the shorter line, <code>min(height[i], height[j])</code>.</li>
+<li>The area for the current pair is <code>(j - i) * min(height[i], height[j])</code>.</li>
+<li>Compare this calculated area with <code>max_area</code> and update <code>max_area</code> if the current area is larger.</li>
+<li>After the loops complete, <code>max_area</code> will hold the maximum possible area.</li>
+</ol>
+<p>This approach has a time complexity of O(n²) and a space complexity of O(1).</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;algorithm&gt;
+
+class Solution {
+public:
+    int maxArea(std::vector&lt;int&gt;&amp; height) {
+        int max_area = 0;
+        int n = height.size();
+        for (int i = 0; i &lt; n; ++i) {
+            for (int j = i + 1; j &lt; n; ++j) {
+                int current_height = std::min(height[i], height[j]);
+                int current_width = j - i;
+                max_area = std::max(max_area, current_height * current_width);
+            }
+        }
+        return max_area;
+    }
+};
+</code></pre>
+<h3>Two Pointer Approach</h3>
+<p>This approach uses two pointers, one starting at each end of the array, to efficiently find the maximum area. By starting with the maximum possible width, we can iteratively narrow down the search space. The key insight is that to potentially find a larger area, we must seek a greater height, which justifies moving the pointer associated with the shorter line.</p>
+<ol>
+<li>Initialize a <code>left</code> pointer at the beginning of the array (index 0) and a <code>right</code> pointer at the end (index <code>n-1</code>).</li>
+<li>Initialize a variable <code>max_area</code> to 0.</li>
+<li>Loop as long as the <code>left</code> pointer is less than the <code>right</code> pointer.</li>
+<li>Inside the loop, calculate the area formed by the lines at the <code>left</code> and <code>right</code> pointers: <code>area = (right - left) * min(height[left], height[right])</code>.</li>
+<li>Update <code>max_area</code> with the maximum of its current value and the newly calculated area.</li>
+<li>To find a potentially larger area, we must increase the height. The current area is limited by the shorter of the two lines. Therefore, we move the pointer corresponding to the shorter line inward.</li>
+<li>If <code>height[left]</code> is less than <code>height[right]</code>, increment <code>left</code>. Otherwise, decrement <code>right</code>.</li>
+<li>Repeat steps 4-7 until the pointers meet. The final <code>max_area</code> is the result.</li>
+</ol>
+<p>This approach has an optimal time complexity of O(n) and a space complexity of O(1).</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;algorithm&gt;
+
+class Solution {
+public:
+    int maxArea(std::vector&lt;int&gt;&amp; height) {
+        int left = 0;
+        int right = height.size() - 1;
+        int max_area = 0;
+
+        while (left &lt; right) {
+            int current_height = std::min(height[left], height[right]);
+            int current_width = right - left;
+            max_area = std::max(max_area, current_height * current_width);
+
+            if (height[left] &lt; height[right]) {
+                left++;
+            } else {
+                right--;
+            }
+        }
+        return max_area;
+    }
+};
+</code></pre>
+<h3>Pythonic solution for best approach</h3>
+<pre><code class="language-python">from typing import List
+
+class Solution:
+    def maxArea(self, height: List[int]) -&gt; int:
+        &quot;&quot;&quot;
+        Finds the maximum area of water that can be contained between two vertical lines.
+
+        This function uses the two-pointer technique to solve the problem in linear time.
+        It starts with the widest possible container and iteratively moves the pointer
+        of the shorter line inward, seeking a container with a greater height.
+        &quot;&quot;&quot;
+        left, right = 0, len(height) - 1
+        max_area = 0
+
+        while left &lt; right:
+            # Calculate the area with the current pair of lines
+            current_width = right - left
+            current_height = min(height[left], height[right])
+            current_area = current_width * current_height
+
+            # Update the maximum area found so far
+            max_area = max(max_area, current_area)
+
+            # Move the pointer that points to the shorter line
+            if height[left] &lt; height[right]:
+                left += 1
+            else:
+                right -= 1
+
+        return max_area
+
+</code></pre></div>

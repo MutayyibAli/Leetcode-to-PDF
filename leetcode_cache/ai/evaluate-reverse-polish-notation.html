@@ -1,0 +1,135 @@
+<div class='ai-explanation'><h3>List of Approaches</h3>
+<ol>
+<li>Stack-based Evaluation with Conditional Checks</li>
+<li>Stack-based Evaluation with Hash Map of Operations</li>
+</ol>
+<hr />
+<h3>Approach 1: Stack-based Evaluation with Conditional Checks</h3>
+<p>This approach uses a stack, the natural data structure for evaluating Reverse Polish Notation (RPN). We iterate through the tokens. If a token is a number, we push it onto the stack. If it's an operator, we pop the top two numbers, perform the operation, and push the result back. A series of <code>if-else</code> statements is used to determine which operation to perform.</p>
+<p><strong>Step-by-step explanation:</strong>
+1.  Initialize an empty stack of integers.
+2.  Iterate through each token in the input <code>tokens</code> array.
+3.  For each token, check if it's one of the four operators (<code>+</code>, <code>-</code>, <code>*</code>, <code>/</code>).
+4.  If it is an operator:
+    a. Pop the top element from the stack; this is the right-hand operand (<code>operand2</code>).
+    b. Pop the new top element; this is the left-hand operand (<code>operand1</code>).
+    c. Perform the operation <code>operand1 &lt;operator&gt; operand2</code>.
+    d. Push the result back onto the stack.
+5.  If the token is not an operator, it must be a number. Convert the string to an integer and push it onto the stack.
+6.  After iterating through all tokens, the stack will contain exactly one number, which is the final result.</p>
+<p>The time complexity is O(N) where N is the number of tokens, as we iterate through the list once. The space complexity is O(N) to store numbers on the stack in the worst-case scenario.</p>
+<pre><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;vector&gt;
+#include &lt;string&gt;
+#include &lt;stack&gt;
+
+class Solution {
+public:
+    int evalRPN(std::vector&lt;std::string&gt;&amp; tokens) {
+        std::stack&lt;int&gt; s;
+        for (const std::string&amp; token : tokens) {
+            if (token == &quot;+&quot;) {
+                int op2 = s.top(); s.pop();
+                int op1 = s.top(); s.pop();
+                s.push(op1 + op2);
+            } else if (token == &quot;-&quot;) {
+                int op2 = s.top(); s.pop();
+                int op1 = s.top(); s.pop();
+                s.push(op1 - op2);
+            } else if (token == &quot;*&quot;) {
+                int op2 = s.top(); s.pop();
+                int op1 = s.top(); s.pop();
+                s.push(op1 * op2);
+            } else if (token == &quot;/&quot;) {
+                int op2 = s.top(); s.pop();
+                int op1 = s.top(); s.pop();
+                s.push(op1 / op2);
+            } else {
+                s.push(std::stoi(token));
+            }
+        }
+        return s.top();
+    }
+};
+</code></pre>
+<hr />
+<h3>Approach 2: Stack-based Evaluation with Hash Map of Operations</h3>
+<p>This is a more refined version of the stack-based approach. Instead of using a lengthy <code>if-else</code> block to handle operators, we use a hash map (or <code>unordered_map</code> in C++) to associate operator symbols with their corresponding operations. This makes the code cleaner, more modular, and easier to extend with new operators. The operations themselves can be elegantly implemented using lambda functions.</p>
+<p><strong>Step-by-step explanation:</strong>
+1.  Initialize an empty stack of integers.
+2.  Create a hash map where keys are operator strings (<code>"+"</code>, <code>"-"</code>, etc.) and values are functions that take two integers and return their result.
+3.  Iterate through each token in the <code>tokens</code> array.
+4.  If the token is a key in the hash map (i.e., it's an operator):
+    a. Pop the top two operands (<code>operand2</code> then <code>operand1</code>).
+    b. Look up the corresponding function in the hash map and execute it with <code>operand1</code> and <code>operand2</code>.
+    c. Push the result onto the stack.
+5.  If the token is not in the map, it's a number. Convert it to an integer and push it onto the stack.
+6.  After the loop, the final result is the only element remaining on the stack.</p>
+<p>This approach has the same time complexity of O(N) and space complexity of O(N) as the previous method, but it offers superior code structure and maintainability.</p>
+<pre><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;vector&gt;
+#include &lt;string&gt;
+#include &lt;stack&gt;
+#include &lt;unordered_map&gt;
+#include &lt;functional&gt;
+
+class Solution {
+public:
+    int evalRPN(std::vector&lt;std::string&gt;&amp; tokens) {
+        std::unordered_map&lt;std::string, std::function&lt;int(int, int)&gt;&gt; map = {
+            { &quot;+&quot;, [](int a, int b) { return a + b; } },
+            { &quot;-&quot;, [](int a, int b) { return a - b; } },
+            { &quot;*&quot;, [](int a, int b) { return a * b; } },
+            { &quot;/&quot;, [](int a, int b) { return a / b; } }
+        };
+        std::stack&lt;int&gt; stack;
+        for (const std::string&amp; s : tokens) {
+            if (map.count(s)) {
+                int op2 = stack.top();
+                stack.pop();
+                int op1 = stack.top();
+                stack.pop();
+                stack.push(map[s](op1, op2));
+            } else {
+                stack.push(std::stoi(s));
+            }
+        }
+        return stack.top();
+    }
+};
+</code></pre>
+<hr />
+<h3>Pythonic Solution (Best Approach)</h3>
+<p>The most Pythonic solution mirrors the hash map approach. It uses a dictionary to map operator strings to functions, leveraging Python's <code>operator</code> module for standard arithmetic and a <code>lambda</code> for the specific division behavior required (truncation towards zero). This results in highly readable and maintainable code.</p>
+<pre><code class="language-python">import operator
+
+class Solution:
+  def evalRPN(self, tokens: list[str]) -&gt; int:
+    &quot;&quot;&quot;
+    Evaluates an arithmetic expression in Reverse Polish Notation.
+    &quot;&quot;&quot;
+    stack = []
+    # Map operators to corresponding functions.
+    # For division, a lambda is used to ensure truncation towards zero as required.
+    operations = {
+        &quot;+&quot;: operator.add,
+        &quot;-&quot;: operator.sub,
+        &quot;*&quot;: operator.mul,
+        &quot;/&quot;: lambda a, b: int(a / b)
+    }
+
+    for token in tokens:
+      if token in operations:
+        # It's an operator: pop two operands, calculate, and push result.
+        operand2 = stack.pop()
+        operand1 = stack.pop()
+        result = operations[token](operand1, operand2)
+        stack.append(result)
+      else:
+        # It's a number: convert to int and push onto the stack.
+        stack.append(int(token))
+
+    # The final result is the only item left on the stack.
+    return stack[0]
+
+</code></pre></div>

@@ -1,0 +1,168 @@
+<div class='ai-explanation'><h3>List of Approaches</h3>
+<ol>
+<li>Brute Force Approach</li>
+<li>Backtracking with State Array</li>
+<li>Optimized Backtracking with Constant Time Checks</li>
+</ol>
+<hr />
+<h3>1. Brute Force Approach</h3>
+<p>This approach involves generating every possible placement of <code>n</code> queens on the <code>n x n</code> board and then checking if each placement is valid. A simple way to generate placements is to place one queen in each row, trying every column for each queen. This leads to <code>n^n</code> possible configurations. For each configuration, we would then check if any two queens attack each other, which takes <code>O(n^2)</code> time. Due to the massive number of possibilities (<code>9^9</code> is over 387 million), this approach is computationally infeasible and would time out for larger <code>n</code>.</p>
+<p>The time complexity is <code>O(n^n * n^2)</code> and space complexity is <code>O(n)</code> to store a single placement.</p>
+<h3>2. Backtracking with State Array</h3>
+<p>This approach systematically builds solutions row by row, abandoning a path (backtracking) as soon as it determines that it cannot lead to a valid solution.</p>
+<ol>
+<li>We define a recursive function, say <code>solve(row)</code>, which tries to place a queen in the given <code>row</code>.</li>
+<li>The state of the board is maintained in an array, <code>queens</code>, where <code>queens[r]</code> stores the column of the queen in row <code>r</code>.</li>
+<li><strong>Base Case:</strong> If <code>row == n</code>, it means we have successfully placed a queen in every row from <code>0</code> to <code>n-1</code>. This is a valid solution, so we increment our total count.</li>
+<li><strong>Recursive Step:</strong> For the current <code>row</code>, iterate through all columns <code>c</code> from <code>0</code> to <code>n-1</code>.</li>
+<li>For each column <code>c</code>, check if placing a queen at <code>(row, c)</code> is valid. A placement is valid if it's not in the same column or diagonal as any of the queens placed in previous rows (<code>0</code> to <code>row-1</code>). This check takes <code>O(row)</code> time.</li>
+<li>If the placement is valid, update the <code>queens</code> array (<code>queens[row] = c</code>) and make a recursive call for the next row: <code>solve(row + 1)</code>.</li>
+<li>After the recursive call returns, we backtrack by simply continuing the loop, which effectively explores placing the queen in the next column of the current row.</li>
+</ol>
+<p>The time complexity is roughly <code>O(n!)</code> as we explore a permutation-like search space, and the space complexity is <code>O(n)</code> for the recursion stack and the state array.</p>
+<pre><code class="language-cpp">class Solution {
+public:
+    int totalNQueens(int n) {
+        int count = 0;
+        // queens[i] stores the column of the queen in row i
+        std::vector&lt;int&gt; queens(n, -1); 
+        solve(0, queens, n, count);
+        return count;
+    }
+
+private:
+    void solve(int row, std::vector&lt;int&gt;&amp; queens, int n, int&amp; count) {
+        if (row == n) {
+            count++;
+            return;
+        }
+
+        for (int col = 0; col &lt; n; ++col) {
+            if (isValid(row, col, queens)) {
+                queens[row] = col;          // Place the queen
+                solve(row + 1, queens, n, count); // Recur for the next row
+                // Backtrack is implicit as queens[row] is overwritten in the next iteration
+            }
+        }
+    }
+
+    bool isValid(int row, int col, std::vector&lt;int&gt;&amp; queens) {
+        // Check against all previously placed queens (in rows 0 to row-1)
+        for (int i = 0; i &lt; row; ++i) {
+            // Check for same column attack
+            if (queens[i] == col) {
+                return false;
+            }
+            // Check for diagonal attack
+            if (abs(row - i) == abs(col - queens[i])) {
+                return false;
+            }
+        }
+        return true;
+    }
+};
+</code></pre>
+<h3>3. Optimized Backtracking with Constant Time Checks</h3>
+<p>This approach improves upon the previous backtracking solution by optimizing the validity check from <code>O(n)</code> to <code>O(1)</code>. Instead of iterating through previous placements, we use boolean arrays (or hash sets) to keep track of which columns and diagonals are already under attack.</p>
+<ol>
+<li>We use three boolean arrays: <code>col</code> to mark attacked columns, <code>diag</code> for main diagonals, and <code>anti_diag</code> for anti-diagonals.</li>
+<li>A cell <code>(r, c)</code> belongs to the main diagonal <code>r + c</code> and the anti-diagonal <code>r - c</code>.</li>
+<li>The recursive function <code>solve(row)</code> attempts to place a queen in the current <code>row</code>.</li>
+<li><strong>Base Case:</strong> If <code>row == n</code>, a valid solution has been found. Return 1 to add to the total count.</li>
+<li><strong>Recursive Step:</strong> For the current <code>row</code>, iterate through each column <code>c</code> from <code>0</code> to <code>n-1</code>.</li>
+<li>In <code>O(1)</code> time, check if the position <code>(row, c)</code> is safe by looking up <code>col[c]</code>, <code>diag[row + c]</code>, and <code>anti_diag[row - c + n - 1]</code>. (We add <code>n-1</code> to the anti-diagonal index to keep it non-negative).</li>
+<li>If the position is safe:
+    a. Mark the corresponding column and diagonals as occupied (set to <code>true</code>).
+    b. Recursively call <code>solve(row + 1)</code> and add the returned count to the total for the current level.
+    c. <strong>Backtrack:</strong> Unmark the column and diagonals (set back to <code>false</code>) to allow other paths to be explored.</li>
+<li>Return the total count for the current level.</li>
+</ol>
+<p>The time complexity is still <code>O(n!)</code>, but it's significantly faster in practice due to the <code>O(1)</code> validity check. The space complexity is <code>O(n)</code> for the boolean arrays and the recursion stack.</p>
+<pre><code class="language-cpp">class Solution {
+public:
+    int totalNQueens(int n) {
+        // Boolean arrays to track occupied columns and diagonals
+        std::vector&lt;bool&gt; col(n, false);
+        std::vector&lt;bool&gt; diag(2 * n - 1, false);
+        std::vector&lt;bool&gt; anti_diag(2 * n - 1, false);
+        return solve(0, n, col, diag, anti_diag);
+    }
+
+private:
+    int solve(int row, int n, std::vector&lt;bool&gt;&amp; col, std::vector&lt;bool&gt;&amp; diag, std::vector&lt;bool&gt;&amp; anti_diag) {
+        if (row == n) {
+            return 1; // Found a valid solution
+        }
+
+        int count = 0;
+        for (int column = 0; column &lt; n; column++) {
+            // Check if the current position is safe in O(1)
+            if (!col[column] &amp;&amp; !diag[row + column] &amp;&amp; !anti_diag[row - column + n - 1]) {
+                // Place the queen and mark the attacked lines
+                col[column] = true;
+                diag[row + column] = true;
+                anti_diag[row - column + n - 1] = true;
+
+                count += solve(row + 1, n, col, diag, anti_diag);
+
+                // Backtrack: Un-place the queen and unmark the lines
+                col[column] = false;
+                diag[row + column] = false;
+                anti_diag[row - column + n - 1] = false;
+            }
+        }
+        return count;
+    }
+};
+</code></pre>
+<hr />
+<h3>Pythonic Solution (Best Approach)</h3>
+<p>This Python solution implements the optimized backtracking approach. It uses sets for <code>O(1)</code> average time complexity for additions, removals, and lookups, which is a clean and efficient way to track the occupied columns and diagonals.</p>
+<pre><code class="language-python">class Solution:
+    def totalNQueens(self, n: int) -&gt; int:
+        &quot;&quot;&quot;
+        Calculates the total number of distinct solutions for the N-Queens puzzle.
+        This solution uses optimized backtracking with sets for O(1) checks.
+        &quot;&quot;&quot;
+
+        # Sets to store occupied columns and diagonals
+        cols = set()
+        pos_diags = set()  # (row + col) is constant for these diagonals
+        neg_diags = set()  # (row - col) is constant for these diagonals
+
+        self.count = 0
+
+        def backtrack(r: int):
+            &quot;&quot;&quot;
+            Recursively places queens row by row.
+
+            :param r: The current row to place a queen in.
+            &quot;&quot;&quot;
+            # Base case: If all queens are placed successfully
+            if r == n:
+                self.count += 1
+                return
+
+            # Try placing a queen in each column of the current row
+            for c in range(n):
+                # Check if the current position is under attack
+                if c in cols or (r + c) in pos_diags or (r - c) in neg_diags:
+                    continue
+
+                # Place the queen
+                cols.add(c)
+                pos_diags.add(r + c)
+                neg_diags.add(r - c)
+
+                # Recur to the next row
+                backtrack(r + 1)
+
+                # Backtrack: Remove the queen to explore other possibilities
+                cols.remove(c)
+                pos_diags.remove(r + c)
+                neg_diags.remove(r - c)
+
+        backtrack(0)
+        return self.count
+
+</code></pre></div>

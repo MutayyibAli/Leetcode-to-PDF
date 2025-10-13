@@ -1,0 +1,216 @@
+<div class='ai-explanation'><h3>List of all the approaches to solution</h3>
+<ol>
+<li>Brute Force Approach</li>
+<li>Binary Search on Answer Approach</li>
+<li>Prefix Sum + Binary Search Approach</li>
+<li>Sliding Window Approach</li>
+</ol>
+<hr />
+<h3>Brute Force Approach</h3>
+<h4>Explanation</h4>
+<p>This straightforward approach considers every possible subarray. We use two nested loops to define the start and end of a subarray. The outer loop iterates through all possible starting indices <code>i</code>, and the inner loop iterates through all possible ending indices <code>j</code> from <code>i</code> onwards. For each subarray, we compute its sum and check if it's greater than or equal to the <code>target</code>. If it is, we update our minimum length. To optimize sum calculation from O(n) to O(1) inside the loops, we can maintain a running sum as the inner loop progresses.</p>
+<ol>
+<li>Initialize <code>minLength</code> to a value larger than any possible length (e.g., infinity).</li>
+<li>Iterate through the array with an index <code>i</code> from 0 to <code>n-1</code> to select a starting element for the subarray.</li>
+<li>For each <code>i</code>, initialize a <code>currentSum</code> to 0 and start a second loop with index <code>j</code> from <code>i</code> to <code>n-1</code>.</li>
+<li>In the inner loop, add <code>nums[j]</code> to <code>currentSum</code>.</li>
+<li>If <code>currentSum</code> is greater than or equal to <code>target</code>, we've found a valid subarray. Update <code>minLength = min(minLength, j - i + 1)</code> and break the inner loop (since any further extension of this subarray will only be longer).</li>
+<li>After the loops complete, if <code>minLength</code> remains at its initial large value, no solution was found; return 0. Otherwise, return <code>minLength</code>.</li>
+</ol>
+<p>This approach has a time complexity of O(n^2) and a space complexity of O(1).</p>
+<h4>C++ Code</h4>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;algorithm&gt;
+#include &lt;limits&gt;
+
+class Solution {
+public:
+    int minSubArrayLen(int target, std::vector&lt;int&gt;&amp; nums) {
+        int n = nums.size();
+        int minLength = std::numeric_limits&lt;int&gt;::max();
+
+        for (int i = 0; i &lt; n; ++i) {
+            long long currentSum = 0;
+            for (int j = i; j &lt; n; ++j) {
+                currentSum += nums[j];
+                if (currentSum &gt;= target) {
+                    minLength = std::min(minLength, j - i + 1);
+                    break; 
+                }
+            }
+        }
+
+        return (minLength == std::numeric_limits&lt;int&gt;::max()) ? 0 : minLength;
+    }
+};
+</code></pre>
+<hr />
+<h3>Binary Search on Answer Approach</h3>
+<h4>Explanation</h4>
+<p>The minimal length of the subarray can be any value from 1 to <code>n</code>. This range of possible answers allows us to use binary search on the length itself. For a given length <code>k</code>, we can efficiently check if there exists <em>any</em> subarray of that length whose sum is at least <code>target</code>.</p>
+<ol>
+<li>Define a search range for the answer (length), from <code>low = 1</code> to <code>high = n</code>.</li>
+<li>In each step of the binary search, pick the middle length <code>mid = low + (high - low) / 2</code>.</li>
+<li>Check if a subarray of length <code>mid</code> with a sum <code>&gt;= target</code> exists. This check can be done in O(n) time using a fixed-size sliding window.</li>
+<li>If such a subarray exists, it means <code>mid</code> is a possible answer. We try to find an even smaller length, so we record <code>mid</code> as a potential answer and set <code>high = mid - 1</code>.</li>
+<li>If no such subarray exists, <code>mid</code> is too small. We must consider larger lengths, so we set <code>low = mid + 1</code>.</li>
+<li>The binary search continues until <code>low &gt; high</code>. The last valid length recorded is the minimal one.</li>
+</ol>
+<p>The time complexity is O(n log n) because the binary search takes O(log n) steps, and each step involves an O(n) scan. The space complexity is O(1).</p>
+<h4>C++ Code</h4>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;numeric&gt;
+
+class Solution {
+private:
+    bool windowExists(int size, int target, std::vector&lt;int&gt;&amp; nums) {
+        long long currentSum = 0;
+        for (int i = 0; i &lt; nums.size(); ++i) {
+            currentSum += nums[i];
+            if (i &gt;= size) {
+                currentSum -= nums[i - size];
+            }
+            if (i &gt;= size - 1 &amp;&amp; currentSum &gt;= target) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+public:
+    int minSubArrayLen(int target, std::vector&lt;int&gt;&amp; nums) {
+        int n = nums.size();
+        int low = 1, high = n;
+        int minLength = 0;
+
+        while (low &lt;= high) {
+            int mid = low + (high - low) / 2;
+            if (windowExists(mid, target, nums)) {
+                minLength = mid;
+                high = mid - 1;
+            } else {
+                low = mid + 1;
+            }
+        }
+        return minLength;
+    }
+};
+</code></pre>
+<hr />
+<h3>Prefix Sum + Binary Search Approach</h3>
+<h4>Explanation</h4>
+<p>This approach utilizes a prefix sum array to quickly calculate the sum of any subarray. The sum of <code>nums[j...i-1]</code> is <code>prefixSum[i] - prefixSum[j]</code>. We need this sum to be <code>&gt;= target</code>, which implies <code>prefixSum[j] &lt;= prefixSum[i] - target</code>.</p>
+<ol>
+<li>Create a prefix sum array, <code>sums</code>, where <code>sums[i]</code> stores the sum of the first <code>i</code> elements of <code>nums</code>. <code>sums[0]</code> is 0.</li>
+<li>Iterate through each possible endpoint of a subarray, represented by index <code>i</code> in the <code>sums</code> array (from 1 to <code>n</code>).</li>
+<li>For each <code>i</code>, we need to find a starting point <code>j</code> (<code>j &lt; i</code>) that satisfies <code>sums[j] &lt;= sums[i] - target</code> and maximizes <code>j</code>. Maximizing <code>j</code> will minimize the subarray length <code>i - j</code>.</li>
+<li>Since <code>nums</code> contains positive integers, the <code>sums</code> array is monotonically increasing. This allows us to use binary search to find the largest valid <code>j</code> for each <code>i</code>.</li>
+<li>Specifically, for each <code>i</code>, we search for the value <code>sums[i] - target</code> in the prefix sums <code>sums[0...i-1]</code>. We can use <code>upper_bound</code> to find the first element strictly greater than this value. The element just before it is our best candidate for <code>sums[j]</code>.</li>
+<li>We calculate the length for this subarray and update the overall minimum length.</li>
+</ol>
+<p>The time complexity is O(n log n) due to performing a binary search for each of the <code>n</code> elements. The space complexity is O(n) for the prefix sum array.</p>
+<h4>C++ Code</h4>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;algorithm&gt;
+#include &lt;limits&gt;
+
+class Solution {
+public:
+    int minSubArrayLen(int target, std::vector&lt;int&gt;&amp; nums) {
+        int n = nums.size();
+        if (n == 0) return 0;
+
+        std::vector&lt;long long&gt; sums(n + 1, 0);
+        for (int i = 0; i &lt; n; ++i) {
+            sums[i + 1] = sums[i] + nums[i];
+        }
+
+        int minLength = std::numeric_limits&lt;int&gt;::max();
+
+        for (int i = n; i &gt;= 1; --i) {
+            if (sums[i] &gt;= target) {
+                long long to_find = sums[i] - target;
+                auto it = std::upper_bound(sums.begin(), sums.begin() + i, to_find);
+                int j = (it - 1) - sums.begin();
+                minLength = std::min(minLength, i - j);
+            }
+        }
+
+        return (minLength == std::numeric_limits&lt;int&gt;::max()) ? 0 : minLength;
+    }
+};
+</code></pre>
+<hr />
+<h3>Sliding Window Approach</h3>
+<h4>Explanation</h4>
+<p>This is the most optimal approach. It uses two pointers, <code>left</code> and <code>right</code>, to maintain a "window" representing the current subarray. The <code>right</code> pointer expands the window, and the <code>left</code> pointer shrinks it. The goal is to keep the sum of the window's elements just above the target, finding the smallest possible window size.</p>
+<ol>
+<li>Initialize <code>left = 0</code>, <code>currentSum = 0</code>, and <code>minLength</code> to infinity.</li>
+<li>Use a <code>right</code> pointer to iterate through the array from <code>0</code> to <code>n-1</code>, adding each <code>nums[right]</code> to <code>currentSum</code>.</li>
+<li>After adding an element, enter a <code>while</code> loop that runs as long as <code>currentSum &gt;= target</code>.</li>
+<li>Inside the <code>while</code> loop, a valid subarray (from <code>left</code> to <code>right</code>) has been found. Update <code>minLength = min(minLength, right - left + 1)</code>.</li>
+<li>To find a potentially smaller valid window, shrink the window from the left: subtract <code>nums[left]</code> from <code>currentSum</code> and increment <code>left</code>.</li>
+<li>The <code>while</code> loop continues to shrink the window until <code>currentSum</code> is less than <code>target</code>. Then, the outer loop continues, expanding the window by incrementing <code>right</code>.</li>
+<li>After the <code>right</code> pointer has traversed the whole array, the final <code>minLength</code> is the answer.</li>
+</ol>
+<p>Each element is visited at most twice (once by <code>right</code> and once by <code>left</code>), leading to a time complexity of O(n) and a space complexity of O(1).</p>
+<h4>C++ Code</h4>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;algorithm&gt;
+#include &lt;limits&gt;
+
+class Solution {
+public:
+    int minSubArrayLen(int target, std::vector&lt;int&gt;&amp; nums) {
+        int n = nums.size();
+        int minLength = std::numeric_limits&lt;int&gt;::max();
+        long long currentSum = 0;
+        int left = 0;
+
+        for (int right = 0; right &lt; n; ++right) {
+            currentSum += nums[right];
+
+            while (currentSum &gt;= target) {
+                minLength = std::min(minLength, right - left + 1);
+                currentSum -= nums[left];
+                left++;
+            }
+        }
+
+        return (minLength == std::numeric_limits&lt;int&gt;::max()) ? 0 : minLength;
+    }
+};
+</code></pre>
+<hr />
+<h3>Pythonic Solution (Best Approach)</h3>
+<p>The best approach is the Sliding Window technique due to its O(n) time and O(1) space complexity.</p>
+<pre><code class="language-python">import math
+
+class Solution:
+    def minSubArrayLen(self, target: int, nums: list[int]) -&gt; int:
+        &quot;&quot;&quot;
+        Finds the minimal length of a contiguous subarray whose sum is &gt;= target.
+        This solution uses the sliding window technique.
+        &quot;&quot;&quot;
+        n = len(nums)
+        min_length = math.inf
+        current_sum = 0
+        left = 0
+
+        for right in range(n):
+            # Expand the window by adding the element at the right pointer
+            current_sum += nums[right]
+
+            # While the window sum is valid, try to shrink it from the left
+            while current_sum &gt;= target:
+                # Update the minimum length found so far
+                min_length = min(min_length, right - left + 1)
+
+                # Shrink the window from the left
+                current_sum -= nums[left]
+                left += 1
+
+        # If min_length was never updated, no valid subarray was found
+        return min_length if min_length != math.inf else 0
+
+</code></pre></div>

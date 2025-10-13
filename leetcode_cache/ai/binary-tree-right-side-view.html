@@ -1,0 +1,204 @@
+<div class='ai-explanation'><h3>List of Approaches</h3>
+<ol>
+<li>Brute Force / Inefficient Recursion</li>
+<li>Breadth-First Search (BFS)</li>
+<li>Depth-First Search (DFS)</li>
+</ol>
+<hr />
+<h3>1. Brute Force / Inefficient Recursion</h3>
+<p>This approach uses a divide-and-conquer strategy. For any given node, the right side view consists of the node itself, followed by the right side view of its right subtree. After that, we append the portion of the left subtree's right side view that is "visible" (i.e., at depths not covered by the right subtree's view). While clever, this approach is inefficient because it involves repeated creation and concatenation of lists/vectors, leading to a quadratic time complexity in the worst-case scenario of a skewed tree.</p>
+<p><strong>Step-by-step explanation:</strong>
+1.  If the current node is <code>null</code>, return an empty list.
+2.  Recursively call the function to get the right side view of the right subtree (<code>right_view</code>).
+3.  Recursively call the function to get the right side view of the left subtree (<code>left_view</code>).
+4.  Construct the final result: Start with the current node's value.
+5.  Append the entire <code>right_view</code> to the result.
+6.  Append the part of <code>left_view</code> that corresponds to levels deeper than the maximum level in <code>right_view</code>. This is done by taking a sublist of <code>left_view</code> starting from the index equal to the size of <code>right_view</code>.
+7.  Return the combined result.</p>
+<p>This approach has a time complexity of O(N^2) in the worst case (a left-skewed tree) due to vector concatenations and a space complexity of O(N) due to recursion stack and storage for intermediate results.</p>
+<pre><code class="language-cpp">/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    vector&lt;int&gt; rightSideView(TreeNode* root) {
+        if (!root) {
+            return {};
+        }
+
+        // Recursively get the view for right and left subtrees
+        vector&lt;int&gt; right = rightSideView(root-&gt;right);
+        vector&lt;int&gt; left = rightSideView(root-&gt;left);
+
+        // Combine the results
+        vector&lt;int&gt; result;
+        result.push_back(root-&gt;val);
+
+        // Append the right view
+        result.insert(result.end(), right.begin(), right.end());
+
+        // Append the part of the left view that is visible
+        if (left.size() &gt; right.size()) {
+            result.insert(result.end(), left.begin() + right.size(), left.end());
+        }
+
+        return result;
+    }
+};
+</code></pre>
+<hr />
+<h3>2. Breadth-First Search (BFS)</h3>
+<p>This is an intuitive and optimal approach that uses level-order traversal. We traverse the tree level by level, from left to right. For each level, the last node we encounter is the rightmost node and is therefore visible from the right side. We add the value of this last node to our result list.</p>
+<p><strong>Step-by-step explanation:</strong>
+1.  Handle the edge case of an empty tree by returning an empty list.
+2.  Initialize a queue and add the <code>root</code> node to it.
+3.  Initialize an empty vector <code>ans</code> to store the result.
+4.  Loop as long as the queue is not empty. Inside the loop, we process one level.
+5.  Get the number of nodes at the current level (<code>level_size = q.size()</code>).
+6.  Iterate <code>level_size</code> times to process all nodes at this level.
+7.  In each iteration, dequeue a node (<code>temp</code>).
+8.  If this is the last node of the current level (i.e., the loop is at its last iteration), add its value to the <code>ans</code> vector.
+9.  Enqueue the left and right children of <code>temp</code> if they exist.
+10. After the loop finishes, return the <code>ans</code> vector.</p>
+<p>The time complexity is O(N) since each node is visited exactly once, and the space complexity is O(W), where W is the maximum width of the tree, which can be up to O(N) in the worst case (for a complete binary tree).</p>
+<pre><code class="language-cpp">/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+#include &lt;vector&gt;
+#include &lt;queue&gt;
+
+class Solution {
+public:
+    vector&lt;int&gt; rightSideView(TreeNode* root) {
+        vector&lt;int&gt; ans;
+        if (root == NULL) {
+            return ans;
+        }
+
+        queue&lt;TreeNode*&gt; q;
+        q.push(root);
+
+        while (!q.empty()) {
+            int level_size = q.size();
+            for (int i = 0; i &lt; level_size; ++i) {
+                TreeNode* temp = q.front();
+                q.pop();
+
+                // If it's the last node of the current level, add it to the result
+                if (i == level_size - 1) {
+                    ans.push_back(temp-&gt;val);
+                }
+
+                if (temp-&gt;left != NULL) {
+                    q.push(temp-&gt;left);
+                }
+                if (temp-&gt;right != NULL) {
+                    q.push(temp-&gt;right);
+                }
+            }
+        }
+        return ans;
+    }
+};
+</code></pre>
+<hr />
+<h3>3. Depth-First Search (DFS)</h3>
+<p>This is another optimal and elegant solution. We traverse the tree using a "reverse preorder" traversal (Root, Right, Left). We also keep track of the current level (or depth). The key idea is that the first time we visit any level during this traversal, it will be with the rightmost node at that level. We can use the size of our result list to track the maximum level visited so far.</p>
+<p><strong>Step-by-step explanation:</strong>
+1.  Define a helper function, say <code>dfs</code>, that takes the current <code>node</code>, its <code>level</code>, and the <code>result</code> list.
+2.  The base case: if <code>node</code> is null, simply return.
+3.  Check if the current <code>level</code> is equal to the current size of the <code>result</code> list. If it is, it means we are visiting this level for the first time. Since we are traversing right-to-left, this must be the rightmost node. Add the node's value to the <code>result</code> list.
+4.  Recursively call <code>dfs</code> for the right child with <code>level + 1</code>.
+5.  Recursively call <code>dfs</code> for the left child with <code>level + 1</code>.
+6.  Start the process by calling <code>dfs(root, 0, result)</code>.</p>
+<p>The time complexity is O(N) as we visit each node once. The space complexity is O(H), where H is the height of the tree, for the recursion stack. This can be O(N) in the worst case (a skewed tree) but O(log N) for a balanced tree.</p>
+<pre><code class="language-cpp">/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+#include &lt;vector&gt;
+
+class Solution {
+private:
+    void dfs(TreeNode* node, int level, std::vector&lt;int&gt;&amp; result) {
+        if (node == nullptr) {
+            return;
+        }
+        // If this level is being visited for the first time, add the node's value
+        if (level == result.size()) {
+            result.push_back(node-&gt;val);
+        }
+        // Recurse on the right subtree first
+        dfs(node-&gt;right, level + 1, result);
+        // Then recurse on the left subtree
+        dfs(node-&gt;left, level + 1, result);
+    }
+
+public:
+    std::vector&lt;int&gt; rightSideView(TreeNode* root) {
+        std::vector&lt;int&gt; result;
+        dfs(root, 0, result);
+        return result;
+    }
+};
+</code></pre>
+<hr />
+<h3>Pythonic Solution (Best Approach - DFS)</h3>
+<p>The DFS approach is highly efficient and can be implemented concisely and elegantly in Python using recursion.</p>
+<pre><code class="language-python"># Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+from typing import List, Optional
+
+class Solution:
+    def rightSideView(self, root: Optional[TreeNode]) -&gt; List[int]:
+
+        def collect(node: Optional[TreeNode], depth: int):
+            &quot;&quot;&quot;
+            Recursive helper to perform a reverse preorder traversal (Root, Right, Left).
+            &quot;&quot;&quot;
+            if not node:
+                return
+
+            # If the current depth is equal to the number of nodes we've seen,
+            # it means this is the first time we're at this depth.
+            # Since we traverse the right side first, this is the rightmost node.
+            if depth == len(view):
+                view.append(node.val)
+
+            # Traverse the right child first
+            collect(node.right, depth + 1)
+            # Then traverse the left child
+            collect(node.left, depth + 1)
+
+        view = []
+        collect(root, 0)
+        return view
+
+</code></pre></div>

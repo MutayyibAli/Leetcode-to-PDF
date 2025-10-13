@@ -1,0 +1,144 @@
+<div class='ai-explanation'><h3>List of Approaches:</h3>
+<ol>
+<li>Brute Force Approach (Simple Recursion)</li>
+<li>Memoization (Top-Down Dynamic Programming)</li>
+<li>Tabulation (Bottom-Up Dynamic Programming)</li>
+<li>Space-Optimized Dynamic Programming</li>
+</ol>
+<hr />
+<h3>1. Brute Force Approach (Simple Recursion)</h3>
+<p>This approach directly translates the Tribonacci recurrence relation <code>T_n = T_{n-1} + T_{n-2} + T_{n-3}</code> into a recursive function.</p>
+<ol>
+<li><strong>Base Cases:</strong> The function checks for the initial values of the sequence. If <code>n</code> is 0, it returns 0. If <code>n</code> is 1 or 2, it returns 1.</li>
+<li><strong>Recursive Step:</strong> For any other <code>n</code>, the function calls itself for <code>n-1</code>, <code>n-2</code>, and <code>n-3</code> and returns the sum of their results.</li>
+<li><strong>Problem:</strong> This method is highly inefficient because it re-computes the same Tribonacci numbers multiple times. For example, to compute <code>tribonacci(5)</code>, it will compute <code>tribonacci(4)</code> and <code>tribonacci(3)</code>. The call to <code>tribonacci(4)</code> will also compute <code>tribonacci(3)</code>, leading to redundant calculations.</li>
+</ol>
+<p>This approach has a time complexity of O(3^n) due to the branching recursive calls and a space complexity of O(n) for the recursion call stack.</p>
+<pre><code class="language-cpp">class Solution {
+public:
+    int tribonacci(int n) {
+        if (n == 0) {
+            return 0;
+        }
+        if (n == 1 || n == 2) {
+            return 1;
+        }
+        return tribonacci(n - 1) + tribonacci(n - 2) + tribonacci(n - 3);
+    }
+};
+</code></pre>
+<hr />
+<h3>2. Memoization (Top-Down Dynamic Programming)</h3>
+<p>This approach optimizes the recursive solution by storing the results of subproblems in a cache (or memoization table) to avoid redundant computations.</p>
+<ol>
+<li><strong>Initialization:</strong> Create a memoization array, <code>memo</code>, of size <code>n+1</code> and initialize it with a special value (e.g., -1) to indicate that the Tribonacci numbers for those indices have not been computed yet.</li>
+<li><strong>Base Cases:</strong> Similar to the brute-force approach, handle <code>n=0, 1, 2</code>.</li>
+<li><strong>Memoization Check:</strong> Before computing <code>tribonacci(k)</code>, check if <code>memo[k]</code> has already been calculated. If so, return the stored value.</li>
+<li><strong>Recursive Calculation &amp; Storage:</strong> If the value is not in the memo table, compute it recursively, store the result in <code>memo[k]</code>, and then return it.</li>
+</ol>
+<p>This approach has a time complexity of O(n) because each Tribonacci number is computed only once, and a space complexity of O(n) for the memoization array and recursion stack.</p>
+<pre><code class="language-cpp">class Solution {
+public:
+    int tribonacci(int n) {
+        vector&lt;int&gt; memo(n + 1, -1);
+        return solve(n, memo);
+    }
+
+private:
+    int solve(int n, vector&lt;int&gt;&amp; memo) {
+        if (n == 0) return 0;
+        if (n == 1 || n == 2) return 1;
+
+        if (memo[n] != -1) {
+            return memo[n];
+        }
+
+        memo[n] = solve(n - 1, memo) + solve(n - 2, memo) + solve(n - 3, memo);
+        return memo[n];
+    }
+};
+</code></pre>
+<hr />
+<h3>3. Tabulation (Bottom-Up Dynamic Programming)</h3>
+<p>This is an iterative approach that builds the solution from the base cases up to the desired value <code>n</code>. It avoids recursion entirely.</p>
+<ol>
+<li><strong>Handle Small <code>n</code>:</strong> If <code>n</code> is less than 3, return the pre-defined values (0 for n=0, 1 for n=1 or 2).</li>
+<li><strong>Initialization:</strong> Create a DP array, <code>dp</code>, of size <code>n+1</code>. Initialize the first three values: <code>dp[0] = 0</code>, <code>dp[1] = 1</code>, <code>dp[2] = 1</code>.</li>
+<li><strong>Iteration:</strong> Loop from <code>i = 3</code> to <code>n</code>. In each iteration, calculate <code>dp[i]</code> by summing the previous three values: <code>dp[i] = dp[i-1] + dp[i-2] + dp[i-3]</code>.</li>
+<li><strong>Result:</strong> The final answer is the value at <code>dp[n]</code>.</li>
+</ol>
+<p>This approach has a time complexity of O(n) due to the single loop and a space complexity of O(n) to store the DP array.</p>
+<pre><code class="language-cpp">class Solution {
+public:
+    int tribonacci(int n) {
+        if (n == 0) return 0;
+        if (n == 1 || n == 2) return 1;
+
+        vector&lt;int&gt; dp(n + 1);
+        dp[0] = 0;
+        dp[1] = 1;
+        dp[2] = 1;
+
+        for (int i = 3; i &lt;= n; ++i) {
+            dp[i] = dp[i-1] + dp[i-2] + dp[i-3];
+        }
+
+        return dp[n];
+    }
+};
+</code></pre>
+<hr />
+<h3>4. Space-Optimized Dynamic Programming</h3>
+<p>This is the most efficient approach. It improves upon the tabulation method by noticing that to compute <code>T_n</code>, we only need the three preceding values (<code>T_{n-1}</code>, <code>T_{n-2}</code>, <code>T_{n-3}</code>). Therefore, we don't need to store the entire array of Tribonacci numbers.</p>
+<ol>
+<li><strong>Handle Base Cases:</strong> Return 0 for <code>n=0</code> and 1 for <code>n=1</code> or <code>n=2</code>.</li>
+<li><strong>Initialization:</strong> Use three variables to store the last three computed values, initialized to the first three numbers in the sequence: <code>a = 0</code> (T_0), <code>b = 1</code> (T_1), and <code>c = 1</code> (T_2).</li>
+<li><strong>Iteration:</strong> Loop from <code>i = 3</code> to <code>n</code>.<ul>
+<li>Calculate the next Tribonacci number: <code>next_val = a + b + c</code>.</li>
+<li>Update the three variables to slide the window forward: <code>a</code> becomes <code>b</code>, <code>b</code> becomes <code>c</code>, and <code>c</code> becomes <code>next_val</code>.</li>
+</ul>
+</li>
+<li><strong>Result:</strong> After the loop completes, <code>c</code> will hold the value of <code>T_n</code>.</li>
+</ol>
+<p>This approach has a time complexity of O(n) and an optimal space complexity of O(1).</p>
+<pre><code class="language-cpp">class Solution {
+public:
+    int tribonacci(int n) {
+        if (n == 0) return 0;
+        if (n &lt;= 2) return 1;
+
+        int a = 0, b = 1, c = 1;
+
+        for (int i = 3; i &lt;= n; ++i) {
+            int next_val = a + b + c;
+            a = b;
+            b = c;
+            c = next_val;
+        }
+
+        return c;
+    }
+};
+</code></pre>
+<hr />
+<h3>Pythonic Solution (Space-Optimized DP)</h3>
+<p>This Python solution implements the space-optimized dynamic programming approach. It uses tuple unpacking for a concise and elegant way to update the three variables in each step of the loop.</p>
+<pre><code class="language-python">class Solution:
+    def tribonacci(self, n: int) -&gt; int:
+        if n == 0:
+            return 0
+        if n &lt;= 2:
+            return 1
+
+        # Initialize with T_0, T_1, T_2
+        a, b, c = 0, 1, 1
+
+        # Loop from 3 to n to find T_n
+        # The loop runs n-2 times
+        for _ in range(3, n + 1):
+            # Calculate the next term and slide the window
+            a, b, c = b, c, a + b + c
+
+        return c
+
+</code></pre></div>

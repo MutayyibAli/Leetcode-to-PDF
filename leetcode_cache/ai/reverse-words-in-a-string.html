@@ -1,0 +1,122 @@
+<div class='ai-explanation'><h3>List of Approaches</h3>
+<ol>
+<li>Brute Force Approach (Using Stringstream)</li>
+<li>In-place Reversal Approach (Two Pointers)</li>
+</ol>
+<hr />
+<h3>Brute Force Approach (Using Stringstream)</h3>
+<p>This method utilizes extra space to store the words and build the result. A <code>stringstream</code> is used to easily parse the input string, which conveniently handles splitting by spaces, including multiple spaces between words.</p>
+<ol>
+<li>Initialize a <code>stringstream</code> with the input string <code>s</code>.</li>
+<li>Create a string variable, <code>word</code>, to hold each extracted word, and a <code>result</code> string to build the final output.</li>
+<li>Read words from the <code>stringstream</code> one by one. The stream extraction operator <code>&gt;&gt;</code> automatically splits the string by whitespace.</li>
+<li>For each <code>word</code> read, prepend it to the <code>result</code> string. To ensure single-space separation, a space is also prepended before adding the word (except for the very first word).</li>
+<li>This process naturally reverses the order of words. The final <code>result</code> string is the desired output.</li>
+</ol>
+<p>This approach is straightforward and easy to read but requires additional memory to store the words and the new string. The time complexity is O(N) because we iterate through the string to parse it and then build a new string, and the space complexity is O(N) for storing the intermediate words and the final result.</p>
+<pre><code class="language-cpp">#include &lt;sstream&gt;
+#include &lt;string&gt;
+#include &lt;vector&gt;
+#include &lt;algorithm&gt;
+
+class Solution {
+public:
+    std::string reverseWords(std::string s) {
+        std::stringstream ss(s);
+        std::string word;
+        std::string result = &quot;&quot;;
+
+        // Read words from the stringstream and prepend to the result
+        while (ss &gt;&gt; word) {
+            if (result.empty()) {
+                result = word;
+            } else {
+                result = word + &quot; &quot; + result;
+            }
+        }
+
+        return result;
+    }
+};
+</code></pre>
+<hr />
+<h3>In-place Reversal Approach (Two Pointers)</h3>
+<p>This optimal approach modifies the string in-place, achieving the result with O(1) extra space. It's a clever multi-step process involving reversing different parts of the string.</p>
+<ol>
+<li><strong>Reverse the Entire String:</strong> The first step is to reverse the whole string. This puts the words in their correct final order, but the letters within each word are now backward (e.g., <code>"the sky is blue"</code> becomes <code>"eulb si yks eht"</code>).</li>
+<li><strong>Clean Spaces and Reverse Each Word:</strong> Iterate through the string with two pointers: a read pointer (<code>i</code>) to scan the current string and a write pointer (<code>right</code>) to build the clean, final string at the beginning of the same character array.<ul>
+<li>As you scan with <code>i</code>, skip any spaces.</li>
+<li>When a word is found, copy its characters from <code>i</code> to the position starting at <code>right</code>.</li>
+<li>After a word is copied, its characters (e.g., <code>"eulb"</code>) are now in the correct position. Reverse this specific word segment to restore its original spelling (e.g., <code>"blue"</code>).</li>
+<li>Append a single space after the corrected word using the <code>right</code> pointer.</li>
+</ul>
+</li>
+<li><strong>Final Cleanup:</strong> After iterating through all the words, the string might have a trailing space. Resize the string to its correct final length to remove this space and any other junk characters at the end.</li>
+</ol>
+<p>This method is highly efficient as each character is processed a constant number of times. The time complexity is O(N), and since all modifications happen on the input string itself, the space complexity is O(1).</p>
+<pre><code class="language-cpp">#include &lt;string&gt;
+#include &lt;algorithm&gt;
+#include &lt;vector&gt;
+
+class Solution {
+public:
+    std::string reverseWords(std::string s) {
+        // Step 1: Reverse the entire string
+        reverse(s.begin(), s.end());
+
+        int n = s.size();
+        int left = 0;
+        int right = 0;
+        int i = 0;
+
+        while (i &lt; n) {
+            // Skip leading/multiple spaces from the source
+            while (i &lt; n &amp;&amp; s[i] == ' ') {
+                i++;
+            }
+            if (i == n) {
+                break;
+            }
+
+            // Copy the word from read position (i) to write position (right)
+            while (i &lt; n &amp;&amp; s[i] != ' ') {
+                s[right++] = s[i++];
+            }
+
+            // Step 2: Reverse the current word which is now at [left, right-1]
+            reverse(s.begin() + left, s.begin() + right);
+
+            // Add a single space after the word
+            s[right++] = ' ';
+            left = right;
+        }
+
+        // Step 3: Resize the string to remove the trailing space
+        if (right &gt; 0) {
+            s.resize(right - 1);
+        } else {
+            s.resize(0); // Handle case of empty or all-space string
+        }
+
+        return s;
+    }
+};
+</code></pre>
+<hr />
+<h3>Pythonic Solution</h3>
+<p>The most idiomatic and concise Python solution leverages built-in string and list methods. It chains together <code>strip()</code>, <code>split()</code>, list reversal, and <code>join()</code> to achieve the result in a single, readable line. While this approach uses O(N) space for the list of words, it is the preferred and most practical solution in Python.</p>
+<ol>
+<li><code>s.strip()</code>: Removes any leading or trailing whitespace from the string.</li>
+<li><code>.split()</code>: Splits the string by any whitespace and returns a list of words. It automatically handles multiple spaces between words.</li>
+<li><code>[::-1]</code>: This slice notation reverses the list of words.</li>
+<li><code>" ".join(...)</code>: Joins the words from the reversed list into a new string, with a single space as the separator between them.</li>
+</ol>
+<pre><code class="language-python">class Solution:
+    def reverseWords(self, s: str) -&gt; str:
+        # 1. Strip leading/trailing spaces
+        # 2. Split the string by spaces into a list of words
+        # 3. Reverse the list of words
+        # 4. Join the words back with a single space
+        return &quot; &quot;.join(s.strip().split()[::-1])
+
+</code></pre></div>

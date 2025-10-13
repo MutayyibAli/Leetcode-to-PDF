@@ -1,0 +1,136 @@
+<div class='ai-explanation'><h3>List of all the approaches to solution</h3>
+<ol>
+<li>Brute Force Approach</li>
+<li>Stack-based Simulation Approach</li>
+<li>Two Pointers (In-place) Approach</li>
+</ol>
+<hr />
+<h3>Brute Force Approach</h3>
+<p>This approach directly simulates the process described in the problem. We repeatedly scan the string to find the first star. Once a star is found, we remove it along with the closest non-star character to its left. This process continues until no stars are left in the string. The repeated searching and erasing operations on the string make this method inefficient.</p>
+<p><strong>Step-by-step explanation:</strong>
+1.  Start a loop that continues as long as a star <code>*</code> exists in the string <code>s</code>.
+2.  Inside the loop, find the index of the first occurrence of a star. Let's call this <code>star_pos</code>.
+3.  If no star is found, break the loop.
+4.  The character to be removed is at <code>star_pos - 1</code>.
+5.  Erase both the character at <code>star_pos - 1</code> and the star at <code>star_pos</code>. A single <code>erase</code> operation can remove both by starting at <code>star_pos - 1</code> and removing 2 characters.
+6.  After the loop terminates, return the modified string.</p>
+<p>This approach is very slow because each <code>erase</code> operation on a string can take linear time, and we might perform this operation for every star present. The total time complexity is O(N * K) where N is the length of the string and K is the number of stars.</p>
+<pre><code class="language-cpp">#include &lt;string&gt;
+#include &lt;iostream&gt;
+
+class Solution {
+public:
+    std::string removeStars(std::string s) {
+        while (true) {
+            // Find the first star in the string
+            size_t star_pos = s.find('*');
+
+            // If no star is found, we are done
+            if (star_pos == std::string::npos) {
+                break;
+            }
+
+            // The character to remove is just before the star.
+            // The problem guarantees this operation is always possible.
+            size_t char_pos = star_pos - 1;
+
+            // Erase the character and the star
+            s.erase(char_pos, 2);
+        }
+        return s;
+    }
+};
+</code></pre>
+<hr />
+<h3>Stack-based Simulation Approach</h3>
+<p>A more efficient way to solve this is by realizing that the operation "remove the closest non-star character to its left" follows a Last-In, First-Out (LIFO) pattern. When we encounter a star, we need to remove the most recently added character. A stack is the perfect data structure for this behavior. We can use a <code>std::string</code> or <code>std::vector&lt;char&gt;</code> to act as a stack.</p>
+<p><strong>Step-by-step explanation:</strong>
+1.  Initialize an empty string or character vector, let's call it <code>result</code>, which will act as our stack.
+2.  Iterate through each character <code>c</code> of the input string <code>s</code>.
+3.  If <code>c</code> is a star <code>*</code>:
+    *   It signifies a removal operation. Pop the last character from <code>result</code>. The problem guarantees <code>result</code> will not be empty.
+4.  If <code>c</code> is not a star:
+    *   It's a regular character. Push it onto our <code>result</code> stack (append it to the end of the string/vector).
+5.  After iterating through all characters in <code>s</code>, the <code>result</code> string will contain the final sequence of characters. Return <code>result</code>.</p>
+<p>This approach processes each character once, with each push and pop operation taking constant amortized time. The time complexity is O(N), and the space complexity is O(N) to store the result.</p>
+<pre><code class="language-cpp">#include &lt;string&gt;
+
+class Solution {
+public:
+    std::string removeStars(std::string s) {
+        std::string result = &quot;&quot;; // Using a string as a stack
+        for (char c : s) {
+            if (c == '*') {
+                // If we see a star, pop the last character
+                if (!result.empty()) {
+                    result.pop_back();
+                }
+            } else {
+                // If it's a normal character, push it
+                result.push_back(c);
+            }
+        }
+        return result;
+    }
+};
+</code></pre>
+<hr />
+<h3>Two Pointers (In-place) Approach</h3>
+<p>This is the most optimized approach in terms of space. We can process the string in-place without using an explicit stack. We use two pointers: a <code>read</code> pointer to iterate through the original string and a <code>write</code> pointer to indicate the end of the valid, processed part of the string. The segment of the string from the beginning up to the <code>write</code> pointer effectively acts as our stack.</p>
+<p><strong>Step-by-step explanation:</strong>
+1.  Initialize a <code>write</code> pointer to <code>0</code>. This pointer will keep track of the position to place the next valid character.
+2.  Iterate through the string <code>s</code> with a <code>read</code> pointer (e.g., the loop index <code>i</code>).
+3.  For each character <code>s[read]</code>:
+    *   If <code>s[read]</code> is a star <code>*</code>:
+        *   This means we need to "pop" the last character. We do this by moving the <code>write</code> pointer one step back (<code>write--</code>).
+    *   If <code>s[read]</code> is a normal character:
+        *   This means we need to "push" it. We copy the character <code>s[read]</code> to the position <code>s[write]</code>.
+        *   Then, we advance the <code>write</code> pointer (<code>write++</code>).
+4.  After the loop finishes, all characters from index <code>0</code> to <code>write - 1</code> form the final string.
+5.  Resize the string <code>s</code> to the length <code>write</code> to discard the remaining characters.
+6.  Return the modified string.</p>
+<p>This approach has a time complexity of O(N) as we iterate through the string once. The space complexity is O(1) as we modify the string in-place and use no extra data structures.</p>
+<pre><code class="language-cpp">#include &lt;string&gt;
+
+class Solution {
+public:
+    std::string removeStars(std::string s) {
+        int write_ptr = 0;
+        for (int read_ptr = 0; read_ptr &lt; s.length(); ++read_ptr) {
+            if (s[read_ptr] == '*') {
+                // Move write pointer back to &quot;remove&quot; the last character
+                if (write_ptr &gt; 0) {
+                    write_ptr--;
+                }
+            } else {
+                // Place the current character at the write position
+                s[write_ptr] = s[read_ptr];
+                write_ptr++;
+            }
+        }
+        // Resize the string to the final length
+        s.resize(write_ptr);
+        return s;
+    }
+};
+</code></pre>
+<hr />
+<h3>Pythonic Solution (Best Approach)</h3>
+<p>The most Pythonic and readable solution uses a list as a stack, which corresponds to the "Stack-based Simulation Approach". While Python strings are immutable, making a true in-place modification like the C++ Two Pointers approach not possible without converting to a list first, this method is clean, idiomatic, and efficient.</p>
+<pre><code class="language-python">class Solution:
+    def removeStars(self, s: str) -&gt; str:
+        # Use a list to simulate a stack
+        res = []
+        for char in s:
+            if char == '*':
+                # If the list is not empty, pop the last element
+                if res:
+                    res.pop()
+            else:
+                # Append the character to the list
+                res.append(char)
+
+        # Join the characters in the list to form the final string
+        return &quot;&quot;.join(res)
+
+</code></pre></div>

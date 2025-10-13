@@ -1,0 +1,308 @@
+<div class='ai-explanation'><h3>List of all the approaches to solution</h3>
+<ol>
+<li>Brute Force Approach: Graph Traversal with Depth-First Search (DFS)</li>
+<li>Graph Traversal with Breadth-First Search (BFS)</li>
+<li>Union-Find (Disjoint Set Union)</li>
+</ol>
+<hr />
+<h3>Brute Force Approach: Graph Traversal with Depth-First Search (DFS)</h3>
+<p>This approach models the problem as a graph. Each variable is a node, and each equation <code>A / B = V</code> represents a directed edge from <code>A</code> to <code>B</code> with weight <code>V</code>, and another from <code>B</code> to <code>A</code> with weight <code>1/V</code>. To solve a query <code>C / D</code>, we need to find a path from node <code>C</code> to node <code>D</code> and multiply the weights of the edges along this path. Depth-First Search (DFS) is a natural way to perform this path-finding.</p>
+<ol>
+<li><strong>Build Graph:</strong> Construct a graph where keys are variables (strings) and values are adjacency lists. The adjacency list for a node stores its neighbors and the weight of the edge to that neighbor. For <code>A / B = V</code>, we add an edge <code>A -&gt; B</code> with weight <code>V</code> and <code>B -&gt; A</code> with weight <code>1/V</code>.</li>
+<li><strong>Process Queries:</strong> For each query <code>(C, D)</code>, start a DFS from node <code>C</code>.</li>
+<li><strong>DFS Traversal:</strong> The recursive DFS function explores paths starting from the current node. It takes the current node, the target node, a set of visited nodes (to avoid cycles), and the cumulative product of weights so far.</li>
+<li><strong>Find Path:</strong> If the DFS reaches the target node <code>D</code>, the current cumulative product is the answer for the query.</li>
+<li><strong>Handle Unsolvable Queries:</strong> If the search completes without finding <code>D</code>, or if <code>C</code> or <code>D</code> don't exist in the graph, no path exists, and the answer is <code>-1.0</code>.</li>
+</ol>
+<p>The time complexity is O(E) to build the graph and O(Q * (V+E)) for all queries, where E is the number of equations, Q is the number of queries, and V is the number of unique variables. The space complexity is O(V+E) to store the graph.</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;string&gt;
+#include &lt;unordered_map&gt;
+#include &lt;unordered_set&gt;
+
+class Solution {
+public:
+    // Helper function to perform DFS
+    double dfs(const std::string&amp; start, const std::string&amp; end, 
+               std::unordered_map&lt;std::string, std::unordered_map&lt;std::string, double&gt;&gt;&amp; graph, 
+               std::unordered_set&lt;std::string&gt;&amp; visited) {
+
+        // If start node is not in the graph, no path exists
+        if (graph.find(start) == graph.end()) {
+            return -1.0;
+        }
+
+        // If we have reached the destination
+        if (start == end) {
+            return 1.0;
+        }
+
+        visited.insert(start);
+
+        for (auto const&amp; [neighbor, value] : graph[start]) {
+            if (visited.find(neighbor) == visited.end()) {
+                double result = dfs(neighbor, end, graph, visited);
+                // If a path was found from the neighbor
+                if (result != -1.0) {
+                    return value * result;
+                }
+            }
+        }
+
+        return -1.0;
+    }
+
+    std::vector&lt;double&gt; calcEquation(std::vector&lt;std::vector&lt;std::string&gt;&gt;&amp; equations, 
+                                     std::vector&lt;double&gt;&amp; values, 
+                                     std::vector&lt;std::vector&lt;std::string&gt;&gt;&amp; queries) {
+
+        // Step 1: Build the graph
+        std::unordered_map&lt;std::string, std::unordered_map&lt;std::string, double&gt;&gt; graph;
+        for (int i = 0; i &lt; equations.size(); ++i) {
+            const std::string&amp; dividend = equations[i][0];
+            const std::string&amp; divisor = equations[i][1];
+            double value = values[i];
+
+            graph[dividend][divisor] = value;
+            graph[divisor][dividend] = 1.0 / value;
+        }
+
+        std::vector&lt;double&gt; results;
+
+        // Step 2: Process each query
+        for (const auto&amp; query : queries) {
+            const std::string&amp; start_node = query[0];
+            const std::string&amp; end_node = query[1];
+
+            // Check if nodes exist in the graph
+            if (graph.find(start_node) == graph.end() || graph.find(end_node) == graph.end()) {
+                results.push_back(-1.0);
+            } else {
+                std::unordered_set&lt;std::string&gt; visited;
+                results.push_back(dfs(start_node, end_node, graph, visited));
+            }
+        }
+
+        return results;
+    }
+};
+</code></pre>
+<hr />
+<h3>Graph Traversal with Breadth-First Search (BFS)</h3>
+<p>Similar to the DFS approach, this method uses a graph representation. However, instead of a recursive search, it uses Breadth-First Search (BFS) with a queue to find the path from a source to a destination node.</p>
+<ol>
+<li><strong>Build Graph:</strong> The graph construction is identical to the DFS approach.</li>
+<li><strong>Process Queries:</strong> For each query <code>(C, D)</code>, start a BFS from <code>C</code>.</li>
+<li><strong>BFS Traversal:</strong> Use a queue that stores pairs of <code>(node, current_product)</code>. Initialize it with <code>(C, 1.0)</code>.</li>
+<li><strong>Find Path:</strong> While the queue is not empty, dequeue an element. If the dequeued node is the target <code>D</code>, the associated product is the answer. Otherwise, add all its unvisited neighbors to the queue, updating the product for each (<code>current_product * edge_weight</code>).</li>
+<li><strong>Handle Unsolvable Queries:</strong> A <code>visited</code> set is used to avoid cycles. If the queue becomes empty and <code>D</code> has not been found, no path exists.</li>
+</ol>
+<p>The time complexity is O(E) for graph building and O(Q * (V+E)) for queries. The space complexity is O(V+E) for the graph and queue.</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;string&gt;
+#include &lt;unordered_map&gt;
+#include &lt;unordered_set&gt;
+#include &lt;queue&gt;
+
+class Solution {
+public:
+    std::vector&lt;double&gt; calcEquation(std::vector&lt;std::vector&lt;std::string&gt;&gt;&amp; equations, 
+                                     std::vector&lt;double&gt;&amp; values, 
+                                     std::vector&lt;std::vector&lt;std::string&gt;&gt;&amp; queries) {
+
+        // Step 1: Build the graph
+        std::unordered_map&lt;std::string, std::unordered_map&lt;std::string, double&gt;&gt; graph;
+        for (int i = 0; i &lt; equations.size(); ++i) {
+            graph[equations[i][0]][equations[i][1]] = values[i];
+            graph[equations[i][1]][equations[i][0]] = 1.0 / values[i];
+        }
+
+        std::vector&lt;double&gt; results;
+
+        // Step 2: Process each query using BFS
+        for (const auto&amp; query : queries) {
+            const std::string&amp; start = query[0];
+            const std::string&amp; end = query[1];
+
+            if (graph.find(start) == graph.end() || graph.find(end) == graph.end()) {
+                results.push_back(-1.0);
+                continue;
+            }
+
+            std::queue&lt;std::pair&lt;std::string, double&gt;&gt; q;
+            q.push({start, 1.0});
+            std::unordered_set&lt;std::string&gt; visited;
+            visited.insert(start);
+
+            bool found = false;
+            while (!q.empty()) {
+                auto [currentNode, currentProduct] = q.front();
+                q.pop();
+
+                if (currentNode == end) {
+                    results.push_back(currentProduct);
+                    found = true;
+                    break;
+                }
+
+                for (auto const&amp; [neighbor, value] : graph[currentNode]) {
+                    if (visited.find(neighbor) == visited.end()) {
+                        visited.insert(neighbor);
+                        q.push({neighbor, currentProduct * value});
+                    }
+                }
+            }
+
+            if (!found) {
+                results.push_back(-1.0);
+            }
+        }
+
+        return results;
+    }
+};
+</code></pre>
+<hr />
+<h3>Union-Find (Disjoint Set Union)</h3>
+<p>This is a more optimized approach that uses a Disjoint Set Union (DSU) data structure. It's particularly efficient for problems involving connected components. We modify the standard DSU to store not only the parent of a node but also the value of <code>node / parent</code>.</p>
+<ol>
+<li><strong>DSU Structure:</strong> Use a map to store <code>parent</code> pointers and <code>weights</code>. For a node <code>A</code>, we store <code>(parent(A), A / parent(A))</code>.</li>
+<li><strong><code>find</code> operation:</strong> This operation finds the root of the set containing a node. It also performs path compression: as it traverses up to the root, it updates each node's parent to be the root and recalculates its weight relative to the new root (e.g., <code>A/root = (A/old_parent) * (old_parent/root)</code>).</li>
+<li><strong><code>union</code> operation:</strong> Given <code>A / B = V</code>, this operation merges the sets containing <code>A</code> and <code>B</code>. It finds their roots (<code>rootA</code>, <code>rootB</code>) and links them, e.g., <code>parent[rootA] = rootB</code>. The weight <code>rootA / rootB</code> is calculated using <code>V</code> and the known weights <code>A / rootA</code> and <code>B / rootB</code>.</li>
+<li><strong>Build and Query:</strong> First, process all equations using <code>union</code> operations. Then, for each query <code>(C, D)</code>, use <code>find</code> to get their roots and values relative to their roots. If they have the same root, <code>C / D = (C / root) / (D / root)</code>. Otherwise, they are disconnected, and the answer is <code>-1.0</code>.</li>
+</ol>
+<p>The time complexity is O((E + Q) * α(V)), where α is the Inverse Ackermann function, making <code>find</code> and <code>union</code> operations nearly constant time. The space complexity is O(V) to store the DSU structure.</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;string&gt;
+#include &lt;unordered_map&gt;
+
+class Solution {
+private:
+    // parent map: key -&gt; {parent, value of key/parent}
+    std::unordered_map&lt;std::string, std::pair&lt;std::string, double&gt;&gt; parent;
+
+    // Find operation with path compression
+    std::pair&lt;std::string, double&gt; find(const std::string&amp; s) {
+        if (parent.find(s) == parent.end()) {
+            parent[s] = {s, 1.0};
+            return {s, 1.0};
+        }
+
+        auto [p_node, p_val] = parent[s];
+        if (s != p_node) {
+            auto [root, root_val] = find(p_node);
+            parent[s] = {root, p_val * root_val};
+        }
+        return parent[s];
+    }
+
+    // Union operation
+    void unite(const std::string&amp; s1, const std::string&amp; s2, double value) {
+        auto [root1, val1] = find(s1);
+        auto [root2, val2] = find(s2);
+
+        if (root1 != root2) {
+            // value = s1 / s2
+            // root1 / root2 = (s2 / root2) / (s1 / root1) * (s1 / s2)
+            //             = val2 / val1 * value
+            parent[root1] = {root2, (val2 / val1) * value};
+        }
+    }
+
+public:
+    std::vector&lt;double&gt; calcEquation(std::vector&lt;std::vector&lt;std::string&gt;&gt;&amp; equations, 
+                                     std::vector&lt;double&gt;&amp; values, 
+                                     std::vector&lt;std::vector&lt;std::string&gt;&gt;&amp; queries) {
+
+        for (int i = 0; i &lt; equations.size(); ++i) {
+            unite(equations[i][0], equations[i][1], values[i]);
+        }
+
+        std::vector&lt;double&gt; results;
+        for (const auto&amp; q : queries) {
+            const std::string&amp; s1 = q[0];
+            const std::string&amp; s2 = q[1];
+
+            // If either node is not in the equations, it's undefined
+            if (parent.find(s1) == parent.end() || parent.find(s2) == parent.end()) {
+                results.push_back(-1.0);
+                continue;
+            }
+
+            auto [root1, val1] = find(s1);
+            auto [root2, val2] = find(s2);
+
+            if (root1 != root2) {
+                results.push_back(-1.0); // Not in the same component
+            } else {
+                // s1 / s2 = (s1 / root) / (s2 / root)
+                results.push_back(val1 / val2);
+            }
+        }
+
+        return results;
+    }
+};
+</code></pre>
+<hr />
+<h3>Pythonic Solution for Best Approach (Union-Find)</h3>
+<p>The Union-Find approach is the most efficient. This Python implementation is concise and effectively uses a dictionary to represent the DSU data structure. The <code>find</code> operation uses recursion for path compression and tuple unpacking for clean value updates.</p>
+<pre><code class="language-python">import collections
+
+class Solution:
+    def calcEquation(self, equations: list[list[str]], values: list[float], queries: list[list[str]]) -&gt; list[float]:
+        # root map: variable -&gt; (parent, value of variable/parent)
+        root = {}
+
+        # find(x) returns (root of x, value of x/root)
+        def find(x):
+            # If x is a new variable, it is its own root.
+            if x not in root:
+                root[x] = (x, 1.0)
+                return root[x]
+
+            parent_x, val = root[x]
+            # Path compression: if x is not its own root, find its ultimate root
+            if x != parent_x:
+                ultimate_root, parent_to_root_val = find(parent_x)
+                # Update x's parent to the ultimate root and update the ratio
+                # x/ultimate_root = (x/parent_x) * (parent_x/ultimate_root)
+                root[x] = (ultimate_root, val * parent_to_root_val)
+            return root[x]
+
+        # union(x, y, v) where x / y = v
+        def union(x, y, v):
+            root_x, val_x = find(x) # val_x = x / root_x
+            root_y, val_y = find(y) # val_y = y / root_y
+
+            if root_x != root_y:
+                # set root_x's parent to root_y
+                # We need to find the value of root_x / root_y
+                # root_x / root_y = (y / root_y) / (x / root_x) * (x / y)
+                #                 = val_y / val_x * v
+                root[root_x] = (root_y, val_y / val_x * v)
+
+        # Build the DSU structure from equations
+        for (x, y), v in zip(equations, values):
+            union(x, y, v)
+
+        results = []
+        for x, y in queries:
+            # If either variable is unknown, the result is -1.0
+            if x not in root or y not in root:
+                results.append(-1.0)
+                continue
+
+            root_x, val_x = find(x)
+            root_y, val_y = find(y)
+
+            # If they don't share a root, they are not connected
+            if root_x != root_y:
+                results.append(-1.0)
+            else:
+                # x / y = (x / root) / (y / root)
+                results.append(val_x / val_y)
+
+        return results
+
+</code></pre></div>

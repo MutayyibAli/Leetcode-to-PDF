@@ -1,0 +1,176 @@
+<div class='ai-explanation'><h3>List of all the approaches to solution</h3>
+<ul>
+<li>Brute Force Approach</li>
+<li>Two-Pass Approach</li>
+<li>One-Pass "Peak and Valley" Approach</li>
+</ul>
+<h3>Brute Force Approach</h3>
+<p>This approach repeatedly scans the <code>ratings</code> array and adjusts the candy count for each child until all conditions are met.</p>
+<ol>
+<li>Initialize a <code>candies</code> array of size <code>n</code>, giving each child 1 candy to satisfy the first condition.</li>
+<li>Use a loop that continues as long as any candy assignments were changed in the previous full pass. A boolean flag, <code>hasChanged</code>, can track this.</li>
+<li>Inside the loop, perform two passes:<ul>
+<li><strong>Left-to-Right Pass</strong>: Iterate from the second child to the end. If a child has a higher rating than their left neighbor but not more candies, update their candy count to be one more than their neighbor's. Set <code>hasChanged</code> to true.</li>
+<li><strong>Right-to-Left Pass</strong>: Iterate from the second-to-last child to the beginning. If a child has a higher rating than their right neighbor but not more candies, update their candy count. Set <code>hasChanged</code> to true.</li>
+</ul>
+</li>
+<li>The loop terminates when a full iteration (both passes) results in no changes, meaning the candy distribution is stable and correct.</li>
+<li>Finally, sum the values in the <code>candies</code> array to get the total.</li>
+</ol>
+<p>This approach is correct but inefficient, as it may take many passes to propagate the correct candy counts across the line. The time complexity is O(n²) in the worst case, and the space complexity is O(n).</p>
+<pre><code class="language-cpp">int n = ratings.size();
+if (n == 0) {
+    return 0;
+}
+std::vector&lt;int&gt; candies(n, 1);
+bool hasChanged = true;
+while (hasChanged) {
+    hasChanged = false;
+    // Check against left neighbors
+    for (int i = 1; i &lt; n; i++) {
+        if (ratings[i] &gt; ratings[i - 1] &amp;&amp; candies[i] &lt;= candies[i - 1]) {
+            candies[i] = candies[i - 1] + 1;
+            hasChanged = true;
+        }
+    }
+    // Check against right neighbors
+    for (int i = n - 2; i &gt;= 0; i--) {
+        if (ratings[i] &gt; ratings[i + 1] &amp;&amp; candies[i] &lt;= candies[i + 1]) {
+            candies[i] = candies[i + 1] + 1;
+            hasChanged = true;
+        }
+    }
+}
+int totalCandies = 0;
+for (int c : candies) {
+    totalCandies += c;
+}
+return totalCandies;
+</code></pre>
+<h3>Two-Pass Approach</h3>
+<p>This greedy approach elegantly solves the problem by separating the neighbor constraints into two sequential passes.</p>
+<ol>
+<li>Create a <code>candies</code> array of the same size as <code>ratings</code> and initialize each child's candy count to 1.</li>
+<li><strong>First Pass (Left-to-Right)</strong>: Iterate from the second child (<code>i=1</code>) to the end. If <code>ratings[i]</code> is greater than <code>ratings[i-1]</code>, it means the current child must have more candy than their left neighbor. So, we set <code>candies[i] = candies[i-1] + 1</code>. After this pass, the "left neighbor" rule is satisfied for all children.</li>
+<li><strong>Second Pass (Right-to-Left)</strong>: Iterate from the second-to-last child (<code>i=n-2</code>) back to the first. If <code>ratings[i]</code> is greater than <code>ratings[i+1]</code>, the current child must also have more candy than their right neighbor. We update their candy count to be <code>max(candies[i], candies[i+1] + 1)</code>. We use <code>max</code> because the child might already have been assigned a larger number of candies from the first pass, and we must not violate the left-neighbor condition.</li>
+<li>After these two passes, every child's candy count satisfies both neighbor conditions. The total number of candies is the sum of all elements in the <code>candies</code> array.</li>
+</ol>
+<p>This approach makes two linear scans of the array, resulting in a time complexity of O(n) and a space complexity of O(n) for the auxiliary <code>candies</code> array.</p>
+<pre><code class="language-cpp">int n = ratings.size();
+if (n == 0) {
+    return 0;
+}
+std::vector&lt;int&gt; candies(n, 1);
+
+// Left-to-right pass
+for (int i = 1; i &lt; n; ++i) {
+    if (ratings[i] &gt; ratings[i - 1]) {
+        candies[i] = candies[i - 1] + 1;
+    }
+}
+
+// Right-to-left pass
+for (int i = n - 2; i &gt;= 0; --i) {
+    if (ratings[i] &gt; ratings[i + 1]) {
+        candies[i] = std::max(candies[i], candies[i + 1] + 1);
+    }
+}
+
+int totalCandies = 0;
+for (int candy : candies) {
+    totalCandies += candy;
+}
+return totalCandies;
+</code></pre>
+<h3>One-Pass "Peak and Valley" Approach</h3>
+<p>This is the most optimal solution, calculating the result in a single pass with constant extra space. The idea is to view the ratings array as a series of slopes, forming peaks and valleys.</p>
+<ol>
+<li>Start with a total <code>candy</code> count of <code>n</code>, assuming each child gets one candy initially. We will only add the <em>extra</em> candies required.</li>
+<li>Iterate through the array from the second child (<code>i=1</code>), processing sequences of ascending and descending slopes.</li>
+<li><strong>Ascending Slope</strong>: When <code>ratings[i] &gt; ratings[i-1]</code>, we are on an uphill slope. We count its length (<code>peak</code>). For each step up, the current child needs <code>peak</code> extra candies (on top of the base 1). We add <code>peak</code> to the total <code>candy</code> count.</li>
+<li><strong>Descending Slope</strong>: When <code>ratings[i] &lt; ratings[i-1]</code>, we are on a downhill slope. We count its length (<code>valley</code>). Similarly, for each step down, we add <code>valley</code> to the total <code>candy</code> count to satisfy the neighbor rule for the children on this slope.</li>
+<li><strong>Peak Correction</strong>: A child at the peak of a hill must have more candies than both neighbors. The number of candies they need is determined by the longer of the two slopes connected to them. Our separate calculations for ascending and descending slopes double-count the allocation for the peak child. To fix this, we subtract <code>min(peak, valley)</code> from the total, effectively ensuring the peak child's candy count corresponds to the maximum of the two slope lengths.</li>
+<li>If <code>ratings[i] == ratings[i-1]</code>, the slope is broken, and a new sequence starts. The child gets 1 candy, which is already accounted for.</li>
+</ol>
+<p>This method correctly calculates the total minimum candies by summing up contributions from slopes and adjusting at the peaks. The time complexity is O(n), and the space complexity is O(1).</p>
+<pre><code class="language-cpp">int n = ratings.size();
+if (n &lt;= 1) {
+    return n;
+}
+int candy = n, i = 1;
+while(i &lt; n){
+    if(ratings[i] == ratings[i-1]){
+        i++;
+        continue;
+    }
+
+    // Count the length of the current ascending slope
+    int peak = 0;
+    while(i &lt; n &amp;&amp; ratings[i] &gt; ratings[i-1]){
+        peak++;
+        candy += peak;
+        i++;
+    }
+
+    // Count the length of the current descending slope
+    int valley = 0;
+    while(i &lt; n &amp;&amp; ratings[i] &lt; ratings[i-1]){
+        valley++;
+        candy += valley;
+        i++;
+    }
+
+    // Correct for the peak, which was part of both slopes.
+    // Its candy count should be based on the longer slope.
+    candy -= std::min(peak, valley);
+}
+return candy;
+</code></pre>
+<h3>Pythonic solution for best approach</h3>
+<p>The best approach is the One-Pass "Peak and Valley" method due to its O(1) space complexity. The Pythonic solution below implements this logic by iterating through pairs of adjacent ratings and dynamically calculating the total candies.</p>
+<pre><code class="language-python">def candy(ratings: list[int]) -&gt; int:
+    &quot;&quot;&quot;
+    Calculates the minimum number of candies needed in a single pass.
+
+    Time Complexity: O(n)
+    Space Complexity: O(1)
+    &quot;&quot;&quot;
+    if not ratings:
+        return 0
+
+    n = len(ratings)
+    if n &lt;= 1:
+        return n
+
+    # total_candies starts at 1 for the first child.
+    # up: length of the current increasing sequence.
+    # down: length of the current decreasing sequence.
+    # peak: length of the previous increasing sequence before a decrease.
+    total_candies, up, down, peak = 1, 0, 0, 0
+
+    for i in range(1, n):
+        # Case 1: Increasing slope
+        if ratings[i] &gt; ratings[i-1]:
+            up += 1
+            down = 0
+            peak = up
+            # Current child gets 1 (base) + up (extra) candies.
+            total_candies += 1 + up
+        # Case 2: Equal ratings
+        elif ratings[i] == ratings[i-1]:
+            up, down, peak = 0, 0, 0
+            # Current child gets 1 candy.
+            total_candies += 1
+        # Case 3: Decreasing slope
+        else:
+            up = 0
+            down += 1
+            # Add 1 for the current child + `down` candies for the previous `down` children.
+            # Subtract 1 if the peak was already high enough (peak &gt;= down),
+            # to avoid giving the peak child an unnecessary extra candy.
+            correction = 1 if peak &gt;= down else 0
+            total_candies += 1 + down - correction
+
+    return total_candies
+
+</code></pre></div>

@@ -1,0 +1,168 @@
+<div class='ai-explanation'><h3>List of all the approaches to solution</h3>
+<ul>
+<li>Brute Force Approach (Using a Hash Map)</li>
+<li>Optimal Approach (Interweaving Nodes)</li>
+</ul>
+<h3>Brute Force Approach (Using a Hash Map)</h3>
+<p>This approach uses a hash map to maintain a one-to-one mapping between the nodes of the original list and their corresponding newly created copies. The main challenge in this problem is setting the <code>random</code> pointer correctly, as a node's random pointer might point to a node that appears later in the list. The hash map elegantly solves this by allowing us to access any copied node in O(1) average time. The process involves two main passes over the original list.</p>
+<ol>
+<li><strong>First Pass (Node Creation):</strong> Iterate through the original linked list. For each node encountered, create a new <code>Node</code> with the same value. Store this mapping in a hash map where the key is the original node and the value is its newly created copy.</li>
+<li><strong>Second Pass (Pointer Assignment):</strong> Iterate through the original linked list again. For each original node <code>curr</code>, find its corresponding copy <code>copy_curr</code> from the hash map. The <code>next</code> pointer of <code>copy_curr</code> should point to the copy of <code>curr-&gt;next</code>. Similarly, the <code>random</code> pointer of <code>copy_curr</code> should point to the copy of <code>curr-&gt;random</code>. Both these copies can be retrieved from the hash map.</li>
+<li><strong>Return New Head:</strong> The head of the new list is the copied node corresponding to the original head, which can be retrieved from the map.</li>
+</ol>
+<p>This algorithm requires two traversals of the list, leading to a linear time complexity, and uses extra space proportional to the number of nodes for the hash map. The time complexity is O(N) and the space complexity is O(N).</p>
+<pre><code class="language-cpp">/*
+// Definition for a Node.
+class Node {
+public:
+    int val;
+    Node* next;
+    Node* random;
+
+    Node(int _val) {
+        val = _val;
+        next = NULL;
+        random = NULL;
+    }
+};
+*/
+
+class Solution {
+public:
+    Node* copyRandomList(Node* head) {
+        if (!head) return nullptr;
+
+        std::unordered_map&lt;Node*, Node*&gt; old_to_new;
+
+        // First pass: create all the new nodes and map old nodes to new nodes.
+        Node* curr = head;
+        while (curr) {
+            old_to_new[curr] = new Node(curr-&gt;val);
+            curr = curr-&gt;next;
+        }
+
+        // Second pass: connect the next and random pointers for the new nodes.
+        curr = head;
+        while (curr) {
+            old_to_new[curr]-&gt;next = old_to_new[curr-&gt;next];
+            old_to_new[curr]-&gt;random = old_to_new[curr-&gt;random];
+            curr = curr-&gt;next;
+        }
+
+        return old_to_new[head];
+    }
+};
+</code></pre>
+<h3>Optimal Approach (Interweaving Nodes)</h3>
+<p>This optimized approach achieves the deep copy without using any extra space, aside from the space required for the new list itself. It works by cleverly modifying the original list's structure in-place to establish the mapping between old and new nodes, and then restoring it at the end. This is done in three passes.</p>
+<ol>
+<li><strong>First Pass (Weave New Nodes):</strong> Traverse the original list. For each node, create a copy and "weave" it into the list right after the original node. For an original node <code>A</code>, its copy <code>A'</code> is inserted between <code>A</code> and <code>A</code>'s original <code>next</code> node. The list transforms from <code>A -&gt; B -&gt; C</code> to <code>A -&gt; A' -&gt; B -&gt; B' -&gt; C -&gt; C'</code>.</li>
+<li><strong>Second Pass (Set Random Pointers):</strong> Traverse the modified (interwoven) list. For each original node <code>curr</code>, its copy is <code>curr-&gt;next</code>. The random pointer of the copy (<code>curr-&gt;next-&gt;random</code>) should point to the copy of the original's random target (<code>curr-&gt;random</code>). In the interwoven list, the copy of <code>curr-&gt;random</code> is simply <code>curr-&gt;random-&gt;next</code>. So, we set <code>curr-&gt;next-&gt;random = curr-&gt;random-&gt;next</code>. A check for a null random pointer is necessary.</li>
+<li><strong>Third Pass (Separate Lists):</strong> Traverse the interwoven list one last time to separate it back into two distinct lists: the original and the copy. This is done by redirecting the <code>next</code> pointers. The original node's <code>next</code> is restored to point to the next original node (<code>curr-&gt;next-&gt;next</code>), and the copied node's <code>next</code> is set to point to the next copied node (<code>curr_new-&gt;next-&gt;next</code>).</li>
+</ol>
+<p>This approach avoids the O(N) space complexity of the hash map by using the <code>next</code> pointers of the original nodes to temporarily store their copies. The time complexity is O(N) due to the three passes, and the space complexity is O(1).</p>
+<pre><code class="language-cpp">/*
+// Definition for a Node.
+class Node {
+public:
+    int val;
+    Node* next;
+    Node* random;
+
+    Node(int _val) {
+        val = _val;
+        next = NULL;
+        random = NULL;
+    }
+};
+*/
+
+class Solution {
+public:
+    Node* copyRandomList(Node* head) {
+        if (!head) return nullptr;
+
+        // Pass 1: Create a copy of each node and interweave them.
+        // A -&gt; B -&gt; C  becomes  A -&gt; A' -&gt; B -&gt; B' -&gt; C -&gt; C'
+        Node* curr = head;
+        while (curr) {
+            Node* new_node = new Node(curr-&gt;val);
+            new_node-&gt;next = curr-&gt;next;
+            curr-&gt;next = new_node;
+            curr = new_node-&gt;next;
+        }
+
+        // Pass 2: Set the random pointers for the copied nodes.
+        curr = head;
+        while (curr) {
+            if (curr-&gt;random) {
+                curr-&gt;next-&gt;random = curr-&gt;random-&gt;next;
+            }
+            curr = curr-&gt;next-&gt;next;
+        }
+
+        // Pass 3: Separate the interwoven lists into original and copied lists.
+        Node* old_head = head;
+        Node* new_head = head-&gt;next;
+        Node* curr_old = old_head;
+        Node* curr_new = new_head;
+
+        while (curr_old) {
+            curr_old-&gt;next = curr_old-&gt;next-&gt;next;
+            curr_new-&gt;next = curr_new-&gt;next ? curr_new-&gt;next-&gt;next : nullptr;
+            curr_old = curr_old-&gt;next;
+            curr_new = curr_new-&gt;next;
+        }
+
+        return new_head;       
+    }
+};
+</code></pre>
+<h3>Pythonic solution for best approach</h3>
+<pre><code class="language-python"># Definition for a Node.
+# class Node:
+#     def __init__(self, x: int, next: 'Node' = None, random: 'Node' = None):
+#         self.val = int(x)
+#         self.next = next
+#         self.random = random
+
+class Solution:
+    def copyRandomList(self, head: 'Optional[Node]') -&gt; 'Optional[Node]':
+        if not head:
+            return None
+
+        # Pass 1: Create a copy of each node and interweave them.
+        # A -&gt; B -&gt; C becomes A -&gt; A' -&gt; B -&gt; B' -&gt; C -&gt; C'
+        curr = head
+        while curr:
+            new_node = Node(curr.val, curr.next)
+            curr.next = new_node
+            curr = new_node.next
+
+        # Pass 2: Set the random pointers for the copied nodes.
+        curr = head
+        while curr:
+            if curr.random:
+                # The random pointer of the copy should point to the copy of the original's random node.
+                # The copy of curr.random is curr.random.next in the interwoven list.
+                curr.next.random = curr.random.next
+            curr = curr.next.next
+
+        # Pass 3: Separate the interwoven lists.
+        old_head = head
+        new_head = head.next
+        curr_old = old_head
+        curr_new = new_head
+
+        while curr_old:
+            curr_old.next = curr_old.next.next
+            if curr_new.next:
+                curr_new.next = curr_new.next.next
+            else:
+                curr_new.next = None
+
+            curr_old = curr_old.next
+            curr_new = curr_new.next
+
+        return new_head
+</code></pre></div>

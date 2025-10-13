@@ -1,0 +1,147 @@
+<div class='ai-explanation'><h3>List of approaches</h3>
+<ol>
+<li>Brute Force Approach (Two-Pass)</li>
+<li>One-Pass Approach using Two Pointers</li>
+</ol>
+<hr />
+<h3>Approach 1: Brute Force Approach (Two-Pass)</h3>
+<p>This straightforward approach involves two separate traversals of the linked list. The first pass is to determine the total length of the list, and the second pass is to locate and remove the target node.</p>
+<ol>
+<li><strong>First Pass (Find Length):</strong> Iterate through the entire linked list from the <code>head</code> to count the total number of nodes, <code>L</code>.</li>
+<li><strong>Calculate Position:</strong> The Nth node from the end is the <code>(L - n + 1)</code>-th node from the beginning. To remove this node, we need to access its predecessor, which is at the <code>(L - n)</code>-th position (1-indexed).</li>
+<li><strong>Handle Edge Case (Removing Head):</strong> If <code>n</code> is equal to the length <code>L</code>, it means we need to remove the head node. In this case, we simply return <code>head-&gt;next</code>.</li>
+<li><strong>Second Pass (Find Predecessor):</strong> Traverse the list again from the <code>head</code> and stop at the node just before the one to be removed (i.e., the <code>(L - n - 1)</code>-th node, 0-indexed).</li>
+<li><strong>Remove Node:</strong> Update the <code>next</code> pointer of the predecessor node to skip over the target node, effectively deleting it from the list. <code>predecessor-&gt;next = predecessor-&gt;next-&gt;next</code>.</li>
+<li>Return the original <code>head</code>.</li>
+</ol>
+<p>This approach has a time complexity of O(L) because the list is traversed twice, and a space complexity of O(1).</p>
+<pre><code class="language-cpp">/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* removeNthFromEnd(ListNode* head, int n) {
+        int length = 0;
+        ListNode* temp = head;
+        while (temp != nullptr) {
+            length++;
+            temp = temp-&gt;next;
+        }
+
+        // Edge case: remove the head
+        if (length == n) {
+            ListNode* newHead = head-&gt;next;
+            delete head;
+            return newHead;
+        }
+
+        // Find the predecessor of the node to be removed
+        ListNode* prev = head;
+        for (int i = 0; i &lt; length - n - 1; ++i) {
+            prev = prev-&gt;next;
+        }
+
+        // Remove the nth node
+        ListNode* toDelete = prev-&gt;next;
+        prev-&gt;next = prev-&gt;next-&gt;next;
+        delete toDelete;
+
+        return head;
+    }
+};
+</code></pre>
+<hr />
+<h3>Approach 2: One-Pass Approach using Two Pointers</h3>
+<p>This optimized approach solves the problem in a single traversal using two pointers. The key idea is to maintain a fixed distance of <code>n</code> nodes between the two pointers. When the faster pointer reaches the end, the slower pointer will be exactly at the predecessor of the node to be deleted.</p>
+<ol>
+<li><strong>Use a Dummy Node:</strong> Create a <code>dummy</code> node that points to the <code>head</code>. This is a common technique to simplify edge cases, such as removing the first node of the list.</li>
+<li><strong>Initialize Pointers:</strong> Start two pointers, <code>slow</code> and <code>fast</code>, at the <code>dummy</code> node. However, to establish the gap, we can initialize <code>slow</code> at <code>dummy</code> and <code>fast</code> at <code>head</code>.</li>
+<li><strong>Create a Gap:</strong> Advance the <code>fast</code> pointer <code>n</code> steps into the list. This creates a gap of <code>n</code> nodes between where <code>slow</code>'s corresponding node is (<code>head</code>) and <code>fast</code>.</li>
+<li><strong>Move in Tandem:</strong> Move both <code>slow</code> and <code>fast</code> pointers one step at a time until <code>fast</code> reaches the end of the list (<code>fast == nullptr</code>).</li>
+<li><strong>Identify Predecessor:</strong> When the <code>fast</code> pointer is at the end, the <code>slow</code> pointer will be positioned just before the Nth node from the end.</li>
+<li><strong>Remove Node:</strong> Update the <code>next</code> pointer of the <code>slow</code> node to bypass the target node: <code>slow-&gt;next = slow-&gt;next-&gt;next</code>.</li>
+<li>Return <code>dummy-&gt;next</code>, which is the new head of the modified list.</li>
+</ol>
+<p>This approach has a time complexity of O(L) as it traverses the list only once, and a space complexity of O(1).</p>
+<pre><code class="language-cpp">/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* removeNthFromEnd(ListNode* head, int n) {
+        ListNode* dummy = new ListNode(0, head);
+        ListNode* slow = dummy;
+        ListNode* fast = head;
+
+        // Move fast pointer n steps ahead
+        for (int i = 0; i &lt; n; ++i) {
+            fast = fast-&gt;next;
+        }
+
+        // Move both pointers until fast reaches the end of the list
+        while (fast != nullptr) {
+            fast = fast-&gt;next;
+            slow = slow-&gt;next;
+        }
+
+        // slow is now at the node before the one to be removed.
+        // Remove the target node.
+        ListNode* toDelete = slow-&gt;next;
+        slow-&gt;next = slow-&gt;next-&gt;next;
+        delete toDelete; // Good practice for C++, optional on LeetCode
+
+        ListNode* newHead = dummy-&gt;next;
+        delete dummy; // Good practice
+
+        return newHead;
+    }
+};
+</code></pre>
+<hr />
+<h3>Pythonic Solution for Best Approach</h3>
+<p>The one-pass, two-pointer approach is the most efficient. The Python solution below is a clean implementation of this method using a dummy node to gracefully handle edge cases.</p>
+<pre><code class="language-python">from typing import Optional
+
+# Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, val=0, next=None):
+#         self.val = val
+#         self.next = next
+
+class Solution:
+    def removeNthFromEnd(self, head: Optional[ListNode], n: int) -&gt; Optional[ListNode]:
+        # Create a dummy node to handle edge cases like removing the first node.
+        dummy = ListNode(0, head)
+        slow = dummy
+        fast = head
+
+        # Move the fast pointer n steps ahead.
+        for _ in range(n):
+            fast = fast.next
+
+        # Move both pointers simultaneously until the fast pointer reaches the end.
+        while fast:
+            slow = slow.next
+            fast = fast.next
+
+        # At this point, slow is the node just before the one we want to remove.
+        # Remove the nth node from the end by updating the next pointer.
+        slow.next = slow.next.next
+
+        return dummy.next
+
+</code></pre></div>

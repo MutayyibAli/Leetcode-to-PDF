@@ -1,0 +1,220 @@
+<div class='ai-explanation'><h3>List of all the approaches to solution</h3>
+<ol>
+<li>Brute Force Recursion</li>
+<li>Recursion with Memoization (Top-Down DP)</li>
+<li>Breadth-First Search (BFS)</li>
+<li>Dynamic Programming (Bottom-Up DP)</li>
+</ol>
+<hr />
+<h3>1. Brute Force Recursion</h3>
+<p>This approach uses a simple recursive function to check all possible segmentations of the string. The function checks every possible prefix of the string. If a prefix is found in the dictionary, it makes a recursive call on the rest of the string (the suffix). The base case for the recursion is an empty string, which is considered a valid segmentation. This method is straightforward but highly inefficient because it recomputes results for the same substrings multiple times.</p>
+<ol>
+<li>Create a recursive function that takes the remaining string <code>s</code> as input.</li>
+<li>The base case: if <code>s</code> is empty, return <code>true</code>.</li>
+<li>Iterate through all possible prefixes of <code>s</code> (from length 1 to <code>s.length()</code>).</li>
+<li>For each <code>prefix</code>, check if it exists in the <code>wordDict</code>.</li>
+<li>If the <code>prefix</code> is in the dictionary, recursively call the function with the remaining <code>suffix</code>.</li>
+<li>If the recursive call returns <code>true</code>, it means a valid segmentation is found, so return <code>true</code> immediately.</li>
+<li>If the loop finishes without finding any valid segmentation, return <code>false</code>.</li>
+</ol>
+<p>This approach has an exponential time complexity, O(2^n), due to the branching nature of the recursion on overlapping subproblems, and a space complexity of O(n) for the recursion stack depth.</p>
+<pre><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;string&gt;
+#include &lt;vector&gt;
+#include &lt;unordered_set&gt;
+
+class Solution {
+public:
+    bool wordBreak(std::string s, std::vector&lt;std::string&gt;&amp; wordDict) {
+        std::unordered_set&lt;std::string&gt; dict(wordDict.begin(), wordDict.end());
+        return check(s, dict);
+    }
+
+private:
+    bool check(std::string s, std::unordered_set&lt;std::string&gt;&amp; dict) {
+        if (s.empty()) {
+            return true;
+        }
+        for (int i = 1; i &lt;= s.length(); ++i) {
+            std::string prefix = s.substr(0, i);
+            if (dict.count(prefix) &amp;&amp; check(s.substr(i), dict)) {
+                return true;
+            }
+        }
+        return false;
+    }
+};
+</code></pre>
+<hr />
+<h3>2. Recursion with Memoization (Top-Down DP)</h3>
+<p>This approach optimizes the brute-force recursion by using memoization to avoid re-computation for the same subproblems. We use a memoization array (or map) to store the results of whether a substring starting from a particular index can be segmented. Before computing the result for a substring, we check if it's already in our memo table.</p>
+<ol>
+<li>Use a helper function that takes a starting index <code>start</code> as an argument.</li>
+<li>Create a memoization array <code>memo</code> initialized to a state indicating "not computed".</li>
+<li>Base case: If <code>start</code> reaches the end of the string, return <code>true</code>.</li>
+<li>Memoization check: If the result for <code>memo[start]</code> has already been computed, return it.</li>
+<li>Iterate <code>end</code> from <code>start + 1</code> to the end of the string. This defines the substring <code>s.substr(start, end - start)</code>.</li>
+<li>If the substring is in the dictionary and a recursive call for the rest of the string (starting from <code>end</code>) returns <code>true</code>, then we've found a valid segmentation.</li>
+<li>Store <code>true</code> in <code>memo[start]</code> and return <code>true</code>.</li>
+<li>If the loop completes without finding a solution, store <code>false</code> in <code>memo[start]</code> and return <code>false</code>.</li>
+</ol>
+<p>The time complexity is O(n^3) due to the nested loops and substring creation, and the space complexity is O(n) for the recursion stack and memoization array.</p>
+<pre><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;string&gt;
+#include &lt;vector&gt;
+#include &lt;unordered_set&gt;
+
+class Solution {
+public:
+    bool wordBreak(std::string s, std::vector&lt;std::string&gt;&amp; wordDict) {
+        std::unordered_set&lt;std::string&gt; dict(wordDict.begin(), wordDict.end());
+        // memo[i] can be -1 (not computed), 0 (false), or 1 (true)
+        std::vector&lt;int&gt; memo(s.length(), -1);
+        return check(s, dict, 0, memo);
+    }
+
+private:
+    bool check(const std::string&amp; s, const std::unordered_set&lt;std::string&gt;&amp; dict, int start, std::vector&lt;int&gt;&amp; memo) {
+        if (start == s.length()) {
+            return true;
+        }
+        if (memo[start] != -1) {
+            return memo[start] == 1;
+        }
+
+        for (int end = start + 1; end &lt;= s.length(); ++end) {
+            if (dict.count(s.substr(start, end - start)) &amp;&amp; check(s, dict, end, memo)) {
+                memo[start] = 1;
+                return true;
+            }
+        }
+
+        memo[start] = 0;
+        return false;
+    }
+};
+</code></pre>
+<hr />
+<h3>3. Breadth-First Search (BFS)</h3>
+<p>The problem can be modeled as a graph traversal problem. Consider the indices of the string (from 0 to <code>n</code>) as nodes in a graph. An edge exists from index <code>i</code> to <code>j</code> if the substring <code>s[i...j-1]</code> is a word in the dictionary. The problem then becomes whether there is a path from node 0 to node <code>n</code>. We can solve this using Breadth-First Search.</p>
+<ol>
+<li>Create a queue and add the starting index <code>0</code>.</li>
+<li>Create a <code>visited</code> boolean array to keep track of indices that have been added to the queue, to avoid cycles and redundant work. Mark index 0 as visited.</li>
+<li>While the queue is not empty, dequeue an index <code>start</code>.</li>
+<li>From <code>start</code>, iterate with <code>end</code> from <code>start + 1</code> to <code>s.length()</code>.</li>
+<li>Check if the substring <code>s.substr(start, end - start)</code> is in the dictionary.</li>
+<li>If it is, and the index <code>end</code> has not been visited, add <code>end</code> to the queue and mark it as visited.</li>
+<li>After the loop finishes, the answer is <code>true</code> if the last index <code>s.length()</code> has been visited, and <code>false</code> otherwise.</li>
+</ol>
+<p>The time complexity is O(n^3) because each index is visited once, and from each index, we iterate and create substrings. The space complexity is O(n) for the queue and the visited array.</p>
+<pre><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;string&gt;
+#include &lt;vector&gt;
+#include &lt;unordered_set&gt;
+#include &lt;queue&gt;
+
+class Solution {
+public:
+    bool wordBreak(std::string s, std::vector&lt;std::string&gt;&amp; wordDict) {
+        std::unordered_set&lt;std::string&gt; dict(wordDict.begin(), wordDict.end());
+        std::queue&lt;int&gt; q;
+        std::vector&lt;bool&gt; visited(s.length() + 1, false);
+
+        q.push(0);
+        visited[0] = true;
+
+        while (!q.empty()) {
+            int start = q.front();
+            q.pop();
+
+            for (int end = start + 1; end &lt;= s.length(); ++end) {
+                if (!visited[end] &amp;&amp; dict.count(s.substr(start, end - start))) {
+                    q.push(end);
+                    visited[end] = true;
+                }
+            }
+        }
+
+        return visited[s.length()];
+    }
+};
+</code></pre>
+<hr />
+<h3>4. Dynamic Programming (Bottom-Up DP)</h3>
+<p>This is an iterative approach that builds the solution from the ground up. We use a DP array, <code>dp</code>, of size <code>n+1</code>, where <code>n</code> is the length of the string <code>s</code>. <code>dp[i]</code> is <code>true</code> if the prefix of <code>s</code> of length <code>i</code> (i.e., <code>s[0...i-1]</code>) can be segmented into dictionary words. The final answer is <code>dp[n]</code>.</p>
+<ol>
+<li>Create a boolean array <code>dp</code> of size <code>s.length() + 1</code>, initialized to <code>false</code>.</li>
+<li>Set <code>dp[0] = true</code>, as an empty string can always be segmented.</li>
+<li>Iterate <code>i</code> from 1 to <code>s.length()</code>. This <code>i</code> represents the length of the prefix we are trying to segment.</li>
+<li>Inside this loop, iterate <code>j</code> from <code>i-1</code> down to <code>0</code>. <code>j</code> represents a potential split point.</li>
+<li>Check two conditions:<ul>
+<li><code>dp[j]</code> is <code>true</code>: This means the prefix <code>s[0...j-1]</code> can be segmented.</li>
+<li>The substring <code>s.substr(j, i - j)</code> is in the dictionary.</li>
+</ul>
+</li>
+<li>If both conditions are met, it means <code>s[0...i-1]</code> can be segmented. So, set <code>dp[i] = true</code> and <code>break</code> the inner loop to move to the next <code>i</code>.</li>
+<li>After the loops, <code>dp[s.length()]</code> holds the answer.</li>
+</ol>
+<p>The time complexity is O(n^3) due to the nested loops and the substring operation, which can take O(n) time. The space complexity is O(n) for the DP array.</p>
+<pre><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;string&gt;
+#include &lt;vector&gt;
+#include &lt;unordered_set&gt;
+
+class Solution {
+public:
+    bool wordBreak(std::string s, std::vector&lt;std::string&gt;&amp; wordDict) {
+        std::unordered_set&lt;std::string&gt; dict(wordDict.begin(), wordDict.end());
+        if(dict.size() == 0) return false;
+
+        std::vector&lt;bool&gt; dp(s.size() + 1, false);
+        dp[0] = true;
+
+        for (int i = 1; i &lt;= s.size(); i++) {
+            for (int j = i - 1; j &gt;= 0; j--) {
+                if (dp[j]) {
+                    std::string word = s.substr(j, i - j);
+                    if (dict.count(word)) {
+                        dp[i] = true;
+                        break; // Move to the next i once a valid segmentation is found
+                    }
+                }
+            }
+        }
+
+        return dp[s.size()];
+    }
+};
+</code></pre>
+<hr />
+<h3>Pythonic solution for best approach</h3>
+<p>The Dynamic Programming approach is generally the most efficient and robust. It avoids recursion overhead and is easy to implement iteratively.</p>
+<pre><code class="language-python">from typing import List
+
+class Solution:
+    def wordBreak(self, s: str, wordDict: List[str]) -&gt; bool:
+        &quot;&quot;&quot;
+        Solves the Word Break problem using Bottom-Up Dynamic Programming.
+        &quot;&quot;&quot;
+        word_set = set(wordDict)
+        n = len(s)
+
+        # dp[i] will be true if s[:i] can be segmented
+        dp = [False] * (n + 1)
+
+        # Base case: an empty string can always be segmented
+        dp[0] = True
+
+        # Iterate through all prefixes of the string
+        for i in range(1, n + 1):
+            # Check all possible split points j for the current prefix s[:i]
+            for j in range(i):
+                # If s[:j] is breakable and s[j:i] is a word in the dictionary
+                if dp[j] and s[j:i] in word_set:
+                    # Then s[:i] is also breakable
+                    dp[i] = True
+                    break # Found a solution for dp[i], can move to next i
+
+        return dp[n]
+
+</code></pre></div>

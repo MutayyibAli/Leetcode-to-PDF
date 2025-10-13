@@ -1,0 +1,178 @@
+<div class='ai-explanation'><h3>List of Approaches</h3>
+<ol>
+<li>Brute Force Approach</li>
+<li>Hashing Slopes Approach</li>
+</ol>
+<hr />
+<h3>1. Brute Force Approach</h3>
+<h4>Explanation</h4>
+<p>The most straightforward method is to consider every possible line that can be formed by any two points and then count how many other points fall on that line.</p>
+<ol>
+<li>Initialize <code>max_points</code> to 1, as a single point is always on a line. If there are 2 or fewer points in total, the answer is just the number of points.</li>
+<li>Iterate through all unique pairs of points, let's say <code>points[i]</code> and <code>points[j]</code>, to define a line.</li>
+<li>For each line defined by <code>(i, j)</code>, iterate through all remaining points <code>points[k]</code>.</li>
+<li>Check if <code>points[k]</code> is collinear with <code>points[i]</code> and <code>points[j]</code>. To do this robustly without using division (which can cause floating-point errors and division-by-zero for vertical lines), we use the cross-product property. Three points <code>(x1, y1)</code>, <code>(x2, y2)</code>, and <code>(x3, y3)</code> are collinear if the slope between <code>(1, 2)</code> is the same as the slope between <code>(1, 3)</code>. This gives the equation: <code>(y2 - y1) * (x3 - x1) == (y3 - y1) * (x2 - x1)</code>.</li>
+<li>Keep a count of points on the current line and update the overall <code>max_points</code> if the current line has more points.</li>
+</ol>
+<p>This approach is simple to understand but computationally expensive due to the three nested loops.</p>
+<p><em>Time Complexity: <code>O(N^3)</code>, Space Complexity: <code>O(1)</code>.</em></p>
+<h4>C++ Code Snippet</h4>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;algorithm&gt;
+
+using namespace std;
+
+class Solution {
+public:
+    int maxPoints(vector&lt;vector&lt;int&gt;&gt;&amp; points) {
+        int n = points.size();
+        if (n &lt;= 2) {
+            return n;
+        }
+
+        int max_count = 0;
+
+        for (int i = 0; i &lt; n; ++i) {
+            for (int j = i + 1; j &lt; n; ++j) {
+                // The line starts with points i and j
+                int current_count = 2; 
+
+                long long x1 = points[i][0];
+                long long y1 = points[i][1];
+                long long x2 = points[j][0];
+                long long y2 = points[j][1];
+
+                for (int k = j + 1; k &lt; n; ++k) {
+                    long long x3 = points[k][0];
+                    long long y3 = points[k][1];
+
+                    // Check for collinearity using cross-multiplication
+                    // (y2 - y1) * (x3 - x1) == (y3 - y1) * (x2 - x1)
+                    if ((y2 - y1) * (x3 - x1) == (y3 - y1) * (x2 - x1)) {
+                        current_count++;
+                    }
+                }
+                max_count = max(max_count, current_count);
+            }
+        }
+        return max_count;
+    }
+};
+</code></pre>
+<hr />
+<h3>2. Hashing Slopes Approach</h3>
+<h4>Explanation</h4>
+<p>This approach improves the time complexity to <code>O(N^2)</code> by changing the perspective. Instead of checking every line, we fix one point and find the line passing through it that contains the most other points.</p>
+<ol>
+<li>Iterate through each point <code>p1</code> in the <code>points</code> array, treating it as an "anchor" point.</li>
+<li>For each anchor <code>p1</code>, we want to find the slope that occurs most frequently between <code>p1</code> and all other points <code>p2</code>. All points that have the same slope with <code>p1</code> lie on the same line.</li>
+<li>A hash map is used to store the counts of each slope. The key is the slope, and the value is the number of points sharing that slope with <code>p1</code>.</li>
+<li>For a given anchor <code>p1</code>, iterate through every other point <code>p2</code>.<ul>
+<li>Calculate the slope between <code>p1</code> and <code>p2</code>.</li>
+<li><strong>Vertical Lines:</strong> If <code>p1</code> and <code>p2</code> have the same x-coordinate, the slope is infinite. We handle this as a special case, for instance, by using <code>infinity</code> as the key in our map.</li>
+<li><strong>Other Lines:</strong> The slope is <code>(y2 - y1) / (x2 - x1)</code>.</li>
+<li><strong>Precision Issue:</strong> Using floating-point numbers (<code>double</code>) for slopes can be problematic due to precision errors. A more robust method is to represent the slope as a simplified fraction <code>dy/dx</code> by dividing both <code>dy</code> and <code>dx</code> by their Greatest Common Divisor (GCD). The pair <code>(dy/gcd, dx/gcd)</code> can then be used as a map key.</li>
+</ul>
+</li>
+<li>After iterating through all other points for a fixed anchor <code>p1</code>, find the maximum count in the slope map. Let this be <code>local_max</code>.</li>
+<li>The maximum number of points on a line passing through <code>p1</code> is <code>local_max + 1</code> (to include <code>p1</code> itself).</li>
+<li>Update the global <code>max_points</code> with this value.</li>
+<li>Repeat for all points as anchors and return the final <code>max_points</code>.</li>
+</ol>
+<p><em>Time Complexity: <code>O(N^2)</code>, Space Complexity: <code>O(N)</code>.</em></p>
+<h4>C++ Code Snippet (using <code>double</code> for slope)</h4>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;unordered_map&gt;
+#include &lt;algorithm&gt;
+#include &lt;limits&gt;
+
+using namespace std;
+
+class Solution {
+public:
+    int maxPoints(vector&lt;vector&lt;int&gt;&gt;&amp; points) {
+        int n = points.size();
+        if (n &lt;= 2) {
+            return n;
+        }
+
+        int max_count = 0;
+
+        for (int i = 0; i &lt; n; ++i) {
+            unordered_map&lt;double, int&gt; slope_map;
+            for (int j = i + 1; j &lt; n; ++j) {
+                int dx = points[j][0] - points[i][0];
+                int dy = points[j][1] - points[i][1];
+
+                double slope;
+                if (dx == 0) {
+                    // Vertical line: use a special value for infinite slope
+                    slope = numeric_limits&lt;double&gt;::infinity();
+                } else {
+                    slope = static_cast&lt;double&gt;(dy) / dx;
+                }
+                slope_map[slope]++;
+            }
+
+            // Find max points for lines passing through point i
+            int current_max = 0;
+            if (!slope_map.empty()) {
+                for (auto const&amp; [slope, count] : slope_map) {
+                    current_max = max(current_max, count);
+                }
+            }
+            // Add 1 for the anchor point itself
+            max_count = max(max_count, current_max + 1);
+        }
+        return max_count;
+    }
+};
+</code></pre>
+<hr />
+<h3>Pythonic Solution (Best Approach)</h3>
+<p>This solution implements the <strong>Hashing Slopes</strong> approach. It avoids floating-point precision issues by representing the slope as a reduced fraction using the Greatest Common Divisor (GCD), making it highly robust and accurate.</p>
+<pre><code class="language-python">import math
+from collections import defaultdict
+
+class Solution:
+    def maxPoints(self, points: list[list[int]]) -&gt; int:
+        n = len(points)
+        if n &lt;= 2:
+            return n
+
+        max_points = 0
+
+        for i in range(n):
+            # slope_map: stores slope_tuple -&gt; count
+            slope_map = defaultdict(int)
+            p1 = points[i]
+
+            # Iterate through subsequent points to form lines
+            for j in range(i + 1, n):
+                p2 = points[j]
+
+                dy = p2[1] - p1[1]
+                dx = p2[0] - p1[0]
+
+                if dx == 0:
+                    # Key for a vertical line
+                    slope_tuple = (float('inf'),)
+                else:
+                    # Reduce the fraction dy/dx to its simplest form
+                    common_divisor = math.gcd(dy, dx)
+                    slope_tuple = (dy // common_divisor, dx // common_divisor)
+
+                slope_map[slope_tuple] += 1
+
+            # The local maximum for lines passing through anchor point p1.
+            # If slope_map is empty, it means there are no other points,
+            # so the line only contains p1.
+            local_max = 0
+            if slope_map:
+                local_max = max(slope_map.values())
+
+            # Update global max. Add 1 for the anchor point itself.
+            max_points = max(max_points, local_max + 1)
+
+        return max_points
+</code></pre></div>

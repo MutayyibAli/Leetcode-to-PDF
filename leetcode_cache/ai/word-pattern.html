@@ -1,0 +1,149 @@
+<div class='ai-explanation'><h3>List of Approaches:</h3>
+<ol>
+<li>Two Hash Maps Approach</li>
+<li>Single Pass with One Index Mapping Approach</li>
+</ol>
+<hr />
+<h3>Two Hash Maps Approach</h3>
+<h4>Explanation</h4>
+<p>This is the most direct and intuitive approach. The problem requires a bijection (a one-to-one correspondence) between characters in the <code>pattern</code> and words in the string <code>s</code>. A bijection has two conditions:
+1. Every character must map to exactly one word.
+2. Every word must be mapped from exactly one character.</p>
+<p>We can enforce these two conditions by using two hash maps:
+- <code>char_to_word</code>: To store mappings from a character in <code>pattern</code> to a word in <code>s</code>.
+- <code>word_to_char</code>: To store the reverse mappings from a word in <code>s</code> to a character in <code>pattern</code>.</p>
+<p>The algorithm proceeds as follows:
+1. Split the string <code>s</code> into a list of words.
+2. Immediately return <code>false</code> if the number of characters in <code>pattern</code> does not equal the number of words in <code>s</code>, as a bijection would be impossible.
+3. Iterate from <code>i = 0</code> to the end of the pattern. For each <code>(character, word)</code> pair at index <code>i</code>:
+    a. <strong>Check forward mapping:</strong> If the character is already in <code>char_to_word</code>, check if its mapped word is the same as the current word. If not, the pattern is broken, so return <code>false</code>.
+    b. <strong>Check reverse mapping:</strong> If the character is new, we must ensure the current word hasn't been mapped by another character. We check if the word exists in <code>word_to_char</code>. If it does, it means another character already maps to this word, which violates the bijection. Return <code>false</code>.
+    c. <strong>Establish new mapping:</strong> If both checks pass, it's a valid new pairing. Add the mapping to both hash maps.
+4. If the loop completes without returning <code>false</code>, the pattern is valid. Return <code>true</code>.</p>
+<p>This approach ensures both one-to-one conditions are met at each step. The time complexity is dominated by parsing the string <code>s</code> and iterating through the pattern once, resulting in O(M + N), where M is the length of <code>s</code> and N is the length of <code>pattern</code>. The space complexity is for storing the maps and the words, which in the worst case is proportional to the size of the input, O(M).</p>
+<h4>C++ Code Snippet</h4>
+<pre><code class="language-cpp">#include &lt;string&gt;
+#include &lt;vector&gt;
+#include &lt;sstream&gt;
+#include &lt;unordered_map&gt;
+
+class Solution {
+public:
+    bool wordPattern(std::string pattern, std::string s) {
+        std::vector&lt;std::string&gt; words;
+        std::istringstream iss(s);
+        std::string word;
+        while (iss &gt;&gt; word) {
+            words.push_back(word);
+        }
+
+        if (pattern.length() != words.size()) {
+            return false;
+        }
+
+        std::unordered_map&lt;char, std::string&gt; char_to_word;
+        std::unordered_map&lt;std::string, char&gt; word_to_char;
+
+        for (int i = 0; i &lt; pattern.length(); ++i) {
+            char p_char = pattern[i];
+            std::string s_word = words[i];
+
+            if (char_to_word.count(p_char)) {
+                // If char is already mapped, it must map to the current word
+                if (char_to_word[p_char] != s_word) {
+                    return false;
+                }
+            } else {
+                // If char is not mapped, the word must not be mapped by another char
+                if (word_to_char.count(s_word)) {
+                    return false;
+                }
+                // Establish the new bidirectional mapping
+                char_to_word[p_char] = s_word;
+                word_to_char[s_word] = p_char;
+            }
+        }
+
+        return true;
+    }
+};
+</code></pre>
+<hr />
+<h3>Single Pass with One Index Mapping Approach</h3>
+<h4>Explanation</h4>
+<p>This is a more clever and concise approach that checks the bijection by mapping both characters and words to a common "canonical" representation. The idea is to check if the pattern of occurrences is the same for both the <code>pattern</code> string and the <code>s</code> string.</p>
+<p>We can achieve this by mapping each character and each word to the index at which it first appeared. For example:
+- <code>pattern = "abba"</code> transforms to <code>[0, 1, 1, 0]</code> because 'a' first appears at index 0 and 'b' at index 1.
+- <code>s = "dog cat cat dog"</code> transforms to <code>[0, 1, 1, 0]</code> because "dog" first appears at index 0 and "cat" at index 1.</p>
+<p>Since the transformed representations are identical, the pattern holds.</p>
+<p>The algorithm works as follows:
+1. Use two hash maps, <code>p2i</code> (pattern char to index) and <code>w2i</code> (word to index).
+2. Use an <code>istringstream</code> to read words from <code>s</code> on-the-fly, avoiding the need to store them all in a vector first.
+3. Iterate through the pattern and words simultaneously with an index <code>i</code>.
+4. For each <code>(character, word)</code> pair:
+    a. Check if the stored first-seen index for the character (<code>p2i[char]</code>) is the same as the first-seen index for the word (<code>w2i[word]</code>).
+    b. Initially, for new characters and words, the map will return a default value (0). If <code>p2i[char]</code> and <code>w2i[word]</code> are both 0, the check passes.
+    c. If they are not equal (e.g., one is 0 and the other is not, or they are two different non-zero values), it means there's a mapping conflict, so we return <code>false</code>.
+    d. If they are equal, we establish or update their mapping to a unique, non-zero value, like <code>i + 1</code>, to mark their correspondence at this position.
+5. After the loop, we must also check if the number of characters processed equals the length of the pattern. This handles cases where <code>s</code> has more or fewer words than <code>pattern</code> has characters.</p>
+<p>This method verifies the bijection in a single pass with compact logic. The time complexity is O(M + N), and space complexity is O(M) for the hash maps.</p>
+<h4>C++ Code Snippet</h4>
+<pre><code class="language-cpp">#include &lt;string&gt;
+#include &lt;sstream&gt;
+#include &lt;unordered_map&gt;
+
+class Solution {
+public:
+    bool wordPattern(std::string pattern, std::string s) {
+        std::unordered_map&lt;char, int&gt; p2i;
+        std::unordered_map&lt;std::string, int&gt; w2i;
+        std::istringstream in(s);
+        int i = 0;
+        int n = pattern.size();
+
+        for (std::string word; in &gt;&gt; word; ++i) {
+            // Check if s has more words than pattern has characters
+            if (i == n) {
+                return false;
+            }
+            // Check for mapping consistency
+            if (p2i[pattern[i]] != w2i[word]) {
+                return false;
+            }
+            // Establish mapping to a unique non-zero value (i+1)
+            p2i[pattern[i]] = w2i[word] = i + 1;
+        }
+
+        // Check if pattern has more characters than s has words
+        return i == n;
+    }
+};
+</code></pre>
+<hr />
+<h3>Pythonic Solution (Best Approach)</h3>
+<p>The core of the problem is to verify a bijection. In set theory, a bijection between two sets <code>A</code> and <code>B</code> can be confirmed if the number of unique elements in <code>A</code>, the number of unique elements in <code>B</code>, and the number of unique <code>(a, b)</code> pairings are all equal. This elegant mathematical property can be translated into a concise Python solution.</p>
+<p>The logic is:
+1. Split the string <code>s</code> into a list of <code>words</code>.
+2. First, ensure the number of characters in <code>pattern</code> matches the number of <code>words</code>. This is a necessary condition for a one-to-one mapping.
+3. Then, check the bijection property:
+   - <code>len(set(pattern))</code> gives the number of unique characters.
+   - <code>len(set(words))</code> gives the number of unique words.
+   - <code>zip(pattern, words)</code> creates pairs of <code>(character, word)</code>. <code>len(set(zip(pattern, words)))</code> gives the number of unique pairs.
+4. If all three lengths are equal, a valid bijection exists.</p>
+<pre><code class="language-python">class Solution:
+    def wordPattern(self, pattern: str, s: str) -&gt; bool:
+        words = s.split(' ')
+
+        if len(pattern) != len(words):
+            return False
+
+        # A bijection exists if and only if the number of unique keys,
+        # unique values, and unique key-value pairs are all equal.
+
+        # set(pattern) -&gt; unique characters
+        # set(words) -&gt; unique words
+        # set(zip(pattern, words)) -&gt; unique (char, word) pairings
+
+        return len(set(pattern)) == len(set(words)) == len(set(zip(pattern, words)))
+
+</code></pre></div>

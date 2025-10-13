@@ -1,0 +1,108 @@
+<div class='ai-explanation'><h3>List of all the approaches to solution</h3>
+<ol>
+<li>Brute Force Approach (Using Hash Set)</li>
+<li>Floyd's Cycle-Finding Algorithm (Two Pointers)</li>
+</ol>
+<hr />
+<h3>Brute Force Approach (Using Hash Set)</h3>
+<p>This approach directly simulates the process described in the problem. We keep calculating the next number in the sequence. The key challenge is to detect if we've entered a cycle. We can solve this by using a hash set to store every number we encounter. If we generate a number that is already in our set, we have detected a cycle, and thus the number is not happy. If the number becomes 1, it is a happy number.</p>
+<p><strong>Step-by-step explanation:</strong>
+1.  Create a helper function, let's call it <code>getNext(n)</code>, that takes a number <code>n</code> and returns the sum of the squares of its digits.
+2.  Initialize a hash set, <code>seen</code>, to store the numbers encountered so far.
+3.  Start a loop that continues as long as the current number <code>n</code> is not equal to 1.
+4.  Inside the loop, check if <code>n</code> is already in the <code>seen</code> set.
+    *   If it is, a cycle has been found. Return <code>false</code>.
+    *   If not, add <code>n</code> to the <code>seen</code> set.
+5.  Update <code>n</code> by calling <code>n = getNext(n)</code>.
+6.  If the loop finishes (meaning <code>n</code> became 1), return <code>true</code>.</p>
+<p>The time complexity is <code>O(log n)</code> because the calculation for the next number takes time proportional to the number of digits in <code>n</code>. The space complexity is <code>O(log n)</code> to store the numbers in the hash set.</p>
+<pre><code class="language-cpp">#include &lt;unordered_set&gt;
+
+class Solution {
+private:
+    int getNext(int n) {
+        int totalSum = 0;
+        while (n &gt; 0) {
+            int digit = n % 10;
+            totalSum += digit * digit;
+            n = n / 10;
+        }
+        return totalSum;
+    }
+
+public:
+    bool isHappy(int n) {
+        std::unordered_set&lt;int&gt; seen;
+        while (n != 1 &amp;&amp; seen.find(n) == seen.end()) {
+            seen.insert(n);
+            n = getNext(n);
+        }
+        return n == 1;
+    }
+};
+</code></pre>
+<hr />
+<h3>Floyd's Cycle-Finding Algorithm (Two Pointers)</h3>
+<p>This is a more optimized approach that avoids using extra space. The sequence of numbers generated from a starting number can be thought of as a linked list, where each number points to the next. A non-happy number will result in a cycle in this "list". We can detect this cycle using Floyd's Tortoise and Hare algorithm.</p>
+<p><strong>Step-by-step explanation:</strong>
+1.  Use the same <code>getNext(n)</code> helper function as in the previous approach.
+2.  Initialize two pointers, a <code>slow</code> pointer starting at <code>n</code> and a <code>fast</code> pointer starting at <code>getNext(n)</code>.
+3.  The <code>slow</code> pointer moves one step at a time (<code>slow = getNext(slow)</code>).
+4.  The <code>fast</code> pointer moves two steps at a time (<code>fast = getNext(getNext(fast))</code>).
+5.  Loop as long as the <code>fast</code> pointer is not 1 and the <code>slow</code> and <code>fast</code> pointers have not met.
+6.  If the pointers meet (<code>slow == fast</code>), a cycle has been detected, and the number is not happy.
+7.  If the loop terminates because <code>fast</code> became 1, the number is happy. Return <code>true</code> in this case.</p>
+<p>The time complexity is <code>O(log n)</code>, similar to the hash set approach. The major advantage is the space complexity, which is <code>O(1)</code>.</p>
+<pre><code class="language-cpp">class Solution {
+private:
+    int getNext(int n) {
+        int totalSum = 0;
+        while (n &gt; 0) {
+            int digit = n % 10;
+            totalSum += digit * digit;
+            n = n / 10;
+        }
+        return totalSum;
+    }
+
+public:
+    bool isHappy(int n) {
+        int slow = n;
+        int fast = getNext(n);
+
+        while (fast != 1 &amp;&amp; slow != fast) {
+            slow = getNext(slow);
+            fast = getNext(getNext(fast));
+        }
+
+        return fast == 1;
+    }
+};
+</code></pre>
+<hr />
+<h3>Pythonic Solution (Best Approach)</h3>
+<p>The best approach is Floyd's Cycle-Finding Algorithm due to its constant space complexity. The Pythonic implementation below uses a nested helper function for clarity and follows the two-pointer logic.</p>
+<pre><code class="language-python">class Solution:
+    def isHappy(self, n: int) -&gt; bool:
+
+        def get_next(number: int) -&gt; int:
+            &quot;&quot;&quot;Calculates the sum of the squares of the digits of a number.&quot;&quot;&quot;
+            total_sum = 0
+            while number &gt; 0:
+                number, digit = divmod(number, 10)
+                total_sum += digit ** 2
+            return total_sum
+
+        slow_runner = n
+        fast_runner = get_next(n)
+
+        # The loop terminates if a cycle is found (slow_runner == fast_runner)
+        # or if we reach 1.
+        while fast_runner != 1 and slow_runner != fast_runner:
+            slow_runner = get_next(slow_runner)
+            fast_runner = get_next(get_next(fast_runner))
+
+        # If the loop ended because we reached 1, it's a happy number.
+        return fast_runner == 1
+
+</code></pre></div>

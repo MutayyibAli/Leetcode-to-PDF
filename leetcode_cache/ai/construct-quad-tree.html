@@ -1,0 +1,204 @@
+<div class='ai-explanation'><h3>List of Approaches</h3>
+<ol>
+<li>Brute Force Recursive Approach</li>
+<li>Optimized Recursive Approach (Using Prefix Sums)</li>
+</ol>
+<hr />
+<h3>1. Brute Force Recursive Approach</h3>
+<p>This approach directly implements the logic described in the problem using a divide-and-conquer strategy. It recursively breaks down the grid into four quadrants and builds the tree from the bottom up.</p>
+<ol>
+<li>A recursive helper function is defined, which takes the current subgrid's top-left coordinates <code>(row, col)</code> and its <code>length</code> as input.</li>
+<li>The base case for the recursion is a homogeneous subgrid (all 0s or all 1s). To verify this, a separate function iterates through all cells of the current subgrid and compares them with the value of the top-left cell <code>grid[row][col]</code>.</li>
+<li>If all cells in the subgrid are the same, a leaf node is created with <code>isLeaf</code> set to <code>true</code>, and <code>val</code> is set to the common value. The four children pointers are set to <code>nullptr</code>.</li>
+<li>If the subgrid contains different values, an internal node is created with <code>isLeaf</code> set to <code>false</code>. Its <code>val</code> can be arbitrary (e.g., <code>true</code>).</li>
+<li>The current subgrid is then divided into four equal, non-overlapping quadrants. The helper function is called recursively for each quadrant.</li>
+<li>The nodes returned from these recursive calls are assigned to the <code>topLeft</code>, <code>topRight</code>, <code>bottomLeft</code>, and <code>bottomRight</code> children of the newly created internal node.</li>
+<li>The initial call starts with the entire grid: <code>helper(grid, 0, 0, n)</code>.</li>
+<li>The check for homogeneity is the bottleneck, as it takes O(length²) time for a subgrid of size <code>length x length</code>, leading to an overall suboptimal time complexity. The time complexity is O(N² * log N) and the space complexity is O(N²) in the worst case to store the tree.</li>
+</ol>
+<pre><code class="language-cpp">/*
+// Definition for a QuadTree node.
+class Node {
+public:
+    bool val;
+    bool isLeaf;
+    Node* topLeft;
+    Node* topRight;
+    Node* bottomLeft;
+    Node* bottomRight;
+
+    Node() {
+        val = false;
+        isLeaf = false;
+        topLeft = NULL;
+        topRight = NULL;
+        bottomLeft = NULL;
+        bottomRight = NULL;
+    }
+
+    Node(bool _val, bool _isLeaf) {
+        val = _val;
+        isLeaf = _isLeaf;
+        topLeft = NULL;
+        topRight = NULL;
+        bottomLeft = NULL;
+        bottomRight = NULL;
+    }
+
+    Node(bool _val, bool _isLeaf, Node* _topLeft, Node* _topRight, Node* _bottomLeft, Node* _bottomRight) {
+        val = _val;
+        isLeaf = _isLeaf;
+        topLeft = _topLeft;
+        topRight = _topRight;
+        bottomLeft = _bottomLeft;
+        bottomRight = _bottomRight;
+    }
+};
+*/
+
+class Solution {
+public:
+    Node* construct(std::vector&lt;std::vector&lt;int&gt;&gt;&amp; grid) {
+        return helper(grid, 0, 0, grid.size());
+    }
+
+private:
+    Node* helper(const std::vector&lt;std::vector&lt;int&gt;&gt;&amp; grid, int r, int c, int len) {
+        if (allSame(grid, r, c, len)) {
+            return new Node(grid[r][c], true);
+        }
+
+        Node* node = new Node(true, false);
+        int half = len / 2;
+        node-&gt;topLeft = helper(grid, r, c, half);
+        node-&gt;topRight = helper(grid, r, c + half, half);
+        node-&gt;bottomLeft = helper(grid, r + half, c, half);
+        node-&gt;bottomRight = helper(grid, r + half, c + half, half);
+        return node;
+    }
+
+    bool allSame(const std::vector&lt;std::vector&lt;int&gt;&gt;&amp; grid, int r, int c, int len) {
+        int val = grid[r][c];
+        for (int i = r; i &lt; r + len; ++i) {
+            for (int j = c; j &lt; c + len; ++j) {
+                if (grid[i][j] != val) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+};
+</code></pre>
+<hr />
+<h3>2. Optimized Recursive Approach (Using Prefix Sums)</h3>
+<p>This approach improves upon the brute-force method by optimizing the check for a homogeneous grid. It uses a precomputed 2D prefix sum array to determine the sum of any subgrid in constant time.</p>
+<ol>
+<li>First, we precompute a 2D prefix sum array, let's call it <code>sums</code>, of size <code>(N+1)x(N+1)</code>. <code>sums[r][c]</code> stores the sum of all elements in the rectangle from <code>(0,0)</code> to <code>(r-1, c-1)</code>. This takes O(N²) time.</li>
+<li>With the <code>sums</code> array, the sum of any rectangular subgrid can be calculated in O(1) time.</li>
+<li>The recursive helper function remains the same, taking the subgrid's <code>(row, col)</code> and <code>length</code>.</li>
+<li>Inside the helper, we calculate the sum of the current subgrid. If the sum is <code>0</code>, all cells are <code>0</code>. If the sum is <code>length * length</code>, all cells are <code>1</code>. In both cases, the subgrid is homogeneous.</li>
+<li>If the subgrid is homogeneous, we create a leaf node as before.</li>
+<li>If the subgrid has a mixed sum (neither 0 nor <code>length * length</code>), it's not homogeneous. We create an internal node and recurse on the four quadrants, just like in the brute-force approach.</li>
+<li>By reducing the homogeneity check from O(length²) to O(1), the overall time complexity is significantly improved. The total time complexity is dominated by the precomputation and the traversal, which is O(N²), and the space complexity is O(N²) for the prefix sum array and the output tree.</li>
+</ol>
+<pre><code class="language-cpp">/*
+// Definition for a QuadTree node.
+class Node {
+public:
+    bool val;
+    bool isLeaf;
+    Node* topLeft;
+    Node* topRight;
+    Node* bottomLeft;
+    Node* bottomRight;
+    // Constructors...
+};
+*/
+
+class Solution {
+public:
+    Node* construct(std::vector&lt;std::vector&lt;int&gt;&gt;&amp; grid) {
+        int n = grid.size();
+        sums.resize(n + 1, std::vector&lt;int&gt;(n + 1, 0));
+        for (int i = 0; i &lt; n; ++i) {
+            for (int j = 0; j &lt; n; ++j) {
+                sums[i + 1][j + 1] = sums[i + 1][j] + sums[i][j + 1] - sums[i][j] + grid[i][j];
+            }
+        }
+        return helper(0, 0, n);
+    }
+
+private:
+    std::vector&lt;std::vector&lt;int&gt;&gt; sums;
+
+    Node* helper(int r, int c, int len) {
+        // Get sum of the current subgrid in O(1)
+        int sum = sums[r + len][c + len] - sums[r + len][c] - sums[r][c + len] + sums[r][c];
+
+        // If all 0s or all 1s
+        if (sum == 0 || sum == len * len) {
+            bool val = (sum == len * len);
+            return new Node(val, true);
+        }
+
+        // Mixed values, create an internal node and recurse
+        Node* node = new Node(true, false);
+        int half = len / 2;
+        node-&gt;topLeft = helper(r, c, half);
+        node-&gt;topRight = helper(r, c + half, half);
+        node-&gt;bottomLeft = helper(r + half, c, half);
+        node-&gt;bottomRight = helper(r + half, c + half, half);
+        return node;
+    }
+};
+</code></pre>
+<hr />
+<h3>Pythonic Solution (Best Approach)</h3>
+<p>The best approach is the optimized recursive solution using prefix sums, as it has a better time complexity of O(N²). The Python solution below implements this efficiently, using a nested helper function to encapsulate the recursive logic.</p>
+<pre><code class="language-python">&quot;&quot;&quot;
+# Definition for a QuadTree node.
+class Node:
+    def __init__(self, val, isLeaf, topLeft=None, topRight=None, bottomLeft=None, bottomRight=None):
+        self.val = val
+        self.isLeaf = isLeaf
+        self.topLeft = topLeft
+        self.topRight = topRight
+        self.bottomLeft = bottomLeft
+        self.bottomRight = bottomRight
+&quot;&quot;&quot;
+
+class Solution:
+    def construct(self, grid: list[list[int]]) -&gt; 'Node':
+        n = len(grid)
+        # Step 1: Precompute the 2D prefix sum array
+        sums = [[0] * (n + 1) for _ in range(n + 1)]
+        for r in range(n):
+            for c in range(n):
+                sums[r + 1][c + 1] = sums[r][c + 1] + sums[r + 1][c] - sums[r][c] + grid[r][c]
+
+        def helper(r: int, c: int, length: int) -&gt; 'Node':
+            &quot;&quot;&quot;Recursive helper to build the tree for a subgrid.&quot;&quot;&quot;
+
+            # Step 2: Calculate subgrid sum in O(1)
+            subgrid_sum = sums[r + length][c + length] - sums[r + length][c] - sums[r][c + length] + sums[r][c]
+
+            # Step 3: Base case - check for homogeneity
+            if subgrid_sum == 0:
+                return Node(False, True)
+            if subgrid_sum == length * length:
+                return Node(True, True)
+
+            # Step 4: Recursive step - divide and conquer
+            half = length // 2
+            return Node(
+                val=True,  # val is arbitrary for internal nodes
+                isLeaf=False,
+                topLeft=helper(r, c, half),
+                topRight=helper(r, c + half, half),
+                bottomLeft=helper(r + half, c, half),
+                bottomRight=helper(r + half, c + half, half)
+            )
+
+        return helper(0, 0, n)
+</code></pre></div>

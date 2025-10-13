@@ -1,0 +1,110 @@
+<div class='ai-explanation'><h3>List of all the approaches to solution</h3>
+<ol>
+<li>Brute Force Approach (Using Sorting)</li>
+<li>Optimal Approach (Using Hash Map and Hash Set)</li>
+</ol>
+<h3>1. Brute Force Approach (Using Sorting)</h3>
+<p>This approach avoids using hashmaps or hashsets and relies on sorting to solve the problem. First, we count the occurrences of each number, and then we check if those counts are unique.</p>
+<p><strong>Step-by-step explanation:</strong>
+1.  <strong>Sort the Input Array:</strong> Sort the input array <code>arr</code>. This brings all identical elements together, making it easy to count them.
+2.  <strong>Count Occurrences:</strong> Iterate through the sorted array. For each unique number, count how many times it appears consecutively. Store these counts in a separate list or vector (e.g., <code>counts</code>).
+3.  <strong>Sort the Counts:</strong> Sort the <code>counts</code> vector. This will place any duplicate counts adjacent to each other.
+4.  <strong>Check for Unique Counts:</strong> Iterate through the sorted <code>counts</code> vector. If you find any two adjacent elements that are the same (<code>counts[i] == counts[i+1]</code>), it means at least one count value is not unique. In this case, return <code>false</code>.
+5.  <strong>Return True:</strong> If the loop finishes without finding any duplicate counts, it means all occurrence counts are unique, and you can return <code>true</code>.</p>
+<p>The time complexity is O(N log N) due to the sorting steps, and the space complexity is O(U), where N is the number of elements in the input array and U is the number of unique elements (O(N) in the worst case).</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;algorithm&gt;
+
+class Solution {
+public:
+    bool uniqueOccurrences(std::vector&lt;int&gt;&amp; arr) {
+        // Step 1: Sort the input array
+        std::sort(arr.begin(), arr.end());
+
+        std::vector&lt;int&gt; counts;
+
+        // Step 2: Count occurrences
+        int i = 0;
+        while (i &lt; arr.size()) {
+            int count = 1;
+            // Count consecutive identical elements
+            while (i + 1 &lt; arr.size() &amp;&amp; arr[i] == arr[i + 1]) {
+                count++;
+                i++;
+            }
+            counts.push_back(count);
+            i++;
+        }
+
+        // Step 3: Sort the counts
+        std::sort(counts.begin(), counts.end());
+
+        // Step 4: Check for unique counts
+        for (int j = 0; j &lt; counts.size() - 1; j++) {
+            if (counts[j] == counts[j + 1]) {
+                return false; // Found a non-unique count
+            }
+        }
+
+        // Step 5: All counts are unique
+        return true;
+    }
+};
+</code></pre>
+<h3>2. Optimal Approach (Using Hash Map and Hash Set)</h3>
+<p>This approach is more efficient as it uses hash-based data structures to achieve a linear time complexity. The idea is to first count the frequencies of each number and then check if the frequencies themselves are unique.</p>
+<p><strong>Step-by-step explanation:</strong>
+1.  <strong>Count Frequencies with a Map:</strong> Iterate through the input array <code>arr</code> and use a hash map (e.g., <code>std::unordered_map</code>) to store the frequency of each number. The keys of the map will be the numbers from the array, and the values will be their occurrence counts.
+2.  <strong>Store Frequencies in a Set:</strong> Create a hash set (e.g., <code>std::unordered_set</code>). Iterate through the values (the frequencies) of the hash map and insert each frequency into the hash set. A set only stores unique elements, so any duplicate frequencies will not be added.
+3.  <strong>Compare Sizes:</strong> The problem asks if the number of occurrences is unique for each value. This is equivalent to checking if the number of unique elements is the same as the number of unique counts. Therefore, we compare the size of the frequency map (which represents the number of unique values) with the size of the frequency set (which represents the number of unique counts).
+4.  <strong>Return Result:</strong> If the sizes are equal, it means every unique number had a unique count, so we return <code>true</code>. Otherwise, we return <code>false</code>.</p>
+<p>The time complexity is O(N) because we iterate through the array once to build the map and then iterate through the map's unique elements. The space complexity is O(U), where U is the number of unique elements, to store the map and the set.</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;unordered_map&gt;
+#include &lt;unordered_set&gt;
+
+class Solution {
+public:
+    bool uniqueOccurrences(std::vector&lt;int&gt;&amp; arr) {
+        // Step 1: Count frequencies with a map
+        std::unordered_map&lt;int, int&gt; freq_map;
+        for (int num : arr) {
+            freq_map[num]++;
+        }
+
+        // Step 2: Store frequencies in a set to find unique counts
+        std::unordered_set&lt;int&gt; count_set;
+        for (auto const&amp; [key, val] : freq_map) {
+            count_set.insert(val);
+        }
+
+        // Step 3 &amp; 4: Compare sizes and return result
+        return freq_map.size() == count_set.size();
+    }
+};
+</code></pre>
+<h3>Pythonic solution for best approach</h3>
+<p>The optimal approach can be implemented very concisely in Python using the <code>collections.Counter</code> class, which is a specialized dictionary for counting hashable objects.</p>
+<ol>
+<li>Use <code>collections.Counter(arr)</code> to create a dictionary-like object where keys are the numbers and values are their frequencies.</li>
+<li>Get all the frequency values using <code>.values()</code>.</li>
+<li>Create a <code>set</code> from these values to get only the unique frequencies.</li>
+<li>Compare the number of unique values (<code>len(counts)</code>) with the number of unique frequencies (<code>len(set(counts.values()))</code>). If they are equal, the occurrences are unique.</li>
+</ol>
+<pre><code class="language-python">from collections import Counter
+from typing import List
+
+class Solution:
+    def uniqueOccurrences(self, arr: List[int]) -&gt; bool:
+        # Step 1: Create a frequency map (Counter) from the array
+        counts = Counter(arr)
+
+        # Step 2: Get the frequencies (the values of the Counter)
+        occurrences = counts.values()
+
+        # Step 3 &amp; 4: Compare the number of unique items with the number of unique occurrences
+        # The number of unique items is len(counts)
+        # The number of unique occurrences is len(set(occurrences))
+        return len(occurrences) == len(set(occurrences))
+
+</code></pre></div>

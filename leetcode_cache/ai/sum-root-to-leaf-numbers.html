@@ -1,0 +1,189 @@
+<div class='ai-explanation'><h3>List of all the approaches to solution</h3>
+<ol>
+<li>Brute Force Approach: Recursive DFS</li>
+<li>Iterative DFS using a Stack</li>
+<li>Iterative BFS using a Queue</li>
+</ol>
+<h3>Brute Force Approach: Recursive DFS</h3>
+<p>This is the most intuitive approach, mirroring the problem's structure. We traverse the tree from the root down to each leaf, building the number along the path. A recursive function is a natural fit for this traversal.</p>
+<ol>
+<li>Create a helper function, let's call it <code>dfs</code>, that takes a tree node and the number formed so far (<code>currentSum</code>) as arguments.</li>
+<li>In the <code>dfs</code> function, if the current node is null, we are at the end of a branch, so we return 0.</li>
+<li>Update the <code>currentSum</code> by shifting it one decimal place to the left and adding the current node's value: <code>currentSum = currentSum * 10 + node-&gt;val</code>.</li>
+<li>Check if the current node is a leaf (i.e., it has no left or right children). If it is, this path is complete, so we return the <code>currentSum</code>.</li>
+<li>If it's not a leaf node, we recursively call <code>dfs</code> for its left and right children, passing the updated <code>currentSum</code>.</li>
+<li>The result for a non-leaf node is the sum of the values returned by the recursive calls on its children: <code>dfs(node-&gt;left, currentSum) + dfs(node-&gt;right, currentSum)</code>.</li>
+<li>The main function starts the process by calling <code>dfs(root, 0)</code>.</li>
+</ol>
+<p>This approach has a time complexity of O(N), where N is the number of nodes in the tree, as we visit each node exactly once. The space complexity is O(H) due to the recursion stack, where H is the height of the tree.</p>
+<pre><code class="language-cpp">/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    int sumNumbers(TreeNode* root) {
+        return dfs(root, 0);
+    }
+
+private:
+    int dfs(TreeNode* node, int currentSum) {
+        if (node == nullptr) {
+            return 0;
+        }
+
+        currentSum = currentSum * 10 + node-&gt;val;
+
+        // Base case: if it's a leaf node, return the path number
+        if (node-&gt;left == nullptr &amp;&amp; node-&gt;right == nullptr) {
+            return currentSum;
+        }
+
+        // Recursive step: sum of paths from left and right children
+        return dfs(node-&gt;left, currentSum) + dfs(node-&gt;right, currentSum);
+    }
+};
+</code></pre>
+<h3>Iterative DFS using a Stack</h3>
+<p>We can convert the recursive DFS into an iterative solution using an explicit stack. This avoids recursion and can be beneficial for extremely deep trees. Instead of just storing nodes, the stack will hold pairs of <code>(node, currentSum)</code> to keep track of the number formed along the path to that node.</p>
+<ol>
+<li>If the root is null, return 0.</li>
+<li>Initialize a <code>totalSum</code> to 0.</li>
+<li>Create a stack and push the initial pair: <code>{root, root-&gt;val}</code>.</li>
+<li>Loop while the stack is not empty. In each iteration, pop a pair <code>(currentNode, currentSum)</code>.</li>
+<li>Check if <code>currentNode</code> is a leaf. If so, add its <code>currentSum</code> to the <code>totalSum</code>.</li>
+<li>If <code>currentNode</code> has a right child, calculate the sum for the path to the child (<code>currentSum * 10 + rightChild-&gt;val</code>) and push the pair <code>{rightChild, newSum}</code> onto the stack.</li>
+<li>Similarly, if <code>currentNode</code> has a left child, push the pair for the left child onto the stack.</li>
+<li>After the loop finishes, <code>totalSum</code> will hold the final result.</li>
+</ol>
+<p>This approach has a time complexity of O(N) as each node is pushed and popped once. The space complexity is O(H) for the stack, where H is the height of the tree.</p>
+<pre><code class="language-cpp">#include &lt;stack&gt;
+#include &lt;utility&gt; // For std::pair
+
+class Solution {
+public:
+    int sumNumbers(TreeNode* root) {
+        if (root == nullptr) {
+            return 0;
+        }
+
+        int totalSum = 0;
+        std::stack&lt;std::pair&lt;TreeNode*, int&gt;&gt; s;
+        s.push({root, root-&gt;val});
+
+        while (!s.empty()) {
+            auto [node, currentSum] = s.top();
+            s.pop();
+
+            if (node-&gt;left == nullptr &amp;&amp; node-&gt;right == nullptr) {
+                totalSum += currentSum;
+            }
+
+            if (node-&gt;right) {
+                s.push({node-&gt;right, currentSum * 10 + node-&gt;right-&gt;val});
+            }
+            if (node-&gt;left) {
+                s.push({node-&gt;left, currentSum * 10 + node-&gt;left-&gt;val});
+            }
+        }
+        return totalSum;
+    }
+};
+</code></pre>
+<h3>Iterative BFS using a Queue</h3>
+<p>This approach is similar to the iterative DFS but uses a queue instead of a stack. This results in a level-order traversal of the tree. We still need to store pairs of <code>(node, currentSum)</code> in the queue.</p>
+<ol>
+<li>If the root is null, return 0.</li>
+<li>Initialize a <code>totalSum</code> to 0.</li>
+<li>Create a queue and enqueue the initial pair: <code>{root, root-&gt;val}</code>.</li>
+<li>Loop while the queue is not empty. In each iteration, dequeue a pair <code>(currentNode, currentSum)</code>.</li>
+<li>Check if <code>currentNode</code> is a leaf. If so, add its <code>currentSum</code> to the <code>totalSum</code>.</li>
+<li>If <code>currentNode</code> has a left child, calculate the sum for the path to the child (<code>currentSum * 10 + leftChild-&gt;val</code>) and enqueue the pair <code>{leftChild, newSum}</code>.</li>
+<li>Similarly, if <code>currentNode</code> has a right child, enqueue the pair for the right child.</li>
+<li>After the loop finishes, <code>totalSum</code> will hold the final result.</li>
+</ol>
+<p>This approach has a time complexity of O(N) as each node is visited once. The space complexity is O(W), where W is the maximum width of the tree, which is the maximum size the queue can reach.</p>
+<pre><code class="language-cpp">#include &lt;queue&gt;
+#include &lt;utility&gt; // For std::pair
+
+class Solution {
+public:
+    int sumNumbers(TreeNode* root) {
+        if (root == nullptr) {
+            return 0;
+        }
+
+        int totalSum = 0;
+        std::queue&lt;std::pair&lt;TreeNode*, int&gt;&gt; q;
+        q.push({root, root-&gt;val});
+
+        while (!q.empty()) {
+            auto [node, currentSum] = q.front();
+            q.pop();
+
+            if (node-&gt;left == nullptr &amp;&amp; node-&gt;right == nullptr) {
+                totalSum += currentSum;
+            }
+
+            if (node-&gt;left) {
+                q.push({node-&gt;left, currentSum * 10 + node-&gt;left-&gt;val});
+            }
+            if (node-&gt;right) {
+                q.push({node-&gt;right, currentSum * 10 + node-&gt;right-&gt;val});
+            }
+        }
+        return totalSum;
+    }
+};
+</code></pre>
+<h3>Pythonic solution for best approach</h3>
+<p>The recursive DFS is often considered the best approach for this problem due to its elegance, conciseness, and direct mapping to the problem's recursive nature. A clean Pythonic implementation uses a nested helper function to encapsulate the recursive logic.</p>
+<pre><code class="language-python">from typing import Optional
+
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+
+class Solution:
+    def sumNumbers(self, root: Optional[TreeNode]) -&gt; int:
+        &quot;&quot;&quot;
+        Calculates the sum of all root-to-leaf numbers using a recursive DFS approach.
+        &quot;&quot;&quot;
+
+        def dfs(node: Optional[TreeNode], current_sum: int) -&gt; int:
+            &quot;&quot;&quot;
+            Helper function to perform depth-first traversal.
+
+            Args:
+                node: The current node in the traversal.
+                current_sum: The number formed by the path from the root to the parent of the current node.
+
+            Returns:
+                The sum of all numbers formed by paths in the subtree rooted at 'node'.
+            &quot;&quot;&quot;
+            if not node:
+                return 0
+
+            # Update the number with the current node's digit
+            current_sum = current_sum * 10 + node.val
+
+            # If it's a leaf node, we have a complete number, so return it
+            if not node.left and not node.right:
+                return current_sum
+
+            # Otherwise, return the sum of numbers from left and right subtrees
+            return dfs(node.left, current_sum) + dfs(node.right, current_sum)
+
+        return dfs(root, 0)
+
+</code></pre></div>

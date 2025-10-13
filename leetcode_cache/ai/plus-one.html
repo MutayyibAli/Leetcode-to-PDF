@@ -1,0 +1,103 @@
+<div class='ai-explanation'><h3>List of all the approaches to solution</h3>
+<ol>
+<li>Brute Force Approach</li>
+<li>Schoolbook Addition with Carry</li>
+</ol>
+<hr />
+<h3>1. Brute Force Approach</h3>
+<p>This naive approach involves converting the array of digits into a single integer, adding one to it, and then converting the result back into an array of digits. While straightforward, this method is impractical for the given constraints, as the number represented can have up to 100 digits, far exceeding the capacity of standard integer types like <code>long long</code> in C++.</p>
+<ol>
+<li><strong>Convert to Integer:</strong> Iterate through the <code>digits</code> array and build a single number. For example, <code>[1, 2, 3]</code> becomes <code>1*100 + 2*10 + 3*1 = 123</code>.</li>
+<li><strong>Increment:</strong> Add one to the resulting number. <code>123 + 1 = 124</code>.</li>
+<li><strong>Convert to Array:</strong> Convert the new number back into an array of its digits. <code>124</code> becomes <code>[1, 2, 4]</code>.</li>
+<li><strong>Limitation:</strong> This will cause an integer overflow for inputs with many digits.</li>
+</ol>
+<p>This approach is primarily for conceptual understanding and is not a valid solution under the problem's constraints. Time complexity is O(N) to build the number and O(N) to convert back, and space complexity is O(N) for the result.</p>
+<pre><code class="language-cpp">// NOTE: This solution is for demonstration and will fail for large inputs due to integer overflow.
+#include &lt;vector&gt;
+#include &lt;string&gt;
+#include &lt;algorithm&gt;
+
+class Solution {
+public:
+    std::vector&lt;int&gt; plusOne(std::vector&lt;int&gt;&amp; digits) {
+        long long number = 0;
+        long long multiplier = 1;
+        for (int i = digits.size() - 1; i &gt;= 0; --i) {
+            number += digits[i] * multiplier;
+            multiplier *= 10;
+        }
+
+        number++;
+
+        std::string s = std::to_string(number);
+        std::vector&lt;int&gt; result;
+        for (char c : s) {
+            result.push_back(c - '0');
+        }
+        return result;
+    }
+};
+</code></pre>
+<h3>2. Schoolbook Addition with Carry</h3>
+<p>This approach mimics the way we perform addition by hand, starting from the rightmost digit (least significant) and handling a carry-over when a sum is 10 or more. This is the most efficient and robust way to solve the problem.</p>
+<ol>
+<li><strong>Iterate from Right:</strong> Traverse the <code>digits</code> array from the last element to the first.</li>
+<li><strong>Increment and Check:</strong> For the current digit, increment it by one.</li>
+<li><strong>No Carry Case:</strong> If the incremented digit is less than 10 (i.e., the original digit was not 9), we are done. There is no carry to the next digit. We can return the modified array immediately.</li>
+<li><strong>Carry Case:</strong> If the incremented digit becomes 10, set it to 0. This means we have a "carry" of 1 that needs to be added to the next digit to the left. The loop will handle this in its next iteration.</li>
+<li><strong>All Nines Case:</strong> If the loop finishes without returning, it means every digit in the input was a 9 (e.g., <code>[9, 9]</code>). The array will have been modified to all zeros (<code>[0, 0]</code>). In this special case, we need to insert a <code>1</code> at the beginning of the array to handle the final carry.</li>
+</ol>
+<p>This method correctly handles all cases, including the overflow scenario, by working with digits individually. The time complexity is O(N) as we may iterate through the entire array, and the space complexity is O(1) as we modify the array in-place (excluding the space for the new digit in the worst case).</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+
+class Solution {
+public:
+    std::vector&lt;int&gt; plusOne(std::vector&lt;int&gt;&amp; digits) {
+        int n = digits.size();
+
+        for (int i = n - 1; i &gt;= 0; --i) {
+            // Increment the current digit
+            digits[i]++;
+
+            // If it's less than 10, there's no carry, so we're done
+            if (digits[i] &lt; 10) {
+                return digits;
+            }
+
+            // Otherwise, it was a 9, it became 10. Set to 0 and carry over.
+            digits[i] = 0;
+        }
+
+        // If we get here, it means all digits were 9s (e.g., [9,9,9])
+        // The vector is now all 0s ([0,0,0]). We need to add a 1 at the beginning.
+        digits.insert(digits.begin(), 1);
+
+        return digits;
+    }
+};
+</code></pre>
+<hr />
+<h3>Pythonic solution for best approach</h3>
+<p>The best approach is the Schoolbook Addition method. Python's ability to handle large integers makes the "brute force" method technically feasible, but the digit-by-digit approach is more aligned with the problem's intent and is generally more efficient for array manipulation.</p>
+<pre><code class="language-python">from typing import List
+
+class Solution:
+    def plusOne(self, digits: List[int]) -&gt; List[int]:
+        n = len(digits)
+
+        # Iterate backwards from the last digit
+        for i in range(n - 1, -1, -1):
+            # If the current digit is 9, it becomes 0, and we carry over
+            if digits[i] == 9:
+                digits[i] = 0
+            # Otherwise, just increment the digit and we are done
+            else:
+                digits[i] += 1
+                return digits
+
+        # If the loop completes, it means all digits were 9s.
+        # e.g., [9, 9, 9] became [0, 0, 0]. We need to prepend a 1.
+        return [1] + digits
+
+</code></pre></div>

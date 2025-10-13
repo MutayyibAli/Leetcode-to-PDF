@@ -1,0 +1,149 @@
+<div class='ai-explanation'><h3>List of all the approaches to solution</h3>
+<ol>
+<li>Brute Force Approach (using Sorting and Linear Scan)</li>
+<li>Binary Search Approach (using Sorting)</li>
+<li>Counting Sort Approach</li>
+</ol>
+<hr />
+<h3>Approach 1: Brute Force Approach (using Sorting and Linear Scan)</h3>
+<p>This approach leverages the definition of the h-index. If we sort the citations in ascending order, we can iterate through the array to find the maximum <code>h</code>. For each paper at index <code>i</code> in the sorted array, we know there are <code>n - i</code> papers (including the current one) that have at least <code>citations[i]</code> citations. If the number of citations <code>citations[i]</code> is greater than or equal to the count of papers <code>n - i</code>, then <code>h = n - i</code> is a potential h-index. We want the maximum such <code>h</code>, so we can find the first index <code>i</code> from the left where this condition is met, and <code>n-i</code> will be our answer.</p>
+<p><strong>Step-by-step explanation:</strong>
+1. Sort the <code>citations</code> array in ascending order.
+2. Let <code>n</code> be the total number of papers (the size of the array).
+3. Iterate through the sorted array with an index <code>i</code> from <code>0</code> to <code>n-1</code>.
+4. For each paper, there are <code>n - i</code> papers that have a citation count of at least <code>citations[i]</code>.
+5. Check if <code>citations[i] &gt;= n - i</code>. If this condition is met, we have found a potential h-index of <code>h = n - i</code>.
+6. Since we iterate from the beginning of the sorted array, the first time this condition is satisfied yields the maximum possible h-index. However, to be safe and cover all cases, we can track the maximum valid <code>h</code> found.
+7. Return the maximum <code>h</code> found after checking all papers.</p>
+<p>This approach has a time complexity of O(N log N) due to sorting and a space complexity of O(1) or O(log N) depending on the sort implementation.</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;algorithm&gt;
+
+class Solution {
+public:
+    int hIndex(std::vector&lt;int&gt;&amp; citations) {
+        std::sort(citations.begin(), citations.end());
+        int n = citations.size();
+        int max_h = 0;
+        for(int i = 0; i &lt; n; i++) {
+            // Number of papers with at least citations[i] citations is n - i
+            int h = n - i;
+            if (citations[i] &gt;= h) {
+                max_h = std::max(max_h, h);
+            }
+        }
+        return max_h;
+    }
+};
+</code></pre>
+<hr />
+<h3>Approach 2: Binary Search Approach (using Sorting)</h3>
+<p>Similar to the first approach, this method also begins by sorting the <code>citations</code> array. Once sorted, we can observe that the property <code>citations[i] &gt;= n - i</code> is monotonic. This allows us to use binary search to find the optimal value more efficiently than a linear scan. We can binary search over the possible indices of the array to find the point where the h-index condition is first met.</p>
+<p><strong>Step-by-step explanation:</strong>
+1. Sort the <code>citations</code> array in ascending order.
+2. Initialize <code>low = 0</code>, <code>high = n - 1</code>, and a variable <code>ans = 0</code> to store the result.
+3. Perform a binary search on the indices of the array.
+4. In each iteration, calculate the middle index <code>mid</code>. The number of papers from this index to the end is <code>h = n - mid</code>.
+5. Check if <code>citations[mid] &gt;= h</code>.
+   - If <code>true</code>, it means we have found a valid h-index of at least <code>h</code>. We store this as a potential answer (<code>ans = h</code>) and try to find a larger <code>h</code> by searching in the left half of the array (by setting <code>high = mid - 1</code>).
+   - If <code>false</code>, it means <code>h</code> is too large for the citation count <code>citations[mid]</code>. We need to try a smaller <code>h</code>, which corresponds to a larger index, so we search in the right half (by setting <code>low = mid + 1</code>).
+6. After the binary search loop concludes, <code>ans</code> will hold the maximum h-index found.</p>
+<p>The time complexity is dominated by the initial sort, making it O(N log N), and the space complexity is O(1) or O(log N).</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;algorithm&gt;
+
+class Solution {
+public:
+    int hIndex(std::vector&lt;int&gt;&amp; citations) {
+        std::sort(citations.begin(), citations.end());
+        int n = citations.size();
+        int low = 0, high = n - 1;
+        int ans = 0;
+        while (low &lt;= high) {
+            int mid = low + (high - low) / 2;
+            if (citations[mid] &gt;= n - mid) {
+                ans = n - mid;
+                high = mid - 1; // Try for a larger h-index
+            } else {
+                low = mid + 1; // Try for a smaller h-index
+            }
+        }
+        return ans;
+    }
+};
+</code></pre>
+<hr />
+<h3>Approach 3: Counting Sort Approach</h3>
+<p>This is the most optimal approach in terms of time complexity. It avoids a comparison-based sort by using extra space to count the frequencies of citations. Since the h-index can be at most <code>n</code> (the number of papers), we can create a counting array (or buckets) of size <code>n+1</code>. Any citation count greater than <code>n</code> can be treated as <code>n</code>, as it will satisfy the condition for any possible h-index up to <code>n</code>.</p>
+<p><strong>Step-by-step explanation:</strong>
+1. Create a frequency array, <code>counts</code>, of size <code>n + 1</code>, initialized to all zeros.
+2. Iterate through the input <code>citations</code>. For each citation <code>c</code>:
+   - If <code>c</code> is greater than or equal to <code>n</code>, increment <code>counts[n]</code>.
+   - Otherwise, increment <code>counts[c]</code>.
+3. Iterate backward through the <code>counts</code> array, from <code>n</code> down to <code>0</code>.
+4. Maintain a running sum <code>total</code> which accumulates the number of papers. At index <code>i</code>, <code>total</code> will represent the number of papers with at least <code>i</code> citations.
+5. In each step <code>i</code>, add <code>counts[i]</code> to <code>total</code>.
+6. Check if the accumulated <code>total</code> is greater than or equal to <code>i</code>. If it is, this means we have <code>total</code> papers with <code>i</code> or more citations. Since <code>total &gt;= i</code>, we have found a valid h-index.
+7. Because we are iterating from <code>n</code> downwards, the first <code>i</code> that satisfies this condition is the maximum possible value, and thus is the h-index. Return <code>i</code> immediately.</p>
+<p>This approach has a time complexity of O(N) and a space complexity of O(N) for the counting array.</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+
+class Solution {
+public:
+    int hIndex(std::vector&lt;int&gt;&amp; citations) {
+        int n = citations.size();
+        std::vector&lt;int&gt; counts(n + 1, 0);
+
+        for (int c : citations) {
+            if (c &gt;= n) {
+                counts[n]++;
+            } else {
+                counts[c]++;
+            }
+        }
+
+        int total = 0;
+        for (int i = n; i &gt;= 0; i--) {
+            total += counts[i];
+            if (total &gt;= i) {
+                return i;
+            }
+        }
+
+        return 0;
+    }
+};
+</code></pre>
+<hr />
+<h3>Pythonic Solution (Best Approach)</h3>
+<p>The best approach is the Counting Sort method due to its linear time complexity. The Python implementation is concise and follows the logic described above. It creates a frequency list, populates it, and then iterates backward to find the first value <code>i</code> for which the cumulative count of papers is at least <code>i</code>.</p>
+<pre><code class="language-python">from typing import List
+
+class Solution:
+    def hIndex(self, citations: List[int]) -&gt; int:
+        n = len(citations)
+        # Create a frequency array (buckets)
+        # counts[i] stores the number of papers with i citations
+        # All papers with &gt; n citations are grouped in counts[n]
+        counts = [0] * (n + 1)
+
+        for c in citations:
+            if c &gt;= n:
+                counts[n] += 1
+            else:
+                counts[c] += 1
+
+        total_papers = 0
+        # Iterate from n down to 0 to find the h-index
+        for i in range(n, -1, -1):
+            # total_papers is the number of papers with at least i citations
+            total_papers += counts[i]
+
+            # If we have at least i papers with i or more citations,
+            # i is a possible h-index. Since we iterate downwards,
+            # the first such i we find is the maximum, i.e., the h-index.
+            if total_papers &gt;= i:
+                return i
+
+        return 0
+</code></pre></div>

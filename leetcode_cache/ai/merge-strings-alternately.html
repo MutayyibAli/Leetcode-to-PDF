@@ -1,0 +1,98 @@
+<div class='ai-explanation'><h3>List of all the approaches to solution</h3>
+<ol>
+<li>Brute Force Approach (Two Pointers with Remainder Append)</li>
+<li>Single Pointer Approach</li>
+</ol>
+<h3>Brute Force Approach (Two Pointers with Remainder Append)</h3>
+<p>This approach uses two pointers, one for each string, to iterate through them simultaneously. It first merges the common part of both strings in an alternating fashion. After the shorter string is fully traversed, it appends the remaining part of the longer string to the result.</p>
+<ol>
+<li>Initialize an empty string <code>result</code> to build the merged string.</li>
+<li>Initialize two pointers, <code>i = 0</code> for <code>word1</code> and <code>j = 0</code> for <code>word2</code>.</li>
+<li>Loop while both <code>i</code> and <code>j</code> are within the bounds of their respective strings.</li>
+<li>In each iteration, append the character from <code>word1</code> at index <code>i</code> and the character from <code>word2</code> at index <code>j</code> to <code>result</code>.</li>
+<li>Increment both <code>i</code> and <code>j</code>.</li>
+<li>After the loop, check if there are any remaining characters in <code>word1</code> (if <code>i &lt; word1.length()</code>) and append them to <code>result</code>.</li>
+<li>Similarly, check for and append any remaining characters from <code>word2</code>.</li>
+<li>Return the final <code>result</code> string.</li>
+</ol>
+<p>This approach is straightforward and directly follows the logic of merging the common part first and then the leftover part. The time complexity is O(N + M) because we iterate through both strings completely, and the space complexity is O(N + M) to store the result string, where N and M are the lengths of <code>word1</code> and <code>word2</code>.</p>
+<pre><code class="language-cpp">#include &lt;string&gt;
+#include &lt;algorithm&gt;
+
+class Solution {
+public:
+    std::string mergeAlternately(std::string word1, std::string word2) {
+        std::string result = &quot;&quot;;
+        int i = 0, j = 0;
+        int n1 = word1.length();
+        int n2 = word2.length();
+
+        // Merge the common part
+        while (i &lt; n1 &amp;&amp; j &lt; n2) {
+            result += word1[i++];
+            result += word2[j++];
+        }
+
+        // Append the remaining part of word1, if any
+        while (i &lt; n1) {
+            result += word1[i++];
+        }
+
+        // Append the remaining part of word2, if any
+        while (j &lt; n2) {
+            result += word2[j++];
+        }
+
+        return result;
+    }
+};
+</code></pre>
+<h3>Single Pointer Approach</h3>
+<p>This is a more concise and optimized approach that uses a single pointer (or loop index) to traverse up to the length of the longer string. In each iteration, it conditionally appends characters from both strings if the index is within their bounds. This elegantly handles both the alternating merge and the appending of the remainder in a single loop.</p>
+<ol>
+<li>Initialize an empty string <code>result</code>.</li>
+<li>Initialize a single index <code>i = 0</code>.</li>
+<li>Loop as long as the index <code>i</code> is less than the length of <code>word1</code> OR <code>word2</code>.</li>
+<li>Inside the loop, check if <code>i</code> is a valid index for <code>word1</code>. If it is, append <code>word1[i]</code> to <code>result</code>.</li>
+<li>Next, check if <code>i</code> is a valid index for <code>word2</code>. If it is, append <code>word2[i]</code> to <code>result</code>.</li>
+<li>Increment <code>i</code> to move to the next position.</li>
+<li>When the loop finishes, <code>result</code> will contain the fully merged string.</li>
+</ol>
+<p>The time complexity is O(max(N, M)) as the loop runs for the length of the longer string, and the space complexity is O(N + M) to store the resulting string.</p>
+<pre><code class="language-cpp">#include &lt;string&gt;
+
+class Solution {
+public:
+    std::string mergeAlternately(std::string word1, std::string word2) {
+        std::string result = &quot;&quot;;
+        int i = 0;
+        while (i &lt; word1.length() || i &lt; word2.length()) {
+            if (i &lt; word1.length()) {
+                result += word1[i];
+            }
+            if (i &lt; word2.length()) {
+                result += word2[i];
+            }
+            i++;
+        }
+        return result;
+    }
+};
+</code></pre>
+<h3>Pythonic solution for best approach</h3>
+<p>The Single Pointer approach is the most efficient and concise. In Python, it's generally more performant to build a list of characters and then use <code>''.join()</code> to create the final string, as string concatenations can be slow.</p>
+<pre><code class="language-python">class Solution:
+    def mergeAlternately(self, word1: str, word2: str) -&gt; str:
+        result = []
+        n1, n2 = len(word1), len(word2)
+        max_len = max(n1, n2)
+
+        for i in range(max_len):
+            if i &lt; n1:
+                result.append(word1[i])
+            if i &lt; n2:
+                result.append(word2[i])
+
+        return &quot;&quot;.join(result)
+
+</code></pre></div>

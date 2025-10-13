@@ -1,0 +1,252 @@
+<div class='ai-explanation'><h3>List of Approaches</h3>
+<ol>
+<li>Brute Force Approach (Standard BFS)</li>
+<li>Pre-computation with Generic States and BFS Approach</li>
+<li>Bidirectional BFS Approach</li>
+</ol>
+<hr />
+<h3>1. Brute Force Approach (Standard BFS)</h3>
+<p>This approach models the problem as finding the shortest path in an unweighted graph. The words are the nodes, and an edge connects two words if they differ by a single letter. Breadth-First Search (BFS) is the perfect algorithm for this task as it explores the graph level by level, guaranteeing that the first time we find the <code>endWord</code>, it will be via the shortest possible path.</p>
+<p><strong>Step-by-step explanation:</strong>
+1.  Initialize a queue and add the <code>beginWord</code> to it. Also, initialize a <code>level</code> counter to 1.
+2.  Use a hash set for the <code>wordList</code> to allow for fast (average O(1)) lookups and removals.
+3.  Begin the BFS loop which continues as long as the queue is not empty.
+4.  In each iteration, process all nodes at the current level. The number of nodes is the queue's size at the beginning of the iteration.
+5.  For each <code>word</code> dequeued, generate all its possible "neighbors" (words that differ by one letter). This is done by iterating through each character of the word and replacing it with every letter from 'a' to 'z'.
+6.  For each generated neighbor:
+    *   If it matches the <code>endWord</code>, the shortest path is found. The length is the current <code>level</code> + 1. Return this value.
+    *   If the neighbor exists in the <code>wordList</code> set, it's a valid next step. Add it to the queue and remove it from the <code>wordList</code> set to mark it as visited and avoid cycles.
+7.  After processing all words at the current level, increment the <code>level</code> counter.
+8.  If the queue becomes empty and the <code>endWord</code> has not been reached, it means no transformation sequence exists. Return 0.</p>
+<p>The time complexity is O(N * L * 26), where N is the number of words in the list and L is the length of each word. The space complexity is O(N) for the queue and the set.</p>
+<pre><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;vector&gt;
+#include &lt;string&gt;
+#include &lt;queue&gt;
+#include &lt;unordered_set&gt;
+
+class Solution {
+public:
+    int ladderLength(std::string beginWord, std::string endWord, std::vector&lt;std::string&gt;&amp; wordList) {
+        std::unordered_set&lt;std::string&gt; dict(wordList.begin(), wordList.end());
+        if (dict.find(endWord) == dict.end()) {
+            return 0; // Optimization: endWord must be in the list
+        }
+
+        std::queue&lt;std::string&gt; q;
+        q.push(beginWord);
+        int ladder = 1;
+
+        while (!q.empty()) {
+            int level_size = q.size();
+            for (int i = 0; i &lt; level_size; ++i) {
+                std::string word = q.front();
+                q.pop();
+
+                if (word == endWord) {
+                    return ladder;
+                }
+
+                // Generate neighbors by changing one character at a time
+                for (int j = 0; j &lt; word.length(); ++j) {
+                    char original_char = word[j];
+                    for (char c = 'a'; c &lt;= 'z'; ++c) {
+                        word[j] = c;
+                        if (dict.count(word)) {
+                            q.push(word);
+                            dict.erase(word); // Mark as visited
+                        }
+                    }
+                    word[j] = original_char; // Restore the word
+                }
+            }
+            ladder++;
+        }
+        return 0;
+    }
+};
+</code></pre>
+<hr />
+<h3>2. Pre-computation with Generic States and BFS Approach</h3>
+<p>This method optimizes the process of finding a word's neighbors. Instead of generating all 26*L possible neighbors and checking for their existence, we can pre-process the entire <code>wordList</code> to find these connections more efficiently.</p>
+<p><strong>Step-by-step explanation:</strong>
+1.  Pre-process the <code>wordList</code> to build a hash map. The keys of this map will be "generic" words with a wildcard character (e.g., <code>h*t</code>), and the values will be lists of all actual words from the <code>wordList</code> that match this pattern (e.g., <code>["hit", "hot"]</code>).
+2.  This map effectively groups all words that are one transformation away from each other.
+3.  Once the map is built, perform a standard BFS, similar to the first approach.
+4.  Start a queue with the <code>beginWord</code> and a level of 1. Use a <code>visited</code> set to avoid cycles.
+5.  In each step of the BFS, for the current <code>word</code>, generate all its L possible generic forms.
+6.  Use the pre-computed map to look up all real-word neighbors for each generic form.
+7.  For each neighbor found, if it's the <code>endWord</code>, return the current level + 1. Otherwise, if it has not been visited, add it to the queue and the <code>visited</code> set.
+8.  If the queue becomes empty before reaching the <code>endWord</code>, return 0.</p>
+<p>The time complexity is O(N * L^2) for pre-processing and O(N * L^2) for the BFS in the worst case, making the total O(N * L^2). The space complexity is O(N * L) to store the adjacency map. Since L (word length) is much smaller than 26, this can be faster than the first approach.</p>
+<pre><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;vector&gt;
+#include &lt;string&gt;
+#include &lt;queue&gt;
+#include &lt;unordered_map&gt;
+#include &lt;unordered_set&gt;
+
+class Solution {
+public:
+    int ladderLength(std::string beginWord, std::string endWord, std::vector&lt;std::string&gt;&amp; wordList) {
+        std::unordered_set&lt;std::string&gt; wordSet(wordList.begin(), wordList.end());
+        if (wordSet.find(endWord) == wordSet.end()) {
+            return 0;
+        }
+
+        std::unordered_map&lt;std::string, std::vector&lt;std::string&gt;&gt; allComboDict;
+        int L = beginWord.length();
+
+        for (const std::string&amp; word : wordList) {
+            for (int i = 0; i &lt; L; ++i) {
+                std::string genericWord = word.substr(0, i) + &quot;*&quot; + word.substr(i + 1);
+                allComboDict[genericWord].push_back(word);
+            }
+        }
+
+        std::queue&lt;std::pair&lt;std::string, int&gt;&gt; Q;
+        Q.push({beginWord, 1});
+
+        std::unordered_set&lt;std::string&gt; visited;
+        visited.insert(beginWord);
+
+        while (!Q.empty()) {
+            auto [word, level] = Q.front();
+            Q.pop();
+
+            for (int i = 0; i &lt; L; ++i) {
+                std::string genericWord = word.substr(0, i) + &quot;*&quot; + word.substr(i + 1);
+
+                if (allComboDict.count(genericWord)) {
+                    for (const std::string&amp; adjacentWord : allComboDict[genericWord]) {
+                        if (adjacentWord == endWord) {
+                            return level + 1;
+                        }
+                        if (visited.find(adjacentWord) == visited.end()) {
+                            visited.insert(adjacentWord);
+                            Q.push({adjacentWord, level + 1});
+                        }
+                    }
+                }
+            }
+        }
+        return 0;
+    }
+};
+</code></pre>
+<hr />
+<h3>3. Bidirectional BFS Approach</h3>
+<p>This is a significant optimization over the standard BFS. Instead of searching only from <code>beginWord</code> outwards, we start two simultaneous BFS searches: one from <code>beginWord</code> (forward) and another from <code>endWord</code> (backward). The algorithm terminates when the two search frontiers meet. This drastically reduces the search space, as exploring two smaller spheres is much faster than exploring one large sphere.</p>
+<p><strong>Step-by-step explanation:</strong>
+1.  First, check if <code>endWord</code> is in <code>wordList</code>. If not, no path is possible, so return 0.
+2.  Initialize two sets to store the frontiers of our searches: <code>head</code> (starting with <code>beginWord</code>) and <code>tail</code> (starting with <code>endWord</code>).
+3.  Initialize a <code>ladder</code> length counter to 2 (since <code>beginWord</code> and <code>endWord</code> are the first two words in any potential path).
+4.  Use a dictionary set to keep track of unvisited words, removing <code>beginWord</code> and <code>endWord</code> from it.
+5.  In a loop, always choose the smaller of the two frontier sets (<code>head</code> or <code>tail</code>) to expand. This is a key optimization that keeps the search balanced.
+6.  For each <code>word</code> in the chosen frontier, generate all its one-letter-different neighbors.
+7.  If a neighbor is found in the <em>other</em> frontier set, it means the two searches have met. The path is complete. Return the current <code>ladder</code> value.
+8.  If a neighbor is found in the main dictionary set, add it to a temporary set for the next level and remove it from the dictionary to mark it as visited.
+9.  After iterating through all words in the chosen frontier, update it with the temporary set of new neighbors and increment the <code>ladder</code> count.
+10. If either frontier becomes empty, the two searches cannot meet, so no path exists. Return 0.</p>
+<p>The time complexity is still O(N * L * 26) in the worst-case, but the search space is effectively halved in terms of depth, making it significantly faster in practice. The space complexity is O(N).</p>
+<pre><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;vector&gt;
+#include &lt;string&gt;
+#include &lt;unordered_set&gt;
+
+class Solution {
+public:
+    int ladderLength(std::string beginWord, std::string endWord, std::vector&lt;std::string&gt;&amp; wordList) {
+        std::unordered_set&lt;std::string&gt; dict(wordList.begin(), wordList.end());
+        if (dict.find(endWord) == dict.end()) {
+            return 0;
+        }
+
+        std::unordered_set&lt;std::string&gt; head, tail, *phead, *ptail;
+        head.insert(beginWord);
+        tail.insert(endWord);
+        int ladder = 2;
+
+        while (!head.empty() &amp;&amp; !tail.empty()) {
+            if (head.size() &lt; tail.size()) {
+                phead = &amp;head;
+                ptail = &amp;tail;
+            } else {
+                phead = &amp;tail;
+                ptail = &amp;head;
+            }
+
+            std::unordered_set&lt;std::string&gt; temp;
+            for (auto it = phead-&gt;begin(); it != phead-&gt;end(); it++) {
+                std::string word = *it;
+                for (int i = 0; i &lt; word.size(); i++) {
+                    char t = word[i];
+                    for (int j = 0; j &lt; 26; j++) {
+                        word[i] = 'a' + j;
+                        if (ptail-&gt;count(word)) {
+                            return ladder;
+                        }
+                        if (dict.count(word)) {
+                            temp.insert(word);
+                            dict.erase(word);
+                        }
+                    }
+                    word[i] = t;
+                }
+            }
+            ladder++;
+            phead-&gt;swap(temp);
+        }
+        return 0;
+    }
+};
+</code></pre>
+<hr />
+<h3>Pythonic Solution (Best Approach)</h3>
+<p>The following Python code implements the <strong>Bidirectional BFS Approach</strong>. It is one of the most efficient solutions in practice due to the significant reduction in the search space. It uses sets for efficient management of the two search frontiers and the dictionary of available words.</p>
+<pre><code class="language-python">import collections
+
+class Solution:
+    def ladderLength(self, beginWord: str, endWord: str, wordList: list[str]) -&gt; int:
+        word_set = set(wordList)
+        if endWord not in word_set:
+            return 0
+
+        # Two-ended BFS frontiers
+        head = {beginWord}
+        tail = {endWord}
+
+        # Remove words from the main set to mark as visited
+        word_set.discard(beginWord)
+        word_set.discard(endWord)
+
+        ladder = 2 # Path length starts at 2 (begin and end words)
+
+        while head and tail:
+            # Always expand the smaller frontier to optimize
+            if len(head) &gt; len(tail):
+                head, tail = tail, head
+
+            next_level_nodes = set()
+            for word in head:
+                for i in range(len(word)):
+                    for char_code in range(ord('a'), ord('z') + 1):
+                        char = chr(char_code)
+                        new_word = word[:i] + char + word[i+1:]
+
+                        # If frontiers meet, path is found
+                        if new_word in tail:
+                            return ladder
+
+                        # If a valid transformation is found
+                        if new_word in word_set:
+                            next_level_nodes.add(new_word)
+                            word_set.remove(new_word)
+
+            # Move to the next level
+            head = next_level_nodes
+            ladder += 1
+
+        # No path found
+        return 0
+</code></pre></div>

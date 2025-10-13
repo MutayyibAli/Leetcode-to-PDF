@@ -1,0 +1,138 @@
+<div class='ai-explanation'><h3>List of all the approaches to solution</h3>
+<ol>
+<li>Brute Force Approach (First Occurrence Index Pattern)</li>
+<li>Two Hash Maps Approach</li>
+<li>Optimal Approach (Last Seen Index Comparison)</li>
+</ol>
+<hr />
+<h3>Approach 1: Brute Force Approach (First Occurrence Index Pattern)</h3>
+<p>This approach transforms each string into a pattern based on the first index where each character appears. Two strings are isomorphic if and only if their transformed patterns are identical. We iterate through each character of the strings. For each index <code>i</code>, we find the first occurrence of <code>s[i]</code> in <code>s</code> and the first occurrence of <code>t[i]</code> in <code>t</code>. If these first-occurrence indices are not equal at any point, the pattern is broken, and the strings are not isomorphic.</p>
+<p>The main drawback is that finding the first occurrence of a character (<code>string::find</code>) inside a loop takes linear time, leading to a quadratic overall time complexity.</p>
+<pre><code class="language-cpp">#include &lt;string&gt;
+#include &lt;vector&gt;
+
+class Solution {
+public:
+    bool isIsomorphic(std::string s, std::string t) {
+        if (s.length() != t.length()) {
+            return false;
+        }
+
+        for (int i = 0; i &lt; s.length(); ++i) {
+            // Find the first occurrence of the character s[i] in s.
+            // Find the first occurrence of the character t[i] in t.
+            // If the positions of first occurrences do not match, they are not isomorphic.
+            if (s.find(s[i]) != t.find(t[i])) {
+                return false;
+            }
+        }
+        return true;
+    }
+};
+</code></pre>
+<p>This approach has a time complexity of O(N^2) because <code>string::find</code> takes O(N) time and is called within a loop that runs N times. The space complexity is O(1).</p>
+<hr />
+<h3>Approach 2: Two Hash Maps Approach</h3>
+<p>This approach ensures a valid one-to-one mapping between characters of <code>s</code> and <code>t</code>. We use two hash maps: one to map characters from <code>s</code> to <code>t</code> (<code>s_to_t</code>) and another from <code>t</code> to <code>s</code> (<code>t_to_s</code>). We iterate through the strings and for each pair of characters <code>s[i]</code> and <code>t[i]</code>:
+1.  If <code>s[i]</code> is already in <code>s_to_t</code>, we check if its mapping is <code>t[i]</code>. If not, the mapping is inconsistent, so we return <code>false</code>.
+2.  If <code>t[i]</code> is already in <code>t_to_s</code>, it means some other character from <code>s</code> is already mapped to <code>t[i]</code>. Since we already handled the case where <code>s[i]</code> was seen before, this new <code>s[i]</code> cannot map to <code>t[i]</code>. So we return <code>false</code>.
+3.  If both characters are new, we establish a new mapping in both maps: <code>s_to_t[s[i]] = t[i]</code> and <code>t_to_s[t[i]] = s[i]</code>.</p>
+<p>If the loop completes, all characters have a valid one-to-one mapping.</p>
+<pre><code class="language-cpp">#include &lt;string&gt;
+#include &lt;unordered_map&gt;
+
+class Solution {
+public:
+    bool isIsomorphic(std::string s, std::string t) {
+        if (s.length() != t.length()) {
+            return false;
+        }
+
+        std::unordered_map&lt;char, char&gt; s_to_t;
+        std::unordered_map&lt;char, char&gt; t_to_s;
+
+        for (int i = 0; i &lt; s.length(); ++i) {
+            char char_s = s[i];
+            char char_t = t[i];
+
+            // Case 1: s[i] already has a mapping
+            if (s_to_t.count(char_s)) {
+                if (s_to_t[char_s] != char_t) {
+                    return false; // Mismatch with existing mapping
+                }
+            }
+            // Case 2: t[i] is already mapped by another character
+            else if (t_to_s.count(char_t)) {
+                // This means char_t is already a target for another char_s,
+                // which violates the one-to-one mapping rule.
+                return false;
+            }
+            // Case 3: Establish a new mapping
+            else {
+                s_to_t[char_s] = char_t;
+                t_to_s[char_t] = char_s;
+            }
+        }
+        return true;
+    }
+};
+</code></pre>
+<p>This approach iterates through the strings once, resulting in a time complexity of O(N). The space complexity is O(k) where k is the number of unique characters in the strings (at most the size of the character set).</p>
+<hr />
+<h3>Approach 3: Optimal Approach (Last Seen Index Comparison)</h3>
+<p>This is a highly optimized approach that encodes the character mapping pattern into an array. We use two arrays, <code>indexS</code> and <code>indexT</code>, to store the last seen index of each character for strings <code>s</code> and <code>t</code>, respectively. We iterate through the strings from left to right.
+1. At each index <code>i</code>, we retrieve the last seen indices for <code>s[i]</code> and <code>t[i]</code>.
+2. If <code>indexS[s[i]]</code> is not equal to <code>indexT[t[i]]</code>, it means the mapping pattern is broken. For example, if <code>s="ab"</code> and <code>t="aa"</code>, at <code>i=1</code>, <code>s[1]</code> ('b') is seen for the first time, but <code>t[1]</code> ('a') has been seen before. Their last seen indices won't match, so they are not isomorphic.
+3. If the last seen indices are equal, it means the pattern holds. We then update the last seen index for both <code>s[i]</code> and <code>t[i]</code> to the current position <code>i + 1</code>. We use <code>i + 1</code> instead of <code>i</code> to distinguish an occurrence at index 0 from the initial state of the arrays (which is 0).</p>
+<p>If the loop completes, the strings are isomorphic.</p>
+<pre><code class="language-cpp">#include &lt;string&gt;
+#include &lt;vector&gt;
+
+class Solution {
+public:
+    bool isIsomorphic(std::string s, std::string t) {
+        if (s.length() != t.length()) {
+            return false;
+        }
+
+        // Arrays to store the last seen position of characters.
+        // Assuming ASCII characters, size 256 is sufficient.
+        std::vector&lt;int&gt; indexS(256, 0); 
+        std::vector&lt;int&gt; indexT(256, 0);
+
+        for (int i = 0; i &lt; s.length(); ++i) {
+            // If the last seen positions of the current characters don't match,
+            // the strings are not isomorphic.
+            if (indexS[s[i]] != indexT[t[i]]) {
+                return false;
+            }
+
+            // Update the last seen position to the current index + 1.
+            // We use i + 1 to distinguish from the initial value 0.
+            indexS[s[i]] = i + 1;
+            indexT[t[i]] = i + 1;
+        }
+
+        return true;
+    }
+};
+</code></pre>
+<p>The time complexity is O(N) because we iterate through the strings once. The space complexity is O(1) as the size of the arrays is fixed (256) and does not depend on the input string length.</p>
+<hr />
+<h3>Pythonic solution for best approach</h3>
+<p>A very concise and "Pythonic" way to solve this problem is to leverage sets. The condition for two strings being isomorphic is that the mapping from <code>s</code> to <code>t</code> must be one-to-one. This can be verified by checking three conditions:
+1.  The number of unique character mappings from <code>s</code> to <code>t</code> (i.e., unique <code>(s[i], t[i])</code> pairs).
+2.  The number of unique characters in <code>s</code>.
+3.  The number of unique characters in <code>t</code>.</p>
+<p>If all three counts are equal, it guarantees a one-to-one correspondence. For example, in <code>s="foo"</code>, <code>t="bar"</code>, <code>set(s)</code> is <code>{'f', 'o'}</code> (size 2), but <code>set(t)</code> is <code>{'b', 'a', 'r'}</code> (size 3), so they can't be isomorphic. In <code>s="aab"</code>, <code>t="xxy"</code>, <code>set(zip(s,t))</code> is <code>{(a,x), (b,y)}</code> (size 2), <code>set(s)</code> is <code>{'a', 'b'}</code> (size 2), and <code>set(t)</code> is <code>{'x', 'y'}</code> (size 2). All sizes match, so they are isomorphic.</p>
+<pre><code class="language-python">class Solution:
+    def isIsomorphic(self, s: str, t: str) -&gt; bool:
+        # zip(s, t) creates pairs of characters: (s[0], t[0]), (s[1], t[1]), ...
+        # set() removes duplicates.
+        # len(set(zip(s, t))) is the number of unique mappings.
+        # len(set(s)) is the number of unique characters in s.
+        # len(set(t)) is the number of unique characters in t.
+        # For a one-to-one mapping, all three must be equal.
+        return len(set(zip(s, t))) == len(set(s)) == len(set(t))
+
+</code></pre></div>

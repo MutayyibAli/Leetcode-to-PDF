@@ -1,0 +1,170 @@
+<div class='ai-explanation'><h3>List of Approaches</h3>
+<ol>
+<li>Brute Force Approach</li>
+<li>Kadane's Algorithm for Two Cases</li>
+</ol>
+<hr />
+<h3>1. Brute Force Approach</h3>
+<h4>Explanation</h4>
+<p>The most straightforward approach is to generate every possible circular subarray, calculate its sum, and keep track of the maximum sum found. We can iterate through every possible starting element <code>i</code> and then, for each starting element, iterate through all possible lengths from 1 to <code>n</code>. The sum of each subarray is calculated, and the overall maximum is updated. The circular nature is handled by using the modulo operator (<code>%</code>) to wrap around the array indices.</p>
+<p><strong>Step-by-step:</strong></p>
+<ol>
+<li>Initialize <code>max_sum</code> to the smallest possible integer value.</li>
+<li>Loop through each element of the array with index <code>i</code> from <code>0</code> to <code>n-1</code>, considering it as the starting point of a subarray.</li>
+<li>Inside this loop, start another loop to define the subarray. Initialize <code>current_sum</code> to 0.</li>
+<li>This inner loop will run <code>n</code> times (for <code>j</code> from <code>0</code> to <code>n-1</code>) to create subarrays of every possible length starting from <code>i</code>.</li>
+<li>Calculate the actual index in the circular array using <code>(i + j) % n</code>.</li>
+<li>Add the element at the calculated index to <code>current_sum</code>.</li>
+<li>After each addition, compare <code>current_sum</code> with <code>max_sum</code> and update <code>max_sum</code> if <code>current_sum</code> is larger.</li>
+<li>After all loops complete, <code>max_sum</code> will hold the maximum circular subarray sum.</li>
+</ol>
+<p>This approach has a time complexity of O(N<sup>2</sup>) and a space complexity of O(1).</p>
+<h4>C++ Code Snippet</h4>
+<pre><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;vector&gt;
+#include &lt;numeric&gt;
+#include &lt;algorithm&gt;
+#include &lt;climits&gt;
+
+class Solution {
+public:
+    int maxSubarraySumCircular(std::vector&lt;int&gt;&amp; nums) {
+        int n = nums.size();
+        int max_sum = INT_MIN;
+
+        for (int i = 0; i &lt; n; ++i) {
+            int current_sum = 0;
+            for (int j = 0; j &lt; n; ++j) {
+                int index = (i + j) % n;
+                current_sum += nums[index];
+                if (current_sum &gt; max_sum) {
+                    max_sum = current_sum;
+                }
+            }
+        }
+        return max_sum;
+    }
+};
+</code></pre>
+<hr />
+<h3>2. Kadane's Algorithm for Two Cases</h3>
+<h4>Explanation</h4>
+<p>This problem is a variation of the standard "Maximum Subarray" problem, which is efficiently solved by Kadane's algorithm. For a circular array, the maximum sum subarray can be one of two types:</p>
+<ol>
+<li><strong>Case 1: A non-wrapping subarray.</strong> This is a contiguous subarray that lies entirely within the array as if it were a normal, non-circular one. We can find the maximum sum for this case using the standard Kadane's algorithm.</li>
+<li><strong>Case 2: A wrapping subarray.</strong> This subarray consists of a prefix and a suffix of the array. The sum of such a subarray is equal to the <code>total sum</code> of the array minus the sum of the elements <em>not</em> included in the subarray (the "middle" part). To maximize the wrapping subarray sum, we need to find the "middle" subarray with the <em>minimum</em> sum and subtract it from the total sum. We can find this minimum sum subarray using a variation of Kadane's algorithm.</li>
+</ol>
+<p>The final answer is the maximum of the results from these two cases.</p>
+<p>There is a special edge case to consider: if all numbers in the array are negative. In this scenario, the minimum sum subarray would be the entire array. <code>total_sum - min_sum</code> would result in <code>0</code>, which is incorrect as we need a non-empty subarray. In this case, the answer is simply the result from Case 1 (the largest, i.e., least negative, single element). This edge case occurs when <code>total_sum</code> equals <code>min_sum</code>.</p>
+<p><strong>Step-by-step:</strong></p>
+<ol>
+<li>Initialize variables to track the maximum and minimum subarray sums found so far (<code>max_so_far</code>, <code>min_so_far</code>), the current maximum and minimum sums ending at the current position (<code>current_max</code>, <code>current_min</code>), and the <code>total_sum</code>.</li>
+<li>Iterate through the array once. In each iteration:<ul>
+<li>Update <code>total_sum</code> by adding the current element.</li>
+<li>Update <code>current_max</code> for the standard Kadane's algorithm (for Case 1).</li>
+<li>Update <code>current_min</code> for the modified Kadane's algorithm (to find the minimum subarray for Case 2).</li>
+<li>Update <code>max_so_far</code> and <code>min_so_far</code> with the new <code>current_max</code> and <code>current_min</code> if they are greater/smaller, respectively.</li>
+</ul>
+</li>
+<li>After the loop, check for the edge case: if <code>total_sum == min_so_far</code>, it means all elements are negative. Return <code>max_so_far</code>.</li>
+<li>Otherwise, the answer is <code>max(max_so_far, total_sum - min_so_far)</code>.</li>
+</ol>
+<p>This approach has a time complexity of O(N) and a space complexity of O(1) as it only requires a single pass through the array.</p>
+<h4>C++ Code Snippet</h4>
+<pre><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;vector&gt;
+#include &lt;numeric&gt;
+#include &lt;algorithm&gt;
+#include &lt;climits&gt;
+
+class Solution {
+public:
+    int maxSubarraySumCircular(std::vector&lt;int&gt;&amp; nums) {
+        int total_sum = 0;
+        int max_so_far = INT_MIN;
+        int current_max = 0;
+        int min_so_far = INT_MAX;
+        int current_min = 0;
+
+        for (int num : nums) {
+            // Standard Kadane's for maximum subarray sum
+            current_max += num;
+            if (current_max &gt; max_so_far) {
+                max_so_far = current_max;
+            }
+            if (current_max &lt; 0) {
+                current_max = 0;
+            }
+
+            // Modified Kadane's for minimum subarray sum
+            current_min += num;
+            if (current_min &lt; min_so_far) {
+                min_so_far = current_min;
+            }
+            if (current_min &gt; 0) {
+                current_min = 0;
+            }
+
+            total_sum += num;
+        }
+
+        // Edge case: If all numbers are negative, total_sum will be equal to min_so_far.
+        // In this case, the wrapping sum (total_sum - min_so_far) would be 0, which is incorrect.
+        // The correct answer is the non-wrapping max sum, which will be the least negative number.
+        if (total_sum == min_so_far) {
+            return max_so_far;
+        }
+
+        return std::max(max_so_far, total_sum - min_so_far);
+    }
+};
+</code></pre>
+<hr />
+<h3>Pythonic Solution (Best Approach)</h3>
+<p>The pythonic implementation of the optimal approach (Kadane's for Two Cases) is concise. It calculates the maximum subarray sum, minimum subarray sum, and total sum in a single pass. It handles the edge case of all negative numbers by first checking if the maximum element is negative. If it is, that's the answer. Otherwise, it proceeds with the two-case logic.</p>
+<pre><code class="language-python">from typing import List
+
+class Solution:
+    def maxSubarraySumCircular(self, nums: List[int]) -&gt; int:
+        &quot;&quot;&quot;
+        Calculates the maximum sum of a circular subarray.
+
+        The solution is based on Kadane's algorithm and considers two cases:
+        1. The maximum subarray is non-wrapping (standard Kadane's).
+        2. The maximum subarray is wrapping. This is equivalent to finding the
+           minimum subarray and subtracting its sum from the total sum of the array.
+
+        The final answer is the maximum of these two cases. An edge case where all
+        numbers are negative is handled separately.
+        &quot;&quot;&quot;
+
+        total_sum = 0
+        max_sum = -float('inf')
+        current_max = 0
+        min_sum = float('inf')
+        current_min = 0
+
+        for num in nums:
+            total_sum += num
+
+            # Kadane's algorithm to find the maximum subarray sum (non-wrapping)
+            current_max += num
+            max_sum = max(max_sum, current_max)
+            if current_max &lt; 0:
+                current_max = 0
+
+            # Kadane's algorithm to find the minimum subarray sum
+            current_min += num
+            min_sum = min(min_sum, current_min)
+            if current_min &gt; 0:
+                current_min = 0
+
+        # If total_sum == min_sum, it means all elements are negative.
+        # The max_sum (from non-wrapping case) will correctly be the largest (least negative) element.
+        if total_sum == min_sum:
+            return max_sum
+
+        # The result is the max of the non-wrapping sum and the wrapping sum.
+        return max(max_sum, total_sum - min_sum)
+
+</code></pre></div>

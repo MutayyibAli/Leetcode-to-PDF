@@ -1,0 +1,146 @@
+<div class='ai-explanation'><h3>List of all the approaches to solution</h3>
+<ol>
+<li>Brute Force Simulation</li>
+<li>Greedy Approach with Two Queues</li>
+</ol>
+<hr />
+<h3>Brute Force Simulation</h3>
+<h4>Explanation</h4>
+<p>This approach directly simulates the round-based voting procedure described in the problem.</p>
+<ol>
+<li>We maintain a count of active senators for both parties and a boolean array, <code>banned</code>, to track which senators have lost their rights.</li>
+<li>We loop through the senators in rounds. A variable, <code>turn</code>, keeps track of whose turn it is to vote.</li>
+<li>In each turn, if the current senator at index <code>turn</code> is not already banned, they exercise their right to ban an opponent.</li>
+<li>The optimal strategy is to ban the very next available opponent senator. We search for this opponent starting from the next index (<code>turn + 1</code>) and wrapping around the senate if necessary.</li>
+<li>Once the opponent is found, we mark them as <code>banned</code>, decrement their party's active count, and check for a winner.</li>
+<li>The process continues until only one party has active senators remaining.</li>
+</ol>
+<p>This method is slow because for each senator's turn, we might have to scan a significant portion of the array to find the next opponent. The time complexity is O(N^2) where N is the number of senators, and the space complexity is O(N) for the <code>banned</code> array.</p>
+<h4>C++ Code</h4>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;string&gt;
+#include &lt;numeric&gt;
+
+class Solution {
+public:
+    std::string predictPartyVictory(std::string senate) {
+        int n = senate.length();
+        int r_count = 0, d_count = 0;
+        for (char c : senate) {
+            if (c == 'R') r_count++;
+            else d_count++;
+        }
+
+        std::vector&lt;bool&gt; banned(n, false);
+        int turn = 0;
+        while (r_count &gt; 0 &amp;&amp; d_count &gt; 0) {
+            if (!banned[turn]) {
+                char current_senator = senate[turn];
+                char target_party = (current_senator == 'R') ? 'D' : 'R';
+
+                // Greedily find the next opponent to ban
+                int search_idx = (turn + 1) % n;
+                while (true) {
+                    if (senate[search_idx] == target_party &amp;&amp; !banned[search_idx]) {
+                        banned[search_idx] = true;
+                        if (target_party == 'R') r_count--;
+                        else d_count--;
+                        break;
+                    }
+                    search_idx = (search_idx + 1) % n;
+                }
+            }
+            turn = (turn + 1) % n;
+        }
+
+        return r_count &gt; 0 ? &quot;Radiant&quot; : &quot;Dire&quot;;
+    }
+};
+</code></pre>
+<hr />
+<h3>Greedy Approach with Two Queues</h3>
+<h4>Explanation</h4>
+<p>This is a more efficient greedy approach that correctly models the optimal strategy without costly searches. The key insight is that a senator will always ban the opponent who is next in line to vote.</p>
+<ol>
+<li>We create two queues, one for the Radiant party (<code>rad</code>) and one for the Dire party (<code>dir</code>).</li>
+<li>We iterate through the input <code>senate</code> string and populate each queue with the initial indices of the senators. Storing indices is crucial as it preserves the original voting order.</li>
+<li>We then simulate the rounds by comparing the front elements of both queues. As long as both parties have senators (queues are not empty), the process continues.</li>
+<li>In each step, we look at the senator from each party who is next to vote (i.e., <code>rad.front()</code> and <code>dir.front()</code>). The one with the smaller index gets to vote first.</li>
+<li>The senator with the smaller index bans their opponent. This means both senators are popped from their respective queues.</li>
+<li>The winning senator (the one who voted) doesn't lose their right; they just get to vote again in the <em>next</em> round. To simulate this, we add their index plus <code>n</code> (the total number of senators) back to their own queue. This new, larger index ensures they are placed at the end of the voting line for the next round.</li>
+<li>This continues until one queue becomes empty. The party corresponding to the non-empty queue is the winner.</li>
+</ol>
+<p>This approach processes each ban in constant time. Since there are N-1 total bans, the time complexity is O(N), and the space complexity is O(N) to store the indices in the queues.</p>
+<h4>C++ Code</h4>
+<pre><code class="language-cpp">#include &lt;queue&gt;
+#include &lt;string&gt;
+
+class Solution {
+public:
+    std::string predictPartyVictory(std::string senate) {
+        std::queue&lt;int&gt; rad, dir;
+        int n = senate.length();
+
+        // Add all senators to their respective queue with their index
+        for (int i = 0; i &lt; n; i++){
+            if (senate[i] == 'R'){
+                rad.push(i);
+            }
+            else {
+                dir.push(i);
+            }
+        }
+
+        // Loop until one party is eliminated
+        while (!rad.empty() &amp;&amp; !dir.empty()){
+            int r_idx = rad.front();
+            int d_idx = dir.front();
+            rad.pop();
+            dir.pop();
+
+            // The senator with the smaller index gets to vote and is enqueued for the next round
+            if (r_idx &lt; d_idx){
+                rad.push(r_idx + n);
+            }
+            else {
+                dir.push(d_idx + n);
+            }
+        }
+
+        return rad.empty() ? &quot;Dire&quot; : &quot;Radiant&quot;;
+    }
+};
+</code></pre>
+<hr />
+<h3>Pythonic solution for Best Approach</h3>
+<pre><code class="language-python">from collections import deque
+
+class Solution:
+    def predictPartyVictory(self, senate: str) -&gt; str:
+        &quot;&quot;&quot;
+        Greedy approach using two queues to track the indices of senators.
+        &quot;&quot;&quot;
+        n = len(senate)
+
+        # Create queues with the initial indices of senators for each party
+        radiant_q = deque([i for i, party in enumerate(senate) if party == 'R'])
+        dire_q = deque([i for i, party in enumerate(senate) if party == 'D'])
+
+        # Simulate rounds until one party has no senators left
+        while radiant_q and dire_q:
+            # Get the index of the next senator to vote for each party
+            r_idx = radiant_q.popleft()
+            d_idx = dire_q.popleft()
+
+            # The senator with the smaller index bans the other.
+            # The winner's turn is in the next round, so we add n to their index
+            # and push them to the back of their queue.
+            if r_idx &lt; d_idx:
+                radiant_q.append(r_idx + n)
+            else:
+                dire_q.append(d_idx + n)
+
+        # The party with remaining senators wins
+        return &quot;Radiant&quot; if radiant_q else &quot;Dire&quot;
+
+</code></pre></div>

@@ -1,0 +1,118 @@
+<div class='ai-explanation'><h3>List of approaches</h3>
+<ul>
+<li>Brute Force Approach (Handling Special Combinations)</li>
+<li>Optimized Approach (Right-to-Left Traversal)</li>
+<li>Optimized Approach (Left-to-Right Traversal)</li>
+</ul>
+<h3>Brute Force Approach (Handling Special Combinations)</h3>
+<p>This approach iterates through the string from left to right, explicitly checking for the six subtractive combinations (like 'IV', 'CM', etc.). If a two-character subtractive numeral is found, its value is added to the total, and the pointer advances by two. Otherwise, the value of the single-character numeral is added, and the pointer advances by one. This method directly translates the rules of Roman numerals into code. This approach has a time complexity of O(N) where N is the length of the string, and a space complexity of O(1) as the map size is constant.</p>
+<pre><code class="language-cpp">#include &lt;string&gt;
+#include &lt;unordered_map&gt;
+
+class Solution {
+public:
+    int romanToInt(std::string s) {
+        std::unordered_map&lt;char, int&gt; m = {
+            {'I', 1}, {'V', 5}, {'X', 10}, {'L', 50},
+            {'C', 100}, {'D', 500}, {'M', 1000}
+        };
+
+        int result = 0;
+        int i = 0;
+        while (i &lt; s.length()) {
+            // Check if the current symbol's value is less than the next one's,
+            // which indicates a subtractive combination.
+            if (i + 1 &lt; s.length() &amp;&amp; m[s[i]] &lt; m[s[i+1]]) {
+                result += m[s[i+1]] - m[s[i]];
+                i += 2; // Move past the two-character numeral
+            } else {
+                result += m[s[i]];
+                i += 1; // Move past the single-character numeral
+            }
+        }
+        return result;
+    }
+};
+</code></pre>
+<h3>Optimized Approach (Right-to-Left Traversal)</h3>
+<p>This elegant approach simplifies the logic by processing the string from right to left. The value of the last numeral is always added to the total. Then, for each preceding numeral, we compare its value to the one on its right. If the current numeral's value is smaller, it's subtracted (as in 'IV', where 'I' is processed after 'V'). Otherwise, it's added. This avoids the need for lookaheads and simplifies the conditional logic. The time complexity is O(N), and the space complexity is O(1).</p>
+<pre><code class="language-cpp">#include &lt;string&gt;
+#include &lt;unordered_map&gt;
+
+class Solution {
+public:
+    int romanToInt(std::string s) {
+        std::unordered_map&lt;char, int&gt; m = {
+            {'I', 1}, {'V', 5}, {'X', 10}, {'L', 50},
+            {'C', 100}, {'D', 500}, {'M', 1000}
+        };
+
+        // Initialize with the value of the last character
+        int result = m[s.back()]; 
+
+        // Iterate from the second-to-last character to the beginning
+        for (int i = s.length() - 2; i &gt;= 0; --i) {
+            // If current symbol's value is less than the one to its right, subtract
+            if (m[s[i]] &lt; m[s[i+1]]) {
+                result -= m[s[i]];
+            } 
+            // Otherwise, add
+            else {
+                result += m[s[i]];
+            }
+        }
+        return result;
+    }
+};
+</code></pre>
+<h3>Optimized Approach (Left-to-Right Traversal)</h3>
+<p>This is another efficient single-pass approach. It iterates through the string from left to right. For each character, it checks if the next character represents a larger value. If it does, it means the current character is part of a subtractive pair (like 'I' in 'IV'), so its value is subtracted from the total. Otherwise, its value is added. This method is intuitive and correctly accumulates the total value in one pass. The time complexity is O(N), and the space complexity is O(1).</p>
+<pre><code class="language-cpp">#include &lt;string&gt;
+#include &lt;unordered_map&gt;
+
+class Solution {
+public:
+    int romanToInt(std::string s) {
+        std::unordered_map&lt;char, int&gt; m = {
+            {'I', 1}, {'V', 5}, {'X', 10}, {'L', 50},
+            {'C', 100}, {'D', 500}, {'M', 1000}
+        };
+
+        int result = 0;
+        for (int i = 0; i &lt; s.length(); ++i) {
+            // Check if the next character exists and has a larger value
+            if (i &lt; s.length() - 1 &amp;&amp; m[s[i]] &lt; m[s[i+1]]) {
+                result -= m[s[i]];
+            } else {
+                result += m[s[i]];
+            }
+        }
+        return result;
+    }
+};
+</code></pre>
+<h3>Pythonic Solution for Best Approach</h3>
+<pre><code class="language-python">class Solution:
+    def romanToInt(self, s: str) -&gt; int:
+        &quot;&quot;&quot;
+        This solution uses the Left-to-Right Traversal approach.
+        It maps Roman numerals to integers and iterates through the string.
+        If a numeral is followed by a larger one, its value is subtracted;
+        otherwise, it's added to the total.
+        &quot;&quot;&quot;
+        roman_map = {
+            'I': 1, 'V': 5, 'X': 10, 'L': 50,
+            'C': 100, 'D': 500, 'M': 1000
+        }
+
+        result = 0
+        for i in range(len(s)):
+            # If the current value is less than the next, it's a subtraction case
+            if i + 1 &lt; len(s) and roman_map[s[i]] &lt; roman_map[s[i+1]]:
+                result -= roman_map[s[i]]
+            else:
+                result += roman_map[s[i]]
+
+        return result
+
+</code></pre></div>

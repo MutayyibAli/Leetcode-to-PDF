@@ -1,0 +1,185 @@
+<div class='ai-explanation'><h3>List of all the approaches to solution</h3>
+<ol>
+<li>Brute Force Approach</li>
+<li>Trie Data Structure Approach</li>
+</ol>
+<hr />
+<h3>Brute Force Approach</h3>
+<h4>Explanation</h4>
+<p>This approach uses a standard data structure, like a hash set (<code>std::unordered_set</code> in C++), to store the inserted words.</p>
+<ol>
+<li><strong>Initialization (<code>Trie()</code>):</strong> Initialize an empty hash set to store the words.</li>
+<li><strong>Insertion (<code>insert(word)</code>):</strong> Add the given <code>word</code> to the hash set. This operation is generally efficient.</li>
+<li><strong>Search (<code>search(word)</code>):</strong> Check if the <code>word</code> exists in the hash set. This is also very efficient.</li>
+<li><strong>Prefix Search (<code>startsWith(prefix)</code>):</strong> This is the inefficient part. We must iterate through every single word currently in the hash set and check if it starts with the given <code>prefix</code>.</li>
+</ol>
+<p>The main drawback is the <code>startsWith</code> function, which has a linear time complexity with respect to the number of words stored, making it slow for large datasets. Time complexity for <code>insert</code> and <code>search</code> is O(L) where L is the length of the word (due to hashing). The <code>startsWith</code> method has a time complexity of O(N * P) where N is the number of words and P is the length of the prefix. The space complexity is O(C) where C is the total number of characters in all words.</p>
+<h4>C++ Code Snippet</h4>
+<pre><code class="language-cpp">#include &lt;string&gt;
+#include &lt;unordered_set&gt;
+#include &lt;vector&gt;
+
+class Trie {
+private:
+    std::unordered_set&lt;std::string&gt; data;
+
+public:
+    Trie() {
+    }
+
+    void insert(std::string word) {
+        data.insert(word);
+    }
+
+    bool search(std::string word) {
+        return data.count(word) &gt; 0;
+    }
+
+    bool startsWith(std::string prefix) {
+        for (const auto&amp; word : data) {
+            if (word.rfind(prefix, 0) == 0) { // Check if word starts with prefix
+                return true;
+            }
+        }
+        return false;
+    }
+};
+</code></pre>
+<hr />
+<h3>Trie Data Structure Approach</h3>
+<h4>Explanation</h4>
+<p>This approach implements a proper Trie (Prefix Tree), which is the optimal data structure for this problem. A Trie is a tree where each node represents a character, and a path from the root to a node forms a prefix.</p>
+<ol>
+<li><strong>Node Structure:</strong> First, define a <code>TrieNode</code> structure. Each node contains:<ul>
+<li>An array of pointers to its children (e.g., an array of 26 pointers for lowercase English letters).</li>
+<li>A boolean flag, <code>isWord</code>, to indicate if the path to this node forms a complete, inserted word.</li>
+</ul>
+</li>
+<li><strong>Initialization (<code>Trie()</code>):</strong> Create a root <code>TrieNode</code>. This root node itself doesn't represent any character.</li>
+<li><strong>Insertion (<code>insert(word)</code>):</strong><ul>
+<li>Start from the root.</li>
+<li>For each character in the <code>word</code>, calculate its corresponding index (e.g., <code>char - 'a'</code>).</li>
+<li>If the child node for that character does not exist, create a new <code>TrieNode</code>.</li>
+<li>Move the current pointer to this child node.</li>
+<li>After iterating through all characters, mark the <code>isWord</code> flag of the final node as <code>true</code>.</li>
+</ul>
+</li>
+<li><strong>Search (<code>search(word)</code>):</strong><ul>
+<li>Start from the root and traverse down the tree following the path dictated by the characters in <code>word</code>.</li>
+<li>If at any point a child node for a character doesn't exist, the word is not in the Trie, so return <code>false</code>.</li>
+<li>If the traversal completes, check the <code>isWord</code> flag of the final node. Return <code>true</code> if it's set, <code>false</code> otherwise (as it might just be a prefix of another word).</li>
+</ul>
+</li>
+<li><strong>Prefix Search (<code>startsWith(prefix)</code>):</strong><ul>
+<li>This is similar to <code>search</code>. Traverse the tree based on the characters in the <code>prefix</code>.</li>
+<li>If any character's path is missing, return <code>false</code>.</li>
+<li>If the traversal for the entire prefix is successful, it means at least one word starts with this prefix, so return <code>true</code>. We don't need to check the <code>isWord</code> flag here.</li>
+</ul>
+</li>
+</ol>
+<p>For a word/prefix of length L, the time complexity for <code>insert</code>, <code>search</code>, and <code>startsWith</code> is O(L). The space complexity of the entire Trie is O(C), where C is the total number of characters in all unique prefixes across all inserted words.</p>
+<h4>C++ Code Snippet</h4>
+<pre><code class="language-cpp">class TrieNode {
+public:
+    TrieNode* children[26];
+    bool isWord;
+
+    TrieNode() {
+        isWord = false;
+        for (int i = 0; i &lt; 26; ++i) {
+            children[i] = nullptr;
+        }
+    }
+};
+
+class Trie {
+private:
+    TrieNode* root;
+
+public:
+    Trie() {
+        root = new TrieNode();
+    }
+
+    void insert(std::string word) {
+        TrieNode* curr = root;
+        for (char c : word) {
+            int index = c - 'a';
+            if (curr-&gt;children[index] == nullptr) {
+                curr-&gt;children[index] = new TrieNode();
+            }
+            curr = curr-&gt;children[index];
+        }
+        curr-&gt;isWord = true;
+    }
+
+    bool search(std::string word) {
+        TrieNode* curr = root;
+        for (char c : word) {
+            int index = c - 'a';
+            if (curr-&gt;children[index] == nullptr) {
+                return false;
+            }
+            curr = curr-&gt;children[index];
+        }
+        return curr-&gt;isWord;
+    }
+
+    bool startsWith(std::string prefix) {
+        TrieNode* curr = root;
+        for (char c : prefix) {
+            int index = c - 'a';
+            if (curr-&gt;children[index] == nullptr) {
+                return false;
+            }
+            curr = curr-&gt;children[index];
+        }
+        return true;
+    }
+};
+</code></pre>
+<hr />
+<h3>Pythonic Solution (Best Approach)</h3>
+<p>The Trie-based approach is the most efficient. A Pythonic implementation often uses nested dictionaries to represent the tree structure. The keys of the dictionary are the characters, and the values are the child nodes (which are also dictionaries). A special marker (like <code>'*'</code>) is added to a node's dictionary to signify the end of a word.</p>
+<pre><code class="language-python">class Trie:
+    def __init__(self):
+        &quot;&quot;&quot;
+        Initializes the trie object.
+        &quot;&quot;&quot;
+        self.root = {}
+
+    def insert(self, word: str) -&gt; None:
+        &quot;&quot;&quot;
+        Inserts a word into the trie.
+        &quot;&quot;&quot;
+        curr = self.root
+        for char in word:
+            # setdefault is a concise way to get a key or create it if it doesn't exist
+            curr = curr.setdefault(char, {})
+        # Mark the end of a word with a special key
+        curr['*'] = True
+
+    def search(self, word: str) -&gt; bool:
+        &quot;&quot;&quot;
+        Returns true if the word is in the trie.
+        &quot;&quot;&quot;
+        curr = self.root
+        for char in word:
+            if char not in curr:
+                return False
+            curr = curr[char]
+        # Check if the end-of-word marker exists
+        return '*' in curr
+
+    def startsWith(self, prefix: str) -&gt; bool:
+        &quot;&quot;&quot;
+        Returns true if there is any word in the trie that starts with the given prefix.
+        &quot;&quot;&quot;
+        curr = self.root
+        for char in prefix:
+            if char not in curr:
+                return False
+            curr = curr[char]
+        return True
+
+</code></pre></div>

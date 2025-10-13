@@ -1,0 +1,151 @@
+<div class='ai-explanation'><h3>List of all the approaches to solution</h3>
+<ul>
+<li>Brute Force Approach</li>
+<li>Sorting Approach</li>
+</ul>
+<h3>Brute Force Approach</h3>
+<p>This approach models the problem using a graph. We treat each interval as a node and connect two nodes if their corresponding intervals overlap. The goal is then to find all the connected groups of nodes (connected components) and merge the intervals within each group.</p>
+<ul>
+<li><strong>Step 1: Build Graph:</strong> Create an adjacency list representation of a graph where <code>N</code> is the number of intervals. Iterate through all pairs of intervals. If two intervals overlap, add an edge between their corresponding nodes in the graph.</li>
+<li><strong>Step 2: Find Connected Components:</strong> Traverse the graph using an algorithm like Depth-First Search (DFS) or Breadth-First Search (BFS) to identify all the connected components. Keep track of visited nodes to avoid redundant processing.</li>
+<li><strong>Step 3: Merge Intervals:</strong> For each connected component, iterate through all the intervals it contains. Find the minimum start time and the maximum end time. This <code>[min_start, max_end]</code> pair represents the merged interval for that component.</li>
+<li><strong>Step 4: Collect Results:</strong> Store the merged interval for each component in a result list.</li>
+</ul>
+<p>Time and Space Complexity: Building the graph requires checking every pair of intervals, which takes O(N<sup>2</sup>) time. The traversal to find components also takes O(N<sup>2</sup>) in the worst case. The space complexity is O(N<sup>2</sup>) to store the graph's adjacency list.</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;algorithm&gt;
+
+class Solution {
+private:
+    // Helper function to check if two intervals overlap
+    bool doesOverlap(const std::vector&lt;int&gt;&amp; a, const std::vector&lt;int&gt;&amp; b) {
+        return std::max(a[0], b[0]) &lt;= std::min(a[1], b[1]);
+    }
+
+    // DFS to find all nodes in a connected component
+    void findComponent(int u, const std::vector&lt;std::vector&lt;int&gt;&gt;&amp; adj, std::vector&lt;bool&gt;&amp; visited, std::vector&lt;int&gt;&amp; component) {
+        visited[u] = true;
+        component.push_back(u);
+        for (int v : adj[u]) {
+            if (!visited[v]) {
+                findComponent(v, adj, visited, component);
+            }
+        }
+    }
+
+public:
+    std::vector&lt;std::vector&lt;int&gt;&gt; merge(std::vector&lt;std::vector&lt;int&gt;&gt;&amp; intervals) {
+        int n = intervals.size();
+        if (n &lt;= 1) {
+            return intervals;
+        }
+
+        // Step 1: Build the graph
+        std::vector&lt;std::vector&lt;int&gt;&gt; adj(n);
+        for (int i = 0; i &lt; n; ++i) {
+            for (int j = i + 1; j &lt; n; ++j) {
+                if (doesOverlap(intervals[i], intervals[j])) {
+                    adj[i].push_back(j);
+                    adj[j].push_back(i);
+                }
+            }
+        }
+
+        std::vector&lt;std::vector&lt;int&gt;&gt; mergedIntervals;
+        std::vector&lt;bool&gt; visited(n, false);
+
+        // Step 2: Find connected components
+        for (int i = 0; i &lt; n; ++i) {
+            if (!visited[i]) {
+                std::vector&lt;int&gt; component;
+                findComponent(i, adj, visited, component);
+
+                // Step 3: Merge intervals in the component
+                int min_start = intervals[component[0]][0];
+                int max_end = intervals[component[0]][1];
+                for (size_t j = 1; j &lt; component.size(); ++j) {
+                    int node_idx = component[j];
+                    min_start = std::min(min_start, intervals[node_idx][0]);
+                    max_end = std::max(max_end, intervals[node_idx][1]);
+                }
+                mergedIntervals.push_back({min_start, max_end});
+            }
+        }
+        return mergedIntervals;
+    }
+};
+</code></pre>
+<h3>Sorting Approach</h3>
+<p>This is the optimal and most common approach. By sorting the intervals based on their start times, we can process them in order and merge them in a single pass.</p>
+<ul>
+<li><strong>Step 1: Sort:</strong> Sort the input <code>intervals</code> array based on the start time of each interval in ascending order.</li>
+<li><strong>Step 2: Initialize:</strong> Create an empty list <code>merged</code> to store the result. Add the very first interval from the sorted list to <code>merged</code>.</li>
+<li><strong>Step 3: Iterate and Merge:</strong> Loop through the sorted intervals, starting from the second one. For each interval, compare its start time with the end time of the <em>last</em> interval in the <code>merged</code> list.</li>
+<li><strong>Step 4: Check for Overlap:</strong><ul>
+<li>If the current interval overlaps with the last interval in <code>merged</code> (i.e., <code>current_interval.start &lt;= last_merged.end</code>), it means they should be merged. Update the end of the last interval in <code>merged</code> to be the maximum of its current end and the current interval's end.</li>
+<li>If there is no overlap, the current interval is distinct. Add it as a new entry to the <code>merged</code> list.</li>
+</ul>
+</li>
+<li><strong>Step 5: Return Result:</strong> After iterating through all intervals, the <code>merged</code> list contains the final set of non-overlapping intervals.</li>
+</ul>
+<p>Time and Space Complexity: The time complexity is dominated by the sorting step, which is O(N log N). The merging process itself is a single pass, taking O(N) time. The space complexity is O(N) to store the merged intervals (or O(log N) for the sorting algorithm's recursion stack, depending on the implementation).</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;algorithm&gt;
+
+class Solution {
+public:
+    std::vector&lt;std::vector&lt;int&gt;&gt; merge(std::vector&lt;std::vector&lt;int&gt;&gt;&amp; intervals) {
+        if (intervals.empty()) {
+            return {};
+        }
+
+        // Step 1: Sort intervals based on the starting value
+        std::sort(intervals.begin(), intervals.end(), 
+                  [](const std::vector&lt;int&gt;&amp; a, const std::vector&lt;int&gt;&amp; b) {
+            return a[0] &lt; b[0];
+        });
+
+        // Step 2: Initialize result list
+        std::vector&lt;std::vector&lt;int&gt;&gt; merged;
+        merged.push_back(intervals[0]);
+
+        // Step 3: Iterate and Merge
+        for (size_t i = 1; i &lt; intervals.size(); ++i) {
+            std::vector&lt;int&gt;&amp; last_merged = merged.back();
+
+            // Step 4: Check for overlap and merge if necessary
+            if (intervals[i][0] &lt;= last_merged[1]) {
+                last_merged[1] = std::max(last_merged[1], intervals[i][1]);
+            } else {
+                merged.push_back(intervals[i]);
+            }
+        }
+        return merged;
+    }
+};
+</code></pre>
+<h3>Pythonic solution for best approach</h3>
+<pre><code class="language-python">from typing import List
+
+class Solution:
+    def merge(self, intervals: List[List[int]]) -&gt; List[List[int]]:
+        &quot;&quot;&quot;
+        Merges overlapping intervals after sorting them by their start time.
+        &quot;&quot;&quot;
+        # Sort the intervals based on their start time
+        intervals.sort(key=lambda x: x[0])
+
+        merged = []
+        for interval in intervals:
+            # If the merged list is empty or the current interval does not overlap 
+            # with the previous one, append it.
+            if not merged or merged[-1][1] &lt; interval[0]:
+                merged.append(interval)
+            else:
+                # Otherwise, there is an overlap, so merge the current and 
+                # previous intervals by updating the end of the previous one.
+                merged[-1][1] = max(merged[-1][1], interval[1])
+
+        return merged
+
+</code></pre></div>

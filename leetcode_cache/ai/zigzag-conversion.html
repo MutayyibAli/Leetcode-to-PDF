@@ -1,0 +1,112 @@
+<div class='ai-explanation'><h3>List of all the approaches to solution</h3>
+<ul>
+<li>Brute Force Approach (Simulation)</li>
+<li>Optimal Approach (Direct Calculation by Row)</li>
+</ul>
+<hr />
+<h3>Brute Force Approach (Simulation)</h3>
+<p>This approach simulates the process of writing characters in a zigzag pattern. We use an array of strings, one for each row. We iterate through the input string, appending each character to the string corresponding to its current row. The key is to keep track of the current row and the direction of movement (down or up). When the path reaches the top or bottom row, the direction is reversed. Finally, all the row-strings are concatenated to get the final result.</p>
+<p><strong>Step-by-step explanation:</strong>
+1.  Handle the edge case where <code>numRows</code> is 1 or less, in which case the string remains unchanged.
+2.  Create a vector of strings, <code>rows</code>, of size <code>numRows</code>, to store the characters for each row.
+3.  Initialize a <code>currentRow</code> index to 0 and a boolean flag <code>goingDown</code> to track the vertical direction. Initially, <code>goingDown</code> is false, but it will be flipped to true before the first character is placed.
+4.  Loop through each character <code>c</code> of the input string <code>s</code>.
+5.  Append <code>c</code> to the string at <code>rows[currentRow]</code>.
+6.  If <code>currentRow</code> is at the top (<code>0</code>) or bottom (<code>numRows - 1</code>), flip the <code>goingDown</code> flag to reverse the direction of traversal for the next character.
+7.  Update <code>currentRow</code> by incrementing it if <code>goingDown</code> is true, and decrementing it otherwise.
+8.  After the loop, combine all strings in the <code>rows</code> vector into a single result string.
+This method has a time complexity of O(N) as we iterate through the string once, and a space complexity of O(N) to store the characters in the <code>rows</code> vector, where N is the length of the string <code>s</code>.</p>
+<pre><code class="language-cpp">class Solution {
+public:
+    string convert(string s, int numRows) {
+        if (numRows &lt;= 1) {
+            return s;
+        }
+
+        vector&lt;string&gt; rows(numRows);
+        int currentRow = 0;
+        bool goingDown = false;
+
+        for (char c : s) {
+            rows[currentRow] += c;
+            if (currentRow == 0 || currentRow == numRows - 1) {
+                goingDown = !goingDown;
+            }
+            currentRow += goingDown ? 1 : -1;
+        }
+
+        string result;
+        for (const string&amp; row : rows) {
+            result += row;
+        }
+        return result;
+    }
+};
+</code></pre>
+<hr />
+<h3>Optimal Approach (Direct Calculation by Row)</h3>
+<p>This method improves upon the simulation by avoiding the extra space required to store the rows. Instead, it directly calculates the indices of the characters that belong to each row and builds the result string in a single pass. The characters in the zigzag pattern follow a repeating cycle. The length of one full "V" cycle (down and up) is <code>2 * numRows - 2</code>. We can iterate through each row and, for each row, find all characters from the original string that fall into that row based on this cycle length.</p>
+<p><strong>Step-by-step explanation:</strong>
+1.  Handle the edge case where <code>numRows</code> is 1 or less.
+2.  Calculate the cycle length: <code>cycleLen = 2 * numRows - 2</code>.
+3.  Initialize an empty result string.
+4.  Loop through each row index <code>i</code> from 0 to <code>numRows - 1</code>.
+5.  For each row <code>i</code>, iterate through the input string <code>s</code> with a step of <code>cycleLen</code>. Let the starting index of each cycle be <code>j</code>.
+6.  The first character in each cycle for row <code>i</code> is at index <code>j + i</code>. Append <code>s[j + i]</code> to the result, provided this index is within the string's bounds.
+7.  For intermediate rows (i.e., not the first or the last row), there is a second character on the diagonal part of the "Z". Its index can be calculated as <code>j + cycleLen - i</code>.
+8.  If this second index is within the bounds of the string, append that character to the result as well.
+9.  After iterating through all rows, return the constructed string.
+This approach has a time complexity of O(N) because each character is visited exactly once. The space complexity is O(1) if we do not count the space for the output string.</p>
+<pre><code class="language-cpp">class Solution {
+public:
+    string convert(string s, int numRows) {
+        if (numRows &lt;= 1) {
+            return s;
+        }
+
+        string result;
+        result.reserve(s.length()); // Pre-allocate memory for efficiency
+        int n = s.length();
+        int cycleLen = 2 * numRows - 2;
+
+        for (int i = 0; i &lt; numRows; i++) {
+            for (int j = 0; j + i &lt; n; j += cycleLen) {
+                result += s[j + i];
+                // Check for the character on the diagonal
+                if (i != 0 &amp;&amp; i != numRows - 1) {
+                    int secondCharIndex = j + cycleLen - i;
+                    if (secondCharIndex &lt; n) {
+                        result += s[secondCharIndex];
+                    }
+                }
+            }
+        }
+        return result;
+    }
+};
+</code></pre>
+<hr />
+<h3>Pythonic solution for best approach</h3>
+<p>The best approach is the Direct Calculation method. It's efficient in both time and space. The Python solution below uses list comprehension and string joining for a concise implementation.</p>
+<pre><code class="language-python">class Solution:
+    def convert(self, s: str, numRows: int) -&gt; str:
+        if numRows == 1 or numRows &gt;= len(s):
+            return s
+
+        n = len(s)
+        cycle_len = 2 * numRows - 2
+        result = []
+
+        for i in range(numRows):
+            # j represents the index of the character at the start of a new cycle
+            for j in range(i, n, cycle_len):
+                result.append(s[j])
+                # Add the diagonal character for intermediate rows
+                if 0 &lt; i &lt; numRows - 1:
+                    diagonal_idx = j + cycle_len - 2 * i
+                    if diagonal_idx &lt; n:
+                        result.append(s[diagonal_idx])
+
+        return &quot;&quot;.join(result)
+
+</code></pre></div>

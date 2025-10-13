@@ -1,0 +1,162 @@
+<div class='ai-explanation'><h3>List of all the approaches to solution</h3>
+<ul>
+<li>Brute Force Approach (Using a Stack)</li>
+<li>Iterative Approach</li>
+<li>Recursive Approach</li>
+</ul>
+<h3>Brute Force Approach (Using a Stack)</h3>
+<p>This approach involves using an external data structure, like a stack, to store the nodes of the linked list. We traverse the list from head to tail, pushing each node onto the stack. Since a stack is a Last-In-First-Out (LIFO) data structure, the nodes will be stored in reverse order. Afterwards, we can pop the nodes one by one and relink them to form the reversed list.</p>
+<ol>
+<li>Traverse the original linked list and push each node onto a stack.</li>
+<li>After the traversal, the stack will contain all nodes in reverse order.</li>
+<li>Pop the top node from the stack; this will be the new head of the reversed list.</li>
+<li>Continuously pop nodes from the stack and link them sequentially, building the new list.</li>
+<li>Set the <code>next</code> pointer of the last node to <code>nullptr</code>.</li>
+<li>Return the new head.</li>
+</ol>
+<p>This method is straightforward but requires extra memory to store all the nodes. The time complexity is O(N) because we iterate through the list twice (once to push and once to pop and link), and the space complexity is O(N) for the stack.</p>
+<pre><code class="language-cpp">#include &lt;stack&gt;
+
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* reverseList(ListNode* head) {
+        if (!head) {
+            return nullptr;
+        }
+
+        std::stack&lt;ListNode*&gt; node_stack;
+        ListNode* current = head;
+        while (current) {
+            node_stack.push(current);
+            current = current-&gt;next;
+        }
+
+        ListNode* new_head = node_stack.top();
+        node_stack.pop();
+        current = new_head;
+
+        while (!node_stack.empty()) {
+            current-&gt;next = node_stack.top();
+            node_stack.pop();
+            current = current-&gt;next;
+        }
+
+        current-&gt;next = nullptr; // Terminate the new list
+        return new_head;
+    }
+};
+</code></pre>
+<h3>Iterative Approach</h3>
+<p>This is the most common and efficient approach. It reverses the list in-place by changing the direction of the pointers during a single traversal. We use three pointers: <code>prev</code>, <code>curr</code>, and <code>next_node</code> to keep track of the nodes as we iterate.</p>
+<ol>
+<li>Initialize a <code>prev</code> pointer to <code>nullptr</code> and a <code>curr</code> pointer to <code>head</code>.</li>
+<li>Iterate through the list as long as <code>curr</code> is not <code>nullptr</code>.</li>
+<li>In each iteration, store the next node in a temporary pointer: <code>next_node = curr-&gt;next</code>. This prevents us from losing the rest of the list.</li>
+<li>Reverse the <code>next</code> pointer of the <code>curr</code> node to point to <code>prev</code>: <code>curr-&gt;next = prev</code>.</li>
+<li>Move the pointers one step forward for the next iteration: <code>prev = curr</code> and <code>curr = next_node</code>.</li>
+<li>When the loop ends, <code>curr</code> will be <code>nullptr</code>, and <code>prev</code> will be pointing to the new head of the reversed list. Return <code>prev</code>.</li>
+</ol>
+<p>This method has a time complexity of O(N) as it traverses the list once, and a space complexity of O(1) as it only uses a few pointers regardless of the list size.</p>
+<pre><code class="language-cpp">/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* reverseList(ListNode* head) {
+        ListNode *prevNode = nullptr;
+        ListNode *currNode = head;
+        ListNode *nextNode = nullptr;
+
+        while (currNode) {
+            nextNode = currNode-&gt;next; // Store the next node
+            currNode-&gt;next = prevNode; // Reverse the link
+
+            // Move pointers one position ahead
+            prevNode = currNode;
+            currNode = nextNode;
+        }
+        return prevNode; // prevNode is the new head
+    }
+};
+</code></pre>
+<h3>Recursive Approach</h3>
+<p>This approach reverses the list by breaking it down into a smaller subproblem. The function calls itself on the rest of the list (<code>head-&gt;next</code>) and then attaches the current <code>head</code> to the end of the reversed sublist.</p>
+<ol>
+<li>Define the base case: If <code>head</code> is <code>nullptr</code> or <code>head-&gt;next</code> is <code>nullptr</code>, the list is already reversed, so return <code>head</code>.</li>
+<li>Make a recursive call with the rest of the list: <code>newHead = reverseList(head-&gt;next)</code>. This call will reverse the sublist and return its new head.</li>
+<li>After the recursive call returns, <code>head-&gt;next</code> still points to its original next node. This node is now the tail of the reversed sublist. We make its <code>next</code> pointer point back to <code>head</code>: <code>head-&gt;next-&gt;next = head</code>.</li>
+<li>Set <code>head-&gt;next</code> to <code>nullptr</code>. This is crucial to break the original link and prevent cycles. <code>head</code> is now the new tail of the list being built.</li>
+<li>Return <code>newHead</code>, which is the head of the completely reversed list that was returned from the base case.</li>
+</ol>
+<p>This method has a time complexity of O(N) because each node is visited once. However, it has a space complexity of O(N) due to the call stack depth, which can go as deep as the number of nodes in the list.</p>
+<pre><code class="language-cpp">/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* reverseList(ListNode* head) {
+        // Base case: empty list or a single node
+        if (head == nullptr || head-&gt;next == nullptr) {
+            return head;
+        }
+
+        // Recursively reverse the rest of the list
+        ListNode* newHead = reverseList(head-&gt;next);
+
+        // Reverse the link between the current node and the next node
+        head-&gt;next-&gt;next = head;
+        head-&gt;next = nullptr;
+
+        // Return the new head of the reversed list
+        return newHead;
+    }
+};
+</code></pre>
+<h3>Pythonic solution for best approach</h3>
+<p>The best approach is the iterative one due to its optimal O(1) space complexity, which avoids the potential for stack overflow on very long lists that can occur with recursion.</p>
+<pre><code class="language-python"># Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, val=0, next=None):
+#         self.val = val
+#         self.next = next
+class Solution:
+    def reverseList(self, head: Optional[ListNode]) -&gt; Optional[ListNode]:
+        # Initialize prev pointer to None and curr pointer to head
+        prev, curr = None, head
+
+        # Iterate until the end of the list
+        while curr:
+            # A more pythonic way to swap pointers
+            # The current node's next pointer is set to prev
+            # The prev pointer is updated to the current node
+            # The curr pointer is moved to the next node in the original list
+            # All three assignments happen in one conceptual step
+            curr.next, prev, curr = prev, curr, curr.next
+
+        # At the end of the loop, prev is the new head
+        return prev
+</code></pre></div>

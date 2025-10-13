@@ -1,0 +1,168 @@
+<div class='ai-explanation'><h3>List of Approaches</h3>
+<ol>
+<li>Brute Force Approach</li>
+<li>Dynamic Programming Approach</li>
+<li>Backtracking Approach</li>
+</ol>
+<hr />
+<h3>1. Brute Force Approach</h3>
+<p>This method involves generating every possible sequence of <code>n</code> open and <code>n</code> close parentheses and then checking if each sequence is well-formed.</p>
+<p><strong>Step-by-step explanation:</strong>
+1.  First, create a recursive function that generates all possible strings of length <code>2*n</code> containing <code>n</code> opening and <code>n</code> closing parentheses.
+2.  At each step of the recursion, we can either add a <code>(</code> or a <code>)</code>.
+3.  The recursion stops when the string length reaches <code>2*n</code>.
+4.  For each generated string, use a helper function <code>isValid</code> to check if it's a well-formed parenthesis sequence.
+5.  A string is valid if at no point while scanning from left to right, the count of <code>)</code> exceeds the count of <code>(</code>, and at the end, the total counts are equal.
+6.  If a string is valid, add it to the final list of results.
+7.  This approach is highly inefficient because it explores a vast number of invalid combinations. The time complexity is O(n * 2^(2n)) and the space complexity is O(n) for the recursion stack.</p>
+<pre><code class="language-cpp">class Solution {
+public:
+    // Helper function to check if a sequence is well-formed
+    bool isValid(const string&amp; s) {
+        int balance = 0;
+        for (char c : s) {
+            if (c == '(') {
+                balance++;
+            } else {
+                balance--;
+            }
+            if (balance &lt; 0) {
+                return false; // More closing than opening brackets at some point
+            }
+        }
+        return balance == 0; // Ensure total counts are equal
+    }
+
+    void generateAll(string current, int n, vector&lt;string&gt;&amp; result) {
+        // Base case: if the string is of full length, check for validity
+        if (current.length() == 2 * n) {
+            if (isValid(current)) {
+                result.push_back(current);
+            }
+            return;
+        }
+
+        // Recursive step: add either '(' or ')'
+        generateAll(current + '(', n, result);
+        generateAll(current + ')', n, result);
+    }
+
+    vector&lt;string&gt; generateParenthesis(int n) {
+        vector&lt;string&gt; result;
+        string current = &quot;&quot;;
+        generateAll(current, n, result);
+        return result;
+    }
+};
+</code></pre>
+<hr />
+<h3>2. Dynamic Programming Approach</h3>
+<p>This approach builds the solution for <code>n</code> pairs by using the solutions for smaller numbers of pairs. Any well-formed parenthesis string <code>S</code> can be expressed as <code>S = (A)B</code>, where <code>A</code> and <code>B</code> are also well-formed parenthesis strings.</p>
+<p><strong>Step-by-step explanation:</strong>
+1.  Let <code>dp[i]</code> be the list of all well-formed parenthesis strings with <code>i</code> pairs.
+2.  The base case is <code>dp[0] = {""}</code> (an empty string for 0 pairs).
+3.  To compute <code>dp[i]</code>, we iterate through all possible splits. We form a new string by enclosing <code>j</code> pairs within <code>()</code> and appending <code>k</code> pairs after, where <code>j + k = i - 1</code>.
+4.  For <code>i</code> from <code>1</code> to <code>n</code>:
+    *   For <code>j</code> from <code>0</code> to <code>i-1</code>:
+        *   Let <code>k = i - 1 - j</code>.
+        *   Combine every string <code>s1</code> from <code>dp[j]</code> and <code>s2</code> from <code>dp[k]</code> to form a new string <code>(" + s1 + ")" + s2</code>. Add this new string to <code>dp[i]</code>.
+5.  The final answer is the list <code>dp[n]</code>.
+6.  The time and space complexity are both O(4^n / sqrt(n)), as the number of valid sequences is related to the Catalan numbers.</p>
+<pre><code class="language-cpp">class Solution {
+public:
+    vector&lt;string&gt; generateParenthesis(int n) {
+        if (n == 0) return {&quot;&quot;};
+
+        // dp[i] will store all well-formed parentheses of length 2*i
+        vector&lt;vector&lt;string&gt;&gt; dp(n + 1);
+        dp[0] = {&quot;&quot;};
+
+        for (int i = 1; i &lt;= n; ++i) {
+            for (int j = 0; j &lt; i; ++j) {
+                // j pairs for the inner part, i-1-j for the outer part
+                for (const string&amp; s1 : dp[j]) {
+                    for (const string&amp; s2 : dp[i - 1 - j]) {
+                        dp[i].push_back(&quot;(&quot; + s1 + &quot;)&quot; + s2);
+                    }
+                }
+            }
+        }
+        return dp[n];
+    }
+};
+</code></pre>
+<hr />
+<h3>3. Backtracking Approach</h3>
+<p>This is the most optimal and intuitive approach. Instead of generating all possibilities and validating them, we build the combinations incrementally and backtrack as soon as we know a path is invalid. This prunes the search space significantly.</p>
+<p><strong>Step-by-step explanation:</strong>
+1.  Define a recursive (backtracking) function that builds the string character by character.
+2.  The function takes the current string, the count of open parentheses used (<code>open</code>), and the count of close parentheses used (<code>close</code>) as parameters.
+3.  <strong>Base Case:</strong> When the length of the current string equals <code>2*n</code>, a valid combination is found. Add it to the results and return.
+4.  <strong>Recursive Step:</strong> At each step, we have two choices:
+    a. <strong>Add '(':</strong> We can add an open parenthesis if the number of open parentheses used is less than <code>n</code>.
+    b. <strong>Add ')':</strong> We can add a close parenthesis if the number of close parentheses used is less than the number of open parentheses used. This rule ensures the generated prefix is always valid.
+5.  Start the recursion with an empty string, <code>open = 0</code>, and <code>close = 0</code>.
+6.  The time complexity is O(4^n / sqrt(n)), proportional to the number of valid solutions (Catalan numbers). The space complexity is O(n) for the recursion stack.</p>
+<pre><code class="language-cpp">class Solution {
+public:
+    void backtrack(vector&lt;string&gt;&amp; ans, string current_string, int open, int close, int n) {
+        // Base case: a valid combination is found
+        if (current_string.length() == n * 2) {
+            ans.push_back(current_string);
+            return;
+        }
+
+        // Choice 1: Add an open parenthesis if we can
+        if (open &lt; n) {
+            backtrack(ans, current_string + &quot;(&quot;, open + 1, close, n);
+        }
+
+        // Choice 2: Add a close parenthesis if it's valid
+        if (close &lt; open) {
+            backtrack(ans, current_string + &quot;)&quot;, open, close + 1, n);
+        }
+    }
+
+    vector&lt;string&gt; generateParenthesis(int n) {
+        vector&lt;string&gt; ans;
+        backtrack(ans, &quot;&quot;, 0, 0, n);
+        return ans;
+    }
+};
+</code></pre>
+<hr />
+<h3>Pythonic Solution (Backtracking Approach)</h3>
+<p>This solution uses a nested helper function for backtracking, which is a common and clean pattern in Python. It encapsulates the recursive logic and has access to the result list and <code>n</code> from the outer scope.</p>
+<pre><code class="language-python">from typing import List
+
+class Solution:
+    def generateParenthesis(self, n: int) -&gt; List[str]:
+        # List to store the resulting combinations
+        ans = []
+
+        # Helper function to perform backtracking
+        # current_string: the string built so far
+        # open_count: number of open parentheses used
+        # close_count: number of close parentheses used
+        def backtrack(current_string, open_count, close_count):
+            # Base case: if we have used n pairs of parentheses
+            if len(current_string) == 2 * n:
+                ans.append(current_string)
+                return
+
+            # Recursive step:
+
+            # 1. Add an open parenthesis if we haven't used all of them
+            if open_count &lt; n:
+                backtrack(current_string + '(', open_count + 1, close_count)
+
+            # 2. Add a close parenthesis if it's valid to do so
+            #    (i.e., number of close parentheses is less than open ones)
+            if close_count &lt; open_count:
+                backtrack(current_string + ')', open_count, close_count + 1)
+
+        # Start the backtracking process with an empty string
+        backtrack(&quot;&quot;, 0, 0)
+        return ans
+
+</code></pre></div>

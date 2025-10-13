@@ -1,0 +1,209 @@
+<div class='ai-explanation'><h3>List of all the approaches to solution</h3>
+<ol>
+<li>Brute Force Approach</li>
+<li>Depth-First Search (DFS) Approach</li>
+<li>Breadth-First Search (BFS) Approach</li>
+</ol>
+<hr />
+<h3>Brute Force Approach</h3>
+<p>This approach considers every possible orientation of the <code>n-1</code> roads. There are <code>2^(n-1)</code> total configurations. For each configuration, we check if all cities have a path to city 0. We keep track of the configuration that satisfies this condition with the minimum number of road reorientations.</p>
+<ol>
+<li>Generate all <code>2^(n-1)</code> subsets of edges from the <code>connections</code> list. Each subset represents the set of edges to be reoriented.</li>
+<li>For each subset:
+    a. Calculate the number of reorientations (the size of the subset).
+    b. Construct a new directed graph based on the original <code>connections</code> and the current subset of edges to flip.
+    c. Verify if every city from <code>1</code> to <code>n-1</code> can reach city <code>0</code> in this new graph. This can be done by running a traversal (like BFS or DFS) from each city to check for reachability to <code>0</code>.</li>
+<li>Keep track of the minimum number of reorientations across all valid configurations.</li>
+<li>This approach is extremely inefficient and will time out for the given constraints due to its exponential nature.</li>
+</ol>
+<p>This approach is computationally expensive with a time complexity of O(2<sup>n</sup> * n<sup>2</sup>) and space complexity of O(n<sup>2</sup>).</p>
+<pre><code class="language-cpp">// NOTE: This is a conceptual implementation and is not feasible for the given constraints.
+class Solution {
+public:
+    int minReorder(int n, vector&lt;vector&lt;int&gt;&gt;&amp; connections) {
+        int min_flips = n; 
+        int num_edges = connections.size();
+
+        for (int i = 0; i &lt; (1 &lt;&lt; num_edges); ++i) {
+            vector&lt;vector&lt;int&gt;&gt; adj(n);
+            int current_flips = 0;
+
+            for (int j = 0; j &lt; num_edges; ++j) {
+                int u = connections[j][0];
+                int v = connections[j][1];
+                if ((i &gt;&gt; j) &amp; 1) { // Flip this edge
+                    adj[v].push_back(u);
+                    current_flips++;
+                } else { // Keep original direction
+                    adj[u].push_back(v);
+                }
+            }
+
+            if (is_valid(n, adj)) {
+                min_flips = min(min_flips, current_flips);
+            }
+        }
+        return min_flips;
+    }
+
+private:
+    bool is_valid(int n, const vector&lt;vector&lt;int&gt;&gt;&amp; adj) {
+        for (int k = 1; k &lt; n; ++k) {
+            if (!can_reach_zero(k, n, adj)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    bool can_reach_zero(int start_node, int n, const vector&lt;vector&lt;int&gt;&gt;&amp; adj) {
+        queue&lt;int&gt; q;
+        q.push(start_node);
+        vector&lt;bool&gt; visited(n, false);
+        visited[start_node] = true;
+
+        while (!q.empty()) {
+            int u = q.front();
+            q.pop();
+            if (u == 0) return true;
+            for (int v : adj[u]) {
+                if (!visited[v]) {
+                    visited[v] = true;
+                    q.push(v);
+                }
+            }
+        }
+        return false;
+    }
+};
+</code></pre>
+<hr />
+<h3>Depth-First Search (DFS) Approach</h3>
+<p>The problem can be rephrased as: if we consider the graph as a tree rooted at city <code>0</code>, how many edges are pointing away from the root? Each such edge must be reoriented. We can solve this with a single DFS traversal.</p>
+<ol>
+<li>First, build a graph representation that allows traversal in both directions (like an undirected graph), but also preserves the original direction of the roads. A clever way to do this is to use an adjacency list where for a connection <code>u -&gt; v</code>, we add <code>v</code> to <code>u</code>'s neighbor list and <code>-v</code> to <code>u</code>'s neighbor list (using a non-existent node like <code>-u</code> for the reverse is also fine, as long as we can distinguish). Here, a positive neighbor represents an original outgoing edge, and a negative neighbor represents an original incoming edge.</li>
+<li>Start a DFS traversal from the capital, city <code>0</code>.</li>
+<li>Maintain a <code>visited</code> array to keep track of visited cities to avoid infinite loops and redundant computations.</li>
+<li>During the traversal from a city <code>u</code> to its neighbor <code>v</code>, if <code>v</code> has not been visited:
+    a. Check the sign of the neighbor in <code>u</code>'s adjacency list.
+    b. If the value is positive, it means the original road was <code>u -&gt; v</code>. Since we are moving away from the root <code>0</code>, this road is pointing in the wrong direction and must be reoriented. We add 1 to our count.
+    c. If the value is negative, the original road was <code>v -&gt; u</code>, which correctly points towards the root <code>0</code>. No reorientation is needed for this edge.</li>
+<li>Recursively call DFS for the neighbor <code>v</code> and add the result (the number of reorientations needed in the subtree rooted at <code>v</code>) to our count.</li>
+<li>The final result is the total count accumulated during the traversal.</li>
+</ol>
+<p>This approach has a time complexity of O(n) and space complexity of O(n) due to the graph representation, visited array, and recursion stack.</p>
+<pre><code class="language-cpp">class Solution {
+public:
+    int dfs(vector&lt;vector&lt;int&gt;&gt; &amp;adj, vector&lt;bool&gt; &amp;visited, int from) {
+        auto change = 0;
+        visited[from] = true;
+        for (auto to : adj[from]) {
+            if (!visited[abs(to)]) {
+                // If 'to' is positive, it's an original u-&gt;v edge, needing a flip.
+                // Add its result from the recursive call.
+                change += dfs(adj, visited, abs(to)) + (to &gt; 0);
+            }
+        }
+        return change;        
+    }
+
+    int minReorder(int n, vector&lt;vector&lt;int&gt;&gt;&amp; connections) {
+        vector&lt;vector&lt;int&gt;&gt; adj(n);
+        for (auto &amp;c : connections) {
+            // Original edge c[0] -&gt; c[1]
+            adj[c[0]].push_back(c[1]); 
+            // Artificial reverse edge for traversal
+            adj[c[1]].push_back(-c[0]);
+        }
+        vector&lt;bool&gt; visited(n, false);
+        return dfs(adj, visited, 0);
+    }
+};
+</code></pre>
+<hr />
+<h3>Breadth-First Search (BFS) Approach</h3>
+<p>Similar to the DFS approach, we can solve this problem using a BFS traversal starting from city <code>0</code>. The goal remains to count the number of edges pointing away from the capital.</p>
+<ol>
+<li>Build the same adjacency list as in the DFS approach, using positive/negative values to encode the original road directions. For an edge <code>u -&gt; v</code>, <code>u</code> gets <code>v</code> in its adjacency list, and <code>v</code> gets <code>-u</code>.</li>
+<li>Initialize a queue for BFS and add city <code>0</code> to it. Also, initialize a <code>visited</code> array and a counter for reorientations to <code>0</code>.</li>
+<li>Mark city <code>0</code> as visited.</li>
+<li>While the queue is not empty, dequeue a city <code>u</code>.</li>
+<li>For each encoded neighbor <code>v_encoded</code> of <code>u</code>:
+    a. Get the actual city number <code>v = abs(v_encoded)</code>.
+    b. If <code>v</code> has not been visited, it means we are expanding our reach from the capital.
+    c. Mark <code>v</code> as visited and enqueue it.
+    d. If <code>v_encoded</code> is positive, it signifies an original road <code>u -&gt; v</code>, which points away from the already-reached part of the graph (containing <code>0</code>). This road needs to be reoriented, so we increment our counter.</li>
+<li>After the BFS traversal is complete, the counter will hold the total minimum number of roads to reorient.</li>
+</ol>
+<p>This approach also has a time complexity of O(n) and space complexity of O(n) for the adjacency list, visited array, and queue.</p>
+<pre><code class="language-cpp">class Solution {
+public:
+    int minReorder(int n, vector&lt;vector&lt;int&gt;&gt;&amp; connections) {
+        vector&lt;vector&lt;int&gt;&gt; adj(n);
+        for (const auto&amp; c : connections) {
+            adj[c[0]].push_back(c[1]);
+            adj[c[1]].push_back(-c[0]);
+        }
+
+        int reorderCount = 0;
+        queue&lt;int&gt; q;
+        q.push(0);
+        vector&lt;bool&gt; visited(n, false);
+        visited[0] = true;
+
+        while (!q.empty()) {
+            int u = q.front();
+            q.pop();
+
+            for (int v_encoded : adj[u]) {
+                int v = abs(v_encoded);
+                if (!visited[v]) {
+                    visited[v] = true;
+                    // Positive value means original edge was u -&gt; v, pointing away from 0
+                    if (v_encoded &gt; 0) {
+                        reorderCount++;
+                    }
+                    q.push(v);
+                }
+            }
+        }
+        return reorderCount;
+    }
+};
+</code></pre>
+<hr />
+<h3>Pythonic Solution (Best Approach - DFS)</h3>
+<p>The DFS and BFS approaches are both optimal with O(n) time and space complexity. The following Python code implements the DFS solution.</p>
+<pre><code class="language-python">import collections
+
+class Solution:
+    def minReorder(self, n: int, connections: list[list[int]]) -&gt; int:
+        # Adjacency list:
+        # For an edge u -&gt; v:
+        #   adj[u] will have v (positive, indicating an original edge)
+        #   adj[v] will have -u (negative, indicating an artificial edge for traversal)
+        adj = collections.defaultdict(list)
+        for u, v in connections:
+            adj[u].append(v)
+            adj[v].append(-u)
+
+        visited = [False] * n
+        self.reorientations = 0
+
+        def dfs(u: int):
+            visited[u] = True
+            for v_encoded in adj[u]:
+                v = abs(v_encoded)
+                if not visited[v]:
+                    # If v_encoded is positive, it means the original edge was u -&gt; v.
+                    # Since we are traversing from u to v (away from 0),
+                    # this edge needs to be reoriented.
+                    if v_encoded &gt; 0:
+                        self.reorientations += 1
+                    dfs(v)
+
+        # Start traversal from the capital city 0
+        dfs(0)
+        return self.reorientations
+
+</code></pre></div>

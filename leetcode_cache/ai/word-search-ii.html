@@ -1,0 +1,187 @@
+<div class='ai-explanation'><h3>List of all the approaches to solution</h3>
+<ol>
+<li>Brute Force Approach</li>
+<li>Optimized Backtracking with Trie</li>
+</ol>
+<h3>Brute Force Approach</h3>
+<p>This approach iterates through each word in the given list. For each word, it scans the entire board to find a cell that matches the first letter of the word. Once a match is found, it initiates a Depth First Search (DFS) from that cell to see if the rest of the word can be formed by moving to adjacent cells. This is essentially solving the "Word Search I" problem for every single word in the input list. A <code>visited</code> mechanism (like temporarily changing the character on the board) is used to ensure the same cell is not used more than once within the formation of a single word. This method is highly inefficient because it repeatedly traverses the board and doesn't leverage the fact that many words might share common prefixes.</p>
+<p>The time complexity is O(W * M * N * 3^L) where W is the number of words, M and N are the board dimensions, and L is the maximum word length. The space complexity is O(L) for the recursion stack.</p>
+<pre><code class="language-cpp">class Solution {
+public:
+    vector&lt;string&gt; findWords(vector&lt;vector&lt;char&gt;&gt;&amp; board, vector&lt;string&gt;&amp; words) {
+        vector&lt;string&gt; result;
+        if (board.empty() || board[0].empty()) {
+            return result;
+        }
+
+        for (const string&amp; word : words) {
+            if (exist(board, word)) {
+                result.push_back(word);
+            }
+        }
+
+        return result;
+    }
+
+private:
+    // This is a standard Word Search I implementation
+    bool exist(vector&lt;vector&lt;char&gt;&gt;&amp; board, const string&amp; word) {
+        int m = board.size();
+        int n = board[0].size();
+        for (int i = 0; i &lt; m; ++i) {
+            for (int j = 0; j &lt; n; ++j) {
+                if (dfs(board, word, 0, i, j)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    bool dfs(vector&lt;vector&lt;char&gt;&gt;&amp; board, const string&amp; word, int index, int i, int j) {
+        if (index == word.length()) {
+            return true;
+        }
+        if (i &lt; 0 || i &gt;= board.size() || j &lt; 0 || j &gt;= board[0].size() || board[i][j] != word[index]) {
+            return false;
+        }
+
+        char temp = board[i][j];
+        board[i][j] = '#'; // Mark as visited
+
+        bool found = dfs(board, word, index + 1, i + 1, j) ||
+                     dfs(board, word, index + 1, i - 1, j) ||
+                     dfs(board, word, index + 1, i, j + 1) ||
+                     dfs(board, word, index + 1, i, j - 1);
+
+        board[i][j] = temp; // Backtrack
+        return found;
+    }
+};
+</code></pre>
+<h3>Optimized Backtracking with Trie</h3>
+<p>This highly efficient approach combines backtracking with a Trie (Prefix Tree) data structure to search for all words simultaneously.</p>
+<ol>
+<li><strong>Build Trie:</strong> First, all the words from the input list are inserted into a Trie. Each node in the Trie represents a character, and a path from the root to a node represents a prefix. The node marking the end of a word can store the complete word.</li>
+<li><strong>Backtrack on Board:</strong> Iterate through each cell <code>(i, j)</code> of the board and start a DFS traversal from that cell.</li>
+<li><strong>Simultaneous Traversal:</strong> The DFS function traverses both the board and the Trie at the same time. At each step, it moves to an adjacent cell on the board and to the corresponding child node in the Trie.</li>
+<li><strong>Pruning:</strong> The key optimization comes from the Trie. If the character in the next cell does not correspond to a valid child in the current Trie node, that entire search path can be immediately pruned. This avoids exploring countless paths that don't match any prefix of the words we are looking for.</li>
+<li><strong>Find and Mark:</strong> When the traversal reaches a Trie node that marks the end of a word, that word is added to the result list. To avoid duplicates and further redundant searches, the word is "removed" from the Trie (e.g., by clearing the word string or a boolean flag in the node).</li>
+</ol>
+<p>The time complexity is O(S + M * N * 3^L) where S is the total number of characters in all words (for building the Trie), and the second term represents the board traversal. The space complexity is O(S) to store the Trie and O(L) for the recursion stack.</p>
+<pre><code class="language-cpp">class Solution {
+    struct TrieNode {
+        TrieNode *children[26];
+        string word;
+
+        TrieNode() : word(&quot;&quot;) {
+            for (int i = 0; i &lt; 26; i++) {
+                children[i] = nullptr;
+            }
+        }
+    };
+
+public:
+    vector&lt;string&gt; findWords(vector&lt;vector&lt;char&gt;&gt; &amp;board, vector&lt;string&gt; &amp;words) {
+        TrieNode *root = buildTrie(words);
+        vector&lt;string&gt; result;
+        for (int i = 0; i &lt; board.size(); i++) {
+            for (int j = 0; j &lt; board[0].size(); j++) {
+                dfs(board, i, j, root, result);
+            }
+        }
+        return result;
+    }
+
+    /** Inserts all words into the trie. */
+    TrieNode *buildTrie(vector&lt;string&gt; &amp;words) {
+        TrieNode *root = new TrieNode();
+        for (string&amp; word : words) {
+            TrieNode *curr = root;
+            for (char c : word) {
+                int index = c - 'a';
+                if (curr-&gt;children[index] == nullptr) {
+                    curr-&gt;children[index] = new TrieNode();
+                }
+                curr = curr-&gt;children[index];
+            }
+            curr-&gt;word = word;
+        }
+        return root;
+    }
+
+    void dfs(vector&lt;vector&lt;char&gt;&gt; &amp;board, int i, int j, TrieNode *p, vector&lt;string&gt; &amp;result) {
+        char c = board[i][j];
+        if (c == '#' || !p-&gt;children[c - 'a']) return;
+
+        p = p-&gt;children[c - 'a'];
+        if (p-&gt;word.size() &gt; 0) {
+            result.push_back(p-&gt;word);
+            p-&gt;word = &quot;&quot;; // Avoid duplicates
+        }
+
+        board[i][j] = '#'; // Mark as visited
+        if (i &gt; 0) dfs(board, i - 1, j, p, result);
+        if (j &gt; 0) dfs(board, i, j - 1, p, result);
+        if (i &lt; board.size() - 1) dfs(board, i + 1, j, p, result);
+        if (j &lt; board[0].size() - 1) dfs(board, i, j + 1, p, result);
+        board[i][j] = c; // Backtrack
+    }
+};
+</code></pre>
+<h3>Pythonic solution for best approach only</h3>
+<pre><code class="language-python">import collections
+
+class TrieNode:
+    def __init__(self):
+        self.children = {}
+        self.word = None
+
+class Solution:
+    def findWords(self, board: list[list[str]], words: list[str]) -&gt; list[str]:
+        # 1. Build the Trie
+        root = TrieNode()
+        for word in words:
+            node = root
+            for char in word:
+                if char not in node.children:
+                    node.children[char] = TrieNode()
+                node = node.children[char]
+            node.word = word
+
+        m, n = len(board), len(board[0])
+        result = []
+
+        def dfs(r, c, node):
+            # Pruning: if path doesn't exist in trie
+            char = board[r][c]
+            if char not in node.children:
+                return
+
+            # Move to the next node in trie
+            node = node.children[char]
+
+            # Word found
+            if node.word:
+                result.append(node.word)
+                node.word = None # Avoid duplicates
+
+            # Mark cell as visited
+            board[r][c] = '#'
+
+            # Explore neighbors
+            for dr, dc in [(0, 1), (0, -1), (1, 0), (-1, 0)]:
+                nr, nc = r + dr, c + dc
+                if 0 &lt;= nr &lt; m and 0 &lt;= nc &lt; n and board[nr][nc] != '#':
+                    dfs(nr, nc, node)
+
+            # Backtrack
+            board[r][c] = char
+
+        # 2. Start DFS from every cell
+        for i in range(m):
+            for j in range(n):
+                dfs(i, j, root)
+
+        return result
+</code></pre></div>

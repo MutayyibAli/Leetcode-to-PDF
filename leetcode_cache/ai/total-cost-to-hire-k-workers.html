@@ -1,0 +1,156 @@
+<div class='ai-explanation'><h3>List of Approaches</h3>
+<ol>
+<li>Brute Force Approach</li>
+<li>Two Priority Queues (Heaps) Approach</li>
+</ol>
+<hr />
+<h3>1. Brute Force Approach</h3>
+<h4>Explanation</h4>
+<p>This approach directly simulates the hiring process described in the problem. We maintain a list of available workers and, in each of the <code>k</code> hiring sessions, we scan the candidate pools to find the best worker to hire.</p>
+<ol>
+<li><strong>Data Structure:</strong> We start by creating a list of workers. To handle the tie-breaking rule ("smallest index"), we store each worker as a pair containing their <code>cost</code> and their <code>original index</code>. A <code>std::deque</code> is a suitable choice as it allows for access from both ends.</li>
+<li><strong>Hiring Loop:</strong> We run a loop <code>k</code> times, with each iteration representing one hiring session.</li>
+<li><strong>Candidate Selection:</strong> In each session, we form a candidate pool by taking the first <code>candidates</code> available workers and the last <code>candidates</code> available workers.</li>
+<li><strong>Find Best Worker:</strong> We then perform a linear scan through this candidate pool to find the worker with the absolute minimum cost. If multiple workers share the minimum cost, we select the one with the smallest original index.</li>
+<li><strong>Update State:</strong> Once the best candidate is found, we add their cost to the <code>total_cost</code> and remove them from our list of available workers.</li>
+<li><strong>Inefficiency:</strong> This method is straightforward but inefficient. The primary bottleneck is removing a worker from the list, which can take time proportional to the number of remaining workers. This makes the overall simulation too slow for the problem's constraints.</li>
+</ol>
+<p>This approach has a time complexity of O(k * n) and a space complexity of O(n), where n is the number of workers.</p>
+<h4>C++ Code Snippet</h4>
+<pre><code class="language-cpp">class Solution {
+public:
+    long long totalCost(std::vector&lt;int&gt;&amp; costs, int k, int candidates) {
+        // Using a deque to store pairs of {cost, original_index}
+        std::deque&lt;std::pair&lt;int, int&gt;&gt; workers;
+        for (int i = 0; i &lt; costs.size(); ++i) {
+            workers.push_back({costs[i], i});
+        }
+
+        long long total_cost = 0;
+        for (int session = 0; session &lt; k; ++session) {
+            int best_cost = INT_MAX;
+            int best_original_idx = INT_MAX;
+            int best_deque_idx = -1;
+
+            // Create a temporary list of candidates to check
+            std::vector&lt;std::pair&lt;int, int&gt;&gt; current_candidates;
+            int head_count = std::min((int)workers.size(), candidates);
+            for(int i = 0; i &lt; head_count; ++i) {
+                current_candidates.push_back({workers[i].first, i});
+            }
+
+            int tail_count = std::min((int)workers.size(), candidates);
+            for(int i = 0; i &lt; tail_count; ++i) {
+                // Avoid adding duplicates if pools overlap
+                if (workers.size() - 1 - i &lt; head_count) break;
+                current_candidates.push_back({workers[workers.size() - 1 - i].first, workers.size() - 1 - i});
+            }
+
+            // Find the best worker among the candidates
+            int deque_idx_to_remove = -1;
+            int min_cost = INT_MAX;
+            int min_orig_idx = INT_MAX;
+
+            for(auto const&amp; candidate : current_candidates) {
+                int current_cost = candidate.first;
+                int deque_idx = candidate.second;
+                int original_idx = workers[deque_idx].second;
+
+                if (current_cost &lt; min_cost || (current_cost == min_cost &amp;&amp; original_idx &lt; min_orig_idx)) {
+                    min_cost = current_cost;
+                    min_orig_idx = original_idx;
+                    deque_idx_to_remove = deque_idx;
+                }
+            }
+
+            total_cost += min_cost;
+            workers.erase(workers.begin() + deque_idx_to_remove);
+        }
+
+        return total_cost;
+    }
+};
+</code></pre>
+<hr />
+<h3>2. Two Priority Queues (Heaps) Approach</h3>
+<h4>Explanation</h4>
+<p>A more optimal approach uses two min-priority queues (min-heaps) to efficiently find the cheapest worker from the two candidate pools (the beginning and the end of the list).</p>
+<ol>
+<li><strong>Initialization:</strong> We use two pointers, <code>i</code> at the start and <code>j</code> at the end of the <code>costs</code> array, to track the next available workers. We also initialize two min-priority queues, <code>pq1</code> for the first <code>candidates</code> and <code>pq2</code> for the last <code>candidates</code>.</li>
+<li><strong>Hiring Loop:</strong> We iterate <code>k</code> times to hire <code>k</code> workers.</li>
+<li><strong>Populate Heaps:</strong> In each iteration, we fill the heaps. We add workers from the left end (pointed to by <code>i</code>) to <code>pq1</code> until it holds <code>candidates</code> workers or until <code>i</code> passes <code>j</code>. Similarly, we add workers from the right end (pointed to by <code>j</code>) to <code>pq2</code>. The condition <code>i &lt;= j</code> cleverly prevents a worker from being added to both heaps if the candidate pools overlap.</li>
+<li><strong>Select a Worker:</strong> We compare the top elements (the minimum costs) of <code>pq1</code> and <code>pq2</code>.</li>
+<li><strong>Tie-Breaking:</strong> If the cost from <code>pq1</code> is less than or equal to the cost from <code>pq2</code>, we choose the worker from <code>pq1</code>. This implicitly handles the tie-breaking rule, as workers in <code>pq1</code> always have smaller original indices than those in <code>pq2</code> (as long as the pools are distinct). If the pools overlap, the <code>i &lt;= j</code> check ensures workers are processed correctly.</li>
+<li><strong>Update Total Cost:</strong> We add the chosen worker's cost to our total and remove them from their respective priority queue. The empty slot in the heap will be filled in the next iteration.</li>
+</ol>
+<p>This approach has a time complexity of O((k + candidates) * log(candidates)) and a space complexity of O(candidates).</p>
+<h4>C++ Code Snippet</h4>
+<pre><code class="language-cpp">class Solution {
+public:
+    long long totalCost(vector&lt;int&gt;&amp; costs, int k, int candidates) {
+        int i = 0;
+        int j = costs.size() - 1;
+        priority_queue&lt;int, vector&lt;int&gt;, greater&lt;int&gt;&gt; pq1;
+        priority_queue&lt;int, vector&lt;int&gt;, greater&lt;int&gt;&gt; pq2;
+
+        long long ans = 0;
+        while(k--){
+            while(pq1.size() &lt; candidates &amp;&amp; i &lt;= j){
+                pq1.push(costs[i++]);
+            }
+            while(pq2.size() &lt; candidates &amp;&amp; i &lt;= j){
+                pq2.push(costs[j--]);
+            }
+
+            int t1 = pq1.size() &gt; 0 ? pq1.top() : INT_MAX;
+            int t2 = pq2.size() &gt; 0 ? pq2.top() : INT_MAX;
+
+            if(t1 &lt;= t2){
+                ans += t1;
+                pq1.pop();
+            }
+            else{
+                ans += t2;
+                pq2.pop();
+            }
+        }
+        return ans;
+    }
+};
+</code></pre>
+<hr />
+<h3>Pythonic Solution (Best Approach)</h3>
+<pre><code class="language-python">import heapq
+
+class Solution:
+    def totalCost(self, costs: list[int], k: int, candidates: int) -&gt; int:
+        left_pq = []
+        right_pq = []
+
+        l, r = 0, len(costs) - 1
+        total_cost = 0
+
+        for _ in range(k):
+            # Fill left heap up to 'candidates' size, from available workers
+            while len(left_pq) &lt; candidates and l &lt;= r:
+                heapq.heappush(left_pq, costs[l])
+                l += 1
+
+            # Fill right heap up to 'candidates' size, from available workers
+            while len(right_pq) &lt; candidates and l &lt;= r:
+                heapq.heappush(right_pq, costs[r])
+                r -= 1
+
+            # Determine the candidates from each heap
+            cost1 = left_pq[0] if left_pq else float('inf')
+            cost2 = right_pq[0] if right_pq else float('inf')
+
+            # Choose the cheaper worker, prioritizing left heap for tie-breaking
+            if cost1 &lt;= cost2:
+                total_cost += heapq.heappop(left_pq)
+            else:
+                total_cost += heapq.heappop(right_pq)
+
+        return total_cost
+
+</code></pre></div>

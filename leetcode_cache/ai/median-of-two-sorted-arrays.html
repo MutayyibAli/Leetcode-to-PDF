@@ -1,0 +1,213 @@
+<div class='ai-explanation'><h3>List of Approaches</h3>
+<ol>
+<li>Brute Force Approach: Merge and Sort</li>
+<li>Two-Pointer Approach</li>
+<li>Optimal Approach: Binary Search</li>
+</ol>
+<hr />
+<h3>1. Brute Force Approach: Merge and Sort</h3>
+<p>This is the most straightforward approach. The idea is to combine both sorted arrays into a single large array, sort this new array, and then find its median.</p>
+<p><strong>Step-by-step Explanation:</strong>
+1.  Create a new array or vector, <code>merged</code>, with a size of <code>m + n</code>.
+2.  Copy all elements from the first array (<code>nums1</code>) into <code>merged</code>.
+3.  Copy all elements from the second array (<code>nums2</code>) into <code>merged</code>.
+4.  Sort the <code>merged</code> array in ascending order.
+5.  Find the total number of elements, <code>total = m + n</code>.
+6.  If <code>total</code> is an odd number, the median is the element at the middle index, <code>merged[total / 2]</code>.
+7.  If <code>total</code> is an even number, the median is the average of the two middle elements, <code>(merged[total / 2 - 1] + merged[total / 2]) / 2.0</code>.</p>
+<p>This approach is simple to understand but not efficient enough to meet the problem's time complexity requirement. The time complexity is dominated by the sorting step, making it <code>O((m+n)log(m+n))</code>, while the space complexity is <code>O(m+n)</code> to store the merged array.</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;algorithm&gt;
+
+class Solution {
+public:
+    double findMedianSortedArrays(std::vector&lt;int&gt;&amp; nums1, std::vector&lt;int&gt;&amp; nums2) {
+        // Create a new vector to merge both arrays.
+        std::vector&lt;int&gt; merged;
+        merged.insert(merged.end(), nums1.begin(), nums1.end());
+        merged.insert(merged.end(), nums2.begin(), nums2.end());
+
+        // Sort the merged array.
+        std::sort(merged.begin(), merged.end());
+
+        // Calculate the total number of elements.
+        int total = merged.size();
+
+        if (total % 2 == 1) {
+            // If odd, the median is the middle element.
+            return static_cast&lt;double&gt;(merged[total / 2]);
+        } else {
+            // If even, the median is the average of the two middle elements.
+            int middle1 = merged[total / 2 - 1];
+            int middle2 = merged[total / 2];
+            return (static_cast&lt;double&gt;(middle1) + static_cast&lt;double&gt;(middle2)) / 2.0;
+        }
+    }
+};
+</code></pre>
+<hr />
+<h3>2. Two-Pointer Approach</h3>
+<p>This approach improves upon the brute-force method by avoiding the creation of a large merged array and the subsequent sort. We can find the median elements by iterating through both arrays just up to the middle point, simulating a merge process.</p>
+<p><strong>Step-by-step Explanation:</strong>
+1.  Calculate the total length <code>total = m + n</code>. The median is related to the element(s) at index <code>total / 2</code>.
+2.  Initialize two pointers, <code>i</code> for <code>nums1</code> and <code>j</code> for <code>nums2</code>, both starting at <code>0</code>.
+3.  We need to find the <code>(total / 2)</code>-th and <code>(total / 2 - 1)</code>-th elements of the conceptual merged array. Let's name them <code>m1</code> and <code>m2</code>.
+4.  Loop <code>(total / 2) + 1</code> times. In each iteration:
+    *   Update <code>m2</code> to hold the previous value of <code>m1</code>.
+    *   Compare <code>nums1[i]</code> and <code>nums2[j]</code>. The smaller of the two is the next element in the merged sequence. Assign this value to <code>m1</code> and advance the corresponding pointer (<code>i</code> or <code>j</code>).
+    *   Handle cases where one of the arrays is exhausted.
+5.  After the loop, if <code>total</code> is odd, the median is <code>m1</code>.
+6.  If <code>total</code> is even, the median is the average of <code>m1</code> and <code>m2</code>.</p>
+<p>The time complexity is <code>O(m+n)</code> because we traverse up to half of the total elements. The space complexity is <code>O(1)</code> as we only use a few variables.</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+
+class Solution {
+public:
+    double findMedianSortedArrays(std::vector&lt;int&gt;&amp; nums1, std::vector&lt;int&gt;&amp; nums2) {
+        int n = nums1.size();
+        int m = nums2.size();
+        int i = 0, j = 0;
+        int m1 = 0, m2 = 0; // m1 is current median element, m2 is previous
+
+        // Iterate up to the middle of the combined array length
+        for (int count = 0; count &lt;= (n + m) / 2; count++) {
+            m2 = m1; // Store the previous median element
+            if (i &lt; n &amp;&amp; j &lt; m) {
+                if (nums1[i] &lt; nums2[j]) {
+                    m1 = nums1[i++];
+                } else {
+                    m1 = nums2[j++];
+                }
+            } else if (i &lt; n) {
+                m1 = nums1[i++];
+            } else {
+                m1 = nums2[j++];
+            }
+        }
+
+        if ((n + m) % 2 == 1) {
+            // If total size is odd, the median is the last element found (m1)
+            return static_cast&lt;double&gt;(m1);
+        } else {
+            // If total size is even, the median is the average of the last two elements (m1 and m2)
+            return (static_cast&lt;double&gt;(m1) + static_cast&lt;double&gt;(m2)) / 2.0;
+        }
+    }
+};
+</code></pre>
+<hr />
+<h3>3. Optimal Approach: Binary Search</h3>
+<p>This approach achieves the required <code>O(log(min(m,n)))</code> time complexity. The key idea is to partition both arrays into a "left part" and a "right part". A correct partition satisfies two conditions:
+1.  The total number of elements in the combined left parts is half the total number of elements of both arrays.
+2.  The maximum element in the left part is less than or equal to the minimum element in the right part.</p>
+<p><strong>Step-by-step Explanation:</strong>
+1.  To simplify the logic, first ensure <code>nums1</code> is the smaller array. If not, swap the arrays.
+2.  The goal is to find a partition point in <code>nums1</code> (let's call it <code>mid1</code>) such that it leads to a valid median partition. The corresponding partition point in <code>nums2</code> (<code>mid2</code>) is determined by the total number of elements needed in the left half: <code>(m + n + 1) / 2</code>.
+3.  Perform a binary search on the smaller array (<code>nums1</code>) to find the correct <code>mid1</code>.
+4.  For each <code>mid1</code>, calculate <code>mid2</code>. Then identify the four boundary elements:
+    *   <code>l1</code>: Max element of <code>nums1</code>'s left part (<code>nums1[mid1-1]</code>).
+    *   <code>r1</code>: Min element of <code>nums1</code>'s right part (<code>nums1[mid1]</code>).
+    *   <code>l2</code>: Max element of <code>nums2</code>'s left part (<code>nums2[mid2-1]</code>).
+    *   <code>r2</code>: Min element of <code>nums2</code>'s right part (<code>nums2[mid2]</code>).
+    (Handle edge cases with <code>INT_MIN</code> and <code>INT_MAX</code> if a partition is empty).
+5.  Check if the partition is correct: <code>l1 &lt;= r2</code> and <code>l2 &lt;= r1</code>.
+6.  If it is correct, we have found the median:
+    *   If total length <code>(m+n)</code> is odd, the median is <code>max(l1, l2)</code>.
+    *   If total length is even, the median is <code>(max(l1, l2) + min(r1, r2)) / 2.0</code>.
+7.  If <code>l1 &gt; r2</code>, it means our partition <code>mid1</code> in <code>nums1</code> is too large. We need to decrease it, so we adjust the binary search range to the left (<code>high = mid1 - 1</code>).
+8.  If <code>l2 &gt; r1</code>, our partition <code>mid1</code> is too small. We adjust the search range to the right (<code>low = mid1 + 1</code>).</p>
+<p>This binary search on the smaller array results in a time complexity of <code>O(log(min(m, n)))</code> with a space complexity of <code>O(1)</code>.</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;algorithm&gt;
+#include &lt;limits&gt;
+
+class Solution {
+public:
+    double findMedianSortedArrays(std::vector&lt;int&gt;&amp; nums1, std::vector&lt;int&gt;&amp; nums2) {
+        int n1 = nums1.size();
+        int n2 = nums2.size();
+
+        // Ensure nums1 is the smaller array to optimize binary search
+        if (n1 &gt; n2) {
+            return findMedianSortedArrays(nums2, nums1);
+        }
+
+        int n = n1 + n2;
+        int left_partition_size = (n + 1) / 2;
+        int low = 0, high = n1;
+
+        while (low &lt;= high) {
+            int mid1 = (low + high) / 2; // Partition point for nums1
+            int mid2 = left_partition_size - mid1; // Corresponding partition for nums2
+
+            // Determine boundary elements for the partitions
+            int l1 = (mid1 &gt; 0) ? nums1[mid1 - 1] : std::numeric_limits&lt;int&gt;::min();
+            int r1 = (mid1 &lt; n1) ? nums1[mid1] : std::numeric_limits&lt;int&gt;::max();
+            int l2 = (mid2 &gt; 0) ? nums2[mid2 - 1] : std::numeric_limits&lt;int&gt;::min();
+            int r2 = (mid2 &lt; n2) ? nums2[mid2] : std::numeric_limits&lt;int&gt;::max();
+
+            // Check if we found the correct partition
+            if (l1 &lt;= r2 &amp;&amp; l2 &lt;= r1) {
+                if (n % 2 == 1) {
+                    // For odd total length, median is the max of left parts
+                    return std::max(l1, l2);
+                } else {
+                    // For even total length, median is avg of max of lefts and min of rights
+                    return (std::max(l1, l2) + std::min(r1, r2)) / 2.0;
+                }
+            } else if (l1 &gt; r2) {
+                // Partition in nums1 is too far right, move left
+                high = mid1 - 1;
+            } else { // l2 &gt; r1
+                // Partition in nums1 is too far left, move right
+                low = mid1 + 1;
+            }
+        }
+
+        return 0.0; // Should not be reached if inputs are sorted arrays
+    }
+};
+</code></pre>
+<hr />
+<h3>Pythonic Solution (Optimal Approach)</h3>
+<pre><code class="language-python">from typing import List
+
+class Solution:
+    def findMedianSortedArrays(self, nums1: List[int], nums2: List[int]) -&gt; float:
+        n1, n2 = len(nums1), len(nums2)
+
+        # Ensure nums1 is the smaller array to optimize binary search range
+        if n1 &gt; n2:
+            return self.findMedianSortedArrays(nums2, nums1)
+
+        n = n1 + n2
+        left_partition_size = (n + 1) // 2
+        low, high = 0, n1
+
+        while low &lt;= high:
+            mid1 = (low + high) // 2  # Partition point in nums1
+            mid2 = left_partition_size - mid1 # Corresponding partition in nums2
+
+            # Get boundary elements, using -inf and +inf for edge cases
+            l1 = nums1[mid1 - 1] if mid1 &gt; 0 else float('-inf')
+            r1 = nums1[mid1] if mid1 &lt; n1 else float('inf')
+            l2 = nums2[mid2 - 1] if mid2 &gt; 0 else float('-inf')
+            r2 = nums2[mid2] if mid2 &lt; n2 else float('inf')
+
+            # Check if the partition is correct
+            if l1 &lt;= r2 and l2 &lt;= r1:
+                # If total length is odd
+                if n % 2 == 1:
+                    return max(l1, l2)
+                # If total length is even
+                else:
+                    return (max(l1, l2) + min(r1, r2)) / 2.0
+            elif l1 &gt; r2:
+                # Partition in nums1 is too large, move left
+                high = mid1 - 1
+            else:
+                # Partition in nums1 is too small, move right
+                low = mid1 + 1
+
+        return 0.0 # Should not be reached
+</code></pre></div>

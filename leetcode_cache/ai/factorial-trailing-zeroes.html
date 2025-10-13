@@ -1,0 +1,90 @@
+<div class='ai-explanation'><h3>List of all the approaches to solution</h3>
+<ol>
+<li>Brute Force Approach: Counting Factors</li>
+<li>Logarithmic Approach</li>
+</ol>
+<hr />
+<h3>Brute Force Approach: Counting Factors</h3>
+<p>This approach directly simulates the process of finding prime factors. We know that trailing zeros are formed by pairs of 2 and 5 in the prime factorization of <code>n!</code>. Since the factor 2 appears far more frequently than the factor 5, the number of zeros is limited by the number of 5s. The algorithm iterates through all multiples of 5 up to <code>n</code> and, for each multiple, counts how many factors of 5 it contains.</p>
+<h4>Step-by-step explanation:</h4>
+<ol>
+<li>Initialize a counter <code>zero_count</code> to zero.</li>
+<li>Loop through all multiples of 5 from 5 up to <code>n</code> (i.e., <code>i = 5, 10, 15, ...</code>). These are the only numbers that can contribute a factor of 5.</li>
+<li>For each such number <code>i</code>, determine how many factors of 5 it has. This can be done by repeatedly dividing <code>i</code> by 5 in a <code>while</code> loop until it's no longer divisible by 5, incrementing <code>zero_count</code> each time.</li>
+<li>For example, for <code>i = 25</code>, the inner loop runs twice (25/5 -&gt; 5, 5/5 -&gt; 1), adding 2 to the total count. For <code>i = 10</code>, it runs once, adding 1.</li>
+<li>After the loop finishes, <code>zero_count</code> will hold the total number of factors of 5 in <code>n!</code>.</li>
+</ol>
+<p>This approach is correct but inefficient for large values of <code>n</code>. The time complexity is dominated by the nested loop structure, approximately O(n log n). The space complexity is O(1).</p>
+<pre><code class="language-cpp">#include &lt;iostream&gt;
+
+class Solution {
+public:
+    int trailingZeroes(int n) {
+        int zero_count = 0;
+        // Iterate through all multiples of 5 up to n
+        for (int i = 5; i &lt;= n; i += 5) {
+            int current_num = i;
+            // Count factors of 5 in the current number
+            while (current_num &gt; 0 &amp;&amp; current_num % 5 == 0) {
+                zero_count++;
+                current_num /= 5;
+            }
+        }
+        return zero_count;
+    }
+};
+</code></pre>
+<hr />
+<h3>Logarithmic Approach</h3>
+<p>This is a highly efficient mathematical approach that builds upon the same core insight: the number of trailing zeros is determined by the number of factors of 5 in the prime factorization of <code>n!</code>. Instead of checking each number, we can count the factors of 5 more directly.</p>
+<p>The total count is the sum of:
+- The number of multiples of 5 up to <code>n</code> (<code>n / 5</code>). Each contributes at least one factor of 5.
+- The number of multiples of 25 up to <code>n</code> (<code>n / 25</code>). Each contributes an <em>additional</em> factor of 5 (their first factor was already counted).
+- The number of multiples of 125 up to <code>n</code> (<code>n / 125</code>), and so on for all powers of 5.</p>
+<p>The formula is: <code>count = n/5 + n/25 + n/125 + ...</code></p>
+<h4>Step-by-step explanation:</h4>
+<ol>
+<li>Initialize a counter <code>count</code> to zero.</li>
+<li>Initialize a variable <code>i</code> (representing the power of 5) to 5. We use a <code>long long</code> for <code>i</code> to avoid overflow as it can get very large.</li>
+<li>Loop as long as <code>n / i</code> is at least 1 (which means there is at least one multiple of <code>i</code> within <code>n</code>).</li>
+<li>In each iteration, add the result of the integer division <code>n / i</code> to <code>count</code>.</li>
+<li>Multiply <code>i</code> by 5 to move to the next power of 5 (5, 25, 125, ...).</li>
+<li>Return the total <code>count</code>.</li>
+</ol>
+<p>This method avoids iterating through <code>n</code> numbers and instead performs a number of steps proportional to the logarithm of <code>n</code>. The time complexity is O(log n) and the space complexity is O(1).</p>
+<pre><code class="language-cpp">#include &lt;iostream&gt;
+
+class Solution {
+public:
+    int trailingZeroes(int n) {
+        int count = 0;
+        for (long long i = 5; n / i &gt;= 1; i *= 5) {
+            count += n / i;
+        }
+        return count;
+    }
+};
+</code></pre>
+<hr />
+<h3>Pythonic Solution (Best Approach)</h3>
+<p>The logarithmic approach can be implemented very concisely in Python. This implementation is an alternative way of expressing the same mathematical formula <code>n/5 + n/25 + ...</code>. In each step, we add <code>n // 5</code> to the result and then update <code>n</code> to <code>n // 5</code> for the next iteration, effectively calculating the terms for the next power of 5.</p>
+<pre><code class="language-python">class Solution:
+    def trailingZeroes(self, n: int) -&gt; int:
+        &quot;&quot;&quot;
+        Calculates the number of trailing zeroes in n!
+        by counting factors of 5.
+
+        Example for n = 100:
+        1. count = 0, n = 100
+        2. n //= 5  -&gt; n = 20. count += 20 -&gt; count = 20. (Counts multiples of 5)
+        3. n //= 5  -&gt; n = 4.  count += 4  -&gt; count = 24. (Counts multiples of 25)
+        4. n //= 5  -&gt; n = 0.  count += 0  -&gt; count = 24. (Counts multiples of 125)
+        5. n is 0, loop terminates. Return 24.
+        &quot;&quot;&quot;
+        count = 0
+        while n &gt; 0:
+            n //= 5
+            count += n
+        return count
+
+</code></pre></div>

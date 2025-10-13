@@ -1,0 +1,130 @@
+<div class='ai-explanation'><h3>List of Approaches</h3>
+<ol>
+<li>Brute Force Approach</li>
+<li>Monotonic Stack Approach</li>
+</ol>
+<hr />
+<h3>Brute Force Approach</h3>
+<h4>Explanation</h4>
+<p>This approach involves storing all the historical prices in a list or an array. For each new price that comes in through the <code>next</code> call, we add it to our list. Then, to calculate the span, we iterate backward from the end of the list (the current day) and count how many consecutive days have prices less than or equal to the current day's price. The counting stops as soon as we encounter a day with a price strictly greater than the current day's price or we reach the beginning of our price history.</p>
+<ol>
+<li>Initialize a dynamic array (e.g., <code>std::vector</code>) to store the sequence of stock prices.</li>
+<li>In the <code>next(price)</code> function, append the new <code>price</code> to this array.</li>
+<li>Initialize a <code>span</code> counter to zero.</li>
+<li>Iterate backward through the array, starting from the last element (today's price).</li>
+<li>For each price, if it is less than or equal to the current day's price, increment the <code>span</code>.</li>
+<li>If a price is found that is greater than the current day's price, stop the iteration.</li>
+<li>Return the final <code>span</code>.</li>
+</ol>
+<p>This approach is simple to understand but inefficient because, for each call to <code>next</code>, we may have to re-scan many of the previous prices.</p>
+<p>The time complexity for each <code>next</code> call is O(N), where N is the number of calls made so far. The space complexity is O(N) to store the prices.</p>
+<h4>C++ Code</h4>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+
+class StockSpanner {
+private:
+    std::vector&lt;int&gt; prices;
+
+public:
+    StockSpanner() {
+    }
+
+    int next(int price) {
+        prices.push_back(price);
+        int span = 0;
+        // Iterate backwards from the current day
+        for (int i = prices.size() - 1; i &gt;= 0; --i) {
+            if (prices[i] &lt;= price) {
+                span++;
+            } else {
+                // Stop when a price greater than the current price is found
+                break;
+            }
+        }
+        return span;
+    }
+};
+</code></pre>
+<hr />
+<h3>Monotonic Stack Approach</h3>
+<h4>Explanation</h4>
+<p>A more optimal solution uses a monotonic stack. The key observation is that the span for a given day is determined by the nearest previous day with a price greater than the current day's price. Instead of re-scanning all previous prices, we can maintain a stack of <code>(price, span)</code> pairs, where the prices are in decreasing order from bottom to top.</p>
+<ol>
+<li>Initialize a stack to store pairs of <code>{price, span}</code>. This stack will maintain a monotonically decreasing order of prices.</li>
+<li>When <code>next(price)</code> is called, initialize the span for the current day to 1.</li>
+<li>While the stack is not empty and the price at the top of the stack is less than or equal to the current <code>price</code>, it means the current price's span can extend over the previous smaller prices' spans.</li>
+<li>We pop the element from the stack and add its span to our current <code>span</code>. This effectively "jumps" over all the consecutive days with smaller or equal prices.</li>
+<li>We repeat this process until the stack is empty or the top element's price is greater than the current price.</li>
+<li>Finally, we push the current <code>{price, span}</code> pair onto the stack, maintaining the monotonic property.</li>
+<li>Return the calculated <code>span</code>.</li>
+</ol>
+<p>Each price-span pair is pushed and popped at most once across all calls to <code>next</code>. This gives an amortized time complexity of O(1) per call. The space complexity is O(N) in the worst case (a strictly decreasing price list).</p>
+<h4>C++ Code</h4>
+<pre><code class="language-cpp">#include &lt;stack&gt;
+#include &lt;utility&gt; // for std::pair
+
+class StockSpanner {
+private:
+    // Stack stores pairs of {price, span}
+    std::stack&lt;std::pair&lt;int, int&gt;&gt; s;
+
+public:
+    StockSpanner() {
+    }
+
+    int next(int price) {
+        int span = 1; // The span for the current day is at least 1 (for itself)
+
+        // While the stack is not empty and the price at the top is less than or equal to the current price
+        while (!s.empty() &amp;&amp; s.top().first &lt;= price) {
+            // Add the span of the popped element to the current span
+            span += s.top().second;
+            s.pop();
+        }
+
+        // Push the current price and its calculated span onto the stack
+        s.push({price, span});
+
+        return span;
+    }
+};
+</code></pre>
+<hr />
+<h3>Pythonic Solution (Best Approach)</h3>
+<p>The best approach is the Monotonic Stack due to its O(1) amortized time complexity. The Python implementation uses a list as a stack.</p>
+<pre><code class="language-python">class StockSpanner:
+    def __init__(self):
+        # The stack will store tuples of (price, span).
+        # It's kept in a monotonically decreasing order of prices.
+        self.stack = []
+
+    def next(self, price: int) -&gt; int:
+        &quot;&quot;&quot;
+        Calculates the span of the stock for the current day's price.
+        &quot;&quot;&quot;
+        # The span for the current day is at least 1 (for itself).
+        span = 1
+
+        # While the stack is not empty and the price of the last recorded day
+        # is less than or equal to the current day's price.
+        while self.stack and self.stack[-1][0] &lt;= price:
+            # We can extend the current day's span by the span of the previous,
+            # smaller-or-equal-priced day.
+            # Pop that day's data and add its span to the current span.
+            span += self.stack.pop()[1]
+
+        # Push the current day's price and its calculated span onto the stack.
+        self.stack.append((price, span))
+
+        return span
+
+# Example Usage:
+# stockSpanner = StockSpanner()
+# print(stockSpanner.next(100)) # Output: 1
+# print(stockSpanner.next(80))  # Output: 1
+# print(stockSpanner.next(60))  # Output: 1
+# print(stockSpanner.next(70))  # Output: 2
+# print(stockSpanner.next(60))  # Output: 1
+# print(stockSpanner.next(75))  # Output: 4
+# print(stockSpanner.next(85))  # Output: 6
+</code></pre></div>

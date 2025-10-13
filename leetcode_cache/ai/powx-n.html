@@ -1,0 +1,157 @@
+<div class='ai-explanation'><h3>List of all the approaches to solution</h3>
+<ol>
+<li>Brute Force Approach</li>
+<li>Fast Power (Binary Exponentiation) Approach</li>
+</ol>
+<hr />
+<h3>Brute Force Approach</h3>
+<p>This approach is the most straightforward. We can calculate <code>x</code> to the power of <code>n</code> by simply multiplying <code>x</code> by itself <code>n</code> times.</p>
+<h4>Step-by-step explanation:</h4>
+<ol>
+<li>First, handle the edge cases for the exponent <code>n</code>.<ul>
+<li>If <code>n</code> is <code>0</code>, any number to the power of 0 is <code>1</code>. So, return <code>1.0</code>.</li>
+<li>If <code>n</code> is negative, the result is the reciprocal of <code>x</code> raised to the power of <code>-n</code>. We can convert the problem to a positive exponent by setting <code>x = 1/x</code> and <code>n = -n</code>.</li>
+</ul>
+</li>
+<li>To avoid overflow issues when <code>n</code> is the minimum possible integer (<code>INT_MIN</code>), it's safe to cast <code>n</code> to a 64-bit integer type like <code>long long</code>. If <code>n = INT_MIN</code>, <code>-n</code> would overflow a 32-bit integer.</li>
+<li>Initialize a variable <code>result</code> to <code>1.0</code>.</li>
+<li>Run a loop from <code>1</code> to <code>|n|</code>. In each iteration, multiply <code>result</code> by <code>x</code>.</li>
+<li>After the loop finishes, <code>result</code> holds the value of <code>x^n</code>.</li>
+</ol>
+<p>This method is too slow for large values of <code>n</code> and will likely result in a "Time Limit Exceeded" error on most coding platforms.</p>
+<p>This approach has a time complexity of <strong>O(|n|)</strong> and a space complexity of <strong>O(1)</strong>.</p>
+<pre><code class="language-cpp">class Solution {
+public:
+    double myPow(double x, int n) {
+        if (n == 0) {
+            return 1.0;
+        }
+
+        long long N = n; // Use long long to handle n = INT_MIN
+        double result = 1.0;
+
+        if (N &lt; 0) {
+            x = 1 / x;
+            N = -N;
+        }
+
+        for (long long i = 0; i &lt; N; ++i) {
+            result *= x;
+        }
+
+        return result;
+    }
+};
+</code></pre>
+<hr />
+<h3>Fast Power (Binary Exponentiation) Approach</h3>
+<p>This is a much more efficient approach that significantly reduces the number of multiplications required. The core idea is based on the observation that <code>x^n</code> can be computed by repeatedly squaring <code>x</code>. For example, <code>x^10 = x^(8+2) = x^8 * x^2</code>. We can calculate <code>x^2</code>, <code>x^4</code>, <code>x^8</code> by successive squaring. This method can be implemented both iteratively and recursively.</p>
+<h4>1. Iterative Method</h4>
+<p>This method uses the binary representation of the exponent <code>n</code> to compute the power in logarithmic time.</p>
+<h5>Step-by-step explanation:</h5>
+<ol>
+<li>Handle the case where <code>n</code> is negative. If <code>n &lt; 0</code>, we update <code>x</code> to <code>1/x</code> and <code>n</code> to <code>-n</code>. As with the brute force method, we use a 64-bit integer for <code>n</code> to prevent overflow when <code>n = INT_MIN</code>.</li>
+<li>Initialize a variable <code>result</code> to <code>1.0</code>. This will store the final answer.</li>
+<li>Iterate as long as <code>n</code> is greater than 0. In each step of the loop, we check the last bit of <code>n</code>.<ul>
+<li>If the last bit of <code>n</code> is <code>1</code> (i.e., <code>n</code> is odd), it means the current power of <code>x</code> contributes to the final result. So, we multiply <code>result</code> by the current <code>x</code>.</li>
+<li>We then update <code>x</code> by squaring it (<code>x = x * x</code>). This prepares <code>x</code> for the next bit in the binary representation of the original exponent.</li>
+<li>Finally, we update <code>n</code> by right-shifting it by one bit (<code>n = n / 2</code>), effectively processing the next bit.</li>
+</ul>
+</li>
+<li>Once the loop terminates (<code>n</code> becomes <code>0</code>), <code>result</code> will hold the value of <code>x^n</code>.</li>
+</ol>
+<p>This approach has a time complexity of <strong>O(log|n|)</strong> and a space complexity of <strong>O(1)</strong>.</p>
+<pre><code class="language-cpp">class Solution {
+public:
+    double myPow(double x, int n) {
+        double result = 1.0;
+        long long N = n; // Use long long to handle n = INT_MIN
+
+        if (N &lt; 0) {
+            x = 1 / x;
+            N = -N;
+        }
+
+        while (N &gt; 0) {
+            // If N is odd, multiply x with the result
+            if (N % 2 == 1) {
+                result = result * x;
+            }
+            // Square x and halve N
+            x = x * x;
+            N = N / 2;
+        }
+        return result;
+    }
+};
+</code></pre>
+<h4>2. Recursive Method</h4>
+<p>This is another way to implement the same Fast Power logic, using recursion.</p>
+<h5>Step-by-step explanation:</h5>
+<ol>
+<li>Define a recursive helper function, say <code>fastPow(x, n)</code>.</li>
+<li>The base case for the recursion is when <code>n</code> is <code>0</code>. In this case, <code>x^0 = 1</code>, so we return <code>1.0</code>.</li>
+<li>In the recursive step, we first calculate the result for <code>n/2</code> by calling <code>fastPow(x, n / 2)</code>. Let's call this <code>half</code>.</li>
+<li>If <code>n</code> is even, then <code>x^n = (x^(n/2))^2</code>. The result is <code>half * half</code>.</li>
+<li>If <code>n</code> is odd, then <code>x^n = x * (x^((n-1)/2))^2 = x * x^(n/2) * x^(n/2)</code>. The result is <code>x * half * half</code>.</li>
+<li>In the main function <code>myPow</code>, handle the negative <code>n</code> by inverting <code>x</code> and making <code>n</code> positive, then call the recursive helper. Again, <code>n</code> should be cast to a 64-bit integer to handle <code>INT_MIN</code>.</li>
+</ol>
+<p>This approach has a time complexity of <strong>O(log|n|)</strong> and a space complexity of <strong>O(log|n|)</strong> due to the recursion call stack.</p>
+<pre><code class="language-cpp">class Solution {
+public:
+    double myPow(double x, int n) {
+        long long N = n;
+        if (N &lt; 0) {
+            x = 1 / x;
+            N = -N;
+        }
+        return fastPow(x, N);
+    }
+
+private:
+    double fastPow(double x, long long n) {
+        if (n == 0) {
+            return 1.0;
+        }
+        double half = fastPow(x, n / 2);
+        if (n % 2 == 0) {
+            return half * half;
+        } else {
+            return half * half * x;
+        }
+    }
+};
+</code></pre>
+<hr />
+<h3>Pythonic solution for Best Approach</h3>
+<p>The best approach is the Fast Power (Binary Exponentiation) method due to its O(log|n|) time complexity. The iterative version is generally preferred as it avoids the overhead and potential stack overflow of deep recursion.</p>
+<pre><code class="language-python">class Solution:
+    def myPow(self, x: float, n: int) -&gt; float:
+        &quot;&quot;&quot;
+        Calculates x raised to the power n using the iterative 
+        Fast Power (Binary Exponentiation) method.
+        &quot;&quot;&quot;
+        if n == 0:
+            return 1.0
+
+        # Handle negative exponent
+        if n &lt; 0:
+            x = 1 / x
+            n = -n
+
+        result = 1.0
+
+        # Iterate through the bits of n
+        while n &gt; 0:
+            # If the current bit is 1, multiply the result by the current x
+            if n % 2 == 1:
+                result *= x
+
+            # Square x for the next bit
+            x *= x
+            # Move to the next bit
+            n //= 2
+
+        return result
+
+</code></pre></div>

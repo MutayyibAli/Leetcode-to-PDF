@@ -1,0 +1,199 @@
+<div class='ai-explanation'><h3>List of Approaches</h3>
+<ol>
+<li>Brute Force Approach</li>
+<li>Trie (Prefix Tree) Based Approach</li>
+</ol>
+<hr />
+<h3>1. Brute Force Approach</h3>
+<h4>Explanation</h4>
+<p>This approach involves storing all the added words in a simple list or vector. When a search is requested, we iterate through every word in our stored list and check if it matches the search pattern.</p>
+<ol>
+<li><strong>Data Structure</strong>: Use a <code>std::vector&lt;std::string&gt;</code> to store the words.</li>
+<li><strong><code>addWord(word)</code></strong>: Append the new <code>word</code> to the end of the vector.</li>
+<li><strong><code>search(word)</code></strong>: Iterate through each <code>storedWord</code> in the vector.<ul>
+<li>First, check if the lengths of the <code>word</code> and <code>storedWord</code> are the same. If not, they can't match.</li>
+<li>If lengths match, compare them character by character. A position <code>i</code> is a match if <code>word[i] == storedWord[i]</code> or if <code>word[i] == '.'</code>.</li>
+<li>If a <code>storedWord</code> matches the entire pattern, return <code>true</code>.</li>
+<li>If the loop completes without finding any match, return <code>false</code>.</li>
+</ul>
+</li>
+</ol>
+<p>This method is simple to implement but inefficient for a large number of search operations, as every search requires scanning a potentially large portion of the dictionary. The time complexity of <code>search</code> is proportional to the total number of characters in the dictionary.</p>
+<p>The time complexity for <code>addWord</code> is O(L) where L is the length of the word, and for <code>search</code> is O(N * L) where N is the number of words in the dictionary. The space complexity is O(Total characters of all words).</p>
+<h4>C++ Code Snippet</h4>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;string&gt;
+
+class WordDictionary {
+private:
+    std::vector&lt;std::string&gt; words;
+
+    bool isMatch(const std::string&amp; pattern, const std::string&amp; word) {
+        if (pattern.length() != word.length()) {
+            return false;
+        }
+        for (int i = 0; i &lt; pattern.length(); ++i) {
+            if (pattern[i] != '.' &amp;&amp; pattern[i] != word[i]) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+public:
+    WordDictionary() {}
+
+    void addWord(std::string word) {
+        words.push_back(word);
+    }
+
+    bool search(std::string word) {
+        for (const std::string&amp; storedWord : words) {
+            if (isMatch(word, storedWord)) {
+                return true;
+            }
+        }
+        return false;
+    }
+};
+</code></pre>
+<hr />
+<h3>2. Trie (Prefix Tree) Based Approach</h3>
+<h4>Explanation</h4>
+<p>A Trie, also known as a prefix tree, is an ideal data structure for this problem. It stores strings in a way that is highly efficient for prefix-based lookups. Each node in the Trie represents a character, and a path from the root to a node represents a prefix.</p>
+<ol>
+<li><strong>Node Structure</strong>: A <code>TrieNode</code> is created with two main components:<ul>
+<li>An array of 26 pointers (<code>children</code>), one for each letter of the alphabet. <code>children[0]</code> corresponds to 'a', <code>children[1]</code> to 'b', and so on.</li>
+<li>A boolean flag, <code>isEndOfWord</code>, which is <code>true</code> if the path from the root to this node forms a complete word.</li>
+</ul>
+</li>
+<li><strong><code>addWord(word)</code></strong>:<ul>
+<li>Start at the root of the Trie.</li>
+<li>For each character <code>c</code> in the <code>word</code>, find the corresponding child node.</li>
+<li>If the child node does not exist, create a new <code>TrieNode</code> for it.</li>
+<li>Move the current node pointer to this child node.</li>
+<li>After iterating through all characters, mark the <code>isEndOfWord</code> flag of the final node as <code>true</code>.</li>
+</ul>
+</li>
+<li><strong><code>search(word)</code></strong>:<ul>
+<li>The search operation becomes more complex due to the wildcard <code>.</code> character. This requires a recursive Depth-First Search (DFS) on the Trie.</li>
+<li>We define a helper function <code>search(word, node)</code> that searches for the <code>word</code> starting from a given <code>node</code>.</li>
+<li>For each character in the word:<ul>
+<li>If the character is a letter (e.g., 'c'), we simply follow the pointer <code>node-&gt;children[c - 'a']</code>. If this pointer is <code>NULL</code>, no match is possible, so we return <code>false</code>.</li>
+<li>If the character is a <code>.</code> (wildcard), it can match any character. We must explore every existing child of the current node. We iterate through all 26 children. For each non-<code>NULL</code> child, we recursively call the search function with the rest of the word (<code>word</code> from the next character onwards) and the child node. If any of these recursive calls returns <code>true</code>, we've found a match and can return <code>true</code> immediately.</li>
+</ul>
+</li>
+<li>The base case for the recursion is reaching the end of the word. A match is found if the final node exists and its <code>isEndOfWord</code> flag is <code>true</code>.</li>
+</ul>
+</li>
+</ol>
+<p>The time complexity for <code>addWord</code> is O(M) where M is the length of the word. For <code>search</code>, it's O(M) for words without wildcards and up to O(M * 26^D) for words with D dots in the worst case. The space complexity is O(C), where C is the total number of characters in all words stored.</p>
+<h4>C++ Code Snippet</h4>
+<pre><code class="language-cpp">class TrieNode {
+public:
+    TrieNode* children[26];
+    bool isEndOfWord;
+
+    TrieNode() {
+        isEndOfWord = false;
+        for (int i = 0; i &lt; 26; i++) {
+            children[i] = nullptr;
+        }
+    }
+};
+
+class WordDictionary {
+private:
+    TrieNode* root;
+
+    bool searchInNode(const std::string&amp; word, int index, TrieNode* node) {
+        if (!node) {
+            return false;
+        }
+        if (index == word.length()) {
+            return node-&gt;isEndOfWord;
+        }
+
+        char ch = word[index];
+        if (ch != '.') {
+            return searchInNode(word, index + 1, node-&gt;children[ch - 'a']);
+        } else {
+            for (int i = 0; i &lt; 26; ++i) {
+                if (node-&gt;children[i] &amp;&amp; searchInNode(word, index + 1, node-&gt;children[i])) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+public:
+    WordDictionary() {
+        root = new TrieNode();
+    }
+
+    void addWord(std::string word) {
+        TrieNode* curr = root;
+        for (char c : word) {
+            int index = c - 'a';
+            if (!curr-&gt;children[index]) {
+                curr-&gt;children[index] = new TrieNode();
+            }
+            curr = curr-&gt;children[index];
+        }
+        curr-&gt;isEndOfWord = true;
+    }
+
+    bool search(std::string word) {
+        return searchInNode(word, 0, root);
+    }
+};
+</code></pre>
+<hr />
+<h3>Pythonic Solution (Best Approach)</h3>
+<p>The Python solution elegantly implements the Trie approach. A <code>WordDictionary</code> class instance can act as a Trie node itself, simplifying the structure. The logic for adding and searching words remains the same as described in the Trie approach. The <code>search</code> method uses recursion to handle the <code>.</code> wildcard by exploring all possible paths.</p>
+<pre><code class="language-python">class WordDictionary:
+
+    def __init__(self):
+        &quot;&quot;&quot;
+        Initializes the data structure.
+        &quot;&quot;&quot;
+        self.children = {}  # Using a dictionary is more space-efficient
+        self.is_end_of_word = False
+
+    def addWord(self, word: str) -&gt; None:
+        &quot;&quot;&quot;
+        Adds a word into the data structure.
+        &quot;&quot;&quot;
+        curr = self
+        for char in word:
+            if char not in curr.children:
+                curr.children[char] = WordDictionary()
+            curr = curr.children[char]
+        curr.is_end_of_word = True
+
+    def search(self, word: str) -&gt; bool:
+        &quot;&quot;&quot;
+        Returns true if the word is in the data structure.
+        A word could contain '.' to represent any one letter.
+        &quot;&quot;&quot;
+        def dfs(index, node):
+            curr = node
+            for i in range(index, len(word)):
+                char = word[i]
+                if char == '.':
+                    # For a '.', check all possible children
+                    for child in curr.children.values():
+                        if dfs(i + 1, child):
+                            return True
+                    return False
+                else:
+                    if char not in curr.children:
+                        return False
+                    curr = curr.children[char]
+
+            return curr.is_end_of_word
+
+        return dfs(0, self)
+
+</code></pre></div>

@@ -1,0 +1,98 @@
+<div class='ai-explanation'><h3>List of all the approaches to solution</h3>
+<ol>
+<li>Brute Force Approach (Greedy Simulation)</li>
+<li>Optimized Approach (Hardcoded Lookup Tables)</li>
+</ol>
+<h3>Brute Force Approach (Greedy Simulation)</h3>
+<p>This approach simulates the process of building a Roman numeral by repeatedly subtracting the largest possible Roman numeral value from the given integer. We create a predefined list of Roman symbols and their corresponding integer values, including the special subtractive cases (like 900 for "CM", 40 for "XL", etc.). This list must be sorted in descending order of value. We then iterate through this list, and for each value, we subtract it from our number as many times as possible, appending the corresponding symbol to our result string each time.</p>
+<ol>
+<li>Create a list of pairs, mapping integer values to their Roman numeral symbols (e.g., <code>1000</code> to <code>"M"</code>, <code>900</code> to <code>"CM"</code>).</li>
+<li>Ensure the list is sorted in descending order of the integer values.</li>
+<li>Initialize an empty string to store the resulting Roman numeral.</li>
+<li>Iterate through the sorted list. For each value-symbol pair:</li>
+<li>Use a <code>while</code> loop to check if the current number <code>num</code> is greater than or equal to the integer value.</li>
+<li>If it is, append the Roman symbol to the result string and subtract the integer value from <code>num</code>.</li>
+<li>Repeat this process until <code>num</code> becomes 0.</li>
+<li>Return the final constructed string.</li>
+</ol>
+<p>The time complexity is O(1) because the input is constrained (max 3999), and the loop runs a fixed number of times. The space complexity is O(1) to store the value-symbol map.</p>
+<pre><code class="language-cpp">#include &lt;string&gt;
+#include &lt;vector&gt;
+#include &lt;utility&gt;
+
+class Solution {
+public:
+    string intToRoman(int num) {
+        std::string roman_numeral = &quot;&quot;;
+        // Store integer values and their corresponding Roman symbols, including subtractive cases.
+        std::vector&lt;std::pair&lt;int, std::string&gt;&gt; value_symbols = {
+            {1000, &quot;M&quot;}, {900, &quot;CM&quot;}, {500, &quot;D&quot;}, {400, &quot;CD&quot;}, 
+            {100, &quot;C&quot;}, {90, &quot;XC&quot;}, {50, &quot;L&quot;}, {40, &quot;XL&quot;}, 
+            {10, &quot;X&quot;}, {9, &quot;IX&quot;}, {5, &quot;V&quot;}, {4, &quot;IV&quot;}, {1, &quot;I&quot;}
+        };
+
+        // Iterate through the list from largest to smallest value.
+        for (const auto&amp; pair : value_symbols) {
+            // While the number is large enough, subtract the value and append the symbol.
+            while (num &gt;= pair.first) {
+                roman_numeral += pair.second;
+                num -= pair.first;
+            }
+        }
+        return roman_numeral;
+    }
+};
+</code></pre>
+<h3>Optimized Approach (Hardcoded Lookup Tables)</h3>
+<p>This is the most direct and fastest approach, leveraging the fact that the number can be broken down by its decimal places (thousands, hundreds, tens, and ones). We can pre-compute the Roman numeral representations for all possible values in each place (1-9 for ones, 10-90 for tens, etc.). These are stored in arrays (or lookup tables). We then extract the digit for each place value from the input number and use it as an index to find the corresponding Roman string. Finally, we concatenate the strings for each place value to get the final result.</p>
+<ol>
+<li>Create four string arrays: one for thousands (<code>"M"</code>, <code>"MM"</code>, <code>"MMM"</code>), one for hundreds (<code>"C"</code>, <code>"CC"</code>, ..., <code>"CM"</code>), one for tens (<code>"X"</code>, <code>"XX"</code>, ..., <code>"XC"</code>), and one for ones (<code>"I"</code>, <code>"II"</code>, ..., <code>"IX"</code>).</li>
+<li>Each array will hold the 9 possible non-zero representations for its place value, plus an empty string for 0.</li>
+<li>Calculate the thousands digit using <code>num / 1000</code>. Use this to look up the thousands string.</li>
+<li>Calculate the hundreds digit using <code>(num % 1000) / 100</code>. Use this to look up the hundreds string.</li>
+<li>Calculate the tens digit using <code>(num % 100) / 10</code>. Use this to look up the tens string.</li>
+<li>Calculate the ones digit using <code>num % 10</code>. Use this to look up the ones string.</li>
+<li>Concatenate the four strings in order: thousands + hundreds + tens + ones.</li>
+</ol>
+<p>The time complexity is O(1) as it only involves a few arithmetic operations and array lookups. The space complexity is O(1) because the storage for the lookup tables is fixed.</p>
+<pre><code class="language-cpp">#include &lt;string&gt;
+#include &lt;vector&gt;
+
+class Solution {
+public:
+    string intToRoman(int num) {
+        std::string ones[] = {&quot;&quot;, &quot;I&quot;, &quot;II&quot;, &quot;III&quot;, &quot;IV&quot;, &quot;V&quot;, &quot;VI&quot;, &quot;VII&quot;, &quot;VIII&quot;, &quot;IX&quot;};
+        std::string tens[] = {&quot;&quot;, &quot;X&quot;, &quot;XX&quot;, &quot;XXX&quot;, &quot;XL&quot;, &quot;L&quot;, &quot;LX&quot;, &quot;LXX&quot;, &quot;LXXX&quot;, &quot;XC&quot;};
+        std::string hundreds[] = {&quot;&quot;, &quot;C&quot;, &quot;CC&quot;, &quot;CCC&quot;, &quot;CD&quot;, &quot;D&quot;, &quot;DC&quot;, &quot;DCC&quot;, &quot;DCCC&quot;, &quot;CM&quot;};
+        std::string thousands[] = {&quot;&quot;, &quot;M&quot;, &quot;MM&quot;, &quot;MMM&quot;};
+
+        return thousands[num / 1000] + 
+               hundreds[(num % 1000) / 100] + 
+               tens[(num % 100) / 10] + 
+               ones[num % 10];
+    }
+};
+</code></pre>
+<h3>Pythonic Solution (Best Approach)</h3>
+<p>The Greedy Simulation approach is often considered cleaner and more maintainable than hardcoding lookup tables for each digit. It's easy to read, understand, and adapt if the rules for Roman numerals were different.</p>
+<pre><code class="language-python">class Solution:
+    def intToRoman(self, num: int) -&gt; str:
+        # List of values and their corresponding Roman symbols, sorted descending
+        value_symbols = [
+            (1000, &quot;M&quot;), (900, &quot;CM&quot;), (500, &quot;D&quot;), (400, &quot;CD&quot;),
+            (100, &quot;C&quot;), (90, &quot;XC&quot;), (50, &quot;L&quot;), (40, &quot;XL&quot;),
+            (10, &quot;X&quot;), (9, &quot;IX&quot;), (5, &quot;V&quot;), (4, &quot;IV&quot;),
+            (1, &quot;I&quot;)
+        ]
+
+        roman_numeral = []
+        # Greedily subtract the largest possible values
+        for val, symbol in value_symbols:
+            # While num is large enough, append the symbol and subtract the value
+            while num &gt;= val:
+                roman_numeral.append(symbol)
+                num -= val
+
+        return &quot;&quot;.join(roman_numeral)
+
+</code></pre></div>

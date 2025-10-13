@@ -1,0 +1,186 @@
+<div class='ai-explanation'><h3>List of all the approaches to solution</h3>
+<ul>
+<li>Brute Force Approach (Store Paths)</li>
+<li>Iterative Approach (Using Parent Pointers)</li>
+<li>Recursive Approach (Single Traversal)</li>
+</ul>
+<h3>Brute Force Approach (Store Paths)</h3>
+<p>This approach involves finding the paths from the root of the tree to each of the two target nodes, <code>p</code> and <code>q</code>. Once both paths are found, we can compare them from the beginning to find the last node they have in common, which will be the Lowest Common Ancestor.</p>
+<ol>
+<li><strong>Find Paths</strong>: Create a helper function that performs a traversal (like DFS) from the root to find a target node. This function will store the sequence of nodes from the root to the target in a list or vector.</li>
+<li><strong>Store Both Paths</strong>: Call the helper function twice, once to get the path to node <code>p</code> and once to get the path to node <code>q</code>.</li>
+<li><strong>Compare Paths</strong>: Iterate through both path vectors simultaneously. The last node that is identical in both paths is the LCA. Since both paths start from the root, they will have a common prefix.</li>
+</ol>
+<p>This approach has a time complexity of O(N) because in the worst case, we might have to traverse the entire tree to find the paths, and a space complexity of O(N) to store the paths and for the recursion stack.</p>
+<pre><code class="language-cpp">/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
+        std::vector&lt;TreeNode*&gt; path_p;
+        std::vector&lt;TreeNode*&gt; path_q;
+
+        findPath(root, p, path_p);
+        findPath(root, q, path_q);
+
+        TreeNode* lca = nullptr;
+        int size = std::min(path_p.size(), path_q.size());
+        for (int i = 0; i &lt; size; ++i) {
+            if (path_p[i] == path_q[i]) {
+                lca = path_p[i];
+            } else {
+                break;
+            }
+        }
+        return lca;
+    }
+
+private:
+    bool findPath(TreeNode* root, TreeNode* target, std::vector&lt;TreeNode*&gt;&amp; path) {
+        if (!root) {
+            return false;
+        }
+        path.push_back(root);
+        if (root == target) {
+            return true;
+        }
+        if (findPath(root-&gt;left, target, path) || findPath(root-&gt;right, target, path)) {
+            return true;
+        }
+        path.pop_back();
+        return false;
+    }
+};
+</code></pre>
+<h3>Iterative Approach (Using Parent Pointers)</h3>
+<p>This method transforms the problem into finding the intersection of two linked lists. We first map each node to its parent. Then, we can traverse upwards from <code>p</code> and <code>q</code> to find their first common ancestor.</p>
+<ol>
+<li><strong>Build Parent Map</strong>: Traverse the entire tree using Breadth-First Search (BFS) or Depth-First Search (DFS). While traversing, store each node's parent in a hash map.</li>
+<li><strong>Collect <code>p</code>'s Ancestors</strong>: Starting from node <code>p</code>, move up towards the root using the parent map. Store all of <code>p</code>'s ancestors (including <code>p</code> itself) in a hash set for quick lookups.</li>
+<li><strong>Find Common Ancestor</strong>: Starting from node <code>q</code>, move up towards the root. For each node in this upward path, check if it exists in the set of <code>p</code>'s ancestors. The first node that is found in the set is the LCA.</li>
+</ol>
+<p>This approach has a time complexity of O(N) for building the parent map and traversing upwards, and a space complexity of O(N) for storing the parent map and the ancestor set.</p>
+<pre><code class="language-cpp">/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
+        std::unordered_map&lt;TreeNode*, TreeNode*&gt; parent;
+        std::queue&lt;TreeNode*&gt; node_queue;
+
+        parent[root] = nullptr;
+        node_queue.push(root);
+
+        // Step 1: Build the parent map
+        while (parent.find(p) == parent.end() || parent.find(q) == parent.end()) {
+            TreeNode* node = node_queue.front();
+            node_queue.pop();
+            if (node-&gt;left) {
+                parent[node-&gt;left] = node;
+                node_queue.push(node-&gt;left);
+            }
+            if (node-&gt;right) {
+                parent[node-&gt;right] = node;
+                node_queue.push(node-&gt;right);
+            }
+        }
+
+        // Step 2: Store ancestors of p in a set
+        std::unordered_set&lt;TreeNode*&gt; ancestors_p;
+        while (p) {
+            ancestors_p.insert(p);
+            p = parent[p];
+        }
+
+        // Step 3: Traverse up from q to find the first common ancestor
+        while (ancestors_p.find(q) == ancestors_p.end()) {
+            q = parent[q];
+        }
+
+        return q;
+    }
+};
+</code></pre>
+<h3>Recursive Approach (Single Traversal)</h3>
+<p>This is a highly elegant and efficient approach that finds the LCA in a single pass. The recursion is designed to return information about whether <code>p</code> or <code>q</code> are found in a subtree.</p>
+<ol>
+<li><strong>Base Case</strong>: If the current node (<code>root</code>) is null, or if it is equal to <code>p</code> or <code>q</code>, return the current node. If we find <code>p</code> or <code>q</code>, that node is a potential LCA.</li>
+<li><strong>Recursive Calls</strong>: Recursively call the function on the left and right subtrees. Let the results be <code>left_lca</code> and <code>right_lca</code>.</li>
+<li><strong>Analyze Results</strong>:<ul>
+<li>If both <code>left_lca</code> and <code>right_lca</code> are non-null, it means <code>p</code> was found in one subtree and <code>q</code> in the other. Therefore, the current <code>root</code> is their lowest common ancestor.</li>
+<li>If only one of them is non-null (e.g., <code>left_lca</code>), it means both <code>p</code> and <code>q</code> are located in the left subtree. The <code>left_lca</code> returned from the recursive call is the actual LCA, so we propagate it up. The same logic applies if only <code>right_lca</code> is non-null.</li>
+<li>If both are null, neither <code>p</code> nor <code>q</code> was found in the subtree of the current <code>root</code>.</li>
+</ul>
+</li>
+</ol>
+<p>This approach has a time complexity of O(N) as it visits each node once, and a space complexity of O(H) (where H is the tree height) due to the recursion stack, which is O(N) in the worst case of a skewed tree.</p>
+<pre><code class="language-cpp">/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
+        // Base case: if root is null or one of the nodes, it's a potential LCA
+        if (!root || root == p || root == q) {
+            return root;
+        }
+
+        // Recurse on left and right subtrees
+        TreeNode* left_lca = lowestCommonAncestor(root-&gt;left, p, q);
+        TreeNode* right_lca = lowestCommonAncestor(root-&gt;right, p, q);
+
+        // If both p and q are found in different subtrees, root is the LCA
+        if (left_lca &amp;&amp; right_lca) {
+            return root;
+        }
+
+        // Otherwise, the LCA is in the subtree where a node was found
+        return left_lca ? left_lca : right_lca;
+    }
+};
+</code></pre>
+<h3>Pythonic solution for best approach only</h3>
+<pre><code class="language-python"># Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
+class Solution:
+    def lowestCommonAncestor(self, root: 'TreeNode', p: 'TreeNode', q: 'TreeNode') -&gt; 'TreeNode':
+        &quot;&quot;&quot;
+        Recursive single-pass approach.
+        &quot;&quot;&quot;
+        # Base case: if root is None or we found p or q, return root
+        if root in (None, p, q):
+            return root
+
+        # Recurse on left and right children
+        left_lca = self.lowestCommonAncestor(root.left, p, q)
+        right_lca = self.lowestCommonAncestor(root.right, p, q)
+
+        # If p is in one subtree and q is in the other, root is the LCA
+        # Otherwise, the non-null result from left or right is the LCA
+        return root if left_lca and right_lca else left_lca or right_lca
+</code></pre></div>

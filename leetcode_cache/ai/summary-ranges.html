@@ -1,0 +1,120 @@
+<div class='ai-explanation'><h3>List of All Approaches</h3>
+<ul>
+<li>Brute Force Approach (Two Pointers)</li>
+<li>Single Pass Approach (Optimal)</li>
+</ul>
+<hr />
+<h3>Brute Force Approach (Two Pointers)</h3>
+<p>This approach iterates through the array, and for each number, it finds the end of the contiguous range it belongs to.</p>
+<ol>
+<li>We use an outer <code>while</code> loop with an index <code>i</code> to traverse the array. This index marks the beginning of each new range.</li>
+<li>Inside the loop, we initialize a second pointer <code>j</code> to <code>i</code>. We then use an inner <code>while</code> loop to advance <code>j</code> as long as the next element <code>nums[j + 1]</code> is consecutive to the current element <code>nums[j]</code>.</li>
+<li>When the inner loop terminates, <code>j</code> points to the last element of the contiguous range that started at <code>i</code>.</li>
+<li>We then check if the range has more than one element (<code>j &gt; i</code>). If it does, we format the string as <code>"start-&gt;end"</code>. Otherwise, it's a single-element range, formatted as just <code>"start"</code>.</li>
+<li>This formatted string is added to our result list.</li>
+<li>Finally, we update <code>i</code> to <code>j + 1</code> to begin searching for the next range from the element immediately after the one we just processed. This ensures each element is visited exactly once.</li>
+</ol>
+<p>This method is considered "brute force" in its directness but is still efficient. The two pointers <code>i</code> and <code>j</code> work together to scan the entire array linearly. Time complexity is O(N) as each element is visited once by the <code>j</code> pointer. Space complexity is O(1), excluding the output list.</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;string&gt;
+
+class Solution {
+public:
+    std::vector&lt;std::string&gt; summaryRanges(std::vector&lt;int&gt;&amp; nums) {
+        std::vector&lt;std::string&gt; result;
+        int n = nums.size();
+        int i = 0;
+        while (i &lt; n) {
+            int start = nums[i];
+            int j = i;
+            // Find the end of the current contiguous range
+            // Using long long to prevent potential overflow during the check
+            while (j + 1 &lt; n &amp;&amp; (long long)nums[j + 1] == (long long)nums[j] + 1) {
+                j++;
+            }
+
+            // Format and add the range to the result
+            if (j &gt; i) {
+                result.push_back(std::to_string(start) + &quot;-&gt;&quot; + std::to_string(nums[j]));
+            } else {
+                result.push_back(std::to_string(start));
+            }
+
+            // Move to the start of the next potential range
+            i = j + 1;
+        }
+        return result;
+    }
+};
+</code></pre>
+<hr />
+<h3>Single Pass Approach (Optimal)</h3>
+<p>This approach is a more streamlined version that uses a single <code>for</code> loop and a <code>start</code> variable to keep track of the beginning of the current range, which can be more intuitive.</p>
+<ol>
+<li>First, handle the edge case of an empty input array by returning an empty list.</li>
+<li>Initialize a <code>start</code> variable with the first element of the array. This variable will hold the starting number of the current range being built.</li>
+<li>Iterate through the array from the second element (<code>i=1</code>). In each step, check if the current number <code>nums[i]</code> is consecutive to the previous one <code>nums[i-1]</code>.</li>
+<li>If a non-consecutive number is found (a "gap"), it signifies the end of the previous range. This range, from <code>start</code> to <code>nums[i-1]</code>, is formatted and added to the results.</li>
+<li>After adding the completed range, reset <code>start</code> to the current number <code>nums[i]</code>, as it's the beginning of a new potential range.</li>
+<li>The loop concludes without adding the final range because there is no subsequent "gap" to trigger the logic. Therefore, after the loop, we must explicitly format and add the last range, which runs from the current <code>start</code> to the last element of the array.</li>
+</ol>
+<p>We iterate through the array once, performing constant time operations at each step. This leads to a time complexity of O(N). The space complexity is O(1), not counting the output list.</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;string&gt;
+
+class Solution {
+public:
+    std::vector&lt;std::string&gt; summaryRanges(std::vector&lt;int&gt;&amp; nums) {
+        if (nums.empty()) {
+            return {};
+        }
+
+        std::vector&lt;std::string&gt; ranges;
+        int start = nums[0];
+
+        for (int i = 1; i &lt; nums.size(); i++) {
+            // Check for a break in the sequence. Using long long for safety.
+            if ((long long)nums[i] != (long long)nums[i - 1] + 1) {
+                // Sequence broke, so add the previous range.
+                if (start == nums[i - 1]) {
+                    ranges.push_back(std::to_string(start));
+                } else {
+                    ranges.push_back(std::to_string(start) + &quot;-&gt;&quot; + std::to_string(nums[i - 1]));
+                }
+                // Start a new range.
+                start = nums[i];
+            }
+        }
+
+        // After the loop, add the last range.
+        if (start == nums.back()) {
+            ranges.push_back(std::to_string(start));
+        } else {
+            ranges.push_back(std::to_string(start) + &quot;-&gt;&quot; + std::to_string(nums.back()));
+        }
+
+        return ranges;
+    }
+};
+</code></pre>
+<hr />
+<h3>Pythonic Solution (for Optimal Approach)</h3>
+<p>This solution elegantly constructs the ranges by iterating through the numbers and maintaining a list of lists, where each inner list represents a start and an optional end of a range.</p>
+<ol>
+<li>An empty list <code>ranges</code> is initialized to store the ranges found, for example, <code>[[0, 2], [4, 5], [7]]</code>.</li>
+<li>The code iterates through each number <code>n</code> in the input <code>nums</code>.</li>
+<li>A new range is started if <code>ranges</code> is empty or if the current number <code>n</code> is not consecutive to the last number of the previous range (<code>n &gt; ranges[-1][-1] + 1</code>).</li>
+<li>To start a new range, an empty list <code>[]</code> is appended to <code>ranges</code>.</li>
+<li>The current number <code>n</code> is then set as the endpoint of the current (last) range. The slice assignment <code>ranges[-1][1:] = [n]</code> cleverly handles both creating a single-element range <code>[n]</code> and updating an existing range <code>[start, old_end]</code> to <code>[start, n]</code>.</li>
+<li>After iterating through all numbers, a list comprehension with f-strings is used to format the list of lists into the required string representation. <code>[start, end]</code> becomes <code>"start-&gt;end"</code> and <code>[start]</code> becomes <code>"start"</code>.</li>
+</ol>
+<pre><code class="language-python">class Solution:
+    def summaryRanges(self, nums: list[int]) -&gt; list[str]:
+        ranges = []
+        for n in nums:
+            if not ranges or n &gt; ranges[-1][-1] + 1:
+                ranges.append([])
+            ranges[-1][1:] = [n]
+
+        return [f&quot;{r[0]}&quot; if len(r) == 1 else f&quot;{r[0]}-&gt;{r[1]}&quot; for r in ranges]
+</code></pre></div>

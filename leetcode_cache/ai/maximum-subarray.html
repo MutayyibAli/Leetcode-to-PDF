@@ -1,0 +1,156 @@
+<div class='ai-explanation'><h3>List of all the approaches to solution</h3>
+<ul>
+<li>Brute Force Approach</li>
+<li>Divide and Conquer Approach</li>
+<li>Dynamic Programming (Kadane's Algorithm)</li>
+</ul>
+<hr />
+<h3>Brute Force Approach</h3>
+<p>This approach considers every possible contiguous subarray, calculates the sum for each one, and keeps track of the maximum sum found. We can achieve this by using two nested loops. The outer loop sets the starting point of the subarray, and the inner loop iterates through all possible ending points from that start. For each subarray, we calculate its sum and update our overall maximum if the current sum is greater.</p>
+<ol>
+<li>Initialize a variable <code>max_sum</code> to the smallest possible integer value to store the maximum subarray sum found.</li>
+<li>Iterate through the array with an index <code>i</code> from <code>0</code> to <code>n-1</code> to select a starting element for the subarray.</li>
+<li>For each starting element <code>i</code>, start an inner loop with an index <code>j</code> from <code>i</code> to <code>n-1</code> to select an ending element.</li>
+<li>Maintain a <code>current_sum</code> for the subarray starting at <code>i</code> and ending at <code>j</code>. In the inner loop, add <code>nums[j]</code> to <code>current_sum</code>.</li>
+<li>After calculating the sum for the subarray <code>[i...j]</code>, compare <code>current_sum</code> with <code>max_sum</code> and update <code>max_sum</code> if <code>current_sum</code> is larger.</li>
+<li>After both loops complete, <code>max_sum</code> will hold the largest subarray sum.</li>
+</ol>
+<p>This approach has a time complexity of O(n^2) and a space complexity of O(1).</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;algorithm&gt;
+#include &lt;climits&gt;
+
+class Solution {
+public:
+    int maxSubArray(std::vector&lt;int&gt;&amp; nums) {
+        int max_sum = INT_MIN;
+        int n = nums.size();
+        for (int i = 0; i &lt; n; ++i) {
+            int current_sum = 0;
+            for (int j = i; j &lt; n; ++j) {
+                current_sum += nums[j];
+                max_sum = std::max(max_sum, current_sum);
+            }
+        }
+        return max_sum;
+    }
+};
+</code></pre>
+<hr />
+<h3>Divide and Conquer Approach</h3>
+<p>As suggested in the problem's follow-up, we can solve this using a divide and conquer strategy. The main idea is to divide the array into two halves. The maximum subarray can then exist in one of three places:
+1.  Entirely in the left half of the array.
+2.  Entirely in the right half of the array.
+3.  Crossing the midpoint of the array.</p>
+<p>We can solve cases 1 and 2 recursively. Case 3, the "crossing subarray," can be found in linear time. The crossing subarray's sum is the maximum sum of a subarray ending at the midpoint plus the maximum sum of a subarray starting just after the midpoint. The final answer is the maximum of these three values.</p>
+<ol>
+<li>Define a recursive function that takes the array and <code>left</code>, <code>right</code> indices as input.</li>
+<li>The base case for the recursion is when <code>left == right</code>, in which case we return the element itself.</li>
+<li>Find the middle index <code>mid</code>.</li>
+<li>Recursively call the function for the left half (<code>left</code> to <code>mid</code>) to find the maximum subarray sum there.</li>
+<li>Recursively call the function for the right half (<code>mid+1</code> to <code>right</code>) to find the maximum subarray sum there.</li>
+<li>Calculate the maximum sum for a subarray that crosses the midpoint. This involves finding the max sum from <code>mid</code> backwards to <code>left</code> and the max sum from <code>mid+1</code> forwards to <code>right</code>, and then adding them.</li>
+<li>Return the maximum of the left-half sum, the right-half sum, and the crossing sum.</li>
+</ol>
+<p>This approach has a time complexity of O(n log n) and a space complexity of O(log n) due to the recursion stack.</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;algorithm&gt;
+#include &lt;climits&gt;
+
+class Solution {
+public:
+    int maxSubArray(std::vector&lt;int&gt;&amp; nums) {
+        return findMaxSubArray(nums, 0, nums.size() - 1);
+    }
+
+private:
+    int findMaxSubArray(std::vector&lt;int&gt;&amp; nums, int left, int right) {
+        if (left == right) {
+            return nums[left];
+        }
+
+        int mid = left + (right - left) / 2;
+
+        int left_sum = findMaxSubArray(nums, left, mid);
+        int right_sum = findMaxSubArray(nums, mid + 1, right);
+        int cross_sum = findMaxCrossingSubArray(nums, left, mid, right);
+
+        return std::max({left_sum, right_sum, cross_sum});
+    }
+
+    int findMaxCrossingSubArray(std::vector&lt;int&gt;&amp; nums, int left, int mid, int right) {
+        int left_border_sum = INT_MIN;
+        int current_sum = 0;
+        for (int i = mid; i &gt;= left; --i) {
+            current_sum += nums[i];
+            if (current_sum &gt; left_border_sum) {
+                left_border_sum = current_sum;
+            }
+        }
+
+        int right_border_sum = INT_MIN;
+        current_sum = 0;
+        for (int i = mid + 1; i &lt;= right; ++i) {
+            current_sum += nums[i];
+            if (current_sum &gt; right_border_sum) {
+                right_border_sum = current_sum;
+            }
+        }
+
+        return left_border_sum + right_border_sum;
+    }
+};
+</code></pre>
+<hr />
+<h3>Dynamic Programming (Kadane's Algorithm)</h3>
+<p>This is the most optimal approach. The core idea is to iterate through the array once, keeping track of the maximum sum of a subarray ending at the current position. For each element, we have two choices: either start a new subarray with the current element or extend the previous subarray by adding the current element. We choose whichever option gives a larger sum. We also maintain a global maximum variable that is updated whenever the maximum sum ending at the current position is greater than the global maximum seen so far.</p>
+<ol>
+<li>Initialize two variables: <code>max_so_far</code> and <code>current_max</code>, both set to the value of the first element in the array.</li>
+<li>Iterate through the array starting from the second element (index 1).</li>
+<li>For each element <code>nums[i]</code>, update <code>current_max</code> by choosing the larger value between <code>nums[i]</code> (starting a new subarray) and <code>current_max + nums[i]</code> (extending the existing subarray).</li>
+<li>Update <code>max_so_far</code> by choosing the larger value between the current <code>max_so_far</code> and the <code>current_max</code>.</li>
+<li>After the loop finishes, <code>max_so_far</code> will hold the result.</li>
+</ol>
+<p>This approach has a time complexity of O(n) and a space complexity of O(1).</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;algorithm&gt;
+
+class Solution {
+public:
+    int maxSubArray(std::vector&lt;int&gt;&amp; nums) {
+        if (nums.empty()) {
+            return 0;
+        }
+
+        int max_so_far = nums[0];
+        int current_max = nums[0];
+
+        for (size_t i = 1; i &lt; nums.size(); ++i) {
+            current_max = std::max(nums[i], current_max + nums[i]);
+            max_so_far = std::max(max_so_far, current_max);
+        }
+
+        return max_so_far;
+    }
+};
+</code></pre>
+<hr />
+<h3>Pythonic Solution (Kadane's Algorithm)</h3>
+<pre><code class="language-python">from typing import List
+
+class Solution:
+    def maxSubArray(self, nums: List[int]) -&gt; int:
+        # Initialize max_so_far and current_max with the first element
+        max_so_far = nums[0]
+        current_max = nums[0]
+
+        # Start loop from the second element
+        for i in range(1, len(nums)):
+            # Decide whether to extend the subarray or start a new one
+            current_max = max(nums[i], current_max + nums[i])
+            # Update the overall maximum sum found so far
+            max_so_far = max(max_so_far, current_max)
+
+        return max_so_far
+
+</code></pre></div>

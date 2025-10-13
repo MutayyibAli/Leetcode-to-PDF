@@ -1,0 +1,162 @@
+<div class='ai-explanation'><h3>List of all the approaches to solution</h3>
+<ol>
+<li>Brute Force Approach</li>
+<li>Two Pointer Approach</li>
+</ol>
+<hr />
+<h3>Brute Force Approach</h3>
+<p>This approach involves creating two separate lists (or arrays) to store the values of the nodes. We first iterate through the original linked list, populating one list with values less than <code>x</code> and another with values greater than or equal to <code>x</code>. Then, we can either overwrite the values in the original linked list using the elements from our two lists in order, or create a completely new linked list. The simpler variant is to create a new linked list.</p>
+<ol>
+<li><strong>Extract Values:</strong> Traverse the original linked list. Create two arrays, <code>lesser</code> and <code>greaterOrEqual</code>.</li>
+<li><strong>Populate Arrays:</strong> For each node, if its value is less than <code>x</code>, add it to the <code>lesser</code> array. Otherwise, add it to the <code>greaterOrEqual</code> array. This preserves the relative order within each partition.</li>
+<li><strong>Create New List:</strong> Create a new dummy head node.</li>
+<li><strong>Build New List:</strong> Iterate through the <code>lesser</code> array and create a new node for each value, appending it to the new list. Then, do the same for the <code>greaterOrEqual</code> array.</li>
+<li><strong>Return:</strong> Return the <code>next</code> of the dummy head node.</li>
+</ol>
+<p>This approach is straightforward but less efficient in terms of space as it requires storing all node values in auxiliary arrays. The time complexity is dominated by traversing the list and then the arrays, and the space complexity is for storing the values.</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* partition(ListNode* head, int x) {
+        if (!head) {
+            return nullptr;
+        }
+
+        std::vector&lt;int&gt; lesser;
+        std::vector&lt;int&gt; greaterOrEqual;
+
+        ListNode* current = head;
+        while (current) {
+            if (current-&gt;val &lt; x) {
+                lesser.push_back(current-&gt;val);
+            } else {
+                greaterOrEqual.push_back(current-&gt;val);
+            }
+            current = current-&gt;next;
+        }
+
+        ListNode* newHead = new ListNode(0);
+        ListNode* tail = newHead;
+
+        for (int val : lesser) {
+            tail-&gt;next = new ListNode(val);
+            tail = tail-&gt;next;
+        }
+
+        for (int val : greaterOrEqual) {
+            tail-&gt;next = new ListNode(val);
+            tail = tail-&gt;next;
+        }
+
+        return newHead-&gt;next;
+    }
+};
+</code></pre>
+<p>This approach has a time complexity of O(N) because we iterate through the list and then the generated arrays once, and a space complexity of O(N) to store the node values in the vectors.</p>
+<hr />
+<h3>Two Pointer Approach</h3>
+<p>This is an optimal in-place approach that rearranges the existing nodes without using extra space proportional to the number of nodes. We create two new temporary linked lists, one for nodes with values less than <code>x</code> and another for nodes with values greater than or equal to <code>x</code>. We use two pointers to keep track of the tails of these two new lists.</p>
+<ol>
+<li><strong>Initialization:</strong> Create two dummy nodes, <code>before_head</code> and <code>after_head</code>, to act as starting points for the two partitions. Also, create two pointers, <code>before_curr</code> and <code>after_curr</code>, initialized to these dummy nodes.</li>
+<li><strong>Traversal and Partition:</strong> Iterate through the original linked list.<ul>
+<li>If a node's value is less than <code>x</code>, append it to the list headed by <code>before_head</code> by setting <code>before_curr-&gt;next</code> to the current node and advancing <code>before_curr</code>.</li>
+<li>Otherwise, append it to the list headed by <code>after_head</code> by setting <code>after_curr-&gt;next</code> to the current node and advancing <code>after_curr</code>.</li>
+</ul>
+</li>
+<li><strong>Merge Partitions:</strong> After iterating through all nodes, the original list is now split into two chains. Connect the end of the "before" list to the start of the "after" list (<code>before_curr-&gt;next = after_head-&gt;next</code>).</li>
+<li><strong>Terminate List:</strong> It's crucial to terminate the combined list by setting the <code>next</code> pointer of the last node in the "after" list to <code>nullptr</code> (<code>after_curr-&gt;next = nullptr</code>). This prevents cycles if the last node of the original list was in the "after" partition.</li>
+<li><strong>Return Result:</strong> The new head of the partitioned list is the node following <code>before_head</code> (<code>before_head-&gt;next</code>).</li>
+</ol>
+<p>This approach efficiently re-links the existing nodes into the correct partitioned order.</p>
+<pre><code class="language-cpp">/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* partition(ListNode* head, int x) {
+        ListNode before_head(0);
+        ListNode after_head(0);
+        ListNode* before_curr = &amp;before_head;
+        ListNode* after_curr = &amp;after_head;
+
+        while (head) {
+            if (head-&gt;val &lt; x) {
+                before_curr-&gt;next = head;
+                before_curr = head; // or before_curr = before_curr-&gt;next;
+            } else {
+                after_curr-&gt;next = head;
+                after_curr = head; // or after_curr = after_curr-&gt;next;
+            }
+            head = head-&gt;next;
+        }
+
+        // Terminate the 'after' list
+        after_curr-&gt;next = nullptr;
+        // Connect the 'before' list to the 'after' list
+        before_curr-&gt;next = after_head.next;
+
+        return before_head.next;
+    }
+};
+</code></pre>
+<p>This approach has a time complexity of O(N) as we traverse the list once, and a space complexity of O(1) because we only use a few extra pointers and dummy nodes.</p>
+<hr />
+<h3>Pythonic solution for best approach</h3>
+<p>The best approach is the Two Pointer method due to its O(1) space complexity. The Pythonic solution is concise and clearly demonstrates the logic of creating two chains and linking them together.</p>
+<pre><code class="language-python"># Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, val=0, next=None):
+#         self.val = val
+#         self.next = next
+from typing import Optional
+
+class Solution:
+    def partition(self, head: Optional[ListNode], x: int) -&gt; Optional[ListNode]:
+        # Dummy nodes for the two partitions
+        before_head = ListNode(0)
+        after_head = ListNode(0)
+
+        # Pointers to the current tail of each partition
+        before_curr = before_head
+        after_curr = after_head
+
+        current = head
+        while current:
+            if current.val &lt; x:
+                # Add node to the 'before' partition
+                before_curr.next = current
+                before_curr = before_curr.next
+            else:
+                # Add node to the 'after' partition
+                after_curr.next = current
+                after_curr = after_curr.next
+
+            current = current.next
+
+        # Terminate the 'after' list to avoid cycles
+        after_curr.next = None
+
+        # Connect the 'before' list to the 'after' list
+        before_curr.next = after_head.next
+
+        return before_head.next
+
+</code></pre></div>

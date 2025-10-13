@@ -1,0 +1,189 @@
+<div class='ai-explanation'><h3>List of all the approaches to solution</h3>
+<ol>
+<li>Brute Force Approach: Using a Boolean Array</li>
+<li>Heap-based Approach: Using a Min-Heap and a Hash Set</li>
+<li>Ordered Set Approach: Using <code>std::set</code></li>
+</ol>
+<h3>Brute Force Approach: Using a Boolean Array</h3>
+<p>This approach simulates the set using a boolean array (or a hash set) to keep track of which numbers are currently present. Since the constraints on <code>num</code> and the number of calls are limited, we can use a fixed-size array.</p>
+<ol>
+<li><strong>Initialization:</strong> In the constructor, initialize a boolean array, say <code>isPresent</code>, of a size sufficient to cover all possible numbers that might be popped or added back (e.g., size 2002, considering 1000 pops and adds up to 1000). Mark all entries from 1 upwards as <code>true</code>. Maintain a variable <code>search_start</code> initialized to 1 to optimize the search for the smallest number.</li>
+<li><strong><code>popSmallest()</code>:</strong> Iterate through the <code>isPresent</code> array starting from <code>search_start</code>. The first index <code>i</code> for which <code>isPresent[i]</code> is <code>true</code> is the smallest number. Mark <code>isPresent[i]</code> as <code>false</code>, update <code>search_start</code> to <code>i</code>, and return <code>i</code>.</li>
+<li><strong><code>addBack(num)</code>:</strong> Simply mark <code>isPresent[num]</code> as <code>true</code>. If <code>num</code> is smaller than the current <code>search_start</code>, update <code>search_start</code> to <code>num</code> to ensure the next pop finds it.</li>
+</ol>
+<p>This approach is simple but inefficient for <code>popSmallest</code> as it may require scanning a portion of the array. The time complexity for <code>popSmallest</code> is O(N) where N is the largest number popped, and O(1) for <code>addBack</code>. The space complexity is O(N) for the boolean array.</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+
+class SmallestInfiniteSet {
+private:
+    std::vector&lt;bool&gt; isPresent;
+    int search_start;
+
+public:
+    SmallestInfiniteSet() {
+        // Constraints: 1000 calls, num &lt;= 1000.
+        // A number &gt; 2001 is unlikely to be popped.
+        isPresent.resize(2002, true);
+        search_start = 1;
+    }
+
+    int popSmallest() {
+        int smallest = -1;
+        for (int i = search_start; i &lt; isPresent.size(); ++i) {
+            if (isPresent[i]) {
+                smallest = i;
+                isPresent[i] = false;
+                search_start = i;
+                break;
+            }
+        }
+        return smallest;
+    }
+
+    void addBack(int num) {
+        if (num &lt; isPresent.size()) {
+            isPresent[num] = true;
+            if (num &lt; search_start) {
+                search_start = num;
+            }
+        }
+    }
+};
+</code></pre>
+<h3>Heap-based Approach: Using a Min-Heap and a Hash Set</h3>
+<p>This approach is more efficient. We conceptually divide the infinite set into two parts: a continuous stream of integers starting from a certain number, and a separate collection of numbers that were added back.</p>
+<ol>
+<li><strong>Initialization:</strong> Use an integer <code>current_integer</code> to track the start of the continuous stream (initially 1). Use a min-heap (priority queue) to store numbers that have been added back. Use a hash set to keep track of the numbers in the min-heap to prevent duplicates.</li>
+<li><strong><code>popSmallest()</code>:</strong> The smallest number is either the top of the min-heap or <code>current_integer</code>.<ul>
+<li>If the heap is not empty, compare its smallest element with <code>current_integer</code>.</li>
+<li>If the heap's smallest element is smaller, pop it from the heap, remove it from the hash set, and return it.</li>
+<li>Otherwise, the smallest is <code>current_integer</code>. Return it and increment <code>current_integer</code> for the next call.</li>
+</ul>
+</li>
+<li><strong><code>addBack(num)</code>:</strong> Add a number <code>num</code> back only if it's smaller than <code>current_integer</code> (meaning it was previously popped) and not already in the hash set. If these conditions are met, push <code>num</code> to the heap and add it to the hash set.</li>
+</ol>
+<p>The time complexity for both <code>popSmallest</code> and <code>addBack</code> is O(log k) where k is the number of elements added back. The space complexity is O(k).</p>
+<pre><code class="language-cpp">#include &lt;queue&gt;
+#include &lt;vector&gt;
+#include &lt;unordered_set&gt;
+
+class SmallestInfiniteSet {
+private:
+    int current_integer;
+    std::priority_queue&lt;int, std::vector&lt;int&gt;, std::greater&lt;int&gt;&gt; added_back_heap;
+    std::unordered_set&lt;int&gt; added_back_set;
+
+public:
+    SmallestInfiniteSet() {
+        current_integer = 1;
+    }
+
+    int popSmallest() {
+        int result;
+        if (!added_back_heap.empty()) {
+            result = added_back_heap.top();
+            added_back_heap.pop();
+            added_back_set.erase(result);
+        } else {
+            result = current_integer;
+            current_integer++;
+        }
+        return result;
+    }
+
+    void addBack(int num) {
+        if (num &lt; current_integer &amp;&amp; added_back_set.find(num) == added_back_set.end()) {
+            added_back_heap.push(num);
+            added_back_set.insert(num);
+        }
+    }
+};
+</code></pre>
+<h3>Ordered Set Approach: Using <code>std::set</code></h3>
+<p>This is an elegant and efficient approach, particularly in C++. It leverages the properties of an ordered set (<code>std::set</code>), which keeps elements sorted and unique automatically. This simplifies the logic from the heap-based approach.</p>
+<ol>
+<li><strong>Initialization:</strong> Use a counter <code>current_integer</code> (initialized to 1) to represent the infinite stream of numbers that have not been touched. Use an ordered set (<code>std::set</code>) to store any numbers that have been added back.</li>
+<li><strong><code>popSmallest()</code>:</strong><ul>
+<li>If the ordered set is not empty, its first element is the smallest among all numbers that have been popped and added back. Since any number added back must be smaller than <code>current_integer</code>, this element is the overall smallest. We remove and return it.</li>
+<li>If the ordered set is empty, the smallest number is simply <code>current_integer</code>. We return <code>current_integer</code> and increment it.</li>
+</ul>
+</li>
+<li><strong><code>addBack(num)</code>:</strong> We only need to add <code>num</code> back if it has been previously removed. This is true if <code>num</code> is less than our <code>current_integer</code> counter. The <code>std::set::insert</code> operation automatically handles uniqueness, so we don't need a separate check.</li>
+</ol>
+<p>The time complexity is O(log k) for both <code>popSmallest</code> and <code>addBack</code>, where k is the number of elements in the set. The space complexity is O(k).</p>
+<pre><code class="language-cpp">#include &lt;set&gt;
+
+class SmallestInfiniteSet {
+private:
+    int current_integer;
+    std::set&lt;int&gt; added_back_set;
+
+public:
+    SmallestInfiniteSet() {
+        current_integer = 1;
+    }
+
+    int popSmallest() {
+        if (!added_back_set.empty()) {
+            int smallest = *added_back_set.begin();
+            added_back_set.erase(added_back_set.begin());
+            return smallest;
+        } else {
+            return current_integer++;
+        }
+    }
+
+    void addBack(int num) {
+        if (num &lt; current_integer) {
+            added_back_set.insert(num);
+        }
+    }
+};
+</code></pre>
+<h3>Pythonic Solution (Best Approach)</h3>
+<p>The most idiomatic and efficient Python solution uses a combination of a counter, a min-heap (<code>heapq</code> module), and a set for quick lookups, which corresponds to the heap-based approach. The logic is identical to the C++ heap-based solution.</p>
+<pre><code class="language-python">import heapq
+
+class SmallestInfiniteSet:
+
+    def __init__(self):
+        &quot;&quot;&quot;
+        Initializes the object.
+        'self.current_integer' tracks the smallest integer in the &quot;infinite&quot; part.
+        'self.added_back_heap' is a min-heap for numbers added back.
+        'self.added_back_set' tracks elements in the heap for O(1) lookups.
+        &quot;&quot;&quot;
+        self.current_integer = 1
+        self.added_back_heap = []
+        self.added_back_set = set()
+
+    def popSmallest(self) -&gt; int:
+        &quot;&quot;&quot;
+        Removes and returns the smallest integer.
+        Priority is given to numbers added back via the min-heap.
+        &quot;&quot;&quot;
+        if self.added_back_heap:
+            smallest = heapq.heappop(self.added_back_heap)
+            self.added_back_set.remove(smallest)
+            return smallest
+        else:
+            smallest = self.current_integer
+            self.current_integer += 1
+            return smallest
+
+    def addBack(self, num: int) -&gt; None:
+        &quot;&quot;&quot;
+        Adds a positive integer num back into the set.
+        It's only added if it was previously popped (i.e., num &lt; current_integer)
+        and is not already in the set of added-back numbers.
+        &quot;&quot;&quot;
+        if num &lt; self.current_integer and num not in self.added_back_set:
+            heapq.heappush(self.added_back_heap, num)
+            self.added_back_set.add(num)
+
+
+# Your SmallestInfiniteSet object will be instantiated and called as such:
+# obj = SmallestInfiniteSet()
+# param_1 = obj.popSmallest()
+# obj.addBack(num)
+</code></pre></div>

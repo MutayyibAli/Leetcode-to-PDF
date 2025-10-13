@@ -1,0 +1,152 @@
+<div class='ai-explanation'><h3>List of approaches</h3>
+<ol>
+<li>Brute Force Recursion</li>
+<li>Dynamic Programming</li>
+<li>Dynamic Programming with Binary Search</li>
+</ol>
+<h3>1. Brute Force Recursion</h3>
+<p>This approach explores all possible subsequences recursively. For each element in the array, we decide whether to include it in our current subsequence or skip it.</p>
+<ol>
+<li>Define a recursive function, say <code>solve(prev_index, current_index)</code>, which calculates the length of the LIS.</li>
+<li>For the element at <code>current_index</code>, we have two choices:<ul>
+<li><strong>Include:</strong> If the current element <code>nums[current_index]</code> is greater than the element at <code>prev_index</code>, we can include it. The length will be <code>1 + solve(current_index, current_index + 1)</code>.</li>
+<li><strong>Exclude:</strong> We can always skip the current element. The length will be <code>solve(prev_index, current_index + 1)</code>.</li>
+</ul>
+</li>
+<li>The function returns the maximum of the lengths from these two choices.</li>
+<li>The base case for the recursion is when <code>current_index</code> reaches the end of the array, in which case we return 0.</li>
+</ol>
+<p>This method checks every single subsequence, making it highly inefficient.</p>
+<p>The time complexity is O(2<sup>n</sup>) because for each element, we make two recursive calls. The space complexity is O(n) due to the recursion depth.</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;algorithm&gt;
+
+class Solution {
+public:
+    int lengthOfLIS(std::vector&lt;int&gt;&amp; nums) {
+        return solve(nums, -1, 0);
+    }
+private:
+    int solve(const std::vector&lt;int&gt;&amp; nums, int prev_idx, int curr_pos) {
+        if (curr_pos == nums.size()) {
+            return 0;
+        }
+
+        // Option 1: Include nums[curr_pos]
+        // This is only possible if it's the first element (prev_idx == -1)
+        // or if it's strictly greater than the previous element.
+        int taken = 0;
+        if (prev_idx == -1 || nums[curr_pos] &gt; nums[prev_idx]) {
+            taken = 1 + solve(nums, curr_pos, curr_pos + 1);
+        }
+
+        // Option 2: Do not include nums[curr_pos]
+        int not_taken = solve(nums, prev_idx, curr_pos + 1);
+
+        return std::max(taken, not_taken);
+    }
+};
+</code></pre>
+<h3>2. Dynamic Programming</h3>
+<p>This approach uses a DP array to store intermediate results, avoiding redundant calculations. We build the solution from the bottom up.</p>
+<ol>
+<li>Create a DP array, <code>dp</code>, of the same size as <code>nums</code>. <code>dp[i]</code> will store the length of the longest increasing subsequence that <em>ends</em> at index <code>i</code>.</li>
+<li>Initialize all elements of <code>dp</code> to 1, since each element by itself is an increasing subsequence of length 1.</li>
+<li>Iterate through the <code>nums</code> array from the second element (<code>i = 1</code> to <code>n-1</code>).</li>
+<li>For each element <code>nums[i]</code>, have a nested loop to iterate through all previous elements (<code>j = 0</code> to <code>i-1</code>).</li>
+<li>If <code>nums[i]</code> is greater than <code>nums[j]</code>, it means we can extend the increasing subsequence ending at <code>j</code>. We update <code>dp[i]</code> to be the maximum of its current value and <code>1 + dp[j]</code>.</li>
+<li>The final answer is the maximum value in the <code>dp</code> array, as the LIS can end at any index.</li>
+</ol>
+<p>The time complexity is O(n<sup>2</sup>) due to the nested loops. The space complexity is O(n) for the DP array.</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;algorithm&gt;
+
+class Solution {
+public:
+    int lengthOfLIS(std::vector&lt;int&gt;&amp; nums) {
+        if (nums.empty()) {
+            return 0;
+        }
+        int n = nums.size();
+        std::vector&lt;int&gt; dp(n, 1);
+        int max_len = 1;
+
+        for (int i = 1; i &lt; n; ++i) {
+            for (int j = 0; j &lt; i; ++j) {
+                if (nums[i] &gt; nums[j]) {
+                    dp[i] = std::max(dp[i], 1 + dp[j]);
+                }
+            }
+            max_len = std::max(max_len, dp[i]);
+        }
+        return max_len;
+    }
+};
+</code></pre>
+<h3>3. Dynamic Programming with Binary Search</h3>
+<p>This is a more optimized approach that improves the time complexity. It maintains an auxiliary array (let's call it <code>sub</code>) that stores the smallest tail of all increasing subsequences of varying lengths.</p>
+<ol>
+<li>Initialize an empty vector <code>sub</code>. This vector will store the smallest ending element for an increasing subsequence of a given length. For example, <code>sub[k]</code> would be the smallest ending number of an increasing subsequence of length <code>k+1</code>.</li>
+<li>This <code>sub</code> vector is always sorted.</li>
+<li>Iterate through each number <code>num</code> in the input array <code>nums</code>.</li>
+<li>For each <code>num</code>, use binary search (<code>lower_bound</code>) to find the first element in <code>sub</code> that is greater than or equal to <code>num</code>.</li>
+<li>Two cases arise:<ul>
+<li>If <code>num</code> is greater than all elements in <code>sub</code>, it means we can extend the longest subsequence found so far. We append <code>num</code> to <code>sub</code>. This increases the length of the LIS by one.</li>
+<li>Otherwise, we found an element in <code>sub</code> at some index <code>i</code>. We replace <code>sub[i]</code> with <code>num</code>. This means we have found a potential increasing subsequence of length <code>i+1</code> that ends with a smaller number (<code>num</code>). This gives us a better chance to extend this subsequence with future elements.</li>
+</ul>
+</li>
+<li>After iterating through all numbers, the size of the <code>sub</code> vector is the length of the longest increasing subsequence.</li>
+</ol>
+<p>The time complexity is O(n log n) because we iterate through n elements, and for each, we perform a binary search which takes O(log n) time. The space complexity is O(n) for storing the <code>sub</code> vector.</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;algorithm&gt;
+
+class Solution {
+public:
+    int lengthOfLIS(std::vector&lt;int&gt;&amp; nums) {
+        std::vector&lt;int&gt; sub;
+        for (int num : nums) {
+            // Find the first element in 'sub' that is not less than 'num'
+            auto it = std::lower_bound(sub.begin(), sub.end(), num);
+
+            // If no such element is found, 'num' is larger than all elements
+            // in 'sub'. We can extend the LIS.
+            if (it == sub.end()) {
+                sub.push_back(num);
+            } else {
+                // Otherwise, we replace the found element with 'num'.
+                // This helps to potentially form a longer LIS later.
+                *it = num;
+            }
+        }
+        return sub.size();
+    }
+};
+</code></pre>
+<h3>Pythonic Solution (Best Approach)</h3>
+<p>The best approach (Dynamic Programming with Binary Search) can be implemented concisely in Python using the <code>bisect</code> module, which provides an efficient implementation of binary search.</p>
+<pre><code class="language-python">import bisect
+
+class Solution:
+    def lengthOfLIS(self, nums: list[int]) -&gt; int:
+        # This list 'sub' will store the smallest tail of all increasing
+        # subsequences with length i+1 at sub[i].
+        sub = []
+
+        for num in nums:
+            # Find the index 'i' where 'num' can be inserted in 'sub'
+            # to maintain the sorted order. This is equivalent to C++'s lower_bound.
+            i = bisect.bisect_left(sub, num)
+
+            # If 'i' is at the end of the list, it means 'num' is greater than
+            # all elements in 'sub'. We append it, extending the LIS.
+            if i == len(sub):
+                sub.append(num)
+            # Otherwise, 'num' can replace the element at index 'i'.
+            # This forms a new potential subsequence of length i+1
+            # with a smaller tail, which is more optimal.
+            else:
+                sub[i] = num
+
+        return len(sub)
+</code></pre></div>

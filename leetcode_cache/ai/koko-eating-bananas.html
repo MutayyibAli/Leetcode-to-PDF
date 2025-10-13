@@ -1,0 +1,131 @@
+<div class='ai-explanation'><h3>List of all the approaches to solution</h3>
+<ol>
+<li>Brute Force Approach</li>
+<li>Binary Search Approach</li>
+</ol>
+<h3>Brute Force Approach</h3>
+<p>The most direct way to solve this is to test every possible eating speed <code>k</code> and find the smallest one that works.</p>
+<ol>
+<li><strong>Determine Search Range:</strong> The range of possible speeds <code>k</code> starts from a minimum of 1. The maximum sensible speed is the size of the largest pile, <code>max(piles)</code>, because any speed higher than this offers no additional time-saving benefit for the largest pile (it will still take 1 hour).</li>
+<li><strong>Iterate and Test:</strong> Iterate through each potential speed <code>k</code> from 1 up to <code>max(piles)</code>.</li>
+<li><strong>Calculate Total Time:</strong> For each speed <code>k</code>, calculate the total hours required. For a pile of size <code>p</code>, it takes <code>ceil(p / k)</code> hours. This can be calculated using integer arithmetic as <code>(p + k - 1) / k</code> to avoid floating-point issues. Sum this time over all piles.</li>
+<li><strong>Check Condition:</strong> If the total time is less than or equal to the available hours <code>h</code>, then <code>k</code> is a valid speed.</li>
+<li><strong>Return First Valid Speed:</strong> Since we are iterating from the smallest <code>k</code> upwards, the first speed that satisfies the condition is the minimum possible speed, so we return it immediately.</li>
+</ol>
+<p>This approach is simple to understand but will be too slow for the given constraints, as <code>max(piles)</code> can be up to 10<sup>9</sup>. The time complexity is O(M * N) and space complexity is O(1), where N is the number of piles and M is the maximum number of bananas in a pile.</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;numeric&gt;
+#include &lt;algorithm&gt;
+
+class Solution {
+public:
+    int minEatingSpeed(std::vector&lt;int&gt;&amp; piles, int h) {
+        int max_val = 0;
+        for (int pile : piles) {
+            max_val = std::max(max_val, pile);
+        }
+
+        // Iterate through all possible speeds k from 1 up to the max pile size.
+        for (int k = 1; k &lt;= max_val; ++k) {
+            long long total_hours = 0;
+            // Calculate total hours for the current speed k.
+            for (int pile : piles) {
+                total_hours += (pile + k - 1) / k; // Integer ceiling division
+            }
+
+            // If Koko can finish within h hours, this is the minimum possible k.
+            if (total_hours &lt;= h) {
+                return k;
+            }
+        }
+
+        return -1; // Should not be reached given problem constraints.
+    }
+};
+</code></pre>
+<h3>Binary Search Approach</h3>
+<p>This approach optimizes the search for the minimum speed <code>k</code>. We can observe that if Koko can finish all bananas with a speed <code>k</code>, she can also finish them with any speed <code>k' &gt; k</code>. This monotonic property (total time is a non-increasing function of speed) allows us to use binary search over the range of possible speeds.</p>
+<ol>
+<li><strong>Define Search Space:</strong> The search space for <code>k</code> is between <code>low = 1</code> and <code>high = max(piles)</code>.</li>
+<li><strong>Apply Binary Search:</strong><ul>
+<li>In each step, calculate the middle speed <code>mid = low + (high - low) / 2</code>.</li>
+<li>Check if Koko can finish all bananas in <code>h</code> hours with speed <code>mid</code>.</li>
+</ul>
+</li>
+<li><strong>Calculate Hours:</strong> Calculate the total hours required for speed <code>mid</code>. This is the sum of <code>(pile + mid - 1) / mid</code> for all piles. Use a <code>long long</code> for the sum to prevent potential overflow.</li>
+<li><strong>Narrow the Search:</strong><ul>
+<li>If <code>total_hours &gt; h</code>: The speed <code>mid</code> is too slow. We must search for a higher speed. So, we discard the left half of our search space by setting <code>low = mid + 1</code>.</li>
+<li>If <code>total_hours &lt;= h</code>: The speed <code>mid</code> is feasible. It could be the answer, but a smaller speed might also work. So, we try to find a better answer in the left half by setting <code>high = mid - 1</code>.</li>
+</ul>
+</li>
+<li><strong>Termination:</strong> The loop continues until <code>low</code> becomes greater than <code>high</code>. The value of <code>low</code> at the end of the loop will be the smallest speed that satisfies the condition.</li>
+</ol>
+<p>This approach significantly improves performance. The time complexity is O(N * log(M)) and space complexity is O(1), where N is the number of piles and M is the maximum number of bananas in a pile.</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;numeric&gt;
+#include &lt;algorithm&gt;
+#include &lt;cmath&gt;
+
+class Solution {
+public:
+    int minEatingSpeed(std::vector&lt;int&gt;&amp; piles, int h) {
+        int low = 1;
+        int high = 0;
+        for (int pile : piles) {
+            high = std::max(high, pile);
+        }
+
+        while (low &lt;= high) {
+            int mid = low + (high - low) / 2;
+            long long total_hours = 0;
+
+            for (int pile : piles) {
+                // Using floating point math
+                total_hours += (long long)ceil((double)pile / mid);
+            }
+
+            if (total_hours &gt; h) {
+                // Speed is too slow, need to increase it
+                low = mid + 1;
+            } else {
+                // Speed is feasible, try for a smaller one
+                high = mid - 1;
+            }
+        }
+        return low;
+    }
+};
+</code></pre>
+<h3>Pythonic Solution (Best Approach)</h3>
+<p>The optimal solution uses binary search. Python's <code>math.ceil</code> and list comprehensions/generator expressions make the implementation concise and readable.</p>
+<pre><code class="language-python">import math
+
+class Solution:
+    def minEatingSpeed(self, piles: list[int], h: int) -&gt; int:
+        &quot;&quot;&quot;
+        Finds the minimum integer k such that Koko can eat all the bananas within h hours.
+        &quot;&quot;&quot;
+        # The minimum possible speed is 1.
+        # The maximum necessary speed is the size of the largest pile.
+        low, high = 1, max(piles)
+
+        # Binary search for the minimum feasible speed k.
+        while low &lt;= high:
+            k = (low + high) // 2
+
+            # Calculate the total hours required to eat all piles at speed k.
+            # math.ceil(pile / k) gives the hours for one pile.
+            # A generator expression is used for a memory-efficient sum.
+            hours_needed = sum(math.ceil(pile / k) for pile in piles)
+
+            if hours_needed &gt; h:
+                # The speed k is too slow, need to increase it.
+                low = k + 1
+            else:
+                # The speed k is feasible, try to find a smaller feasible speed.
+                high = k - 1
+
+        # 'low' is the smallest k for which hours_needed &lt;= h.
+        return low
+
+</code></pre></div>

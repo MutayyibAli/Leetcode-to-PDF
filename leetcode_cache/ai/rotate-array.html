@@ -1,0 +1,167 @@
+<div class='ai-explanation'><h3>List of all the approaches to solution</h3>
+<ul>
+<li>Brute Force Approach</li>
+<li>Using an Extra Array</li>
+<li>Cyclic Replacements</li>
+<li>Reversal Algorithm</li>
+</ul>
+<h3>1. Brute Force Approach</h3>
+<h4>Explanation</h4>
+<p>This approach simulates the rotation process step by step. We rotate the array to the right by one position and repeat this process <code>k</code> times.
+1.  Since rotating <code>n</code> times (where <code>n</code> is the array size) brings the array to its original state, we only need to perform the rotation <code>k % n</code> times. Let this new value be <code>k'</code>.
+2.  Loop <code>k'</code> times:
+    a. Store the last element of the array in a temporary variable.
+    b. Shift all other elements one position to the right. This means moving the element at index <code>i</code> to <code>i+1</code> for <code>i</code> from <code>n-2</code> down to <code>0</code>.
+    c. Place the stored last element at the beginning of the array (index 0).
+This method is straightforward but inefficient for large <code>k</code> and <code>n</code>, and will likely result in a "Time Limit Exceeded" error on larger test cases.</p>
+<p>The time complexity is O(n * k) and the space complexity is O(1).</p>
+<h4>Code</h4>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;algorithm&gt;
+
+class Solution {
+public:
+    void rotate(std::vector&lt;int&gt;&amp; nums, int k) {
+        int n = nums.size();
+        if (n == 0) return;
+        k = k % n;
+        if (k == 0) return;
+
+        for (int i = 0; i &lt; k; ++i) {
+            int last_element = nums[n - 1];
+            for (int j = n - 1; j &gt; 0; --j) {
+                nums[j] = nums[j - 1];
+            }
+            nums[0] = last_element;
+        }
+    }
+};
+</code></pre>
+<h3>2. Using an Extra Array</h3>
+<h4>Explanation</h4>
+<p>A simpler and more time-efficient approach than brute force is to use an auxiliary array.
+1.  Create a new array, let's call it <code>result</code>, of the same size as the original array <code>nums</code>.
+2.  Calculate the new position for each element. An element at index <code>i</code> in the original array <code>nums</code> will be at index <code>(i + k) % n</code> in the rotated array, where <code>n</code> is the size of the array.
+3.  Iterate through the <code>nums</code> array and place each element <code>nums[i]</code> into <code>result[(i + k) % n]</code>.
+4.  Finally, copy all elements from the <code>result</code> array back to the original <code>nums</code> array.</p>
+<p>The time complexity is O(n) because we iterate through the array twice. The space complexity is O(n) due to the extra array used.</p>
+<h4>Code</h4>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+
+class Solution {
+public:
+    void rotate(std::vector&lt;int&gt;&amp; nums, int k) {
+        int n = nums.size();
+        if (n == 0) return;
+        k = k % n;
+        if (k == 0) return;
+
+        std::vector&lt;int&gt; result(n);
+        for (int i = 0; i &lt; n; ++i) {
+            result[(i + k) % n] = nums[i];
+        }
+
+        nums = result;
+    }
+};
+</code></pre>
+<h3>3. Cyclic Replacements</h3>
+<h4>Explanation</h4>
+<p>This is an optimized in-place approach that moves each element to its correct final position, using cycles.
+1.  First, reduce <code>k</code> by taking <code>k = k % n</code> to handle cases where <code>k &gt;= n</code>.
+2.  We start with an element at an index, say <code>start = 0</code>, and move it to its correct position <code>(start + k) % n</code>. The element that was at this new position is then held, and we move our saved element into its place. We repeat this process, moving the held element to its correct spot, until we return to the <code>start</code> index, completing a cycle.
+3.  One cycle might not cover all elements. This happens if <code>n</code> and <code>k</code> share common factors. The number of cycles needed is the greatest common divisor (GCD) of <code>n</code> and <code>k</code>.
+4.  We must ensure all elements are moved. We can do this by keeping a count of moved elements and starting a new cycle from the next index whenever a cycle completes, until all <code>n</code> elements are processed.</p>
+<p>The time complexity is O(n) as each element is visited and moved exactly once. The space complexity is O(1) as the rotation is done in-place.</p>
+<h4>Code</h4>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;numeric&gt;
+
+class Solution {
+public:
+    void rotate(std::vector&lt;int&gt;&amp; nums, int k) {
+        int n = nums.size();
+        if (n == 0) return;
+        k = k % n;
+        if (k == 0) return;
+
+        int count = 0;
+        for (int start = 0; count &lt; n; ++start) {
+            int current = start;
+            int prev_val = nums[start];
+            do {
+                int next_idx = (current + k) % n;
+                int temp = nums[next_idx];
+                nums[next_idx] = prev_val;
+                prev_val = temp;
+                current = next_idx;
+                count++;
+            } while (start != current);
+        }
+    }
+};
+</code></pre>
+<h3>4. Reversal Algorithm</h3>
+<h4>Explanation</h4>
+<p>This is a clever and efficient in-place algorithm that achieves the rotation using three reversal operations. The idea is to reverse parts of the array and then the whole array to get the final arrangement.
+1.  First, ensure <code>k</code> is within the bounds of the array length by taking <code>k = k % n</code>.
+2.  <strong>Reverse the first part:</strong> Reverse the elements from index <code>0</code> to <code>n-k-1</code>.
+3.  <strong>Reverse the second part:</strong> Reverse the elements from index <code>n-k</code> to <code>n-1</code>.
+4.  <strong>Reverse the entire array:</strong> Reverse all elements from index <code>0</code> to <code>n-1</code>.</p>
+<p>Let's take <code>nums = [1,2,3,4,5,6,7], k = 3</code>. <code>n=7</code>.
+- Initial array: <code>[1,2,3,4, | 5,6,7]</code>
+- After reversing the first <code>n-k=4</code> elements: <code>[4,3,2,1, | 5,6,7]</code>
+- After reversing the last <code>k=3</code> elements: <code>[4,3,2,1, | 7,6,5]</code>
+- After reversing the entire array: <code>[5,6,7,1,2,3,4]</code>, which is the correct result.</p>
+<p>The time complexity is O(n) as we traverse the array a constant number of times. The space complexity is O(1) as all operations are in-place.</p>
+<h4>Code</h4>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;algorithm&gt; // For std::reverse
+
+class Solution {
+public:
+    void rotate(std::vector&lt;int&gt;&amp; nums, int k) {
+        int n = nums.size();
+        if (n == 0) return;
+        k = k % n;
+        if (k == 0) return;
+
+        // Reverse the first n-k elements
+        std::reverse(nums.begin(), nums.begin() + n - k);
+        // Reverse the last k elements
+        std::reverse(nums.begin() + n - k, nums.end());
+        // Reverse the entire array
+        std::reverse(nums.begin(), nums.end());
+    }
+};
+</code></pre>
+<h3>Pythonic solution for best approach</h3>
+<p>The best approach is the <strong>Reversal Algorithm</strong> due to its O(n) time complexity and O(1) space complexity. To strictly adhere to the O(1) space constraint, we implement the reversal logic manually.</p>
+<pre><code class="language-python">from typing import List
+
+class Solution:
+    def rotate(self, nums: List[int], k: int) -&gt; None:
+        &quot;&quot;&quot;
+        Do not return anything, modify nums in-place instead.
+        This is a true O(1) space solution using the reversal algorithm.
+        &quot;&quot;&quot;
+        n = len(nums)
+        k %= n
+        if k == 0:
+            return
+
+        def reverse(start: int, end: int) -&gt; None:
+            &quot;&quot;&quot;Helper function to reverse a part of the list.&quot;&quot;&quot;
+            while start &lt; end:
+                nums[start], nums[end] = nums[end], nums[start]
+                start += 1
+                end -= 1
+
+        # Reverse the first part of the array
+        reverse(0, n - k - 1)
+        # Reverse the second part of the array
+        reverse(n - k, n - 1)
+        # Reverse the entire array
+        reverse(0, n - 1)
+
+</code></pre></div>

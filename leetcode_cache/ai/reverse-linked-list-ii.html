@@ -1,0 +1,233 @@
+<div class='ai-explanation'><h3>List of Approaches</h3>
+<ol>
+<li>Brute Force Approach (Using Extra Space)</li>
+<li>Standard Iterative Reversal Approach (One Pass)</li>
+<li>Iterative Approach with In-place Re-linking (One Pass)</li>
+</ol>
+<hr />
+<h3>1. Brute Force Approach (Using Extra Space)</h3>
+<p>This approach involves extracting the sub-list to be reversed into an auxiliary data structure, like a vector or an array, reversing it there, and then re-linking the nodes.</p>
+<p><strong>Explanation:</strong>
+1.  <strong>Identify Sublist Nodes:</strong> Traverse the linked list to find and store the pointers to the nodes from position <code>left</code> to <code>right</code> in a vector.
+2.  <strong>Find Connection Points:</strong> While traversing, keep track of the node just before the <code>left</code>-th node (<code>left_prev</code>) and the node just after the <code>right</code>-th node (<code>right_next</code>). These are crucial for re-linking the list later.
+3.  <strong>Reverse Pointers:</strong> Reverse the vector of node pointers. Now the pointers are in the desired reversed order.
+4.  <strong>Re-link the List:</strong>
+    *   Connect <code>left_prev</code> to the new head of the sublist (the first element in the reversed vector). If <code>left</code> was 1, the new head of the entire list is this node.
+    *   Iterate through the reversed vector, linking each node to the next one.
+    *   Connect the new tail of the sublist (the last element in the reversed vector) to <code>right_next</code>.</p>
+<p>This method is straightforward but requires extra memory to store the node pointers. The time complexity is dominated by the single traversal of the list.</p>
+<p><strong>Time Complexity:</strong> O(N) where N is the number of nodes in the list.
+<strong>Space Complexity:</strong> O(R - L + 1) where R is <code>right</code> and L is <code>left</code>, for storing the sublist pointers.</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;algorithm&gt;
+
+// Definition for singly-linked list.
+struct ListNode {
+    int val;
+    ListNode *next;
+    ListNode() : val(0), next(nullptr) {}
+    ListNode(int x) : val(x), next(nullptr) {}
+    ListNode(int x, ListNode *next) : val(x), next(next) {}
+};
+
+class Solution {
+public:
+    ListNode* reverseBetween(ListNode* head, int left, int right) {
+        if (left == right || !head) {
+            return head;
+        }
+
+        std::vector&lt;ListNode*&gt; nodes;
+        ListNode* current = head;
+        ListNode* left_prev = nullptr;
+
+        // Find left_prev and populate the vector
+        for (int i = 1; i &lt;= right; ++i) {
+            if (i &lt; left) {
+                left_prev = current;
+            } else {
+                nodes.push_back(current);
+            }
+            if (current) {
+                current = current-&gt;next;
+            }
+        }
+        ListNode* right_next = current; // Node after the sublist
+
+        // Reverse the pointers in the vector
+        std::reverse(nodes.begin(), nodes.end());
+
+        // Re-link the list
+        if (left_prev) {
+            left_prev-&gt;next = nodes[0];
+        } else {
+            head = nodes[0]; // If reversing from the start
+        }
+
+        for (size_t i = 0; i &lt; nodes.size() - 1; ++i) {
+            nodes[i]-&gt;next = nodes[i+1];
+        }
+        nodes.back()-&gt;next = right_next;
+
+        return head;
+    }
+};
+</code></pre>
+<hr />
+<h3>2. Standard Iterative Reversal Approach (One Pass)</h3>
+<p>This approach finds the sublist to be reversed and applies the standard iterative algorithm for reversing a linked list to just that portion. Then, it carefully connects the reversed sublist back to the main list.</p>
+<p><strong>Explanation:</strong>
+1.  <strong>Use a Dummy Node:</strong> A <code>dummy</code> node is created and linked to the head. This simplifies handling the edge case where the reversal starts from the first node (<code>left = 1</code>).
+2.  <strong>Find the Pre-Reversal Node:</strong> Traverse the list to find the node just before the sublist begins. Let's call this <code>pre</code>. This will be at position <code>left - 1</code>.
+3.  <strong>Reverse the Sublist:</strong>
+    *   Identify the start of the sublist, <code>cur = pre-&gt;next</code>.
+    *   Perform a standard iterative reversal for <code>right - left + 1</code> nodes. Use three pointers: <code>prev_node</code> (for the reversed part), <code>cur</code> (the current node being processed), and <code>next_node</code> (to store the next node before changing pointers).
+4.  <strong>Connect the Pieces:</strong> After the reversal loop, the pointers will be in the following state:
+    *   <code>pre</code>: The node before the original sublist.
+    *   <code>pre-&gt;next</code>: Still points to the original start of the sublist (which is now the tail of the reversed part).
+    *   <code>cur</code>: Points to the node just after the original sublist.
+    *   <code>prev_node</code>: Points to the new head of the reversed sublist.
+    *   The connections must be rewired: <code>pre-&gt;next-&gt;next</code> (the new tail) should point to <code>cur</code>, and <code>pre-&gt;next</code> should point to <code>prev_node</code> (the new head).</p>
+<p>This is a one-pass algorithm that modifies the list in place without using extra space.</p>
+<p><strong>Time Complexity:</strong> O(N) as we traverse the list at most once.
+<strong>Space Complexity:</strong> O(1) as we only use a few extra pointers.</p>
+<pre><code class="language-cpp">// Definition for singly-linked list.
+struct ListNode {
+    int val;
+    ListNode *next;
+    ListNode() : val(0), next(nullptr) {}
+    ListNode(int x) : val(x), next(nullptr) {}
+    ListNode(int x, ListNode *next) : val(x), next(next) {}
+};
+
+class Solution {
+public:
+    ListNode* reverseBetween(ListNode* head, int left, int right) {
+        if (left == right || !head) {
+            return head;
+        }
+
+        ListNode* dummy = new ListNode(0, head);
+        ListNode* pre = dummy;
+
+        // 1. Move `pre` to the node just before the reversal section
+        for (int i = 0; i &lt; left - 1; ++i) {
+            pre = pre-&gt;next;
+        }
+
+        // 2. Reverse the sublist from `left` to `right`
+        ListNode* cur = pre-&gt;next;
+        ListNode* prev_node = nullptr;
+        for (int i = 0; i &lt; right - left + 1; ++i) {
+            ListNode* next_node = cur-&gt;next;
+            cur-&gt;next = prev_node;
+            prev_node = cur;
+            cur = next_node;
+        }
+
+        // 3. Connect the reversed sublist back to the main list
+        // `pre-&gt;next` is the original start, now the tail
+        pre-&gt;next-&gt;next = cur; 
+        // `pre` should point to the new head of the sublist
+        pre-&gt;next = prev_node;
+
+        ListNode* result = dummy-&gt;next;
+        delete dummy;
+        return result;
+    }
+};
+</code></pre>
+<hr />
+<h3>3. Iterative Approach with In-place Re-linking (One Pass)</h3>
+<p>This is another one-pass, constant space approach that is slightly different from the standard reversal. Instead of reversing the sublist separately, it iteratively moves nodes from the sublist to their correct reversed position.</p>
+<p><strong>Explanation:</strong>
+1.  <strong>Use a Dummy Node:</strong> A <code>dummy</code> node is created and linked to the head to simplify edge cases.
+2.  <strong>Find the Pre-Reversal Node:</strong> Traverse <code>left - 1</code> steps to find the node <code>pre</code>.
+3.  <strong>Identify Fixed Points:</strong> Let <code>cur</code> be the <code>left</code>-th node. This node will eventually become the tail of the reversed sublist. We will keep its pointer fixed and move the nodes that follow it.
+4.  <strong>Iterative Re-linking:</strong> Loop <code>right - left</code> times. In each iteration:
+    *   Identify the node to be moved, <code>node_to_move = cur-&gt;next</code>.
+    *   Unlink it by setting <code>cur-&gt;next = node_to_move-&gt;next</code>.
+    *   Link <code>node_to_move</code> to the front of the reversed section: <code>node_to_move-&gt;next = pre-&gt;next</code>.
+    *   Connect <code>pre</code> to this newly moved node: <code>pre-&gt;next = node_to_move</code>.
+    *   This process effectively pulls the <code>(i+1)</code>-th node of the sublist and places it at the first position of the sublist, repeating this until the sublist is reversed.</p>
+<p>This approach is efficient and clever, achieving the reversal by re-wiring pointers in a single pass.</p>
+<p><strong>Time Complexity:</strong> O(N) as we traverse the list to the <code>right</code>-th node.
+<strong>Space Complexity:</strong> O(1) as only a few pointers are used.</p>
+<pre><code class="language-cpp">// Definition for singly-linked list.
+struct ListNode {
+    int val;
+    ListNode *next;
+    ListNode() : val(0), next(nullptr) {}
+    ListNode(int x) : val(x), next(nullptr) {}
+    ListNode(int x, ListNode *next) : val(x), next(next) {}
+};
+
+class Solution {
+public:
+    ListNode* reverseBetween(ListNode* head, int left, int right) {
+        ListNode *dummy = new ListNode(0, head);
+        ListNode *pre = dummy;
+
+        // 1. Move `pre` to the node just before the reversal section
+        for (int i = 0; i &lt; left - 1; i++) {
+            pre = pre-&gt;next;
+        }
+
+        // `cur` will be the tail of the reversed section
+        ListNode* cur = pre-&gt;next;
+
+        // 2. Iteratively move nodes
+        for (int i = 0; i &lt; right - left; i++) {
+            ListNode* node_to_move = cur-&gt;next;
+            cur-&gt;next = node_to_move-&gt;next;
+            node_to_move-&gt;next = pre-&gt;next;
+            pre-&gt;next = node_to_move;
+        }
+
+        ListNode* result = dummy-&gt;next;
+        delete dummy;
+        return result;
+    }
+};
+</code></pre>
+<hr />
+<h3>Pythonic Solution (Best Approach)</h3>
+<p>The best approach is the <strong>Standard Iterative Reversal Approach</strong> due to its clarity and efficiency. It follows a standard pattern for linked list manipulation which is easy to understand and debug.</p>
+<pre><code class="language-python"># Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, val=0, next=None):
+#         self.val = val
+#         self.next = next
+class Solution:
+    def reverseBetween(self, head: Optional[ListNode], left: int, right: int) -&gt; Optional[ListNode]:
+        # Edge case for no reversal needed
+        if left == right or not head:
+            return head
+
+        # Use a dummy node to simplify edge cases like left=1
+        dummy = ListNode(0, head)
+        pre = dummy
+
+        # 1. Traverse to the node just before the reversal section
+        for _ in range(left - 1):
+            pre = pre.next
+
+        # `start` will be the first node of the sublist to be reversed.
+        # It will become the tail of the reversed sublist.
+        start = pre.next
+        # `then` is the node that will be moved to the front.
+        then = start.next
+
+        # 2. Perform the in-place re-linking `right - left` times
+        # [pre] -&gt; [start] -&gt; [then] -&gt; ...
+        # After one iteration:
+        # [pre] -&gt; [then] -&gt; [start] -&gt; ...
+        for _ in range(right - left):
+            start.next = then.next
+            then.next = pre.next
+            pre.next = then
+            then = start.next
+
+        return dummy.next
+
+</code></pre></div>

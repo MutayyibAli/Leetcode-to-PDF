@@ -1,0 +1,105 @@
+<div class='ai-explanation'><h3>List of Approaches</h3>
+<ol>
+<li>Brute Force Approach</li>
+<li>Optimal Approach (Using a Queue/Sliding Window)</li>
+</ol>
+<hr />
+<h3>1. Brute Force Approach</h3>
+<h4>Explanation</h4>
+<p>This naive approach involves storing every single request timestamp in a list or dynamic array. When a new <code>ping</code> arrives at time <code>t</code>, we add this new timestamp to our list. Then, to find the number of recent calls, we iterate through the entire list, counting every timestamp that falls within the required range of <code>[t - 3000, t]</code>.</p>
+<p><strong>Step-by-step:</strong>
+1.  Initialize an empty dynamic array (e.g., <code>std::vector</code>) to store request timestamps.
+2.  In the <code>ping(t)</code> method, append the new timestamp <code>t</code> to the array.
+3.  Initialize a counter to zero.
+4.  Iterate through all the timestamps stored in the array.
+5.  For each timestamp, check if it is greater than or equal to <code>t - 3000</code>. If it is, increment the counter.
+6.  Return the final count.</p>
+<p>This method is inefficient because with every <code>ping</code>, we re-check many old timestamps that we already know are outside any future time window. The time taken for each <code>ping</code> call grows linearly with the total number of calls made.</p>
+<p>The time complexity is O(N) for each <code>ping</code> call, where N is the total number of pings so far. The space complexity is O(N) to store all timestamps.</p>
+<h4>C++ Code</h4>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+
+class RecentCounter {
+private:
+    std::vector&lt;int&gt; requests;
+
+public:
+    RecentCounter() {
+    }
+
+    int ping(int t) {
+        requests.push_back(t);
+
+        int lower_bound = t - 3000;
+        int count = 0;
+
+        // Iterate through all stored requests to find those in the window
+        for (int timestamp : requests) {
+            if (timestamp &gt;= lower_bound) {
+                count++;
+            }
+        }
+        return count;
+    }
+};
+</code></pre>
+<hr />
+<h3>2. Optimal Approach (Using a Queue/Sliding Window)</h3>
+<h4>Explanation</h4>
+<p>A more efficient approach uses a queue to maintain a "sliding window" of recent requests. The key insight is that since new ping times <code>t</code> are always increasing, any request that is too old for the current <code>ping</code> will also be too old for all future <code>pings</code>. This means we can discard old timestamps permanently. A queue (First-In, First-Out) is the perfect data structure for this.</p>
+<p><strong>Step-by-step:</strong>
+1.  Initialize an empty queue to store the timestamps of recent requests.
+2.  In the <code>ping(t)</code> method, add the new timestamp <code>t</code> to the back of the queue.
+3.  Check the timestamp at the front of the queue. While it is older than the valid time window (i.e., less than <code>t - 3000</code>), remove it from the front of the queue.
+4.  After removing all the expired timestamps, the remaining elements in the queue are precisely those within the <code>[t - 3000, t]</code> range.
+5.  The size of the queue is the number of recent requests, so we return it.</p>
+<p>Each timestamp is added to the queue once and removed at most once across all <code>ping</code> calls. This makes the time complexity for each <code>ping</code> call amortized O(1). The space complexity is O(W) where W is the maximum number of requests that can fit in the 3000ms window.</p>
+<h4>C++ Code</h4>
+<pre><code class="language-cpp">#include &lt;queue&gt;
+
+class RecentCounter {
+private:
+    std::queue&lt;int&gt; requests;
+
+public:
+    RecentCounter() {
+    }
+
+    int ping(int t) {
+        // Add the new request timestamp to the back of the queue
+        requests.push(t);
+
+        // Remove requests from the front that are outside the time window [t - 3000, t]
+        while (requests.front() &lt; t - 3000) {
+            requests.pop();
+        }
+
+        // The size of the queue is the number of recent requests
+        return requests.size();
+    }
+};
+</code></pre>
+<hr />
+<h3>Pythonic Solution (Best Approach)</h3>
+<p>The most pythonic way to implement the optimal queue-based approach is by using <code>collections.deque</code>, which is a double-ended queue designed for fast appends and pops from both ends.</p>
+<pre><code class="language-python">import collections
+
+class RecentCounter:
+    def __init__(self):
+        # Initialize a deque to store the timestamps of recent requests
+        self.requests = collections.deque()
+
+    def ping(self, t: int) -&gt; int:
+        # Add the new request's timestamp
+        self.requests.append(t)
+
+        # Remove timestamps from the left (oldest) that are outside the
+        # 3000ms window.
+        while self.requests[0] &lt; t - 3000:
+            self.requests.popleft()
+
+        # The length of the deque is the number of requests in the
+        # recent time frame.
+        return len(self.requests)
+
+</code></pre></div>

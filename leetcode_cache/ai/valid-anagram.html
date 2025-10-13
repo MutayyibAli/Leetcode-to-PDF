@@ -1,0 +1,146 @@
+<div class='ai-explanation'><h3>List of all the approaches to solution</h3>
+<ol>
+<li>Brute Force Approach (Sorting)</li>
+<li>Hash Table Approach</li>
+<li>Optimized Hash Table (Array) Approach</li>
+</ol>
+<hr />
+<h3>Brute Force Approach (Sorting)</h3>
+<p>This approach is based on a simple property of anagrams: if two strings are anagrams, they are composed of the exact same characters. Therefore, if we sort both strings alphabetically, they will become identical.</p>
+<p><strong>Step-by-step explanation:</strong>
+1. Sort the characters of the first string <code>s</code>.
+2. Sort the characters of the second string <code>t</code>.
+3. Compare the two sorted strings. If they are equal, the original strings are anagrams, and we return <code>true</code>. Otherwise, we return <code>false</code>.
+4. A preliminary check to see if <code>s.length() != t.length()</code> can be an optimization, but sorting and comparing handles this case implicitly.</p>
+<p>This method is straightforward but less efficient for very long strings due to the time complexity of sorting. The time complexity is dominated by the sorting algorithm, which is typically O(N log N), and the space complexity depends on the sorting implementation, often requiring O(N) for string-to-array conversion.</p>
+<pre><code class="language-cpp">#include &lt;string&gt;
+#include &lt;algorithm&gt;
+#include &lt;vector&gt;
+
+class Solution {
+public:
+    bool isAnagram(std::string s, std::string t) {
+        // Sort both strings
+        std::sort(s.begin(), s.end());
+        std::sort(t.begin(), t.end());
+
+        // Compare the sorted strings
+        return s == t;
+    }
+};
+</code></pre>
+<hr />
+<h3>Hash Table Approach</h3>
+<p>This approach uses a hash table (or a hash map) to count the frequency of each character in both strings. Anagrams must have the same frequency for each character.</p>
+<p><strong>Step-by-step explanation:</strong>
+1. Create a hash map to store character frequencies, mapping characters to their counts.
+2. Iterate through the first string <code>s</code> and for each character, increment its count in the hash map.
+3. Iterate through the second string <code>t</code> and for each character, decrement its count in the hash map.
+4. After processing both strings, iterate through the hash map. If the strings are anagrams, the count for every character will be zero.
+5. If any character has a non-zero count, the strings are not anagrams, so return <code>false</code>.
+6. If all counts are zero, it confirms they are anagrams, so return <code>true</code>. A simple check for differing lengths at the beginning (<code>s.length() != t.length()</code>) can be a quick optimization.</p>
+<p>This approach is more efficient than sorting. The time complexity is O(N) because we iterate through the strings once, and the space complexity is O(K) where K is the number of unique characters (at most 26 for this problem, so it's effectively O(1)).</p>
+<pre><code class="language-cpp">#include &lt;string&gt;
+#include &lt;unordered_map&gt;
+
+class Solution {
+public:
+    bool isAnagram(std::string s, std::string t) {
+        if (s.length() != t.length()) {
+            return false;
+        }
+
+        std::unordered_map&lt;char, int&gt; counts;
+
+        // Count characters in s
+        for (char c : s) {
+            counts[c]++;
+        }
+
+        // Decrement counts using characters from t
+        for (char c : t) {
+            counts[c]--;
+            // If a character count goes below zero, it means t has more of that
+            // character than s, so they can't be anagrams.
+            if (counts[c] &lt; 0) {
+                return false;
+            }
+        }
+
+        // If all counts are zero, the map will be balanced. Since we checked
+        // for lengths and negative counts, no final loop is needed.
+        return true;
+    }
+};
+</code></pre>
+<hr />
+<h3>Optimized Hash Table (Array) Approach</h3>
+<p>This is an optimization of the hash table approach. Since the problem statement specifies that the strings consist only of lowercase English letters, we can use a simple fixed-size array instead of a hash map. An array provides faster access and uses less memory than a hash map.</p>
+<p><strong>Step-by-step explanation:</strong>
+1. First, check if the lengths of <code>s</code> and <code>t</code> are different. If so, they cannot be anagrams, so return <code>false</code>.
+2. Create an integer array <code>counts</code> of size 26, initialized to all zeros. Each index from 0 to 25 corresponds to a letter 'a' through 'z'.
+3. Iterate through string <code>s</code>. For each character, increment the corresponding count in the array (e.g., for 'c', increment <code>counts[2]</code>). This is done by <code>counts[character - 'a']++</code>.
+4. Iterate through string <code>t</code>. For each character, decrement the corresponding count in the array (<code>counts[character - 'a']--</code>).
+5. After the first pass through <code>t</code>, if any count in the array becomes negative, it means <code>t</code> has more of a certain character than <code>s</code>, so we can immediately return <code>false</code>.
+6. If the loop over <code>t</code> completes without any count going negative, and since we already checked that the lengths are equal, it guarantees that the strings are anagrams. We can return <code>true</code>.</p>
+<p>This is the most efficient approach for this problem's constraints. The time complexity is O(N) where N is the length of the strings, and the space complexity is O(1) because the array size is constant (26).</p>
+<pre><code class="language-cpp">#include &lt;string&gt;
+#include &lt;vector&gt;
+
+class Solution {
+public:
+    bool isAnagram(std::string s, std::string t) {
+        if (s.length() != t.length()) {
+            return false;
+        }
+
+        int counts[26] = {0};
+
+        // Increment count for chars in s
+        for (char c : s) {
+            counts[c - 'a']++;
+        }
+
+        // Decrement count for chars in t
+        for (char c : t) {
+            counts[c - 'a']--;
+        }
+
+        // Check if all counts are zero
+        for (int count : counts) {
+            if (count != 0) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+};
+</code></pre>
+<hr />
+<h3>Pythonic Solution (Best Approach)</h3>
+<p>The most Pythonic way to solve this problem leverages the <code>collections.Counter</code> class, which is designed for exactly this type of frequency counting task. This approach is not only concise and readable but also efficient. It internally works like the hash table approach.</p>
+<p><strong>Step-by-step explanation:</strong>
+1. A preliminary check ensures both strings have the same length. If not, they can't be anagrams.
+2. <code>collections.Counter(s)</code> is called to create a hash map (dictionary) of character counts for string <code>s</code>.
+3. <code>collections.Counter(t)</code> does the same for string <code>t</code>.
+4. The two <code>Counter</code> objects are compared. The equality check (<code>==</code>) for <code>Counter</code> objects compares both the keys (characters) and their values (counts). If they are identical, the strings are anagrams.</p>
+<p>This solution is elegant and also robust. It naturally handles the follow-up question about Unicode characters without any modification, as <code>Counter</code> can handle any hashable items.</p>
+<pre><code class="language-python">import collections
+
+class Solution:
+  def isAnagram(self, s: str, t: str) -&gt; bool:
+    &quot;&quot;&quot;
+    Checks if two strings are anagrams using collections.Counter.
+    &quot;&quot;&quot;
+    # Anagrams must have the same length.
+    if len(s) != len(t):
+        return False
+
+    # Create frequency counters for both strings and compare them.
+    # Counter({'a': 3, 'n': 1, 'g': 1, 'r': 1, 'm': 1}) for &quot;anagram&quot;
+    # Counter({'n': 1, 'a': 3, 'g': 1, 'r': 1, 'm': 1}) for &quot;nagaram&quot;
+    # These two counters are equal.
+    return collections.Counter(s) == collections.Counter(t)
+
+</code></pre></div>

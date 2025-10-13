@@ -1,0 +1,260 @@
+<div class='ai-explanation'><h3>List of all the approaches to solution</h3>
+<ol>
+<li>Brute Force Approach</li>
+<li>Optimal Approach (Hash Map + Doubly Linked List)</li>
+</ol>
+<hr />
+<h3>1. Brute Force Approach</h3>
+<p>This approach uses a simple data structure, like a <code>std::vector</code> or <code>std::list</code> of pairs, to store the key-value items. The order of elements in the structure represents their recency, with the most recently used item at the front and the least recently used at the back.</p>
+<p><strong>Step-by-step explanation:</strong>
+1.  <strong><code>get(key)</code>:</strong>
+    *   Iterate through the list from front to back to find the item with the matching <code>key</code>.
+    *   If found, take note of its value. Move this item from its current position to the front of the list to mark it as most recently used. Return the value.
+    *   If not found after checking all items, return -1.
+2.  <strong><code>put(key, value)</code>:</strong>
+    *   First, iterate through the list to check if the <code>key</code> already exists.
+    *   If it exists, update its value and move the item to the front of the list.
+    *   If it does not exist:
+        *   Check if the cache is at full capacity. If it is, remove the last item from the list (the least recently used one).
+        *   Insert the new <code>(key, value)</code> pair at the front of the list.</p>
+<p>The main drawback is that searching for an element requires a linear scan of the data structure. Both <code>get</code> and <code>put</code> operations have a time complexity of O(N), where N is the current size of the cache, failing the problem's O(1) requirement.</p>
+<ul>
+<li><strong>Time Complexity:</strong> O(N) for both <code>get</code> and <code>put</code>, where N is the capacity.</li>
+<li><strong>Space Complexity:</strong> O(N) to store the cache items.</li>
+</ul>
+<pre><code class="language-cpp">#include &lt;list&gt;
+#include &lt;vector&gt;
+#include &lt;utility&gt;
+
+class LRUCache {
+private:
+    int capacity;
+    std::list&lt;std::pair&lt;int, int&gt;&gt; cache_items;
+
+public:
+    LRUCache(int capacity) {
+        this-&gt;capacity = capacity;
+    }
+
+    int get(int key) {
+        for (auto it = cache_items.begin(); it != cache_items.end(); ++it) {
+            if (it-&gt;first == key) {
+                int value = it-&gt;second;
+                // Move the accessed item to the front (most recent)
+                cache_items.splice(cache_items.begin(), cache_items, it);
+                return value;
+            }
+        }
+        return -1;
+    }
+
+    void put(int key, int value) {
+        // Check if key already exists
+        for (auto it = cache_items.begin(); it != cache_items.end(); ++it) {
+            if (it-&gt;first == key) {
+                it-&gt;second = value;
+                // Move the updated item to the front
+                cache_items.splice(cache_items.begin(), cache_items, it);
+                return;
+            }
+        }
+
+        // Key does not exist, insert new item
+        if (cache_items.size() == capacity) {
+            // Evict the least recently used item (at the back)
+            cache_items.pop_back();
+        }
+        // Add the new item to the front
+        cache_items.push_front({key, value});
+    }
+};
+</code></pre>
+<hr />
+<h3>2. Optimal Approach (Hash Map + Doubly Linked List)</h3>
+<p>To achieve O(1) time complexity for both <code>get</code> and <code>put</code>, we need to combine two data structures: a hash map and a doubly linked list.</p>
+<ul>
+<li><strong>Hash Map (<code>std::unordered_map</code>):</strong> Provides O(1) average time complexity for lookups, insertions, and deletions. It will store the <code>key</code> and a pointer to the corresponding node in the doubly linked list.</li>
+<li><strong>Doubly Linked List:</strong> Maintains the order of recency. It allows O(1) time complexity for adding/removing nodes from either end and for moving an existing node to the front (if we have a pointer to it). The most recently used (MRU) item will be at the head of the list, and the least recently used (LRU) item will be at the tail.</li>
+</ul>
+<p><strong>Step-by-step explanation:</strong>
+1.  <strong>Data Structures:</strong>
+    *   A doubly linked list <code>Node</code> will store <code>key</code>, <code>value</code>, <code>prev</code> pointer, and <code>next</code> pointer.
+    *   We use two sentinel nodes, <code>head</code> and <code>tail</code>, to simplify list operations (insertions/deletions). The actual cache items will be between <code>head</code> and <code>tail</code>.
+    *   An <code>unordered_map&lt;int, Node*&gt;</code> maps the user-provided <code>key</code> to its <code>Node*</code> in the list.</p>
+<ol>
+<li>
+<p><strong><code>get(key)</code>:</strong></p>
+<ul>
+<li>Look up the <code>key</code> in the hash map. If it's not present, the item is not in the cache, so return -1.</li>
+<li>If the <code>key</code> is found, we get a pointer to its node in the linked list.</li>
+<li>To mark this node as most recently used, we move it to the front of the list (right after the <code>head</code> sentinel). This involves unlinking it from its current position and re-linking it at the front.</li>
+<li>Return the <code>value</code> from the node.</li>
+</ul>
+</li>
+<li>
+<p><strong><code>put(key, value)</code>:</strong></p>
+<ul>
+<li>Look up the <code>key</code> in the hash map.</li>
+<li><strong>If the key exists:</strong> Update the <code>value</code> in the corresponding node and move this node to the front of the list to mark it as most recently used.</li>
+<li><strong>If the key does not exist:</strong><ul>
+<li>Create a new <code>Node</code> with the <code>key</code> and <code>value</code>.</li>
+<li>Check if the cache is full (i.e., <code>map.size() == capacity</code>).</li>
+<li>If it is full, evict the least recently used item. This is the node just before the <code>tail</code> sentinel. Remove it from the linked list and also remove its corresponding entry from the hash map.</li>
+<li>Add the new node to the front of the list (after <code>head</code>).</li>
+<li>Add an entry for the new <code>key</code> and its node pointer to the hash map.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<p>This design ensures that all <code>get</code> and <code>put</code> operations are performed in O(1) average time.</p>
+<ul>
+<li><strong>Time Complexity:</strong> O(1) on average for both <code>get</code> and <code>put</code>.</li>
+<li><strong>Space Complexity:</strong> O(N) where N is the capacity, for storing the hash map and the linked list.</li>
+</ul>
+<pre><code class="language-cpp">#include &lt;unordered_map&gt;
+
+class LRUCache {
+private:
+    // Node for the doubly linked list
+    struct Node {
+        int key;
+        int value;
+        Node *prev;
+        Node *next;
+        Node(int k, int v) : key(k), value(v), prev(nullptr), next(nullptr) {}
+    };
+
+    int capacity;
+    std::unordered_map&lt;int, Node*&gt; cache;
+    Node *head; // Sentinel node for the most recently used
+    Node *tail; // Sentinel node for the least recently used
+
+    // Helper to move a node to the front (most recent)
+    void moveToFront(Node* node) {
+        // 1. Unlink the node
+        node-&gt;prev-&gt;next = node-&gt;next;
+        node-&gt;next-&gt;prev = node-&gt;prev;
+
+        // 2. Link it at the front
+        node-&gt;next = head-&gt;next;
+        node-&gt;prev = head;
+        head-&gt;next-&gt;prev = node;
+        head-&gt;next = node;
+    }
+
+    // Helper to add a new node to the front
+    void addToFront(Node* node) {
+        node-&gt;next = head-&gt;next;
+        node-&gt;prev = head;
+        head-&gt;next-&gt;prev = node;
+        head-&gt;next = node;
+    }
+
+    // Helper to remove the least recently used node
+    void removeLRU() {
+        Node* lru = tail-&gt;prev;
+        lru-&gt;prev-&gt;next = tail;
+        tail-&gt;prev = lru-&gt;prev;
+        cache.erase(lru-&gt;key);
+        delete lru;
+    }
+
+public:
+    LRUCache(int capacity) {
+        this-&gt;capacity = capacity;
+        head = new Node(-1, -1); // Sentinel
+        tail = new Node(-1, -1); // Sentinel
+        head-&gt;next = tail;
+        tail-&gt;prev = head;
+    }
+
+    ~LRUCache() {
+        Node* current = head;
+        while (current != nullptr) {
+            Node* next = current-&gt;next;
+            delete current;
+            current = next;
+        }
+    }
+
+    int get(int key) {
+        if (cache.find(key) == cache.end()) {
+            return -1;
+        }
+
+        Node* node = cache[key];
+        moveToFront(node);
+        return node-&gt;value;
+    }
+
+    void put(int key, int value) {
+        if (cache.find(key) != cache.end()) {
+            // Key exists, update value and move to front
+            Node* node = cache[key];
+            node-&gt;value = value;
+            moveToFront(node);
+        } else {
+            // Key does not exist, add a new node
+            if (cache.size() == capacity) {
+                // Cache is full, evict the LRU element
+                removeLRU();
+            }
+            Node* newNode = new Node(key, value);
+            cache[key] = newNode;
+            addToFront(newNode);
+        }
+    }
+};
+</code></pre>
+<hr />
+<h3>Pythonic Solution (Best Approach)</h3>
+<p>Python's standard library provides the <code>collections.OrderedDict</code> class, which is a perfect fit for implementing an LRU cache. An <code>OrderedDict</code> is a dictionary subclass that remembers the order in which items were inserted. It has methods like <code>move_to_end()</code> to move an existing item to one end (making it recently used) and <code>popitem(last=False)</code> to remove the item that was inserted first (the least recently used).</p>
+<p><strong>Step-by-step explanation:</strong>
+1.  <strong><code>__init__(self, capacity)</code>:</strong>
+    *   Initialize an <code>OrderedDict</code> to store the cache data and store the capacity.</p>
+<ol>
+<li>
+<p><strong><code>get(self, key)</code>:</strong></p>
+<ul>
+<li>Check if the <code>key</code> is in the <code>OrderedDict</code>. If not, return -1.</li>
+<li>If the <code>key</code> exists, its value needs to be returned, and it must be marked as the most recently used. The <code>move_to_end(key)</code> method does exactly this. By default, it moves the item to the end, which we will designate as our "most recent" side.</li>
+<li>Return the value associated with the <code>key</code>.</li>
+</ul>
+</li>
+<li>
+<p><strong><code>put(self, key, value)</code>:</strong></p>
+<ul>
+<li>First, add or update the <code>key-value</code> pair in the <code>OrderedDict</code>. If the <code>key</code> already exists, its value is updated.</li>
+<li>Mark the key as the most recently used by calling <code>move_to_end(key)</code>.</li>
+<li>After the insertion/update, check if the size of the <code>OrderedDict</code> has exceeded the <code>capacity</code>.</li>
+<li>If it has, evict the least recently used item. <code>popitem(last=False)</code> removes and returns the key-value pair that was inserted first (the "left" side of the ordered dict).</li>
+</ul>
+</li>
+</ol>
+<pre><code class="language-python">from collections import OrderedDict
+
+class LRUCache:
+    def __init__(self, capacity: int):
+        self.cache = OrderedDict()
+        self.capacity = capacity
+
+    def get(self, key: int) -&gt; int:
+        if key not in self.cache:
+            return -1
+        # Move the accessed key to the end to mark it as most recently used
+        self.cache.move_to_end(key)
+        return self.cache[key]
+
+    def put(self, key: int, value: int) -&gt; None:
+        # If key is already in cache, it will be updated.
+        # Then, we move it to the end to mark it as most recently used.
+        self.cache[key] = value
+        self.cache.move_to_end(key)
+
+        # If the cache size exceeds capacity, remove the least recently used item.
+        # popitem(last=False) removes the first item inserted.
+        if len(self.cache) &gt; self.capacity:
+            self.cache.popitem(last=False)
+
+</code></pre></div>

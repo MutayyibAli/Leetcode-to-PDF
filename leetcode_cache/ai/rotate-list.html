@@ -1,0 +1,171 @@
+<div class='ai-explanation'><h3>List of all the approaches to solution</h3>
+<ol>
+<li>Brute Force Approach</li>
+<li>Optimized Approach: Make the List Circular</li>
+</ol>
+<hr />
+<h3>Brute Force Approach</h3>
+<h4>Explanation</h4>
+<p>The most intuitive approach is to simulate the rotation one position at a time. We repeat the process of rotating the list by one position to the right, <code>k</code> times.</p>
+<ol>
+<li><strong>Handle Edge Cases:</strong> If the list is empty, has only one node, or <code>k</code> is 0, no rotation is needed. Return the original <code>head</code>.</li>
+<li><strong>Calculate Effective Rotations:</strong> A rotation by the length of the list brings it back to the original state. So, we only need to perform <code>k % length</code> rotations. First, traverse the list to find its length.</li>
+<li><strong>Rotate <code>k</code> times:</strong> Loop <code>k % length</code> times. In each iteration:<ul>
+<li>Traverse the list to find the very last node and the second-to-last node.</li>
+<li>To perform a single rotation, move the last node to the front:<ul>
+<li>Set the <code>next</code> pointer of the second-to-last node to <code>nullptr</code>, making it the new tail.</li>
+<li>Set the <code>next</code> pointer of the (old) last node to the current <code>head</code>.</li>
+<li>Update the <code>head</code> of the list to be this (old) last node.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>Return Head:</strong> After the loop finishes, return the new <code>head</code>.</li>
+</ol>
+<p>This approach is simple to understand but inefficient because it traverses the list repeatedly. The time complexity is O(n * (k % n)) and space complexity is O(1).</p>
+<h4>C++ Code</h4>
+<pre><code class="language-cpp">/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* rotateRight(ListNode* head, int k) {
+        if (!head || !head-&gt;next || k == 0) {
+            return head;
+        }
+
+        // Calculate length
+        int len = 1;
+        ListNode* temp = head;
+        while (temp-&gt;next) {
+            temp = temp-&gt;next;
+            len++;
+        }
+
+        // Get effective k
+        k = k % len;
+        if (k == 0) {
+            return head;
+        }
+
+        // Rotate k times
+        for (int i = 0; i &lt; k; ++i) {
+            ListNode* last = head;
+            ListNode* second_last = nullptr;
+            while (last-&gt;next) {
+                second_last = last;
+                last = last-&gt;next;
+            }
+
+            // Move last node to the front
+            second_last-&gt;next = nullptr;
+            last-&gt;next = head;
+            head = last;
+        }
+        return head;
+    }
+};
+</code></pre>
+<hr />
+<h3>Optimized Approach: Make the List Circular</h3>
+<h4>Explanation</h4>
+<p>Instead of rotating one by one, we can achieve the same result with a constant number of traversals by rearranging pointers. The key idea is to temporarily form a circular linked list.</p>
+<ol>
+<li><strong>Handle Edge Cases:</strong> If the list is empty or has only one node, return <code>head</code>.</li>
+<li><strong>Find Length and Tail:</strong> Traverse the list once to find its length (<code>len</code>) and get a pointer to the last node (<code>tail</code>).</li>
+<li><strong>Form a Circle:</strong> Connect the <code>tail</code> node back to the <code>head</code> (<code>tail-&gt;next = head</code>), creating a circular linked list.</li>
+<li><strong>Find the New Tail:</strong> The list needs to be rotated <code>k</code> times. The new head will be the <code>(len - k % len)</code>-th node. Consequently, the new tail of the list will be the node right before it, at index <code>len - (k % len) - 1</code> from the original head.</li>
+<li><strong>Find New Head and Break Circle:</strong> Traverse <code>len - (k % len) - 1</code> steps from the original <code>head</code> to reach the <code>new_tail</code>. The node immediately after it (<code>new_tail-&gt;next</code>) is our <code>new_head</code>. To finalize the rotation, break the circular link by setting <code>new_tail-&gt;next = nullptr</code>.</li>
+<li><strong>Return New Head:</strong> Return the <code>new_head</code>.</li>
+</ol>
+<p>This method requires just two passes over the list (one to find the length and another to find the new tail), resulting in a much better time complexity of O(n) and a space complexity of O(1).</p>
+<h4>C++ Code</h4>
+<pre><code class="language-cpp">/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* rotateRight(ListNode* head, int k) {
+        if (head == nullptr || head-&gt;next == nullptr || k == 0) {
+            return head;
+        }
+
+        // 1. Find the length and the last node
+        ListNode* iter = head;
+        int len = 1;
+        while (iter-&gt;next != nullptr) {
+            iter = iter-&gt;next;
+            len++;
+        }
+
+        // 2. Connect the tail to the head to form a circle
+        // iter is now at the last node
+        iter-&gt;next = head;
+
+        // 3. Find the new tail, which is at (len - k % len - 1)
+        int steps_to_new_tail = len - (k % len) - 1;
+        iter = head; // Reset iter to head for traversal
+        for (int i = 0; i &lt; steps_to_new_tail; ++i) {
+            iter = iter-&gt;next;
+        }
+
+        // 4. Identify new head and break the circle
+        head = iter-&gt;next; // The new head is the node after the new tail
+        iter-&gt;next = nullptr; // Break the circle
+
+        return head;
+    }
+};
+</code></pre>
+<hr />
+<h3>Pythonic Solution for Best Approach</h3>
+<p>This Python solution implements the optimized circular list approach. It first calculates the list's length and finds the last element. Then, it connects the list into a circle and calculates the break point based on <code>k % length</code>. Finally, it identifies the new head and sets the new tail's <code>next</code> to <code>None</code> to break the circle.</p>
+<pre><code class="language-python"># Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, val=0, next=None):
+#         self.val = val
+#         self.next = next
+class Solution:
+    def rotateRight(self, head: Optional[ListNode], k: int) -&gt; Optional[ListNode]:
+        if not head or not head.next or k == 0:
+            return head
+
+        # 1. Find the length and the last node
+        last_node = head
+        length = 1
+        while last_node.next:
+            last_node = last_node.next
+            length += 1
+
+        # 2. Connect the tail to the head to form a circle
+        last_node.next = head
+
+        # 3. Calculate effective rotations and find the new tail
+        # The new tail is at (length - k % length - 1)
+        k = k % length
+        steps_to_new_tail = length - k - 1
+
+        new_tail = head
+        for _ in range(steps_to_new_tail):
+            new_tail = new_tail.next
+
+        # 4. Identify new head and break the circle
+        new_head = new_tail.next
+        new_tail.next = None
+
+        return new_head
+</code></pre></div>

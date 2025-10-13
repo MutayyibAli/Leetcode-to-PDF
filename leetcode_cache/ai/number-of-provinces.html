@@ -1,0 +1,188 @@
+<div class='ai-explanation'><h3>List of all the approaches to solution</h3>
+<ol>
+<li>Breadth-First Search (BFS) Approach</li>
+<li>Depth-First Search (DFS) Approach</li>
+<li>Union-Find (Disjoint Set Union) Approach</li>
+</ol>
+<hr />
+<h3>1. Breadth-First Search (BFS) Approach</h3>
+<p>This approach treats the cities and their connections as a graph. We can find the number of connected components (provinces) by traversing the graph. We iterate through each city. If a city hasn't been visited, it signifies the start of a new province. We then use BFS to find and mark all cities belonging to this province. A <code>visited</code> array is used to keep track of cities that have already been assigned to a province.</p>
+<p><strong>Step-by-step explanation:</strong>
+1.  Initialize a province counter <code>provinces</code> to zero and a <code>visited</code> array of size <code>n</code> to keep track of visited cities.
+2.  Iterate through each city from <code>i = 0</code> to <code>n-1</code>.
+3.  If city <code>i</code> has not been visited, it means we've found a new province. Increment the <code>provinces</code> counter.
+4.  Start a BFS traversal from city <code>i</code> to find all connected cities. Add <code>i</code> to a queue and mark it as visited.
+5.  While the queue is not empty, dequeue a city <code>u</code>.
+6.  For city <code>u</code>, check all other cities <code>v</code>. If <code>isConnected[u][v]</code> is 1 and city <code>v</code> has not been visited, enqueue <code>v</code> and mark it as visited.
+7.  Once the BFS is complete, all cities in the current province are marked. The outer loop continues to find the next unvisited city.
+8.  Return the final <code>provinces</code> count.</p>
+<p>This approach has a time complexity of O(N²) because we may need to traverse the entire adjacency matrix and a space complexity of O(N) for the <code>visited</code> array and the queue.</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;queue&gt;
+
+class Solution {
+public:
+    int findCircleNum(std::vector&lt;std::vector&lt;int&gt;&gt;&amp; isConnected) {
+        int n = isConnected.size();
+        if (n == 0) {
+            return 0;
+        }
+
+        int provinces = 0;
+        std::vector&lt;bool&gt; visited(n, false);
+
+        for (int i = 0; i &lt; n; ++i) {
+            if (!visited[i]) {
+                provinces++;
+                std::queue&lt;int&gt; q;
+                q.push(i);
+                visited[i] = true;
+
+                while (!q.empty()) {
+                    int u = q.front();
+                    q.pop();
+
+                    for (int v = 0; v &lt; n; ++v) {
+                        if (isConnected[u][v] == 1 &amp;&amp; !visited[v]) {
+                            visited[v] = true;
+                            q.push(v);
+                        }
+                    }
+                }
+            }
+        }
+        return provinces;
+    }
+};
+</code></pre>
+<hr />
+<h3>2. Depth-First Search (DFS) Approach</h3>
+<p>Similar to BFS, this approach uses a graph traversal algorithm, DFS, to identify connected components. We iterate through each city. If an unvisited city is found, we increment our province count and initiate a DFS from that city to recursively visit and mark all cities in the same province.</p>
+<p><strong>Step-by-step explanation:</strong>
+1.  Initialize a province counter <code>provinces</code> to zero and a <code>visited</code> array.
+2.  Iterate through each city <code>i</code> from <code>0</code> to <code>n-1</code>.
+3.  If city <code>i</code> has not been visited, we have found a new province. Increment <code>provinces</code> and call a helper <code>dfs</code> function starting from city <code>i</code>.
+4.  The <code>dfs(city)</code> function does the following:
+    a. Marks the current <code>city</code> as visited.
+    b. Iterates through all its neighbors <code>j</code>.
+    c. If <code>isConnected[city][j]</code> is 1 and neighbor <code>j</code> has not been visited, it makes a recursive call <code>dfs(j)</code>.
+5.  This recursive process ensures all cities in the component are marked as visited.
+6.  After the main loop finishes, return the <code>provinces</code> count.</p>
+<p>This approach has a time complexity of O(N²) because we visit each cell of the matrix at most once. The space complexity is O(N) for the <code>visited</code> array and to store the recursion stack.</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+
+class Solution {
+public:
+    void dfs(int u, int n, std::vector&lt;std::vector&lt;int&gt;&gt;&amp; isConnected, std::vector&lt;bool&gt;&amp; visited) {
+        visited[u] = true;
+        for (int v = 0; v &lt; n; ++v) {
+            if (isConnected[u][v] == 1 &amp;&amp; !visited[v]) {
+                dfs(v, n, isConnected, visited);
+            }
+        }
+    }
+
+    int findCircleNum(std::vector&lt;std::vector&lt;int&gt;&gt;&amp; isConnected) {
+        int n = isConnected.size();
+        if (n == 0) {
+            return 0;
+        }
+
+        int provinces = 0;
+        std::vector&lt;bool&gt; visited(n, false);
+
+        for (int i = 0; i &lt; n; ++i) {
+            if (!visited[i]) {
+                provinces++;
+                dfs(i, n, isConnected, visited);
+            }
+        }
+        return provinces;
+    }
+};
+</code></pre>
+<hr />
+<h3>3. Union-Find (Disjoint Set Union) Approach</h3>
+<p>This is a highly efficient approach for problems involving partitioning elements into disjoint sets. Each province is treated as a disjoint set. We start by assuming each city is its own province (set). Then, we iterate through the connections and merge (<code>union</code>) the sets of any two connected cities. The final number of disjoint sets is the number of provinces.</p>
+<p><strong>Step-by-step explanation:</strong>
+1.  Initialize a <code>parent</code> array of size <code>n</code>, where <code>parent[i]</code> will store the representative of the set containing city <code>i</code>. Initially, each city is its own parent.
+2.  The <code>find(i)</code> operation finds the root parent (representative) of the set containing city <code>i</code>. Path compression is used to optimize this by making nodes point directly to the root.
+3.  The <code>union(i, j)</code> operation merges the sets containing cities <code>i</code> and <code>j</code>. It finds the roots of both cities. If the roots are different, it means they belong to different provinces, so we merge them by making one root the parent of the other.
+4.  Iterate through the <code>isConnected</code> matrix. If <code>isConnected[i][j] == 1</code>, call the <code>union(i, j)</code> function.
+5.  After iterating through all connections, the number of provinces is the number of unique roots. This can be counted by checking how many cities are their own parents.</p>
+<p>With path compression, the time complexity is O(N² * α(N)), where α(N) is the very slow-growing inverse Ackermann function, making it nearly linear in the number of matrix cells. The space complexity is O(N) for the <code>parent</code> array.</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;numeric&gt;
+
+class Solution {
+public:
+    std::vector&lt;int&gt; parent;
+
+    // Find the root of the set containing element x, with path compression
+    int find(int x) {
+        if (parent[x] == x) {
+            return x;
+        }
+        return parent[x] = find(parent[x]);
+    }
+
+    // Union of two sets
+    void unite(int a, int b) {
+        int root_a = find(a);
+        int root_b = find(b);
+        if (root_a != root_b) {
+            parent[root_a] = root_b;
+        }
+    }
+
+    int findCircleNum(std::vector&lt;std::vector&lt;int&gt;&gt;&amp; isConnected) {
+        int n = isConnected.size();
+        parent.resize(n);
+        std::iota(parent.begin(), parent.end(), 0); // Initialize each node as its own parent
+
+        for (int i = 0; i &lt; n; ++i) {
+            for (int j = i + 1; j &lt; n; ++j) {
+                if (isConnected[i][j] == 1) {
+                    unite(i, j);
+                }
+            }
+        }
+
+        int provinces = 0;
+        for (int i = 0; i &lt; n; ++i) {
+            if (parent[i] == i) {
+                provinces++;
+            }
+        }
+
+        return provinces;
+    }
+};
+</code></pre>
+<hr />
+<h3>Pythonic Solution (DFS Approach)</h3>
+<p>The DFS approach provides a clean, readable, and efficient solution that is very idiomatic in Python. It directly models the action of exploring a connected group of cities.</p>
+<pre><code class="language-python">class Solution:
+    def findCircleNum(self, isConnected: list[list[int]]) -&gt; int:
+        n = len(isConnected)
+        visited = set()
+        provinces = 0
+
+        def dfs(city: int):
+            # Mark the current city as visited
+            visited.add(city)
+            # Visit all connected neighbors
+            for neighbor, connected in enumerate(isConnected[city]):
+                if connected and neighbor not in visited:
+                    dfs(neighbor)
+
+        # Iterate through all cities
+        for i in range(n):
+            # If a city hasn't been visited, it's a new province
+            if i not in visited:
+                provinces += 1
+                dfs(i)
+
+        return provinces
+
+</code></pre></div>

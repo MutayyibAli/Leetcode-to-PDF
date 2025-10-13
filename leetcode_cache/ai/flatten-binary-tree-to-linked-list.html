@@ -1,0 +1,236 @@
+<div class='ai-explanation'><h3>List of all the approaches to solution</h3>
+<ol>
+<li>Brute Force Approach (Pre-order Traversal &amp; List)</li>
+<li>Iterative Approach (Using a Stack)</li>
+<li>Recursive Approach (Reverse Pre-order)</li>
+<li>Optimal In-place Approach (Morris Traversal)</li>
+</ol>
+<hr />
+<h3>Brute Force Approach (Pre-order Traversal &amp; List)</h3>
+<p>This approach involves performing a standard pre-order traversal on the binary tree and storing all the visited nodes in an auxiliary list. Once the traversal is complete, we iterate through the list and re-wire the <code>right</code> pointers of each node to point to the next node in the list, while setting the <code>left</code> pointers to <code>null</code>.</p>
+<ol>
+<li>Create a list to store tree nodes.</li>
+<li>Define a recursive helper function to perform pre-order traversal (Root, Left, Right) and add each visited node to the list.</li>
+<li>Call the helper function starting from the <code>root</code>.</li>
+<li>Iterate through the list from the first node to the second-to-last node.</li>
+<li>For each node at index <code>i</code>, set its <code>left</code> child to <code>nullptr</code> and its <code>right</code> child to the node at index <code>i+1</code>.</li>
+<li>Set the <code>left</code> and <code>right</code> children of the last node in the list to <code>nullptr</code>.</li>
+</ol>
+<p>This approach has a time complexity of O(N) because we traverse each node twice, and a space complexity of O(N) for storing the nodes in a list.</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+
+// Definition for a binary tree node.
+struct TreeNode {
+    int val;
+    TreeNode *left;
+    TreeNode *right;
+    TreeNode() : val(0), left(nullptr), right(nullptr) {}
+    TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+    TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+};
+
+class Solution {
+public:
+    void flatten(TreeNode* root) {
+        if (!root) {
+            return;
+        }
+        std::vector&lt;TreeNode*&gt; nodes;
+        preorderTraversal(root, nodes);
+
+        for (size_t i = 0; i &lt; nodes.size() - 1; ++i) {
+            nodes[i]-&gt;left = nullptr;
+            nodes[i]-&gt;right = nodes[i+1];
+        }
+
+        nodes.back()-&gt;left = nullptr;
+        nodes.back()-&gt;right = nullptr;
+    }
+private:
+    void preorderTraversal(TreeNode* node, std::vector&lt;TreeNode*&gt;&amp; nodes) {
+        if (!node) {
+            return;
+        }
+        nodes.push_back(node);
+        preorderTraversal(node-&gt;left, nodes);
+        preorderTraversal(node-&gt;right, nodes);
+    }
+};
+</code></pre>
+<hr />
+<h3>Iterative Approach (Using a Stack)</h3>
+<p>This method mimics a pre-order traversal iteratively using a stack, modifying the tree structure along the way. Since pre-order traversal processes the current node, then the left subtree, then the right subtree, we push the right child onto the stack before the left child. This ensures the left child is processed first when popped.</p>
+<ol>
+<li>If the <code>root</code> is <code>nullptr</code>, return immediately.</li>
+<li>Initialize a stack and push the <code>root</code> node onto it.</li>
+<li>Loop while the stack is not empty:
+    a. Pop a node, let's call it <code>curr</code>.
+    b. If <code>curr</code> has a right child, push it onto the stack.
+    c. If <code>curr</code> has a left child, push it onto the stack.
+    d. Set <code>curr-&gt;left</code> to <code>nullptr</code>.
+    e. Set <code>curr-&gt;right</code> to the node currently at the top of the stack. If the stack is empty, set it to <code>nullptr</code>.</li>
+</ol>
+<p>This approach has a time complexity of O(N) as each node is visited once, and a space complexity of O(H) where H is the height of the tree, which can be O(N) in the worst case for a skewed tree.</p>
+<pre><code class="language-cpp">#include &lt;stack&gt;
+
+// Definition for a binary tree node.
+struct TreeNode {
+    int val;
+    TreeNode *left;
+    TreeNode *right;
+    TreeNode() : val(0), left(nullptr), right(nullptr) {}
+    TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+    TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+};
+
+class Solution {
+public:
+    void flatten(TreeNode* root) {
+        if (!root) {
+            return;
+        }
+        std::stack&lt;TreeNode*&gt; s;
+        s.push(root);
+
+        while (!s.empty()) {
+            TreeNode* curr = s.top();
+            s.pop();
+
+            if (curr-&gt;right) {
+                s.push(curr-&gt;right);
+            }
+            if (curr-&gt;left) {
+                s.push(curr-&gt;left);
+            }
+
+            curr-&gt;left = nullptr;
+            if (!s.empty()) {
+                curr-&gt;right = s.top();
+            } else {
+                curr-&gt;right = nullptr;
+            }
+        }
+    }
+};
+</code></pre>
+<hr />
+<h3>Recursive Approach (Reverse Pre-order)</h3>
+<p>A more elegant recursive solution involves traversing the tree in a reverse pre-order manner (Right, Left, Root). We maintain a pointer, <code>prev</code>, to the previously visited node. This way, we build the linked list from the tail towards the head.</p>
+<ol>
+<li>Start a recursive traversal from the root.</li>
+<li>In the recursive function, first recurse on the right child.</li>
+<li>Then, recurse on the left child.</li>
+<li>After the recursive calls for the children return, process the current node. Set its <code>right</code> pointer to <code>prev</code> (the head of the already flattened list segment) and its <code>left</code> pointer to <code>nullptr</code>.</li>
+<li>Finally, update <code>prev</code> to point to the current node, effectively making it the new head of the processed list segment.</li>
+</ol>
+<p>This approach has a time complexity of O(N) because each node is visited once, and a space complexity of O(H) due to the recursion stack, which can be O(N) in the worst case.</p>
+<pre><code class="language-cpp">// Definition for a binary tree node.
+struct TreeNode {
+    int val;
+    TreeNode *left;
+    TreeNode *right;
+    TreeNode() : val(0), left(nullptr), right(nullptr) {}
+    TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+    TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+};
+
+class Solution {
+public:
+    void flatten(TreeNode* root) {
+        if (root) {
+            revPreOrder(root);
+        }
+    }
+private:
+    TreeNode* prev = nullptr;
+    void revPreOrder(TreeNode* node) {
+        if (node-&gt;right) {
+            revPreOrder(node-&gt;right);
+        }
+        if (node-&gt;left) {
+            revPreOrder(node-&gt;left);
+        }
+        node-&gt;left = nullptr;
+        node-&gt;right = prev;
+        prev = node;
+    }
+};
+</code></pre>
+<hr />
+<h3>Optimal In-place Approach (Morris Traversal)</h3>
+<p>This approach achieves the flattening in-place with constant extra space, which addresses the follow-up question. The idea is based on Morris Traversal. For each node, we find the rightmost node of its left subtree (its pre-order predecessor). We then rewire the pointers to insert the left subtree between the current node and its original right subtree.</p>
+<ol>
+<li>Initialize a pointer <code>curr</code> to <code>root</code>.</li>
+<li>While <code>curr</code> is not <code>nullptr</code>:
+    a. If <code>curr</code> has a left child:
+        i. Find the rightmost node of the left subtree (let's call it <code>predecessor</code>).
+        ii. Set <code>predecessor-&gt;right</code> to <code>curr-&gt;right</code>.
+        iii. Move the entire left subtree to be the right child of <code>curr</code> by setting <code>curr-&gt;right = curr-&gt;left</code>.
+        iv. Set <code>curr-&gt;left</code> to <code>nullptr</code>.
+    b. Move <code>curr</code> to its next node, which is now <code>curr-&gt;right</code>.</li>
+</ol>
+<p>This approach has a time complexity of O(N) because each edge is traversed at most twice, and a space complexity of O(1).</p>
+<pre><code class="language-cpp">// Definition for a binary tree node.
+struct TreeNode {
+    int val;
+    TreeNode *left;
+    TreeNode *right;
+    TreeNode() : val(0), left(nullptr), right(nullptr) {}
+    TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+    TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+};
+
+class Solution {
+public:
+    void flatten(TreeNode* root) {
+        TreeNode* curr = root;
+        while (curr) {
+            if (curr-&gt;left) {
+                TreeNode* predecessor = curr-&gt;left;
+                while (predecessor-&gt;right) {
+                    predecessor = predecessor-&gt;right;
+                }
+                predecessor-&gt;right = curr-&gt;right;
+                curr-&gt;right = curr-&gt;left;
+                curr-&gt;left = nullptr;
+            }
+            curr = curr-&gt;right;
+        }
+    }
+};
+</code></pre>
+<hr />
+<h3>Pythonic Solution (Best Approach)</h3>
+<p>The best approach is the Morris Traversal due to its O(1) space complexity. The Python solution below implements this logic concisely.</p>
+<pre><code class="language-python">from typing import Optional
+
+# Definition for a binary tree node.
+class TreeNode:
+    def __init__(self, val=0, left=None, right=None):
+        self.val = val
+        self.left = left
+        self.right = right
+
+class Solution:
+    def flatten(self, root: Optional[TreeNode]) -&gt; None:
+        &quot;&quot;&quot;
+        Do not return anything, modify root in-place instead.
+        &quot;&quot;&quot;
+        curr = root
+        while curr:
+            # If the current node has a left child
+            if curr.left:
+                # Find the rightmost node in the left subtree (predecessor)
+                predecessor = curr.left
+                while predecessor.right:
+                    predecessor = predecessor.right
+
+                # Rewire the pointers to insert the left subtree
+                # between the current node and its right subtree
+                predecessor.right = curr.right
+                curr.right = curr.left
+                curr.left = None
+
+            # Move to the next node in the pre-order sequence
+            curr = curr.right
+</code></pre></div>

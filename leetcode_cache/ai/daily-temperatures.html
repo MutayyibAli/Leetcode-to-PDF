@@ -1,0 +1,102 @@
+<div class='ai-explanation'><h3>List of Approaches</h3>
+<ol>
+<li>Brute Force Approach</li>
+<li>Monotonic Stack Approach</li>
+</ol>
+<hr />
+<h3>Brute Force Approach</h3>
+<p>This method involves iterating through the array for each day to find the next warmer day.</p>
+<ol>
+<li>Initialize an <code>answer</code> array of the same size as <code>temperatures</code>, filled with zeros.</li>
+<li>Loop through each day <code>i</code> from the start to the end of the <code>temperatures</code> array.</li>
+<li>For each day <code>i</code>, start a second, nested loop for the subsequent days <code>j</code> (from <code>i + 1</code> to the end).</li>
+<li>Inside the inner loop, check if <code>temperatures[j]</code> is greater than <code>temperatures[i]</code>.</li>
+<li>If a warmer day <code>j</code> is found, calculate the difference <code>j - i</code>, store it in <code>answer[i]</code>, and break the inner loop to proceed to the next day <code>i+1</code>.</li>
+<li>If the inner loop completes without finding a warmer day, <code>answer[i]</code> will retain its initial value of 0.</li>
+</ol>
+<p>This approach is simple to understand but inefficient for large inputs due to its nested loop structure. The time complexity is O(N^2), and the space complexity is O(1) (excluding the space for the output array).</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+
+class Solution {
+public:
+    std::vector&lt;int&gt; dailyTemperatures(std::vector&lt;int&gt;&amp; temperatures) {
+        int n = temperatures.size();
+        std::vector&lt;int&gt; answer(n, 0);
+        for (int i = 0; i &lt; n; ++i) {
+            for (int j = i + 1; j &lt; n; ++j) {
+                if (temperatures[j] &gt; temperatures[i]) {
+                    answer[i] = j - i;
+                    break;
+                }
+            }
+        }
+        return answer;
+    }
+};
+</code></pre>
+<hr />
+<h3>Monotonic Stack Approach</h3>
+<p>This optimized approach uses a stack to keep track of the indices of days for which we have not yet found a warmer day. The stack maintains indices in an order such that their corresponding temperatures are monotonically decreasing.</p>
+<ol>
+<li>Initialize an <code>answer</code> array of the same size as <code>temperatures</code>, filled with zeros.</li>
+<li>Create an empty stack that will store the indices of the days.</li>
+<li>Iterate through the <code>temperatures</code> array with index <code>i</code> from left to right.</li>
+<li>For each day <code>i</code>, peek at the index at the top of the stack. While the stack is not empty and the current day's temperature (<code>temperatures[i]</code>) is warmer than the temperature at the index on top of the stack:
+    a. Pop the index (<code>prev_index</code>) from the stack.
+    b. The current day <code>i</code> is the next warmer day for <code>prev_index</code>. Calculate the wait days as <code>i - prev_index</code> and update <code>answer[prev_index]</code>.</li>
+<li>After the while loop (when the current temperature is no longer warmer than the one at the stack's top, or the stack is empty), push the current index <code>i</code> onto the stack. This ensures the stack maintains the monotonically decreasing temperature property.</li>
+<li>Any indices remaining in the stack after the loop have no warmer future day, so their <code>answer</code> value correctly remains 0.</li>
+</ol>
+<p>This method processes each temperature at most twice (one push and one pop), making it highly efficient. The time complexity is O(N), and the space complexity is O(N) for the stack in the worst-case scenario (e.g., a strictly decreasing temperature array).</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;stack&gt;
+
+class Solution {
+public:
+    std::vector&lt;int&gt; dailyTemperatures(std::vector&lt;int&gt;&amp; temps) {
+        std::vector&lt;int&gt; results(temps.size(), 0);
+        std::stack&lt;int&gt; stack; // Stack stores indices
+
+        for (int i = 0; i &lt; temps.size(); i++) {
+            // Found a warmer day for the day at stack's top
+            while (!stack.empty() &amp;&amp; temps[stack.top()] &lt; temps[i]) {
+                int prev_index = stack.top();
+                stack.pop();
+                results[prev_index] = i - prev_index;
+            }
+            // Push current index for which we need to find a warmer day
+            stack.push(i);
+        }
+
+        return results;
+    }
+};
+</code></pre>
+<hr />
+<h3>Pythonic Solution (Monotonic Stack)</h3>
+<pre><code class="language-python">from typing import List
+
+class Solution:
+    def dailyTemperatures(self, temperatures: List[int]) -&gt; List[int]:
+        &quot;&quot;&quot;
+        Calculates the number of days to wait for a warmer temperature 
+        using a monotonic stack.
+        &quot;&quot;&quot;
+        n = len(temperatures)
+        answer = [0] * n
+        stack = []  # This stack will store indices
+
+        for i, temp in enumerate(temperatures):
+            # While stack is not empty and the current temperature is higher 
+            # than the temperature of the day at the top of the stack
+            while stack and temperatures[stack[-1]] &lt; temp:
+                # We've found the next warmer day for the index at the top of the stack
+                prev_index = stack.pop()
+                answer[prev_index] = i - prev_index
+
+            # Push the current index onto the stack
+            stack.append(i)
+
+        return answer
+
+</code></pre></div>

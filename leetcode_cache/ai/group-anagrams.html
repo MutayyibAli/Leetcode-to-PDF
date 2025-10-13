@@ -1,0 +1,111 @@
+<div class='ai-explanation'><h3>List of Approaches</h3>
+<ol>
+<li>Brute Force Approach</li>
+<li>Categorize by Sorted String</li>
+</ol>
+<hr />
+<h3>1. Brute Force Approach</h3>
+<h4>Explanation</h4>
+<p>This approach iterates through the list of strings and, for each string, searches the rest of the list for all its anagrams. A helper function is used to determine if two strings are anagrams. To avoid processing strings that have already been grouped, a <code>visited</code> array is used.</p>
+<ol>
+<li>Initialize an empty list <code>result</code> for the final groups and a boolean array <code>visited</code> to mark strings that have been assigned to a group.</li>
+<li>Iterate through each string <code>strs[i]</code>.</li>
+<li>If <code>strs[i]</code> has not been visited, create a new <code>current_group</code> and add <code>strs[i]</code> to it. Mark it as visited.</li>
+<li>Iterate through the subsequent strings <code>strs[j]</code> (where <code>j &gt; i</code>).</li>
+<li>Check if <code>strs[j]</code> is an anagram of <code>strs[i]</code>. This can be done by sorting both strings and comparing them.</li>
+<li>If <code>strs[j]</code> is an anagram and hasn't been visited, add it to <code>current_group</code> and mark it as visited.</li>
+<li>After checking all subsequent strings, add the <code>current_group</code> to the <code>result</code>.</li>
+<li>Continue until all strings have been placed in a group.</li>
+</ol>
+<p>This method is inefficient due to the nested loops and repeated anagram checks. The time complexity is O(N² * K log K), where N is the number of strings and K is the maximum length of a string, and the space complexity is O(N*K) for the result list.</p>
+<h4>C++ Code</h4>
+<pre><code class="language-cpp">class Solution {
+private:
+    // Helper to check if two strings are anagrams by sorting
+    bool isAnagram(string s1, string s2) {
+        if (s1.length() != s2.length()) {
+            return false;
+        }
+        sort(s1.begin(), s1.end());
+        sort(s2.begin(), s2.end());
+        return s1 == s2;
+    }
+
+public:
+    vector&lt;vector&lt;string&gt;&gt; groupAnagrams(vector&lt;string&gt;&amp; strs) {
+        vector&lt;vector&lt;string&gt;&gt; result;
+        vector&lt;bool&gt; visited(strs.size(), false);
+
+        for (int i = 0; i &lt; strs.size(); ++i) {
+            if (!visited[i]) {
+                vector&lt;string&gt; current_group;
+                current_group.push_back(strs[i]);
+                visited[i] = true;
+
+                for (int j = i + 1; j &lt; strs.size(); ++j) {
+                    if (!visited[j] &amp;&amp; isAnagram(strs[i], strs[j])) {
+                        current_group.push_back(strs[j]);
+                        visited[j] = true;
+                    }
+                }
+                result.push_back(current_group);
+            }
+        }
+        return result;
+    }
+};
+</code></pre>
+<hr />
+<h3>2. Categorize by Sorted String</h3>
+<h4>Explanation</h4>
+<p>A more optimal approach uses a hash map to group anagrams. The core idea is that all anagrams, when sorted alphabetically, become identical. This sorted string can serve as a unique key for each group of anagrams.</p>
+<ol>
+<li>Create a hash map where keys are strings (the sorted representation) and values are lists of strings (the anagrams).</li>
+<li>Iterate through each string in the input array <code>strs</code>.</li>
+<li>For each string, create a copy and sort its characters alphabetically.</li>
+<li>Use this new sorted string as a key in the hash map.</li>
+<li>Append the original, unsorted string to the list of strings associated with this key.</li>
+<li>After iterating through all strings, the hash map's values will be the lists of grouped anagrams.</li>
+<li>Construct the final result by collecting all the values from the hash map.</li>
+</ol>
+<p>The time complexity is O(N * K log K) where N is the number of strings and K is the maximum length of a string, and space complexity is O(N*K) to store the map.</p>
+<h4>C++ Code</h4>
+<pre><code class="language-cpp">class Solution {
+public:
+    vector&lt;vector&lt;string&gt;&gt; groupAnagrams(vector&lt;string&gt;&amp; strs) {
+        unordered_map&lt;string, vector&lt;string&gt;&gt; mp;
+
+        for (auto x : strs) {
+            string word = x;
+            sort(word.begin(), word.end());
+            mp[word].push_back(x);
+        }
+
+        vector&lt;vector&lt;string&gt;&gt; ans;
+        for (auto x : mp) {
+            ans.push_back(x.second);
+        }
+        return ans;
+    }
+};
+</code></pre>
+<hr />
+<h3>Pythonic Solution (Best Approach)</h3>
+<p>This Python solution implements the "Categorize by Sorted String" approach. It uses a <code>defaultdict</code> from the <code>collections</code> module, which simplifies the process of appending to a list within a dictionary. The sorted string serves as the key, and the original strings are appended to the list corresponding to that key.</p>
+<pre><code class="language-python">from collections import defaultdict
+
+class Solution:
+    def groupAnagrams(self, strs: list[str]) -&gt; list[list[str]]:
+        # Use a defaultdict to automatically handle list creation for new keys
+        anagram_map = defaultdict(list)
+
+        for word in strs:
+            # Sort the characters of the word to create a canonical key
+            sorted_word = &quot;&quot;.join(sorted(word))
+            # Append the original word to the list for this key
+            anagram_map[sorted_word].append(word)
+
+        # The values of the map are the grouped anagrams
+        return list(anagram_map.values())
+
+</code></pre></div>

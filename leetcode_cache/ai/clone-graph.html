@@ -1,0 +1,193 @@
+<div class='ai-explanation'><h3>List of Approaches</h3>
+<ol>
+<li>Depth-First Search (DFS) Approach</li>
+<li>Breadth-First Search (BFS) Approach</li>
+</ol>
+<hr />
+<h3>1. Depth-First Search (DFS) Approach</h3>
+<p>This approach uses recursion to traverse the graph in a depth-first manner. A hash map is used to store the mapping between original nodes and their newly created clones. This map is crucial to keep track of visited nodes, preventing infinite loops in graphs with cycles and ensuring that each node is cloned only once.</p>
+<p><strong>Step-by-step Explanation:</strong>
+1.  Create a hash map <code>visited</code> to store a mapping from an original node's pointer to its cloned node's pointer.
+2.  If the input <code>node</code> is <code>NULL</code>, return <code>NULL</code>.
+3.  Check if the current <code>node</code> is already in the <code>visited</code> map. If it is, it means we have already created a clone for this node, so we can simply return the clone from the map.
+4.  If the <code>node</code> is not in the map, create a new <code>Node</code> with the same value as the original <code>node</code>.
+5.  Add this new <code>node</code>-<code>clone</code> pair to the <code>visited</code> map <em>before</em> processing its neighbors. This step is essential to handle cycles correctly.
+6.  Recursively call the function for each of the original <code>node</code>'s neighbors.
+7.  Add the returned cloned neighbor from each recursive call to the <code>neighbors</code> list of the newly created clone.
+8.  Return the new clone.</p>
+<p>The time complexity is O(N + M) where N is the number of nodes and M is the number of edges, as each node and edge is visited once. The space complexity is O(N) due to the hash map and the recursion stack depth.</p>
+<pre><code class="language-cpp">/*
+// Definition for a Node.
+class Node {
+public:
+    int val;
+    vector&lt;Node*&gt; neighbors;
+    Node() {
+        val = 0;
+        neighbors = vector&lt;Node*&gt;();
+    }
+    Node(int _val) {
+        val = _val;
+        neighbors = vector&lt;Node*&gt;();
+    }
+    Node(int _val, vector&lt;Node*&gt; _neighbors) {
+        val = _val;
+        neighbors = _neighbors;
+    }
+};
+*/
+
+class Solution {
+private:
+    // Map to store original node -&gt; cloned node mapping
+    unordered_map&lt;Node*, Node*&gt; visited;
+
+public:
+    Node* cloneGraph(Node* node) {
+        if (!node) {
+            return nullptr;
+        }
+
+        // If the node is already cloned, return its clone
+        if (visited.find(node) != visited.end()) {
+            return visited[node];
+        }
+
+        // Create a new node (clone) with the same value
+        Node* cloneNode = new Node(node-&gt;val);
+
+        // Store the mapping in the visited map
+        visited[node] = cloneNode;
+
+        // Recursively clone all neighbors and add them to the clone's neighbors list
+        for (Node* neighbor : node-&gt;neighbors) {
+            cloneNode-&gt;neighbors.push_back(cloneGraph(neighbor));
+        }
+
+        return cloneNode;
+    }
+};
+</code></pre>
+<hr />
+<h3>2. Breadth-First Search (BFS) Approach</h3>
+<p>This approach uses a queue to traverse the graph level by level. Similar to the DFS approach, it uses a hash map to keep track of visited/cloned nodes to avoid redundant work and handle cycles. This is an iterative solution, which avoids potential stack overflow issues that can occur with deep recursion in DFS.</p>
+<p><strong>Step-by-step Explanation:</strong>
+1.  Handle the edge case: if the input <code>node</code> is <code>NULL</code>, return <code>NULL</code>.
+2.  Create a queue to manage the traversal and a hash map <code>visited</code> to map original nodes to their clones.
+3.  Create the clone for the starting <code>node</code>, add the <code>{original_node, clone_node}</code> mapping to the <code>visited</code> map, and push the original <code>node</code> into the queue.
+4.  Begin a loop that continues as long as the queue is not empty.
+5.  In each iteration, dequeue a node (<code>current_node</code>).
+6.  Iterate through all <code>neighbors</code> of the <code>current_node</code>.
+7.  For each <code>neighbor</code>, check if it has been visited (i.e., if it exists as a key in the <code>visited</code> map).
+    - If not, create a clone for the <code>neighbor</code>, add it to the <code>visited</code> map, and enqueue the original <code>neighbor</code> to process its neighbors later.
+8.  Add the cloned neighbor (retrieved from the <code>visited</code> map) to the neighbors list of the <code>current_node</code>'s clone.
+9.  After the loop finishes, return the clone of the starting <code>node</code> from the <code>visited</code> map.</p>
+<p>The time complexity is O(N + M) where N is the number of nodes and M is the number of edges. The space complexity is O(N) for the hash map and the queue.</p>
+<pre><code class="language-cpp">/*
+// Definition for a Node.
+class Node {
+public:
+    int val;
+    vector&lt;Node*&gt; neighbors;
+    Node() {
+        val = 0;
+        neighbors = vector&lt;Node*&gt;();
+    }
+    Node(int _val) {
+        val = _val;
+        neighbors = vector&lt;Node*&gt;();
+    }
+    Node(int _val, vector&lt;Node*&gt; _neighbors) {
+        val = _val;
+        neighbors = _neighbors;
+    }
+};
+*/
+#include &lt;queue&gt;
+#include &lt;unordered_map&gt;
+
+class Solution {
+public:
+    Node* cloneGraph(Node* node) {
+        if (!node) {
+            return nullptr;
+        }
+
+        // Map to store original node -&gt; cloned node mapping
+        unordered_map&lt;Node*, Node*&gt; visited;
+        // Queue for BFS traversal
+        queue&lt;Node*&gt; q;
+
+        // Clone the starting node and initialize the process
+        Node* cloneNode = new Node(node-&gt;val);
+        visited[node] = cloneNode;
+        q.push(node);
+
+        while (!q.empty()) {
+            Node* currentNode = q.front();
+            q.pop();
+
+            // Process all neighbors of the current node
+            for (Node* neighbor : currentNode-&gt;neighbors) {
+                // If the neighbor hasn't been cloned yet
+                if (visited.find(neighbor) == visited.end()) {
+                    // Clone it and add to the map
+                    Node* clonedNeighbor = new Node(neighbor-&gt;val);
+                    visited[neighbor] = clonedNeighbor;
+                    // Add the original neighbor to the queue for processing
+                    q.push(neighbor);
+                }
+                // Add the cloned neighbor to the neighbors list of the current cloned node
+                visited[currentNode]-&gt;neighbors.push_back(visited[neighbor]);
+            }
+        }
+
+        return cloneNode;
+    }
+};
+</code></pre>
+<hr />
+<h3>Pythonic Solution (BFS Approach)</h3>
+<p>The BFS approach is generally preferred for its iterative nature, avoiding recursion depth limits. This Python solution uses a dictionary as a hash map and a <code>deque</code> for an efficient queue implementation.</p>
+<pre><code class="language-python">&quot;&quot;&quot;
+# Definition for a Node.
+class Node:
+    def __init__(self, val = 0, neighbors = None):
+        self.val = val
+        self.neighbors = neighbors if neighbors is not None else []
+&quot;&quot;&quot;
+from collections import deque
+
+class Solution:
+    def cloneGraph(self, node: 'Node') -&gt; 'Node':
+        # Handle the case of an empty graph
+        if not node:
+            return None
+
+        # A dictionary to map original nodes to their clones
+        # This also serves as a 'visited' set
+        clones = {node: Node(node.val, [])}
+
+        # A queue for BFS, starting with the initial node
+        q = deque([node])
+
+        while q:
+            # Get the next original node to process
+            current_node = q.popleft()
+
+            # Iterate through all neighbors of the original node
+            for neighbor in current_node.neighbors:
+                # If the neighbor has not been cloned yet
+                if neighbor not in clones:
+                    # Create a clone for the neighbor
+                    clones[neighbor] = Node(neighbor.val, [])
+                    # Add the original neighbor to the queue to process it later
+                    q.append(neighbor)
+
+                # Add the cloned neighbor to the list of neighbors for the current cloned node
+                clones[current_node].neighbors.append(clones[neighbor])
+
+        # Return the clone of the starting node
+        return clones[node]
+
+</code></pre></div>

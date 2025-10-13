@@ -1,0 +1,135 @@
+<div class='ai-explanation'><h3>List of all the approaches to solution</h3>
+<ul>
+<li>Brute Force Approach</li>
+<li>Breadth-First Search (BFS)</li>
+</ul>
+<h3>Brute Force Approach</h3>
+<p>A brute-force solution would involve exploring every possible sequence of dice rolls from the start to the end using a recursive approach like Depth-First Search (DFS). From the current square, we would recursively call the function for all 6 possible outcomes of a dice roll. We would need to keep track of visited squares in the current path to avoid infinite loops (e.g., a snake leading back to a previous square). The minimum number of moves found across all successful paths to the destination would be the answer. However, this approach is inefficient because it may re-explore the same squares multiple times through different paths and is not guaranteed to find the shortest path first. The number of paths can grow exponentially, leading to a very high time complexity.</p>
+<p>This approach is generally not suitable for shortest path problems on unweighted graphs and would likely exceed the time limit on most platforms. The time complexity would be exponential, O(6^S) where S is the number of squares, and space complexity would be O(S) for the recursion stack.</p>
+<h3>Breadth-First Search (BFS)</h3>
+<p>This problem can be modeled as finding the shortest path in an unweighted graph, where each square on the board is a node. Since every move (dice roll) has a uniform cost of 1, Breadth-First Search (BFS) is the ideal algorithm to find the minimum number of moves.</p>
+<p>The main steps for the BFS approach are:
+1.  <strong>Coordinate Mapping:</strong> The first challenge is to map the square numbers (from 1 to <code>n*n</code>) to their <code>(row, column)</code> coordinates on the board, considering the special Boustrophedon (snake-like) numbering. We can either pre-compute these mappings or calculate them on the fly. The C++ solution below pre-computes them for efficiency.
+2.  <strong>BFS Initialization:</strong> We use a queue for the BFS and a <code>dist</code> array (or a hash map) to store the minimum moves to reach each square. The <code>dist</code> array also implicitly acts as a <code>visited</code> set. We initialize the queue with the starting square <code>1</code> and set its distance to <code>0</code>.
+3.  <strong>Level-by-Level Exploration:</strong> We process the squares in the queue one by one. For each <code>curr</code> square dequeued, we simulate all 6 possible dice rolls.
+4.  <strong>Move Calculation:</strong> For each roll, we determine the <code>next</code> square. We then use our coordinate mapping to find its position on the board. If this position contains a snake or a ladder (<code>board[r][c] != -1</code>), the final <code>destination</code> is the square indicated by the board; otherwise, it's just the <code>next</code> square.
+5.  <strong>Queue and Distance Update:</strong> If this final <code>destination</code> has not been visited yet (i.e., its distance is -1), we update its distance to <code>dist[curr] + 1</code> and enqueue it for future processing.
+6.  <strong>Termination:</strong> The BFS continues until the queue is empty. The answer is the distance recorded for the final square, <code>n*n</code>. If the final square is unreachable, its distance will remain -1.</p>
+<p>This approach guarantees finding the shortest path in terms of the number of moves. The time complexity is O(n^2) because we visit each of the <code>n*n</code> squares at most once, and for each square, we do a constant amount of work (exploring 6 subsequent moves). The space complexity is also O(n^2) for the queue and the distance array.</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;queue&gt;
+#include &lt;utility&gt;
+#include &lt;algorithm&gt;
+#include &lt;numeric&gt;
+
+class Solution {
+public:
+    int snakesAndLadders(std::vector&lt;std::vector&lt;int&gt;&gt;&amp; board) {
+        int n = board.size();
+        std::vector&lt;std::pair&lt;int, int&gt;&gt; cells(n * n + 1);
+        int lbl = 1;
+        std::vector&lt;int&gt; columns(n);
+        std::iota(columns.begin(), columns.end(), 0);
+        for (int row = n - 1; row &gt;= 0; row--) {
+            for (int column : columns) {
+                cells[lbl++] = {row, column};
+            }
+            std::reverse(columns.begin(), columns.end());
+        }
+
+        std::vector&lt;int&gt; dist(n * n + 1, -1);
+        std::queue&lt;int&gt; q;
+
+        dist[1] = 0;
+        q.push(1);
+
+        while (!q.empty()) {
+            int curr = q.front();
+            q.pop();
+
+            if (curr == n * n) {
+                return dist[curr];
+            }
+
+            for (int next = curr + 1; next &lt;= std::min(curr + 6, n * n); next++) {
+                auto [row, column] = cells[next];
+                int destination = board[row][column] != -1 ? board[row][column] : next;
+
+                if (dist[destination] == -1) {
+                    dist[destination] = dist[curr] + 1;
+                    q.push(destination);
+                }
+            }
+        }
+
+        return -1;
+    }
+};
+</code></pre>
+<h3>Pythonic solution for best approach only</h3>
+<pre><code class="language-python">import collections
+
+class Solution:
+    def snakesAndLadders(self, board: list[list[int]]) -&gt; int:
+        n = len(board)
+
+        def get_coords(square: int) -&gt; tuple[int, int]:
+            &quot;&quot;&quot;Converts a square number to its (row, col) coordinates.&quot;&quot;&quot;
+            if square &gt; n * n or square &lt; 1:
+                return -1, -1
+
+            # Zero-indexed for calculation
+            zero_based_sq = square - 1 
+
+            # Row from the bottom (0-indexed)
+            row_from_bottom = zero_based_sq // n
+
+            # Actual row index from the top
+            row = n - 1 - row_from_bottom
+
+            col_from_left = zero_based_sq % n
+
+            if row_from_bottom % 2 == 1: # Right-to-left row
+                col = n - 1 - col_from_left
+            else: # Left-to-right row
+                col = col_from_left
+
+            return row, col
+
+        # BFS setup
+        # Queue stores the current square number
+        queue = collections.deque([1]) 
+        # `visited` set to keep track of squares already added to the queue
+        visited = {1}
+        # `moves` to count the number of dice rolls
+        moves = 0
+
+        while queue:
+            level_size = len(queue)
+            for _ in range(level_size):
+                curr_square = queue.popleft()
+
+                if curr_square == n * n:
+                    return moves
+
+                # Explore all possible next moves from a dice roll (1 to 6)
+                for i in range(1, 7):
+                    next_square = curr_square + i
+
+                    if next_square &gt; n * n:
+                        break
+
+                    row, col = get_coords(next_square)
+
+                    # Check for a snake or ladder
+                    destination = board[row][col] if board[row][col] != -1 else next_square
+
+                    # If this destination hasn't been visited, add it to the queue
+                    if destination not in visited:
+                        visited.add(destination)
+                        queue.append(destination)
+
+            moves += 1
+
+        return -1
+</code></pre></div>

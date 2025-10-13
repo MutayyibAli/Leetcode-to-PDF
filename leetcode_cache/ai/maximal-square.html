@@ -1,0 +1,184 @@
+<div class='ai-explanation'><h3>List of Approaches</h3>
+<ol>
+<li>Brute Force Approach</li>
+<li>Dynamic Programming Approach</li>
+<li>Space-Optimized Dynamic Programming Approach</li>
+</ol>
+<hr />
+<h3>Brute Force Approach</h3>
+<h4>Explanation</h4>
+<p>The brute-force solution checks every possible square in the matrix. We can iterate through each cell <code>(i, j)</code> and consider it as the top-left corner of a potential square. For each such corner, we try to form the largest possible square by expanding its side length <code>k</code>, starting from 1. For each side length <code>k</code>, we must verify that all <code>k*k</code> cells within this square contain only '1's. We keep track of the maximum side length found across all possible top-left corners. This method is straightforward but highly inefficient due to redundant checks of the same cells.</p>
+<ol>
+<li>Initialize a variable <code>max_side = 0</code>.</li>
+<li>Iterate through each cell <code>(i, j)</code> from <code>(0, 0)</code> to <code>(m-1, n-1)</code> to use as a potential top-left corner.</li>
+<li>If <code>matrix[i][j] == '1'</code>, start checking for possible square sizes <code>k</code> from 1 upwards.</li>
+<li>For a given <code>k</code>, check if the <code>k x k</code> square starting at <code>(i, j)</code> is entirely filled with '1's.</li>
+<li>If it is, update <code>max_side = max(max_side, k)</code>.</li>
+<li>If a <code>k x k</code> square is not valid, any larger square starting at <code>(i, j)</code> will also be invalid, so we can stop expanding from this corner.</li>
+<li>After checking all cells, the result is <code>max_side * max_side</code>.</li>
+</ol>
+<p>This approach has a time complexity of O((m*n) * min(m,n)²) and a space complexity of O(1).</p>
+<h4>C++ Code Snippet</h4>
+<pre><code class="language-cpp">class Solution {
+public:
+    int maximalSquare(vector&lt;vector&lt;char&gt;&gt;&amp; matrix) {
+        if (matrix.empty() || matrix[0].empty()) {
+            return 0;
+        }
+        int m = matrix.size();
+        int n = matrix[0].size();
+        int max_side = 0;
+
+        for (int i = 0; i &lt; m; ++i) {
+            for (int j = 0; j &lt; n; ++j) {
+                if (matrix[i][j] == '1') {
+                    // Check for the largest square starting at (i, j)
+                    int current_side = 1;
+                    bool is_possible = true;
+                    while (i + current_side &lt; m &amp;&amp; j + current_side &lt; n &amp;&amp; is_possible) {
+                        // Check the new column
+                        for (int k = i; k &lt;= i + current_side; ++k) {
+                            if (matrix[k][j + current_side] == '0') {
+                                is_possible = false;
+                                break;
+                            }
+                        }
+                        // Check the new row
+                        for (int k = j; k &lt; j + current_side; ++k) {
+                            if (matrix[i + current_side][k] == '0') {
+                                is_possible = false;
+                                break;
+                            }
+                        }
+                        if (is_possible) {
+                            current_side++;
+                        }
+                    }
+                    max_side = max(max_side, current_side);
+                }
+            }
+        }
+        return max_side * max_side;
+    }
+};
+</code></pre>
+<hr />
+<h3>Dynamic Programming Approach</h3>
+<h4>Explanation</h4>
+<p>A more efficient solution uses dynamic programming. We create a 2D <code>dp</code> array of the same size as the input matrix. The state <code>dp[i][j]</code> represents the side length of the largest square of '1's whose <strong>bottom-right corner</strong> is the cell <code>(i, j)</code>.</p>
+<ol>
+<li>Initialize a 2D <code>dp</code> table <code>dp[m][n]</code> with zeros.</li>
+<li>Iterate through the matrix from <code>(i=0, j=0)</code> to <code>(m-1, n-1)</code>.</li>
+<li>For each cell <code>(i, j)</code>:<ul>
+<li>If <code>matrix[i][j] == '0'</code>, no square can end here, so <code>dp[i][j] = 0</code>.</li>
+<li>If <code>matrix[i][j] == '1'</code>, the size of the square ending at <code>(i, j)</code> depends on its top, left, and top-left neighbors. A square of side <code>k</code> can only form if there are squares of at least side <code>k-1</code> ending at these three neighbors. This leads to the recurrence relation:
+    <code>dp[i][j] = 1 + min(dp[i-1][j], dp[i][j-1], dp[i-1][j-1])</code>.</li>
+<li>For the first row and column (<code>i=0</code> or <code>j=0</code>), the base case is <code>dp[i][j] = 1</code> if <code>matrix[i][j] == '1'</code>.</li>
+</ul>
+</li>
+<li>While filling the table, keep track of the maximum value in <code>dp</code>, which corresponds to the maximum side length.</li>
+<li>Return the square of the maximum side length found.</li>
+</ol>
+<p>This approach has a time complexity of O(m<em>n) and a space complexity of O(m</em>n).</p>
+<h4>C++ Code Snippet</h4>
+<pre><code class="language-cpp">class Solution {
+public:
+    int maximalSquare(vector&lt;vector&lt;char&gt;&gt;&amp; matrix) {
+        if (matrix.empty()) {
+            return 0;
+        }
+        int m = matrix.size(), n = matrix[0].size(), max_side = 0;
+        vector&lt;vector&lt;int&gt;&gt; dp(m, vector&lt;int&gt;(n, 0));
+
+        for (int i = 0; i &lt; m; i++) {
+            for (int j = 0; j &lt; n; j++) {
+                if (matrix[i][j] == '1') {
+                    if (i == 0 || j == 0) {
+                        dp[i][j] = 1;
+                    } else {
+                        dp[i][j] = min({dp[i - 1][j], dp[i][j - 1], dp[i - 1][j - 1]}) + 1;
+                    }
+                    max_side = max(dp[i][j], max_side);
+                }
+            }
+        }
+        return max_side * max_side;
+    }
+};
+</code></pre>
+<hr />
+<h3>Space-Optimized Dynamic Programming Approach</h3>
+<h4>Explanation</h4>
+<p>The previous DP approach can be optimized in terms of space. Notice that to compute <code>dp[i][j]</code>, we only need values from the current row <code>i</code> and the previous row <code>i-1</code>. This suggests we can reduce the space from O(m*n) to O(n). A further optimization allows us to use just a single 1D array.</p>
+<ol>
+<li>Create a 1D <code>dp</code> array of size <code>n</code> to store the DP values of the current row being processed.</li>
+<li>We need a variable, let's call it <code>prev</code>, to store the value of the top-left neighbor (<code>dp[i-1][j-1]</code>) because the original value in the <code>dp</code> array at <code>dp[j-1]</code> will be overwritten when we process the current row.</li>
+<li>Iterate through the matrix rows <code>i</code> from <code>0</code> to <code>m-1</code>.</li>
+<li>For each row, iterate through columns <code>j</code> from <code>0</code> to <code>n-1</code>.</li>
+<li>Before calculating the new <code>dp[j]</code> for the current row <code>i</code>, save its old value (which corresponds to <code>dp[i-1][j]</code>) in a <code>temp</code> variable.</li>
+<li>If <code>matrix[i][j] == '1'</code>, calculate the new <code>dp[j]</code> using the formula: <code>dp[j] = 1 + min({dp[j] (old, top), dp[j-1] (new, left), prev (old, top-left)})</code>.</li>
+<li>If <code>matrix[i][j] == '0'</code>, set <code>dp[j] = 0</code>.</li>
+<li>After processing cell <code>j</code>, update <code>prev</code> with the <code>temp</code> value for the next iteration (<code>j+1</code>).</li>
+<li>Keep track of the maximum side length and return its area.</li>
+</ol>
+<p>This approach has a time complexity of O(m*n) and a space complexity of O(n).</p>
+<h4>C++ Code Snippet</h4>
+<pre><code class="language-cpp">class Solution {
+public:
+    int maximalSquare(vector&lt;vector&lt;char&gt;&gt;&amp; matrix) {
+        if (matrix.empty()) {
+            return 0;
+        }
+        int m = matrix.size(), n = matrix[0].size(), max_side = 0, prev = 0;
+        vector&lt;int&gt; dp(n, 0);
+
+        for (int i = 0; i &lt; m; i++) {
+            for (int j = 0; j &lt; n; j++) {
+                int temp = dp[j];
+                if (matrix[i][j] == '1') {
+                    if (i == 0 || j == 0) {
+                        dp[j] = 1;
+                    } else {
+                        dp[j] = min({prev, dp[j], dp[j - 1]}) + 1;
+                    }
+                    max_side = max(dp[j], max_side);
+                } else {
+                    dp[j] = 0;
+                }
+                prev = temp;
+            }
+        }
+        return max_side * max_side;
+    }
+};
+</code></pre>
+<hr />
+<h3>Pythonic Solution (Best Approach)</h3>
+<p>This solution implements the space-optimized dynamic programming approach, which is the most efficient in terms of both time and space complexity. It uses a 1D <code>dp</code> array to represent the current row and a <code>prev</code> variable to keep track of the diagonal element needed for the DP transition. Padding the <code>dp</code> array with an extra element simplifies the logic for the first column.</p>
+<pre><code class="language-python">class Solution:
+    def maximalSquare(self, matrix: list[list[str]]) -&gt; int:
+        if not matrix or not matrix[0]:
+            return 0
+
+        m, n = len(matrix), len(matrix[0])
+        # dp array has an extra element for padding, simplifying boundary checks
+        dp = [0] * (n + 1)
+        max_side = 0
+        prev = 0  # Corresponds to dp[i-1][j-1]
+
+        for i in range(1, m + 1):
+            for j in range(1, n + 1):
+                temp = dp[j]  # Store dp[i-1][j]
+                if matrix[i - 1][j - 1] == '1':
+                    # dp[j] is currently dp[i-1][j]
+                    # dp[j-1] is dp[i][j-1]
+                    # prev is dp[i-1][j-1]
+                    dp[j] = min(dp[j - 1], prev, dp[j]) + 1
+                    max_side = max(max_side, dp[j])
+                else:
+                    dp[j] = 0
+                prev = temp
+
+        return max_side * max_side
+
+</code></pre></div>

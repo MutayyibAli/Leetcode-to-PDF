@@ -1,0 +1,125 @@
+<div class='ai-explanation'><h3>List of Approaches</h3>
+<ol>
+<li>Brute Force Approach (Using Extra Space)</li>
+<li>Two Pointers Approach (Fill and Append Zeros)</li>
+<li>Optimal Two Pointers Approach (Swapping)</li>
+</ol>
+<hr />
+<h3>1. Brute Force Approach (Using Extra Space)</h3>
+<p>This approach iterates through the input array and uses an auxiliary array to store the non-zero elements. After collecting all non-zero elements, it fills the remaining spots in the auxiliary array with zeros and then copies the result back to the original array.</p>
+<p><strong>Step-by-step explanation:</strong>
+1.  Create a new temporary array, say <code>temp</code>.
+2.  Iterate through the input array <code>nums</code>.
+3.  For each element, if it is not zero, add it to the <code>temp</code> array.
+4.  After the first pass, the <code>temp</code> array contains all non-zero elements from <code>nums</code> in their original relative order.
+5.  Now, fill the remaining positions in <code>nums</code> with zeros. The number of zeros to add is <code>nums.size() - temp.size()</code>.
+6.  Finally, copy the elements from <code>temp</code> back to the original <code>nums</code> array.</p>
+<p>This approach is simple to understand but violates the in-place constraint by using extra space. The time complexity is O(N) due to multiple passes over the data, and the space complexity is O(N) for the temporary array.</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+
+class Solution {
+public:
+    void moveZeroes(std::vector&lt;int&gt;&amp; nums) {
+        int n = nums.size();
+        if (n == 0) return;
+
+        // Create a temporary vector to store non-zero elements
+        std::vector&lt;int&gt; temp;
+        for (int i = 0; i &lt; n; ++i) {
+            if (nums[i] != 0) {
+                temp.push_back(nums[i]);
+            }
+        }
+
+        // Copy non-zero elements back to the start of nums
+        int non_zero_count = temp.size();
+        for (int i = 0; i &lt; non_zero_count; ++i) {
+            nums[i] = temp[i];
+        }
+
+        // Fill the rest of the array with zeros
+        for (int i = non_zero_count; i &lt; n; ++i) {
+            nums[i] = 0;
+        }
+    }
+};
+</code></pre>
+<hr />
+<h3>2. Two Pointers Approach (Fill and Append Zeros)</h3>
+<p>This in-place approach uses two pointers. One pointer iterates through the array, and another pointer (<code>insertPos</code>) keeps track of the next position to place a non-zero element.</p>
+<p><strong>Step-by-step explanation:</strong>
+1.  Initialize a pointer, <code>insertPos</code>, to 0. This pointer marks the position for the next non-zero element.
+2.  Iterate through the array <code>nums</code> from left to right.
+3.  If the current element is not zero, place it at the <code>insertPos</code> and increment <code>insertPos</code>. This effectively moves all non-zero elements to the front of the array while maintaining their relative order.
+4.  After the first loop completes, all non-zero elements are in the first <code>insertPos</code> positions of the array.
+5.  Iterate from <code>insertPos</code> to the end of the array and fill all these elements with 0.</p>
+<p>This approach is efficient, making two passes over the array in the worst case. The time complexity is O(N) and the space complexity is O(1) as it modifies the array in-place.</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+
+class Solution {
+public:
+    void moveZeroes(std::vector&lt;int&gt;&amp; nums) {
+        int insertPos = 0;
+        // Move all non-zero elements to the front
+        for (int num : nums) {
+            if (num != 0) {
+                nums[insertPos++] = num;
+            }
+        }
+
+        // Fill the remaining space with zeros
+        while (insertPos &lt; nums.size()) {
+            nums[insertPos++] = 0;
+        }
+    }
+};
+</code></pre>
+<hr />
+<h3>3. Optimal Two Pointers Approach (Swapping)</h3>
+<p>This is the most optimal approach as it minimizes the number of write operations, addressing the follow-up question in the problem. It uses two pointers to swap non-zero elements into their correct positions.</p>
+<p><strong>Step-by-step explanation:</strong>
+1.  Initialize a <code>slow</code> pointer to 0. This pointer will always point to the position where the next non-zero element should be placed.
+2.  Initialize a <code>fast</code> pointer to 0. This pointer will iterate through the entire array.
+3.  Iterate with the <code>fast</code> pointer from the beginning to the end of the array.
+4.  If the element at the <code>fast</code> pointer is non-zero, swap it with the element at the <code>slow</code> pointer.
+5.  After the swap, increment the <code>slow</code> pointer.
+6.  Regardless of whether a swap happened, the <code>fast</code> pointer always moves to the next element.</p>
+<p>This process ensures that all elements before the <code>slow</code> pointer are non-zero, and all elements between the <code>slow</code> and <code>fast</code> pointers are zeros. The time complexity is O(N) for a single pass, and the space complexity is O(1).</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;utility&gt; // for std::swap
+
+class Solution {
+public:
+    void moveZeroes(std::vector&lt;int&gt;&amp; nums) {
+        int slow = 0;
+        for (int fast = 0; fast &lt; nums.size(); ++fast) {
+            // If we find a non-zero element
+            if (nums[fast] != 0) {
+                // Swap it with the element at the slow pointer's position
+                std::swap(nums[slow], nums[fast]);
+                // Move the slow pointer forward
+                slow++;
+            }
+        }
+    }
+};
+</code></pre>
+<hr />
+<h3>Pythonic Solution (Best Approach)</h3>
+<p>The optimal two-pointers approach using swapping is considered the best. Below is a clean and pythonic implementation of this approach. It uses tuple unpacking for an elegant in-place swap.</p>
+<pre><code class="language-python">class Solution:
+    def moveZeroes(self, nums: list[int]) -&gt; None:
+        &quot;&quot;&quot;
+        Do not return anything, modify nums in-place instead.
+        &quot;&quot;&quot;
+        slow = 0
+        for fast in range(len(nums)):
+            # When the fast pointer finds a non-zero element,
+            # swap it with the element at the slow pointer.
+            if nums[fast] != 0:
+                nums[slow], nums[fast] = nums[fast], nums[slow]
+
+                # The slow pointer is only incremented when a non-zero element
+                # is placed in its correct spot.
+                slow += 1
+</code></pre></div>

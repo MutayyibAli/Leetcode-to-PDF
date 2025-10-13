@@ -1,0 +1,186 @@
+<div class='ai-explanation'><h3>List of Approaches</h3>
+<ol>
+<li>Brute Force Approach</li>
+<li>Sorting and Two Pointers Approach</li>
+<li>Hash Set Approach</li>
+</ol>
+<hr />
+<h3>Brute Force Approach</h3>
+<h4>Explanation</h4>
+<p>This approach directly simulates the problem statement. We find the elements unique to <code>nums1</code> by iterating through each element of <code>nums1</code> and, for each one, performing a full scan of <code>nums2</code> to see if it exists. If it's not found, we add it to a hash set to ensure the final result contains only distinct numbers. We repeat the entire process, swapping the roles of <code>nums1</code> and <code>nums2</code>, to find the elements unique to <code>nums2</code>.</p>
+<ol>
+<li>Initialize two hash sets, <code>distinct_nums1_only</code> and <code>distinct_nums2_only</code>, to store the unique results.</li>
+<li>Iterate through each element <code>n1</code> in <code>nums1</code>.</li>
+<li>Inside this loop, iterate through every element <code>n2</code> in <code>nums2</code> to check if <code>n1</code> is present.</li>
+<li>If after checking all of <code>nums2</code>, <code>n1</code> was not found, insert it into <code>distinct_nums1_only</code>.</li>
+<li>Repeat steps 2-4 for <code>nums2</code>, checking against <code>nums1</code> and inserting unique elements into <code>distinct_nums2_only</code>.</li>
+<li>Convert the two hash sets into vectors and return them.</li>
+</ol>
+<p>This approach has a time complexity of O(N * M) and a space complexity of O(N + M) for storing the results, where N and M are the lengths of the input arrays.</p>
+<h4>C++ Code</h4>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;unordered_set&gt;
+
+class Solution {
+public:
+    std::vector&lt;std::vector&lt;int&gt;&gt; findDifference(std::vector&lt;int&gt;&amp; nums1, std::vector&lt;int&gt;&amp; nums2) {
+        std::unordered_set&lt;int&gt; distinct_nums1_only;
+        std::unordered_set&lt;int&gt; distinct_nums2_only;
+
+        // Find elements in nums1 but not in nums2
+        for (int n1 : nums1) {
+            bool found = false;
+            for (int n2 : nums2) {
+                if (n1 == n2) {
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                distinct_nums1_only.insert(n1);
+            }
+        }
+
+        // Find elements in nums2 but not in nums1
+        for (int n2 : nums2) {
+            bool found = false;
+            for (int n1 : nums1) {
+                if (n2 == n1) {
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                distinct_nums2_only.insert(n2);
+            }
+        }
+
+        return {std::vector&lt;int&gt;(distinct_nums1_only.begin(), distinct_nums1_only.end()),
+                std::vector&lt;int&gt;(distinct_nums2_only.begin(), distinct_nums2_only.end())};
+    }
+};
+</code></pre>
+<hr />
+<h3>Sorting and Two Pointers Approach</h3>
+<h4>Explanation</h4>
+<p>This approach improves upon the brute-force method by first sorting both arrays. Sorting allows us to find the differences in a single pass using a two-pointer technique. By sorting and removing duplicates beforehand, we can efficiently compare elements and identify those unique to each array.</p>
+<ol>
+<li>Sort both <code>nums1</code> and <code>nums2</code> in ascending order.</li>
+<li>Remove duplicate elements from both sorted arrays to handle the "distinct" requirement.</li>
+<li>Initialize two pointers, <code>i</code> for <code>nums1</code> and <code>j</code> for <code>nums2</code>, both starting at index 0.</li>
+<li>While both pointers are within the bounds of their respective arrays:<ul>
+<li>If <code>nums1[i]</code> is less than <code>nums2[j]</code>, it means <code>nums1[i]</code> is unique to <code>nums1</code>. Add it to the first result list and increment <code>i</code>.</li>
+<li>If <code>nums1[i]</code> is greater than <code>nums2[j]</code>, <code>nums2[j]</code> is unique to <code>nums2</code>. Add it to the second result list and increment <code>j</code>.</li>
+<li>If they are equal, the element is present in both. Increment both <code>i</code> and <code>j</code>.</li>
+</ul>
+</li>
+<li>After the loop, one of the arrays may still have remaining elements. These are all unique to that array, so add them to the corresponding result list.</li>
+<li>Return the two result lists.</li>
+</ol>
+<p>This approach has a time complexity of O(N log N + M log M) due to sorting and a space complexity of O(N + M) for storing the results.</p>
+<h4>C++ Code</h4>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;algorithm&gt;
+
+class Solution {
+public:
+    std::vector&lt;std::vector&lt;int&gt;&gt; findDifference(std::vector&lt;int&gt;&amp; nums1, std::vector&lt;int&gt;&amp; nums2) {
+        sort(nums1.begin(), nums1.end());
+        sort(nums2.begin(), nums2.end());
+
+        // Remove duplicates
+        nums1.erase(unique(nums1.begin(), nums1.end()), nums1.end());
+        nums2.erase(unique(nums2.begin(), nums2.end()), nums2.end());
+
+        std::vector&lt;int&gt; res1, res2;
+        int i = 0, j = 0;
+
+        while (i &lt; nums1.size() &amp;&amp; j &lt; nums2.size()) {
+            if (nums1[i] &lt; nums2[j]) {
+                res1.push_back(nums1[i]);
+                i++;
+            } else if (nums1[i] &gt; nums2[j]) {
+                res2.push_back(nums2[j]);
+                j++;
+            } else { // nums1[i] == nums2[j]
+                i++;
+                j++;
+            }
+        }
+
+        // Add remaining elements from nums1
+        while (i &lt; nums1.size()) {
+            res1.push_back(nums1[i]);
+            i++;
+        }
+
+        // Add remaining elements from nums2
+        while (j &lt; nums2.size()) {
+            res2.push_back(nums2[j]);
+            j++;
+        }
+
+        return {res1, res2};
+    }
+};
+</code></pre>
+<hr />
+<h3>Hash Set Approach</h3>
+<h4>Explanation</h4>
+<p>This is the most optimal approach. It leverages the properties of hash sets: automatic handling of duplicates and average O(1) time complexity for insertions and lookups. By converting both input arrays into hash sets, we can efficiently check for the presence of an element in the other array.</p>
+<ol>
+<li>Create two hash sets, <code>set1</code> from <code>nums1</code> and <code>set2</code> from <code>nums2</code>. This step takes care of finding the distinct elements of each array.</li>
+<li>Initialize an empty vector, <code>distinct_nums1</code>, for the first part of the answer.</li>
+<li>Iterate through each unique number in <code>set1</code>. For each number, check if it exists in <code>set2</code> (an O(1) operation).</li>
+<li>If the number is not in <code>set2</code>, add it to <code>distinct_nums1</code>.</li>
+<li>Repeat steps 2-4 for <code>set2</code>, checking against <code>set1</code> and storing the results in a new vector <code>distinct_nums2</code>.</li>
+<li>Return the two result vectors.</li>
+</ol>
+<p>This approach has a linear time complexity of O(N + M) and a space complexity of O(N + M) to store the hash sets.</p>
+<h4>C++ Code</h4>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;unordered_set&gt;
+
+class Solution {
+public:
+    std::vector&lt;std::vector&lt;int&gt;&gt; findDifference(std::vector&lt;int&gt;&amp; nums1, std::vector&lt;int&gt;&amp; nums2) {
+        std::unordered_set&lt;int&gt; set1(nums1.begin(), nums1.end());
+        std::unordered_set&lt;int&gt; set2(nums2.begin(), nums2.end());
+
+        std::vector&lt;int&gt; distinct_nums1, distinct_nums2;
+
+        for (int num : set1) {
+            if (set2.count(num) == 0) {
+                distinct_nums1.push_back(num);
+            }
+        }
+
+        for (int num : set2) {
+            if (set1.count(num) == 0) {
+                distinct_nums2.push_back(num);
+            }
+        }
+
+        return {distinct_nums1, distinct_nums2};
+    }
+};
+</code></pre>
+<hr />
+<h3>Pythonic Solution (Best Approach)</h3>
+<p>This solution uses Python's built-in set operations, which are highly optimized. Converting the lists to sets handles the "distinct" requirement. The set difference operator (<code>-</code>) directly computes the elements present in one set but not the other, leading to a very concise and readable solution.</p>
+<pre><code class="language-python">from typing import List
+
+class Solution:
+    def findDifference(self, nums1: List[int], nums2: List[int]) -&gt; List[List[int]]:
+        # Convert lists to sets to get unique elements
+        set1 = set(nums1)
+        set2 = set(nums2)
+
+        # Use the set difference operator '-' to find elements in one set but not the other
+        # Then convert the resulting sets back to lists
+        diff1 = list(set1 - set2)
+        diff2 = list(set2 - set1)
+
+        return [diff1, diff2]
+
+</code></pre></div>

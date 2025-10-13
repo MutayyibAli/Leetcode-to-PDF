@@ -1,0 +1,133 @@
+<div class='ai-explanation'><h3>List of Approaches</h3>
+<ol>
+<li>Brute Force Approach (using Depth-First Search)</li>
+<li>Breadth-First Search (BFS) Approach</li>
+</ol>
+<h3>Brute Force Approach (using Depth-First Search)</h3>
+<p>The problem can be modeled as finding if all nodes in a directed graph are reachable from a starting node (room 0). A brute-force way to solve this is to simulate the process of visiting rooms and collecting keys, exploring as far as possible along one path before backtracking. This exhaustive search is naturally implemented using a graph traversal algorithm like Depth-First Search (DFS).</p>
+<ol>
+<li><strong>Initialization:</strong> Create a <code>vis</code> array to track which rooms have been entered. Initially, no rooms are visited.</li>
+<li><strong>Start Traversal:</strong> Begin a DFS traversal from the starting room, which is room 0. This can be implemented with a recursive function.</li>
+<li><strong>DFS Logic:</strong> In the recursive function for a given room <code>i</code>:<ul>
+<li>Mark the current room <code>i</code> as visited.</li>
+<li>Iterate through all the keys available in room <code>i</code>.</li>
+<li>For each key that unlocks a new room <code>j</code>, if room <code>j</code> has not yet been visited, make a recursive call to the DFS function for room <code>j</code>.</li>
+</ul>
+</li>
+<li><strong>Verification:</strong> After the initial DFS call completes, all rooms reachable from room 0 will be marked as visited.</li>
+<li><strong>Result:</strong> Iterate through the <code>vis</code> array. If any room is not marked as visited, it means it was unreachable, so return <code>false</code>. Otherwise, if all rooms have been visited, return <code>true</code>.</li>
+</ol>
+<p>The time complexity is O(N + E) where N is the number of rooms and E is the total number of keys, as we visit each room and process each key once. The space complexity is O(N) for the recursion stack and the visited array.</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+
+class Solution {
+public:
+    void dfs(int i, std::vector&lt;std::vector&lt;int&gt;&gt;&amp; rooms, std::vector&lt;int&gt;&amp; vis) {
+        vis[i] = 1;
+        for (auto key : rooms[i]) {
+            if (!vis[key]) {
+                dfs(key, rooms, vis);
+            }
+        }
+    }
+
+    bool canVisitAllRooms(std::vector&lt;std::vector&lt;int&gt;&gt;&amp; rooms) {
+        std::vector&lt;int&gt; vis(rooms.size(), 0);
+
+        dfs(0, rooms, vis);
+
+        for (auto it : vis) {
+            if (!it) return false;
+        }
+
+        return true;
+    }
+};
+</code></pre>
+<h3>Breadth-First Search (BFS) Approach</h3>
+<p>This approach also solves the problem by treating the rooms and keys as a graph. However, it explores the rooms in a level-by-level manner using a queue, characteristic of Breadth-First Search (BFS). This ensures we visit rooms closer to the start (room 0) before rooms further away.</p>
+<ol>
+<li><strong>Initialization:</strong><ul>
+<li>Create a <code>queue</code> to store the rooms we need to visit.</li>
+<li>Create a <code>vis</code> array to keep track of visited rooms.</li>
+</ul>
+</li>
+<li><strong>Start Traversal:</strong> Add the starting room, room 0, to the queue to begin the traversal.</li>
+<li><strong>BFS Logic:</strong><ul>
+<li>Loop as long as the queue is not empty.</li>
+<li>In each iteration, dequeue a room, let's call it <code>curr_room</code>.</li>
+<li>Mark <code>curr_room</code> as visited.</li>
+<li>For each <code>key</code> found in <code>curr_room</code>, if the room it unlocks has not been visited, add that room to the queue.</li>
+</ul>
+</li>
+<li><strong>Verification:</strong> After the loop finishes, all reachable rooms will have been processed and marked as visited.</li>
+<li><strong>Result:</strong> Check the <code>vis</code> array. If all rooms are marked as visited, return <code>true</code>. Otherwise, return <code>false</code>.</li>
+</ol>
+<p>The time complexity is O(N + E) where N is the number of rooms and E is the total number of keys. The space complexity is O(N) to store the queue and the visited array.</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;queue&gt;
+
+class Solution {
+public:
+    bool canVisitAllRooms(std::vector&lt;std::vector&lt;int&gt;&gt;&amp; rooms) {
+        int n = rooms.size();
+        std::vector&lt;int&gt; vis(n, 0);
+        std::queue&lt;int&gt; q;
+
+        q.push(0);
+
+        while (!q.empty()) {
+            int curr_room = q.front();
+            q.pop();
+            vis[curr_room] = 1;
+
+            for (auto key : rooms[curr_room]) {
+                if (!vis[key]) {
+                    q.push(key);
+                }
+            }
+        }
+
+        for (int i = 0; i &lt; n; i++) {
+            if (!vis[i]) return false;
+        }
+
+        return true;
+    }
+};
+</code></pre>
+<h3>Pythonic Solution (Best Approach)</h3>
+<p>Both DFS and BFS are optimal approaches with the same time and space complexity. The following Python solution uses an iterative Depth-First Search (DFS) with a stack. This approach is highly efficient, avoids potential recursion depth limits in Python, and is written in a clean, idiomatic way using a set for tracking visited rooms.</p>
+<pre><code class="language-python">from typing import List
+
+class Solution:
+    def canVisitAllRooms(self, rooms: List[List[int]]) -&gt; bool:
+        &quot;&quot;&quot;
+        Solves the Keys and Rooms problem using an iterative DFS approach.
+        &quot;&quot;&quot;
+        # A set to keep track of all rooms that have been visited.
+        # Start with room 0, as it's the only unlocked one.
+        visited = {0}
+
+        # A stack to keep track of rooms to visit.
+        # Initialize it with the starting room 0.
+        stack = [0]
+
+        while stack:
+            # Get the next room to visit from the stack.
+            room = stack.pop()
+
+            # For each key in the current room...
+            for key in rooms[room]:
+                # If the key unlocks a room we haven't visited yet...
+                if key not in visited:
+                    # Mark the new room as visited.
+                    visited.add(key)
+                    # Add the new room to our stack to visit later.
+                    stack.append(key)
+
+        # If the number of visited rooms is equal to the total number of rooms,
+        # it means we have successfully visited all of them.
+        return len(visited) == len(rooms)
+
+</code></pre></div>

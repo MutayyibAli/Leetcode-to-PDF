@@ -1,0 +1,187 @@
+<div class='ai-explanation'><h3>List of Approaches</h3>
+<ol>
+<li>Brute Force Approach (Recursive with Slicing)</li>
+<li>Optimized Recursive Approach (Divide and Conquer with Hash Map)</li>
+</ol>
+<hr />
+<h3>1. Brute Force Approach (Recursive with Slicing)</h3>
+<h4>Explanation</h4>
+<p>The core idea is to use the properties of preorder and inorder traversals recursively. The first element in a preorder traversal is always the root of the tree/subtree. This root value divides the inorder traversal into two parts: elements to its left form the left subtree, and elements to its right form the right subtree.</p>
+<ol>
+<li><strong>Base Case</strong>: If the <code>preorder</code> or <code>inorder</code> array is empty, it means there is no node to create, so we return <code>nullptr</code>.</li>
+<li><strong>Find Root</strong>: The first element of the <code>preorder</code> array (<code>preorder[0]</code>) is the root of the current tree.</li>
+<li><strong>Create Root Node</strong>: Create a new <code>TreeNode</code> with this value.</li>
+<li><strong>Find Root in Inorder</strong>: Locate the root's value in the <code>inorder</code> array. This search takes linear time.</li>
+<li><strong>Partition</strong>: The elements in the <code>inorder</code> array to the left of the root's index belong to the left subtree. The elements to the right belong to the right subtree.</li>
+<li><strong>Recursive Calls</strong>:<ul>
+<li>To build the left subtree, make a recursive call with the corresponding sub-arrays of <code>preorder</code> and <code>inorder</code>. The left subtree's <code>inorder</code> is the part of the original <code>inorder</code> array before the root. The left subtree's <code>preorder</code> is the next <code>k</code> elements from the original <code>preorder</code>, where <code>k</code> is the size of the left subtree.</li>
+<li>Similarly, build the right subtree using the remaining parts of the arrays.</li>
+</ul>
+</li>
+<li><strong>Link Subtrees</strong>: Assign the results of the recursive calls to the <code>left</code> and <code>right</code> children of the root node.</li>
+</ol>
+<p>This approach is intuitive but inefficient because it repeatedly searches the <code>inorder</code> array and creates new sub-arrays (slicing) in each recursive call.</p>
+<p>The time complexity is O(N^2) due to the linear search for the root index within the recursive calls. The space complexity is O(N^2) in the worst case because of the space used by the sliced arrays on the recursion stack.</p>
+<h4>C++ Code</h4>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;algorithm&gt;
+
+// Definition for a binary tree node.
+struct TreeNode {
+    int val;
+    TreeNode *left;
+    TreeNode *right;
+    TreeNode() : val(0), left(nullptr), right(nullptr) {}
+    TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+    TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+};
+
+class Solution {
+public:
+    TreeNode* buildTree(std::vector&lt;int&gt;&amp; preorder, std::vector&lt;int&gt;&amp; inorder) {
+        if (preorder.empty() || inorder.empty()) {
+            return nullptr;
+        }
+
+        // The first element of preorder is the root.
+        int rootVal = preorder[0];
+        TreeNode* root = new TreeNode(rootVal);
+
+        // Find the root in the inorder traversal to partition.
+        auto it = std::find(inorder.begin(), inorder.end(), rootVal);
+        int rootIndex = std::distance(inorder.begin(), it);
+
+        // Create sub-arrays for left and right subtrees.
+        // This vector creation is inefficient.
+        std::vector&lt;int&gt; leftInorder(inorder.begin(), inorder.begin() + rootIndex);
+        std::vector&lt;int&gt; rightInorder(inorder.begin() + rootIndex + 1, inorder.end());
+
+        std::vector&lt;int&gt; leftPreorder(preorder.begin() + 1, preorder.begin() + 1 + leftInorder.size());
+        std::vector&lt;int&gt; rightPreorder(preorder.begin() + 1 + leftInorder.size(), preorder.end());
+
+        // Recursively build the left and right subtrees.
+        root-&gt;left = buildTree(leftPreorder, leftInorder);
+        root-&gt;right = buildTree(rightPreorder, rightInorder);
+
+        return root;
+    }
+};
+</code></pre>
+<hr />
+<h3>2. Optimized Recursive Approach (Divide and Conquer with Hash Map)</h3>
+<h4>Explanation</h4>
+<p>This approach follows the same divide-and-conquer logic but optimizes the two main bottlenecks of the brute-force method: finding the root in the <code>inorder</code> array and creating sub-arrays.</p>
+<ol>
+<li><strong>Pre-computation</strong>: First, we create a hash map (e.g., <code>std::unordered_map</code> in C++) to store the values of the <code>inorder</code> array and their corresponding indices. This allows us to find the index of any value in O(1) time on average.</li>
+<li><strong>Use Indices</strong>: Instead of creating new sub-arrays for each recursive call, we pass indices (<code>preStart</code>, <code>preEnd</code>, <code>inStart</code>, <code>inEnd</code>) that define the boundaries of the current <code>preorder</code> and <code>inorder</code> segments we are working with.</li>
+<li><strong>Recursive Helper Function</strong>:<ul>
+<li><strong>Base Case</strong>: If <code>preStart &gt; preEnd</code> or <code>inStart &gt; inEnd</code>, it signifies an empty subtree, so we return <code>nullptr</code>.</li>
+<li><strong>Find Root</strong>: The root of the current subtree is <code>preorder[preStart]</code>.</li>
+<li><strong>Create Root Node</strong>: Create a new <code>TreeNode</code> for this root value.</li>
+<li><strong>Find Root in Inorder</strong>: Use the pre-computed hash map to get the root's index (<code>rootIdx</code>) in the <code>inorder</code> array in O(1) time.</li>
+<li><strong>Calculate Left Subtree Size</strong>: The number of nodes in the left subtree is <code>numLeft = rootIdx - inStart</code>.</li>
+<li><strong>Recursive Calls with Indices</strong>:<ul>
+<li>For the left subtree, the <code>preorder</code> segment is from <code>preStart + 1</code> to <code>preStart + numLeft</code>, and the <code>inorder</code> segment is from <code>inStart</code> to <code>rootIdx - 1</code>.</li>
+<li>For the right subtree, the <code>preorder</code> segment is from <code>preStart + numLeft + 1</code> to <code>preEnd</code>, and the <code>inorder</code> segment is from <code>rootIdx + 1</code> to <code>inEnd</code>.</li>
+</ul>
+</li>
+<li><strong>Link Subtrees</strong>: Assign the results of the recursive calls to the <code>root-&gt;left</code> and <code>root-&gt;right</code> pointers.</li>
+</ul>
+</li>
+</ol>
+<p>This approach significantly improves performance by eliminating the linear search and array copying overhead.</p>
+<p>The time complexity is O(N) as we visit each node once, and operations per node are constant time. The space complexity is O(N) for the hash map and O(H) for the recursion stack (where H is the tree height, O(N) in the worst case).</p>
+<h4>C++ Code</h4>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;unordered_map&gt;
+
+// Definition for a binary tree node.
+struct TreeNode {
+    int val;
+    TreeNode *left;
+    TreeNode *right;
+    TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+};
+
+class Solution {
+public:
+    TreeNode* buildTree(std::vector&lt;int&gt;&amp; preorder, std::vector&lt;int&gt;&amp; inorder) {
+        // Create a map from inorder values to their indices for O(1) lookup.
+        std::unordered_map&lt;int, int&gt; inorderMap;
+        for (int i = 0; i &lt; inorder.size(); ++i) {
+            inorderMap[inorder[i]] = i;
+        }
+
+        // Start the recursive construction.
+        int preIndex = 0;
+        return build(preorder, preIndex, 0, inorder.size() - 1, inorderMap);
+    }
+
+private:
+    TreeNode* build(std::vector&lt;int&gt;&amp; preorder, int&amp; preIndex, int inStart, int inEnd, 
+                    std::unordered_map&lt;int, int&gt;&amp; inorderMap) {
+        // Base case: if the inorder segment is empty.
+        if (inStart &gt; inEnd) {
+            return nullptr;
+        }
+
+        // The current root value is the next element in the preorder traversal.
+        int rootVal = preorder[preIndex++];
+        TreeNode* root = new TreeNode(rootVal);
+
+        // Find the root's index in the inorder traversal using the map.
+        int inIndex = inorderMap[rootVal];
+
+        // Recursively build the left and right subtrees.
+        // The left subtree is built first, which is a key property of preorder.
+        root-&gt;left = build(preorder, preIndex, inStart, inIndex - 1, inorderMap);
+        root-&gt;right = build(preorder, preIndex, inIndex + 1, inEnd, inorderMap);
+
+        return root;
+    }
+};
+</code></pre>
+<hr />
+<h3>Pythonic Solution (Best Approach)</h3>
+<p>This Python solution implements the optimized recursive approach. A helper function uses pointers (<code>in_left</code>, <code>in_right</code>) to define the current segment of the <code>inorder</code> array. A <code>pre_idx</code> variable, declared as <code>nonlocal</code>, keeps track of the current root in the <code>preorder</code> array across recursive calls.</p>
+<pre><code class="language-python">from typing import List, Optional
+
+# Definition for a binary tree node.
+class TreeNode:
+    def __init__(self, val=0, left=None, right=None):
+        self.val = val
+        self.left = left
+        self.right = right
+
+class Solution:
+    def buildTree(self, preorder: List[int], inorder: List[int]) -&gt; Optional[TreeNode]:
+        # Create a hash map for efficient lookups of inorder indices.
+        inorder_map = {val: i for i, val in enumerate(inorder)}
+
+        # A variable to track the current root index in the preorder list.
+        self.pre_idx = 0
+
+        def array_to_tree(in_left: int, in_right: int) -&gt; Optional[TreeNode]:
+            # Base case: if there are no elements to construct the tree.
+            if in_left &gt; in_right:
+                return None
+
+            # The current root's value is the next item in the preorder traversal.
+            root_val = preorder[self.pre_idx]
+            self.pre_idx += 1
+
+            root = TreeNode(root_val)
+
+            # Get the root's index from the map to partition the inorder array.
+            inorder_index = inorder_map[root_val]
+
+            # Recursively build the left and right subtrees.
+            # It's crucial to build the left subtree first.
+            root.left = array_to_tree(in_left, inorder_index - 1)
+            root.right = array_to_tree(inorder_index + 1, in_right)
+
+            return root
+
+        return array_to_tree(0, len(inorder) - 1)
+
+</code></pre></div>

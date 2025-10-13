@@ -1,0 +1,175 @@
+<div class='ai-explanation'><h3>List of Approaches</h3>
+<ol>
+<li>Brute Force Approach</li>
+<li>Max-Heap Approach</li>
+<li>Min-Heap Approach (Optimal)</li>
+</ol>
+<hr />
+<h3>1. Brute Force Approach</h3>
+<h4>Explanation</h4>
+<p>This straightforward approach involves generating all possible pairs, calculating their sums, sorting them, and picking the top <code>k</code>.</p>
+<ol>
+<li>Create an empty list to store all possible pairs.</li>
+<li>Iterate through each element <code>u</code> in <code>nums1</code>.</li>
+<li>For each <code>u</code>, iterate through every element <code>v</code> in <code>nums2</code> and add the pair <code>{u, v}</code> to the list.</li>
+<li>After generating all <code>nums1.size() * nums2.size()</code> pairs, sort the list in ascending order based on the sum of each pair.</li>
+<li>Return the first <code>k</code> pairs from the sorted list.</li>
+</ol>
+<p>This method is simple to understand but inefficient for large inputs due to the high cost of generating and sorting all pairs.</p>
+<p>The time complexity is dominated by sorting all N<em>M pairs, O(N</em>M log(N<em>M)), and the space complexity is O(N</em>M) to store all pairs, where N and M are the lengths of <code>nums1</code> and <code>nums2</code> respectively.</p>
+<h4>C++ Code Snippet</h4>
+<pre><code class="language-cpp">class Solution {
+public:
+    vector&lt;vector&lt;int&gt;&gt; kSmallestPairs(vector&lt;int&gt;&amp; nums1, vector&lt;int&gt;&amp; nums2, int k) {
+        vector&lt;vector&lt;int&gt;&gt; allPairs;
+        for (int u : nums1) {
+            for (int v : nums2) {
+                allPairs.push_back({u, v});
+            }
+        }
+
+        sort(allPairs.begin(), allPairs.end(), [](const vector&lt;int&gt;&amp; a, const vector&lt;int&gt;&amp; b) {
+            return (a[0] + a[1]) &lt; (b[0] + b[1]);
+        });
+
+        if (allPairs.size() &gt; k) {
+            return vector&lt;vector&lt;int&gt;&gt;(allPairs.begin(), allPairs.begin() + k);
+        }
+        return allPairs;
+    }
+};
+</code></pre>
+<hr />
+<h3>2. Max-Heap Approach</h3>
+<h4>Explanation</h4>
+<p>This approach improves upon the brute force method by avoiding a full sort. Instead of storing all pairs, we maintain a max-heap of size <code>k</code> that keeps track of the <code>k</code> smallest pairs found so far.</p>
+<ol>
+<li>Initialize a max-heap. The heap will store pairs and order them by their sum in descending order.</li>
+<li>Iterate through all possible pairs <code>(u, v)</code> from <code>nums1</code> and <code>nums2</code>.</li>
+<li>For each pair, if the heap's size is less than <code>k</code>, push the pair onto the heap.</li>
+<li>If the heap is already full (size <code>k</code>), compare the current pair's sum with the sum of the pair at the top of the max-heap (which is the largest sum in the heap).</li>
+<li>If the current pair's sum is smaller, pop the top element from the heap and push the current pair. This keeps the heap updated with the <code>k</code> smallest pairs seen.</li>
+<li>After checking all pairs, the max-heap contains the <code>k</code> smallest pairs. Extract them to form the result list.</li>
+</ol>
+<p>This approach is more memory-efficient than brute force, but still requires iterating through all N<em>M pairs. The time complexity is O(N</em>M log(k)) and the space complexity is O(k) for the heap.</p>
+<h4>C++ Code Snippet</h4>
+<pre><code class="language-cpp">class Solution {
+public:
+    vector&lt;vector&lt;int&gt;&gt; kSmallestPairs(vector&lt;int&gt;&amp; nums1, vector&lt;int&gt;&amp; nums2, int k) {
+        // Custom comparator for the max-heap based on pair sums
+        auto compare = [](const vector&lt;int&gt;&amp; a, const vector&lt;int&gt;&amp; b) {
+            return (a[0] + a[1]) &lt; (b[0] + b[1]);
+        };
+        priority_queue&lt;vector&lt;int&gt;, vector&lt;vector&lt;int&gt;&gt;, decltype(compare)&gt; maxHeap(compare);
+
+        for (int u : nums1) {
+            for (int v : nums2) {
+                if (maxHeap.size() &lt; k) {
+                    maxHeap.push({u, v});
+                } else if (u + v &lt; maxHeap.top()[0] + maxHeap.top()[1]) {
+                    maxHeap.pop();
+                    maxHeap.push({u, v});
+                } else {
+                    // Optimization: since nums2 is sorted, no more pairs in this row will be smaller
+                    break; 
+                }
+            }
+        }
+
+        vector&lt;vector&lt;int&gt;&gt; result;
+        while (!maxHeap.empty()) {
+            result.push_back(maxHeap.top());
+            maxHeap.pop();
+        }
+        // The max-heap gives elements in descending order of sum, so reverse is not needed
+        // but the order of equal sums might not match the expected output. A sort would fix this.
+        sort(result.begin(), result.end(), compare);
+        return result;
+    }
+};
+</code></pre>
+<hr />
+<h3>3. Min-Heap Approach (Optimal)</h3>
+<h4>Explanation</h4>
+<p>This is the most efficient approach. It leverages the sorted nature of the input arrays to avoid generating all pairs. We can imagine the sums <code>nums1[i] + nums2[j]</code> as a matrix sorted both by rows and columns. The problem then becomes finding the <code>k</code> smallest elements in this conceptual matrix. A min-heap is perfect for this.</p>
+<ol>
+<li>Initialize an empty result list and a min-heap. The heap will store tuples of <code>{sum, index_in_nums1, index_in_nums2}</code>.</li>
+<li>Since both arrays are sorted, the smallest sums must involve <code>nums2[0]</code>. We can start by adding the pairs formed by each element of <code>nums1</code> with the first element of <code>nums2</code> to the heap. To optimize, we only need to add the first <code>min(k, nums1.size())</code> such pairs.</li>
+<li>Push <code>{nums1[i] + nums2[0], i, 0}</code> for <code>i</code> from <code>0</code> to <code>min(k, nums1.size()) - 1</code> into the min-heap.</li>
+<li>Loop until we have found <code>k</code> pairs or the heap is empty:
+    a. Pop the element with the smallest sum from the heap. Let it be <code>{sum, i, j}</code>.
+    b. Add the pair <code>{nums1[i], nums2[j]}</code> to the result list.
+    c. The next candidate pair from the <code>i</code>-th row of our conceptual matrix is <code>{nums1[i], nums2[j+1]}</code>. If <code>j+1</code> is a valid index in <code>nums2</code>, push <code>{nums1[i] + nums2[j+1], i, j+1}</code> into the heap.</li>
+</ol>
+<p>This method ensures we only keep a limited number of candidates in the heap and always process the one with the smallest sum, efficiently finding the <code>k</code> smallest pairs. The time complexity is O(k * log(min(k, N))) and the space complexity is O(min(k, N)).</p>
+<h4>C++ Code Snippet</h4>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;queue&gt;
+#include &lt;tuple&gt;
+
+class Solution {
+public:
+    vector&lt;vector&lt;int&gt;&gt; kSmallestPairs(vector&lt;int&gt;&amp; nums1, vector&lt;int&gt;&amp; nums2, int k) {
+        vector&lt;vector&lt;int&gt;&gt; result;
+        if (nums1.empty() || nums2.empty()) {
+            return result;
+        }
+
+        // Min-heap stores {sum, index_in_nums1, index_in_nums2}
+        priority_queue&lt;tuple&lt;int, int, int&gt;, vector&lt;tuple&lt;int, int, int&gt;&gt;, greater&lt;tuple&lt;int, int, int&gt;&gt;&gt; minHeap;
+
+        // Push the first k pairs with the first element of nums2
+        for (int i = 0; i &lt; nums1.size() &amp;&amp; i &lt; k; ++i) {
+            minHeap.push({nums1[i] + nums2[0], i, 0});
+        }
+
+        while (!minHeap.empty() &amp;&amp; result.size() &lt; k) {
+            auto [sum, i, j] = minHeap.top();
+            minHeap.pop();
+
+            result.push_back({nums1[i], nums2[j]});
+
+            // If there's a next element in nums2 for the current element from nums1,
+            // push it to the heap.
+            if (j + 1 &lt; nums2.size()) {
+                minHeap.push({nums1[i] + nums2[j + 1], i, j + 1});
+            }
+        }
+        return result;
+    }
+};
+</code></pre>
+<hr />
+<h3>Pythonic Solution (Best Approach)</h3>
+<p>The optimal solution uses a min-heap to efficiently find the <code>k</code> smallest pairs without exploring all possibilities. This Python implementation follows the same logic as the optimal C++ solution. We initialize the heap with pairs formed from the first element of <code>nums2</code> and then iteratively explore the next elements.</p>
+<pre><code class="language-python">import heapq
+
+class Solution:
+    def kSmallestPairs(self, nums1: list[int], nums2: list[int], k: int) -&gt; list[list[int]]:
+        if not nums1 or not nums2:
+            return []
+
+        min_heap = []
+        result = []
+
+        # Initially, push pairs (nums1[i], nums2[0]) into the heap.
+        # We only need to consider the first k elements of nums1, as any more
+        # would lead to sums that are likely larger than the k smallest.
+        for i in range(min(k, len(nums1))):
+            # The heap stores tuples of (sum, index in nums1, index in nums2)
+            heapq.heappush(min_heap, (nums1[i] + nums2[0], i, 0))
+
+        # Extract the smallest pair from the heap k times
+        while min_heap and len(result) &lt; k:
+            # Pop the pair with the minimum sum
+            current_sum, i, j = heapq.heappop(min_heap)
+            result.append([nums1[i], nums2[j]])
+
+            # If the popped pair used nums2[j], the next candidate from this
+            # row is (nums1[i], nums2[j+1]).
+            if j + 1 &lt; len(nums2):
+                heapq.heappush(min_heap, (nums1[i] + nums2[j + 1], i, j + 1))
+
+        return result
+
+</code></pre></div>

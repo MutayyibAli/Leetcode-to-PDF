@@ -1,0 +1,192 @@
+<div class='ai-explanation'><h3>List of all the approaches to solution</h3>
+<ul>
+<li>Brute Force Approach</li>
+<li>Dynamic Programming Approach</li>
+<li>Sliding Window Approach</li>
+</ul>
+<hr />
+<h3>Brute Force Approach</h3>
+<p>This approach exhaustively checks every possible outcome. We iterate through each element of the array, simulating its deletion one by one. For each simulated deletion, we then find the length of the longest contiguous subarray of 1s in the resulting array. The overall maximum length found across all possible deletions is the final answer.</p>
+<ol>
+<li>Initialize a variable <code>max_len</code> to 0.</li>
+<li>Loop through each index <code>i</code> from <code>0</code> to <code>n-1</code>, where <code>n</code> is the size of the array. This outer loop chooses which element to delete.</li>
+<li>Inside the loop, iterate again from <code>j=0</code> to <code>n-1</code> to scan the array.</li>
+<li>If the current index <code>j</code> is the one we are deleting (i.e., <code>j == i</code>), skip it.</li>
+<li>Otherwise, count the number of consecutive 1s. If a 0 is encountered, reset the count and update a local maximum for this specific deletion.</li>
+<li>After the inner loop, update the global <code>max_len</code> with the local maximum.</li>
+<li>After the outer loop finishes, <code>max_len</code> will hold the result.</li>
+</ol>
+<p>This method is straightforward but inefficient due to its nested loops. The time complexity is O(N<sup>2</sup>) and space complexity is O(1).</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;algorithm&gt;
+
+class Solution {
+public:
+    int longestSubarray(std::vector&lt;int&gt;&amp; nums) {
+        int n = nums.size();
+        int max_len = 0;
+
+        if (n &lt;= 1) {
+            return 0;
+        }
+
+        for (int i = 0; i &lt; n; ++i) {
+            // Simulate deleting element at index i
+            int current_len = 0;
+            int local_max = 0;
+            for (int j = 0; j &lt; n; ++j) {
+                if (i == j) continue; // Skip the &quot;deleted&quot; element
+
+                if (nums[j] == 1) {
+                    current_len++;
+                } else {
+                    local_max = std::max(local_max, current_len);
+                    current_len = 0;
+                }
+            }
+            local_max = std::max(local_max, current_len);
+            max_len = std::max(max_len, local_max);
+        }
+
+        return max_len;
+    }
+};
+</code></pre>
+<hr />
+<h3>Dynamic Programming Approach</h3>
+<p>This approach uses pre-computation to solve the problem efficiently. The key insight is that when we delete a <code>0</code> at an index <code>i</code>, the longest possible subarray of 1s is formed by merging the consecutive 1s immediately to the left of <code>i</code> and immediately to the right of <code>i</code>. We can pre-calculate these lengths for all indices.</p>
+<ol>
+<li>Create two arrays, <code>left</code> and <code>right</code>, of the same size as <code>nums</code>. <code>left[i]</code> will store the count of consecutive 1s ending at index <code>i</code>, and <code>right[i]</code> will store the count of consecutive 1s starting at index <code>i</code>.</li>
+<li>Populate the <code>left</code> array by iterating from left to right. If <code>nums[i]</code> is 1, <code>left[i] = left[i-1] + 1</code>; otherwise, it's 0.</li>
+<li>Populate the <code>right</code> array by iterating from right to left. If <code>nums[i]</code> is 1, <code>right[i] = right[i+1] + 1</code>; otherwise, it's 0.</li>
+<li>Initialize <code>max_len = 0</code>. Iterate through the array from <code>i = 1</code> to <code>n-2</code>. If <code>nums[i]</code> is 0, the potential length is <code>left[i-1] + right[i+1]</code>. Update <code>max_len</code> with the maximum such sum found.</li>
+<li>Handle the edge case where the array contains no zeros. In this case, we must delete a 1, so the answer is <code>n-1</code>. Otherwise, the answer is <code>max_len</code>.</li>
+</ol>
+<p>This approach has a time complexity of O(N) due to three separate passes over the array and a space complexity of O(N) for the auxiliary <code>left</code> and <code>right</code> arrays.</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;algorithm&gt;
+
+class Solution {
+public:
+    int longestSubarray(std::vector&lt;int&gt;&amp; nums) {
+        int n = nums.size();
+        if (n == 0) return 0;
+
+        std::vector&lt;int&gt; left(n, 0);
+        for (int i = 0; i &lt; n; ++i) {
+            if (nums[i] == 1) {
+                left[i] = (i &gt; 0 ? left[i-1] : 0) + 1;
+            }
+        }
+
+        std::vector&lt;int&gt; right(n, 0);
+        for (int i = n - 1; i &gt;= 0; --i) {
+            if (nums[i] == 1) {
+                right[i] = (i &lt; n - 1 ? right[i+1] : 0) + 1;
+            }
+        }
+
+        int max_len = 0;
+        bool has_zero = false;
+        for (int i = 0; i &lt; n; ++i) {
+            if (nums[i] == 0) {
+                has_zero = true;
+                int left_count = (i &gt; 0) ? left[i-1] : 0;
+                int right_count = (i &lt; n - 1) ? right[i+1] : 0;
+                max_len = std::max(max_len, left_count + right_count);
+            }
+        }
+
+        if (!has_zero) {
+            return n - 1;
+        }
+
+        return max_len;
+    }
+};
+</code></pre>
+<hr />
+<h3>Sliding Window Approach</h3>
+<p>This is the most optimal approach, solving the problem in a single pass with constant extra space. The problem can be rephrased as finding the longest subarray containing at most one zero. If we find such a subarray, its length minus one gives us a potential answer, as we can "delete" the zero (or a <code>1</code> if there are no zeros) to create a contiguous block of 1s.</p>
+<ol>
+<li>Initialize a left pointer <code>left = 0</code>, a counter for zeros <code>zeros = 0</code>, and the answer <code>max_len = 0</code>.</li>
+<li>Iterate through the array with a right pointer <code>right</code>, expanding the window.</li>
+<li>If <code>nums[right]</code> is a 0, increment the <code>zeros</code> counter.</li>
+<li>If the number of zeros in the window <code>[left, right]</code> exceeds one (<code>zeros &gt; 1</code>), we must shrink the window from the left. Increment <code>left</code> and if <code>nums[left]</code> was a zero, decrement the <code>zeros</code> counter. Repeat until the window is valid again.</li>
+<li>After each expansion and potential shrinkage, the window <code>[left, right]</code> is guaranteed to have at most one zero. The length of the subarray of 1s we can form is <code>(right - left + 1) - 1</code>, which simplifies to <code>right - left</code>.</li>
+<li>Update <code>max_len</code> with the maximum value of <code>right - left</code> seen so far.</li>
+<li>The final <code>max_len</code> will be the answer. This correctly handles the all-ones case as well, where the window expands to the whole array and <code>right - left</code> becomes <code>n-1</code>.</li>
+</ol>
+<p>This approach processes each element at most twice (once by <code>right</code> and once by <code>left</code>), resulting in a time complexity of O(N) and a space complexity of O(1).</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;algorithm&gt;
+
+class Solution {
+public:
+    int longestSubarray(std::vector&lt;int&gt;&amp; nums) {
+        int n = nums.size();
+        int left = 0;
+        int zeros = 0;
+        int max_len = 0;
+
+        for (int right = 0; right &lt; n; right++) {
+            if (nums[right] == 0) {
+                zeros++;
+            }
+
+            // Shrink the window if it contains more than one zero
+            while (zeros &gt; 1) {
+                if (nums[left] == 0) {
+                    zeros--;
+                }
+                left++;
+            }
+
+            // The current valid window is [left, right].
+            // Its size is (right - left + 1).
+            // After deleting one element, the longest subarray of 1s we can get from this window
+            // is its size minus 1. This is equivalent to right - left.
+            max_len = std::max(max_len, right - left);
+        }
+
+        return max_len;
+    }
+};
+</code></pre>
+<hr />
+<h3>Pythonic solution for best approach only</h3>
+<pre><code class="language-python">from typing import List
+
+class Solution:
+    def longestSubarray(self, nums: List[int]) -&gt; int:
+        &quot;&quot;&quot;
+        This solution uses the sliding window technique to find the longest
+        subarray with at most one zero. The length of such a window minus one
+        is a candidate for the answer.
+        &quot;&quot;&quot;
+
+        left = 0
+        zeros_count = 0
+        max_length = 0
+
+        for right in range(len(nums)):
+            # Expand the window by including the element at the right pointer
+            if nums[right] == 0:
+                zeros_count += 1
+
+            # Shrink the window from the left if it contains more than one zero
+            while zeros_count &gt; 1:
+                if nums[left] == 0:
+                    zeros_count -= 1
+                left += 1
+
+            # The current window [left, right] has at most one zero.
+            # The size of this window is `right - left + 1`.
+            # After deleting one element (the zero if present, or a one),
+            # the length of the subarray of ones would be `(right - left + 1) - 1`,
+            # which simplifies to `right - left`.
+            max_length = max(max_length, right - left)
+
+        return max_length
+
+</code></pre></div>

@@ -1,0 +1,175 @@
+<div class='ai-explanation'><h3>List of all the approaches to solution</h3>
+<ul>
+<li>Brute Force Approach (Recursive DFS)</li>
+<li>Iterative DFS Approach (Using a Stack)</li>
+<li>Iterative BFS Approach (Using a Queue)</li>
+</ul>
+<h3>Brute Force Approach (Recursive DFS)</h3>
+<p>This approach naturally solves the problem by traversing the tree from the root downwards. For each node, we subtract its value from the <code>targetSum</code> and recursively call the function for its children with the updated sum. The base case for the recursion is when we encounter a leaf node. At a leaf, we check if the remaining <code>targetSum</code> is equal to the leaf's value. If it is, we've found a valid path and return <code>true</code>. The results from the left and right subtrees are combined with an <code>OR</code> operation, as we only need to find one such path.</p>
+<p>The time complexity is O(N), where N is the number of nodes, as we visit each node once. The space complexity is O(H) for the recursion stack, where H is the height of the tree (O(N) in the worst-case of a skewed tree).</p>
+<pre><code class="language-cpp">/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    bool hasPathSum(TreeNode* root, int targetSum) {
+        // If the tree is empty, no path exists.
+        if (root == nullptr) {
+            return false;
+        }
+
+        // Subtract the current node's value from the target sum.
+        targetSum -= root-&gt;val;
+
+        // Check if the current node is a leaf.
+        if (root-&gt;left == nullptr &amp;&amp; root-&gt;right == nullptr) {
+            // If it's a leaf, check if the remaining sum is zero.
+            return targetSum == 0;
+        }
+
+        // Recursively check the left and right subtrees.
+        // Return true if a path is found in either subtree.
+        return hasPathSum(root-&gt;left, targetSum) || hasPathSum(root-&gt;right, targetSum);
+    }
+};
+</code></pre>
+<h3>Iterative DFS Approach (Using a Stack)</h3>
+<p>This approach mimics the recursive DFS but uses an explicit stack to avoid recursion and potential stack overflow on very deep trees. We push pairs of <code>(node, current_sum)</code> onto the stack. We start by pushing the root and its value. Then, in a loop, we pop a node and its accumulated sum. If the node is a leaf and its sum equals <code>targetSum</code>, we return <code>true</code>. Otherwise, we push its non-null children onto the stack with the updated sum.</p>
+<p>The time complexity is O(N) since each node is pushed and popped exactly once. The space complexity is O(H) on average and O(N) in the worst case for the stack.</p>
+<pre><code class="language-cpp">/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+#include &lt;stack&gt;
+#include &lt;utility&gt; // for std::pair
+
+class Solution {
+public:
+    bool hasPathSum(TreeNode* root, int targetSum) {
+        if (root == nullptr) {
+            return false;
+        }
+
+        // Stack to store pairs of (node, sum_up_to_node)
+        std::stack&lt;std::pair&lt;TreeNode*, int&gt;&gt; s;
+        s.push({root, root-&gt;val});
+
+        while (!s.empty()) {
+            auto [currentNode, currentSum] = s.top();
+            s.pop();
+
+            // Check if it's a leaf node
+            if (currentNode-&gt;left == nullptr &amp;&amp; currentNode-&gt;right == nullptr) {
+                if (currentSum == targetSum) {
+                    return true;
+                }
+            }
+
+            // Push children to the stack with updated sum
+            if (currentNode-&gt;right != nullptr) {
+                s.push({currentNode-&gt;right, currentSum + currentNode-&gt;right-&gt;val});
+            }
+            if (currentNode-&gt;left != nullptr) {
+                s.push({currentNode-&gt;left, currentSum + currentNode-&gt;left-&gt;val});
+            }
+        }
+
+        return false;
+    }
+};
+</code></pre>
+<h3>Iterative BFS Approach (Using a Queue)</h3>
+<p>This method is similar to the iterative DFS but uses a queue to explore the tree level by level (Breadth-First Search). We enqueue pairs of <code>(node, current_sum)</code>. The logic remains the same: we start with the root, and in a loop, we dequeue a node. If it's a valid leaf path, we return <code>true</code>. Otherwise, we enqueue its children with their respective updated path sums. This approach explores wider paths before deeper ones.</p>
+<p>The time complexity is O(N) as each node is enqueued and dequeued once. The space complexity is O(W), where W is the maximum width of the tree, which can be up to O(N) for a complete binary tree.</p>
+<pre><code class="language-cpp">/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+#include &lt;queue&gt;
+#include &lt;utility&gt; // for std::pair
+
+class Solution {
+public:
+    bool hasPathSum(TreeNode* root, int targetSum) {
+        if (root == nullptr) {
+            return false;
+        }
+
+        // Queue to store pairs of (node, sum_up_to_node)
+        std::queue&lt;std::pair&lt;TreeNode*, int&gt;&gt; q;
+        q.push({root, root-&gt;val});
+
+        while (!q.empty()) {
+            auto [currentNode, currentSum] = q.front();
+            q.pop();
+
+            // Check if it's a leaf node
+            if (currentNode-&gt;left == nullptr &amp;&amp; currentNode-&gt;right == nullptr) {
+                if (currentSum == targetSum) {
+                    return true;
+                }
+            }
+
+            // Enqueue children with updated sum
+            if (currentNode-&gt;left != nullptr) {
+                q.push({currentNode-&gt;left, currentSum + currentNode-&gt;left-&gt;val});
+            }
+            if (currentNode-&gt;right != nullptr) {
+                q.push({currentNode-&gt;right, currentSum + currentNode-&gt;right-&gt;val});
+            }
+        }
+
+        return false;
+    }
+};
+</code></pre>
+<h3>Pythonic solution for best approach</h3>
+<p>The recursive DFS approach is the most straightforward, elegant, and "Pythonic" way to solve this problem due to its conciseness and direct mapping to the problem's structure.</p>
+<pre><code class="language-python"># Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+
+class Solution:
+    def hasPathSum(self, root: Optional[TreeNode], targetSum: int) -&gt; bool:
+        # If the root is None, there are no paths, so return False.
+        if not root:
+            return False
+
+        # If it's a leaf node (no children)
+        if not root.left and not root.right:
+            # Check if the node's value equals the targetSum.
+            # This is the end of a path.
+            return targetSum == root.val
+
+        # If it's not a leaf, recursively check the left and right subtrees.
+        # Subtract the current node's value from the targetSum for the next level.
+        # Return True if a valid path is found in either the left OR the right subtree.
+        return (self.hasPathSum(root.left, targetSum - root.val) or
+                self.hasPathSum(root.right, targetSum - root.val))
+
+</code></pre></div>

@@ -1,0 +1,194 @@
+<div class='ai-explanation'><h3>List of Approaches</h3>
+<ol>
+<li>Brute Force Approach: Recursion</li>
+<li>Stack for Results and Signs</li>
+<li>Optimal Approach: Stack for Signs Only</li>
+</ol>
+<hr />
+<h3>1. Brute Force Approach: Recursion</h3>
+<p>This approach directly translates the nested structure of the expression into recursive function calls. When an opening parenthesis is encountered, a recursive call is made to evaluate the sub-expression within it. The call stack implicitly handles the state of the outer expressions.</p>
+<p><strong>Step-by-step Explanation:</strong></p>
+<ol>
+<li>Define a recursive helper function that takes the expression string and the current parsing index (by reference) as input.</li>
+<li>Inside the function, loop through the string starting from the given index. Maintain variables for the current <code>result</code> within this scope, the current <code>number</code> being parsed, and the current <code>sign</code> (<code>+1</code> or <code>-1</code>).</li>
+<li>When a digit is encountered, parse the complete multi-digit number.</li>
+<li>When an operator (<code>+</code> or <code>-</code>) is found, add the previously parsed <code>number</code> (multiplied by its <code>sign</code>) to the <code>result</code>, reset <code>number</code>, and update the <code>sign</code> for the next number.</li>
+<li>When an opening parenthesis <code>(</code> is found, make a recursive call. The value returned is the result of the entire sub-expression, which is then treated as a single <code>number</code> in the current expression's context.</li>
+<li>When a closing parenthesis <code>)</code> is found, it signifies the end of the current sub-expression's scope. Add the last parsed <code>number</code> to the <code>result</code> and return the <code>result</code> to the parent call.</li>
+<li>The main function starts the process by calling the recursive helper at index 0.</li>
+</ol>
+<p>The time complexity is O(N) as each character is processed once. The space complexity is O(N) due to the recursion depth in the worst-case scenario of deeply nested parentheses.</p>
+<pre><code class="language-cpp">class Solution {
+public:
+    int calculate(string s) {
+        int i = 0;
+        return evaluate(s, i);
+    }
+
+private:
+    int evaluate(const string&amp; s, int&amp; i) {
+        int result = 0;
+        int sign = 1;
+        long long number = 0;
+
+        while (i &lt; s.length()) {
+            char c = s[i++];
+            if (isdigit(c)) {
+                number = number * 10 + (c - '0');
+            } else if (c == '(') {
+                number = evaluate(s, i);
+            } else if (c == ')') {
+                result += sign * number;
+                return result;
+            } else if (c == '+' || c == '-') {
+                result += sign * number;
+                number = 0;
+                sign = (c == '+') ? 1 : -1;
+            }
+            // Ignore spaces
+        }
+        result += sign * number;
+        return result;
+    }
+};
+</code></pre>
+<hr />
+<h3>2. Stack for Results and Signs</h3>
+<p>This iterative approach uses an explicit stack to manage the state of calculations when entering and exiting parenthesized sub-expressions, avoiding recursion.</p>
+<p><strong>Step-by-step Explanation:</strong></p>
+<ol>
+<li>Initialize variables: <code>result</code> for the accumulated value, <code>number</code> for the current number being parsed, <code>sign</code> for the current operator's effect, and a <code>stack</code> of integers.</li>
+<li>Iterate through the expression string character by character.</li>
+<li>If a digit is found, parse the full multi-digit <code>number</code>.</li>
+<li>If <code>+</code> or <code>-</code> is found, add the completed <code>number</code> (with its preceding <code>sign</code>) to the <code>result</code>. Then, update the <code>sign</code> for the next number and reset <code>number</code> to 0.</li>
+<li>If an opening parenthesis <code>(</code> is encountered, it signals the start of a nested calculation. Push the current <code>result</code> and <code>sign</code> onto the stack. Reset <code>result</code> to 0 and <code>sign</code> to 1 for the new sub-expression.</li>
+<li>If a closing parenthesis <code>)</code> is found, it marks the end of the current sub-expression. First, add the last <code>number</code> to the current <code>result</code>. Then, pop the <code>sign</code> from before the parenthesis and multiply the current <code>result</code> by it. Finally, pop the <code>result</code> from before the parenthesis and add it to the current <code>result</code>.</li>
+<li>After the loop finishes, there might be a trailing number, so add it to the final <code>result</code>.</li>
+</ol>
+<p>This approach has a time complexity of O(N) as it traverses the string once. The space complexity is O(N) for the stack in the case of deeply nested parentheses.</p>
+<pre><code class="language-cpp">#include &lt;stack&gt;
+#include &lt;string&gt;
+
+class Solution {
+public:
+    int calculate(std::string s) {
+        std::stack&lt;int&gt; st;
+        long long result = 0;
+        long long number = 0;
+        int sign = 1;
+
+        for (int i = 0; i &lt; s.length(); ++i) {
+            char c = s[i];
+            if (isdigit(c)) {
+                number = number * 10 + (c - '0');
+            } else if (c == '+') {
+                result += sign * number;
+                number = 0;
+                sign = 1;
+            } else if (c == '-') {
+                result += sign * number;
+                number = 0;
+                sign = -1;
+            } else if (c == '(') {
+                // Push the result and sign onto the stack for later
+                st.push(result);
+                st.push(sign);
+                // Reset for the new sub-expression
+                result = 0;
+                sign = 1;
+            } else if (c == ')') {
+                result += sign * number;
+                number = 0;
+
+                // Pop sign and result from stack
+                int prev_sign = st.top(); st.pop();
+                long long prev_result = st.top(); st.pop();
+
+                result = prev_result + prev_sign * result;
+            }
+        }
+
+        // Add the last number if any
+        if (number != 0) {
+            result += sign * number;
+        }
+
+        return result;
+    }
+};
+</code></pre>
+<hr />
+<h3>3. Optimal Approach: Stack for Signs Only</h3>
+<p>This is a highly optimized stack-based approach. Instead of storing intermediate results, we only need to keep track of the cumulative sign effect of nested parentheses. Each number is added to a single running total, multiplied by its effective sign.</p>
+<p><strong>Step-by-step Explanation:</strong></p>
+<ol>
+<li>Maintain a single running <code>total</code> and a <code>stack</code> (or <code>vector</code>) to store signs.</li>
+<li>Initialize the signs stack with <code>[1, 1]</code>. The first <code>1</code> is the base sign for the whole expression. The second <code>1</code> is a placeholder for the sign of the first number encountered.</li>
+<li>Iterate through the string.</li>
+<li>If a digit is found, parse the entire number. Add this number to the <code>total</code>, multiplied by the sign at the top of the stack (<code>signs.back()</code>). This top sign represents the effective sign for the current number (e.g., in <code>1 - (2 + 3)</code>, the effective sign of <code>2</code> is <code>-1</code>). After using this sign for the number, pop it.</li>
+<li>If an operator (<code>+</code> or <code>-</code>) or an opening parenthesis <code>(</code> is found, it affects the sign of the <em>next</em> number. Calculate the new sign by multiplying the current effective sign (<code>signs.back()</code>) by <code>+1</code> (for <code>+</code> or <code>(</code>) or <code>-1</code> (for <code>-</code>) and push it onto the stack.</li>
+<li>If a closing parenthesis <code>)</code> is found, it signifies the end of a scope. We simply pop the sign for that scope from the stack.</li>
+<li>This method effectively "flattens" the expression by computing the true sign of each number on the fly.</li>
+</ol>
+<p>Time complexity is O(N) for the single pass, and space complexity is O(N) for the signs stack, which depends on the maximum nesting depth of parentheses.</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;string&gt;
+
+class Solution {
+public:
+    int calculate(std::string s) {
+        int total = 0;
+        std::vector&lt;int&gt; signs(2, 1);
+        for (int i = 0; i &lt; s.size(); ++i) {
+            char c = s[i];
+            if (c &gt;= '0') {
+                int number = 0;
+                while (i &lt; s.size() &amp;&amp; s[i] &gt;= '0') {
+                    number = 10 * number + (s[i++] - '0');
+                }
+                total += signs.back() * number;
+                signs.pop_back();
+                i--;
+            } else if (c == ')') {
+                signs.pop_back();
+            } else if (c != ' ') {
+                signs.push_back(signs.back() * (c == '-' ? -1 : 1));
+            }
+        }
+        return total;
+    }
+};
+</code></pre>
+<hr />
+<h3>Pythonic Solution (Optimal Approach)</h3>
+<p>This Python solution implements the optimal "Stack for Signs Only" approach. It uses a list as a stack and iterates through the string, calculating the effective sign for each number and adding it to a running total.</p>
+<pre><code class="language-python">class Solution:
+    def calculate(self, s: str) -&gt; int:
+        total = 0
+        i, signs = 0, [1, 1]  # signs stack, initialized for global and first number signs
+
+        while i &lt; len(s):
+            c = s[i]
+            if c.isdigit():
+                start = i
+                while i &lt; len(s) and s[i].isdigit():
+                    i += 1
+
+                # Get number, apply sign from stack top, add to total
+                total += signs.pop() * int(s[start:i])
+                continue  # Continue to next char after number
+
+            if c in '+-(':
+                # For a new operator or scope, calculate new sign and push
+                # signs[-1] is the current scope's sign
+                # new sign = current_scope_sign * (+1 or -1)
+                new_sign = signs[-1] * (1 if c != '-' else -1)
+                signs.append(new_sign)
+            elif c == ')':
+                # End of scope, pop its sign
+                signs.pop()
+
+            i += 1
+
+        return total
+</code></pre></div>

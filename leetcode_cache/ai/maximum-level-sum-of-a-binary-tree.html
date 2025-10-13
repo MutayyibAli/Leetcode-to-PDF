@@ -1,0 +1,190 @@
+<div class='ai-explanation'><h3>List of All Approaches</h3>
+<ol>
+<li>Breadth-First Search (BFS)</li>
+<li>Depth-First Search (DFS)</li>
+</ol>
+<hr />
+<h3>1. Breadth-First Search (BFS)</h3>
+<h4>Explanation</h4>
+<p>This is the most intuitive approach for a level-based problem. We traverse the tree level by level using a queue. For each level, we calculate the sum of all node values. We keep track of the maximum sum found so far and the level at which it occurred. If the current level's sum is strictly greater than the maximum sum seen, we update our maximum sum and the result level. This process guarantees we find the maximum sum, and because we traverse in increasing order of levels, the first time we find a maximum sum, we record the smallest level.</p>
+<p><strong>Step-by-step:</strong>
+1.  Initialize a queue and add the <code>root</code> node.
+2.  Initialize <code>max_sum</code> to the minimum possible integer value, <code>max_level</code> to 1, and <code>current_level</code> to 1.
+3.  Begin a loop that continues as long as the queue is not empty.
+4.  Inside the loop, determine the number of nodes at the current level (the current size of the queue).
+5.  Calculate the sum of values for all nodes at this level. As you process each node, remove it from the queue and add its children to the queue for the next level's processing.
+6.  Compare the <code>current_level_sum</code> with <code>max_sum</code>. If it's greater, update <code>max_sum</code> with the new sum and <code>max_level</code> with <code>current_level</code>.
+7.  Increment <code>current_level</code> and repeat the process for the next level.
+8.  After the loop finishes, <code>max_level</code> will hold the smallest level with the maximal sum.</p>
+<p>This approach visits every node exactly once, making it efficient. The space required is proportional to the maximum number of nodes at any single level. Time complexity is O(N), where N is the number of nodes in the tree, and space complexity is O(W), where W is the maximum width of the tree.</p>
+<h4>C++ Code Snippet</h4>
+<pre><code class="language-cpp">#include &lt;queue&gt;
+#include &lt;climits&gt;
+
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    int maxLevelSum(TreeNode* root) {
+        if (root == nullptr) {
+            return 0;
+        }
+
+        std::queue&lt;TreeNode*&gt; q;
+        q.push(root);
+        int max_level = 1;
+        int max_sum = INT_MIN;
+        int current_level = 1;
+
+        while (!q.empty()) {
+            int level_size = q.size();
+            int current_sum = 0;
+
+            for (int i = 0; i &lt; level_size; i++) {
+                TreeNode* node = q.front();
+                q.pop();
+                current_sum += node-&gt;val;
+
+                if (node-&gt;left != nullptr) {
+                    q.push(node-&gt;left);
+                }
+                if (node-&gt;right != nullptr) {
+                    q.push(node-&gt;right);
+                }
+            }
+
+            if (current_sum &gt; max_sum) {
+                max_sum = current_sum;
+                max_level = current_level;
+            }
+
+            current_level++;
+        }
+
+        return max_level;
+    }
+};
+</code></pre>
+<hr />
+<h3>2. Depth-First Search (DFS)</h3>
+<h4>Explanation</h4>
+<p>An alternative approach is to use Depth-First Search. During the traversal, we need to keep track of the current node's level. We use an auxiliary data structure, like a vector, to store the sum of values for each level. The level number can be used as the index in this vector. We perform a pre-order traversal of the tree. When visiting a node at a certain <code>level</code>, we add its value to the sum stored at <code>level_sums[level]</code>. If we encounter a level for the first time, we'll need to extend the vector. After the traversal is complete, we iterate through the <code>level_sums</code> vector to find the index corresponding to the maximum sum.</p>
+<p><strong>Step-by-step:</strong>
+1.  Create a vector, <code>level_sums</code>, to store the sum of each level.
+2.  Implement a recursive <code>dfs</code> function that takes a <code>node</code>, its <code>level</code>, and the <code>level_sums</code> vector as arguments.
+3.  The base case for the recursion is a null node.
+4.  In the <code>dfs</code> function, if the current <code>level</code> is equal to the size of <code>level_sums</code>, it means we are visiting this level for the first time, so we append the node's value to the vector. Otherwise, we add the node's value to the existing sum at <code>level_sums[level]</code>.
+5.  Recursively call <code>dfs</code> for the left and right children, incrementing the level by 1.
+6.  Initiate the traversal by calling <code>dfs(root, 0, level_sums)</code>.
+7.  After the traversal, find the index with the maximum value in <code>level_sums</code>.
+8.  Return this index plus one, as levels are 1-indexed.</p>
+<p>The time complexity is O(N) since each node is visited once. The space complexity is O(H) where H is the height of the tree, for both the recursion stack and the <code>level_sums</code> vector.</p>
+<h4>C++ Code Snippet</h4>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;algorithm&gt;
+
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+private:
+    void dfs(TreeNode* node, int level, std::vector&lt;int&gt;&amp; level_sums) {
+        if (!node) {
+            return;
+        }
+        // If we are visiting this level for the first time, extend the vector.
+        if (level == level_sums.size()) {
+            level_sums.push_back(node-&gt;val);
+        } else {
+            level_sums[level] += node-&gt;val;
+        }
+
+        // Recurse for children at the next level
+        dfs(node-&gt;left, level + 1, level_sums);
+        dfs(node-&gt;right, level + 1, level_sums);
+    }
+
+public:
+    int maxLevelSum(TreeNode* root) {
+        std::vector&lt;int&gt; level_sums;
+        dfs(root, 0, level_sums);
+
+        int max_sum_level = 0;
+        for (int i = 0; i &lt; level_sums.size(); ++i) {
+            if (level_sums[i] &gt; level_sums[max_sum_level]) {
+                max_sum_level = i;
+            }
+        }
+
+        // Levels are 1-indexed, our vector is 0-indexed
+        return max_sum_level + 1;
+    }
+};
+</code></pre>
+<hr />
+<h3>Pythonic Solution (Best Approach - BFS)</h3>
+<p>The Breadth-First Search (BFS) approach is the most direct and natural fit for this problem. The following Python solution demonstrates a concise and efficient implementation of BFS using a <code>deque</code> for the queue and a list comprehension to generate the nodes for the next level.</p>
+<pre><code class="language-python">import collections
+
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+
+class Solution:
+    def maxLevelSum(self, root: TreeNode) -&gt; int:
+        if not root:
+            return 0
+
+        max_sum = float('-inf')
+        result_level = 0
+        current_level = 1
+
+        # Use a deque for an efficient queue
+        q = collections.deque([root])
+
+        while q:
+            # Calculate sum for the current level
+            level_sum = 0
+            # The number of nodes at the current level
+            level_size = len(q)
+
+            for _ in range(level_size):
+                node = q.popleft()
+                level_sum += node.val
+
+                # Add children to the queue for the next level
+                if node.left:
+                    q.append(node.left)
+                if node.right:
+                    q.append(node.right)
+
+            # Check if the current level's sum is the new maximum
+            if level_sum &gt; max_sum:
+                max_sum = level_sum
+                result_level = current_level
+
+            current_level += 1
+
+        return result_level
+
+</code></pre></div>

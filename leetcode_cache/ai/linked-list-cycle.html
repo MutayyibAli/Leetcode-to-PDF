@@ -1,0 +1,116 @@
+<div class='ai-explanation'><h3>List of all the approaches to solution</h3>
+<ol>
+<li>Brute Force Approach (Using Hash Table)</li>
+<li>Two-Pointers (Floyd's Cycle-Finding) Approach</li>
+</ol>
+<h3>Brute Force Approach (Using Hash Table)</h3>
+<p>This approach involves traversing the linked list and keeping a record of each node we have visited. We can use a hash set to store the memory addresses of the nodes. If we encounter a node that is already in our hash set, it means we have visited it before, and thus a cycle exists.</p>
+<ol>
+<li>Initialize an empty hash set (like <code>std::unordered_set</code> in C++) to store pointers to visited nodes.</li>
+<li>Create a pointer <code>current</code> and initialize it to <code>head</code>.</li>
+<li>Traverse the list: as long as <code>current</code> is not <code>nullptr</code>, continue the loop.</li>
+<li>Inside the loop, check if the <code>current</code> node pointer already exists in the hash set.</li>
+<li>If it exists, a cycle is detected, so return <code>true</code>.</li>
+<li>If it doesn't exist, insert the <code>current</code> node pointer into the hash set and advance <code>current</code> to the next node.</li>
+<li>If the loop completes, it means we reached the end of the list without finding a cycle, so return <code>false</code>.</li>
+</ol>
+<p>This approach has a time complexity of O(n) because we visit each node at most once, and a space complexity of O(n) for storing the visited nodes in the hash set.</p>
+<pre><code class="language-cpp">/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+#include &lt;unordered_set&gt;
+
+class Solution {
+public:
+    bool hasCycle(ListNode *head) {
+        std::unordered_set&lt;ListNode*&gt; visited_nodes;
+        ListNode *current_node = head;
+        while (current_node != nullptr) {
+            // If the node is already in our set, we've found a cycle.
+            if (visited_nodes.find(current_node) != visited_nodes.end()) {
+                return true;
+            }
+            // Otherwise, add the node to the set of visited nodes.
+            visited_nodes.insert(current_node);
+            current_node = current_node-&gt;next;
+        }
+        return false;
+    }
+};
+</code></pre>
+<h3>Two-Pointers (Floyd's Cycle-Finding) Approach</h3>
+<p>This is an optimal and classic approach also known as the "Tortoise and Hare" algorithm. It uses two pointers that move through the list at different speeds. A "slow" pointer moves one step at a time, while a "fast" pointer moves two steps. If there is a cycle, the fast pointer will eventually catch up to and meet the slow pointer.</p>
+<ol>
+<li>Initialize two pointers, <code>slow</code> and <code>fast</code>, to the <code>head</code> of the list.</li>
+<li>Check for edge cases: if the list is empty or has only one node, no cycle can exist, so return <code>false</code>.</li>
+<li>Traverse the list with a loop that continues as long as <code>fast</code> and <code>fast-&gt;next</code> are not <code>nullptr</code>.</li>
+<li>In each iteration, move <code>slow</code> one step forward (<code>slow = slow-&gt;next</code>).</li>
+<li>Move <code>fast</code> two steps forward (<code>fast = fast-&gt;next-&gt;next</code>).</li>
+<li>After moving, check if <code>slow</code> and <code>fast</code> pointers are pointing to the same node (<code>slow == fast</code>). If they are, a cycle has been detected, and we return <code>true</code>.</li>
+<li>If the loop terminates, it means the <code>fast</code> pointer reached the end of the list, so no cycle exists. Return <code>false</code>.</li>
+</ol>
+<p>This algorithm has a time complexity of O(n) and an optimal space complexity of O(1) since it only uses two pointers.</p>
+<pre><code class="language-cpp">/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    bool hasCycle(ListNode *head) {
+        if (head == nullptr || head-&gt;next == nullptr) {
+            return false;
+        }
+        ListNode *slow = head;
+        ListNode *fast = head;
+
+        while (fast != nullptr &amp;&amp; fast-&gt;next != nullptr) {
+            slow = slow-&gt;next;
+            fast = fast-&gt;next-&gt;next;
+
+            // If the pointers meet, a cycle exists.
+            if (slow == fast) {
+                return true;
+            }
+        }
+
+        // If the loop finishes, no cycle was found.
+        return false;
+    }
+};
+</code></pre>
+<h3>Pythonic solution for best approach</h3>
+<p>The best approach is the Two-Pointers (Floyd's Cycle-Finding) algorithm due to its constant space complexity, fulfilling the problem's follow-up question.</p>
+<pre><code class="language-python"># Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.next = None
+
+from typing import Optional
+
+class Solution:
+    def hasCycle(self, head: Optional[ListNode]) -&gt; bool:
+        slow, fast = head, head
+
+        # The loop continues as long as fast and the next node are not None.
+        while fast and fast.next:
+            slow = slow.next
+            fast = fast.next.next
+
+            # If slow and fast pointers meet, there is a cycle.
+            if slow == fast:
+                return True
+
+        # If the loop ends, it means fast reached the end of the list.
+        return False
+
+</code></pre></div>

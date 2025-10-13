@@ -1,0 +1,215 @@
+<div class='ai-explanation'><h3>List of Approaches</h3>
+<ol>
+<li>Dynamic Programming with Memoization (Top-Down)</li>
+<li>Bottom-Up Dynamic Programming with Two States</li>
+<li>Optimized Bottom-Up DP with a Single State</li>
+<li>Space-Optimized Dynamic Programming</li>
+</ol>
+<hr />
+<h3>1. Dynamic Programming with Memoization (Top-Down)</h3>
+<p>This approach solves the problem by defining a recursive function that calculates the number of ways to tile a board of a given size. To understand the recurrence, we must consider the state of the rightmost edge of the tiling. A simple state <code>dp(n)</code> for a <code>2 x n</code> board is insufficient because placing a tromino can leave the board in an incomplete state (a <code>2 x n</code> board with one corner cell missing).</p>
+<p>Therefore, we need two states:
+-   <code>full(n)</code>: The number of ways to completely tile a <code>2 x n</code> board.
+-   <code>partial(n)</code>: The number of ways to tile a <code>2 x n</code> board, leaving one corner cell in the <code>n</code>-th column uncovered. By symmetry, the number of ways is the same whether the top-right or bottom-right cell is uncovered.</p>
+<p>The recurrence relations are derived by considering how the last column(s) can be tiled:</p>
+<ul>
+<li>
+<p>To achieve a <strong>fully tiled <code>2 x n</code> board</strong> (<code>full(n)</code>):</p>
+<ol>
+<li>Start with a fully tiled <code>2 x (n-1)</code> board and add a vertical domino. Contribution: <code>full(n-1)</code>.</li>
+<li>Start with a fully tiled <code>2 x (n-2)</code> board and add two horizontal dominoes. Contribution: <code>full(n-2)</code>.</li>
+<li>Start with a <code>2 x (n-1)</code> board with its top corner uncovered and add a tromino to complete it. Contribution: <code>partial(n-1)</code>.</li>
+<li>Start with a <code>2 x (n-1)</code> board with its bottom corner uncovered and add a tromino to complete it. Contribution: <code>partial(n-1)</code>.</li>
+<li>Total: <code>full(n) = full(n-1) + full(n-2) + 2 * partial(n-1)</code>.</li>
+</ol>
+</li>
+<li>
+<p>To achieve a <strong>partially tiled <code>2 x n</code> board</strong> (<code>partial(n)</code>):</p>
+<ol>
+<li>Start with a fully tiled <code>2 x (n-2)</code> board and add a tromino that covers three cells, leaving one corner of the <code>2 x n</code> board empty. Contribution: <code>full(n-2)</code>.</li>
+<li>Start with a <code>2 x (n-1)</code> board with the <em>opposite</em> corner uncovered and add a horizontal domino. Contribution: <code>partial(n-1)</code>.</li>
+<li>Total: <code>partial(n) = full(n-2) + partial(n-1)</code>.</li>
+</ol>
+</li>
+</ul>
+<p>We use memoization (storing results in arrays) to avoid recomputing the same subproblems.</p>
+<p>This approach has a time complexity of O(N) because each state <code>(full(i), partial(i))</code> is computed once, and a space complexity of O(N) for the memoization tables and recursion stack.</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;cstring&gt;
+
+class Solution {
+    long long M = 1e9 + 7;
+    long long memo_full[1001];
+    long long memo_partial[1001];
+
+public:
+    int numTilings(int n) {
+        memset(memo_full, -1, sizeof(memo_full));
+        memset(memo_partial, -1, sizeof(memo_partial));
+        return solve_full(n);
+    }
+
+private:
+    long long solve_full(int n) {
+        if (n == 0) return 1;
+        if (n == 1) return 1;
+        if (n == 2) return 2;
+        if (memo_full[n] != -1) return memo_full[n];
+
+        long long res = (solve_full(n - 1) + solve_full(n - 2) + 2 * solve_partial(n - 1)) % M;
+        return memo_full[n] = res;
+    }
+
+    long long solve_partial(int n) {
+        if (n &lt;= 1) return 0;
+        if (n == 2) return 1;
+        if (memo_partial[n] != -1) return memo_partial[n];
+
+        long long res = (solve_full(n - 2) + solve_partial(n - 1)) % M;
+        return memo_partial[n] = res;
+    }
+};
+</code></pre>
+<hr />
+<h3>2. Bottom-Up Dynamic Programming with Two States</h3>
+<p>This is the iterative version of the top-down approach. We use two DP arrays, <code>full_dp</code> and <code>partial_dp</code>, to store the solutions for subproblems and build them up from the base cases.</p>
+<ol>
+<li>Initialize two arrays, <code>full_dp</code> and <code>partial_dp</code>, of size <code>n+1</code>.</li>
+<li>Set the base cases:<ul>
+<li><code>full_dp[0] = 1</code> (one way to tile an empty board: do nothing)</li>
+<li><code>full_dp[1] = 1</code> (one vertical domino)</li>
+<li><code>partial_dp[0] = 0</code>, <code>partial_dp[1] = 0</code></li>
+</ul>
+</li>
+<li>Iterate from <code>i = 2</code> to <code>n</code>. In each iteration, calculate <code>full_dp[i]</code> and <code>partial_dp[i]</code> using the same recurrence relations as before:<ul>
+<li><code>full_dp[i] = (full_dp[i-1] + full_dp[i-2] + 2 * partial_dp[i-1]) % MOD</code></li>
+<li><code>partial_dp[i] = (full_dp[i-2] + partial_dp[i-1]) % MOD</code></li>
+</ul>
+</li>
+<li>The final answer is <code>full_dp[n]</code>.</li>
+</ol>
+<p>This approach has a time complexity of O(N) and a space complexity of O(N).</p>
+<pre><code class="language-cpp">class Solution {
+public:
+    int numTilings(int n) {
+        if (n == 1) return 1;
+        long long M = 1e9 + 7;
+
+        std::vector&lt;long long&gt; full_dp(n + 1, 0);
+        std::vector&lt;long long&gt; partial_dp(n + 1, 0);
+
+        full_dp[0] = 1;
+        full_dp[1] = 1;
+        // partial_dp[0] and partial_dp[1] are 0
+
+        for (int i = 2; i &lt;= n; ++i) {
+            full_dp[i] = (full_dp[i - 1] + full_dp[i - 2] + 2 * partial_dp[i - 1]) % M;
+            partial_dp[i] = (full_dp[i - 2] + partial_dp[i - 1]) % M;
+        }
+
+        return full_dp[n];
+    }
+};
+</code></pre>
+<hr />
+<h3>3. Optimized Bottom-Up DP with a Single State</h3>
+<p>We can optimize the two-state DP by finding a single recurrence relation for <code>full(n)</code>.
+Let's analyze the recurrences:
+1. <code>full(n) = full(n-1) + full(n-2) + 2 * partial(n-1)</code>
+2. <code>partial(n) = full(n-2) + partial(n-1)</code></p>
+<p>From (1), we have <code>2 * partial(n-1) = full(n) - full(n-1) - full(n-2)</code>.
+Shifting <code>n</code> to <code>n-1</code> in (1), we get <code>2 * partial(n-2) = full(n-1) - full(n-2) - full(n-3)</code>.
+From (2), we know <code>partial(n-1) = full(n-3) + partial(n-2)</code>. Multiplying by 2 gives <code>2 * partial(n-1) = 2 * full(n-3) + 2 * partial(n-2)</code>.</p>
+<p>Now, substitute the expressions for <code>2 * partial</code>:
+<code>full(n) - full(n-1) - full(n-2) = 2 * full(n-3) + (full(n-1) - full(n-2) - full(n-3))</code>
+Simplifying this equation leads to:
+<code>full(n) = 2 * full(n-1) + full(n-3)</code></p>
+<p>This new recurrence only depends on previous values of <code>full</code>, so we only need one DP array.</p>
+<ol>
+<li>Create a DP array <code>dp</code> of size <code>n+1</code>.</li>
+<li>Set the base cases. The recurrence is valid for <code>n &gt;= 3</code>.<ul>
+<li><code>dp[0] = 1</code> (empty board)</li>
+<li><code>dp[1] = 1</code></li>
+<li><code>dp[2] = 2</code></li>
+</ul>
+</li>
+<li>Iterate from <code>i = 3</code> to <code>n</code>, filling the <code>dp</code> array using <code>dp[i] = (2 * dp[i-1] + dp[i-3]) % MOD</code>.</li>
+<li>The final answer is <code>dp[n]</code>.</li>
+</ol>
+<p>This approach has a time complexity of O(N) and a space complexity of O(N).</p>
+<pre><code class="language-cpp">class Solution {
+public:
+    int numTilings(int n) {
+        if (n &lt;= 2) {
+            return n;
+        }
+        long long M = 1e9 + 7;
+        std::vector&lt;long long&gt; dp(n + 1);
+        dp[0] = 1;
+        dp[1] = 1;
+        dp[2] = 2;
+
+        for (int i = 3; i &lt;= n; ++i) {
+            dp[i] = (2 * dp[i - 1] + dp[i - 3]) % M;
+        }
+
+        return dp[n];
+    }
+};
+</code></pre>
+<hr />
+<h3>4. Space-Optimized Dynamic Programming</h3>
+<p>This is the most optimal approach. Notice that the recurrence <code>dp[i] = 2 * dp[i-1] + dp[i-3]</code> only depends on the three previous values (<code>i-1</code>, <code>i-2</code>, <code>i-3</code>). We do not need to store the entire DP array. We can use three variables to keep track of the required previous values.</p>
+<ol>
+<li>Handle the base cases for <code>n &lt;= 2</code> separately.</li>
+<li>Initialize three variables representing <code>dp[i-3]</code>, <code>dp[i-2]</code>, and <code>dp[i-1]</code>. Let's call them <code>d1</code>, <code>d2</code>, <code>d3</code>. We initialize them with values for <code>n=0, 1, 2</code>. So, <code>d1 = dp[0] = 1</code>, <code>d2 = dp[1] = 1</code>, <code>d3 = dp[2] = 2</code>.</li>
+<li>Iterate from <code>i = 3</code> to <code>n</code>.</li>
+<li>In each iteration, calculate the current value <code>current = (2 * d3 + d1) % MOD</code>.</li>
+<li>Update the three variables for the next iteration: <code>d1</code> becomes <code>d2</code>, <code>d2</code> becomes <code>d3</code>, and <code>d3</code> becomes <code>current</code>.</li>
+<li>After the loop, <code>d3</code> will hold the value for <code>dp[n]</code>.</li>
+</ol>
+<p>This approach has an optimal time complexity of O(N) and a space complexity of O(1).</p>
+<pre><code class="language-cpp">class Solution {
+public:
+    int numTilings(int n) {
+        if (n &lt;= 2) {
+            return n;
+        }
+        long long M = 1e9 + 7;
+
+        // Initialize with dp[0], dp[1], dp[2]
+        long long d1 = 1; // Represents dp[i-3]
+        long long d2 = 1; // Represents dp[i-2]
+        long long d3 = 2; // Represents dp[i-1]
+
+        for (int i = 3; i &lt;= n; ++i) {
+            long long current = (2 * d3 + d1) % M;
+            d1 = d2;
+            d2 = d3;
+            d3 = current;
+        }
+
+        return d3;
+    }
+};
+</code></pre>
+<h3>Pythonic Solution (Best Approach)</h3>
+<p>The space-optimized DP approach can be implemented elegantly in Python.</p>
+<pre><code class="language-python">class Solution:
+    def numTilings(self, n: int) -&gt; int:
+        if n &lt;= 2:
+            return n
+
+        MOD = 10**9 + 7
+
+        # d1, d2, d3 represent dp[i-3], dp[i-2], dp[i-1]
+        # Initialized for i=3, they are dp[0], dp[1], dp[2]
+        d1, d2, d3 = 1, 1, 2
+
+        for _ in range(3, n + 1):
+            current = (2 * d3 + d1) % MOD
+            d1, d2, d3 = d2, d3, current
+
+        return d3
+
+</code></pre></div>

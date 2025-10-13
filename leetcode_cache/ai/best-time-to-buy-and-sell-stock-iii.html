@@ -1,0 +1,192 @@
+<div class='ai-explanation'><h3>List of Approaches</h3>
+<ol>
+<li>Brute Force with Memoization (Top-Down DP)</li>
+<li>Two-Pass Dynamic Programming</li>
+<li>One-Pass Dynamic Programming (State Machine)</li>
+</ol>
+<hr />
+<h3>1. Brute Force with Memoization (Top-Down DP)</h3>
+<p>This approach uses recursion to explore all possible decisions at each day: buy, sell, or skip. To optimize this, we use memoization (a form of dynamic programming) to store the results of subproblems we've already solved.</p>
+<p>The state of our recursive function can be defined by <code>(current_day, can_we_buy, transactions_completed)</code>.
+- <strong><code>current_day</code> (i):</strong> The index of the price we are considering.
+- <strong><code>can_we_buy</code> (isBuy):</strong> A boolean flag. If true, we have the option to buy a stock. If false, we must sell the stock we are currently holding.
+- <strong><code>transactions_completed</code> (k):</strong> The number of buy-sell cycles completed so far.</p>
+<p>The function calculates the maximum profit from the <code>current_day</code> onwards given the state.
+- <strong>Base Cases:</strong> We stop if we run out of days (<code>i == prices.size()</code>) or if we've completed two transactions (<code>k == 2</code>).
+- <strong>Recursive Steps:</strong>
+    1. <strong>If we can buy:</strong> We can either buy at <code>prices[i]</code> (which costs us <code>prices[i]</code>) and transition to a "must sell" state, or we can skip today and remain in a "can buy" state.
+    2. <strong>If we must sell:</strong> We can either sell at <code>prices[i]</code> (which earns us <code>prices[i]</code>, completes a transaction, and transitions us to a "can buy" state) or we can skip today and remain in a "must sell" state.
+- We take the maximum of the outcomes from these choices and store it in a memoization table to avoid redundant calculations.</p>
+<p>This approach is intuitive but can be slow due to the overhead of recursion and map-based memoization, potentially leading to a "Time Limit Exceeded" error on very large inputs.</p>
+<p>This approach has a time complexity of <code>O(N)</code> because there are <code>N * 2 * 3</code> possible states and each state is computed once, and a space complexity of <code>O(N)</code> for the memoization table and recursion stack.</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;string&gt;
+#include &lt;unordered_map&gt;
+#include &lt;algorithm&gt;
+
+class Solution {
+public:
+    std::unordered_map&lt;std::string, int&gt; memo;
+
+    int solve(std::vector&lt;int&gt;&amp; prices, int i, int canBuy, int k) {
+        // Base case: No more days to trade or max transactions reached
+        if (i == prices.size() || k == 2) {
+            return 0;
+        }
+
+        std::string key = std::to_string(i) + &quot;-&quot; + std::to_string(canBuy) + &quot;-&quot; + std::to_string(k);
+        if (memo.count(key)) {
+            return memo[key];
+        }
+
+        int max_profit;
+        if (canBuy) {
+            // Option 1: Buy the stock today
+            int buy_profit = solve(prices, i + 1, 0, k) - prices[i];
+            // Option 2: Skip buying today
+            int skip_profit = solve(prices, i + 1, 1, k);
+            max_profit = std::max(buy_profit, skip_profit);
+        } else { // Must sell
+            // Option 1: Sell the stock today
+            int sell_profit = solve(prices, i + 1, 1, k + 1) + prices[i];
+            // Option 2: Skip selling today
+            int skip_profit = solve(prices, i + 1, 0, k);
+            max_profit = std::max(sell_profit, skip_profit);
+        }
+
+        return memo[key] = max_profit;
+    }
+
+    int maxProfit(std::vector&lt;int&gt;&amp; prices) {
+        return solve(prices, 0, 1, 0); // Start at day 0, can buy, 0 transactions done
+    }
+};
+</code></pre>
+<hr />
+<h3>2. Two-Pass Dynamic Programming</h3>
+<p>The core idea is that the two non-overlapping transactions can be split by some day <code>i</code>. The total profit would be the maximum profit from one transaction in <code>prices[0...i]</code> plus the maximum profit from one transaction in <code>prices[i...n-1]</code>. We can find the maximum profit for every possible split point and take the overall maximum.</p>
+<ol>
+<li><strong>First Pass (Left to Right):</strong> Create an array <code>left_profits</code> of the same size as <code>prices</code>. <code>left_profits[i]</code> will store the maximum profit that can be obtained from a single transaction on or before day <code>i</code>. To calculate this, we iterate from left to right, keeping track of the minimum price seen so far (<code>min_price</code>). For each day <code>i</code>, the max profit is either the previous day's max profit or the profit from selling today (<code>prices[i] - min_price</code>).</li>
+<li><strong>Second Pass (Right to Left):</strong> Create another array <code>right_profits</code>. <code>right_profits[i]</code> will store the maximum profit from a single transaction on or after day <code>i</code>. We iterate from right to left, keeping track of the maximum price seen so far (<code>max_price</code>). For each day <code>j</code>, the max profit is either the next day's max profit or the profit from buying today and selling at the future max price (<code>max_price - prices[j]</code>).</li>
+<li><strong>Combine Results:</strong> The maximum total profit is the maximum of <code>left_profits[i] + right_profits[i]</code> over all <code>i</code>. This represents splitting the timeline at day <code>i</code> and performing one transaction before/on this day and one after/on this day.</li>
+</ol>
+<p>This approach has a time complexity of <code>O(N)</code> due to the three separate linear passes and a space complexity of <code>O(N)</code> for the two profit arrays.</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;algorithm&gt;
+
+class Solution {
+public:
+    int maxProfit(std::vector&lt;int&gt;&amp; prices) {
+        int n = prices.size();
+        if (n &lt;= 1) {
+            return 0;
+        }
+
+        std::vector&lt;int&gt; left_profits(n, 0);
+        int min_price = prices[0];
+        for (int i = 1; i &lt; n; ++i) {
+            min_price = std::min(min_price, prices[i]);
+            left_profits[i] = std::max(left_profits[i - 1], prices[i] - min_price);
+        }
+
+        std::vector&lt;int&gt; right_profits(n, 0);
+        int max_price = prices[n - 1];
+        for (int i = n - 2; i &gt;= 0; --i) {
+            max_price = std::max(max_price, prices[i]);
+            right_profits[i] = std::max(right_profits[i + 1], max_price - prices[i]);
+        }
+
+        int max_total_profit = 0;
+        for (int i = 0; i &lt; n; ++i) {
+            max_total_profit = std::max(max_total_profit, left_profits[i] + right_profits[i]);
+        }
+
+        return max_total_profit;
+    }
+};
+</code></pre>
+<hr />
+<h3>3. One-Pass Dynamic Programming (State Machine)</h3>
+<p>This is the most efficient approach, using constant extra space. We can think of the problem as a sequence of states we transition through. We need to track the "cost" and "profit" for up to two transactions.</p>
+<p>We maintain four variables that represent the state of our trades:
+- <code>buy1</code>: The minimum cost to make the <em>first</em> purchase. We want this to be as low as possible.
+- <code>profit1</code>: The maximum profit we can have after the <em>first</em> sale.
+- <code>buy2</code>: The minimum "effective" cost for the <em>second</em> purchase. The real cost is <code>prices[i]</code>, but since we already have <code>profit1</code> from the first transaction, the effective cost from our initial capital is <code>prices[i] - profit1</code>. We want to minimize this value.
+- <code>profit2</code>: The maximum profit we can have after the <em>second</em> sale. This will be our final answer.</p>
+<p>We iterate through the <code>prices</code> array once, updating these four variables in order:
+1.  <strong><code>buy1 = min(buy1, price)</code></strong>: Update the minimum price for the first buy.
+2.  <strong><code>profit1 = max(profit1, price - buy1)</code></strong>: Update the maximum profit from selling after the first buy.
+3.  <strong><code>buy2 = min(buy2, price - profit1)</code></strong>: Update the minimum effective cost for the second buy. <code>price - profit1</code> is the cost of the second share, offset by the profit from the first trade.
+4.  <strong><code>profit2 = max(profit2, price - buy2)</code></strong>: Update the maximum total profit after the second sell.</p>
+<p>By the end of the loop, <code>profit2</code> will hold the maximum profit achievable from at most two transactions.</p>
+<p>This approach has an optimal time complexity of <code>O(N)</code> for a single pass and a space complexity of <code>O(1)</code>.</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;algorithm&gt;
+#include &lt;limits&gt;
+
+class Solution {
+public:
+    int maxProfit(std::vector&lt;int&gt;&amp; prices) {
+        if (prices.empty()) {
+            return 0;
+        }
+
+        int buy1 = std::numeric_limits&lt;int&gt;::max();
+        int profit1 = 0;
+        int buy2 = std::numeric_limits&lt;int&gt;::max();
+        int profit2 = 0;
+
+        for (int price : prices) {
+            // For the first transaction
+            buy1 = std::min(buy1, price);
+            profit1 = std::max(profit1, price - buy1);
+
+            // For the second transaction
+            // The cost of the second buy is offset by the profit from the first transaction
+            buy2 = std::min(buy2, price - profit1);
+            profit2 = std::max(profit2, price - buy2);
+        }
+
+        return profit2;
+    }
+};
+</code></pre>
+<hr />
+<h3>Pythonic Solution (Best Approach)</h3>
+<p>The one-pass state machine approach is the most efficient and can be implemented concisely in Python. We initialize our <code>buy</code> states to infinity to ensure the first price seen is always chosen as the initial minimum buy price.</p>
+<pre><code class="language-python">import math
+
+class Solution:
+    def maxProfit(self, prices: list[int]) -&gt; int:
+        &quot;&quot;&quot;
+        Finds the maximum profit from at most two transactions using a 
+        one-pass state machine approach.
+
+        We track four states:
+        - buy1: The cost of the first buy (minimized).
+        - profit1: The profit after the first sell (maximized).
+        - buy2: The effective cost of the second buy (minimized).
+        - profit2: The profit after the second sell (maximized).
+        &quot;&quot;&quot;
+        if not prices:
+            return 0
+
+        buy1 = math.inf
+        profit1 = 0
+        buy2 = math.inf
+        profit2 = 0
+
+        for price in prices:
+            # Update states for the first transaction
+            buy1 = min(buy1, price)
+            profit1 = max(profit1, price - buy1)
+
+            # Update states for the second transaction
+            # The cost of the second buy is effectively reduced by the profit
+            # made from the first transaction.
+            buy2 = min(buy2, price - profit1)
+            profit2 = max(profit2, price - buy2)
+
+        return profit2
+
+</code></pre></div>

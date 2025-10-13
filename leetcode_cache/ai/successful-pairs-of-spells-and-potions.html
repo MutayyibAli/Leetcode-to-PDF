@@ -1,0 +1,112 @@
+<div class='ai-explanation'><h3>List of Approaches</h3>
+<ol>
+<li>Brute Force Approach</li>
+<li>Sorting and Binary Search Approach</li>
+</ol>
+<hr />
+<h3>Brute Force Approach</h3>
+<h4>Explanation</h4>
+<p>This is the most straightforward approach. We iterate through each spell in the <code>spells</code> array. For each spell, we then iterate through every potion in the <code>potions</code> array. In the inner loop, we calculate the product of the current spell's strength and the current potion's strength. If this product is greater than or equal to the <code>success</code> value, we increment a counter for that spell. After checking all potions for a given spell, we store the final count in our result array.</p>
+<ol>
+<li>Initialize an answer array <code>pairs</code> with the same size as <code>spells</code>, filled with zeros.</li>
+<li>Loop through each spell <code>spells[i]</code> from <code>i = 0</code> to <code>n-1</code>.</li>
+<li>Inside this loop, start another loop for each potion <code>potions[j]</code> from <code>j = 0</code> to <code>m-1</code>.</li>
+<li>Calculate the product: <code>(long long)spells[i] * potions[j]</code>. It's crucial to use <code>long long</code> to prevent overflow, as the product can exceed the capacity of a standard 32-bit integer.</li>
+<li>If the product is <code>&gt;= success</code>, increment the count for the current spell <code>spells[i]</code>.</li>
+<li>After the inner loop finishes, <code>pairs[i]</code> will hold the total number of successful potions for <code>spells[i]</code>.</li>
+<li>Return the <code>pairs</code> array after the outer loop completes.</li>
+</ol>
+<p>This approach is too slow for the given constraints and will result in a "Time Limit Exceeded" error.</p>
+<p>The time complexity is O(n * m) and the space complexity is O(1) (excluding the output array).</p>
+<h4>C++ Code Snippet</h4>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+
+class Solution {
+public:
+    std::vector&lt;int&gt; successfulPairs(std::vector&lt;int&gt;&amp; spells, std::vector&lt;int&gt;&amp; potions, long long success) {
+        int n = spells.size();
+        int m = potions.length();
+        std::vector&lt;int&gt; pairs(n, 0);
+
+        for (int i = 0; i &lt; n; ++i) {
+            int count = 0;
+            for (int j = 0; j &lt; m; ++j) {
+                if ((long long)spells[i] * potions[j] &gt;= success) {
+                    count++;
+                }
+            }
+            pairs[i] = count;
+        }
+        return pairs;
+    }
+};
+</code></pre>
+<hr />
+<h3>Sorting and Binary Search Approach</h3>
+<h4>Explanation</h4>
+<p>The brute-force approach is inefficient because, for each spell, we re-scan the entire <code>potions</code> array. We can optimize this by observing a key property: if a potion with strength <code>p</code> is successful with a spell, any potion with strength greater than <code>p</code> will also be successful. This suggests that sorting the <code>potions</code> array can be beneficial.</p>
+<p>Once the <code>potions</code> array is sorted, for any given spell <code>s</code>, we can use binary search to efficiently find the minimum potion strength <code>p</code> required for a successful pair (<code>s * p &gt;= success</code>). This is equivalent to finding the smallest <code>p</code> such that <code>p &gt;= success / s</code>. All potions with strength greater than or equal to this minimum required strength will form a successful pair. The number of such potions is the total number of potions minus the index of this first successful potion.</p>
+<ol>
+<li>Sort the <code>potions</code> array in non-decreasing order.</li>
+<li>Initialize an answer array <code>pairs</code> of size <code>n</code>.</li>
+<li>Iterate through each spell <code>spells[i]</code>.</li>
+<li>For the current spell, calculate the minimum potion strength needed to achieve <code>success</code>. This is <code>ceil(success / spells[i])</code>. We can calculate this using integer arithmetic as <code>(success + spells[i] - 1) / spells[i]</code>. Note the use of <code>long long</code> for <code>success</code> to prevent overflow during the addition.</li>
+<li>Perform a binary search (or use a library function like <code>std::lower_bound</code>) on the sorted <code>potions</code> array to find the index of the first element that is greater than or equal to this minimum required potion strength.</li>
+<li>If such a potion is found at index <code>k</code>, then all potions from index <code>k</code> to <code>m-1</code> are also successful. The count of successful pairs is <code>m - k</code>.</li>
+<li>Store this count in <code>pairs[i]</code>.</li>
+<li>Return the <code>pairs</code> array.</li>
+</ol>
+<p>The time complexity is O(m log m + n log m) due to sorting and the binary searches, and the space complexity is O(1) (excluding the output array).</p>
+<h4>C++ Code Snippet</h4>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;algorithm&gt;
+
+class Solution {
+public:
+    std::vector&lt;int&gt; successfulPairs(std::vector&lt;int&gt;&amp; spells, std::vector&lt;int&gt;&amp; potions, long long success) {
+        int n = spells.size();
+        int m = potions.size();
+        std::vector&lt;int&gt; pairs(n);
+
+        // Sort the potions array to enable binary search
+        std::sort(potions.begin(), potions.end());
+
+        for (int i = 0; i &lt; n; ++i) {
+            // Calculate the minimum potion strength needed
+            long long min_potion_strength = (success + spells[i] - 1) / spells[i];
+
+            // Find the first potion that meets the minimum strength requirement
+            // std::lower_bound returns an iterator to the first element not less than the value
+            auto it = std::lower_bound(potions.begin(), potions.end(), min_potion_strength);
+
+            // The number of successful pairs is the count of potions from this iterator to the end
+            pairs[i] = std::distance(it, potions.end());
+        }
+
+        return pairs;
+    }
+};
+</code></pre>
+<hr />
+<h3>Pythonic Solution (Best Approach)</h3>
+<p>The optimal approach involves sorting the <code>potions</code> array and using binary search. Python's <code>bisect</code> module provides an efficient and clean way to perform the binary search. <code>bisect_left</code> finds the insertion point for an element in a sorted list, which corresponds to the index of the first element greater than or equal to the target value.</p>
+<pre><code class="language-python">import bisect
+import math
+
+class Solution:
+    def successfulPairs(self, spells: list[int], potions: list[int], success: int) -&gt; list[int]:
+        &quot;&quot;&quot;
+        Calculates the number of successful pairs for each spell using sorting and binary search.
+        &quot;&quot;&quot;
+        # Sort the potions to enable binary search
+        potions.sort()
+        m = len(potions)
+
+        # This list comprehension efficiently computes the result for each spell
+        # 1. For each spell, calculate the minimum potion strength required.
+        #    math.ceil(success / spell) is equivalent to (success + spell - 1) // spell
+        # 2. Use bisect_left to find the index of the first potion strong enough.
+        # 3. The number of successful potions is the total count minus this index.
+        return [m - bisect.bisect_left(potions, (success + spell - 1) // spell) for spell in spells]
+
+</code></pre></div>

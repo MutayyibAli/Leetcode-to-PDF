@@ -1,0 +1,213 @@
+<div class='ai-explanation'><h3>List of approaches</h3>
+<ul>
+<li>Brute Force Approach (Recursion)</li>
+<li>Recursion with Memoization</li>
+<li>2D Dynamic Programming</li>
+<li>1D Dynamic Programming (Space Optimized)</li>
+</ul>
+<h3>Brute Force Approach (Recursion)</h3>
+<p>This approach uses a recursive function to explore all possible ways of forming <code>s3</code> by picking characters from <code>s1</code> and <code>s2</code>.</p>
+<ol>
+<li>First, perform a sanity check: if <code>s1.length() + s2.length() != s3.length()</code>, it's impossible to form <code>s3</code>, so return <code>false</code>.</li>
+<li>Define a recursive helper function <code>check(i, j)</code> which determines if the suffix of <code>s3</code> starting at index <code>i+j</code> can be formed by the suffix of <code>s1</code> starting at <code>i</code> and the suffix of <code>s2</code> starting at <code>j</code>.</li>
+<li>The base case for the recursion is when we have successfully used all characters from both <code>s1</code> and <code>s2</code>. If <code>i</code> and <code>j</code> have reached the ends of <code>s1</code> and <code>s2</code>, we return <code>true</code>.</li>
+<li>In the recursive step, we consider two choices for the current character <code>s3[i+j]</code>:<ul>
+<li>If <code>s3[i+j]</code> matches <code>s1[i]</code>, we make a recursive call <code>check(i+1, j)</code>.</li>
+<li>If <code>s3[i+j]</code> matches <code>s2[j]</code>, we make a recursive call <code>check(i, j+1)</code>.</li>
+</ul>
+</li>
+<li>If either of these recursive calls returns <code>true</code>, it means a valid interleaving exists. This method is inefficient as it recomputes the same subproblems multiple times.</li>
+<li>The time complexity is exponential, <code>O(2^(m+n))</code>, and the space complexity is <code>O(m+n)</code> due to the recursion depth, where <code>m</code> and <code>n</code> are the lengths of <code>s1</code> and <code>s2</code>.</li>
+</ol>
+<pre><code class="language-cpp">class Solution {
+public:
+    bool isInterleave(string s1, string s2, string s3) {
+        if (s1.length() + s2.length() != s3.length()) {
+            return false;
+        }
+        return check(s1, s2, s3, 0, 0);
+    }
+private:
+    bool check(const string&amp; s1, const string&amp; s2, const string&amp; s3, int i, int j) {
+        if (i == s1.length() &amp;&amp; j == s2.length()) {
+            return true;
+        }
+
+        int k = i + j;
+
+        bool canTakeFromS1 = (i &lt; s1.length() &amp;&amp; s1[i] == s3[k] &amp;&amp; check(s1, s2, s3, i + 1, j));
+        if (canTakeFromS1) return true;
+
+        bool canTakeFromS2 = (j &lt; s2.length() &amp;&amp; s2[j] == s3[k] &amp;&amp; check(s1, s2, s3, i, j + 1));
+
+        return canTakeFromS2;
+    }
+};
+</code></pre>
+<h3>Recursion with Memoization</h3>
+<p>This approach improves upon the brute force method by using memoization (a top-down dynamic programming technique) to store the results of subproblems and avoid re-computation.</p>
+<ol>
+<li>As before, we check if the lengths of the strings are compatible.</li>
+<li>We use a 2D array, <code>memo</code>, to store the results of our recursive calls. <code>memo[i][j]</code> will store whether <code>s3</code> from index <code>i+j</code> can be formed by <code>s1</code> from <code>i</code> and <code>s2</code> from <code>j</code>.</li>
+<li>The recursive function <code>check(i, j)</code> first checks <code>memo[i][j]</code>. If the result has already been computed, it is returned immediately.</li>
+<li>Otherwise, the function calculates the result as in the brute force approach.</li>
+<li>Before returning, the result is stored in <code>memo[i][j]</code> to be used for future calls with the same <code>(i, j)</code> state.</li>
+<li>This ensures that each of the <code>m*n</code> unique subproblems is solved only once.</li>
+<li>The time complexity is <code>O(m*n)</code> as each state <code>(i, j)</code> is computed once, and the space complexity is <code>O(m*n)</code> for the memoization table.</li>
+</ol>
+<pre><code class="language-cpp">class Solution {
+public:
+    bool isInterleave(string s1, string s2, string s3) {
+        int m = s1.length(), n = s2.length(), l = s3.length();
+        if (m + n != l) {
+            return false;
+        }
+        // memo state: 0=not computed, 1=true, -1=false
+        memo = vector&lt;vector&lt;int&gt;&gt;(m + 1, vector&lt;int&gt;(n + 1, 0));
+        return check(s1, s2, s3, 0, 0);
+    }
+private:
+    vector&lt;vector&lt;int&gt;&gt; memo;
+    bool check(const string&amp; s1, const string&amp; s2, const string&amp; s3, int i, int j) {
+        if (i == s1.length() &amp;&amp; j == s2.length()) {
+            return true;
+        }
+        if (memo[i][j] != 0) {
+            return memo[i][j] == 1;
+        }
+
+        int k = i + j;
+        bool result = false;
+        if (i &lt; s1.length() &amp;&amp; s1[i] == s3[k]) {
+            result = check(s1, s2, s3, i + 1, j);
+        }
+        if (!result &amp;&amp; j &lt; s2.length() &amp;&amp; s2[j] == s3[k]) {
+            result = check(s1, s2, s3, i, j + 1);
+        }
+
+        memo[i][j] = result ? 1 : -1;
+        return result;
+    }
+};
+</code></pre>
+<h3>2D Dynamic Programming</h3>
+<p>This is the bottom-up, iterative version of the memoized recursion. We build the solution from smaller subproblems up to the final answer.</p>
+<ol>
+<li>Create a 2D boolean DP table, <code>dp[i][j]</code>, of size <code>(m+1) x (n+1)</code>. <code>dp[i][j]</code> will be <code>true</code> if the first <code>i</code> characters of <code>s1</code> and the first <code>j</code> of <code>s2</code> can interleave to form the first <code>i+j</code> characters of <code>s3</code>.</li>
+<li>The base case is <code>dp[0][0] = true</code>, since two empty strings can form an empty string.</li>
+<li>Initialize the first row and column. <code>dp[i][0]</code> is true if the prefix <code>s1[0...i-1]</code> matches <code>s3[0...i-1]</code>. Similarly, <code>dp[0][j]</code> is true if <code>s2[0...j-1]</code> matches <code>s3[0...j-1]</code>.</li>
+<li>Iterate through the rest of the table. The value of <code>dp[i][j]</code> is determined by the following logic:<ul>
+<li>If <code>s1[i-1]</code> matches <code>s3[i+j-1]</code>, we can potentially form the string by taking a character from <code>s1</code>. So, we check <code>dp[i-1][j]</code>.</li>
+<li>If <code>s2[j-1]</code> matches <code>s3[i+j-1]</code>, we can potentially form the string by taking a character from <code>s2</code>. So, we check <code>dp[i][j-1]</code>.</li>
+<li><code>dp[i][j]</code> is <code>true</code> if either of these conditions holds.</li>
+</ul>
+</li>
+<li>The final result is stored in <code>dp[m][n]</code>.</li>
+<li>The time complexity is <code>O(m*n)</code> for filling the table, and the space complexity is <code>O(m*n)</code> for the DP table.</li>
+</ol>
+<pre><code class="language-cpp">class Solution {
+public:
+    bool isInterleave(string s1, string s2, string s3) {
+        int m = s1.length(), n = s2.length(), l = s3.length();
+        if (m + n != l) {
+            return false;
+        }
+
+        vector&lt;vector&lt;bool&gt;&gt; dp(m + 1, vector&lt;bool&gt;(n + 1, false));
+        dp[0][0] = true;
+
+        for (int i = 1; i &lt;= m; ++i) {
+            dp[i][0] = dp[i - 1][0] &amp;&amp; (s1[i - 1] == s3[i - 1]);
+        }
+        for (int j = 1; j &lt;= n; ++j) {
+            dp[0][j] = dp[0][j - 1] &amp;&amp; (s2[j - 1] == s3[j - 1]);
+        }
+
+        for (int i = 1; i &lt;= m; ++i) {
+            for (int j = 1; j &lt;= n; ++j) {
+                dp[i][j] = (dp[i - 1][j] &amp;&amp; s1[i - 1] == s3[i + j - 1]) ||
+                           (dp[i][j - 1] &amp;&amp; s2[j - 1] == s3[i + j - 1]);
+            }
+        }
+
+        return dp[m][n];
+    }
+};
+</code></pre>
+<h3>1D Dynamic Programming (Space Optimized)</h3>
+<p>This approach optimizes the space complexity of the 2D DP solution. We observe that to calculate the current row of the DP table, we only need the values from the previous row.</p>
+<ol>
+<li>Use a 1D DP array, <code>dp</code>, of size <code>n+1</code>. This array will represent one row of the 2D DP table at a time.</li>
+<li>To achieve the best space optimization, we can ensure that the DP array's size corresponds to the shorter of the two strings. We can do this by swapping <code>s1</code> and <code>s2</code> if <code>s1</code> is shorter.</li>
+<li>Initialize <code>dp[0]</code> to <code>true</code> and fill the rest of the array based on matching <code>s2</code> with the prefix of <code>s3</code> (this corresponds to the first row of the 2D DP table).</li>
+<li>Iterate from <code>i = 1 to m</code> (representing rows for <code>s1</code>). In each iteration, we update the <code>dp</code> array for the current <code>i</code>.<ul>
+<li>First, update <code>dp[0]</code> (the first column value for the current row).</li>
+<li>Then, iterate from <code>j = 1 to n</code> and update <code>dp[j]</code>. The recurrence <code>dp[j] = (dp[j] &amp;&amp; s1_match) || (dp[j-1] &amp;&amp; s2_match)</code> correctly uses the old <code>dp[j]</code> (from the previous row <code>i-1</code>) and the new <code>dp[j-1]</code> (from the current row <code>i</code>).</li>
+</ul>
+</li>
+<li>The final answer is the last element of the <code>dp</code> array.</li>
+<li>The time complexity remains <code>O(m*n)</code>, but the space complexity is reduced to <code>O(min(m, n))</code>.</li>
+</ol>
+<pre><code class="language-cpp">class Solution {
+public:
+    bool isInterleave(string s1, string s2, string s3) {
+        int m = s1.length(), n = s2.length(), l = s3.length();
+        if (m + n != l) {
+            return false;
+        }
+
+        if (m &lt; n) {
+            return isInterleave(s2, s1, s3);
+        }
+
+        vector&lt;bool&gt; dp(n + 1, false);
+        dp[0] = true;
+
+        for (int j = 1; j &lt;= n; ++j) {
+            dp[j] = dp[j - 1] &amp;&amp; s2[j - 1] == s3[j - 1];
+        }
+
+        for (int i = 1; i &lt;= m; ++i) {
+            dp[0] = dp[0] &amp;&amp; s1[i - 1] == s3[i - 1];
+            for (int j = 1; j &lt;= n; ++j) {
+                dp[j] = (dp[j] &amp;&amp; s1[i - 1] == s3[i + j - 1]) || 
+                        (dp[j - 1] &amp;&amp; s2[j - 1] == s3[i + j - 1]);
+            }
+        }
+
+        return dp[n];
+    }
+};
+</code></pre>
+<h3>Pythonic Solution (1D Dynamic Programming)</h3>
+<p>This is the Python implementation of the space-optimized 1D Dynamic Programming approach, which is the most efficient solution in terms of memory usage.</p>
+<pre><code class="language-python">class Solution:
+    def isInterleave(self, s1: str, s2: str, s3: str) -&gt; bool:
+        m, n, l = len(s1), len(s2), len(s3)
+        if m + n != l:
+            return False
+
+        # Ensure s2 is the shorter string for O(min(m, n)) space
+        if m &lt; n:
+            return self.isInterleave(s2, s1, s3)
+
+        # Now len(s1) &gt;= len(s2), so we use a DP array of size len(s2) + 1
+        dp = [False] * (n + 1)
+        dp[0] = True
+
+        # Initialize the first &quot;row&quot; of the DP table (when s1 is empty)
+        for j in range(1, n + 1):
+            dp[j] = dp[j-1] and s2[j-1] == s3[j-1]
+
+        # Iterate through s1 to build up the DP table row by row
+        for i in range(1, m + 1):
+            # Update the first &quot;column&quot; entry for the current row
+            dp[0] = dp[0] and s1[i-1] == s3[i-1]
+
+            # Update the rest of the entries for the current row
+            for j in range(1, n + 1):
+                dp[j] = (dp[j] and s1[i-1] == s3[i+j-1]) or \
+                        (dp[j-1] and s2[j-1] == s3[i+j-1])
+
+        return dp[n]
+</code></pre></div>

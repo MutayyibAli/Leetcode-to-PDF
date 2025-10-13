@@ -1,0 +1,228 @@
+<div class='ai-explanation'><h3>List of all the approaches to solution</h3>
+<ol>
+<li>Brute Force Approach</li>
+<li>Dynamic Programming Approach</li>
+<li>Monotonic Stack Approach</li>
+<li>Two Pointers Approach</li>
+</ol>
+<h3>Brute Force Approach</h3>
+<p>This approach directly follows the logic for calculating trapped water. For each bar in the elevation map, we find the tallest bar to its left and the tallest bar to its right. The amount of water that can be stored above the current bar is limited by the shorter of these two walls.</p>
+<ol>
+<li>Initialize a variable <code>total_water</code> to 0.</li>
+<li>Iterate through each bar from index <code>i = 1</code> to <code>n-2</code> (the first and last bars can't hold water).</li>
+<li>For each bar <code>i</code>, find the maximum height to its left (<code>left_max</code>) by iterating from index 0 to <code>i</code>.</li>
+<li>Similarly, find the maximum height to its right (<code>right_max</code>) by iterating from index <code>i</code> to <code>n-1</code>.</li>
+<li>Calculate the water trapped above the current bar as <code>min(left_max, right_max) - height[i]</code>.</li>
+<li>If the calculated water is positive, add it to <code>total_water</code>.</li>
+<li>After iterating through all the inner bars, return <code>total_water</code>.</li>
+</ol>
+<p>This method is straightforward but inefficient due to repeated calculations for <code>left_max</code> and <code>right_max</code>. The time complexity is O(N<sup>2</sup>) and the space complexity is O(1).</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;algorithm&gt;
+
+class Solution {
+public:
+    int trap(std::vector&lt;int&gt;&amp; height) {
+        int n = height.size();
+        if (n &lt;= 2) {
+            return 0;
+        }
+        int total_water = 0;
+        for (int i = 1; i &lt; n - 1; ++i) {
+            int left_max = 0;
+            for (int j = 0; j &lt;= i; ++j) {
+                left_max = std::max(left_max, height[j]);
+            }
+
+            int right_max = 0;
+            for (int j = i; j &lt; n; ++j) {
+                right_max = std::max(right_max, height[j]);
+            }
+
+            int water_at_i = std::min(left_max, right_max) - height[i];
+            if (water_at_i &gt; 0) {
+                total_water += water_at_i;
+            }
+        }
+        return total_water;
+    }
+};
+</code></pre>
+<h3>Dynamic Programming Approach</h3>
+<p>To optimize the brute force approach, we can pre-compute the maximum height to the left and right for every position. This avoids the repeated scans within the main loop.</p>
+<ol>
+<li>Create two arrays, <code>left_maxes</code> and <code>right_maxes</code>, of the same size as the input <code>height</code> array.</li>
+<li>Perform a pass from left to right. For each index <code>i</code>, <code>left_maxes[i]</code> will store the maximum height found from index 0 up to <code>i</code>.</li>
+<li>Perform a second pass from right to left. For each index <code>i</code>, <code>right_maxes[i]</code> will store the maximum height found from index <code>i</code> to the end of the array.</li>
+<li>Initialize <code>total_water</code> to 0.</li>
+<li>Iterate through the <code>height</code> array from index 0 to <code>n-1</code>. At each index <code>i</code>, calculate the trapped water as <code>min(left_maxes[i], right_maxes[i]) - height[i]</code>.</li>
+<li>Add this amount to <code>total_water</code>.</li>
+<li>Return the final <code>total_water</code>.</li>
+</ol>
+<p>This approach improves the time complexity significantly by trading space for time. The time complexity is O(N) due to the three separate passes, and the space complexity is O(N) for the two auxiliary arrays.</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;algorithm&gt;
+
+class Solution {
+public:
+    int trap(std::vector&lt;int&gt;&amp; height) {
+        int n = height.size();
+        if (n &lt;= 2) {
+            return 0;
+        }
+
+        std::vector&lt;int&gt; left_maxes(n, 0);
+        left_maxes[0] = height[0];
+        for (int i = 1; i &lt; n; ++i) {
+            left_maxes[i] = std::max(left_maxes[i-1], height[i]);
+        }
+
+        std::vector&lt;int&gt; right_maxes(n, 0);
+        right_maxes[n-1] = height[n-1];
+        for (int i = n - 2; i &gt;= 0; --i) {
+            right_maxes[i] = std::max(right_maxes[i+1], height[i]);
+        }
+
+        int total_water = 0;
+        for (int i = 0; i &lt; n; ++i) {
+            total_water += std::min(left_maxes[i], right_maxes[i]) - height[i];
+        }
+
+        return total_water;
+    }
+};
+</code></pre>
+<h3>Monotonic Stack Approach</h3>
+<p>This approach uses a stack to keep track of the indices of bars in a decreasing order of height. When we encounter a bar that is taller than the one at the top of the stack, it forms a right wall, and the previous bar in the stack forms a left wall, allowing us to calculate the trapped water between them.</p>
+<ol>
+<li>Initialize <code>total_water</code> to 0 and an empty stack to store indices.</li>
+<li>Iterate through the <code>height</code> array with the current index <code>i</code>.</li>
+<li>While the stack is not empty and the current bar <code>height[i]</code> is taller than the bar at the index on top of the stack (<code>height[st.top()]</code>):
+    a. Pop the top index from the stack, which represents the <code>bottom</code> of the U-shape that traps water.
+    b. If the stack becomes empty after popping, there is no left wall, so break the inner loop.
+    c. The new top of the stack is the <code>left_wall</code> index. The current index <code>i</code> is the <code>right_wall</code>.
+    d. The bounded water level is determined by the shorter of the two walls: <code>min(height[i], height[st.top()])</code>.
+    e. The amount of water trapped is <code>(bounded_level - height[bottom]) * (width)</code>, where <code>width</code> is <code>i - st.top() - 1</code>.
+    f. Add this amount to <code>total_water</code>.</li>
+<li>After the while loop, push the current index <code>i</code> onto the stack.</li>
+<li>Return <code>total_water</code> after the main loop finishes.</li>
+</ol>
+<p>This approach processes each bar at most twice (once when pushed, once when popped). The time complexity is O(N), and the space complexity is O(N) for the stack in the worst-case scenario (a strictly decreasing array).</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;stack&gt;
+#include &lt;algorithm&gt;
+
+class Solution {
+public:
+    int trap(std::vector&lt;int&gt;&amp; height) {
+        std::stack&lt;int&gt; st;
+        int total_water = 0;
+        int n = height.size();
+
+        for (int i = 0; i &lt; n; ++i) {
+            while (!st.empty() &amp;&amp; height[i] &gt; height[st.top()]) {
+                int top_idx = st.top();
+                st.pop();
+
+                if (st.empty()) {
+                    break;
+                }
+
+                int distance = i - st.top() - 1;
+                int bounded_height = std::min(height[i], height[st.top()]) - height[top_idx];
+                total_water += distance * bounded_height;
+            }
+            st.push(i);
+        }
+        return total_water;
+    }
+};
+</code></pre>
+<h3>Two Pointers Approach</h3>
+<p>This is the most optimal approach, improving upon the DP solution by eliminating the need for extra space. It uses two pointers, one at each end of the array, and moves them inward.</p>
+<ol>
+<li>Initialize a <code>left</code> pointer to 0 and a <code>right</code> pointer to the last index.</li>
+<li>Initialize <code>left_max</code> and <code>right_max</code> to 0 to track the maximum heights seen from the left and right sides, respectively.</li>
+<li>Initialize <code>total_water</code> to 0.</li>
+<li>Loop while <code>left</code> is less than <code>right</code>.</li>
+<li>Inside the loop, compare <code>height[left]</code> and <code>height[right]</code>.</li>
+<li>If <code>height[left]</code> is smaller than <code>height[right]</code>, process the left side:
+    a. If <code>height[left]</code> is greater than or equal to <code>left_max</code>, update <code>left_max</code> with <code>height[left]</code>. No water is trapped at this point as it's a new boundary.
+    b. Otherwise, it means <code>left_max</code> is the containing wall on the left. Since we know <code>right_max</code> is guaranteed to be at least as high as <code>height[right]</code> (which is higher than <code>height[left]</code>), the water trapped is determined by <code>left_max</code>. Add <code>left_max - height[left]</code> to <code>total_water</code>.
+    c. Increment <code>left</code>.</li>
+<li>If <code>height[right]</code> is smaller or equal, process the right side with symmetric logic:
+    a. Update <code>right_max</code> if <code>height[right]</code> is a new maximum from the right.
+    b. Otherwise, add <code>right_max - height[right]</code> to <code>total_water</code>.
+    c. Decrement <code>right</code>.</li>
+<li>The loop ends when the pointers meet. Return <code>total_water</code>.</li>
+</ol>
+<p>This approach makes a single pass through the array. The time complexity is O(N), and the space complexity is O(1).</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;algorithm&gt;
+
+class Solution {
+public:
+    int trap(std::vector&lt;int&gt;&amp; height) {
+        if (height.empty()) {
+            return 0;
+        }
+        int left = 0, right = height.size() - 1;
+        int left_max = 0, right_max = 0;
+        int total_water = 0;
+
+        while (left &lt; right) {
+            if (height[left] &lt; height[right]) {
+                if (height[left] &gt;= left_max) {
+                    left_max = height[left];
+                } else {
+                    total_water += left_max - height[left];
+                }
+                left++;
+            } else {
+                if (height[right] &gt;= right_max) {
+                    right_max = height[right];
+                } else {
+                    total_water += right_max - height[right];
+                }
+                right--;
+            }
+        }
+        return total_water;
+    }
+};
+</code></pre>
+<h3>Pythonic Solution (Best Approach)</h3>
+<p>The two-pointers approach is the most optimal. The Python implementation is clean and directly reflects the logic of moving two pointers inward and calculating trapped water based on the shorter of the max heights seen so far.</p>
+<pre><code class="language-python">from typing import List
+
+class Solution:
+    def trap(self, height: List[int]) -&gt; int:
+        if not height:
+            return 0
+
+        left, right = 0, len(height) - 1
+        left_max, right_max = height[left], height[right]
+        total_water = 0
+
+        while left &lt; right:
+            # The amount of trapped water is limited by the smaller of the
+            # left_max and right_max boundaries. We can process the side
+            # with the smaller boundary.
+            if left_max &lt; right_max:
+                left += 1
+                # Update left_max to the new maximum height seen from the left
+                left_max = max(left_max, height[left])
+                # The water trapped at the current 'left' position is the
+                # difference between the boundary (left_max) and the bar's height.
+                total_water += left_max - height[left]
+            else:
+                right -= 1
+                # Update right_max to the new maximum height seen from the right
+                right_max = max(right_max, height[right])
+                # The water trapped at the current 'right' position is the
+                # difference between the boundary (right_max) and the bar's height.
+                total_water += right_max - height[right]
+
+        return total_water
+
+</code></pre></div>

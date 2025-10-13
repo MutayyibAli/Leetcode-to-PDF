@@ -1,0 +1,211 @@
+<div class='ai-explanation'><h3>List of Approaches</h3>
+<ol>
+<li>Brute Force Approach (Recursion)</li>
+<li>Top-Down Dynamic Programming (Memoization)</li>
+<li>Bottom-Up Dynamic Programming (Tabulation)</li>
+<li>Breadth-First Search (BFS)</li>
+</ol>
+<hr />
+<h3>Brute Force Approach (Recursion)</h3>
+<p>This approach explores all possible combinations of coins to find the minimum number required to form the target amount. It uses a recursive function that calculates the minimum coins for a remaining amount by trying every coin and recursively solving for the new remaining amount.</p>
+<ol>
+<li>Define a recursive function <code>solve(rem_amount)</code> that returns the minimum coins for <code>rem_amount</code>.</li>
+<li><strong>Base Case 1:</strong> If <code>rem_amount</code> is 0, it means we've successfully made the amount, so 0 coins are needed. Return 0.</li>
+<li><strong>Base Case 2:</strong> If <code>rem_amount</code> is negative, this path is invalid. Return a value indicating impossibility (e.g., infinity).</li>
+<li><strong>Recursive Step:</strong> Initialize a variable <code>min_coins</code> to infinity. Iterate through each <code>coin</code> in the <code>coins</code> array.</li>
+<li>For each <code>coin</code>, make a recursive call <code>solve(rem_amount - coin)</code>. If the call returns a valid result (not infinity), update <code>min_coins</code> to the minimum of its current value and <code>1 + result</code>.</li>
+<li>Return <code>min_coins</code>. The main function should handle the case where the final result is infinity, returning -1 as required.</li>
+</ol>
+<p>This method is inefficient because it recalculates the solution for the same remaining amounts multiple times. The time complexity is exponential, roughly O(S^N), where S is the amount and N is the number of coin denominations, and the space complexity is O(S) for the recursion stack depth.</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;algorithm&gt;
+
+class Solution {
+public:
+    int coinChange(std::vector&lt;int&gt;&amp; coins, int amount) {
+        if (amount == 0) return 0;
+        int result = solve(coins, amount);
+        return (result == INT_MAX) ? -1 : result;
+    }
+
+private:
+    int solve(const std::vector&lt;int&gt;&amp; coins, int rem_amount) {
+        if (rem_amount &lt; 0) return INT_MAX;
+        if (rem_amount == 0) return 0;
+
+        int min_count = INT_MAX;
+
+        for (int coin : coins) {
+            int res = solve(coins, rem_amount - coin);
+            if (res != INT_MAX) {
+                min_count = std::min(min_count, res + 1);
+            }
+        }
+
+        return min_count;
+    }
+};
+</code></pre>
+<hr />
+<h3>Top-Down Dynamic Programming (Memoization)</h3>
+<p>This approach optimizes the brute-force recursion by using memoization to store and reuse the results of subproblems. This avoids redundant computations for the same remaining amount.</p>
+<ol>
+<li>Create a memoization array, <code>memo</code>, of size <code>amount + 1</code>, initialized with a special value (e.g., -1) to indicate that the subproblem has not been solved.</li>
+<li>Modify the recursive function to <code>solve(rem_amount, memo)</code>.</li>
+<li>Before any computation, check if <code>memo[rem_amount]</code> has a valid stored result. If so, return it immediately.</li>
+<li>The base cases and recursive logic remain the same as the brute-force approach.</li>
+<li>After computing the minimum coins for <code>rem_amount</code>, store the result in <code>memo[rem_amount]</code> before returning.</li>
+</ol>
+<p>By storing results, we ensure that each subproblem is solved only once. The time complexity is O(S * N) where S is the amount and N is the number of coins, and the space complexity is O(S) for the recursion stack and memoization array.</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;algorithm&gt;
+
+class Solution {
+public:
+    int coinChange(std::vector&lt;int&gt;&amp; coins, int amount) {
+        std::vector&lt;int&gt; memo(amount + 1, -1);
+        int result = solve(coins, amount, memo);
+        return (result == INT_MAX) ? -1 : result;
+    }
+
+private:
+    int solve(const std::vector&lt;int&gt;&amp; coins, int rem_amount, std::vector&lt;int&gt;&amp; memo) {
+        if (rem_amount &lt; 0) return INT_MAX;
+        if (rem_amount == 0) return 0;
+        if (memo[rem_amount] != -1) return memo[rem_amount];
+
+        int min_count = INT_MAX;
+        for (int coin : coins) {
+            int res = solve(coins, rem_amount - coin, memo);
+            if (res != INT_MAX) {
+                min_count = std::min(min_count, res + 1);
+            }
+        }
+
+        return memo[rem_amount] = min_count;
+    }
+};
+</code></pre>
+<hr />
+<h3>Bottom-Up Dynamic Programming (Tabulation)</h3>
+<p>This iterative approach builds the solution from the smallest subproblem up to the target amount. It uses an array to store the minimum coins needed for every amount from 0 to the target.</p>
+<ol>
+<li>Create a DP array, <code>dp</code>, of size <code>amount + 1</code>. <code>dp[i]</code> will store the minimum number of coins for amount <code>i</code>.</li>
+<li>Initialize <code>dp[0]</code> to 0 (zero coins for amount zero).</li>
+<li>Initialize the rest of the <code>dp</code> array elements to a large value (e.g., <code>amount + 1</code>) to represent infinity.</li>
+<li>Iterate from <code>i = 1</code> to <code>amount</code>. For each amount <code>i</code>:</li>
+<li>Iterate through each <code>coin</code> in the <code>coins</code> array.</li>
+<li>If <code>i - coin</code> is not negative, it means we can use this coin. The potential solution is <code>1 + dp[i - coin]</code>.</li>
+<li>Update <code>dp[i]</code> with the minimum of its current value and <code>1 + dp[i - coin]</code>.</li>
+<li>After the loops, <code>dp[amount]</code> holds the result. If <code>dp[amount]</code> is still the large initial value, the amount cannot be formed, so return -1. Otherwise, return <code>dp[amount]</code>.</li>
+</ol>
+<p>This approach avoids recursion overhead and is generally more efficient. The time complexity is O(S * N) where S is the amount and N is the number of coins, and the space complexity is O(S) for the DP array.</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;algorithm&gt;
+
+class Solution {
+public:
+    int coinChange(std::vector&lt;int&gt;&amp; coins, int amount) {
+        std::vector&lt;int&gt; dp(amount + 1, amount + 1);
+        dp[0] = 0;
+
+        for (int i = 1; i &lt;= amount; i++) {
+            for (int coin : coins) {
+                if (i - coin &gt;= 0) {
+                    dp[i] = std::min(dp[i], 1 + dp[i - coin]);
+                }
+            }
+        }
+
+        return dp[amount] &gt; amount ? -1 : dp[amount];
+    }
+};
+</code></pre>
+<hr />
+<h3>Breadth-First Search (BFS)</h3>
+<p>This problem can be modeled as finding the shortest path in an unweighted graph where nodes are amounts from 0 to <code>amount</code>, and an edge exists from <code>u</code> to <code>v</code> if <code>v = u + coin</code>. BFS is ideal for finding the shortest path in such a graph.</p>
+<ol>
+<li>Initialize a queue and add the starting amount <code>0</code>.</li>
+<li>Use a <code>visited</code> array to keep track of amounts already added to the queue to prevent cycles. Mark <code>0</code> as visited.</li>
+<li>Initialize <code>level</code> (number of coins) to 0.</li>
+<li>While the queue is not empty, process all nodes at the current level.</li>
+<li>Increment the <code>level</code>. For each <code>current_amount</code> at the current level:</li>
+<li>For each <code>coin</code>, calculate <code>next_amount = current_amount + coin</code>.</li>
+<li>If <code>next_amount</code> equals the target <code>amount</code>, the shortest path is found. Return the current <code>level</code>.</li>
+<li>If <code>next_amount</code> is less than the target and has not been visited, add it to the queue and mark it as visited.</li>
+<li>If the queue becomes empty and the target amount is not reached, it's impossible. Return -1.</li>
+</ol>
+<p>The time complexity is O(S * N) where S is the amount and N is the number of coins, as each amount is visited once, and for each, we iterate through all coins. The space complexity is O(S) for the queue and visited array.</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;queue&gt;
+
+class Solution {
+public:
+    int coinChange(std::vector&lt;int&gt;&amp; coins, int amount) {
+        if (amount == 0) return 0;
+
+        std::queue&lt;int&gt; q;
+        q.push(0);
+
+        std::vector&lt;bool&gt; visited(amount + 1, false);
+        visited[0] = true;
+
+        int level = 0;
+
+        while (!q.empty()) {
+            int level_size = q.size();
+            level++;
+            for (int i = 0; i &lt; level_size; ++i) {
+                int current_amount = q.front();
+                q.pop();
+
+                for (int coin : coins) {
+                    long long next_amount = (long long)current_amount + coin;
+
+                    if (next_amount == amount) {
+                        return level;
+                    }
+
+                    if (next_amount &lt; amount &amp;&amp; !visited[next_amount]) {
+                        q.push(next_amount);
+                        visited[next_amount] = true;
+                    }
+                }
+            }
+        }
+
+        return -1;
+    }
+};
+</code></pre>
+<hr />
+<h3>Pythonic Solution (Bottom-Up DP)</h3>
+<p>The Bottom-Up Dynamic Programming approach is generally considered the best for this problem due to its efficiency and iterative nature, which avoids potential stack overflow issues from deep recursion.</p>
+<pre><code class="language-python">from typing import List
+
+class Solution:
+    def coinChange(self, coins: List[int], amount: int) -&gt; int:
+        &quot;&quot;&quot;
+        Finds the fewest number of coins to make up a given amount using bottom-up dynamic programming.
+        &quot;&quot;&quot;
+        # dp[i] will store the minimum number of coins to make amount i
+        # Initialize with a value larger than any possible answer (e.g., infinity)
+        dp = [float('inf')] * (amount + 1)
+
+        # Base case: 0 coins are needed to make an amount of 0
+        dp[0] = 0
+
+        # Build the dp table from amount 1 to the target amount
+        for i in range(1, amount + 1):
+            # For each amount, try every coin
+            for coin in coins:
+                # If the coin can be used to form the current amount
+                if i - coin &gt;= 0:
+                    # Update the minimum coins for amount i
+                    dp[i] = min(dp[i], 1 + dp[i - coin])
+
+        # If dp[amount] is still infinity, it means the amount cannot be formed
+        # Otherwise, dp[amount] contains the minimum number of coins
+        return dp[amount] if dp[amount] != float('inf') else -1
+
+</code></pre></div>

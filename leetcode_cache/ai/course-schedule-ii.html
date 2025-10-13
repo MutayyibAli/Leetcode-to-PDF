@@ -1,0 +1,233 @@
+<div class='ai-explanation'><h3>List of All Approaches</h3>
+<ol>
+<li>Brute Force Approach</li>
+<li>Depth-First Search (DFS) Approach</li>
+<li>Breadth-First Search (BFS) / Kahn's Algorithm Approach</li>
+</ol>
+<hr />
+<h3>Brute Force Approach</h3>
+<h4>Explanation</h4>
+<p>The brute force approach involves generating every possible ordering of the courses and then checking if any of these orderings are valid.</p>
+<ol>
+<li>Generate all permutations of the <code>numCourses</code> courses (from <code>0</code> to <code>numCourses - 1</code>). There are <code>N!</code> such permutations, where <code>N</code> is the number of courses.</li>
+<li>For each permutation, check if it satisfies all the prerequisite constraints. To do this, iterate through the <code>prerequisites</code> list. For each prerequisite <code>[a, b]</code>, verify that course <code>b</code> appears before course <code>a</code> in the current permutation.</li>
+<li>A helper map can be used to store the position of each course in the permutation for efficient lookup (O(1) after O(N) pre-processing).</li>
+<li>If a permutation satisfies all constraints, it is a valid topological sort, and we can return it.</li>
+<li>If we check all permutations and none are valid, it means a valid ordering is impossible (likely due to a cycle), so we return an empty array.</li>
+</ol>
+<p>This approach is extremely inefficient and will time out for even moderately sized inputs due to the factorial complexity.</p>
+<p>This approach has a time complexity of <strong>O(N! * E)</strong> and space complexity of <strong>O(N^2)</strong>, where N is <code>numCourses</code> and E is the number of prerequisites.</p>
+<h4>C++ Code Snippet</h4>
+<pre><code class="language-cpp">// Note: This approach is not practical and will time out on LeetCode.
+// The code is for conceptual understanding only.
+class Solution {
+public:
+    vector&lt;int&gt; findOrder(int numCourses, vector&lt;vector&lt;int&gt;&gt;&amp; prerequisites) {
+        vector&lt;int&gt; p(numCourses);
+        iota(p.begin(), p.end(), 0); // Fills p with 0, 1, ..., numCourses-1
+
+        do {
+            if (isValid(p, prerequisites, numCourses)) {
+                return p;
+            }
+        } while (next_permutation(p.begin(), p.end()));
+
+        return {}; // No valid permutation found
+    }
+
+private:
+    bool isValid(const vector&lt;int&gt;&amp; p, const vector&lt;vector&lt;int&gt;&gt;&amp; prerequisites, int numCourses) {
+        unordered_map&lt;int, int&gt; pos;
+        for (int i = 0; i &lt; numCourses; ++i) {
+            pos[p[i]] = i;
+        }
+
+        for (const auto&amp; pre : prerequisites) {
+            int course = pre[0];
+            int prereq = pre[1];
+            if (pos[prereq] &gt; pos[course]) {
+                return false;
+            }
+        }
+        return true;
+    }
+};
+</code></pre>
+<hr />
+<h3>Depth-First Search (DFS) Approach</h3>
+<h4>Explanation</h4>
+<p>This problem can be modeled as finding a topological sort of a directed graph. The courses are the vertices, and the prerequisites are the directed edges. For a prerequisite <code>[a, b]</code>, there is an edge from <code>b</code> to <code>a</code> (<code>b -&gt; a</code>). A topological sort is possible if and only if the graph is a Directed Acyclic Graph (DAG).</p>
+<p>The DFS approach detects cycles while determining the topological order. We use a 3-state system for each node: unvisited, visiting, and visited.</p>
+<ol>
+<li><strong>Build Graph</strong>: Construct an adjacency list representation of the graph from the <code>prerequisites</code>.</li>
+<li><strong>Initialize States</strong>: Use two boolean arrays, <code>todo</code> (or <code>visiting</code>) and <code>done</code> (or <code>visited</code>), to track the state of each course. <code>todo[i]</code> is true if course <code>i</code> is in the current recursion stack. <code>done[i]</code> is true if we have already completed the DFS for course <code>i</code> and its descendants.</li>
+<li><strong>DFS Traversal</strong>: Iterate through each course from <code>0</code> to <code>numCourses - 1</code>. If a course has not been <code>done</code>, start a DFS from it.</li>
+<li><strong>Cycle Detection</strong>: In the DFS function for a node, if we encounter a neighbor that is already in the <code>todo</code> state, we have found a back edge, which indicates a cycle. In this case, it's impossible to finish the courses, so we return an empty array.</li>
+<li><strong>Build Order</strong>: During the DFS traversal, after visiting all neighbors of a node (post-order traversal), add the node to our result list. This means a course is added to the list only after all its dependent courses have been added.</li>
+<li><strong>Final Result</strong>: The resulting list from the post-order traversals will be the reverse of the topological sort. Reverse this list to get the final correct order.</li>
+</ol>
+<p>This approach has a time complexity of <strong>O(V + E)</strong> and space complexity of <strong>O(V + E)</strong>, where V is <code>numCourses</code> and E is the number of prerequisites.</p>
+<h4>C++ Code Snippet</h4>
+<pre><code class="language-cpp">class Solution {
+public:
+    vector&lt;int&gt; findOrder(int numCourses, vector&lt;vector&lt;int&gt;&gt;&amp; prerequisites) {
+        vector&lt;vector&lt;int&gt;&gt; adj(numCourses);
+        for (const auto&amp; p : prerequisites) {
+            adj[p[1]].push_back(p[0]);
+        }
+
+        vector&lt;int&gt; order;
+        // States: 0 = unvisited, 1 = visiting, 2 = visited
+        vector&lt;int&gt; visited(numCourses, 0); 
+
+        for (int i = 0; i &lt; numCourses; ++i) {
+            if (visited[i] == 0) {
+                if (!dfs(adj, visited, i, order)) {
+                    return {}; // Cycle detected
+                }
+            }
+        }
+
+        reverse(order.begin(), order.end());
+        return order;
+    }
+
+private:
+    bool dfs(const vector&lt;vector&lt;int&gt;&gt;&amp; adj, vector&lt;int&gt;&amp; visited, int u, vector&lt;int&gt;&amp; order) {
+        visited[u] = 1; // Mark as visiting
+
+        for (int v : adj[u]) {
+            if (visited[v] == 1) { // Cycle detected
+                return false;
+            }
+            if (visited[v] == 0) {
+                if (!dfs(adj, visited, v, order)) {
+                    return false;
+                }
+            }
+        }
+
+        visited[u] = 2; // Mark as visited
+        order.push_back(u); // Add to post-order list
+        return true;
+    }
+};
+</code></pre>
+<hr />
+<h3>Breadth-First Search (BFS) / Kahn's Algorithm Approach</h3>
+<h4>Explanation</h4>
+<p>This is an iterative approach for topological sorting, also known as Kahn's algorithm. It works by identifying nodes with no incoming edges and processing them.</p>
+<ol>
+<li><strong>Build Graph and In-degrees</strong>:<ul>
+<li>Construct an adjacency list for the graph.</li>
+<li>Create an <code>in_degree</code> array to count the number of prerequisites for each course. For each edge <code>b -&gt; a</code>, increment the in-degree of <code>a</code>.</li>
+</ul>
+</li>
+<li><strong>Initialize Queue</strong>:<ul>
+<li>Find all courses with an in-degree of 0 (i.e., no prerequisites).</li>
+<li>Add these courses to a queue. These are the courses we can take first.</li>
+</ul>
+</li>
+<li><strong>Process Queue</strong>:<ul>
+<li>While the queue is not empty, dequeue a course <code>u</code>.</li>
+<li>Add <code>u</code> to the topological order result list.</li>
+<li>For each neighbor <code>v</code> of <code>u</code> (i.e., courses that have <code>u</code> as a prerequisite):<ul>
+<li>Decrement the in-degree of <code>v</code>.</li>
+<li>If the in-degree of <code>v</code> becomes 0, it means all its prerequisites are now satisfied. Add <code>v</code> to the queue.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>Check for Cycles</strong>:<ul>
+<li>After the loop, if the number of courses in our result list is equal to <code>numCourses</code>, we have found a valid topological sort.</li>
+<li>If the count is less than <code>numCourses</code>, it means the graph has a cycle, and not all nodes could be visited. In this case, return an empty array.</li>
+</ul>
+</li>
+</ol>
+<p>This approach has a time complexity of <strong>O(V + E)</strong> and space complexity of <strong>O(V + E)</strong>, where V is <code>numCourses</code> and E is the number of prerequisites.</p>
+<h4>C++ Code Snippet</h4>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;queue&gt;
+
+class Solution {
+public:
+    vector&lt;int&gt; findOrder(int numCourses, vector&lt;vector&lt;int&gt;&gt;&amp; prerequisites) {
+        vector&lt;vector&lt;int&gt;&gt; adj(numCourses);
+        vector&lt;int&gt; in_degree(numCourses, 0);
+
+        for (const auto&amp; p : prerequisites) {
+            adj[p[1]].push_back(p[0]);
+            in_degree[p[0]]++;
+        }
+
+        queue&lt;int&gt; q;
+        for (int i = 0; i &lt; numCourses; ++i) {
+            if (in_degree[i] == 0) {
+                q.push(i);
+            }
+        }
+
+        vector&lt;int&gt; topological_order;
+        while (!q.empty()) {
+            int u = q.front();
+            q.pop();
+            topological_order.push_back(u);
+
+            for (int v : adj[u]) {
+                in_degree[v]--;
+                if (in_degree[v] == 0) {
+                    q.push(v);
+                }
+            }
+        }
+
+        if (topological_order.size() == numCourses) {
+            return topological_order;
+        } else {
+            return {};
+        }
+    }
+};
+</code></pre>
+<hr />
+<h3>Pythonic Solution (Best Approach: BFS / Kahn's Algorithm)</h3>
+<pre><code class="language-python">import collections
+from typing import List
+
+class Solution:
+    def findOrder(self, numCourses: int, prerequisites: List[List[int]]) -&gt; List[int]:
+        &quot;&quot;&quot;
+        Finds a valid course order using Kahn's algorithm (BFS-based topological sort).
+        &quot;&quot;&quot;
+        # Adjacency list: prereq -&gt; [course1, course2, ...]
+        adj = collections.defaultdict(list)
+        # Array to store the in-degree of each course
+        in_degree = [0] * numCourses
+
+        # Build the graph and in_degree array
+        for course, prereq in prerequisites:
+            adj[prereq].append(course)
+            in_degree[course] += 1
+
+        # Queue for courses with no prerequisites (in-degree of 0)
+        queue = collections.deque([i for i in range(numCourses) if in_degree[i] == 0])
+
+        topological_order = []
+
+        # Process courses from the queue
+        while queue:
+            prereq_course = queue.popleft()
+            topological_order.append(prereq_course)
+
+            # Reduce in-degree of neighboring courses
+            for dependent_course in adj[prereq_course]:
+                in_degree[dependent_course] -= 1
+                # If a course's prerequisites are all met, add it to the queue
+                if in_degree[dependent_course] == 0:
+                    queue.append(dependent_course)
+
+        # If the topological order contains all courses, return it.
+        # Otherwise, there is a cycle in the graph.
+        return topological_order if len(topological_order) == numCourses else []
+
+</code></pre></div>

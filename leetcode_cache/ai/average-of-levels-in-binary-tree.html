@@ -1,0 +1,167 @@
+<div class='ai-explanation'><h3>List of all the approaches to solution</h3>
+<ol>
+<li>Depth-First Search (DFS) Approach</li>
+<li>Breadth-First Search (BFS) Approach</li>
+</ol>
+<h3>Depth-First Search (DFS) Approach</h3>
+<p>This approach uses recursion to traverse the tree. We maintain a helper data structure, such as a vector of pairs, to store the sum of node values and the count of nodes for each level.</p>
+<ol>
+<li>Define a recursive function <code>dfs(node, level)</code> that takes the current node and its level as arguments.</li>
+<li>We use a vector of pairs, <code>stats</code>, where <code>stats[i]</code> will store <code>{sum_of_level_i, count_of_nodes_at_level_i}</code>.</li>
+<li>In the <code>dfs</code> function, if the current node is null, we return.</li>
+<li>If the current <code>level</code> is being visited for the first time (<code>level &gt;= stats.size()</code>), we add a new pair to our <code>stats</code> vector with the current node's value and a count of 1.</li>
+<li>If the level has been visited before, we update the existing entry at <code>stats[level]</code> by adding the current node's value to the sum and incrementing the count.</li>
+<li>Recursively call <code>dfs</code> for the left and right children, incrementing the level for each call (<code>level + 1</code>).</li>
+<li>After the initial <code>dfs(root, 0)</code> call completes, iterate through the <code>stats</code> vector, calculate the average for each level (<code>sum / count</code>), and store it in the final result vector.</li>
+</ol>
+<p>This approach visits every node once, resulting in a time complexity of O(N). The space complexity is determined by the recursion stack depth and the <code>stats</code> vector, both of which are proportional to the height of the tree (H), making it O(H) or O(N) in the worst case for a skewed tree.</p>
+<pre><code class="language-cpp">/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    // Vector to store {sum, count} for each level
+    vector&lt;pair&lt;long, int&gt;&gt; stats;
+
+    void dfs(TreeNode* root, int level) {
+        if (!root) {
+            return;
+        }
+
+        // If this is the first time we're visiting this level,
+        // create a new entry in our stats vector.
+        if (level &gt;= stats.size()) {
+            stats.push_back({(long)root-&gt;val, 1});
+        } else {
+            // Otherwise, update the existing entry for this level.
+            stats[level].first += root-&gt;val;
+            stats[level].second++;
+        }
+
+        // Recurse for left and right children at the next level.
+        dfs(root-&gt;left, level + 1);
+        dfs(root-&gt;right, level + 1);
+    }
+
+    vector&lt;double&gt; averageOfLevels(TreeNode* root) {
+        dfs(root, 0);
+
+        vector&lt;double&gt; averages;
+        for (const auto&amp; p : stats) {
+            averages.push_back((double)p.first / p.second);
+        }
+
+        return averages;
+    }
+};
+</code></pre>
+<h3>Breadth-First Search (BFS) Approach</h3>
+<p>This is the most intuitive approach for level-based problems. We use a queue to traverse the tree level by level, calculate the sum and count for each level, and then compute the average.</p>
+<ol>
+<li>Initialize an empty queue and add the <code>root</code> node to it.</li>
+<li>Initialize an empty vector <code>averages</code> to store the results.</li>
+<li>Loop as long as the queue is not empty.</li>
+<li>Inside the loop, first get the number of nodes currently in the queue. This <code>level_size</code> represents the number of nodes on the current level.</li>
+<li>Initialize a <code>level_sum</code> to 0. Use a <code>long long</code> or <code>double</code> to prevent overflow.</li>
+<li>Iterate <code>level_size</code> times to process all nodes of the current level. In each iteration:
+    a. Dequeue a node.
+    b. Add its value to <code>level_sum</code>.
+    c. Enqueue its non-null left and right children.</li>
+<li>After the inner loop finishes, you have processed all nodes for the current level. Calculate the average (<code>level_sum / level_size</code>) and push it into the <code>averages</code> vector.</li>
+<li>The outer loop continues until all levels are processed. Return the <code>averages</code> vector.</li>
+</ol>
+<p>This approach also visits every node once, giving a time complexity of O(N). The space complexity is determined by the maximum number of nodes in the queue at any time, which is the maximum width (W) of the tree, making it O(W) or O(N) in the worst case for a complete binary tree.</p>
+<pre><code class="language-cpp">/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    vector&lt;double&gt; averageOfLevels(TreeNode* root) {
+        if (!root) {
+            return {};
+        }
+
+        vector&lt;double&gt; averages;
+        queue&lt;TreeNode*&gt; q;
+        q.push(root);
+
+        while (!q.empty()) {
+            int level_size = q.size();
+            double level_sum = 0;
+
+            for (int i = 0; i &lt; level_size; ++i) {
+                TreeNode* current = q.front();
+                q.pop();
+
+                level_sum += current-&gt;val;
+
+                if (current-&gt;left) {
+                    q.push(current-&gt;left);
+                }
+                if (current-&gt;right) {
+                    q.push(current-&gt;right);
+                }
+            }
+
+            averages.push_back(level_sum / level_size);
+        }
+
+        return averages;
+    }
+};
+</code></pre>
+<h3>Pythonic solution for best approach</h3>
+<p>The BFS approach is generally considered better and more intuitive for level-order problems. It directly processes the tree level by level, matching the problem's requirements. Using <code>collections.deque</code> provides an efficient O(1) time complexity for append and pop-left operations.</p>
+<pre><code class="language-python">from collections import deque
+
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+class Solution:
+    def averageOfLevels(self, root: Optional[TreeNode]) -&gt; List[float]:
+        if not root:
+            return []
+
+        averages = []
+        # Use collections.deque for efficient queue operations
+        q = deque([root])
+
+        while q:
+            level_size = len(q)
+            level_sum = 0
+
+            # Process all nodes for the current level
+            for _ in range(level_size):
+                node = q.popleft()
+                level_sum += node.val
+
+                if node.left:
+                    q.append(node.left)
+                if node.right:
+                    q.append(node.right)
+
+            # Calculate and append the average for the level
+            averages.append(level_sum / level_size)
+
+        return averages
+
+</code></pre></div>

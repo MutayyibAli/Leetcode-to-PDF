@@ -1,0 +1,271 @@
+<div class='ai-explanation'><h3>List of Approaches</h3>
+<ol>
+<li>Brute Force Approach (Recursion)</li>
+<li>Memoization Approach (Top-Down DP)</li>
+<li>Tabulation Approach (Bottom-Up DP)</li>
+<li>Space-Optimized DP Approach</li>
+<li>Combined DP and Greedy Approach (Best Approach)</li>
+</ol>
+<hr />
+<h3>1. Brute Force Approach (Recursion)</h3>
+<p>This approach explores all possible sequences of buying and selling stocks. We define a recursive function that, for each day, decides whether to buy, sell, or do nothing. The state of our recursion can be defined by the current day, the number of transactions remaining, and whether we are currently holding a stock.</p>
+<p><strong>Step-by-step explanation:</strong>
+1.  Define a recursive function <code>solve(index, k, holding)</code> which returns the maximum profit from <code>prices[index:]</code> with <code>k</code> transactions left, given our <code>holding</code> status.
+2.  <strong>Base Cases:</strong> If we run out of days (<code>index == prices.size()</code>) or transactions (<code>k == 0</code>), we can't make any more profit, so return 0.
+3.  <strong>Recursive Step (Not Holding):</strong> If we are not holding a stock (<code>holding == false</code>), we have two choices on day <code>index</code>:
+    *   <strong>Buy:</strong> Spend <code>prices[index]</code> and recursively call <code>solve(index + 1, k, true)</code>. The profit is <code>-prices[index] + solve(...)</code>.
+    *   <strong>Skip:</strong> Do nothing and move to the next day: <code>solve(index + 1, k, false)</code>.
+    *   Return the maximum of these two choices.
+4.  <strong>Recursive Step (Holding):</strong> If we are holding a stock (<code>holding == true</code>), we have two choices:
+    *   <strong>Sell:</strong> Gain <code>prices[index]</code>, complete one transaction, and recursively call <code>solve(index + 1, k - 1, false)</code>. The profit is <code>prices[index] + solve(...)</code>.
+    *   <strong>Skip:</strong> Do nothing and move to the next day: <code>solve(index + 1, k, true)</code>.
+    *   Return the maximum of these two choices.
+5.  The initial call would be <code>solve(0, k, false)</code>. This approach is too slow due to re-computing the same subproblems multiple times.</p>
+<p>This approach is highly inefficient and will time out on most platforms due to its exponential complexity. Time complexity is O(2^N) and space complexity is O(N) for the recursion stack depth.</p>
+<pre><code class="language-cpp">// Note: This solution is for conceptual understanding and will time out (TLE).
+class Solution {
+public:
+    int solve(int index, int k, bool holding, const vector&lt;int&gt;&amp; prices) {
+        // Base cases
+        if (index == prices.size() || k == 0) {
+            return 0;
+        }
+
+        // Option 1: Skip the current day
+        int profit = solve(index + 1, k, holding, prices);
+
+        if (holding) {
+            // Option 2: Sell the stock
+            profit = max(profit, prices[index] + solve(index + 1, k - 1, false, prices));
+        } else {
+            // Option 2: Buy the stock
+            profit = max(profit, -prices[index] + solve(index + 1, k, true, prices));
+        }
+        return profit;
+    }
+
+    int maxProfit(int k, vector&lt;int&gt;&amp; prices) {
+        if (prices.empty()) return 0;
+        return solve(0, k, false, prices);
+    }
+};
+</code></pre>
+<hr />
+<h3>2. Memoization Approach (Top-Down DP)</h3>
+<p>To optimize the brute-force approach, we can use memoization (a form of dynamic programming) to store the results of subproblems we've already solved. We'll use a 3D array <code>memo[index][k][holding]</code> to store the result of <code>solve(index, k, holding)</code>.</p>
+<p><strong>Step-by-step explanation:</strong>
+1.  Create a 3D DP table <code>memo[N][K+1][2]</code> and initialize it with a value like -1 to indicate that a state has not been computed.
+2.  Use the same recursive structure as the brute-force approach.
+3.  Before computing the result for a state <code>(index, k, holding)</code>, check if <code>memo[index][k][holding]</code> is already computed. If it is, return the stored value.
+4.  After computing the result, store it in <code>memo[index][k][holding]</code> before returning.</p>
+<p>This significantly reduces redundant computations, making the solution feasible. The time complexity is O(N * K) because there are N<em>K</em>2 unique states, and each takes O(1) to compute. The space complexity is O(N * K) for the memoization table.</p>
+<pre><code class="language-cpp">class Solution {
+public:
+    int memo[1001][101][2];
+
+    int solve(int index, int k, bool holding, const vector&lt;int&gt;&amp; prices) {
+        if (index == prices.size() || k == 0) {
+            return 0;
+        }
+
+        if (memo[index][k][holding] != -1) {
+            return memo[index][k][holding];
+        }
+
+        int profit = solve(index + 1, k, holding, prices); // Skip
+
+        if (holding) { // Sell
+            profit = max(profit, prices[index] + solve(index + 1, k - 1, false, prices));
+        } else { // Buy
+            profit = max(profit, -prices[index] + solve(index + 1, k, true, prices));
+        }
+
+        return memo[index][k][holding] = profit;
+    }
+
+    int maxProfit(int k, vector&lt;int&gt;&amp; prices) {
+        if (prices.empty()) return 0;
+        memset(memo, -1, sizeof(memo));
+        return solve(0, k, false, prices);
+    }
+};
+</code></pre>
+<hr />
+<h3>3. Tabulation Approach (Bottom-Up DP)</h3>
+<p>This approach converts the top-down recursive solution into an iterative one. We use a DP table to build the solution from the base cases up. We can define <code>dp[t][i]</code> as the maximum profit after <code>t</code> transactions up to day <code>i</code>.</p>
+<p><strong>Step-by-step explanation:</strong>
+1.  Create a 2D DP table <code>dp[k+1][n]</code>, where <code>dp[t][i]</code> stores the max profit using at most <code>t</code> transactions up to day <code>i</code>.
+2.  Initialize the <code>dp</code> table with 0s.
+3.  Iterate through transactions <code>t</code> from 1 to <code>k</code>.
+4.  For each transaction <code>t</code>, iterate through days <code>i</code> from 1 to <code>n-1</code>.
+5.  To calculate <code>dp[t][i]</code>, we have two choices:
+    *   Don't transact on day <code>i</code>: profit is <code>dp[t][i-1]</code>.
+    *   Sell on day <code>i</code>: This completes the <code>t</code>-th transaction. We must have bought on some day <code>j &lt; i</code>. The profit is <code>prices[i] - prices[j] + dp[t-1][j]</code>. We want to maximize this over all <code>j</code>.
+6.  The recurrence relation is <code>dp[t][i] = max(dp[t][i-1], prices[i] + max_diff)</code>, where <code>max_diff = max(max_diff, dp[t-1][j] - prices[j])</code> for <code>j &lt; i</code>. We can maintain <code>max_diff</code> in a variable to avoid a nested loop.
+7.  The final answer is <code>dp[k][n-1]</code>.</p>
+<p>The time complexity is O(N * K) and the space complexity is O(N * K) for the DP table.</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;algorithm&gt;
+
+class Solution {
+public:
+    int maxProfit(int k, std::vector&lt;int&gt;&amp; prices) {
+        int n = prices.size();
+        if (n &lt;= 1 || k == 0) {
+            return 0;
+        }
+
+        // If k is large enough, it's the same as unlimited transactions
+        if (k &gt;= n / 2) {
+            int totalProfit = 0;
+            for (int i = 1; i &lt; n; ++i) {
+                if (prices[i] &gt; prices[i-1]) {
+                    totalProfit += prices[i] - prices[i-1];
+                }
+            }
+            return totalProfit;
+        }
+
+        std::vector&lt;std::vector&lt;int&gt;&gt; dp(k + 1, std::vector&lt;int&gt;(n, 0));
+
+        for (int t = 1; t &lt;= k; ++t) {
+            int maxDiff = -prices[0];
+            for (int i = 1; i &lt; n; ++i) {
+                dp[t][i] = std::max(dp[t][i - 1], prices[i] + maxDiff);
+                maxDiff = std::max(maxDiff, dp[t - 1][i] - prices[i]);
+            }
+        }
+
+        return dp[k][n - 1];
+    }
+};
+</code></pre>
+<p><em>Note: The code snippet for this approach includes an optimization for large <code>k</code> which will be fully explained in the "Best Approach".</em></p>
+<hr />
+<h3>4. Space-Optimized DP Approach</h3>
+<p>We can observe that the calculation of <code>dp[t][i]</code> only depends on the previous row <code>dp[t-1]</code> and the previous column <code>dp[t][i-1]</code>. This suggests we can optimize the space. We can use two arrays, one for the current transaction <code>t</code> and one for the previous transaction <code>t-1</code>. Or even better, we can use two arrays representing our state: <code>hold[j]</code> (max profit holding a stock after <code>j</code> buys) and <code>sell[j]</code> (max profit not holding a stock after <code>j</code> complete transactions).</p>
+<p><strong>Step-by-step explanation:</strong>
+1.  Initialize two arrays, <code>hold[k+1]</code> and <code>sell[k+1]</code>. <code>hold</code> should be initialized to a very small number (negative infinity) to represent an invalid state, and <code>sell</code> should be initialized to 0.
+2.  Iterate through each <code>price</code> in the <code>prices</code> array.
+3.  For each price, iterate through the number of transactions <code>j</code> from <code>k</code> down to 1. We iterate downwards to use the values from the previous day's iteration before they are updated.
+4.  Update the <code>sell</code> and <code>hold</code> arrays:
+    *   <code>sell[j] = max(sell[j], hold[j] + price)</code>: The max profit after <code>j</code> sells is either the same as yesterday, or we sell the stock we were holding today.
+    *   <code>hold[j] = max(hold[j], sell[j-1] - price)</code>: The max profit after <code>j</code> buys is either the same as yesterday, or we buy a stock today. This new 'hold' state comes from the state where we had completed <code>j-1</code> transactions.
+5.  After iterating through all prices, the maximum profit will be <code>sell[k]</code>.</p>
+<p>This approach maintains the O(N * K) time complexity but reduces the space complexity to O(K).</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;algorithm&gt;
+#include &lt;limits&gt;
+
+class Solution {
+public:
+    int maxProfit(int k, std::vector&lt;int&gt;&amp; prices) {
+        int n = prices.size();
+        if (n &lt;= 1 || k == 0) {
+            return 0;
+        }
+
+        if (k &gt;= n / 2) {
+            int totalProfit = 0;
+            for (int i = 1; i &lt; n; ++i) {
+                if (prices[i] &gt; prices[i-1]) {
+                    totalProfit += prices[i] - prices[i-1];
+                }
+            }
+            return totalProfit;
+        }
+
+        std::vector&lt;int&gt; sell(k + 1, 0);
+        std::vector&lt;int&gt; hold(k + 1, std::numeric_limits&lt;int&gt;::min());
+
+        for (int price : prices) {
+            for (int j = k; j &gt;= 1; --j) {
+                sell[j] = std::max(sell[j], hold[j] + price);
+                hold[j] = std::max(hold[j], sell[j - 1] - price);
+            }
+        }
+
+        return sell[k];
+    }
+};
+</code></pre>
+<p><em>Note: The code snippet for this approach also includes the optimization for large <code>k</code>.</em></p>
+<hr />
+<h3>5. Combined DP and Greedy Approach (Best Approach)</h3>
+<p>This approach combines the efficiency of the Space-Optimized DP with a greedy optimization for a special case. If <code>k</code> is large enough, we can perform as many transactions as we want. The maximum number of transactions you can make is <code>n/2</code> (buy one day, sell the next). If <code>k &gt;= n/2</code>, the constraint on the number of transactions is effectively removed.</p>
+<p><strong>Step-by-step explanation:</strong>
+1.  <strong>Check for large <code>k</code>:</strong> First, check if <code>k &gt;= prices.size() / 2</code>.
+2.  <strong>Greedy Case:</strong> If the condition is true, the problem becomes "Best Time to Buy and Sell Stock II". We can simply iterate through the prices and accumulate profit whenever the price on day <code>i</code> is greater than on day <code>i-1</code>. This is because we can buy on <code>i-1</code> and sell on <code>i</code> for a small profit, and this can be done for every upward price swing.
+3.  <strong>DP Case:</strong> If <code>k &lt; prices.size() / 2</code>, the constraint is meaningful. We then apply the Space-Optimized DP approach described previously, which is efficient for smaller values of <code>k</code>.
+4.  This combined strategy ensures that we use the most efficient algorithm for the given constraints.</p>
+<p>The time complexity is O(N) for the greedy case and O(N * K) for the DP case. The space complexity is O(1) for greedy and O(K) for DP. Overall, the complexity is O(N * min(K, N)) time and O(K) space.</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;algorithm&gt;
+#include &lt;limits&gt;
+
+class Solution {
+public:
+    int maxProfit(int k, std::vector&lt;int&gt;&amp; prices) {
+        int n = prices.size();
+        if (n &lt;= 1 || k == 0) {
+            return 0;
+        }
+
+        // Case 1: k is large enough for unlimited transactions (Greedy)
+        if (k &gt;= n / 2) {
+            int totalProfit = 0;
+            for (int i = 1; i &lt; n; ++i) {
+                if (prices[i] &gt; prices[i-1]) {
+                    totalProfit += prices[i] - prices[i-1];
+                }
+            }
+            return totalProfit;
+        }
+
+        // Case 2: k is a real constraint (Space-Optimized DP)
+        std::vector&lt;int&gt; sell(k + 1, 0);
+        std::vector&lt;int&gt; hold(k + 1, std::numeric_limits&lt;int&gt;::min());
+
+        for (int price : prices) {
+            for (int j = k; j &gt;= 1; --j) {
+                sell[j] = std::max(sell[j], hold[j] + price);
+                hold[j] = std::max(hold[j], sell[j - 1] - price);
+            }
+        }
+
+        return sell[k];
+    }
+};
+</code></pre>
+<h3>Pythonic Solution (Best Approach)</h3>
+<p>This is the Python implementation of the combined DP and greedy approach. It's concise and follows the same logic.</p>
+<pre><code class="language-python">import math
+
+class Solution:
+    def maxProfit(self, k: int, prices: list[int]) -&gt; int:
+        n = len(prices)
+        if n &lt;= 1 or k == 0:
+            return 0
+
+        # Case 1: k is large enough for unlimited transactions (Greedy)
+        if k &gt;= n // 2:
+            total_profit = 0
+            for i in range(1, n):
+                if prices[i] &gt; prices[i - 1]:
+                    total_profit += prices[i] - prices[i - 1]
+            return total_profit
+
+        # Case 2: k is a real constraint (Space-Optimized DP)
+        # sell[j]: max profit after j transactions, not holding stock
+        # hold[j]: max profit after j-th buy, holding stock
+        sell = [0] * (k + 1)
+        hold = [-math.inf] * (k + 1)
+
+        for price in prices:
+            for j in range(k, 0, -1):
+                sell[j] = max(sell[j], hold[j] + price)
+                hold[j] = max(hold[j], sell[j - 1] - price)
+
+        return sell[k]
+
+</code></pre></div>

@@ -1,0 +1,208 @@
+<div class='ai-explanation'><h3>List of Approaches</h3>
+<ol>
+<li>Brute Force with Hash Map Approach</li>
+<li>Sliding Window with Hash Map Approach</li>
+</ol>
+<hr />
+<h3>1. Brute Force with Hash Map Approach</h3>
+<p>This approach iterates through every possible starting index of a substring in <code>s</code> and checks if the substring is a valid concatenation of the words in <code>words</code>.</p>
+<ol>
+<li>First, create a frequency map (<code>counts</code>) of all words in the <code>words</code> array. This map will serve as a reference for what a valid concatenation should contain.</li>
+<li>Calculate the total length of the concatenated substring, which is <code>num_words * word_length</code>.</li>
+<li>Iterate through the string <code>s</code> from index <code>i = 0</code> up to the last possible starting position (<code>s.length() - total_length</code>).</li>
+<li>For each starting index <code>i</code>, check if the substring of <code>total_length</code> is a valid concatenation. To do this, create a second frequency map (<code>seen</code>) for the words within the current substring window.</li>
+<li>Iterate <code>num_words</code> times, extracting each word of <code>word_length</code> from the substring starting at <code>i</code>.</li>
+<li>For each extracted word, check if it's a required word (i.e., exists in <code>counts</code>). If not, the substring is invalid.</li>
+<li>If it is a required word, update its count in the <code>seen</code> map. If its count in <code>seen</code> exceeds its required count in <code>counts</code>, the substring is also invalid.</li>
+<li>If the inner loop completes without breaking, it means we have found a valid permutation of words. Add the starting index <code>i</code> to the result list.</li>
+<li>This approach is simple but inefficient as it re-evaluates overlapping parts of the string multiple times. The time complexity is O(N * M * L) and space complexity is O(M * L), where N is the length of s, M is the number of words, and L is the length of each word.</li>
+</ol>
+<pre><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;vector&gt;
+#include &lt;string&gt;
+#include &lt;unordered_map&gt;
+
+class Solution {
+public:
+    std::vector&lt;int&gt; findSubstring(std::string s, std::vector&lt;std::string&gt;&amp; words) {
+        if (s.empty() || words.empty()) {
+            return {};
+        }
+
+        std::unordered_map&lt;std::string, int&gt; counts;
+        for (const std::string&amp; word : words) {
+            counts[word]++;
+        }
+
+        int n = s.length();
+        int num = words.size();
+        int len = words[0].length();
+        int totalLen = num * len;
+        std::vector&lt;int&gt; indexes;
+
+        if (n &lt; totalLen) {
+            return {};
+        }
+
+        for (int i = 0; i &lt;= n - totalLen; i++) {
+            std::unordered_map&lt;std::string, int&gt; seen;
+            int j = 0;
+            for (; j &lt; num; j++) {
+                std::string word = s.substr(i + j * len, len);
+                if (counts.count(word)) {
+                    seen[word]++;
+                    if (seen[word] &gt; counts[word]) {
+                        break;
+                    }
+                } else {
+                    break;
+                }
+            }
+            if (j == num) {
+                indexes.push_back(i);
+            }
+        }
+        return indexes;
+    }
+};
+</code></pre>
+<hr />
+<h3>2. Sliding Window with Hash Map Approach</h3>
+<p>This approach optimizes the brute-force method by using a sliding window. It avoids redundant checks on overlapping substrings by maintaining a window of words and sliding it across the string.</p>
+<ol>
+<li>The key insight is that any valid substring is composed of words of a fixed length, <code>L</code>. This means we can process the string <code>s</code> in <code>L</code> independent passes. The first pass checks for concatenations starting at indices <code>0, L, 2L, ...</code>, the second at <code>1, L+1, 2L+1, ...</code>, and so on, up to <code>L-1</code>.</li>
+<li>As in the previous approach, first create a reference frequency map (<code>counts</code>) for the words in the <code>words</code> list.</li>
+<li>Begin an outer loop <code>i</code> from <code>0</code> to <code>L-1</code>. Each <code>i</code> represents a different starting offset for our sliding window.</li>
+<li>For each offset <code>i</code>, initialize a sliding window with its <code>left</code> boundary at <code>i</code>. Also, initialize a <code>seen</code> map for the current window's words and a <code>count</code> for the number of valid words in the window.</li>
+<li>Iterate a <code>j</code> pointer from <code>i</code> through <code>s</code>, moving by <code>L</code> each time. This <code>j</code> pointer represents the start of the next word to be considered for the right side of the window.</li>
+<li>If the word <code>s.substr(j, len)</code> is in our <code>counts</code> map:<ul>
+<li>Add it to the window (increment its count in <code>seen</code> and the total <code>count</code>).</li>
+<li>If we have an excess of this word (i.e., <code>seen[word] &gt; counts[word]</code>), we must shrink the window from the left until it becomes valid again.</li>
+<li>If the <code>count</code> of valid words in the window equals the total number of words (<code>num</code>), we've found a match. Record the <code>left</code> index. Then, to continue searching, slide the window one position to the right by removing the leftmost word.</li>
+</ul>
+</li>
+<li>If the word <code>s.substr(j, len)</code> is <em>not</em> in the <code>counts</code> map, it cannot be part of a valid concatenation. This breaks the current window. We reset <code>seen</code>, <code>count</code>, and move the <code>left</code> boundary of the window to the position after this invalid word (<code>j + len</code>).</li>
+<li>This method processes each part of the string a constant number of times, leading to a better time complexity. The time complexity is O(N * L) and space complexity is O(M * L), where N is the length of s, M is the number of words, and L is the length of each word.</li>
+</ol>
+<pre><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;vector&gt;
+#include &lt;string&gt;
+#include &lt;unordered_map&gt;
+
+class Solution {
+public:
+    std::vector&lt;int&gt; findSubstring(std::string s, std::vector&lt;std::string&gt;&amp; words) {
+        if (s.empty() || words.empty()) {
+            return {};
+        }
+
+        std::unordered_map&lt;std::string, int&gt; counts;
+        for (const std::string&amp; word : words) {
+            counts[word]++;
+        }
+
+        int n = s.length();
+        int num = words.size();
+        int len = words[0].length();
+        std::vector&lt;int&gt; result;
+
+        if (n &lt; num * len) {
+            return {};
+        }
+
+        for (int i = 0; i &lt; len; ++i) {
+            std::unordered_map&lt;std::string, int&gt; seen;
+            int left = i;
+            int count = 0;
+            for (int j = i; j &lt;= n - len; j += len) {
+                std::string word = s.substr(j, len);
+
+                if (counts.count(word)) {
+                    seen[word]++;
+                    count++;
+
+                    while (seen[word] &gt; counts[word]) {
+                        std::string leftWord = s.substr(left, len);
+                        seen[leftWord]--;
+                        count--;
+                        left += len;
+                    }
+
+                    if (count == num) {
+                        result.push_back(left);
+                        std::string leftWord = s.substr(left, len);
+                        seen[leftWord]--;
+                        count--;
+                        left += len;
+                    }
+                } else {
+                    seen.clear();
+                    count = 0;
+                    left = j + len;
+                }
+            }
+        }
+        return result;
+    }
+};
+</code></pre>
+<hr />
+<h3>Pythonic Solution (Sliding Window Approach)</h3>
+<p>This Python solution implements the optimized sliding window approach using <code>collections.Counter</code> for efficient frequency counting, which is idiomatic and clean.</p>
+<pre><code class="language-python">from collections import Counter
+from typing import List
+
+class Solution:
+    def findSubstring(self, s: str, words: List[str]) -&gt; List[int]:
+        if not s or not words:
+            return []
+
+        word_len = len(words[0])
+        num_words = len(words)
+        total_len = word_len * num_words
+        s_len = len(s)
+
+        if s_len &lt; total_len:
+            return []
+
+        word_counts = Counter(words)
+        result = []
+
+        # Iterate through each possible starting offset
+        for i in range(word_len):
+            left = i
+            words_seen = Counter()
+            count = 0
+
+            # Slide a window of size 'word_len' across the relevant part of the string
+            for j in range(i, s_len - word_len + 1, word_len):
+                word = s[j : j + word_len]
+
+                if word in word_counts:
+                    words_seen[word] += 1
+                    count += 1
+
+                    # If a word count is exceeded, shrink the window from the left
+                    while words_seen[word] &gt; word_counts[word]:
+                        left_word = s[left : left + word_len]
+                        words_seen[left_word] -= 1
+                        count -= 1
+                        left += word_len
+
+                    # If the window contains all the words, it's a valid substring
+                    if count == num_words:
+                        result.append(left)
+                        # Slide the window forward by one word to find the next solution
+                        left_word = s[left : left + word_len]
+                        words_seen[left_word] -= 1
+                        count -= 1
+                        left += word_len
+                else:
+                    # If an unknown word is found, reset the window
+                    words_seen.clear()
+                    count = 0
+                    left = j + word_len
+
+        return result
+
+</code></pre></div>

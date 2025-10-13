@@ -1,0 +1,84 @@
+<div class='ai-explanation'><h3>List of all the approaches to solution</h3>
+<ul>
+<li>Brute Force Approach: Splitting the String</li>
+<li>Optimized Approach: Single Pass from the End</li>
+</ul>
+<h3>Brute Force Approach: Splitting the String</h3>
+<p>This approach relies on built-in string manipulation functions to simplify the problem. The core idea is to split the string into individual words and then find the length of the very last word in the resulting collection. While this is often simple to implement, it can be less efficient in terms of memory usage.</p>
+<ol>
+<li><strong>Split the String</strong>: The input string <code>s</code> is parsed, and all sequences of non-space characters (words) are separated. This is typically done using a built-in split function or a stringstream.</li>
+<li><strong>Identify the Last Word</strong>: After splitting, the words are stored in a list or are processed sequentially. We identify the last word from this sequence.</li>
+<li><strong>Return Length</strong>: The length of this last word is calculated and returned.</li>
+</ol>
+<p>This approach has a time complexity of O(N), where N is the length of the string, because the entire string must be scanned to be split. The space complexity is also O(N) in the worst case, as a new data structure might be needed to store all the words from the string.</p>
+<pre><code class="language-cpp">#include &lt;string&gt;
+#include &lt;sstream&gt;
+
+class Solution {
+public:
+    int lengthOfLastWord(std::string s) {
+        std::stringstream ss(s);
+        std::string word = &quot;&quot;;
+        std::string lastWord = &quot;&quot;;
+
+        // The '&gt;&gt;' operator extracts whitespace-separated words.
+        // We loop through all words, and 'lastWord' will hold the last one found.
+        while (ss &gt;&gt; word) {
+            lastWord = word;
+        }
+
+        return lastWord.length();
+    }
+};
+</code></pre>
+<h3>Optimized Approach: Single Pass from the End</h3>
+<p>This is a more efficient approach that avoids allocating extra memory. By scanning the string from right to left, we can find the last word and calculate its length in a single pass without storing all the words.</p>
+<ol>
+<li><strong>Find End of Last Word</strong>: Start iterating from the end of the string. Skip any trailing spaces to find the last non-space character, which is the end of the last word.</li>
+<li><strong>Count Characters</strong>: Once the last character of the word is found, start counting backwards.</li>
+<li><strong>Stop Counting</strong>: Continue counting until a space is encountered or the beginning of the string is reached. This count represents the length of the last word.</li>
+<li><strong>Return Count</strong>: The final count is the result.</li>
+</ol>
+<p>This approach has a time complexity of O(N) as it involves a single traversal of the string, and a space complexity of O(1) since it only uses a few variables for counting and indexing.</p>
+<pre><code class="language-cpp">#include &lt;string&gt;
+
+class Solution {
+public:
+    int lengthOfLastWord(std::string s) {
+        int length = 0;
+        int i = s.length() - 1;
+
+        // 1. Skip all trailing spaces
+        while (i &gt;= 0 &amp;&amp; s[i] == ' ') {
+            i--;
+        }
+
+        // 2. Count the length of the last word
+        while (i &gt;= 0 &amp;&amp; s[i] != ' ') {
+            length++;
+            i--;
+        }
+
+        return length;
+    }
+};
+</code></pre>
+<h3>Pythonic solution for best approach</h3>
+<p>The best approach is the single pass from the end, which is optimal in terms of space. The following Python code implements this logic in a clean and readable way.</p>
+<pre><code class="language-python">class Solution:
+    def lengthOfLastWord(self, s: str) -&gt; int:
+        length = 0
+        # We start iterating from the last character of the string
+        for i in reversed(range(len(s))):
+            # If the character is not a space, it's part of a word
+            if s[i] != ' ':
+                length += 1
+            # If we encounter a space after we've started counting,
+            # it means we have found the end of the last word.
+            elif length &gt; 0:
+                return length
+
+        # This handles cases where the string has no leading spaces,
+        # e.g., &quot;word&quot; or &quot;another word&quot;.
+        return length
+</code></pre></div>

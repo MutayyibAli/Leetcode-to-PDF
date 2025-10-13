@@ -1,0 +1,188 @@
+<div class='ai-explanation'><h3>List of all the approaches to solution</h3>
+<ol>
+<li>Brute Force Approach</li>
+<li>Sliding Window with Set</li>
+<li>Optimized Sliding Window with Map</li>
+<li>Optimized Sliding Window with Array</li>
+</ol>
+<h3>Brute Force Approach</h3>
+<p>The most straightforward approach is to generate every possible substring of the given string <code>s</code>. For each substring, we then check if it contains any duplicate characters. A simple way to check for duplicates is to use a hash set. We iterate through the substring, adding each character to the set. If we encounter a character that's already in the set, the substring is invalid. If we successfully iterate through the entire substring, it's valid, and we update our maximum length if this substring is longer than the longest one found so far.</p>
+<p><strong>Step-by-step explanation:</strong>
+1. Initialize a variable <code>maxLength</code> to 0.
+2. Generate all possible substrings by using two nested loops. The outer loop <code>i</code> determines the start of the substring, and the inner loop <code>j</code> determines the end.
+3. For each substring <code>s.substr(i, j - i + 1)</code>:
+    a. Create a <code>std::unordered_set&lt;char&gt;</code> to keep track of characters in the current substring.
+    b. Iterate through the characters of the substring.
+    c. For each character, check if it's already in the set. If it is, this substring has a duplicate, so we break the inner loop and check the next substring.
+    d. If the character is not in the set, add it.
+    e. After checking all characters in the substring, if no duplicates were found, update <code>maxLength = max(maxLength, current_substring_length)</code>.
+4. After checking all substrings, return <code>maxLength</code>.</p>
+<p>This approach is correct but inefficient due to redundant checks. The time complexity is O(N³) because of the two loops for substrings and a third loop for checking duplicates. The space complexity is O(min(N, M)) where N is the string length and M is the character set size.</p>
+<pre><code class="language-cpp">#include &lt;string&gt;
+#include &lt;unordered_set&gt;
+#include &lt;algorithm&gt;
+
+class Solution {
+public:
+    int lengthOfLongestSubstring(std::string s) {
+        int n = s.length();
+        if (n == 0) return 0;
+        int maxLength = 0;
+
+        for (int i = 0; i &lt; n; ++i) {
+            for (int j = i; j &lt; n; ++j) {
+                std::unordered_set&lt;char&gt; charSet;
+                bool hasDuplicate = false;
+                for (int k = i; k &lt;= j; ++k) {
+                    if (charSet.count(s[k])) {
+                        hasDuplicate = true;
+                        break;
+                    }
+                    charSet.insert(s[k]);
+                }
+                if (!hasDuplicate) {
+                    maxLength = std::max(maxLength, j - i + 1);
+                }
+            }
+        }
+        return maxLength;
+    }
+};
+</code></pre>
+<h3>Sliding Window with Set</h3>
+<p>This approach improves upon the brute-force method by using a "sliding window". The window represents the current substring we are examining. We use two pointers, <code>left</code> and <code>right</code>, to define the boundaries of the window. A hash set is used to store the unique characters within the current window. We expand the window by moving the <code>right</code> pointer. If we encounter a character <code>s[right]</code> that is already in our set, it means we have a duplicate. To fix this, we shrink the window from the left by moving the <code>left</code> pointer forward and removing characters from the set until the duplicate is gone.</p>
+<p><strong>Step-by-step explanation:</strong>
+1. Initialize <code>left = 0</code>, <code>maxLength = 0</code>, and an empty hash set <code>charSet</code>.
+2. Iterate through the string with a <code>right</code> pointer from <code>0</code> to <code>n-1</code>.
+3. In each iteration, check if <code>s[right]</code> is already in <code>charSet</code>.
+4. If <code>s[right]</code> is in <code>charSet</code>, it's a duplicate. We shrink the window from the left by removing <code>s[left]</code> from the set and incrementing <code>left</code> until <code>s[right]</code> is no longer in the set.
+5. After handling any duplicates, <code>s[right]</code> is now a unique character for the current window. Insert <code>s[right]</code> into <code>charSet</code>.
+6. Update <code>maxLength</code> with the size of the current valid window: <code>maxLength = max(maxLength, right - left + 1)</code>.
+7. After the loop finishes, return <code>maxLength</code>.</p>
+<p>Each character is visited at most twice (once by <code>right</code> and once by <code>left</code>), leading to a time complexity of O(N). The space complexity is O(min(N, M)) for the hash set.</p>
+<pre><code class="language-cpp">#include &lt;string&gt;
+#include &lt;unordered_set&gt;
+#include &lt;algorithm&gt;
+
+class Solution {
+public:
+    int lengthOfLongestSubstring(std::string s) {
+        int n = s.length();
+        int maxLength = 0;
+        std::unordered_set&lt;char&gt; charSet;
+        int left = 0;
+
+        for (int right = 0; right &lt; n; right++) {
+            // Shrink window from the left if a duplicate is found
+            while (charSet.count(s[right])) {
+                charSet.erase(s[left]);
+                left++;
+            }
+            // Expand window to the right
+            charSet.insert(s[right]);
+            maxLength = std::max(maxLength, right - left + 1);
+        }
+
+        return maxLength;
+    }
+};
+</code></pre>
+<h3>Optimized Sliding Window with Map</h3>
+<p>This approach further optimizes the sliding window by using a hash map instead of a set. The map stores characters and their most recently seen indices. When we encounter a character <code>s[right]</code> that is already in the map, we don't need to shrink the window one by one. Instead, we can check if the last seen index of <code>s[right]</code> is within our current window (<code>&gt;= left</code>). If it is, we have a duplicate in the current window, and we can directly jump the <code>left</code> pointer to the position right after the previous occurrence (<code>map[s[right]] + 1</code>). This avoids the repeated removals required by the set-based approach.</p>
+<p><strong>Step-by-step explanation:</strong>
+1. Initialize <code>left = 0</code>, <code>maxLength = 0</code>, and an empty hash map <code>charMap</code> to store <code>char -&gt; index</code> pairs.
+2. Iterate through the string with a <code>right</code> pointer from <code>0</code> to <code>n-1</code>.
+3. Check if the current character <code>s[right]</code> is in <code>charMap</code>.
+4. If it is, and its last seen index <code>charMap[s[right]]</code> is within the current window (i.e., <code>&gt;= left</code>), it's a duplicate. Move the <code>left</code> pointer to <code>charMap[s[right]] + 1</code>.
+5. Update the last seen index of the current character: <code>charMap[s[right]] = right</code>.
+6. Calculate the length of the current window (<code>right - left + 1</code>) and update <code>maxLength</code> if it's larger.
+7. After the loop, return <code>maxLength</code>.</p>
+<p>This approach ensures the <code>left</code> pointer only moves forward, and each character is processed once by <code>right</code>, giving a time complexity of O(N). The space complexity is O(min(N, M)) for the hash map.</p>
+<pre><code class="language-cpp">#include &lt;string&gt;
+#include &lt;unordered_map&gt;
+#include &lt;algorithm&gt;
+
+class Solution {
+public:
+    int lengthOfLongestSubstring(std::string s) {
+        int n = s.length();
+        int maxLength = 0;
+        std::unordered_map&lt;char, int&gt; charMap;
+        int left = 0;
+
+        for (int right = 0; right &lt; n; right++) {
+            if (charMap.count(s[right])) {
+                // Move left pointer to the right of the previous occurrence
+                // Only if the previous occurrence is inside the current window
+                left = std::max(left, charMap[s[right]] + 1);
+            }
+            // Update the last seen index of the character
+            charMap[s[right]] = right;
+            maxLength = std::max(maxLength, right - left + 1);
+        }
+
+        return maxLength;
+    }
+};
+</code></pre>
+<h3>Optimized Sliding Window with Array</h3>
+<p>This is the most optimized approach. It builds on the previous map-based solution but replaces the hash map with a fixed-size integer array (e.g., size 128 for ASCII characters). The character's integer value (ASCII code) serves as the index into the array. This eliminates the overhead of hash computations, making it slightly faster. The array, <code>charIndex</code>, stores the most recently seen index for each character, initialized to a value like -1. The logic remains the same as the map approach.</p>
+<p><strong>Step-by-step explanation:</strong>
+1. Initialize <code>left = 0</code>, <code>maxLength = 0</code>, and an integer array <code>charIndex</code> of size 128 (for ASCII), with all values set to -1.
+2. Iterate through the string with a <code>right</code> pointer from <code>0</code> to <code>n-1</code>.
+3. Get the character <code>s[right]</code> and its ASCII value <code>idx = s[right]</code>.
+4. Check the last seen position of this character, <code>charIndex[idx]</code>.
+5. If <code>charIndex[idx]</code> is greater than or equal to <code>left</code>, it means the character has appeared before within our current window. We update <code>left</code> to be one position after that last appearance: <code>left = charIndex[idx] + 1</code>.
+6. Update the last seen index for the current character: <code>charIndex[idx] = right</code>.
+7. Update <code>maxLength</code> with the length of the current valid window: <code>maxLength = max(maxLength, right - left + 1)</code>.
+8. After the loop, return <code>maxLength</code>.</p>
+<p>The time complexity is O(N) because we iterate through the string once. The space complexity is O(M), where M is the size of the character set (e.g., 128), which is constant space, effectively O(1).</p>
+<pre><code class="language-cpp">#include &lt;string&gt;
+#include &lt;vector&gt;
+#include &lt;algorithm&gt;
+
+class Solution {
+public:
+    int lengthOfLongestSubstring(std::string s) {
+        int n = s.length();
+        int maxLength = 0;
+        std::vector&lt;int&gt; charIndex(128, -1);
+        int left = 0;
+
+        for (int right = 0; right &lt; n; right++) {
+            // If the character was seen before and is inside the current window
+            if (charIndex[s[right]] &gt;= left) {
+                left = charIndex[s[right]] + 1;
+            }
+            // Update the last seen index of the current character
+            charIndex[s[right]] = right;
+            maxLength = std::max(maxLength, right - left + 1);
+        }
+
+        return maxLength;
+    }
+};
+</code></pre>
+<h3>Pythonic solution for best approach only</h3>
+<p>The best approach uses a sliding window and a data structure to keep track of the last seen index of characters. In Python, a dictionary (hash map) is a natural and efficient choice for this. The logic is identical to the C++ map-based solution: iterate through the string, maintaining a <code>left</code> pointer for the start of the window. If a character is found that has already been seen within the current window, move the <code>left</code> pointer past its last occurrence.</p>
+<pre><code class="language-python">class Solution:
+    def lengthOfLongestSubstring(self, s: str) -&gt; int:
+        char_index_map = {}
+        max_length = 0
+        left = 0
+
+        for right, char in enumerate(s):
+            # If the character is in the map and its last seen index is
+            # within the current window, update the left pointer.
+            if char in char_index_map and char_index_map[char] &gt;= left:
+                left = char_index_map[char] + 1
+
+            # Update the last seen index of the character
+            char_index_map[char] = right
+
+            # Update the maximum length found so far
+            max_length = max(max_length, right - left + 1)
+
+        return max_length
+
+</code></pre></div>

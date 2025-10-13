@@ -1,0 +1,141 @@
+<div class='ai-explanation'><h3>List of all the approaches to solution</h3>
+<ol>
+<li>Brute Force Approach</li>
+<li>Prefix and Suffix Products Approach (Using Extra Space)</li>
+<li>Optimized Prefix and Suffix Products Approach (O(1) Space)</li>
+</ol>
+<hr />
+<h3>Brute Force Approach</h3>
+<h4>Explanation</h4>
+<p>This is the most straightforward approach. For each element in the input array, we iterate through the entire array again to calculate the product of all other elements.</p>
+<ol>
+<li>Initialize an output array <code>answer</code>.</li>
+<li>Iterate through the input array <code>nums</code> with an index <code>i</code>.</li>
+<li>For each <code>nums[i]</code>, initialize a variable <code>product</code> to 1.</li>
+<li>Start a nested loop with an index <code>j</code>.</li>
+<li>If <code>i</code> is not equal to <code>j</code>, multiply <code>product</code> by <code>nums[j]</code>.</li>
+<li>After the inner loop finishes, the <code>product</code> will be the product of all elements except <code>nums[i]</code>. Add this <code>product</code> to the <code>answer</code> array.</li>
+<li>Repeat for all elements in <code>nums</code>.</li>
+</ol>
+<p>This approach is simple to understand but inefficient for large inputs, leading to a "Time Limit Exceeded" error on most platforms.
+This approach has a time complexity of O(N^2) and a space complexity of O(1) (excluding the output array).</p>
+<h4>C++ Code</h4>
+<pre><code class="language-cpp">class Solution {
+public:
+    vector&lt;int&gt; productExceptSelf(vector&lt;int&gt;&amp; nums) {
+        int n = nums.size();
+        vector&lt;int&gt; answer;
+        for (int i = 0; i &lt; n; i++) {
+            int product = 1;
+            for (int j = 0; j &lt; n; j++) {
+                if (i == j) continue;
+                product *= nums[j];
+            }
+            answer.push_back(product);
+        }
+        return answer;
+    }
+};
+</code></pre>
+<hr />
+<h3>Prefix and Suffix Products Approach (Using Extra Space)</h3>
+<h4>Explanation</h4>
+<p>A more efficient approach is to recognize that the product of elements except self at index <code>i</code> is the product of all elements to its left multiplied by the product of all elements to its right. We can pre-calculate these prefix and suffix products.</p>
+<ol>
+<li>Create two arrays, <code>left_products</code> and <code>right_products</code>, of the same size as <code>nums</code>.</li>
+<li><strong>Calculate Prefix Products:</strong> Traverse <code>nums</code> from left to right. For each index <code>i</code>, <code>left_products[i]</code> will store the product of all elements to the left of <code>nums[i]</code>. <code>left_products[0]</code> is initialized to 1.</li>
+<li><strong>Calculate Suffix Products:</strong> Traverse <code>nums</code> from right to left. For each index <code>i</code>, <code>right_products[i]</code> will store the product of all elements to the right of <code>nums[i]</code>. <code>right_products[n-1]</code> is initialized to 1.</li>
+<li><strong>Final Product:</strong> Traverse through the arrays one last time. For each index <code>i</code>, the final result <code>answer[i]</code> is <code>left_products[i] * right_products[i]</code>.</li>
+</ol>
+<p>This approach consists of three separate linear passes through the arrays.
+This approach has a time complexity of O(N) and a space complexity of O(N) due to the extra <code>left_products</code> and <code>right_products</code> arrays.</p>
+<h4>C++ Code</h4>
+<pre><code class="language-cpp">class Solution {
+public:
+    vector&lt;int&gt; productExceptSelf(vector&lt;int&gt;&amp; nums) {
+        int n = nums.size();
+        vector&lt;int&gt; answer(n);
+        vector&lt;int&gt; left_products(n);
+        vector&lt;int&gt; right_products(n);
+
+        // Calculate left products
+        left_products[0] = 1;
+        for (int i = 1; i &lt; n; i++) {
+            left_products[i] = left_products[i-1] * nums[i-1];
+        }
+
+        // Calculate right products
+        right_products[n-1] = 1;
+        for (int i = n-2; i &gt;= 0; i--) {
+            right_products[i] = right_products[i+1] * nums[i+1];
+        }
+
+        // Calculate the final answer
+        for (int i = 0; i &lt; n; i++) {
+            answer[i] = left_products[i] * right_products[i];
+        }
+
+        return answer;
+    }
+};
+</code></pre>
+<hr />
+<h3>Optimized Prefix and Suffix Products Approach (O(1) Space)</h3>
+<h4>Explanation</h4>
+<p>This approach is an optimization of the previous one. Instead of using two separate arrays for prefix and suffix products, we can use the output array itself to store these intermediate results, thus reducing the space complexity.</p>
+<ol>
+<li>Initialize the output array <code>answer</code> of size <code>n</code>.</li>
+<li><strong>First Pass (Left Products):</strong> Traverse <code>nums</code> from left to right. For each index <code>i</code>, calculate the product of elements to its left and store it in <code>answer[i]</code>. Initialize <code>answer[0]</code> to 1.</li>
+<li><strong>Second Pass (Right Products):</strong> Traverse <code>nums</code> from right to left. Use a variable <code>right_product</code> to keep track of the running product of elements to the right. For each index <code>i</code>, first multiply <code>answer[i]</code> (which currently holds the left product) by <code>right_product</code>, then update <code>right_product</code> by multiplying it with <code>nums[i]</code>.</li>
+</ol>
+<p>This method uses two linear passes and a single variable for extra storage, satisfying the O(1) space constraint.
+This approach has a time complexity of O(N) and a space complexity of O(1) (excluding the output array).</p>
+<h4>C++ Code</h4>
+<pre><code class="language-cpp">class Solution {
+public:
+    vector&lt;int&gt; productExceptSelf(vector&lt;int&gt;&amp; nums) {
+        int n = nums.size();
+        vector&lt;int&gt; answer(n);
+
+        // First pass: Calculate and store left products in the answer array
+        answer[0] = 1;
+        for (int i = 1; i &lt; n; i++) {
+            answer[i] = answer[i-1] * nums[i-1];
+        }
+
+        // Second pass: Calculate right products and multiply with the existing left products
+        int right_product = 1;
+        for (int i = n - 1; i &gt;= 0; i--) {
+            answer[i] = answer[i] * right_product;
+            right_product *= nums[i];
+        }
+
+        return answer;
+    }
+};
+</code></pre>
+<hr />
+<h3>Pythonic Solution (Best Approach)</h3>
+<pre><code class="language-python">class Solution:
+    def productExceptSelf(self, nums: list[int]) -&gt; list[int]:
+        n = len(nums)
+        # Initialize the result array with 1s
+        result = [1] * n
+
+        # First pass: Calculate prefix products and store them in the result array
+        # result[i] will contain the product of all elements to the left of i
+        prefix_product = 1
+        for i in range(n):
+            result[i] = prefix_product
+            prefix_product *= nums[i]
+
+        # Second pass: Calculate suffix products on-the-fly and update the result array
+        # result[i] will be multiplied by the product of all elements to the right of i
+        suffix_product = 1
+        for i in range(n - 1, -1, -1):
+            result[i] *= suffix_product
+            suffix_product *= nums[i]
+
+        return result
+
+</code></pre></div>

@@ -1,0 +1,135 @@
+<div class='ai-explanation'><h3>List of Approaches</h3>
+<ol>
+<li>Brute Force Approach</li>
+<li>Sliding Window Approach</li>
+</ol>
+<hr />
+<h3>1. Brute Force Approach</h3>
+<p>This approach involves examining every possible substring of length <code>k</code>, counting the vowels in each, and keeping track of the maximum count found.</p>
+<p><strong>Step-by-step explanation:</strong>
+1.  Initialize a variable <code>maxVowels</code> to 0, which will store the final answer.
+2.  Iterate through the string <code>s</code> from the first possible starting position of a substring (<code>i = 0</code>) up to the last possible one (<code>i &lt;= s.length() - k</code>).
+3.  For each starting position <code>i</code>, initialize a <code>currentVowels</code> counter to 0.
+4.  Create an inner loop to iterate through the characters of the current substring of length <code>k</code> (from index <code>i</code> to <code>i + k - 1</code>).
+5.  Inside the inner loop, if a character is a vowel, increment <code>currentVowels</code>.
+6.  After counting vowels for the current substring, update <code>maxVowels</code> with the maximum of its current value and <code>currentVowels</code>.
+7.  After checking all substrings, return <code>maxVowels</code>.</p>
+<p>This approach is simple to understand but inefficient for large strings because it repeatedly counts vowels in overlapping parts of substrings. The time complexity is O(N * K) where N is the length of the string, and the space complexity is O(1).</p>
+<pre><code class="language-cpp">#include &lt;string&gt;
+#include &lt;algorithm&gt;
+
+class Solution {
+public:
+    // Helper function to check if a character is a vowel
+    bool isVowel(char c) {
+        return c == 'a' || c == 'e' || c == 'i' || c == 'o' || c == 'u';
+    }
+
+    int maxVowels(std::string s, int k) {
+        int maxVowels = 0;
+        int n = s.length();
+        // Iterate through all possible start indices of a substring of length k
+        for (int i = 0; i &lt;= n - k; ++i) {
+            int currentVowels = 0;
+            // Count vowels in the current substring s[i...i+k-1]
+            for (int j = i; j &lt; i + k; ++j) {
+                if (isVowel(s[j])) {
+                    currentVowels++;
+                }
+            }
+            maxVowels = std::max(maxVowels, currentVowels);
+        }
+        return maxVowels;
+    }
+};
+</code></pre>
+<hr />
+<h3>2. Sliding Window Approach</h3>
+<p>This is a more optimized approach that avoids redundant calculations. We maintain a "window" of size <code>k</code> and slide it across the string, updating the vowel count efficiently at each step.</p>
+<p><strong>Step-by-step explanation:</strong>
+1.  <strong>Initialize:</strong>
+    *   First, calculate the number of vowels in the initial window of size <code>k</code> (from index 0 to <code>k-1</code>).
+    *   Store this count in a <code>currentVowels</code> variable.
+    *   Initialize <code>maxVowels</code> to this initial count.
+2.  <strong>Slide and Update:</strong>
+    *   Iterate through the rest of the string, starting from index <code>k</code>.
+    *   In each iteration, we "slide" the window one position to the right. This involves:
+        a. <strong>Adding the new character:</strong> Check if the character entering the window from the right (<code>s[i]</code>) is a vowel. If it is, increment <code>currentVowels</code>.
+        b. <strong>Removing the old character:</strong> Check if the character leaving the window from the left (<code>s[i-k]</code>) was a vowel. If it was, decrement <code>currentVowels</code>.
+    *   After each slide, compare <code>currentVowels</code> with <code>maxVowels</code> and update <code>maxVowels</code> if <code>currentVowels</code> is larger.
+3.  <strong>Return:</strong> After the loop finishes, <code>maxVowels</code> will hold the maximum number of vowels found in any window.</p>
+<p>This approach iterates through the string only once, performing constant time operations at each step. The time complexity is O(N), and the space complexity is O(1).</p>
+<pre><code class="language-cpp">#include &lt;string&gt;
+#include &lt;algorithm&gt;
+
+class Solution {
+public:
+    int maxVowels(std::string s, int k) {
+        int currentVowels = 0;
+
+        // Use a boolean array for fast O(1) vowel lookup
+        bool is_vowel[26] = {false};
+        is_vowel[0] = is_vowel[4] = is_vowel[8] = is_vowel[14] = is_vowel[20] = true; // a, e, i, o, u
+
+        // 1. Calculate vowels in the first window
+        for (int i = 0; i &lt; k; ++i) {
+            if (is_vowel[s[i] - 'a']) {
+                currentVowels++;
+            }
+        }
+
+        int maxVowels = currentVowels;
+
+        // 2. Slide the window across the rest of the string
+        for (int i = k; i &lt; s.length(); ++i) {
+            // Add the new character entering from the right
+            if (is_vowel[s[i] - 'a']) {
+                currentVowels++;
+            }
+            // Remove the character leaving from the left
+            if (is_vowel[s[i - k] - 'a']) {
+                currentVowels--;
+            }
+            // Update the maximum
+            maxVowels = std::max(maxVowels, currentVowels);
+        }
+
+        return maxVowels;
+    }
+};
+</code></pre>
+<hr />
+<h3>Pythonic Solution (Sliding Window)</h3>
+<p>This solution implements the sliding window technique in a clean and efficient Pythonic style. A set is used for O(1) average time complexity for vowel lookups.</p>
+<pre><code class="language-python">class Solution:
+    def maxVowels(self, s: str, k: int) -&gt; int:
+        &quot;&quot;&quot;
+        Calculates the maximum number of vowels in a substring of length k
+        using the sliding window technique.
+        &quot;&quot;&quot;
+        vowels = {'a', 'e', 'i', 'o', 'u'}
+
+        # 1. Initialize the count for the first window
+        current_vowel_count = 0
+        for i in range(k):
+            if s[i] in vowels:
+                current_vowel_count += 1
+
+        max_vowel_count = current_vowel_count
+
+        # 2. Slide the window from the k-th character to the end
+        for i in range(k, len(s)):
+            # Add the new character entering the window from the right
+            if s[i] in vowels:
+                current_vowel_count += 1
+
+            # Remove the old character leaving the window from the left
+            if s[i - k] in vowels:
+                current_vowel_count -= 1
+
+            # Update the maximum count
+            max_vowel_count = max(max_vowel_count, current_vowel_count)
+
+        return max_vowel_count
+
+</code></pre></div>

@@ -136,7 +136,11 @@ def fetch_missing_ai_explanations():
 
                 key = keys[keys["key"].strip()]
         except FileNotFoundError:
-            key = input("Enter your API key: ").strip()
+            PrintHelper.print_info(
+                "Get Gemini API key from https://aistudio.google.com/."
+            )
+            key = input("Enter Gemini API key: ").strip()
+            PrintHelper.clear_last_lines(1)
 
         try:
             client = genai.Client(api_key=key)
@@ -345,140 +349,222 @@ def fetch_missing_questions():
     )
 
 
-def make_pdf(option):
-    PrintHelper.print_info("Generating HTML...")
+def make_pdf(option, data):
+    PrintHelper.print_info("Compiling HTML...")
 
-    # Prepare HTML
-    contentStr = "<h3 style='text-align: center;'>List of Questions</h3>"
-    htmlStr = ""
-    totalQ = 0
-    qCount = 0
-    headingCount = 0
+    # Table of Contents
+    isFirstHeading = True
+    contentsHtml = "<div id='table-of-contents'>"
+    for item in range(len(data["table"])):
+        if data["headings"][item] is not None:
+            if not isFirstHeading:
+                contentsHtml += "</div>"
+            isFirstHeading = False
 
-    for idx, question in enumerate(State.lines):
-        # Skip invalid lines
-        if not State.is_question(question) and not State.is_heading(question):
+            contentsHtml += f"<h3>{data['table'][item]}</h3>"
+            contentsHtml += "<hr>"
+            contentsHtml += "<div class='two-col'>"
+        else:
+            contentsHtml += f"<p>{data['table'][item]}</p>"
+
+    contentsHtml += "</div>"
+
+    # Body
+    bodyHtml = "<div id='body'>"
+    for item in range(len(data["table"])):
+        if data["headings"][item] is not None:
+            bodyHtml += "<div style='height: 0.5cm;'></div>"
+            bodyHtml += f"<h1 class='title'>{data['table'][item]}</h1>"
             continue
 
-        # Headings
-        if State.is_heading(question):
-            headingCount += 1
-            qCount = 0
-            heading = question[2:].strip()
+        if "q" in option and data["statements"][item] is not None:
+            bodyHtml += "<div style='height: 0.5cm;'></div>"
+            bodyHtml += "<div class='statement'>"
+            bodyHtml += f"<h2 class='title'>{data['table'][item]}</h2>"
+            bodyHtml += "<hr>"
+            bodyHtml += data["statements"][item]
+            bodyHtml += "</div>"
+            bodyHtml += '<div style="page-break-before: always;"></div>'
 
-            if headingCount > 1:
-                contentStr += "</ol>"
-            contentStr += (
-                "<p style='font-weight:bold;'>"
-                + str(chr(64 + headingCount))
-                + ". "
-                + str(heading)
-                + "</p>"
-            )
+        if "s" in option and data["solutions"][item] is not None:
+            bodyHtml += "<div class='solution'>"
+            bodyHtml += f"<h2 class='title'>{data['table'][item]} - Solution</h2>"
+            bodyHtml += "<hr>"
+            bodyHtml += data["solutions"][item]
+            bodyHtml += "</div>"
+            bodyHtml += '<div style="page-break-before: always;"></div>'
 
-            htmlStr += f"<h2>{chr(64 + headingCount)}. {heading}</h2>"
-            contentStr += '<ol style="column-count: 2;">'
-            print(heading)
-            continue
+        if "ai" in option and data["ai_explanations"][item] is not None:
+            bodyHtml += "<div class='ai-explanation'>"
+            bodyHtml += f"<h2 class='title'>{data['table'][item]} - Explanation</h2>"
+            bodyHtml += "<hr>"
+            bodyHtml += data["ai_explanations"][item]
+            bodyHtml += "</div>"
+            bodyHtml += '<div style="page-break-before: always;"></div>'
 
-        # Question
-        qTitle = ""
-        if State.is_question(question):
-            question = question[len("https://leetcode.com/problems/") :].split("/")[0]
+    bodyHtml += "</div>"
 
-            PrintHelper.print_info(f"Processing: {question}")
-
-            # Question Statement
-            if "q" in option and question in State.all_cached_questions:
-                try:
-                    qHtml = open(
-                        f"leetcode_cache/questions/{question}.html",
-                        "r",
-                        encoding="utf-8",
-                    ).read()
-                    qCount += 1
-
-                    soup = BeautifulSoup(qHtml, "html.parser")
-                    # Extract text from first h2 tag
-                    qTitle = soup.find("h2").get_text(strip=True)
-
-                    qHtml = (
-                        "<div><h2 class='question-title'>"
-                        + str(qCount)
-                        + ". "
-                        + qHtml[len("<div><h2 class='question-title'>") :]
-                    )
-
-                    contentStr += "<li>" + qTitle + "</li>"
-                    htmlStr += qHtml
-                    htmlStr += '<div style="page-break-before: always;"></div>'
-
-                except FileNotFoundError:
-                    PrintHelper.clear_last_lines(1)
-                    PrintHelper.print_error(f"Question not found: {question}")
-                    continue
-            else:
-                qCount += 1
-                contentStr += "<li>" + qTitle + "</li>"
-                htmlStr += "<h2>" + str(qCount) + ". " + qTitle + "</h2>"
-
-            totalQ += 1
-
-            # Solution
-            if "s" in option and question in State.all_cached_sol:
-                try:
-                    sHtml = open(
-                        f"leetcode_cache/solutions/{question}.html",
-                        "r",
-                        encoding="utf-8",
-                    ).read()
-                    htmlStr += f'<h2 style="text-align: center;">{qCount}. {qTitle} -- Community Solution</h2>'
-                    htmlStr += sHtml
-                    htmlStr += '<div style="page-break-before: always;"></div>'
-                except FileNotFoundError:
-                    PrintHelper.print_error(f"Solution not found: {question}")
-
-            # AI Explanation
-            if "ai" in option and question in State.all_cached_ai:
-                try:
-                    aiHtml = open(
-                        f"leetcode_cache/ai/{question}.html", "r", encoding="utf-8"
-                    ).read()
-                    htmlStr += f'<h2 style="text-align: center;">{qCount}. {qTitle} -- AI Explanation</h2>'
-                    htmlStr += aiHtml
-                    htmlStr += '<div style="page-break-before: always;"></div>'
-                except FileNotFoundError:
-                    PrintHelper.print_error(f"AI Explanation not found: {question}")
-
-            PrintHelper.clear_last_lines(1)
-
-    PrintHelper.print_success(f"Processed {totalQ} questions.")
+    soup = BeautifulSoup(bodyHtml, "html.parser")
+    soup.find_all("div")[-1].decompose()
+    bodyHtml = str(soup)
 
     # Wrap with HTML and CSS
     styles = open("assets/styles.css").read()
 
-    htmlStr, css = helper.highlight_code_blocks(htmlStr)
+    bodyHtml, bodyStyles = helper.highlight_code_blocks(bodyHtml)
 
     finalHtml = "<html><head><meta charset='utf-8'><style>"
     finalHtml += styles
-    finalHtml += css
+    finalHtml += bodyStyles
     finalHtml += "</style></head><body>"
-    finalHtml += f"<div>{contentStr}</div>"
+    finalHtml += "<h1 class='title'>Table of Contents</h1>"
+    finalHtml += "<hr>"
+    finalHtml += contentsHtml
     finalHtml += '<div style="page-break-before: always;"></div>'
-    finalHtml += htmlStr
+    finalHtml += bodyHtml
     finalHtml += "</body></html>"
+
+    PrintHelper.print_info("Saving HTML...")
 
     # Generate PDF
     PrintHelper.print_info("Generating PDF...")
     pdf = weasyprint.HTML(string=finalHtml).write_pdf()
 
     # Save PDF
-
+    if not os.path.exists(".output"):
+        os.makedirs(".output")
     filename = f"{State.file_name}_{'_'.join(option)}.pdf"
-    with open(filename, "wb") as f:
+    with open(os.path.join(".output", filename), "wb") as f:
         f.write(pdf)
 
     PrintHelper.print_success(f"PDF generated successfully: {filename}")
+
+
+def process_cached_data():
+    steps = len(State.lines)
+    table = [None] * steps
+    headings = [None] * steps
+    questions = [None] * steps
+    statements = [None] * steps
+    solutions = [None] * steps
+    ai_explanations = [None] * steps
+
+    hCount = 1
+    qCount = 1
+    missing = {"q": 0, "s": 0, "ai": 0}
+
+    def int_to_roman(num):
+        val = [50, 40, 10, 9, 5, 4, 1]
+        syms = ["L", "XL", "X", "IX", "V", "IV", "I"]
+        roman = ""
+        for i in range(len(val)):
+            count = num // val[i]
+            roman += syms[i] * count
+            num -= val[i] * count
+        return roman
+
+    for idx, line in enumerate(State.lines):
+        # Headings
+        if State.is_heading(line):
+            headings[idx] = line[2:].strip()
+            table[idx] = f"{int_to_roman(hCount)}. {headings[idx]}"
+            hCount += 1
+            continue
+
+        # Question
+        line = line[len("https://leetcode.com/problems/") :].split("/")[0]
+        PrintHelper.print_info(f"Processing: {line}")
+        everythingFound = True
+
+        # Question Statement
+        if line in State.all_cached_questions:
+            try:
+                qHtml = open(
+                    f"leetcode_cache/questions/{line}.html",
+                    "r",
+                    encoding="utf-8",
+                ).read()
+
+                # Get question title
+                soup = BeautifulSoup(qHtml, "html.parser")
+                qTitle = soup.find("h2").get_text(strip=True)
+
+                # Remove question title from statement
+                soup.find("h2").decompose()
+
+                soup.find("p").insert_after(soup.new_tag("hr"))
+
+                # Add section breaks
+                for p in soup.find_all("p"):
+                    text = p.get_text(strip=True)
+                    if (
+                        text == "Example 1:"
+                        or text == "Constraints:"
+                        or text == "Hints:"
+                        or text == "Custom Judge:"
+                    ):
+                        p.insert_before(soup.new_tag("hr"))
+
+                questions[idx] = qTitle
+                statements[idx] = str(soup)
+                table[idx] = f"{qCount}. {qTitle}"
+
+                qCount += 1
+
+            except FileNotFoundError:
+                PrintHelper.clear_last_lines(1)
+                missing["q"] += 1
+                everythingFound = False
+                PrintHelper.print_error("Question not found.")
+
+        # Solution
+        if line in State.all_cached_sol:
+            try:
+                sHtml = open(
+                    f"leetcode_cache/solutions/{line}.html",
+                    "r",
+                    encoding="utf-8",
+                ).read()
+                soup = BeautifulSoup(sHtml, "html.parser")
+                [hr.decompose() for hr in soup.find_all("hr")]
+                solutions[idx] = str(soup)
+            except FileNotFoundError:
+                missing["s"] += 1
+                everythingFound = False
+                PrintHelper.print_error("Solution not found.")
+
+        # AI Explanation
+        if line in State.all_cached_ai:
+            try:
+                aiHtml = open(
+                    f"leetcode_cache/ai/{line}.html", "r", encoding="utf-8"
+                ).read()
+                soup = BeautifulSoup(aiHtml, "html.parser")
+                [hr.decompose() for hr in soup.find_all("hr")]
+                ai_explanations[idx] = str(soup)
+            except FileNotFoundError:
+                missing["ai"] += 1
+                everythingFound = False
+                PrintHelper.print_error("AI Explanation not found.")
+
+        if everythingFound:
+            PrintHelper.clear_last_lines(1)
+
+    if missing["q"] == 0 and missing["s"] == 0 and missing["ai"] == 0:
+        PrintHelper.print_success("All data found in cache.")
+    else:
+        PrintHelper.print_warning(
+            f"Missing data - Questions: {missing['q']}, Solutions: {missing['s']}, AI Explanations: {missing['ai']}"
+        )
+
+    return {
+        "table": table,
+        "questions": questions,
+        "headings": headings,
+        "statements": statements,
+        "solutions": solutions,
+        "ai_explanations": ai_explanations,
+    }
 
 
 def select_list():
@@ -520,15 +606,18 @@ def main():
 
     def generate_pdf():
         PrintHelper.clear_last_lines(1)
+        PrintHelper.print_info("Processing cached data...")
+        data = process_cached_data()
         while True:
             sel = PrintHelper.print_options(
                 "Select PDF Type:",
                 [
                     "Questions Only",
-                    "Solutions Only",
                     "AI Explanations Only",
-                    "Questions + Solutions",
                     "Questions + AI Explanations",
+                    "==========================================",
+                    "Solutions Only",
+                    "Questions + Solutions",
                     "Questions + Solutions + AI Explanations",
                     "Back",
                 ],
@@ -537,16 +626,16 @@ def main():
             match sel:
                 case "Questions Only":
                     content.append("q")
-                case "Solutions Only":
-                    content.append("s")
                 case "AI Explanations Only":
                     content.append("ai")
-                case "Questions + Solutions":
-                    content.append("q")
-                    content.append("s")
                 case "Questions + AI Explanations":
                     content.append("q")
                     content.append("ai")
+                case "Solutions Only":
+                    content.append("s")
+                case "Questions + Solutions":
+                    content.append("q")
+                    content.append("s")
                 case "Questions + Solutions + AI Explanations":
                     content.append("q")
                     content.append("s")
@@ -554,7 +643,7 @@ def main():
                 case "Back":
                     break
 
-            make_pdf(content)
+            make_pdf(content, data)
 
     def fetch_new_data():
         PrintHelper.clear_last_lines(1)

@@ -1,0 +1,109 @@
+<div class='ai-explanation'><h3>List of Approaches</h3>
+<ol>
+<li>Brute Force Approach</li>
+<li>Two-pass Hash Table Approach</li>
+<li>One-pass Hash Table Approach</li>
+</ol>
+<hr />
+<h3>1. Brute Force Approach</h3>
+<p>This approach iterates through every possible pair of numbers in the array to see if they sum up to the target.</p>
+<ol>
+<li>Use a nested loop structure. The outer loop picks the first number of a pair, starting from the first element.</li>
+<li>The inner loop picks the second number, starting from the element right after the one picked by the outer loop.</li>
+<li>For each pair, calculate their sum.</li>
+<li>If the sum equals the <code>target</code>, return the indices of the two numbers.</li>
+<li>This process continues until a pair is found. Since the problem guarantees exactly one solution, we will always find a pair.</li>
+</ol>
+<p>This approach has a time complexity of O(n²) because of the nested loops and a space complexity of O(1) as we use no extra space.</p>
+<pre><code class="language-cpp">class Solution {
+public:
+    vector&lt;int&gt; twoSum(vector&lt;int&gt;&amp; nums, int target) {
+        int n = nums.size();
+        for (int i = 0; i &lt; n - 1; i++) {
+            for (int j = i + 1; j &lt; n; j++) {
+                if (nums[i] + nums[j] == target) {
+                    return {i, j};
+                }
+            }
+        }
+        return {}; // Should not be reached given the problem constraints
+    }
+};
+</code></pre>
+<hr />
+<h3>2. Two-pass Hash Table Approach</h3>
+<p>To improve upon the brute-force method, we can use a hash table (or <code>unordered_map</code> in C++) to make the lookup for the second number faster. This approach involves two separate passes through the array.</p>
+<ol>
+<li><strong>First Pass:</strong> Create an <code>unordered_map</code> to store the elements of the array. Iterate through the array and populate the map with each number as the key and its index as the value.</li>
+<li><strong>Second Pass:</strong> Iterate through the array again. For each element <code>nums[i]</code>, calculate the required <code>complement</code> (<code>target - nums[i]</code>).</li>
+<li>Check if this <code>complement</code> exists as a key in the map.</li>
+<li>If the <code>complement</code> exists and its index in the map is not the current index <code>i</code> (to avoid using the same element), we have found our solution. Return the current index <code>i</code> and the index of the <code>complement</code> from the map.</li>
+</ol>
+<p>This approach has a time complexity of O(n) as we iterate through the list twice, and a space complexity of O(n) for the hash map.</p>
+<pre><code class="language-cpp">class Solution {
+public:
+    vector&lt;int&gt; twoSum(vector&lt;int&gt;&amp; nums, int target) {
+        unordered_map&lt;int, int&gt; numMap;
+        int n = nums.size();
+
+        // Build the hash table
+        for (int i = 0; i &lt; n; i++) {
+            numMap[nums[i]] = i;
+        }
+
+        // Find the complement
+        for (int i = 0; i &lt; n; i++) {
+            int complement = target - nums[i];
+            if (numMap.count(complement) &amp;&amp; numMap[complement] != i) {
+                return {i, numMap[complement]};
+            }
+        }
+
+        return {}; // Should not be reached
+    }
+};
+</code></pre>
+<hr />
+<h3>3. One-pass Hash Table Approach</h3>
+<p>This is the most optimal approach. We can combine the two passes from the previous method into a single pass. While we iterate and insert elements into the hash table, we also check if the current element's complement already exists in the table.</p>
+<ol>
+<li>Create an empty <code>unordered_map</code>.</li>
+<li>Iterate through the array from the beginning.</li>
+<li>For each element <code>nums[i]</code>, calculate its <code>complement</code> (<code>target - nums[i]</code>).</li>
+<li>Check if the <code>complement</code> already exists in the map. If it does, we have found the pair. Return the index of the <code>complement</code> (retrieved from the map) and the current index <code>i</code>.</li>
+<li>If the <code>complement</code> is not in the map, add the current number <code>nums[i]</code> and its index <code>i</code> to the map. This ensures that for the next elements, we can check if the current element is their complement.</li>
+</ol>
+<p>This approach has a time complexity of O(n) because we traverse the list only once, and a space complexity of O(n) for the hash map.</p>
+<pre><code class="language-cpp">class Solution {
+public:
+    vector&lt;int&gt; twoSum(vector&lt;int&gt;&amp; nums, int target) {
+        unordered_map&lt;int, int&gt; numMap;
+        int n = nums.size();
+
+        for (int i = 0; i &lt; n; i++) {
+            int complement = target - nums[i];
+            if (numMap.count(complement)) {
+                return {numMap[complement], i};
+            }
+            numMap[nums[i]] = i;
+        }
+
+        return {}; // Should not be reached
+    }
+};
+</code></pre>
+<hr />
+<h3>Pythonic Solution (One-pass Hash Table)</h3>
+<p>This Python solution uses a dictionary, which functions as a hash map, to implement the efficient one-pass approach.</p>
+<pre><code class="language-python">class Solution:
+    def twoSum(self, nums: list[int], target: int) -&gt; list[int]:
+        num_map = {}  # Dictionary to store number and its index
+
+        for index, num in enumerate(nums):
+            complement = target - num
+            if complement in num_map:
+                return [num_map[complement], index]
+            num_map[num] = index
+
+        return [] # Should not be reached given problem constraints
+</code></pre></div>

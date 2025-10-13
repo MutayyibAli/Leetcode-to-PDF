@@ -1,0 +1,165 @@
+<div class='ai-explanation'><h3>List of all the approaches to solution</h3>
+<ul>
+<li>Brute Force Approach</li>
+<li>Brute Force Approach with Substring</li>
+<li>Knuth-Morris-Pratt (KMP) Algorithm</li>
+</ul>
+<h3>Brute Force Approach</h3>
+<p>This is the most straightforward method. We check every possible starting position in the <code>haystack</code> to see if it matches the <code>needle</code> character by character.</p>
+<ol>
+<li>Start an outer loop to iterate through <code>haystack</code> with an index <code>i</code>. This loop runs from <code>0</code> up to <code>m-n</code>, where <code>m</code> is the length of <code>haystack</code> and <code>n</code> is the length of <code>needle</code>. The index <code>i</code> represents a potential starting point of a match.</li>
+<li>Inside the outer loop, start an inner loop with an index <code>j</code> from <code>0</code> to <code>n-1</code> to iterate through <code>needle</code>.</li>
+<li>In the inner loop, compare the characters <code>haystack[i + j]</code> and <code>needle[j]</code>.</li>
+<li>If a character mismatch is found, break the inner loop and continue the outer loop to check the next starting position in <code>haystack</code>.</li>
+<li>If the inner loop completes successfully (meaning <code>j</code> reaches <code>n</code>), it implies that the substring of <code>haystack</code> starting at <code>i</code> matches <code>needle</code> completely. Return the index <code>i</code>.</li>
+<li>If the outer loop finishes without finding any match, it means <code>needle</code> is not in <code>haystack</code>. Return <code>-1</code>.</li>
+</ol>
+<p>This approach has a time complexity of O(m * n) and a space complexity of O(1).</p>
+<pre><code class="language-cpp">class Solution {
+public:
+    int strStr(string haystack, string needle) {
+        int m = haystack.size(), n = needle.size();
+        for (int i = 0; i &lt;= m - n; i++) {
+            int j = 0;
+            for (; j &lt; n; j++) {
+                if (haystack[i + j] != needle[j]) {
+                    break;
+                }
+            }
+            if (j == n) {
+                return i;
+            }
+        }
+        return -1;
+    }
+};
+</code></pre>
+<h3>Brute Force Approach with Substring</h3>
+<p>This approach is similar to the basic brute-force method but utilizes built-in library functions to simplify the code by comparing substrings instead of individual characters.</p>
+<ol>
+<li>Iterate through <code>haystack</code> with a single loop from index <code>i = 0</code> up to <code>m - n</code>.</li>
+<li>In each iteration, extract a substring from <code>haystack</code> starting at index <code>i</code> with the same length as <code>needle</code>.</li>
+<li>Compare this extracted substring with <code>needle</code>.</li>
+<li>If they are identical, a match is found. Return the current index <code>i</code>.</li>
+<li>If the loop finishes without finding any match, return <code>-1</code>.</li>
+</ol>
+<p>While the code is cleaner, the underlying work is similar to the character-by-character approach, resulting in a time complexity of O(m * n) and a space complexity of O(n) due to substring creation.</p>
+<pre><code class="language-cpp">class Solution {
+public:
+    int strStr(string haystack, string needle) {
+        if (haystack.length() &lt; needle.length()) {
+            return -1;
+        }
+        for (int i = 0; i &lt;= haystack.length() - needle.length(); i++) {
+            if (haystack.substr(i, needle.length()) == needle) {
+                return i;
+            }
+        }
+        return -1;        
+    }
+};
+</code></pre>
+<h3>Knuth-Morris-Pratt (KMP) Algorithm</h3>
+<p>The KMP algorithm is a highly efficient string-matching algorithm that improves upon the brute-force approach by avoiding redundant comparisons. It achieves this by preprocessing the <code>needle</code> to build a Longest Proper Prefix Suffix (LPS) array.</p>
+<ol>
+<li>
+<p><strong>Preprocessing:</strong></p>
+<ul>
+<li>Create an LPS array, <code>lps</code>, for the <code>needle</code>. <code>lps[i]</code> stores the length of the longest proper prefix of <code>needle[0...i]</code> which is also a suffix of that substring.</li>
+<li>This array helps to determine how many characters to shift the <code>needle</code> pattern forward upon a mismatch, without re-comparing characters that are already known to match. This preprocessing step takes O(n) time.</li>
+</ul>
+</li>
+<li>
+<p><strong>Searching:</strong></p>
+<ul>
+<li>Use two pointers: <code>i</code> for <code>haystack</code> and <code>j</code> for <code>needle</code>.</li>
+<li>Iterate through <code>haystack</code> with <code>i</code> and <code>needle</code> with <code>j</code>.</li>
+<li>If <code>haystack[i]</code> matches <code>needle[j]</code>, increment both pointers.</li>
+<li>If <code>j</code> reaches the end of <code>needle</code>, a match is found at index <code>i - j</code> in <code>haystack</code>.</li>
+<li>If a mismatch occurs (<code>haystack[i] != needle[j]</code>), instead of resetting <code>j</code> to 0, use the <code>lps</code> array. Update <code>j</code> to <code>lps[j-1]</code>. This efficiently repositions <code>needle</code> without moving <code>i</code> backward, eliminating redundant comparisons.</li>
+</ul>
+</li>
+</ol>
+<p>The KMP algorithm has an optimal time complexity of O(m + n) and a space complexity of O(n) for the LPS array.</p>
+<pre><code class="language-cpp">class Solution {
+public:
+    int strStr(string haystack, string needle) {
+        int m = haystack.size(), n = needle.size();
+        if (n == 0) {
+            return 0;
+        }
+        vector&lt;int&gt; lps = kmpProcess(needle);
+        for (int i = 0, j = 0; i &lt; m;) {
+            if (haystack[i] == needle[j]) { 
+                i++, j++;
+            }
+            if (j == n) {
+                return i - j;
+            }
+            if (i &lt; m &amp;&amp; haystack[i] != needle[j]) {
+                j ? j = lps[j - 1] : i++;
+            }
+        }
+        return -1;
+    }
+private:
+    vector&lt;int&gt; kmpProcess(string&amp; needle) {
+        int n = needle.size();
+        vector&lt;int&gt; lps(n, 0);
+        for (int i = 1, len = 0; i &lt; n;) {
+            if (needle[i] == needle[len]) {
+                lps[i++] = ++len;
+            } else if (len) {
+                len = lps[len - 1];
+            } else {
+                lps[i++] = 0;
+            }
+        }
+        return lps;
+    }
+};
+</code></pre>
+<h3>Pythonic solution for best approach</h3>
+<p>The best approach in terms of performance is the Knuth-Morris-Pratt (KMP) algorithm. While Python's built-in <code>haystack.find(needle)</code> is highly optimized and the most idiomatic solution for this problem in practice, implementing the KMP algorithm is a great way to understand efficient string matching.</p>
+<pre><code class="language-python">class Solution:
+    def strStr(self, haystack: str, needle: str) -&gt; int:
+        if not needle:
+            return 0
+
+        m, n = len(haystack), len(needle)
+
+        # Pre-computation of the Longest Proper Prefix Suffix (LPS) array
+        lps = [0] * n
+        prev_lps_len = 0
+        i = 1
+        while i &lt; n:
+            if needle[i] == needle[prev_lps_len]:
+                prev_lps_len += 1
+                lps[i] = prev_lps_len
+                i += 1
+            else:
+                if prev_lps_len != 0:
+                    prev_lps_len = lps[prev_lps_len - 1]
+                else:
+                    lps[i] = 0
+                    i += 1
+
+        # KMP search
+        i = 0  # pointer for haystack
+        j = 0  # pointer for needle
+        while i &lt; m:
+            if needle[j] == haystack[i]:
+                i += 1
+                j += 1
+
+            if j == n:
+                return i - j
+
+            elif i &lt; m and needle[j] != haystack[i]:
+                if j != 0:
+                    j = lps[j - 1]
+                else:
+                    i += 1
+
+        return -1
+</code></pre></div>

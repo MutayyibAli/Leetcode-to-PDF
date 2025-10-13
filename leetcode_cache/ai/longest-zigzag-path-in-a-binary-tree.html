@@ -1,0 +1,187 @@
+<div class='ai-explanation'><h3>List of Approaches</h3>
+<ol>
+<li>Brute Force Approach (DFS from every node)</li>
+<li>Optimized Single-Pass DFS Approach</li>
+</ol>
+<hr />
+<h3>Brute Force Approach (DFS from every node)</h3>
+<p>The most straightforward way to solve this is to follow the problem definition directly. Since a zigzag path can start from any node, we can iterate through every node in the tree. For each node, we will calculate the length of the longest zigzag path that starts from it. This involves initiating two Depth-First Searches (DFS) from each node: one starting with a move to the left child and another starting with a move to the right child. We keep track of the maximum length found across all these potential starting nodes.</p>
+<h4>Step-by-step Explanation:</h4>
+<ol>
+<li>Initialize a global variable <code>maxLength</code> to 0.</li>
+<li>Traverse the entire tree using any method (e.g., BFS or another DFS) to visit every node. Let the current node be <code>curr</code>.</li>
+<li>For each <code>curr</code> node, consider it as a potential starting point for a zigzag path.</li>
+<li>Define a helper DFS function, <code>findPath(node, direction, length)</code>, that explores a zigzag path.<ul>
+<li><code>direction</code> indicates the next required move (e.g., <code>true</code> for left, <code>false</code> for right).</li>
+<li><code>length</code> is the current path length.</li>
+</ul>
+</li>
+<li>From each <code>curr</code> node, make two initial calls to the helper function to find the maximum length starting from this node:<ul>
+<li><code>findPath(curr-&gt;left, false, 1)</code>: Simulates starting a path by moving left from <code>curr</code>. The next required move is to the right (<code>false</code>).</li>
+<li><code>findPath(curr-&gt;right, true, 1)</code>: Simulates starting a path by moving right from <code>curr</code>. The next required move is to the left (<code>true</code>).</li>
+</ul>
+</li>
+<li>Update <code>maxLength</code> with the maximum value found from all starting nodes.</li>
+<li>This approach is inefficient because it repeatedly traverses the same subtrees.</li>
+</ol>
+<p>This approach is very slow due to re-computation and will likely result in a "Time Limit Exceeded" error on larger test cases. The time complexity is O(N^2) in the worst-case (a skewed tree), and space complexity is O(N) for the recursion stack.</p>
+<pre><code class="language-cpp">class Solution {
+public:
+    int maxLength = 0;
+
+    // Helper function to find the length of a specific zigzag path
+    void findPath(TreeNode* node, bool isLeft, int length) {
+        if (!node) {
+            return;
+        }
+        maxLength = max(maxLength, length);
+        if (isLeft) {
+            // Last move was left, so next must be right
+            findPath(node-&gt;right, false, length + 1);
+        } else {
+            // Last move was right, so next must be left
+            findPath(node-&gt;left, true, length + 1);
+        }
+    }
+
+    // Main traversal to check every node as a starting point
+    void traverse(TreeNode* root) {
+        if (!root) {
+            return;
+        }
+        // Start a new zigzag path from the current node
+        // Path starts by going left
+        findPath(root-&gt;left, true, 1);
+        // Path starts by going right
+        findPath(root-&gt;right, false, 1);
+
+        // Move to other nodes to use them as starting points
+        traverse(root-&gt;left);
+        traverse(root-&gt;right);
+    }
+
+    int longestZigZag(TreeNode* root) {
+        if (!root) {
+            return 0;
+        }
+        traverse(root);
+        return maxLength;
+    }
+};
+</code></pre>
+<hr />
+<h3>Optimized Single-Pass DFS Approach</h3>
+<p>The brute-force method is inefficient because it re-calculates paths. We can optimize this by traversing the tree just once and passing down the necessary information. The key insight is that for any node, the length of a zigzag path ending at it depends only on the direction of the move from its parent and the length of the path ending at the parent.</p>
+<h4>Step-by-step Explanation:</h4>
+<ol>
+<li>We use a single Depth-First Search (DFS) traversal. We'll maintain a global <code>maxLength</code> variable.</li>
+<li>Create a recursive helper function, <code>solve(node, dir, currLength)</code>.<ul>
+<li><code>node</code>: The current node being visited.</li>
+<li><code>dir</code>: The direction of the edge that led to <code>node</code> from its parent. Let's use <code>0</code> for left and <code>1</code> for right.</li>
+<li><code>currLength</code>: The length of the zigzag path ending at <code>node</code>.</li>
+</ul>
+</li>
+<li><strong>Base Case:</strong> If <code>node</code> is null, we have reached the end of a path, so we simply return.</li>
+<li><strong>Update Max:</strong> At the current <code>node</code>, the path ending here has length <code>currLength</code>. We update our global <code>maxLength = max(maxLength, currLength)</code>.</li>
+<li><strong>Recursive Step:</strong> We explore the children of the current <code>node</code>.<ul>
+<li><strong>Move Left:</strong> We call <code>solve</code> for the left child (<code>node-&gt;left</code>).<ul>
+<li>If the previous move was <code>right</code> (<code>dir == 1</code>), this move to the left continues the zigzag. So, the new length is <code>currLength + 1</code>.</li>
+<li>If the previous move was also <code>left</code> (<code>dir == 0</code>), the zigzag pattern is broken. We must start a new path from <code>node-&gt;left</code>, which has a length of 1.</li>
+</ul>
+</li>
+<li><strong>Move Right:</strong> We call <code>solve</code> for the right child (<code>node-&gt;right</code>).<ul>
+<li>If the previous move was <code>left</code> (<code>dir == 0</code>), this move to the right continues the zigzag. The new length is <code>currLength + 1</code>.</li>
+<li>If the previous move was also <code>right</code> (<code>dir == 1</code>), the pattern is broken. We start a new path of length 1.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>Initial Calls:</strong> The root node has no parent. We can handle this by making two initial calls to <code>solve</code> from the <code>longestZigZag</code> function, simulating a "dummy" parent. One call assumes we arrived at the root from the left, and the other assumes we arrived from the right, both with a path length of 0. This setup correctly initiates the process of starting new paths from the root's children.</li>
+</ol>
+<p>This approach visits each node a constant number of times, leading to a time complexity of O(N), where N is the number of nodes. The space complexity is O(H) due to the recursion stack, where H is the height of the tree (which is O(N) in the worst case).</p>
+<pre><code class="language-cpp">class Solution {
+public:
+    int maxLength = 0;
+
+    /**
+     * @brief Traverses the tree to find the longest zigzag path.
+     * @param node The current node.
+     * @param dir The direction of the move to reach this node (0 for left, 1 for right).
+     * @param currLength The length of the zigzag path ending at this node.
+     */
+    void solve(TreeNode* node, int dir, int currLength) {
+        if (!node) {
+            return;
+        }
+
+        // Update the maximum length found so far.
+        maxLength = max(maxLength, currLength);
+
+        // If the last move was RIGHT (dir=1), going LEFT continues the zigzag path.
+        // If the last move was LEFT (dir=0), going LEFT starts a new zigzag path of length 1.
+        solve(node-&gt;left, 0, (dir == 1) ? currLength + 1 : 1);
+
+        // If the last move was LEFT (dir=0), going RIGHT continues the zigzag path.
+        // If the last move was RIGHT (dir=1), going RIGHT starts a new zigzag path of length 1.
+        solve(node-&gt;right, 1, (dir == 0) ? currLength + 1 : 1);
+    }
+
+    int longestZigZag(TreeNode* root) {
+        // We can start a path from the root's children.
+        // To handle this, we can imagine a dummy parent for the root.
+        // solve(root, 0, 0) simulates coming from a &quot;left&quot; parent.
+        // solve(root, 1, 0) simulates coming from a &quot;right&quot; parent.
+        solve(root, 0, 0);
+        solve(root, 1, 0);
+
+        return maxLength;
+    }
+};
+</code></pre>
+<p><em>Note: A slightly more intuitive C++ implementation might be to call <code>solve(root-&gt;left, 0, 1)</code> and <code>solve(root-&gt;right, 1, 1)</code> directly, but the provided solution's logic of calling <code>solve(root, dir, 0)</code> is an elegant way to handle all cases including starting new paths at the root's children.</em></p>
+<hr />
+<h3>Pythonic Solution (Optimized Single-Pass DFS)</h3>
+<p>This Python solution uses the same efficient single-pass DFS logic. A nested helper function <code>dfs</code> is used to traverse the tree, keeping track of the last direction and current path length. The <code>max_len</code> variable is updated at each node. The initial calls to <code>dfs</code> from the main function start the process for paths beginning at the root's left and right children.</p>
+<pre><code class="language-python"># Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+
+class Solution:
+    def longestZigZag(self, root: Optional[TreeNode]) -&gt; int:
+        if not root:
+            return 0
+
+        self.max_len = 0
+
+        # Helper function to perform DFS
+        # direction: 'L' if the last move was to the left, 'R' if to the right
+        # length: the length of the current zigzag path
+        def dfs(node: Optional[TreeNode], direction: str, length: int):
+            if not node:
+                return
+
+            # A path of a certain length has been found, update the max
+            self.max_len = max(self.max_len, length)
+
+            if direction == 'L':
+                # Last move was left, so to continue the zigzag, we must go right.
+                dfs(node.right, 'R', length + 1)
+                # We can also choose to break the pattern and start a new zigzag to the left.
+                dfs(node.left, 'L', 1)
+            else:  # direction == 'R'
+                # Last move was right, so to continue the zigzag, we must go left.
+                dfs(node.left, 'L', length + 1)
+                # We can also choose to break the pattern and start a new zigzag to the right.
+                dfs(node.right, 'R', 1)
+
+        # A zigzag path can start by going left or right from the root.
+        # Start a path of length 1 by going left from the root.
+        dfs(root.left, 'L', 1)
+        # Start a path of length 1 by going right from the root.
+        dfs(root.right, 'R', 1)
+
+        return self.max_len
+</code></pre></div>

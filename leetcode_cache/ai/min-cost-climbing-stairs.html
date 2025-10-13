@@ -1,0 +1,186 @@
+<div class='ai-explanation'><p>Here are the solutions for the Min Cost Climbing Stairs problem, explained from a brute-force approach to the most optimal one.</p>
+<h3>List of Approaches</h3>
+<ol>
+<li>Brute Force Approach (Recursion)</li>
+<li>Top-Down Dynamic Programming Approach (Memoization)</li>
+<li>Bottom-Up Dynamic Programming Approach (Tabulation)</li>
+<li>Bottom-Up Dynamic Programming Approach (Space-Optimized)</li>
+<li>Bottom-Up Dynamic Programming Approach (In-place)</li>
+</ol>
+<hr />
+<h3>1. Brute Force Approach (Recursion)</h3>
+<p>This approach directly translates the problem into a recursive structure. We define a function that calculates the minimum cost to reach a certain step <code>i</code>. The cost to reach step <code>i</code> is <code>cost[i]</code> plus the minimum of the costs to reach the two preceding steps (<code>i-1</code> and <code>i-2</code>).</p>
+<p><strong>Step-by-step Explanation:</strong>
+1.  Define a recursive function, let's call it <code>solve(i)</code>, that computes the minimum cost to land on step <code>i</code>.
+2.  The base cases are the starting steps. Since we can start at index 0 or 1, the cost to reach them is simply <code>cost[0]</code> and <code>cost[1]</code>, respectively. So, if <code>i &lt; 2</code>, <code>solve(i)</code> returns <code>cost[i]</code>.
+3.  For any other step <code>i</code>, the cost is <code>cost[i]</code> plus the minimum cost to get to the previous step. The previous step could be <code>i-1</code> (by a single step) or <code>i-2</code> (by a double step). So, the recursive relation is <code>solve(i) = cost[i] + min(solve(i-1), solve(i-2))</code>.
+4.  The goal is to reach the "top", which is one step beyond the last element. This can be reached from the last step (<code>n-1</code>) or the second to last step (<code>n-2</code>).
+5.  The final answer is the minimum of <code>solve(n-1)</code> and <code>solve(n-2)</code>.
+6.  This method is inefficient because it recomputes the solutions for the same steps multiple times, leading to an exponential number of calls.</p>
+<p>This approach has a time complexity of O(2^n) and a space complexity of O(n) due to the recursion stack depth.</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;algorithm&gt;
+
+class Solution {
+public:
+    int minCostClimbingStairs(std::vector&lt;int&gt;&amp; cost) {
+        int n = cost.size();
+        return std::min(solve(cost, n - 1), solve(cost, n - 2));
+    }
+private:
+    int solve(const std::vector&lt;int&gt;&amp; cost, int i) {
+        // Base cases for the first two steps
+        if (i &lt; 2) {
+            return cost[i];
+        }
+        // Recursive relation to find the cost to reach step i
+        return cost[i] + std::min(solve(cost, i - 1), solve(cost, i - 2));
+    }
+};
+</code></pre>
+<hr />
+<h3>2. Top-Down Dynamic Programming Approach (Memoization)</h3>
+<p>This approach optimizes the brute-force recursion by caching the results of subproblems. We use a memoization table (an array) to store the result for each step <code>i</code> once it's computed. When the function is called again for the same step, we return the cached result instead of re-computing it.</p>
+<p><strong>Step-by-step Explanation:</strong>
+1.  Use the same recursive structure as the brute-force approach.
+2.  Create a memoization array, <code>memo</code>, of the same size as <code>cost</code>, initialized with a value like -1 to indicate that the subproblem has not been solved yet.
+3.  In the recursive function <code>solve(i)</code>, first check if <code>memo[i]</code> is not -1. If it's not, it means we have already computed the result for step <code>i</code>, so we return <code>memo[i]</code>.
+4.  If the result is not cached, compute it using the recurrence relation: <code>cost[i] + min(solve(i-1), solve(i-2))</code>.
+5.  Before returning the computed value, store it in <code>memo[i]</code> to avoid future re-computation.</p>
+<p>This approach has a time complexity of O(n) because each subproblem is solved only once, and a space complexity of O(n) for the memoization table and recursion stack.</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;algorithm&gt;
+
+class Solution {
+private:
+    std::vector&lt;int&gt; memo;
+    int solve(const std::vector&lt;int&gt;&amp; cost, int i) {
+        if (i &lt; 2) {
+            return cost[i];
+        }
+        if (memo[i] != -1) {
+            return memo[i];
+        }
+        memo[i] = cost[i] + std::min(solve(cost, i - 1), solve(cost, i - 2));
+        return memo[i];
+    }
+public:
+    int minCostClimbingStairs(std::vector&lt;int&gt;&amp; cost) {
+        int n = cost.size();
+        memo.assign(n, -1);
+        return std::min(solve(cost, n - 1), solve(cost, n - 2));
+    }
+};
+</code></pre>
+<hr />
+<h3>3. Bottom-Up Dynamic Programming Approach (Tabulation)</h3>
+<p>This is an iterative approach that builds the solution from the bottom up. We use an array, <code>dp</code>, where <code>dp[i]</code> stores the minimum cost to reach step <code>i</code>. We fill this array starting from the base cases.</p>
+<p><strong>Step-by-step Explanation:</strong>
+1.  Create a <code>dp</code> array of size <code>n</code> (the number of steps).
+2.  Initialize the base cases: <code>dp[0] = cost[0]</code> and <code>dp[1] = cost[1]</code>.
+3.  Iterate from <code>i = 2</code> to <code>n-1</code>. For each step <code>i</code>, calculate <code>dp[i]</code> using the recurrence relation: <code>dp[i] = cost[i] + min(dp[i-1], dp[i-2])</code>.
+4.  After the loop, the <code>dp</code> array is filled. The minimum cost to reach the top is the minimum of the costs to reach the last two steps.
+5.  Return <code>min(dp[n-1], dp[n-2])</code>.</p>
+<p>This approach has a time complexity of O(n) and a space complexity of O(n) for the <code>dp</code> array.</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;algorithm&gt;
+
+class Solution {
+public:
+    int minCostClimbingStairs(std::vector&lt;int&gt;&amp; cost) {
+        int n = cost.size();
+        std::vector&lt;int&gt; dp(n);
+        dp[0] = cost[0];
+        dp[1] = cost[1];
+
+        for (int i = 2; i &lt; n; ++i) {
+            dp[i] = cost[i] + std::min(dp[i - 1], dp[i - 2]);
+        }
+
+        return std::min(dp[n - 1], dp[n - 2]);
+    }
+};
+</code></pre>
+<hr />
+<h3>4. Bottom-Up Dynamic Programming Approach (Space-Optimized)</h3>
+<p>Observing the bottom-up DP approach, we can see that to calculate the cost for the current step, we only need the costs of the previous two steps. This allows us to optimize the space complexity from O(n) to O(1) by using just two variables instead of a full DP array.</p>
+<p><strong>Step-by-step Explanation:</strong>
+1.  Initialize two variables, <code>two_steps_back</code> with <code>cost[0]</code> and <code>one_step_back</code> with <code>cost[1]</code>.
+2.  Iterate from <code>i = 2</code> to <code>n-1</code>.
+3.  In each iteration, calculate the <code>current_cost</code> for step <code>i</code> as <code>cost[i] + min(one_step_back, two_steps_back)</code>.
+4.  Update the variables for the next iteration: <code>two_steps_back</code> becomes the old <code>one_step_back</code>, and <code>one_step_back</code> becomes the <code>current_cost</code>.
+5.  After the loop, <code>one_step_back</code> and <code>two_steps_back</code> hold the minimum costs to reach the last and second-to-last steps, respectively.
+6.  Return the minimum of these two variables.</p>
+<p>This approach has a time complexity of O(n) and a space complexity of O(1).</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;algorithm&gt;
+
+class Solution {
+public:
+    int minCostClimbingStairs(std::vector&lt;int&gt;&amp; cost) {
+        int n = cost.size();
+        int two_steps_back = cost[0];
+        int one_step_back = cost[1];
+
+        for (int i = 2; i &lt; n; ++i) {
+            int current_cost = cost[i] + std::min(one_step_back, two_steps_back);
+            two_steps_back = one_step_back;
+            one_step_back = current_cost;
+        }
+
+        return std::min(one_step_back, two_steps_back);
+    }
+};
+</code></pre>
+<hr />
+<h3>5. Bottom-Up Dynamic Programming Approach (In-place)</h3>
+<p>This is the most space-efficient approach, which reuses the input <code>cost</code> array itself as the DP table. It modifies the input array in-place to store the minimum costs, thereby achieving O(1) extra space.</p>
+<p><strong>Step-by-step Explanation:</strong>
+1.  The <code>cost</code> array will be used to store the minimum cumulative cost to reach each step. <code>cost[0]</code> and <code>cost[1]</code> are already our base cases.
+2.  Iterate from <code>i = 2</code> to <code>n-1</code>.
+3.  For each step <code>i</code>, update <code>cost[i]</code> by adding the minimum of the cumulative costs of the previous two steps: <code>cost[i] += min(cost[i-1], cost[i-2])</code>.
+4.  After the loop, <code>cost[n-1]</code> and <code>cost[n-2]</code> will contain the total minimum cost to reach those steps.
+5.  The final answer is <code>min(cost[n-1], cost[n-2])</code>.
+6.  Note that this approach modifies the input array.</p>
+<p>This approach has a time complexity of O(n) and a space complexity of O(1).</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;algorithm&gt;
+
+class Solution {
+public:
+    int minCostClimbingStairs(std::vector&lt;int&gt;&amp; cost) {
+        int n = cost.size();
+        for(int i = 2; i &lt; n; i++) {
+            cost[i] += std::min(cost[i - 1], cost[i - 2]);
+        }
+        return std::min(cost[n - 1], cost[n - 2]);
+    }
+};
+</code></pre>
+<hr />
+<h3>Pythonic Solution (Best Approach)</h3>
+<p>The best approach is the space-optimized Bottom-Up DP, which can be implemented concisely by modifying the input array in-place.</p>
+<pre><code class="language-python">from typing import List
+
+class Solution:
+    def minCostClimbingStairs(self, cost: List[int]) -&gt; int:
+        &quot;&quot;&quot;
+        This solution uses a bottom-up dynamic programming approach with
+        in-place modification of the cost array to achieve O(1) space.
+
+        The value at cost[i] is updated to represent the minimum cost
+        to reach the i-th step.
+        &quot;&quot;&quot;
+        n = len(cost)
+
+        # Iterate from the third step to the end of the array.
+        for i in range(2, n):
+            # The minimum cost to reach step i is the cost of step i plus
+            # the minimum of the costs to reach the previous two steps.
+            cost[i] += min(cost[i - 1], cost[i - 2])
+
+        # The final answer is the minimum cost to reach either of the
+        # last two steps, from which we can reach the top.
+        return min(cost[n - 1], cost[n - 2])
+
+</code></pre></div>

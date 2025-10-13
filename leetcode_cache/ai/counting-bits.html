@@ -1,0 +1,139 @@
+<div class='ai-explanation'><h3>List of Approaches</h3>
+<ol>
+<li>Brute Force Approach</li>
+<li>Dynamic Programming with Most Significant Bit (MSB)</li>
+<li>Dynamic Programming with Least Significant Bit (LSB)</li>
+<li>Dynamic Programming using Brian Kernighan's Algorithm</li>
+</ol>
+<hr />
+<h3>1. Brute Force Approach</h3>
+<p>This is the most straightforward solution. We iterate through each number from 0 to <code>n</code>. For each number, we manually count the number of set bits (1s) in its binary representation. A common way to count bits is to repeatedly check the last bit and then right-shift the number until it becomes zero.</p>
+<p><strong>Step-by-step explanation:</strong>
+1.  Initialize an answer vector <code>ans</code> of size <code>n + 1</code>.
+2.  Loop with a variable <code>i</code> from 0 to <code>n</code>.
+3.  Inside the loop, for each <code>i</code>, initialize a <code>count</code> to 0 and a temporary variable <code>num = i</code>.
+4.  Use a <code>while</code> loop that runs as long as <code>num &gt; 0</code>.
+5.  In the <code>while</code> loop, add the last bit of <code>num</code> (<code>num &amp; 1</code>) to <code>count</code>.
+6.  Right-shift <code>num</code> by one position (<code>num &gt;&gt;= 1</code>) to discard the last bit.
+7.  After the <code>while</code> loop finishes, store the final <code>count</code> in <code>ans[i]</code>.
+8.  Return the <code>ans</code> vector.</p>
+<p>This approach has a time complexity of O(n log n) because for each of the <code>n</code> numbers, the inner while loop runs <code>log(i)</code> times. The space complexity is O(n) for the output array.</p>
+<pre><code class="language-cpp">class Solution {
+public:
+    vector&lt;int&gt; countBits(int n) {
+        vector&lt;int&gt; ans(n + 1, 0);
+        for (int i = 0; i &lt;= n; ++i) {
+            int count = 0;
+            int num = i;
+            while (num &gt; 0) {
+                count += (num &amp; 1); // Add 1 if the last bit is 1
+                num &gt;&gt;= 1;          // Move to the next bit
+            }
+            ans[i] = count;
+        }
+        return ans;
+    }
+};
+</code></pre>
+<hr />
+<h3>2. Dynamic Programming with Most Significant Bit (MSB)</h3>
+<p>This dynamic programming approach identifies a pattern based on powers of two. The number of set bits for a number <code>i</code> can be derived from a previous number by recognizing that numbers from a power of two <code>p</code> up to <code>2p - 1</code> all have the most significant bit (the <code>p</code>-th bit) set. Therefore, the bit count for <code>i</code> in this range is <code>1 + ans[i - p]</code>.</p>
+<p><strong>Step-by-step explanation:</strong>
+1.  Initialize an answer vector <code>ans</code> of size <code>n + 1</code> with <code>ans[0] = 0</code>.
+2.  Initialize an <code>offset</code> variable to 1, which represents the most recent power of two.
+3.  Loop from <code>i = 1</code> to <code>n</code>.
+4.  Inside the loop, check if <code>i</code> is a new power of two. This happens when <code>i</code> is double the current <code>offset</code>. If so, update <code>offset = i</code>.
+5.  Calculate <code>ans[i]</code> using the recurrence relation: <code>ans[i] = 1 + ans[i - offset]</code>.
+6.  Return the <code>ans</code> vector.</p>
+<p>This approach has a time complexity of O(n) because it iterates through the numbers once. The space complexity is O(n) for the output array.</p>
+<pre><code class="language-cpp">class Solution {
+public:
+    vector&lt;int&gt; countBits(int n) {
+        vector&lt;int&gt; ans(n + 1, 0);
+        int offset = 1;
+        for (int i = 1; i &lt;= n; ++i) {
+            if (offset * 2 == i) {
+                offset = i;
+            }
+            ans[i] = 1 + ans[i - offset];
+        }
+        return ans;
+    }
+};
+</code></pre>
+<hr />
+<h3>3. Dynamic Programming with Least Significant Bit (LSB)</h3>
+<p>This is a very efficient and intuitive DP approach. It leverages the relationship between the bit count of a number <code>i</code> and the bit count of <code>i / 2</code> (or <code>i &gt;&gt; 1</code>).
+-   If <code>i</code> is an even number, its binary representation is the same as <code>i / 2</code> with a <code>0</code> appended. Thus, <code>ans[i] = ans[i / 2]</code>.
+-   If <code>i</code> is an odd number, its binary representation is the same as <code>i / 2</code> with a <code>1</code> appended. Thus, <code>ans[i] = ans[i / 2] + 1</code>.
+These two conditions can be combined into a single formula: <code>ans[i] = ans[i &gt;&gt; 1] + (i &amp; 1)</code>.</p>
+<p><strong>Step-by-step explanation:</strong>
+1.  Initialize an answer vector <code>ans</code> of size <code>n + 1</code>. <code>ans[0]</code> will be 0 by default.
+2.  Loop from <code>i = 1</code> to <code>n</code>.
+3.  For each <code>i</code>, apply the recurrence relation: <code>ans[i] = ans[i &gt;&gt; 1] + (i &amp; 1)</code>.
+    -   <code>i &gt;&gt; 1</code> is equivalent to integer division <code>i / 2</code>.
+    -   <code>i &amp; 1</code> is 1 if <code>i</code> is odd, and 0 if <code>i</code> is even.
+4.  Return the <code>ans</code> vector.</p>
+<p>This approach has a time complexity of O(n) due to the single pass. The space complexity is O(n) for the output array.</p>
+<pre><code class="language-cpp">class Solution {
+public:
+    vector&lt;int&gt; countBits(int n) {
+        vector&lt;int&gt; ans(n + 1, 0);
+        for (int i = 1; i &lt;= n; ++i) {
+            // ans[i &gt;&gt; 1] gives the count for the number without its last bit.
+            // (i &amp; 1) gives the last bit itself.
+            ans[i] = ans[i &gt;&gt; 1] + (i &amp; 1);
+        }
+        return ans;
+    }
+};
+</code></pre>
+<hr />
+<h3>4. Dynamic Programming using Brian Kernighan's Algorithm</h3>
+<p>This DP solution uses a clever bit manipulation trick. The expression <code>i &amp; (i - 1)</code> always unsets the least significant set bit (the rightmost '1') of <code>i</code>. For example, for <code>i=12 (1100)</code>, <code>i-1=11 (1011)</code>, and <code>i &amp; (i-1)</code> is <code>8 (1000)</code>. This means that the number of set bits in <code>i</code> is exactly one more than the number of set bits in <code>i &amp; (i - 1)</code>. This gives us the recurrence relation: <code>ans[i] = ans[i &amp; (i - 1)] + 1</code>.</p>
+<p><strong>Step-by-step explanation:</strong>
+1.  Initialize an answer vector <code>ans</code> of size <code>n + 1</code>. <code>ans[0]</code> is 0.
+2.  Loop from <code>i = 1</code> to <code>n</code>.
+3.  For each <code>i</code>, apply the recurrence relation: <code>ans[i] = ans[i &amp; (i - 1)] + 1</code>.
+4.  Return the <code>ans</code> vector.</p>
+<p>This approach has a time complexity of O(n) as it involves a single pass. The space complexity is O(n) for the output array.</p>
+<pre><code class="language-cpp">class Solution {
+public:
+    vector&lt;int&gt; countBits(int n) {
+        vector&lt;int&gt; ans(n + 1, 0);
+        for (int i = 1; i &lt;= n; ++i) {
+            ans[i] = ans[i &amp; (i - 1)] + 1;
+        }
+        return ans;
+    }
+};
+</code></pre>
+<hr />
+<h3>Pythonic Solution (Best Approach)</h3>
+<p>The best approaches are the O(n) dynamic programming solutions. The DP with LSB (Approach 3) is particularly clean and easy to understand. We can implement this in a very concise way in Python.</p>
+<pre><code class="language-python">from typing import List
+
+class Solution:
+    def countBits(self, n: int) -&gt; List[int]:
+        &quot;&quot;&quot;
+        Calculates the number of set bits for each number from 0 to n
+        using dynamic programming with the least significant bit (LSB) property.
+
+        The number of set bits in `i` is the number of set bits in `i // 2`
+        plus 1 if `i` is odd.
+
+        dp[i] = dp[i &gt;&gt; 1] + (i &amp; 1)
+        &quot;&quot;&quot;
+
+        # Initialize dp array of size n + 1 with zeros.
+        # dp[0] is already correctly set to 0.
+        dp = [0] * (n + 1)
+
+        for i in range(1, n + 1):
+            # i &gt;&gt; 1 is the same as i // 2 (integer division)
+            # i &amp; 1 is 1 if i is odd, 0 if i is even
+            dp[i] = dp[i &gt;&gt; 1] + (i &amp; 1)
+
+        return dp
+
+</code></pre></div>

@@ -1,0 +1,208 @@
+<div class='ai-explanation'><h3>List of Approaches</h3>
+<ol>
+<li>Brute Force Approach using Backtracking (DFS)</li>
+<li>Optimized Approach using Backtracking with Pruning</li>
+</ol>
+<hr />
+<h3>Brute Force Approach using Backtracking (DFS)</h3>
+<p>This approach iterates through every cell of the board. If a cell's character matches the first character of the word, it initiates a Depth-First Search (DFS) from that cell to find the rest of the word.</p>
+<ol>
+<li><strong>Iterate and Start:</strong> Loop through each cell <code>(r, c)</code> of the <code>board</code>. If <code>board[r][c]</code> matches the first character of the <code>word</code>, begin a search.</li>
+<li><strong>Recursive DFS Function:</strong> A helper function, <code>dfs(r, c, index)</code>, is used to explore paths. <code>index</code> tracks our position in the <code>word</code>.</li>
+<li><strong>Base Cases:</strong><ul>
+<li>If <code>index</code> equals the length of the <code>word</code>, it means we have successfully found all characters in sequence. Return <code>true</code>.</li>
+<li>If the current cell <code>(r, c)</code> is out of bounds, or its character doesn't match <code>word[index]</code>, this path is invalid. Return <code>false</code>.</li>
+</ul>
+</li>
+<li><strong>Mark as Visited:</strong> To prevent reusing the same cell in the current path, we temporarily modify the character in <code>board[r][c]</code> to a special marker (like '#').</li>
+<li><strong>Explore Neighbors:</strong> Recursively call the <code>dfs</code> function for all four adjacent cells (up, down, left, right), incrementing the <code>index</code>. If any of these calls return <code>true</code>, a valid path has been found, so we propagate <code>true</code> back.</li>
+<li><strong>Backtrack:</strong> After exploring all neighbors from <code>(r, c)</code>, restore the cell's original character. This is crucial as it allows the cell to be part of other potential paths starting from different initial cells.</li>
+<li><strong>Final Result:</strong> If the main loop completes without any DFS call returning <code>true</code>, the word does not exist in the grid.</li>
+</ol>
+<p>The time complexity is O(N * 3^L) where N is the number of cells in the board and L is the length of the word, because from each cell we can go in at most 3 directions (we don't go back). The space complexity is O(L) for the recursion stack.</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;string&gt;
+
+class Solution {
+public:
+    bool exist(std::vector&lt;std::vector&lt;char&gt;&gt;&amp; board, std::string word) {
+        int m = board.size();
+        if (m == 0) return false;
+        int n = board[0].size();
+
+        for (int i = 0; i &lt; m; ++i) {
+            for (int j = 0; j &lt; n; ++j) {
+                if (board[i][j] == word[0] &amp;&amp; dfs(board, word, i, j, 0)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+private:
+    bool dfs(std::vector&lt;std::vector&lt;char&gt;&gt;&amp; board, const std::string&amp; word, int r, int c, int index) {
+        // Base case: all characters of the word have been found
+        if (index == word.length()) {
+            return true;
+        }
+
+        // Boundary checks and character match check
+        if (r &lt; 0 || r &gt;= board.size() || c &lt; 0 || c &gt;= board[0].size() || board[r][c] != word[index]) {
+            return false;
+        }
+
+        // Mark the cell as visited to avoid cycles
+        char temp = board[r][c];
+        board[r][c] = '#'; 
+
+        // Explore neighbors
+        bool found = dfs(board, word, r + 1, c, index + 1) ||
+                     dfs(board, word, r - 1, c, index + 1) ||
+                     dfs(board, word, r, c + 1, index + 1) ||
+                     dfs(board, word, r, c - 1, index + 1);
+
+        // Backtrack: un-mark the cell
+        board[r][c] = temp;
+
+        return found;
+    }
+};
+</code></pre>
+<hr />
+<h3>Optimized Approach using Backtracking with Pruning</h3>
+<p>This approach enhances the standard backtracking algorithm by adding "pruning" steps. These are preliminary checks that can quickly determine if a solution is impossible, thus avoiding many costly DFS explorations.</p>
+<ol>
+<li><strong>Initial Checks:</strong><ul>
+<li>If the <code>word</code>'s length is greater than the total number of cells in the <code>board</code>, it's impossible to find. Return <code>false</code>.</li>
+</ul>
+</li>
+<li><strong>Pruning 1 (Character Frequency):</strong> Count the frequency of each character on the board and in the word. If the board has fewer instances of any character than the word requires, a solution is impossible. For example, if the word is "APPLE" but the board has only one 'P', we can stop immediately.</li>
+<li><strong>Pruning 2 (Search Direction Heuristic):</strong> To fail faster, we can start our search from the side of the word that has a rarer character on the board. We compare the frequency of the first and last characters of the <code>word</code>. If the last character is less common on the board, we reverse the <code>word</code> and search for the reversed version. This reduces the number of potential starting points for the DFS.</li>
+<li><strong>Core DFS Logic:</strong> After the pruning steps, the core algorithm is the same backtracking DFS as in the brute-force approach. We iterate through the grid and initiate a search from cells that match the first character of our (potentially reversed) <code>word</code>.</li>
+</ol>
+<p>The worst-case time complexity remains O(N * 3^L) and space complexity is O(L), but these pruning techniques significantly improve the average-case performance by cutting down the search space.</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;string&gt;
+#include &lt;unordered_map&gt;
+#include &lt;algorithm&gt;
+
+class Solution {
+public:
+    bool exist(std::vector&lt;std::vector&lt;char&gt;&gt;&amp; board, std::string word) {
+        int m = board.size();
+        int n = board[0].size();
+
+        if (word.length() &gt; m * n) return false;
+
+        // Pruning Step 1: Character Frequency
+        std::unordered_map&lt;char, int&gt; boardCounts;
+        for (const auto&amp; row : board) {
+            for (char c : row) {
+                boardCounts[c]++;
+            }
+        }
+        std::unordered_map&lt;char, int&gt; wordCounts;
+        for (char c : word) {
+            wordCounts[c]++;
+        }
+        for (auto const&amp; [key, val] : wordCounts) {
+            if (boardCounts[key] &lt; val) {
+                return false;
+            }
+        }
+
+        // Pruning Step 2: Search Direction Heuristic
+        if (boardCounts[word.front()] &gt; boardCounts[word.back()]) {
+            std::reverse(word.begin(), word.end());
+        }
+
+        // Start DFS
+        for (int i = 0; i &lt; m; ++i) {
+            for (int j = 0; j &lt; n; ++j) {
+                if (board[i][j] == word[0] &amp;&amp; dfs(board, word, i, j, 0)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+private:
+    bool dfs(std::vector&lt;std::vector&lt;char&gt;&gt;&amp; board, const std::string&amp; word, int r, int c, int index) {
+        if (index == word.length()) return true;
+
+        if (r &lt; 0 || r &gt;= board.size() || c &lt; 0 || c &gt;= board[0].size() || board[r][c] != word[index]) {
+            return false;
+        }
+
+        char temp = board[r][c];
+        board[r][c] = '#'; 
+
+        bool found = dfs(board, word, r + 1, c, index + 1) ||
+                     dfs(board, word, r - 1, c, index + 1) ||
+                     dfs(board, word, r, c + 1, index + 1) ||
+                     dfs(board, word, r, c - 1, index + 1);
+
+        board[r][c] = temp;
+        return found;
+    }
+};
+</code></pre>
+<hr />
+<h3>Pythonic Solution (Optimized Approach)</h3>
+<p>This Python solution implements the optimized backtracking approach using pythonic constructs like <code>collections.Counter</code> for efficient frequency counting and a nested function for the DFS logic.</p>
+<pre><code class="language-python">from collections import Counter
+from typing import List
+
+class Solution:
+    def exist(self, board: List[List[str]], word: str) -&gt; bool:
+        m, n = len(board), len(board[0])
+
+        # Pruning 1: Word is longer than the board
+        if len(word) &gt; m * n:
+            return False
+
+        # Pruning 2: Character frequency check
+        board_counts = Counter(c for row in board for c in row)
+        word_counts = Counter(word)
+        for char, count in word_counts.items():
+            if board_counts[char] &lt; count:
+                return False
+
+        # Pruning 3: Reverse word if last char is less frequent
+        if board_counts[word[0]] &gt; board_counts[word[-1]]:
+            word = word[::-1]
+
+        def dfs(r: int, c: int, index: int) -&gt; bool:
+            # Base case: All characters of the word have been found
+            if index == len(word):
+                return True
+
+            # Boundary checks and character match check
+            if not (0 &lt;= r &lt; m and 0 &lt;= c &lt; n and board[r][c] == word[index]):
+                return False
+
+            # Mark the cell as visited
+            temp = board[r][c]
+            board[r][c] = '#'
+
+            # Explore neighbors
+            found = (dfs(r + 1, c, index + 1) or
+                     dfs(r - 1, c, index + 1) or
+                     dfs(r, c + 1, index + 1) or
+                     dfs(r, c - 1, index + 1))
+
+            # Backtrack: Un-mark the cell
+            board[r][c] = temp
+
+            return found
+
+        # Start DFS from each cell that matches the first character
+        for i in range(m):
+            for j in range(n):
+                if board[i][j] == word[0] and dfs(i, j, 0):
+                    return True
+
+        return False
+</code></pre></div>

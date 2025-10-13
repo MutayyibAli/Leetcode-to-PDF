@@ -43,38 +43,43 @@ def highlight_code_blocks(html):
     soup = BeautifulSoup(html, "html.parser")
 
     # Create a Pygments formatter (with CSS classes)
-    formatter = formatters.HtmlFormatter(
-        style="colorful", cssclass="codehilite", linenos="table"
-    )
+    formatter = formatters.HtmlFormatter(style="colorful", cssclass="codehilite")
 
-    # Process each <code> tag
     for code_tag in soup.find_all("code"):
-        code_text = code_tag.get_text()
-        lang = ""
+        code_text = code_tag.get_text().strip()
+
+        # Skip single-line code blocks
+        if len(code_text.splitlines()) < 2:
+            continue
+
+        detected = True
 
         if code_tag.get("class") == ["language-cpp"]:
-            lang = "C++"
             lexer = lexers.CppLexer()
         elif code_tag.get("class") == ["language-python"]:
-            lang = "Python"
             lexer = lexers.PythonLexer()
         elif code_tag.get("class") == ["language-java"]:
-            lang = "Java"
             lexer = lexers.JavaLexer()
         elif code_tag.get("class") == ["language-javascript"]:
-            lang = "JavaScript"
             lexer = lexers.JavascriptLexer()
         else:
-            continue
+            detected = False
+            lexer = lexers.PythonLexer()
 
         # Highlight using Pygments
         highlighted_code = highlight(code_text, lexer, formatter)
 
         # Create a new <p> tag for the language
-        style = "margin:0; padding:0; font-weight:bold; text-decoration:underline; text-align:center;"
+        style = "margin:0 20px; padding:0; font-weight:bold;"
         p = soup.new_tag("p", style=style)
-        p.string = lang
+        if detected:
+            p.string = lexer.name
+        else:
+            p.string = "Code"
         code_tag.insert_before(p)
+
+        wrapper_div = soup.new_tag("div", **{"class": "formatted-code"})
+        code_tag.wrap(wrapper_div)
 
         # Replace the <code> tag with highlighted HTML
         code_tag.replace_with(BeautifulSoup(highlighted_code, "html.parser"))

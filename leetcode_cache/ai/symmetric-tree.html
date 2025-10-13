@@ -1,0 +1,165 @@
+<div class='ai-explanation'><h3>List of Approaches</h3>
+<ol>
+<li>Recursive (Depth-First Search) Approach</li>
+<li>Iterative (Breadth-First Search) Approach</li>
+</ol>
+<hr />
+<h3>1. Recursive (Depth-First Search) Approach</h3>
+<p>This approach defines a tree's symmetry by comparing its left and right subtrees. Two subtrees are considered mirror images if their root nodes have the same value, and the right subtree of the first node is a mirror image of the left subtree of the second node, and vice versa. We can implement this logic using a helper function that recursively checks these conditions.</p>
+<ol>
+<li>The main function <code>isSymmetric</code> handles the edge case of an empty tree (which is symmetric) and then initiates the comparison by calling a helper function <code>isMirror</code> on the root's left and right children.</li>
+<li>The <code>isMirror(node1, node2)</code> function is the core of the recursion.</li>
+<li><strong>Base Cases:</strong><ul>
+<li>If both <code>node1</code> and <code>node2</code> are <code>nullptr</code>, they are symmetric, so return <code>true</code>.</li>
+<li>If only one of them is <code>nullptr</code> or if their values are different, they are not symmetric, so return <code>false</code>.</li>
+</ul>
+</li>
+<li><strong>Recursive Step:</strong> The two subtrees are symmetric if and only if all of the following are true:<ul>
+<li><code>node1-&gt;val == node2-&gt;val</code></li>
+<li>The outer children are symmetric: <code>isMirror(node1-&gt;left, node2-&gt;right)</code></li>
+<li>The inner children are symmetric: <code>isMirror(node1-&gt;right, node2-&gt;left)</code></li>
+</ul>
+</li>
+<li>The final result is the boolean returned by the initial call to <code>isMirror</code>.</li>
+</ol>
+<p>This approach has a time complexity of O(N), where N is the number of nodes, as we visit each node once. The space complexity is O(H), where H is the height of the tree, due to the recursion stack depth.</p>
+<pre><code class="language-cpp">/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    bool isSymmetric(TreeNode* root) {
+        if (!root) {
+            return true;
+        }
+        return isMirror(root-&gt;left, root-&gt;right);
+    }
+
+private:
+    bool isMirror(TreeNode* t1, TreeNode* t2) {
+        // If both nodes are null, they are symmetric
+        if (!t1 &amp;&amp; !t2) {
+            return true;
+        }
+        // If one is null but the other isn't, or their values differ, not symmetric
+        if (!t1 || !t2 || t1-&gt;val != t2-&gt;val) {
+            return false;
+        }
+        // Recursively check the outer children (left of t1, right of t2)
+        // and the inner children (right of t1, left of t2)
+        return isMirror(t1-&gt;left, t2-&gt;right) &amp;&amp; isMirror(t1-&gt;right, t2-&gt;left);
+    }
+};
+</code></pre>
+<h3>2. Iterative (Breadth-First Search) Approach</h3>
+<p>Instead of recursion, we can use a queue to solve the problem iteratively. This approach compares the tree level by level, ensuring that each level is a mirror of itself.</p>
+<ol>
+<li>Handle the edge case of an empty tree.</li>
+<li>Initialize a queue and push the root's left and right children into it. The queue will hold pairs of nodes that need to be compared.</li>
+<li>Loop as long as the queue is not empty.</li>
+<li>In each iteration, dequeue two nodes, <code>t1</code> and <code>t2</code>.</li>
+<li><strong>Check for symmetry:</strong><ul>
+<li>If both <code>t1</code> and <code>t2</code> are <code>nullptr</code>, they form a symmetric pair. We <code>continue</code> to the next pair in the queue.</li>
+<li>If only one is <code>nullptr</code> or if their values are not equal, the tree is not symmetric, so we return <code>false</code>.</li>
+</ul>
+</li>
+<li><strong>Enqueue children:</strong> If the current pair of nodes is symmetric, we add their children to the queue in a specific, mirrored order to ensure future comparisons are correct.<ul>
+<li>Enqueue <code>t1</code>'s left child and <code>t2</code>'s right child.</li>
+<li>Enqueue <code>t1</code>'s right child and <code>t2</code>'s left child.</li>
+</ul>
+</li>
+<li>If the loop completes without returning <code>false</code>, it means all pairs were symmetric, so the entire tree is symmetric. Return <code>true</code>.</li>
+</ol>
+<p>This approach has a time complexity of O(N) since each node is visited once. The space complexity is O(W), where W is the maximum width of the tree, which in the worst case can be O(N).</p>
+<pre><code class="language-cpp">/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+#include &lt;queue&gt;
+
+class Solution {
+public:
+    bool isSymmetric(TreeNode* root) {
+        if (!root) {
+            return true;
+        }
+
+        std::queue&lt;TreeNode*&gt; q;
+        q.push(root-&gt;left);
+        q.push(root-&gt;right);
+
+        while (!q.empty()) {
+            TreeNode* t1 = q.front();
+            q.pop();
+            TreeNode* t2 = q.front();
+            q.pop();
+
+            // If both are null, continue to the next pair
+            if (!t1 &amp;&amp; !t2) {
+                continue;
+            }
+
+            // If one is null or values are different, not symmetric
+            if (!t1 || !t2 || t1-&gt;val != t2-&gt;val) {
+                return false;
+            }
+
+            // Enqueue children in a mirrored order
+            q.push(t1-&gt;left);
+            q.push(t2-&gt;right);
+            q.push(t1-&gt;right);
+            q.push(t2-&gt;left);
+        }
+
+        return true;
+    }
+};
+</code></pre>
+<h3>Pythonic Solution (Recursive)</h3>
+<p>The recursive approach is often considered more elegant and "Pythonic" for tree traversal problems due to its conciseness and clarity. It directly translates the definition of a symmetric tree into code.</p>
+<pre><code class="language-python"># Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+class Solution:
+    def isSymmetric(self, root: Optional[TreeNode]) -&gt; bool:
+        &quot;&quot;&quot;
+        Checks if a binary tree is symmetric around its center.
+        &quot;&quot;&quot;
+        if not root:
+            return True
+
+        def is_mirror(t1: Optional[TreeNode], t2: Optional[TreeNode]) -&gt; bool:
+            &quot;&quot;&quot;
+            Helper function to check if two subtrees are mirror images.
+            &quot;&quot;&quot;
+            # Both are None, which is symmetric
+            if not t1 and not t2:
+                return True
+            # One is None or values don't match, not symmetric
+            if not t1 or not t2 or t1.val != t2.val:
+                return False
+
+            # Recursively check if outer children and inner children are mirrors
+            return is_mirror(t1.left, t2.right) and is_mirror(t1.right, t2.left)
+
+        return is_mirror(root.left, root.right)
+
+</code></pre></div>

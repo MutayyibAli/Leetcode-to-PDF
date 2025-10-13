@@ -1,0 +1,209 @@
+<div class='ai-explanation'><h3>List of all the approaches to solution</h3>
+<ol>
+<li>Brute Force Approach (Using a Dynamic Array/Vector)</li>
+<li>Optimal Approach (Using a Hash Map and a Dynamic Array)</li>
+</ol>
+<hr />
+<h3>1. Brute Force Approach (Using a Dynamic Array/Vector)</h3>
+<p>This approach uses a single dynamic array (like <code>std::vector</code> in C++) to store the elements of the set. While simple to conceptualize, it fails to meet the <code>O(1)</code> time complexity requirement for all operations.</p>
+<p><strong>Step-by-step explanation:</strong>
+1.  <strong>Data Structure</strong>: Use a <code>std::vector&lt;int&gt;</code> to store the numbers.
+2.  <strong><code>insert(val)</code></strong>: To ensure no duplicates, iterate through the entire vector to check if <code>val</code> already exists. If it doesn't, add <code>val</code> to the end of the vector using <code>push_back()</code>. This search operation makes insertion slow.
+3.  <strong><code>remove(val)</code></strong>: Iterate through the vector to find the element <code>val</code>. If found, erase it. Erasing an element from the middle of a vector requires shifting all subsequent elements, which is a slow operation.
+4.  <strong><code>getRandom()</code></strong>: Generate a random index between <code>0</code> and <code>vector.size() - 1</code>. Return the element at that random index. This operation is efficient.</p>
+<p>This approach is inefficient because <code>insert</code> and <code>remove</code> both require a linear scan of the vector, leading to O(n) time complexity.</p>
+<p><strong>Time Complexity:</strong> <code>insert</code>: O(n), <code>remove</code>: O(n), <code>getRandom</code>: O(1).
+<strong>Space Complexity:</strong> O(n) to store the elements in the vector.</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;algorithm&gt;
+#include &lt;cstdlib&gt;
+
+class RandomizedSet {
+private:
+    std::vector&lt;int&gt; elements;
+
+public:
+    RandomizedSet() {
+        // Constructor is empty
+    }
+
+    bool insert(int val) {
+        // O(n) search
+        if (std::find(elements.begin(), elements.end(), val) != elements.end()) {
+            return false;
+        }
+        // O(1) amortized push
+        elements.push_back(val);
+        return true;
+    }
+
+    bool remove(int val) {
+        // O(n) search
+        auto it = std::find(elements.begin(), elements.end(), val);
+        if (it == elements.end()) {
+            return false;
+        }
+        // O(n) erase
+        elements.erase(it);
+        return true;
+    }
+
+    int getRandom() {
+        // O(1) random access
+        int randomIndex = rand() % elements.size();
+        return elements[randomIndex];
+    }
+};
+</code></pre>
+<hr />
+<h3>2. Optimal Approach (Using a Hash Map and a Dynamic Array)</h3>
+<p>To achieve an average <code>O(1)</code> time complexity for all operations, we can combine the strengths of two data structures: a dynamic array (<code>std::vector</code>) and a hash map (<code>std::unordered_map</code>).</p>
+<ul>
+<li>The <strong>dynamic array</strong> stores the elements and provides <code>O(1)</code> time for adding an element to the end and for random access by index (<code>getRandom</code>).</li>
+<li>The <strong>hash map</strong> stores each element and its corresponding index in the dynamic array. This allows for <code>O(1)</code> average time lookups to check for existence (<code>insert</code>) and to find an element's position (<code>remove</code>).</li>
+</ul>
+<p><strong>Step-by-step explanation:</strong>
+1.  <strong>Data Structures</strong>: Use a <code>std::vector&lt;int&gt;</code> named <code>nums</code> to store the elements and an <code>std::unordered_map&lt;int, int&gt;</code> named <code>valToIndex</code> to map each value to its index in <code>nums</code>.
+2.  <strong><code>insert(val)</code></strong>:
+    -   Check if <code>val</code> exists in <code>valToIndex</code>. If it does, return <code>false</code>.
+    -   If not, append <code>val</code> to the end of the <code>nums</code> vector.
+    -   Add an entry to the map: <code>valToIndex[val] = nums.size() - 1</code>.
+    -   Return <code>true</code>.
+3.  <strong><code>remove(val)</code></strong>:
+    -   Check if <code>val</code> exists in <code>valToIndex</code>. If not, return <code>false</code>.
+    -   <strong>The Core Trick:</strong> To avoid an <code>O(n)</code> removal from the vector, we swap the element to be removed with the <em>last</em> element in the vector.
+    -   Get the index of <code>val</code> from the map: <code>int indexToRemove = valToIndex[val];</code>.
+    -   Get the last element from the vector: <code>int lastVal = nums.back();</code>.
+    -   Move the last element to the position of the element we're removing: <code>nums[indexToRemove] = lastVal;</code>.
+    -   Update the map for the moved element: <code>valToIndex[lastVal] = indexToRemove;</code>.
+    -   Remove the last element from the vector (which is now a duplicate of the element we're "removing") using <code>pop_back()</code>.
+    -   Erase <code>val</code> from the map.
+    -   Return <code>true</code>.
+4.  <strong><code>getRandom()</code></strong>:
+    -   Generate a random index <code>randIdx</code> in the range <code>[0, nums.size() - 1]</code>.
+    -   Return <code>nums[randIdx]</code>.</p>
+<p>All operations now have an average time complexity of O(1), and the space complexity is O(n) for storing the elements.</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;unordered_map&gt;
+#include &lt;cstdlib&gt;
+
+class RandomizedSet {
+private:
+    std::vector&lt;int&gt; nums;
+    std::unordered_map&lt;int, int&gt; valToIndex;
+
+public:
+    RandomizedSet() {
+        // Use current time as seed for random generator
+        srand(time(0));
+    }
+
+    bool insert(int val) {
+        if (valToIndex.count(val)) {
+            return false;
+        }
+        nums.push_back(val);
+        valToIndex[val] = nums.size() - 1;
+        return true;
+    }
+
+    bool remove(int val) {
+        if (!valToIndex.count(val)) {
+            return false;
+        }
+
+        // Get the index of the element to remove
+        int indexToRemove = valToIndex[val];
+        // Get the last element's value
+        int lastVal = nums.back();
+
+        // Move the last element to the position of the element to remove
+        nums[indexToRemove] = lastVal;
+        // Update the map for the moved element
+        valToIndex[lastVal] = indexToRemove;
+
+        // Remove the last element
+        nums.pop_back();
+        // Erase the original value from the map
+        valToIndex.erase(val);
+
+        return true;
+    }
+
+    int getRandom() {
+        return nums[rand() % nums.size()];
+    }
+};
+
+/**
+ * Your RandomizedSet object will be instantiated and called as such:
+ * RandomizedSet* obj = new RandomizedSet();
+ * bool param_1 = obj-&gt;insert(val);
+ * bool param_2 = obj-&gt;remove(val);
+ * int param_3 = obj-&gt;getRandom();
+ */
+</code></pre>
+<hr />
+<h3>Pythonic Solution (Best Approach)</h3>
+<p>The optimal approach is implemented in Python using a <code>list</code> and a <code>dictionary</code> (hash map). The logic is identical to the C++ optimal solution, but <code>random.choice</code> provides a more direct way to get a random element from a list.</p>
+<pre><code class="language-python">import random
+
+class RandomizedSet:
+
+    def __init__(self):
+        &quot;&quot;&quot;
+        Initializes the RandomizedSet object.
+        &quot;&quot;&quot;
+        self.val_to_index = {} # Dictionary to map value to its index in the list
+        self.nums_list = []      # List to store the elements
+
+    def insert(self, val: int) -&gt; bool:
+        &quot;&quot;&quot;
+        Inserts an item val into the set if not present. Returns true if the item was not present, false otherwise.
+        &quot;&quot;&quot;
+        if val in self.val_to_index:
+            return False
+
+        # Add the new value and its index to the map
+        self.val_to_index[val] = len(self.nums_list)
+        # Append the new value to the list
+        self.nums_list.append(val)
+        return True
+
+    def remove(self, val: int) -&gt; bool:
+        &quot;&quot;&quot;
+        Removes an item val from the set if present. Returns true if the item was present, false otherwise.
+        &quot;&quot;&quot;
+        if val not in self.val_to_index:
+            return False
+
+        # The trick: swap the element to remove with the last element
+        last_element = self.nums_list[-1]
+        index_to_remove = self.val_to_index[val]
+
+        # Move the last element to the position of the element to remove
+        self.nums_list[index_to_remove] = last_element
+        # Update the index of the moved element in the map
+        self.val_to_index[last_element] = index_to_remove
+
+        # Remove the last element (which is now the one we wanted to delete)
+        self.nums_list.pop()
+        # Remove the original value from the map
+        del self.val_to_index[val]
+
+        return True
+
+    def getRandom(self) -&gt; int:
+        &quot;&quot;&quot;
+        Returns a random element from the current set of elements.
+        &quot;&quot;&quot;
+        # random.choice is an efficient way to get a random item from a list
+        return random.choice(self.nums_list)
+
+
+# Your RandomizedSet object will be instantiated and called as such:
+# obj = RandomizedSet()
+# param_1 = obj.insert(val)
+# param_2 = obj.remove(val)
+# param_3 = obj.getRandom()
+</code></pre></div>

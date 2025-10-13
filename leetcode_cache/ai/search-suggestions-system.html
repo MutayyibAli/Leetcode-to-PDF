@@ -1,0 +1,202 @@
+<div class='ai-explanation'><h3>List of Approaches</h3>
+<ol>
+<li>Brute Force Approach</li>
+<li>Binary Search Approach</li>
+<li>Two Pointers Approach</li>
+</ol>
+<hr />
+<h3>1. Brute Force Approach</h3>
+<p>This is a straightforward approach that directly implements the logic described in the problem. First, we sort the <code>products</code> array lexicographically to ensure that when we find matching products, they are already in the desired order. Then, for each character typed in the <code>searchWord</code>, we form a prefix. We iterate through the entire sorted <code>products</code> array, checking each product to see if it starts with the current prefix. We collect the first three matching products and add them to our result list for that prefix. This process is repeated for every prefix generated from the <code>searchWord</code>.</p>
+<p><strong>Step-by-step explanation:</strong>
+1.  Sort the <code>products</code> array lexicographically. This is crucial for returning the three lexicographically smallest results.
+2.  Initialize an empty list of lists, <code>ans</code>, to store the final suggestions.
+3.  Iterate through each character of the <code>searchWord</code> from left to right. In each iteration, build the current prefix string.
+4.  For the current prefix, create a temporary list <code>temp</code> to store suggestions.
+5.  Iterate through the sorted <code>products</code> array.
+6.  For each <code>product</code>, check if it has the current prefix.
+7.  If it matches, add the <code>product</code> to <code>temp</code>.
+8.  Stop adding to <code>temp</code> once it contains 3 suggestions to avoid unnecessary checks.
+9.  After checking all products, add the <code>temp</code> list to <code>ans</code>.
+10. Repeat for all prefixes. Finally, return <code>ans</code>.</p>
+<p>This approach is inefficient because for each prefix, we scan the entire <code>products</code> list again.
+<em>Time Complexity: O(N * L * logN + N * M^2), Space Complexity: O(M * L) for the output.</em> (Where N is the number of products, M is the length of <code>searchWord</code>, and L is the maximum length of a product).</p>
+<pre><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;vector&gt;
+#include &lt;string&gt;
+#include &lt;algorithm&gt;
+
+class Solution {
+public:
+    std::vector&lt;std::vector&lt;std::string&gt;&gt; suggestedProducts(std::vector&lt;std::string&gt;&amp; products, std::string searchWord) {
+        // Sort the products array to handle the lexicographical requirement easily.
+        sort(products.begin(), products.end());
+
+        std::vector&lt;std::vector&lt;std::string&gt;&gt; ans;
+        std::string currentPrefix = &quot;&quot;;
+
+        // Iterate through each character of the searchWord to form prefixes.
+        for (char c : searchWord) {
+            currentPrefix += c;
+            std::vector&lt;std::string&gt; temp;
+
+            // For each prefix, iterate through all products.
+            for (const std::string&amp; product : products) {
+                // Check if the product starts with the current prefix.
+                if (product.rfind(currentPrefix, 0) == 0) {
+                    temp.push_back(product);
+                }
+
+                // We only need at most 3 suggestions.
+                if (temp.size() == 3) {
+                    break;
+                }
+            }
+            ans.push_back(temp);
+        }
+        return ans;
+    }
+};
+</code></pre>
+<hr />
+<h3>2. Binary Search Approach</h3>
+<p>This approach improves upon the brute-force method by avoiding a full scan of the <code>products</code> array for each prefix. After the initial sorting of the <code>products</code> array, for each prefix, we can use binary search to efficiently find the first product that could potentially match. The C++ <code>lower_bound</code> function is perfect for this; it finds the first element not less than the given value. Once we have this starting point, we only need to check the subsequent products. We collect up to three valid suggestions starting from this index, stopping as soon as a product does not match the prefix (since the array is sorted, no further products will match).</p>
+<p><strong>Step-by-step explanation:</strong>
+1.  Sort the <code>products</code> array lexicographically.
+2.  Initialize <code>ans</code> and build the <code>currentPrefix</code> as in the previous approach.
+3.  For each <code>currentPrefix</code>:
+    a. Use binary search (or <code>std::lower_bound</code>) on the <code>products</code> array to find the index of the first product that is lexicographically greater than or equal to the <code>currentPrefix</code>.
+    b. Starting from this index, iterate through the next 3 products (or until the end of the array).
+    c. For each of these products, check if it actually starts with <code>currentPrefix</code>.
+    d. If it does, add it to the temporary suggestions list.
+    e. If it doesn't, break the loop, as all subsequent products will also not match.
+    f. Add the temporary list to <code>ans</code>.
+4.  Return <code>ans</code>.</p>
+<p>This method is significantly faster as binary search takes logarithmic time, compared to the linear scan of the brute-force method.
+<em>Time Complexity: O(N * L * logN + M * L * logN), Space Complexity: O(M * L) for the output.</em> (Where N is the number of products, M is the length of <code>searchWord</code>, and L is the maximum length of a product).</p>
+<pre><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;vector&gt;
+#include &lt;string&gt;
+#include &lt;algorithm&gt;
+
+class Solution {
+public:
+    std::vector&lt;std::vector&lt;std::string&gt;&gt; suggestedProducts(std::vector&lt;std::string&gt;&amp; products, std::string searchWord) {
+        // Sort the products to enable binary search and get lexicographical order.
+        sort(products.begin(), products.end());
+
+        std::vector&lt;std::vector&lt;std::string&gt;&gt; ans;
+        std::string currentPrefix = &quot;&quot;;
+        auto it = products.begin();
+
+        for (char c : searchWord) {
+            currentPrefix += c;
+            std::vector&lt;std::string&gt; temp;
+
+            // Find the first product that is not less than the current prefix.
+            // We search from the last found position 'it' to optimize.
+            it = std::lower_bound(it, products.end(), currentPrefix);
+
+            // Check up to 3 products from the found position.
+            for (int i = 0; i &lt; 3 &amp;&amp; (it + i) != products.end(); ++i) {
+                const std::string&amp; product = *(it + i);
+
+                // If the product doesn't have the prefix, stop.
+                if (product.rfind(currentPrefix, 0) != 0) {
+                    break;
+                }
+                temp.push_back(product);
+            }
+            ans.push_back(temp);
+        }
+        return ans;
+    }
+};
+</code></pre>
+<hr />
+<h3>3. Two Pointers Approach</h3>
+<p>This is the most optimized approach among the sorting-based solutions. After an initial sort of the <code>products</code> array, we use two pointers, <code>left</code> and <code>right</code>, to maintain a "window" of products that are potential matches. Initially, <code>left</code> is 0 and <code>right</code> is at the end of the array. For each character typed, we shrink this window. We move <code>left</code> forward past any products that are now too small lexicographically, and we move <code>right</code> backward past any products that are too large. The key insight is that these pointers only move in one direction throughout the entire process, never resetting. This means each product is visited at most twice by the pointers. After shrinking the window for the current prefix, the products within <code>[left, right]</code> are all valid candidates, and we simply take the first 3 from this window.</p>
+<p><strong>Step-by-step explanation:</strong>
+1.  Sort the <code>products</code> array lexicographically.
+2.  Initialize two pointers, <code>left = 0</code> and <code>right = products.size() - 1</code>.
+3.  Iterate through <code>searchWord</code> with an index <code>i</code> from <code>0</code> to <code>M-1</code>.
+    a. Get the character <code>c = searchWord[i]</code>.
+    b. Shrink the window from the left: while <code>left &lt;= right</code> and the <code>i</code>-th character of <code>products[left]</code> is less than <code>c</code> (or <code>products[left]</code> is too short), increment <code>left</code>.
+    c. Shrink the window from the right: while <code>left &lt;= right</code> and the <code>i</code>-th character of <code>products[right]</code> is greater than <code>c</code> (or <code>products[right]</code> is too short), decrement <code>right</code>.
+    d. Now, all products between <code>left</code> and <code>right</code> match the prefix <code>searchWord[0...i]</code>.
+    e. Add up to the first 3 products from <code>products[left]</code> to the result for this iteration. The number of products to add is <code>min(3, right - left + 1)</code>.
+4.  Return the collected list of suggestions.</p>
+<p>This approach is very efficient because the search part runs in a total time proportional to <code>N+M</code>, making the initial sort the bottleneck.
+<em>Time Complexity: O(N * L * logN), Space Complexity: O(M * L) for the output.</em> (Where N is the number of products, M is the length of <code>searchWord</code>, and L is the maximum length of a product). The search part is O(N+M), so sorting dominates.</p>
+<pre><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;vector&gt;
+#include &lt;string&gt;
+#include &lt;algorithm&gt;
+
+class Solution {
+public:
+    std::vector&lt;std::vector&lt;std::string&gt;&gt; suggestedProducts(std::vector&lt;std::string&gt;&amp; products, std::string searchWord) {
+        // Sort products to handle lexicographical order and enable two-pointer scan.
+        sort(products.begin(), products.end());
+
+        std::vector&lt;std::vector&lt;std::string&gt;&gt; ans;
+        int left = 0, right = products.size() - 1;
+
+        for (int i = 0; i &lt; searchWord.length(); i++) {
+            char c = searchWord[i];
+
+            // Move left pointer if the product at 'left' does not match the new prefix.
+            while (left &lt;= right &amp;&amp; (products[left].length() &lt;= i || products[left][i] &lt; c)) {
+                left++;
+            }
+
+            // Move right pointer if the product at 'right' does not match the new prefix.
+            while (left &lt;= right &amp;&amp; (products[right].length() &lt;= i || products[right][i] &gt; c)) {
+                right--;
+            }
+
+            std::vector&lt;std::string&gt; temp;
+            // Add up to 3 suggestions from the current valid window [left, right].
+            for (int j = 0; j &lt; 3 &amp;&amp; (left + j) &lt;= right; j++) {
+                temp.push_back(products[left + j]);
+            }
+            ans.push_back(temp);
+        }
+        return ans;
+    }
+};
+</code></pre>
+<hr />
+<h3>Pythonic Solution (Best Approach)</h3>
+<p>The two-pointers approach is highly efficient and elegant. After sorting the products, it narrows down the range of valid suggestions with each typed character. The pointers <code>left</code> and <code>right</code> ensure that we only consider relevant products, and since they never move backward, the overall complexity for finding suggestions after the sort is very low.</p>
+<pre><code class="language-python">from typing import List
+
+class Solution:
+    def suggestedProducts(self, products: List[str], searchWord: str) -&gt; List[List[str]]:
+        # Sort the products list lexicographically.
+        products.sort()
+
+        ans = []
+        left, right = 0, len(products) - 1
+
+        for i, char in enumerate(searchWord):
+            # Shrink the window [left, right] to match the current prefix.
+            # Move left pointer
+            while left &lt;= right and (len(products[left]) &lt;= i or products[left][i] &lt; char):
+                left += 1
+
+            # Move right pointer
+            while left &lt;= right and (len(products[right]) &lt;= i or products[right][i] &gt; char):
+                right -= 1
+
+            # The products within the window [left, right] are potential suggestions.
+            # We need at most 3.
+            suggestions = []
+            remaining = right - left + 1
+            for j in range(min(3, remaining)):
+                suggestions.append(products[left + j])
+
+            ans.append(suggestions)
+
+        return ans
+
+</code></pre></div>

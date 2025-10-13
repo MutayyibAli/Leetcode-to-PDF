@@ -1,0 +1,128 @@
+<div class='ai-explanation'><h3>List of approaches</h3>
+<ol>
+<li>Greedy Line-by-Line Simulation</li>
+</ol>
+<h3>1. Greedy Line-by-Line Simulation</h3>
+<p>This approach processes the text one line at a time. We greedily pack as many words as possible onto each line and then format that line according to the justification rules before moving to the next.</p>
+<p><strong>Step-by-step Explanation:</strong></p>
+<ol>
+<li>
+<p><strong>Iterate and Group:</strong> We'll traverse the input <code>words</code> array and determine which words belong to the current line. We keep adding words as long as the total length (including one space between each word) does not exceed <code>maxWidth</code>.</p>
+</li>
+<li>
+<p><strong>Format the Line:</strong> Once a line is full (i.e., adding the next word would exceed <code>maxWidth</code>), we format it. There are three cases for formatting:</p>
+<ul>
+<li><strong>Case 1: The line has only one word.</strong> The word should be left-justified. We append spaces to its right until the line's length equals <code>maxWidth</code>.</li>
+<li><strong>Case 2: It is the last line.</strong> The last line is also left-justified. Words are joined by a single space, and the remaining space is padded at the end of the line.</li>
+<li><strong>Case 3: It is a regular, multi-word line.</strong> This line must be fully justified.<ul>
+<li>Calculate the total number of spaces to be distributed: <code>totalSpaces = maxWidth - (length of all words on the line)</code>.</li>
+<li>Calculate the number of gaps between words: <code>gaps = numberOfWords - 1</code>.</li>
+<li>Determine the base number of spaces for each gap: <code>spacesPerGap = totalSpaces / gaps</code>.</li>
+<li>The leftover spaces (<code>extraSpaces = totalSpaces % gaps</code>) are distributed one by one to the gaps from left to right.</li>
+<li>Build the string by joining the words with the calculated number of spaces.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>Repeat:</strong> Add the formatted line to our result list and start the process again from the word that didn't fit. Continue until all words have been placed.</p>
+</li>
+</ol>
+<p>This entire process simulates how a text editor would justify text, line by line. The overall time complexity is dominated by iterating through the words and constructing the new lines, which is O(N * L) where N is the number of words and L is the maxWidth. The space complexity is O(N * L) to store the result.</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;string&gt;
+
+class Solution {
+public:
+    std::vector&lt;std::string&gt; fullJustify(std::vector&lt;std::string&gt;&amp; words, int maxWidth) {
+        std::vector&lt;std::string&gt; result;
+        int i = 0;
+        int n = words.size();
+
+        while (i &lt; n) {
+            int j = i;
+            int lineLength = 0;
+            // Determine how many words can fit in the current line
+            while (j &lt; n &amp;&amp; lineLength + words[j].length() + (j - i) &lt;= maxWidth) {
+                lineLength += words[j].length();
+                j++;
+            }
+
+            std::string line;
+            int wordCount = j - i;
+            int totalSpaces = maxWidth - lineLength;
+
+            // Handle last line or line with a single word (left-justified)
+            if (wordCount == 1 || j == n) {
+                line += words[i];
+                for (int k = i + 1; k &lt; j; k++) {
+                    line += &quot; &quot; + words[k];
+                }
+                line += std::string(maxWidth - line.length(), ' ');
+            } else { // Handle fully justified line
+                int baseSpaces = totalSpaces / (wordCount - 1);
+                int extraSpaces = totalSpaces % (wordCount - 1);
+
+                line += words[i];
+                for (int k = i + 1; k &lt; j; k++) {
+                    line += std::string(baseSpaces, ' ');
+                    if (extraSpaces &gt; 0) {
+                        line += &quot; &quot;;
+                        extraSpaces--;
+                    }
+                    line += words[k];
+                }
+            }
+            result.push_back(line);
+            i = j;
+        }
+        return result;
+    }
+};
+</code></pre>
+<h3>Pythonic Solution</h3>
+<p>This Python solution elegantly handles the line-by-line simulation. For regular justification, it uses a clever round-robin approach with the modulo operator (<code>%</code>) to distribute the extra spaces. For the last line, it simply joins the words with a single space and uses <code>.ljust()</code> to pad the remaining space.</p>
+<pre><code class="language-python">from typing import List
+
+class Solution:
+    def fullJustify(self, words: List[str], maxWidth: int) -&gt; List[str]:
+        res, current_line, num_of_letters = [], [], 0
+
+        for word in words:
+            # Check if adding the new word exceeds maxWidth
+            # len(current_line) accounts for the minimum spaces between words
+            if num_of_letters + len(word) + len(current_line) &gt; maxWidth:
+                # Line is full, format and add to results
+                total_spaces = maxWidth - num_of_letters
+                gaps = len(current_line) - 1
+
+                # Special case: one word on the line or distributing spaces
+                if gaps == 0:
+                    res.append(current_line[0] + ' ' * total_spaces)
+                else:
+                    # Distribute spaces using round-robin
+                    base_spaces = total_spaces // gaps
+                    extra_spaces = total_spaces % gaps
+
+                    line = &quot;&quot;
+                    for i in range(gaps):
+                        line += current_line[i] + ' ' * base_spaces
+                        if i &lt; extra_spaces:
+                            line += ' '
+                    line += current_line[-1]
+                    res.append(line)
+
+                # Reset for the next line
+                current_line, num_of_letters = [], 0
+
+            # Add the current word to the line
+            current_line.append(word)
+            num_of_letters += len(word)
+
+        # Handle the last line (left-justified)
+        last_line = ' '.join(current_line)
+        res.append(last_line.ljust(maxWidth))
+
+        return res
+
+</code></pre></div>

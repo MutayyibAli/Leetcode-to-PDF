@@ -1,0 +1,148 @@
+<div class='ai-explanation'><h3>List of all the approaches to solution</h3>
+<ul>
+<li>Brute Force Approach</li>
+<li>Two Pointers (Slow &amp; Fast) Approach</li>
+</ul>
+<h3>Brute Force Approach</h3>
+<p>This approach involves two separate traversals of the linked list. The first pass is to determine the length of the list, and the second pass is to locate and delete the middle node.</p>
+<ol>
+<li>Handle the edge case where the list has zero or one node. If <code>head</code> is <code>nullptr</code> or <code>head-&gt;next</code> is <code>nullptr</code>, the middle node is the head itself. Deleting it results in an empty list, so we return <code>nullptr</code>.</li>
+<li><strong>First Pass:</strong> Traverse the list from the <code>head</code> to the end, counting the number of nodes (<code>n</code>).</li>
+<li><strong>Calculate Middle:</strong> Determine the index of the node to be deleted using the formula <code>middle_index = n / 2</code>.</li>
+<li><strong>Second Pass:</strong> To delete the middle node, we must stop at the node just <em>before</em> it. Initialize a pointer <code>prev</code> to the <code>head</code> and traverse <code>middle_index - 1</code> steps.</li>
+<li><strong>Delete Node:</strong> Once <code>prev</code> is positioned correctly, update its <code>next</code> pointer to skip the middle node: <code>prev-&gt;next = prev-&gt;next-&gt;next</code>.</li>
+<li>Return the original <code>head</code> of the modified list.</li>
+</ol>
+<p>This method is straightforward but less efficient as it requires iterating through the list twice. The time complexity is O(N) due to the two passes, and the space complexity is O(1).</p>
+<pre><code class="language-cpp">/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* deleteMiddle(ListNode* head) {
+        // Edge case: If the list is empty or has only one node.
+        if (head == nullptr || head-&gt;next == nullptr) {
+            return nullptr;
+        }
+
+        // 1. First pass to find the length of the list.
+        int n = 0;
+        ListNode* temp = head;
+        while (temp != nullptr) {
+            n++;
+            temp = temp-&gt;next;
+        }
+
+        // 2. Calculate the index of the node before the middle.
+        int middle_prev_index = n / 2 - 1;
+
+        // 3. Second pass to find the node before the middle.
+        ListNode* prev = head;
+        for (int i = 0; i &lt; middle_prev_index; ++i) {
+            prev = prev-&gt;next;
+        }
+
+        // 4. Delete the middle node.
+        ListNode* node_to_delete = prev-&gt;next;
+        prev-&gt;next = prev-&gt;next-&gt;next;
+        delete node_to_delete; // Optional: free memory
+
+        return head;
+    }
+};
+</code></pre>
+<h3>Two Pointers (Slow &amp; Fast) Approach</h3>
+<p>This is the optimal approach, solving the problem in a single pass using the "tortoise and hare" algorithm. By moving one pointer at twice the speed of another, we can efficiently locate the middle of the list.</p>
+<ol>
+<li>Handle the edge case of an empty list. If <code>head</code> is <code>nullptr</code>, there's nothing to do.</li>
+<li>A list with a single node is also a special case. Deleting the middle node (the head) leaves an empty list. The code below handles this elegantly.</li>
+<li>To easily manage pointer manipulation, especially when the head needs to be modified, we use a <code>dummy</code> node. This <code>dummy</code> node points to the original <code>head</code>.</li>
+<li>Initialize a <code>slow</code> pointer at the <code>dummy</code> node and a <code>fast</code> pointer at the <code>head</code>.</li>
+<li>Traverse the list. In each iteration, move <code>slow</code> one step forward (<code>slow = slow-&gt;next</code>) and <code>fast</code> two steps forward (<code>fast = fast-&gt;next-&gt;next</code>).</li>
+<li>This loop continues as long as <code>fast</code> and <code>fast-&gt;next</code> are not <code>nullptr</code>. When the loop terminates, <code>fast</code> will have reached the end of the list. Because <code>slow</code> started one step behind <code>fast</code> and moved at half the speed, it will be positioned at the node immediately preceding the middle node.</li>
+<li>Delete the middle node by bypassing it: <code>slow-&gt;next = slow-&gt;next-&gt;next</code>.</li>
+<li>Return <code>dummy-&gt;next</code>, which is the head of the modified list.</li>
+</ol>
+<p>This single-pass algorithm is highly efficient. The time complexity is O(N) and the space complexity is O(1).</p>
+<pre><code class="language-cpp">/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* deleteMiddle(ListNode* head) {
+        // Edge case: If the list is empty.
+        if (head == nullptr) {
+            return nullptr;
+        }
+
+        // Using a dummy node simplifies handling of edge cases like deleting the head.
+        ListNode* dummy = new ListNode(0);
+        dummy-&gt;next = head;
+
+        ListNode* slow = dummy;
+        ListNode* fast = head;
+
+        // Move fast pointer twice as fast as slow pointer.
+        while (fast != nullptr &amp;&amp; fast-&gt;next != nullptr) {
+            slow = slow-&gt;next;
+            fast = fast-&gt;next-&gt;next;
+        }
+
+        // When fast reaches the end, slow is at the node before the middle.
+        ListNode* node_to_delete = slow-&gt;next;
+        slow-&gt;next = slow-&gt;next-&gt;next;
+
+        delete node_to_delete; // Optional: free memory
+
+        ListNode* new_head = dummy-&gt;next;
+        delete dummy; // Clean up the dummy node
+
+        return new_head;
+    }
+};
+</code></pre>
+<h3>Pythonic solution for best approach</h3>
+<pre><code class="language-python"># Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, val=0, next=None):
+#         self.val = val
+#         self.next = next
+class Solution:
+    def deleteMiddle(self, head: Optional[ListNode]) -&gt; Optional[ListNode]:
+        # Handle the edge case of an empty list or a single-node list.
+        # If head.next is None, deleting the middle (head) results in None.
+        if not head or not head.next:
+            return None
+
+        # Initialize slow and fast pointers.
+        # By starting fast at head.next, slow will naturally stop
+        # at the node just before the middle. This is a slight variation
+        # from the dummy node approach but achieves the same goal.
+        slow = head
+        fast = head.next.next
+
+        # Move fast twice as fast as slow.
+        while fast and fast.next:
+            slow = slow.next
+            fast = fast.next.next
+
+        # At this point, `slow` is the node before the middle node.
+        # We bypass the middle node to delete it.
+        slow.next = slow.next.next
+
+        return head
+</code></pre></div>

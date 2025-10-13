@@ -1,0 +1,136 @@
+<div class='ai-explanation'><h3>List of all the approaches to solution</h3>
+<ol>
+<li>Brute Force Approach</li>
+<li>Bit Manipulation by Counting</li>
+<li>Bit Manipulation with State Machine</li>
+</ol>
+<hr />
+<h3>Brute Force Approach</h3>
+<p>This approach uses a hash map to count the frequency of each number in the array. We first iterate through the array to populate the hash map. Then, we iterate through the hash map to find the number with a frequency of exactly one.</p>
+<p><strong>Step-by-step explanation:</strong>
+1.  Create a hash map (e.g., <code>std::unordered_map</code> in C++) to store each number as a key and its frequency as the value.
+2.  Iterate through the input array <code>nums</code>. For each number, increment its corresponding count in the hash map.
+3.  After counting all the numbers, iterate through the key-value pairs in the hash map.
+4.  Return the key whose value (frequency) is 1.</p>
+<p>This approach is simple to understand but violates the constraint of using only constant extra space. The space used by the hash map depends on the number of unique elements, which is proportional to the input size.</p>
+<p>The time complexity is O(N) because we iterate through the array twice (once to build the map and once to check frequencies), and the space complexity is O(N) to store the map.</p>
+<pre><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;vector&gt;
+#include &lt;unordered_map&gt;
+
+class Solution {
+public:
+    int singleNumber(std::vector&lt;int&gt;&amp; nums) {
+        std::unordered_map&lt;int, int&gt; m;
+
+        for(auto x: nums){
+            m[x]++;
+        }
+
+        for(auto x: m){
+            if(x.second == 1){
+                return x.first;
+            }
+        }
+
+        return -1; // Should not be reached given the problem constraints
+    }
+};
+</code></pre>
+<hr />
+<h3>Bit Manipulation by Counting</h3>
+<p>This approach solves the problem in linear time and constant space by considering the bits of the numbers. Since every number except one appears three times, the sum of the bits at each position (0 to 31) across all numbers must be a multiple of 3, unless the single number has a '1' at that bit position. If the single number has a '1' at a certain bit position, the sum of bits at that position will be <code>3k + 1</code>. By taking the sum modulo 3, we can determine the bits of the single number and reconstruct it.</p>
+<p><strong>Step-by-step explanation:</strong>
+1.  Initialize a variable <code>ans</code> to 0. This will store the reconstructed single number.
+2.  Iterate through each bit position from 0 to 31.
+3.  For each bit position <code>i</code>, initialize a <code>sum</code> to 0.
+4.  Iterate through each number <code>num</code> in the input array <code>nums</code>.
+5.  Extract the <code>i</code>-th bit of <code>num</code> using the expression <code>(num &gt;&gt; i) &amp; 1</code> and add it to <code>sum</code>.
+6.  After iterating through all numbers, calculate <code>sum % 3</code>. If the result is 1, it means the single number has a '1' at the <code>i</code>-th bit position.
+7.  Set the <code>i</code>-th bit in <code>ans</code> by performing a bitwise OR operation: <code>ans |= (sum % 3) &lt;&lt; i;</code>.
+8.  After the outer loop completes, <code>ans</code> will hold the single number.</p>
+<p>The time complexity is O(N) because we iterate 32 times over the N elements, and the space complexity is O(1) as we only use a few variables to store the result and intermediate sums.</p>
+<pre><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;vector&gt;
+
+class Solution {
+ public:
+  int singleNumber(std::vector&lt;int&gt;&amp; nums) {
+    int ans = 0;
+
+    for (int i = 0; i &lt; 32; ++i) {
+      int sum = 0;
+      for (const int num : nums) {
+        sum += (num &gt;&gt; i) &amp; 1;
+      }
+      if (sum % 3 != 0) {
+        ans |= (1 &lt;&lt; i);
+      }
+    }
+
+    return ans;
+  }
+};
+</code></pre>
+<hr />
+<h3>Bit Manipulation with State Machine</h3>
+<p>This is the most efficient approach, achieving a solution in a single pass with constant space. We use two variables, <code>ones</code> and <code>twos</code>, to simulate a state machine for each bit.
+- <code>ones</code>: A bitmask representing bits that have appeared <code>3k + 1</code> times.
+- <code>twos</code>: A bitmask representing bits that have appeared <code>3k + 2</code> times.</p>
+<p>When a bit appears for the third time (<code>3k</code>), it's cleared from both <code>ones</code> and <code>twos</code>. The final answer will be the value in <code>ones</code>, as the unique number appears only once.</p>
+<p><strong>Step-by-step explanation:</strong>
+1.  Initialize two integer variables, <code>ones</code> and <code>twos</code>, to 0.
+2.  Iterate through each number <code>num</code> in the input array <code>nums</code>.
+3.  For each <code>num</code>, update <code>ones</code> and <code>twos</code> based on the following logic:
+    -   <code>ones = (ones ^ num) &amp; ~twos;</code>: A bit is set in <code>ones</code> if it appears for the first time. It is cleared if it appears for the second time (because it will be set in <code>twos</code>).
+    -   <code>twos = (twos ^ num) &amp; ~ones;</code>: A bit is set in <code>twos</code> if it appears for the second time. It is cleared if it appears for the third time (because it will be cleared from <code>ones</code> first).
+4.  The state transitions for any given bit are as follows:
+    -   <code>00</code> (appeared 3k times) -&gt; <code>01</code> (appeared 3k+1 times)
+    -   <code>01</code> (appeared 3k+1 times) -&gt; <code>10</code> (appeared 3k+2 times)
+    -   <code>10</code> (appeared 3k+2 times) -&gt; <code>00</code> (appeared 3k+3 times)
+5.  After iterating through all the numbers, the <code>ones</code> variable will hold the number that appeared exactly once.</p>
+<p>The time complexity is O(N) for a single pass through the array, and the space complexity is O(1).</p>
+<pre><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;vector&gt;
+
+class Solution {
+ public:
+  int singleNumber(std::vector&lt;int&gt;&amp; nums) {
+    int ones = 0;
+    int twos = 0;
+
+    for (const int num : nums) {
+      // If a bit in `num` is 1 and not in `twos`, it's a candidate for `ones`.
+      // XOR with `ones` toggles its state (0-&gt;1, 1-&gt;0).
+      ones = (ones ^ num) &amp; ~twos;
+
+      // If a bit in `num` is 1 and not in the new `ones`, it's a candidate for `twos`.
+      // XOR with `twos` toggles its state.
+      twos = (twos ^ num) &amp; ~ones;
+    }
+
+    return ones;
+  }
+};
+</code></pre>
+<hr />
+<h3>Pythonic solution for best approach</h3>
+<p>The best approach is the "Bit Manipulation with State Machine" due to its O(N) time and O(1) space complexity in a single pass. The Python implementation is a direct translation of the C++ logic.</p>
+<pre><code class="language-python">from typing import List
+
+class Solution:
+  def singleNumber(self, nums: List[int]) -&gt; int:
+    ones = 0
+    twos = 0
+
+    for num in nums:
+      # The logic correctly cycles a bit's state through:
+      # 1. First appearance: bit is added to `ones`.
+      # 2. Second appearance: bit is removed from `ones` and added to `twos`.
+      # 3. Third appearance: bit is removed from `twos`.
+      ones = (ones ^ num) &amp; ~twos
+      twos = (twos ^ num) &amp; ~ones
+
+    return ones
+
+</code></pre></div>

@@ -1,0 +1,125 @@
+<div class='ai-explanation'><h3>List of Approaches</h3>
+<ul>
+<li>Brute Force Approach (Iterative)</li>
+<li>Backtracking Approach (Recursive)</li>
+</ul>
+<h3>Brute Force Approach (Iterative)</h3>
+<p>This approach builds the combinations iteratively, level by level, corresponding to each digit in the input string. It resembles a Breadth-First Search (BFS) where each level of the search tree corresponds to a digit.</p>
+<ol>
+<li><strong>Initialization</strong>: Create a mapping of digits to their corresponding letters. If the input <code>digits</code> string is empty, return an empty list. Otherwise, initialize a results list (e.g., a queue or vector) with a single empty string <code>""</code>.</li>
+<li><strong>Iterate through Digits</strong>: Loop through each digit in the input string from left to right.</li>
+<li><strong>Expand Combinations</strong>: For each digit, create a new temporary list to store the next level of combinations. Iterate through all the combinations currently in the results list. For each of these combinations, iterate through all the letters corresponding to the current digit. Append each letter to the existing combination and add the new, longer combination to the temporary list.</li>
+<li><strong>Update Results</strong>: After processing all existing combinations for the current digit, replace the main results list with the newly generated temporary list.</li>
+<li><strong>Final Result</strong>: After iterating through all the digits, the results list will contain all possible full-length letter combinations.</li>
+</ol>
+<p>The time complexity is O(4^N * N), where N is the length of the <code>digits</code> string, as we have to generate all possible combinations and each has length N. The space complexity is also O(4^N * N) because we need to store all intermediate combinations.</p>
+<pre><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;vector&gt;
+#include &lt;string&gt;
+
+class Solution {
+public:
+    std::vector&lt;std::string&gt; letterCombinations(std::string digits) {
+        if (digits.empty()) return {};
+
+        std::string phone_map[] = {&quot;abc&quot;, &quot;def&quot;, &quot;ghi&quot;, &quot;jkl&quot;, &quot;mno&quot;, &quot;pqrs&quot;, &quot;tuv&quot;, &quot;wxyz&quot;};
+        std::vector&lt;std::string&gt; combinations = {&quot;&quot;};
+
+        for (char digit : digits) {
+            std::vector&lt;std::string&gt; new_combinations;
+            std::string letters = phone_map[digit - '2'];
+            for (const std::string&amp; combination : combinations) {
+                for (char letter : letters) {
+                    new_combinations.push_back(combination + letter);
+                }
+            }
+            combinations = new_combinations; // or std::move(new_combinations)
+        }
+
+        return combinations;
+    }
+};
+</code></pre>
+<h3>Backtracking Approach (Recursive)</h3>
+<p>This approach uses recursion to explore all possible combinations in a Depth-First Search (DFS) manner. A helper function builds a combination string one character at a time.</p>
+<ol>
+<li><strong>Initialization</strong>: Create a mapping of digits to their corresponding letters. If the input <code>digits</code> string is empty, return an empty list.</li>
+<li><strong>Recursive Helper Function</strong>: Define a recursive function, let's call it <code>backtrack</code>, that takes the current combination being built and the index of the digit to process next.</li>
+<li><strong>Base Case</strong>: The base case for the recursion is when the length of the current combination is equal to the length of the input <code>digits</code> string. This means a complete combination has been formed, so it's added to the final results list, and the function returns.</li>
+<li><strong>Recursive Step</strong>: If the base case is not met, get the letters corresponding to the current digit (at the current index).</li>
+<li><strong>Explore</strong>: Iterate through each of these letters. For each letter, make a recursive call to <code>backtrack</code> with the updated combination (current combination + the new letter) and the next index (<code>index + 1</code>). This explores all paths starting with that letter. The "backtracking" happens implicitly after a recursive call returns; the loop continues to the next letter for the current digit, effectively exploring a different path.</li>
+</ol>
+<p>The time complexity is O(4^N * N), as we explore all possible combinations. The space complexity is O(N) for the recursion call stack, which is more efficient than the iterative approach's space requirement for intermediate results.</p>
+<pre><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;vector&gt;
+#include &lt;string&gt;
+
+class Solution {
+public:
+    std::vector&lt;std::string&gt; letterCombinations(std::string digits) {
+        if (digits.empty()) return {};
+
+        std::string phone_map[] = {&quot;abc&quot;, &quot;def&quot;, &quot;ghi&quot;, &quot;jkl&quot;, &quot;mno&quot;, &quot;pqrs&quot;, &quot;tuv&quot;, &quot;wxyz&quot;};
+        std::vector&lt;std::string&gt; output;
+        backtrack(&quot;&quot;, digits, phone_map, output);
+        return output;
+    }
+
+private:
+    void backtrack(std::string combination, std::string next_digits, const std::string phone_map[], std::vector&lt;std::string&gt;&amp; output) {
+        if (next_digits.empty()) {
+            output.push_back(combination);
+        } else {
+            std::string letters = phone_map[next_digits[0] - '2'];
+            for (char letter : letters) {
+                backtrack(combination + letter, next_digits.substr(1), phone_map, output);
+            }
+        }
+    }
+};
+</code></pre>
+<h3>Pythonic Solution (Best Approach)</h3>
+<p>The backtracking approach is generally preferred due to its lower auxiliary space complexity (O(N) for the recursion stack vs. O(4^N * N) for storing intermediate results in the iterative approach). The Python solution below implements this elegantly using a nested helper function.</p>
+<pre><code class="language-python">from typing import List
+
+class Solution:
+    def letterCombinations(self, digits: str) -&gt; List[str]:
+        &quot;&quot;&quot;
+        Generates all possible letter combinations for a given string of digits.
+
+        This solution uses a recursive backtracking algorithm to explore
+        all possible combinations.
+        &quot;&quot;&quot;
+        if not digits:
+            return []
+
+        phone_map = {
+            '2': 'abc',
+            '3': 'def',
+            '4': 'ghi',
+            '5': 'jkl',
+            '6': 'mno',
+            '7': 'pqrs',
+            '8': 'tuv',
+            '9': 'wxyz'
+        }
+
+        output = []
+
+        def backtrack(index: int, current_combination: str):
+            # Base case: if we have processed all digits, add the combination
+            if index == len(digits):
+                output.append(current_combination)
+                return
+
+            # Get the letters for the current digit
+            possible_letters = phone_map[digits[index]]
+
+            # Iterate through letters and recurse
+            for letter in possible_letters:
+                backtrack(index + 1, current_combination + letter)
+
+        backtrack(0, &quot;&quot;)
+        return output
+
+</code></pre></div>

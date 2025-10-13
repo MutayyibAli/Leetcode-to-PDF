@@ -1,0 +1,184 @@
+<div class='ai-explanation'><h3>List of all the approaches to solution</h3>
+<ul>
+<li>Brute Force Approach (Recursion)</li>
+<li>Top-Down Dynamic Programming (Memoization)</li>
+<li>Bottom-Up Dynamic Programming (Tabulation)</li>
+<li>Space-Optimized Bottom-Up Dynamic Programming</li>
+</ul>
+<hr />
+<h3>Brute Force Approach (Recursion)</h3>
+<p>This approach explores every possible path from the top to the bottom of the triangle using recursion.</p>
+<ol>
+<li>Define a recursive function, say <code>findMinPath(row, col)</code>, that calculates the minimum path sum starting from the element at <code>triangle[row][col]</code>.</li>
+<li>The base case for the recursion is when we reach the last row (<code>row == n-1</code>). The function simply returns the value of the element at that position.</li>
+<li>For any other cell <code>(row, col)</code>, we have two choices: move to the element at <code>(row+1, col)</code> or <code>(row+1, col+1)</code>.</li>
+<li>The function recursively calculates the minimum path sum for both choices: <code>path1 = findMinPath(row+1, col)</code> and <code>path2 = findMinPath(row+1, col+1)</code>.</li>
+<li>The result for the current cell <code>(row, col)</code> is its own value plus the minimum of the two paths from the next level: <code>triangle[row][col] + min(path1, path2)</code>.</li>
+<li>The final answer is the result of the initial call <code>findMinPath(0, 0)</code>. This approach is very slow because it recomputes the minimum paths for the same cells multiple times.</li>
+</ol>
+<p>This approach has a time complexity of O(2^n) and a space complexity of O(n) for the recursion stack, where n is the number of rows.</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;algorithm&gt;
+
+class Solution {
+public:
+    int minimumTotal(std::vector&lt;std::vector&lt;int&gt;&gt;&amp; triangle) {
+        return findMinPath(triangle, 0, 0);
+    }
+
+private:
+    int findMinPath(std::vector&lt;std::vector&lt;int&gt;&gt;&amp; triangle, int row, int col) {
+        // Base case: if we are at the last row, return the element's value
+        if (row == triangle.size() - 1) {
+            return triangle[row][col];
+        }
+
+        // Recursive step: calculate the sum for the two possible paths
+        int path1 = findMinPath(triangle, row + 1, col);
+        int path2 = findMinPath(triangle, row + 1, col + 1);
+
+        // Return the current element's value plus the minimum of the two paths
+        return triangle[row][col] + std::min(path1, path2);
+    }
+};
+</code></pre>
+<hr />
+<h3>Top-Down Dynamic Programming (Memoization)</h3>
+<p>This approach is an optimization of the recursive solution. It uses a memoization table (a 2D array) to store the results of subproblems that have already been solved, thus avoiding redundant computations.</p>
+<ol>
+<li>Create a 2D <code>dp</code> table of the same size as the triangle to store the results of subproblems. Initialize it with a value that indicates a state hasn't been computed (e.g., a large number).</li>
+<li>The recursive function <code>findMinPath(row, col)</code> is modified to first check the <code>dp</code> table.</li>
+<li>If <code>dp[row][col]</code> contains a valid pre-computed result, return it immediately.</li>
+<li>If not, compute the result as in the brute-force approach: <code>triangle[row][col] + min(findMinPath(row+1, col), findMinPath(row+1, col+1))</code>.</li>
+<li>Before returning the result, store it in <code>dp[row][col]</code> for future use.</li>
+<li>This ensures that the minimum path sum for each cell is calculated only once.</li>
+</ol>
+<p>The time complexity is O(N^2) as each state <code>(row, col)</code> is computed once, and the space complexity is O(N^2) for the memoization table and recursion stack, where N is the number of rows.</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;algorithm&gt;
+
+class Solution {
+public:
+    int minimumTotal(std::vector&lt;std::vector&lt;int&gt;&gt;&amp; triangle) {
+        int n = triangle.size();
+        std::vector&lt;std::vector&lt;int&gt;&gt; memo(n, std::vector&lt;int&gt;(n, -1));
+        return findMinPath(triangle, 0, 0, memo);
+    }
+
+private:
+    int findMinPath(std::vector&lt;std::vector&lt;int&gt;&gt;&amp; triangle, int row, int col, std::vector&lt;std::vector&lt;int&gt;&gt;&amp; memo) {
+        // Base case
+        if (row == triangle.size() - 1) {
+            return triangle[row][col];
+        }
+
+        // Check if the result is already memoized
+        if (memo[row][col] != -1) {
+            return memo[row][col];
+        }
+
+        // Recursive calls
+        int path1 = findMinPath(triangle, row + 1, col, memo);
+        int path2 = findMinPath(triangle, row + 1, col + 1, memo);
+
+        // Store and return the result
+        memo[row][col] = triangle[row][col] + std::min(path1, path2);
+        return memo[row][col];
+    }
+};
+</code></pre>
+<hr />
+<h3>Bottom-Up Dynamic Programming (Tabulation)</h3>
+<p>This approach avoids recursion by iteratively filling a DP table from the bottom of the triangle to the top.</p>
+<ol>
+<li>Create a 2D DP table, <code>dp</code>, of the same size as the triangle.</li>
+<li>Initialize the last row of <code>dp</code> with the values from the last row of the input <code>triangle</code>, as the minimum path from a bottom-row element to the bottom is just the element itself.</li>
+<li>Iterate from the second-to-last row (<code>n-2</code>) upwards to the top row (<code>0</code>).</li>
+<li>For each cell <code>(i, j)</code> in the current row, calculate its minimum path sum. This is the value <code>triangle[i][j]</code> plus the minimum of the two path sums directly below it, which have already been computed in our <code>dp</code> table: <code>dp[i+1][j]</code> and <code>dp[i+1][j+1]</code>.</li>
+<li>The update rule is: <code>dp[i][j] = triangle[i][j] + min(dp[i+1][j], dp[i+1][j+1])</code>.</li>
+<li>After the loops complete, the value at <code>dp[0][0]</code> will be the overall minimum path sum from the top to the bottom.</li>
+</ol>
+<p>The time complexity is O(N^2) due to nested loops, and the space complexity is O(N^2) for the DP table, where N is the number of rows.</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;algorithm&gt;
+
+class Solution {
+public:
+    int minimumTotal(std::vector&lt;std::vector&lt;int&gt;&gt;&amp; triangle) {
+        int n = triangle.size();
+        if (n == 0) return 0;
+
+        std::vector&lt;std::vector&lt;int&gt;&gt; dp = triangle;
+
+        for (int i = n - 2; i &gt;= 0; --i) {
+            for (int j = 0; j &lt; triangle[i].size(); ++j) {
+                dp[i][j] = triangle[i][j] + std::min(dp[i+1][j], dp[i+1][j+1]);
+            }
+        }
+
+        return dp[0][0];
+    }
+};
+</code></pre>
+<hr />
+<h3>Space-Optimized Bottom-Up Dynamic Programming</h3>
+<p>This is the most efficient approach, optimizing the space complexity of the bottom-up DP. It recognizes that to compute the values for any row, we only need the results from the row immediately below it.</p>
+<ol>
+<li>Instead of a 2D <code>dp</code> table, create a 1D array, <code>dp</code>, of size <code>n</code> or <code>n+1</code> (where <code>n</code> is the number of rows).</li>
+<li>Initialize this <code>dp</code> array with the values from the last row of the triangle.</li>
+<li>Iterate from the second-to-last row (<code>n-2</code>) up to the top row (<code>0</code>).</li>
+<li>For each row <code>i</code>, update the <code>dp</code> array in place. For each element <code>j</code> in that row, the new <code>dp[j]</code> is <code>triangle[i][j]</code> plus the minimum of the old <code>dp[j]</code> and <code>dp[j+1]</code>.</li>
+<li>The update rule is: <code>dp[j] = triangle[i][j] + min(dp[j], dp[j+1])</code>.</li>
+<li>After iterating through all the rows, the final answer is stored in <code>dp[0]</code>.</li>
+</ol>
+<p>The time complexity is O(N^2), and the space complexity is O(N) for the 1D DP array, where N is the number of rows.</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;algorithm&gt;
+
+class Solution {
+public:
+    int minimumTotal(std::vector&lt;std::vector&lt;int&gt;&gt;&amp; triangle) {
+        int n = triangle.size();
+        // dp vector initialized with the last row of the triangle
+        std::vector&lt;int&gt; dp = triangle[n - 1];
+
+        // Iterate from the second to last row up to the top
+        for (int i = n - 2; i &gt;= 0; --i) {
+            for (int j = 0; j &lt; triangle[i].size(); ++j) {
+                // Update dp[j] with the minimum path sum
+                dp[j] = triangle[i][j] + std::min(dp[j], dp[j + 1]);
+            }
+        }
+
+        return dp[0];
+    }
+};
+</code></pre>
+<hr />
+<h3>Pythonic Solution (Best Approach)</h3>
+<p>The space-optimized bottom-up approach is the most efficient. It can be implemented concisely in Python by iterating backward through the triangle rows and updating a list representing the minimum path sums from the row below.</p>
+<pre><code class="language-python">from typing import List
+
+class Solution:
+    def minimumTotal(self, triangle: List[List[int]]) -&gt; int:
+        &quot;&quot;&quot;
+        Calculates the minimum path sum from top to bottom in a triangle
+        using space-optimized bottom-up dynamic programming.
+        &quot;&quot;&quot;
+        # Start with the last row as the initial minimum path sums.
+        # No need for extra space; we can use a variable that gets updated.
+        # However, for clarity, let's create a copy.
+        dp = triangle[-1][:]
+
+        # Iterate from the second-to-last row up to the top row.
+        # Python's range(start, stop, step) is useful here.
+        for i in range(len(triangle) - 2, -1, -1):
+            for j in range(len(triangle[i])):
+                # The minimum path from (i, j) is its value plus the minimum
+                # of the paths from the two adjacent numbers in the row below.
+                dp[j] = triangle[i][j] + min(dp[j], dp[j+1])
+
+        # The top of the triangle (dp[0]) will contain the overall minimum path sum.
+        return dp[0]
+
+</code></pre></div>

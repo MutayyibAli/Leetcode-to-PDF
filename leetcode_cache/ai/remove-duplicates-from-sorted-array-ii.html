@@ -1,0 +1,102 @@
+<div class='ai-explanation'><h3>List of all the approaches to solution</h3>
+<ol>
+<li>Brute Force Approach</li>
+<li>Two-Pointer Approach</li>
+</ol>
+<hr />
+<h3>Brute Force Approach</h3>
+<p>The brute-force solution involves iterating through the array and removing elements that violate the "at most twice" rule. We can start checking from the third element. Since the array is sorted, if an element at index <code>i</code> is the same as the element at <code>i-2</code>, it must be at least the third occurrence of that number. When such an element is found, we "remove" it by shifting all subsequent elements one position to the left. We then decrement the effective length of the array and adjust our loop counter to re-evaluate the new element that has been shifted into the current position.</p>
+<p><strong>Step-by-step explanation:</strong>
+1.  Initialize a variable <code>k</code> to the size of the array, representing its effective length.
+2.  Iterate through the array with an index <code>i</code>, starting from <code>2</code> (the third element).
+3.  Inside the loop, check if <code>nums[i]</code> is equal to <code>nums[i-2]</code>.
+4.  If they are equal, it means <code>nums[i]</code> is an unwanted third duplicate.
+    *   Shift all elements from <code>i+1</code> to <code>k</code> one position to the left to overwrite <code>nums[i]</code>.
+    *   Decrement <code>k</code> to reflect the new, shorter length.
+    *   Decrement <code>i</code> because the element that was at <code>i+1</code> is now at <code>i</code>, and it needs to be checked in the next iteration.
+5.  If <code>nums[i]</code> is not equal to <code>nums[i-2]</code>, it's a valid element, so we continue to the next one by incrementing <code>i</code>.
+6.  Return <code>k</code> after the loop finishes.</p>
+<p>This approach is inefficient because for each element removed, we may shift a large portion of the array, leading to a quadratic time complexity.</p>
+<p>The time complexity is O(N^2) in the worst case (e.g., an array with all same elements), and the space complexity is O(1) as we modify the array in-place.</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+
+class Solution {
+public:
+    int removeDuplicates(std::vector&lt;int&gt;&amp; nums) {
+        int k = nums.size();
+        if (k &lt;= 2) {
+            return k;
+        }
+
+        for (int i = 2; i &lt; k; ++i) {
+            if (nums[i] == nums[i - 2]) {
+                // This is a third duplicate, remove it by shifting
+                for (int j = i + 1; j &lt; k; ++j) {
+                    nums[j - 1] = nums[j];
+                }
+                k--; // Decrease effective size
+                i--; // Re-check the new element at the current position
+            }
+        }
+        return k;
+    }
+};
+</code></pre>
+<hr />
+<h3>Two-Pointer Approach</h3>
+<p>This is an optimal, in-place solution that uses two pointers to process the array in a single pass. One pointer (the "read" pointer) iterates through the array to examine each element, while the other pointer (the "write" pointer) points to the position where the next valid element should be placed.</p>
+<p><strong>Step-by-step explanation:</strong>
+1.  Initialize a <code>write</code> pointer, let's call it <code>k</code>, to <code>0</code>. This pointer will also count the number of valid elements.
+2.  Iterate through each element <code>num</code> of the array <code>nums</code> (this acts as the "read" pointer).
+3.  For each <code>num</code>, we decide whether to keep it. An element should be kept if it is one of the first two elements, or if it is not a third duplicate.
+4.  The condition to keep <code>num</code> is: <code>k &lt; 2</code> (to always keep the first two elements) OR <code>num</code> is different from the element at <code>nums[k-2]</code>.
+    *   <code>nums[k-2]</code> is the second-to-last element that we decided to keep. If the current <code>num</code> is the same as <code>nums[k-2]</code>, it implies <code>num</code> is a third occurrence because the array is sorted (<code>num</code> must also be equal to <code>nums[k-1]</code>).
+5.  If the condition is met, we place the element at the <code>write</code> position by setting <code>nums[k] = num</code>, and then we advance the <code>write</code> pointer (<code>k++</code>).
+6.  After iterating through all elements, <code>k</code> will hold the length of the modified array with duplicates appropriately removed. Return <code>k</code>.</p>
+<p>This approach processes each element once, making it very efficient. The time complexity is O(N) where N is the number of elements in the array, and the space complexity is O(1).</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+
+class Solution {
+public:
+    int removeDuplicates(std::vector&lt;int&gt;&amp; nums) {
+        int k = 0;
+        for (int num : nums) {
+            // If k &lt; 2, we are at the beginning of the array.
+            // If num &gt; nums[k-2], the current element is not a third duplicate.
+            // Using `!=` also works since the array is sorted.
+            if (k &lt; 2 || num != nums[k - 2]) {
+                nums[k] = num;
+                k++;
+            }
+        }
+        return k;
+    }
+};
+</code></pre>
+<hr />
+<h3>Pythonic solution for best approach</h3>
+<p>The optimal two-pointer approach can be implemented concisely in Python. We use one pointer <code>j</code> as the "write" index and iterate through the array with another pointer <code>i</code> as the "read" index. The logic remains the same: an element <code>nums[i]</code> is copied to <code>nums[j]</code> only if it doesn't form a sequence of more than two identical elements.</p>
+<pre><code class="language-python">from typing import List
+
+class Solution:
+    def removeDuplicates(self, nums: List[int]) -&gt; int:
+        # If the array has 2 or fewer elements, no duplicates need to be removed.
+        if len(nums) &lt;= 2:
+            return len(nums)
+
+        # 'k' is the write pointer. It indicates the next position
+        # in the array to place a valid number.
+        k = 2
+
+        # We iterate from the third element to the end of the array.
+        for i in range(2, len(nums)):
+            # If the current element nums[i] is different from the element
+            # at two positions before the write pointer (nums[k-2]),
+            # it means we can include nums[i] in our result.
+            if nums[i] != nums[k - 2]:
+                nums[k] = nums[i]
+                k += 1
+
+        return k
+
+</code></pre></div>

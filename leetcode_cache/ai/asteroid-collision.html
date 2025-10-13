@@ -1,0 +1,159 @@
+<div class='ai-explanation'><h3>List of Approaches</h3>
+<ol>
+<li>Brute Force Approach</li>
+<li>Stack-based Simulation Approach</li>
+</ol>
+<hr />
+<h3>Brute Force Approach</h3>
+<h4>Explanation</h4>
+<p>This approach directly simulates the process described in the problem. We repeatedly scan the list of asteroids and resolve the very first collision we find. A collision occurs between two adjacent asteroids if the left one is moving right (positive) and the right one is moving left (negative). After resolving one collision (by removing one or both asteroids), the list changes, which might create new collision possibilities. Therefore, we must restart the scan from the beginning. We continue this process until we can complete a full scan of the list without any collisions occurring.</p>
+<ol>
+<li>Start an outer loop that continues as long as collisions are being found and resolved. A boolean flag, <code>collision_happened</code>, can track this.</li>
+<li>In each iteration of the outer loop, reset <code>collision_happened</code> to <code>false</code> and start an inner loop to scan the current list of asteroids.</li>
+<li>In the inner loop, look for the first pair of adjacent asteroids <code>asteroids[i]</code> and <code>asteroids[i+1]</code> where <code>asteroids[i] &gt; 0</code> and <code>asteroids[i+1] &lt; 0</code>.</li>
+<li>If such a pair is found:<ul>
+<li>Compare their absolute values.</li>
+<li>If <code>abs(asteroids[i]) &gt; abs(asteroids[i+1])</code>, the right asteroid explodes. Remove it from the list.</li>
+<li>If <code>abs(asteroids[i]) &lt; abs(asteroids[i+1])</code>, the left asteroid explodes. Remove it from the list.</li>
+<li>If their absolute values are equal, both explode. Remove both from the list.</li>
+<li>Set <code>collision_happened</code> to <code>true</code> and <code>break</code> the inner loop to restart the scan from the beginning of the modified list.</li>
+</ul>
+</li>
+<li>If the inner loop completes without finding any collisions, <code>collision_happened</code> remains <code>false</code>, and the outer loop terminates.</li>
+<li>Return the final list of asteroids.</li>
+</ol>
+<p>This approach is inefficient due to repeated scans and costly list modification operations. The time complexity is O(N^2) in the worst case, and space complexity is O(1) if modifying in place.</p>
+<h4>C++ Code</h4>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;cmath&gt;
+
+class Solution {
+public:
+    std::vector&lt;int&gt; asteroidCollision(std::vector&lt;int&gt;&amp; asteroids) {
+        bool collision_happened = true;
+        while (collision_happened) {
+            collision_happened = false;
+            // The size can change, so we must be careful with the loop condition
+            for (int i = 0; i &lt; (int)asteroids.size() - 1; ++i) {
+                // Check for a collision condition: right-moving meets left-moving
+                if (asteroids[i] &gt; 0 &amp;&amp; asteroids[i+1] &lt; 0) {
+                    collision_happened = true;
+                    if (abs(asteroids[i]) &gt; abs(asteroids[i+1])) {
+                        asteroids.erase(asteroids.begin() + i + 1);
+                    } else if (abs(asteroids[i]) &lt; abs(asteroids[i+1])) {
+                        asteroids.erase(asteroids.begin() + i);
+                    } else {
+                        asteroids.erase(asteroids.begin() + i, asteroids.begin() + i + 2);
+                    }
+                    // After a collision, restart the scan from the beginning
+                    break; 
+                }
+            }
+        }
+        return asteroids;
+    }
+};
+</code></pre>
+<hr />
+<h3>Stack-based Simulation Approach</h3>
+<h4>Explanation</h4>
+<p>A more efficient approach uses a stack. The key observation is that collisions only happen when a new, left-moving (negative) asteroid encounters a stack of right-moving (positive) asteroids. A stack perfectly models this "last-in, first-out" interaction, as a new asteroid only interacts with the rightmost stable asteroid.</p>
+<ol>
+<li>Initialize an empty stack (a <code>std::vector</code> or <code>std::stack</code> can be used) to store the asteroids that have settled.</li>
+<li>Iterate through each <code>asteroid</code> in the input array.</li>
+<li>If the current <code>asteroid</code> is positive (moving right), it won't collide with anything already in the stack. Push it onto the stack.</li>
+<li>If the current <code>asteroid</code> is negative (moving left), it might collide with positive asteroids at the top of the stack.<ul>
+<li>Use a <code>while</code> loop to handle multiple potential collisions. The loop continues as long as the stack is not empty, its top element is positive, and the top element is smaller than the absolute value of the current negative <code>asteroid</code>.</li>
+<li>Inside the loop, the smaller positive asteroid at the top of the stack is destroyed, so we <code>pop</code> it.</li>
+<li>After the loop, there are three possibilities for the current negative <code>asteroid</code>:
+    a. If the stack is now empty or the top element is also negative, the current asteroid survived all collisions. Push it onto the stack.
+    b. If the top of the stack is a positive asteroid with the same size (<code>s.top() == abs(asteroid)</code>), both are destroyed. Pop the one from the stack, and don't push the current one.
+    c. If the top of the stack is a positive asteroid with a larger size (<code>s.top() &gt; abs(asteroid)</code>), the current asteroid is destroyed. Do nothing.</li>
+</ul>
+</li>
+<li>After iterating through all asteroids, the stack will contain the final state. Convert the stack to a vector and return it.</li>
+</ol>
+<p>Each asteroid is pushed onto the stack at most once and popped at most once. This leads to a linear time complexity. The time complexity is O(N) and the space complexity is O(N) for the stack.</p>
+<h4>C++ Code</h4>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;stack&gt;
+#include &lt;cmath&gt;
+#include &lt;algorithm&gt;
+
+class Solution {
+public:
+    std::vector&lt;int&gt; asteroidCollision(std::vector&lt;int&gt;&amp; asteroids) {
+        std::stack&lt;int&gt; s;
+        for (int ast : asteroids) {
+            // Case 1: Stack is empty or asteroid moves right.
+            if (ast &gt; 0) {
+                s.push(ast);
+            } 
+            // Case 2: Asteroid moves left.
+            else {
+                // Keep destroying smaller, right-moving asteroids from the stack.
+                while (!s.empty() &amp;&amp; s.top() &gt; 0 &amp;&amp; s.top() &lt; abs(ast)) {
+                    s.pop();
+                }
+
+                // After collisions, check the state.
+                if (s.empty() || s.top() &lt; 0) {
+                    // Current asteroid survives.
+                    s.push(ast);
+                } else if (s.top() == abs(ast)) {
+                    // Both asteroids are destroyed.
+                    s.pop();
+                }
+                // If s.top() &gt; abs(ast), the current asteroid is destroyed and we do nothing.
+            }
+        }
+
+        // Convert stack to vector for the result.
+        std::vector&lt;int&gt; res(s.size());
+        for (int i = s.size() - 1; i &gt;= 0; i--) {
+            res[i] = s.top();
+            s.pop();
+        }
+        return res;
+    }
+};
+</code></pre>
+<hr />
+<h3>Pythonic Solution (Best Approach)</h3>
+<p>The stack-based approach is the most efficient. In Python, a list can be used as a stack with <code>append()</code> for push and <code>pop()</code> for pop. The <code>while-else</code> loop structure provides a particularly clean and "Pythonic" way to implement the logic.</p>
+<pre><code class="language-python">from typing import List
+
+class Solution:
+    def asteroidCollision(self, asteroids: List[int]) -&gt; List[int]:
+        # Use a list as a stack
+        stack = []
+
+        for ast in asteroids:
+            # This loop handles collisions for an incoming left-moving asteroid (ast &lt; 0)
+            # against right-moving asteroids at the top of the stack (stack[-1] &gt; 0).
+            while stack and ast &lt; 0 and stack[-1] &gt; 0:
+                # Case 1: The right-moving asteroid on stack is smaller. It's destroyed.
+                if abs(ast) &gt; stack[-1]:
+                    stack.pop()
+                    continue # The incoming asteroid continues to check the next one on the stack.
+
+                # Case 2: Both asteroids have the same size. Both are destroyed.
+                elif abs(ast) == stack[-1]:
+                    stack.pop()
+
+                # Break the loop. Either both were destroyed (Case 2), 
+                # or the incoming asteroid was destroyed (stack[-1] &gt; abs(ast)).
+                break
+            else:
+                # This 'else' clause executes only if the 'while' loop did not 'break'.
+                # This happens if:
+                # 1. The stack was empty.
+                # 2. The incoming asteroid was right-moving (ast &gt; 0).
+                # 3. The incoming asteroid was left-moving but the stack top was also left-moving.
+                # 4. The incoming left-moving asteroid destroyed all right-moving asteroids on the stack.
+                # In all these cases, the incoming asteroid survives and is added to the stack.
+                stack.append(ast)
+
+        return stack
+
+</code></pre></div>

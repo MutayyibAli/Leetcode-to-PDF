@@ -1,0 +1,214 @@
+<div class='ai-explanation'><h3>List of all the approaches to solution</h3>
+<ol>
+<li>Brute Force Approach (Recursive)</li>
+<li>Memoization Approach (Top-Down DP)</li>
+<li>Tabulation Approach (Bottom-Up DP)</li>
+<li>Space-Optimized Tabulation Approach (1D DP)</li>
+</ol>
+<hr />
+<h3>Brute Force Approach (Recursive)</h3>
+<p>This approach uses a simple recursive function to find the length of the longest common subsequence. The function considers two cases at each step: whether the current characters of the two strings match or not.</p>
+<ol>
+<li>Define a recursive function, <code>solve(i, j)</code>, which calculates the LCS for <code>text1</code> starting from index <code>i</code> and <code>text2</code> starting from index <code>j</code>.</li>
+<li>The base case for the recursion is when either index <code>i</code> or <code>j</code> reaches the end of its respective string. In this case, no more common characters can be found, so we return 0.</li>
+<li>If <code>text1[i]</code> and <code>text2[j]</code> are the same, this character is part of the common subsequence. We add 1 to the result of the recursive call for the rest of the strings: <code>1 + solve(i + 1, j + 1)</code>.</li>
+<li>If the characters are different, we must skip a character from one of the strings. We make two recursive calls: one skipping the character from <code>text1</code> (<code>solve(i + 1, j)</code>) and another skipping the character from <code>text2</code> (<code>solve(i, j + 1)</code>). We take the maximum of their results.</li>
+<li>This method is inefficient because it repeatedly solves the same subproblems. The time complexity is exponential, O(2^(m+n)), and the space complexity is O(m+n) due to the recursion depth.</li>
+</ol>
+<pre><code class="language-cpp">#include &lt;string&gt;
+#include &lt;algorithm&gt;
+
+using namespace std;
+
+class Solution {
+public:
+    int solve(const string&amp; text1, const string&amp; text2, int i, int j) {
+        // Base case: If either string is exhausted, return 0
+        if (i == text1.length() || j == text2.length()) {
+            return 0;
+        }
+
+        // If characters match, include it in LCS and move to next characters in both
+        if (text1[i] == text2[j]) {
+            return 1 + solve(text1, text2, i + 1, j + 1);
+        } else {
+            // If characters don't match, take the max of skipping a character
+            // from either text1 or text2
+            return max(solve(text1, text2, i + 1, j), solve(text1, text2, i, j + 1));
+        }
+    }
+
+    int longestCommonSubsequence(string text1, string text2) {
+        return solve(text1, text2, 0, 0);
+    }
+};
+</code></pre>
+<hr />
+<h3>Memoization Approach (Top-Down DP)</h3>
+<p>This is a top-down dynamic programming approach that optimizes the brute-force recursion by storing the results of subproblems in a memoization table to avoid recomputation.</p>
+<ol>
+<li>Use a 2D array, <code>memo</code>, to store the results of subproblems. <code>memo[i][j]</code> will store the LCS length for <code>text1[i...]</code> and <code>text2[j...]</code>.</li>
+<li>Initialize the <code>memo</code> table with a sentinel value (e.g., -1) to indicate that a subproblem has not yet been solved.</li>
+<li>In the recursive function, before any computation, check if <code>memo[i][j]</code> already contains a valid result. If so, return it directly.</li>
+<li>If the result is not in the memo table, compute it using the same logic as the brute-force approach.</li>
+<li>After computing the result, store it in <code>memo[i][j]</code> before returning. This ensures each subproblem is solved only once.</li>
+<li>The time complexity is O(m<em>n) as each state <code>(i, j)</code> is computed once, and the space complexity is O(m</em>n) for the memoization table plus O(m+n) for the recursion stack.</li>
+</ol>
+<pre><code class="language-cpp">#include &lt;string&gt;
+#include &lt;vector&gt;
+#include &lt;algorithm&gt;
+
+using namespace std;
+
+class Solution {
+public:
+    int solve(const string&amp; text1, const string&amp; text2, int i, int j, vector&lt;vector&lt;int&gt;&gt;&amp; memo) {
+        if (i == text1.length() || j == text2.length()) {
+            return 0;
+        }
+        if (memo[i][j] != -1) {
+            return memo[i][j];
+        }
+
+        if (text1[i] == text2[j]) {
+            memo[i][j] = 1 + solve(text1, text2, i + 1, j + 1, memo);
+        } else {
+            memo[i][j] = max(solve(text1, text2, i + 1, j, memo), solve(text1, text2, i, j + 1, memo));
+        }
+        return memo[i][j];
+    }
+
+    int longestCommonSubsequence(string text1, string text2) {
+        int m = text1.length();
+        int n = text2.length();
+        vector&lt;vector&lt;int&gt;&gt; memo(m, vector&lt;int&gt;(n, -1));
+        return solve(text1, text2, 0, 0, memo);
+    }
+};
+</code></pre>
+<hr />
+<h3>Tabulation Approach (Bottom-Up DP)</h3>
+<p>This approach uses an iterative, bottom-up method to solve the problem, eliminating recursion entirely.</p>
+<ol>
+<li>Create a 2D DP table <code>dp</code> of size <code>(m+1) x (n+1)</code>, where <code>m</code> and <code>n</code> are the lengths of the strings. <code>dp[i][j]</code> will store the LCS length of <code>text1</code>'s prefix of length <code>i</code> and <code>text2</code>'s prefix of length <code>j</code>.</li>
+<li>Initialize the entire table with 0. The first row and column represent the base cases where one of the strings is empty, so the LCS is 0.</li>
+<li>Iterate through the strings using nested loops, filling the <code>dp</code> table. For each cell <code>dp[i][j]</code>, corresponding to <code>text1[i-1]</code> and <code>text2[j-1]</code>:</li>
+<li>If <code>text1[i-1] == text2[j-1]</code>, the characters match. The LCS length is one greater than the LCS of the strings without these last characters, which is found diagonally at <code>dp[i-1][j-1]</code>. So, <code>dp[i][j] = 1 + dp[i-1][j-1]</code>.</li>
+<li>If the characters do not match, the LCS is the maximum of the LCS found by either excluding <code>text1[i-1]</code> (value from <code>dp[i-1][j]</code>) or excluding <code>text2[j-1]</code> (value from <code>dp[i][j-1]</code>). So, <code>dp[i][j] = max(dp[i-1][j], dp[i][j-1])</code>.</li>
+<li>The value in the bottom-right cell <code>dp[m][n]</code> is the length of the LCS for the entire strings.</li>
+<li>The time complexity is O(m<em>n) due to iterating through the table, and the space complexity is O(m</em>n) for the DP table.</li>
+</ol>
+<pre><code class="language-cpp">#include &lt;string&gt;
+#include &lt;vector&gt;
+#include &lt;algorithm&gt;
+
+using namespace std;
+
+class Solution {
+public:
+    int longestCommonSubsequence(string text1, string text2) {
+        int m = text1.length();
+        int n = text2.length();
+        vector&lt;vector&lt;int&gt;&gt; dp(m + 1, vector&lt;int&gt;(n + 1, 0));
+
+        for (int i = 1; i &lt;= m; ++i) {
+            for (int j = 1; j &lt;= n; ++j) {
+                if (text1[i - 1] == text2[j - 1]) {
+                    dp[i][j] = 1 + dp[i - 1][j - 1];
+                } else {
+                    dp[i][j] = max(dp[i - 1][j], dp[i][j - 1]);
+                }
+            }
+        }
+        return dp[m][n];
+    }
+};
+</code></pre>
+<hr />
+<h3>Space-Optimized Tabulation Approach (1D DP)</h3>
+<p>This is the most optimized approach, building upon the tabulation method by reducing its space complexity.</p>
+<ol>
+<li>Notice that to compute the current row of the DP table, we only need information from the previous row. This means we don't need to store the entire 2D table.</li>
+<li>We can optimize space to use only a 1D DP array of size <code>n+1</code> (where <code>n</code> is the length of the shorter string to minimize space).</li>
+<li>We iterate through the longer string (say, <code>text1</code>). For each character in <code>text1</code>, we compute a new <code>dp</code> array representing the current row's values.</li>
+<li>During the update for the inner loop (iterating through <code>text2</code>), we need the value from the previous row and same column (<code>dp[i-1][j]</code>) and the previous row and previous column (<code>dp[i-1][j-1]</code>).</li>
+<li>When updating <code>dp[j]</code>, the old <code>dp[j]</code> is <code>dp[i-1][j]</code>, and the value we need from the "previous column" (<code>dp[i][j-1]</code>) is the newly updated <code>dp[j-1]</code> in our 1D array. The diagonal value <code>dp[i-1][j-1]</code> needs to be saved in a temporary variable before <code>dp[j-1]</code> is overwritten.</li>
+<li>We maintain a <code>prevRowPrevCol</code> variable to hold the <code>dp[i-1][j-1]</code> value (the diagonal element) for the current computation.</li>
+<li>The time complexity remains O(m*n), but the space complexity is reduced to O(min(m, n)).</li>
+</ol>
+<pre><code class="language-cpp">#include &lt;string&gt;
+#include &lt;vector&gt;
+#include &lt;algorithm&gt;
+
+using namespace std;
+
+class Solution {
+public:
+    int longestCommonSubsequence(string text1, string text2) {
+        int m = text1.length();
+        int n = text2.length();
+
+        // Ensure text2 is the shorter string to use O(min(m,n)) space
+        if (m &lt; n) {
+            return longestCommonSubsequence(text2, text1);
+        }
+
+        vector&lt;int&gt; dp(n + 1, 0);
+
+        for (int i = 1; i &lt;= m; ++i) {
+            int prevRowPrevCol = 0; // Stores dp[i-1][j-1]
+            for (int j = 1; j &lt;= n; ++j) {
+                int prevRow = dp[j]; // Stores dp[i-1][j]
+                if (text1[i - 1] == text2[j - 1]) {
+                    dp[j] = 1 + prevRowPrevCol;
+                } else {
+                    dp[j] = max(dp[j], dp[j - 1]);
+                }
+                prevRowPrevCol = prevRow;
+            }
+        }
+        return dp[n];
+    }
+};
+</code></pre>
+<hr />
+<h3>Pythonic Solution (Best Approach)</h3>
+<p>The best approach is the space-optimized tabulation method. The Python code below implements this with O(min(m, n)) space complexity. It ensures that the DP array is created for the shorter string to save space.</p>
+<pre><code class="language-python">class Solution:
+    def longestCommonSubsequence(self, text1: str, text2: str) -&gt; int:
+        m, n = len(text1), len(text2)
+
+        # To optimize space, we should iterate through the longer string
+        # and use a DP array of the size of the shorter string.
+        if m &lt; n:
+            text1, text2 = text2, text1
+            m, n = n, m
+
+        # dp array stores the results for the previous row
+        dp = [0] * (n + 1)
+
+        # Iterate through each character of the longer string (text1)
+        for i in range(1, m + 1):
+            # prev_row_prev_col holds the value of dp[i-1][j-1]
+            prev_row_prev_col = 0
+            # Iterate through each character of the shorter string (text2)
+            for j in range(1, n + 1):
+                # Store dp[j] (which is dp[i-1][j]) before it's updated
+                prev_row = dp[j]
+
+                # If characters match
+                if text1[i - 1] == text2[j - 1]:
+                    # Current dp value is 1 + diagonal value
+                    dp[j] = prev_row_prev_col + 1
+                else:
+                    # Current dp value is max of top (dp[i-1][j]) and left (dp[i][j-1])
+                    # dp[j] is the old value from top (dp[i-1][j])
+                    # dp[j-1] is the new value from left (dp[i][j-1])
+                    dp[j] = max(dp[j], dp[j - 1])
+
+                # Update prev_row_prev_col for the next iteration
+                prev_row_prev_col = prev_row
+
+        return dp[n]
+
+</code></pre></div>

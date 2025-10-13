@@ -1,0 +1,132 @@
+<div class='ai-explanation'><h3>List of all the approaches to solution</h3>
+<ul>
+<li>Brute Force Approach</li>
+<li>Prefix Sum Array Approach</li>
+<li>Optimized Single Pass Approach</li>
+</ul>
+<h3>Brute Force Approach</h3>
+<p>This approach iterates through every possible pivot index. For each index, it calculates the sum of all elements to its left and the sum of all elements to its right by using two separate inner loops. If the two sums are equal, the index is returned. If the loop completes without finding such an index, it means no pivot exists, and -1 is returned.</p>
+<p>This method is simple to understand but inefficient because for each index, we repeatedly sum up subarrays, leading to redundant calculations.</p>
+<p>The time complexity is O(N^2) due to the nested loops, and the space complexity is O(1) as we only use a few variables to store the sums.</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;numeric&gt;
+
+class Solution {
+public:
+    int pivotIndex(std::vector&lt;int&gt;&amp; nums) {
+        int n = nums.size();
+        for (int i = 0; i &lt; n; ++i) {
+            int leftSum = 0;
+            // Calculate sum of elements to the left of i
+            for (int j = 0; j &lt; i; ++j) {
+                leftSum += nums[j];
+            }
+
+            int rightSum = 0;
+            // Calculate sum of elements to the right of i
+            for (int j = i + 1; j &lt; n; ++j) {
+                rightSum += nums[j];
+            }
+
+            if (leftSum == rightSum) {
+                return i;
+            }
+        }
+        return -1;
+    }
+};
+</code></pre>
+<h3>Prefix Sum Array Approach</h3>
+<p>To avoid the repeated calculations of the brute-force method, we can pre-calculate the sums. This approach involves two main steps. First, we compute the total sum of all elements in the array. Second, we create a prefix sum array (or just use a running sum variable) where we iterate through the array, keeping track of the sum of elements to the left.</p>
+<p>For each index <code>i</code>, the <code>leftSum</code> is the sum of elements up to <code>i-1</code>. The <code>rightSum</code> can be calculated without another loop by using the <code>totalSum</code>: <code>rightSum = totalSum - leftSum - nums[i]</code>. We check if <code>leftSum</code> equals <code>rightSum</code>. If they match, we've found the pivot. This method uses an extra array to store prefix sums, which can be optimized away.</p>
+<p>The time complexity is O(N) because we make a few passes over the array, but not in a nested manner. The space complexity is O(N) if we store the prefix sums in a separate array.</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;numeric&gt;
+
+class Solution {
+public:
+    int pivotIndex(std::vector&lt;int&gt;&amp; nums) {
+        int n = nums.size();
+        if (n == 0) return -1;
+
+        std::vector&lt;int&gt; prefixSum(n, 0);
+        prefixSum[0] = nums[0];
+        for (int i = 1; i &lt; n; ++i) {
+            prefixSum[i] = prefixSum[i - 1] + nums[i];
+        }
+
+        for (int i = 0; i &lt; n; ++i) {
+            int leftSum = (i == 0) ? 0 : prefixSum[i - 1];
+            int rightSum = prefixSum[n - 1] - prefixSum[i];
+
+            if (leftSum == rightSum) {
+                return i;
+            }
+        }
+
+        return -1;
+    }
+};
+</code></pre>
+<h3>Optimized Single Pass Approach</h3>
+<p>This is the most efficient approach. It improves upon the prefix sum idea by eliminating the need for an extra array. First, we calculate the <code>totalSum</code> of all numbers in the array. Then, we iterate through the array a single time, maintaining a <code>leftSum</code> variable, which represents the sum of numbers to the left of the current index.</p>
+<p>For each index <code>i</code>, we check if <code>leftSum</code> is equal to <code>totalSum - leftSum - nums[i]</code>. The right side of this equation represents the sum of all numbers to the right of the current index. If they are equal, we have found the pivot and return the index. After the check, we add the current number <code>nums[i]</code> to <code>leftSum</code> to prepare for the next iteration.</p>
+<p>The time complexity is O(N) as we iterate through the array twice (once to get the total sum, and once to find the pivot). The space complexity is O(1) as we only use a few variables to store the sums.</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;numeric&gt;
+
+class Solution {
+public:
+    int pivotIndex(std::vector&lt;int&gt;&amp; nums) {
+        // Calculate the total sum of the array.
+        int totalSum = std::accumulate(nums.begin(), nums.end(), 0);
+
+        int leftSum = 0;
+        for (int i = 0; i &lt; nums.size(); ++i) {
+            // The right sum is the total sum minus the left sum and the current element.
+            int rightSum = totalSum - leftSum - nums[i];
+
+            // Check if we found the pivot index.
+            if (leftSum == rightSum) {
+                return i;
+            }
+
+            // Update the left sum for the next iteration.
+            leftSum += nums[i];
+        }
+
+        return -1;
+    }
+};
+</code></pre>
+<h3>Pythonic Solution (Best Approach)</h3>
+<pre><code class="language-python">from typing import List
+
+class Solution:
+    def pivotIndex(self, nums: List[int]) -&gt; int:
+        &quot;&quot;&quot;
+        Finds the pivot index using an optimized single-pass approach.
+
+        The pivot index is where the sum of numbers to the left equals the sum of numbers to the right.
+
+        Time Complexity: O(N)
+        Space Complexity: O(1)
+        &quot;&quot;&quot;
+        # Calculate the total sum of all elements in the list.
+        total_sum = sum(nums)
+
+        left_sum = 0
+        # Iterate through the list with both index and element.
+        for i, num in enumerate(nums):
+            # The sum of elements to the right of the current index is
+            # total_sum - left_sum - current_element.
+            if left_sum == total_sum - left_sum - num:
+                return i
+
+            # Add the current element to left_sum for the next iteration.
+            left_sum += num
+
+        # If no pivot index is found after checking all elements, return -1.
+        return -1
+
+</code></pre></div>

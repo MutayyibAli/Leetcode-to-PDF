@@ -1,0 +1,179 @@
+<div class='ai-explanation'><h3>List of All Approaches</h3>
+<ol>
+<li>Brute Force Approach (Recursion)</li>
+<li>Dynamic Programming Approach</li>
+<li>Two Pointers Approach</li>
+<li>Follow-up: Optimized Approach for Multiple Queries</li>
+</ol>
+<hr />
+<h3>1. Brute Force Approach (Recursion)</h3>
+<p>This approach frames the problem recursively. A helper function checks if a suffix of <code>s</code> is a subsequence of a suffix of <code>t</code>. The decision at each step is based on whether the current characters match.</p>
+<ol>
+<li>Define a recursive function <code>check(s_idx, t_idx)</code> that determines if <code>s</code> starting from <code>s_idx</code> is a subsequence of <code>t</code> starting from <code>t_idx</code>.</li>
+<li><strong>Base Case 1:</strong> If <code>s_idx</code> reaches the end of <code>s</code>, it means all characters of <code>s</code> have been successfully matched in order. Return <code>true</code>.</li>
+<li><strong>Base Case 2:</strong> If <code>t_idx</code> reaches the end of <code>t</code> but <code>s_idx</code> has not, we've run out of characters in <code>t</code> to match against. Return <code>false</code>.</li>
+<li><strong>Recursive Step:</strong><ul>
+<li>If <code>s[s_idx]</code> equals <code>t[t_idx]</code>, we have a match. We then need to find the rest of <code>s</code> in the rest of <code>t</code>. Recurse with <code>check(s_idx + 1, t_idx + 1)</code>.</li>
+<li>If <code>s[s_idx]</code> does not equal <code>t[t_idx]</code>, the current character in <code>t</code> is skipped. We continue to search for <code>s[s_idx]</code> in the rest of <code>t</code> by recursing with <code>check(s_idx, t_idx + 1)</code>.</li>
+</ul>
+</li>
+</ol>
+<p>This approach has a time complexity of O(|t|) because we traverse through <code>t</code> at most once, and a space complexity of O(|t|) due to the recursion stack depth in the worst case.</p>
+<pre><code class="language-cpp">class Solution {
+public:
+    bool isSubsequence(string s, string t) {
+        return check(s, t, 0, 0);
+    }
+private:
+    bool check(const string&amp; s, const string&amp; t, int s_idx, int t_idx) {
+        // Base case: All characters in s are found.
+        if (s_idx == s.length()) {
+            return true;
+        }
+        // Base case: Reached the end of t, but s is not fully matched.
+        if (t_idx == t.length()) {
+            return false;
+        }
+
+        // If characters match, move to the next character in both strings.
+        if (s[s_idx] == t[t_idx]) {
+            return check(s, t, s_idx + 1, t_idx + 1);
+        }
+
+        // If characters do not match, move to the next character only in t.
+        return check(s, t, s_idx, t_idx + 1);
+    }
+};
+</code></pre>
+<hr />
+<h3>2. Dynamic Programming Approach</h3>
+<p>This problem can be solved by finding the length of the Longest Common Subsequence (LCS) between <code>s</code> and <code>t</code>. If the length of the LCS is equal to the length of <code>s</code>, then <code>s</code> is a subsequence of <code>t</code>.</p>
+<ol>
+<li>Create a 2D DP table, <code>dp[m+1][n+1]</code>, where <code>m</code> is the length of <code>s</code> and <code>n</code> is the length of <code>t</code>. <code>dp[i][j]</code> will store the length of the LCS between <code>s[0...i-1]</code> and <code>t[0...j-1]</code>.</li>
+<li>Iterate through the strings <code>s</code> and <code>t</code> to fill the DP table.</li>
+<li>For each pair of characters <code>s[i-1]</code> and <code>t[j-1]</code>:<ul>
+<li>If they are equal, the LCS length is one more than the LCS of the strings without these characters: <code>dp[i][j] = 1 + dp[i-1][j-1]</code>.</li>
+<li>If they are not equal, the LCS is the maximum of the LCS found by excluding one character from either string: <code>dp[i][j] = max(dp[i-1][j], dp[i][j-1])</code>.</li>
+</ul>
+</li>
+<li>After filling the table, the value at <code>dp[m][n]</code> gives the length of the LCS of <code>s</code> and <code>t</code>.</li>
+<li>Return <code>true</code> if <code>dp[m][n] == m</code>, and <code>false</code> otherwise.</li>
+</ol>
+<p>This approach has a time complexity of O(|s| * |t|) and a space complexity of O(|s| * |t|).</p>
+<pre><code class="language-cpp">class Solution {
+public:
+    bool isSubsequence(string s, string t) {
+        int m = s.length();
+        int n = t.length();
+
+        if (m == 0) return true;
+
+        // dp[i][j] = length of LCS of s[0...i-1] and t[0...j-1]
+        vector&lt;vector&lt;int&gt;&gt; dp(m + 1, vector&lt;int&gt;(n + 1, 0));
+
+        for (int i = 1; i &lt;= m; ++i) {
+            for (int j = 1; j &lt;= n; ++j) {
+                if (s[i - 1] == t[j - 1]) {
+                    dp[i][j] = 1 + dp[i - 1][j - 1];
+                } else {
+                    dp[i][j] = max(dp[i - 1][j], dp[i][j - 1]);
+                }
+            }
+        }
+
+        return dp[m][n] == m;
+    }
+};
+</code></pre>
+<hr />
+<h3>3. Two Pointers Approach</h3>
+<p>This is a greedy and highly efficient approach. We use two pointers, one for string <code>s</code> and one for string <code>t</code>, to iterate through them.</p>
+<ol>
+<li>Initialize two pointers, <code>s_ptr = 0</code> for <code>s</code> and <code>t_ptr = 0</code> for <code>t</code>.</li>
+<li>Iterate through <code>t</code> using <code>t_ptr</code> as long as we haven't exhausted either string.</li>
+<li>If <code>s[s_ptr]</code> matches <code>t[t_ptr]</code>, it means we've found the next required character of the subsequence. We then increment <code>s_ptr</code> to look for the subsequent character of <code>s</code>.</li>
+<li>Always increment <code>t_ptr</code> to move to the next character in <code>t</code>, regardless of whether a match was found.</li>
+<li>After the loop finishes, if <code>s_ptr</code> has reached the end of <code>s</code> (i.e., <code>s_ptr == s.length()</code>), it implies that all characters of <code>s</code> were found in <code>t</code> in the correct order.</li>
+</ol>
+<p>This approach has a time complexity of O(|t|) as we iterate through <code>t</code> only once, and a space complexity of O(1).</p>
+<pre><code class="language-cpp">class Solution {
+public:
+    bool isSubsequence(string s, string t) {
+        int s_ptr = 0;
+        int t_ptr = 0;
+
+        while (s_ptr &lt; s.length() &amp;&amp; t_ptr &lt; t.length()) {
+            // If characters match, advance the pointer for s
+            if (s[s_ptr] == t[t_ptr]) {
+                s_ptr++;
+            }
+            // Always advance the pointer for t
+            t_ptr++;
+        }
+
+        // If s_ptr reached the end of s, all its characters were found in order
+        return s_ptr == s.length();
+    }
+};
+</code></pre>
+<hr />
+<h3>4. Follow-up: Optimized Approach for Multiple Queries</h3>
+<p>For the scenario with many incoming <code>s</code> strings to be checked against a single <code>t</code>, we can pre-process <code>t</code> to answer each query faster than a linear scan. We can map each character to a sorted list of its indices in <code>t</code> and then use binary search for matching.</p>
+<ol>
+<li><strong>Pre-computation:</strong> Create a hash map (or an array of vectors) where keys are characters and values are sorted lists of their indices in <code>t</code>. This step is done once.</li>
+<li><strong>Query:</strong> For a given string <code>s</code>:<ul>
+<li>Initialize a variable <code>last_t_index = -1</code> to track the required index in <code>t</code> for the next character match.</li>
+<li>For each character <code>c</code> in <code>s</code>, find its list of indices from the pre-computed map.</li>
+<li>Perform a binary search (specifically, <code>upper_bound</code>) on this list to find the first index that is strictly greater than <code>last_t_index</code>.</li>
+<li>If no such index is found (binary search reaches the end of the list), <code>s</code> is not a subsequence. Return <code>false</code>.</li>
+<li>If an index is found, update <code>last_t_index</code> to this new index and proceed to the next character in <code>s</code>.</li>
+</ul>
+</li>
+<li>If the loop completes for all characters in <code>s</code>, return <code>true</code>.</li>
+</ol>
+<p>The pre-computation step takes O(|t|) time and O(|t|) space. Each query then takes O(|s| * log|t|) time.</p>
+<pre><code class="language-cpp">class Solution {
+public:
+    bool isSubsequence(string s, string t) {
+        // Pre-computation: This part is slow for a single call but efficient
+        // for multiple calls with the same t, as it would be done only once.
+        vector&lt;vector&lt;int&gt;&gt; char_indices(26);
+        for (int i = 0; i &lt; t.length(); ++i) {
+            char_indices[t[i] - 'a'].push_back(i);
+        }
+
+        int last_t_index = -1;
+        // Check each character of s
+        for (char c : s) {
+            // Get the list of indices for the current character
+            auto&amp; indices = char_indices[c - 'a'];
+
+            // Find the first index in the list that is &gt; last_t_index
+            auto it = upper_bound(indices.begin(), indices.end(), last_t_index);
+
+            // If no such index exists, it's not a subsequence
+            if (it == indices.end()) {
+                return false;
+            }
+
+            // Update last_t_index to the found index
+            last_t_index = *it;
+        }
+
+        return true;
+    }
+};
+</code></pre>
+<hr />
+<h3>Pythonic Solution (Best Approach)</h3>
+<p>The best approach for the base problem is the Two Pointers method. A concise and pythonic way to implement this is by using iterators. The <code>iter()</code> function creates an iterator for <code>t</code>, and the <code>all()</code> function with a generator expression elegantly checks if each character of <code>s</code> can be found sequentially within the iterator.</p>
+<pre><code class="language-python">class Solution:
+    def isSubsequence(self, s: str, t: str) -&gt; bool:
+        # Create an iterator for the string t
+        it = iter(t)
+
+        # The generator (c in it for c in s) yields True if the next
+        # character c of s is found in the rest of the iterator it.
+        # all() returns True only if all characters of s are found in order.
+        return all(c in it for c in s)
+</code></pre></div>

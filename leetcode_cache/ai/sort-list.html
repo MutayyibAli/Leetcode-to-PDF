@@ -1,0 +1,309 @@
+<div class='ai-explanation'><h3>List of Approaches</h3>
+<ol>
+<li>Brute Force Approach (Using Extra Space)</li>
+<li>Recursive Merge Sort (Top-Down)</li>
+<li>Iterative Merge Sort (Bottom-Up)</li>
+</ol>
+<hr />
+<h3>Brute Force Approach (Using Extra Space)</h3>
+<h4>Explanation</h4>
+<p>This is the most straightforward approach. We traverse the linked list and store all its values into a dynamic array (like a <code>std::vector</code> in C++). Then, we can use a highly optimized built-in sorting function to sort this array. Finally, we traverse the linked list a second time, updating the value of each node with the corresponding sorted value from the array.</p>
+<ol>
+<li>Create a vector to store the values of the linked list nodes.</li>
+<li>Iterate through the linked list from the <code>head</code>, adding each node's value to the vector.</li>
+<li>Sort the vector using a standard sorting algorithm.</li>
+<li>Iterate through the linked list again from the <code>head</code>, and simultaneously iterate through the sorted vector. Update each node's value with the value from the vector.</li>
+<li>Return the original <code>head</code> of the now-sorted list.</li>
+</ol>
+<p>This method is simple to implement but fails to meet the follow-up constraint of constant space complexity. The time complexity is O(N log N) due to sorting, and the space complexity is O(N) for the auxiliary vector.</p>
+<h4>C++ Code Snippet</h4>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;algorithm&gt;
+
+// Definition for singly-linked list.
+struct ListNode {
+    int val;
+    ListNode *next;
+    ListNode() : val(0), next(nullptr) {}
+    ListNode(int x) : val(x), next(nullptr) {}
+    ListNode(int x, ListNode *next) : val(x), next(next) {}
+};
+
+class Solution {
+public:
+    ListNode* sortList(ListNode* head) {
+        if (!head) {
+            return nullptr;
+        }
+
+        std::vector&lt;int&gt; node_values;
+        ListNode* current = head;
+        while (current) {
+            node_values.push_back(current-&gt;val);
+            current = current-&gt;next;
+        }
+
+        std::sort(node_values.begin(), node_values.end());
+
+        current = head;
+        for (int val : node_values) {
+            current-&gt;val = val;
+            current = current-&gt;next;
+        }
+
+        return head;
+    }
+};
+</code></pre>
+<hr />
+<h3>Recursive Merge Sort (Top-Down)</h3>
+<h4>Explanation</h4>
+<p>Merge sort is a natural fit for linked lists as it doesn't rely on random access. This approach uses a divide-and-conquer strategy. The list is recursively split into two halves until we are left with sublists of size 0 or 1, which are inherently sorted. Then, these sorted sublists are merged back together in a sorted manner.</p>
+<ol>
+<li><strong>Base Case:</strong> If the list has zero or one node, it is already sorted, so return the head.</li>
+<li><strong>Divide:</strong> Find the middle of the linked list using the "slow and fast pointer" technique. The <code>slow</code> pointer moves one step at a time, while the <code>fast</code> pointer moves two. When <code>fast</code> reaches the end, <code>slow</code> will be at the middle.</li>
+<li>Split the list into two halves at the middle node. Let the first half be from <code>head</code> to <code>slow</code>, and the second half from <code>slow-&gt;next</code> to the end. Terminate the first half by setting <code>slow-&gt;next = nullptr</code>.</li>
+<li><strong>Conquer:</strong> Recursively call the sort function on both halves.</li>
+<li><strong>Combine:</strong> Merge the two sorted halves into a single, sorted list. A helper function <code>merge()</code> is used for this, which iteratively compares nodes from both lists and links the smaller one to the result list.</li>
+</ol>
+<p>This approach has a time complexity of O(N log N) but uses O(log N) space for the recursion call stack, which doesn't satisfy the follow-up's constant space constraint.</p>
+<h4>C++ Code Snippet</h4>
+<pre><code class="language-cpp">// Definition for singly-linked list.
+struct ListNode {
+    int val;
+    ListNode *next;
+    ListNode() : val(0), next(nullptr) {}
+    ListNode(int x) : val(x), next(nullptr) {}
+    ListNode(int x, ListNode *next) : val(x), next(next) {}
+};
+
+class Solution {
+public:
+    ListNode* sortList(ListNode* head) {
+        if (!head || !head-&gt;next) {
+            return head;
+        }
+
+        // Find the middle of the list
+        ListNode* slow = head;
+        ListNode* fast = head-&gt;next;
+        while (fast &amp;&amp; fast-&gt;next) {
+            slow = slow-&gt;next;
+            fast = fast-&gt;next-&gt;next;
+        }
+
+        // Split the list into two halves
+        ListNode* mid = slow-&gt;next;
+        slow-&gt;next = nullptr;
+
+        // Recursively sort the two halves
+        ListNode* left_half = sortList(head);
+        ListNode* right_half = sortList(mid);
+
+        // Merge the sorted halves
+        return merge(left_half, right_half);
+    }
+
+private:
+    ListNode* merge(ListNode* l1, ListNode* l2) {
+        ListNode dummy(0);
+        ListNode* tail = &amp;dummy;
+
+        while (l1 &amp;&amp; l2) {
+            if (l1-&gt;val &lt;= l2-&gt;val) {
+                tail-&gt;next = l1;
+                l1 = l1-&gt;next;
+            } else {
+                tail-&gt;next = l2;
+                l2 = l2-&gt;next;
+            }
+            tail = tail-&gt;next;
+        }
+
+        tail-&gt;next = (l1) ? l1 : l2;
+        return dummy.next;
+    }
+};
+</code></pre>
+<hr />
+<h3>Iterative Merge Sort (Bottom-Up)</h3>
+<h4>Explanation</h4>
+<p>This approach achieves the optimal O(N log N) time and O(1) space complexity. Instead of recursively splitting the list from the top down, we start from the bottom, merging small, sorted sublists into progressively larger ones. We treat individual nodes as sorted lists of size 1, then merge them to get sorted lists of size 2, then merge those to get sorted lists of size 4, and so on, until the entire list is one sorted unit.</p>
+<ol>
+<li>First, calculate the total length <code>n</code> of the list.</li>
+<li>Use a <code>dummy</code> node to simplify handling the head of the list. <code>dummy.next</code> will always point to the head of the list being built.</li>
+<li>Iterate with a variable <code>k</code> representing the size of the sublists to merge. <code>k</code> starts at 1 and doubles in each outer loop iteration (<code>1, 2, 4, 8, ...</code>).</li>
+<li>In each iteration, traverse the current list and merge pairs of sublists of size <code>k</code>.<ul>
+<li>Identify the first sublist (<code>left</code>) of size <code>k</code>.</li>
+<li>Identify the second sublist (<code>right</code>) of size <code>k</code> that follows the first one.</li>
+<li>Keep track of the rest of the list to process in the next inner loop iteration.</li>
+<li>Merge <code>left</code> and <code>right</code> and append the result to the tail of the sorted part of the list.</li>
+</ul>
+</li>
+<li>Continue until <code>k</code> is greater than or equal to <code>n</code>, at which point the entire list has been merged and is sorted.</li>
+</ol>
+<p>This method avoids recursion, thereby achieving constant space complexity, making it the ideal solution for the follow-up.</p>
+<h4>C++ Code Snippet</h4>
+<pre><code class="language-cpp">#include &lt;utility&gt; // For std::pair
+
+// Definition for singly-linked list.
+struct ListNode {
+    int val;
+    ListNode *next;
+    ListNode() : val(0), next(nullptr) {}
+    ListNode(int x) : val(x), next(nullptr) {}
+    ListNode(int x, ListNode *next) : val(x), next(next) {}
+};
+
+class Solution {
+public:
+    ListNode* sortList(ListNode* head) {
+        if (!head || !head-&gt;next) {
+            return head;
+        }
+
+        int n = 0;
+        ListNode* cur = head;
+        while (cur) {
+            n++;
+            cur = cur-&gt;next;
+        }
+
+        ListNode dummy(0, head);
+        for (int k = 1; k &lt; n; k *= 2) {
+            ListNode* tail = &amp;dummy;
+            cur = dummy.next;
+            while (cur) {
+                ListNode* left = cur;
+                ListNode* right = split(left, k);
+                cur = split(right, k);
+
+                auto merged_pair = merge(left, right);
+                tail-&gt;next = merged_pair.first;
+                tail = merged_pair.second;
+            }
+        }
+        return dummy.next;
+    }
+
+private:
+    // Splits the list after k nodes. Returns head of the second part.
+    ListNode* split(ListNode* head, int k) {
+        if (!head) return nullptr;
+        for (int i = 1; head-&gt;next &amp;&amp; i &lt; k; i++) {
+            head = head-&gt;next;
+        }
+        ListNode* rest = head-&gt;next;
+        head-&gt;next = nullptr;
+        return rest;
+    }
+
+    // Merges two sorted lists. Returns {head, tail} of the merged list.
+    std::pair&lt;ListNode*, ListNode*&gt; merge(ListNode* l1, ListNode* l2) {
+        ListNode dummy(0);
+        ListNode* tail = &amp;dummy;
+        while (l1 &amp;&amp; l2) {
+            if (l1-&gt;val &lt; l2-&gt;val) {
+                tail-&gt;next = l1;
+                l1 = l1-&gt;next;
+            } else {
+                tail-&gt;next = l2;
+                l2 = l2-&gt;next;
+            }
+            tail = tail-&gt;next;
+        }
+        tail-&gt;next = l1 ? l1 : l2;
+        while (tail-&gt;next) {
+            tail = tail-&gt;next;
+        }
+        return {dummy.next, tail};
+    }
+};
+</code></pre>
+<hr />
+<h3>Pythonic Solution (Best Approach)</h3>
+<p>The following Python code implements the optimal Iterative Merge Sort approach. It uses helper methods to split the list and merge sublists, making the logic clean and maintainable.</p>
+<pre><code class="language-python">from typing import Optional
+
+# Definition for singly-linked list.
+class ListNode:
+    def __init__(self, val=0, next=None):
+        self.val = val
+        self.next = next
+
+class Solution:
+    def sortList(self, head: Optional[ListNode]) -&gt; Optional[ListNode]:
+        if not head or not head.next:
+            return head
+
+        # 1. Get the length of the list
+        length = 0
+        curr = head
+        while curr:
+            length += 1
+            curr = curr.next
+
+        dummy = ListNode(0, head)
+        k = 1 # k is the size of sublists to merge
+        while k &lt; length:
+            tail = dummy
+            curr = dummy.next
+            while curr:
+                # 2. Split list into two sublists of size k
+                left = curr
+                right = self._split(left, k)
+                curr = self._split(right, k) # The remainder of the list
+
+                # 3. Merge left and right, and append to the result
+                merged_head, merged_tail = self._merge(left, right)
+                tail.next = merged_head
+                if merged_tail:
+                    tail = merged_tail
+
+            k *= 2
+
+        return dummy.next
+
+    def _split(self, head: Optional[ListNode], k: int) -&gt; Optional[ListNode]:
+        &quot;&quot;&quot;Splits the list after k nodes, returns the head of the second part.&quot;&quot;&quot;
+        if not head:
+            return None
+
+        # Move k-1 steps to find the tail of the first part
+        current = head
+        for _ in range(k - 1):
+            if not current or not current.next:
+                break
+            current = current.next
+
+        # The rest of the list is the second part
+        if not current:
+            return None
+
+        rest = current.next
+        current.next = None
+        return rest
+
+    def _merge(self, l1: Optional[ListNode], l2: Optional[ListNode]) -&gt; (Optional[ListNode], Optional[ListNode]):
+        &quot;&quot;&quot;Merges two sorted lists, returns the head and tail of the merged list.&quot;&quot;&quot;
+        dummy = ListNode(0)
+        tail = dummy
+
+        while l1 and l2:
+            if l1.val &lt; l2.val:
+                tail.next = l1
+                l1 = l1.next
+            else:
+                tail.next = l2
+                l2 = l2.next
+            tail = tail.next
+
+        # Append remaining nodes
+        tail.next = l1 if l1 else l2
+
+        # Find the new tail
+        while tail.next:
+            tail = tail.next
+
+        return dummy.next, tail
+</code></pre></div>

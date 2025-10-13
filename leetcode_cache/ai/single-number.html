@@ -1,0 +1,186 @@
+<div class='ai-explanation'><h3>List of all the approaches to solution</h3>
+<ul>
+<li>Brute Force Approach</li>
+<li>Sorting Approach</li>
+<li>Hash Map Approach</li>
+<li>Mathematical Approach</li>
+<li>Bit Manipulation (XOR) Approach</li>
+</ul>
+<h3>Brute Force Approach</h3>
+<p>This is the most straightforward method. We iterate through each element in the array and for each element, we perform another iteration through the entire array to count its occurrences. If we find an element with a count of exactly one, we return it.</p>
+<ol>
+<li>Pick an element from the array.</li>
+<li>Initialize a counter to zero.</li>
+<li>Iterate through the entire array and increment the counter every time the picked element is found.</li>
+<li>If the final count for the element is 1, it is the unique number. Return it.</li>
+<li>Repeat steps 1-4 for all elements until the unique one is found.</li>
+</ol>
+<p>This approach is easy to understand but is not efficient for large inputs. The time complexity is O(n²) and the space complexity is O(1).</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+
+class Solution {
+public:
+    int singleNumber(std::vector&lt;int&gt;&amp; nums) {
+        for (int i = 0; i &lt; nums.size(); ++i) {
+            int count = 0;
+            for (int j = 0; j &lt; nums.size(); ++j) {
+                if (nums[i] == nums[j]) {
+                    count++;
+                }
+            }
+            if (count == 1) {
+                return nums[i];
+            }
+        }
+        return -1; // Should not be reached based on problem constraints
+    }
+};
+</code></pre>
+<h3>Sorting Approach</h3>
+<p>By sorting the array, all duplicate elements will become adjacent. We can then iterate through the sorted array and find the element that does not have an identical neighbor.</p>
+<ol>
+<li>Sort the input array <code>nums</code>.</li>
+<li>Iterate through the array, taking steps of 2.</li>
+<li>In each step, compare the current element <code>nums[i]</code> with the next element <code>nums[i+1]</code>.</li>
+<li>If they are not equal, <code>nums[i]</code> must be the single element, so we return it.</li>
+<li>If the loop completes, it means the single element is the last one in the array.</li>
+</ol>
+<p>This approach improves upon the brute-force method but is still not linear time. The time complexity is dominated by the sort, making it O(n log n), and the space complexity is O(1) if an in-place sort is used.</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;algorithm&gt;
+
+class Solution {
+public:
+    int singleNumber(std::vector&lt;int&gt;&amp; nums) {
+       std::sort(nums.begin(), nums.end());
+        for (int i = 0; i &lt; nums.size() - 1; i += 2) {
+            if (nums[i] != nums[i+1]) {
+                return nums[i];
+            }
+        }
+        return nums[nums.size() - 1];
+    }
+};
+</code></pre>
+<h3>Hash Map Approach</h3>
+<p>This approach uses a hash map to store the frequency of each element in the array. We can find the unique element by identifying which one has a frequency of 1.</p>
+<ol>
+<li>Create a hash map (like <code>std::unordered_map</code>) to map numbers to their frequencies.</li>
+<li>Iterate through the input array <code>nums</code>. For each number, increment its count in the hash map.</li>
+<li>Iterate through the key-value pairs in the hash map.</li>
+<li>Return the key (the number) whose value (the frequency) is 1.</li>
+</ol>
+<p>This solution has a linear time complexity but violates the constant space requirement. The time complexity is O(n) and the space complexity is O(n).</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;unordered_map&gt;
+
+class Solution {
+public:
+    int singleNumber(std::vector&lt;int&gt;&amp; nums) { 
+       std::unordered_map&lt;int, int&gt; freq_map;
+       for (int num : nums) {
+           freq_map[num]++;
+       }
+       for (auto const&amp; [num, freq] : freq_map) {
+           if (freq == 1) {
+               return num;
+           }
+       }
+       return -1; // Should not be reached based on problem constraints
+    }
+};
+</code></pre>
+<h3>Mathematical Approach</h3>
+<p>This method leverages a mathematical property. If we find the sum of all unique numbers, double it, and then subtract the sum of all numbers in the original array, the result will be the single number.</p>
+<ol>
+<li>Create a set of all numbers from the input array to get only the unique elements.</li>
+<li>Calculate the sum of all elements in the set (<code>sum_of_set</code>).</li>
+<li>Calculate the sum of all elements in the original array <code>nums</code> (<code>sum_of_nums</code>).</li>
+<li>The result is <code>2 * sum_of_set - sum_of_nums</code>.</li>
+</ol>
+<p>This is another linear time solution, but like the hash map approach, it uses extra space for the set. The time complexity is O(n) and the space complexity is O(n).</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;numeric&gt;
+#include &lt;unordered_set&gt;
+
+class Solution {
+public:
+    int singleNumber(std::vector&lt;int&gt;&amp; nums) {
+        std::unordered_set&lt;int&gt; unique_nums(nums.begin(), nums.end());
+
+        long long sum_of_set = 0;
+        for(int num : unique_nums) {
+            sum_of_set += num;
+        }
+
+        long long sum_of_nums = 0;
+        for(int num : nums) {
+            sum_of_nums += num;
+        }
+
+        return static_cast&lt;int&gt;(2 * sum_of_set - sum_of_nums);
+    }
+};
+</code></pre>
+<h3>Bit Manipulation (XOR) Approach</h3>
+<p>This is the optimal solution that meets both the linear time and constant space requirements. It uses the properties of the bitwise XOR (<code>^</code>) operator.
+- <code>x ^ x = 0</code> (XORing a number with itself results in zero).
+- <code>x ^ 0 = x</code> (XORing a number with zero results in the number itself).
+- XOR is commutative and associative.</p>
+<ol>
+<li>Initialize a variable <code>result</code> to 0.</li>
+<li>Iterate through each number in the input array <code>nums</code>.</li>
+<li>In each iteration, update <code>result</code> by XORing it with the current number (<code>result = result ^ num</code>).</li>
+<li>Since every duplicate number will cancel itself out (<code>x ^ x = 0</code>), the <code>result</code> will ultimately hold the single, non-repeated number.</li>
+</ol>
+<p>This elegant solution is highly efficient. The time complexity is O(n) and the space complexity is O(1).</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+
+class Solution {
+public:
+    int singleNumber(std::vector&lt;int&gt;&amp; nums) { 
+       int result = 0;
+       for (int num : nums) {
+           result ^= num;
+       }
+       return result;
+    }
+};
+</code></pre>
+<h3>Pythonic solution for best approach</h3>
+<p>The most optimal and Pythonic solution uses the bitwise XOR operator, which can be elegantly implemented using a loop or <code>functools.reduce</code>.</p>
+<pre><code class="language-python">import functools
+import operator
+from typing import List
+
+class Solution:
+    def singleNumber(self, nums: List[int]) -&gt; int:
+        &quot;&quot;&quot;
+        Finds the single element in a list where every other element appears twice.
+
+        This solution uses the bitwise XOR operation.
+        The key properties are:
+        1. x ^ x = 0
+        2. x ^ 0 = x
+        When we XOR all numbers in the list, the pairs of identical numbers
+        cancel each other out, leaving only the unique number.
+
+        Example: [4, 1, 2, 1, 2]
+        0 ^ 4 = 4
+        4 ^ 1 = 5
+        5 ^ 2 = 7
+        7 ^ 1 = 6  (since 5^1 = (4^1)^1 = 4)
+        6 ^ 2 = 4  (since 7^2 = (5^2)^2 = 5)
+        The final result is 4.
+        &quot;&quot;&quot;
+
+        # A simple and readable loop-based approach
+        # xor_sum = 0
+        # for num in nums:
+        #     xor_sum ^= num
+        # return xor_sum
+
+        # A more concise functional approach using reduce
+        return functools.reduce(operator.xor, nums)
+
+</code></pre></div>

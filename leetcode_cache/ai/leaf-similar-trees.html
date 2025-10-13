@@ -1,0 +1,88 @@
+<div class='ai-explanation'><h3>List of all the approaches to solution</h3>
+<ol>
+<li>Brute Force Approach (Two-Pass DFS)</li>
+</ol>
+<hr />
+<h3>Brute Force Approach (Two-Pass DFS)</h3>
+<p>The most straightforward way to solve this problem is to generate the leaf value sequence for each tree and then compare the two sequences. This can be achieved by performing a Depth-First Search (DFS) on each tree.</p>
+<ol>
+<li><strong>Define a Helper Function:</strong> Create a recursive helper function, let's call it <code>getLeaves</code>, that takes a tree node and a list/vector as input. This function will perform a pre-order traversal of the tree.</li>
+<li><strong>Base Case:</strong> If the current node is <code>nullptr</code>, the function returns, as there's nothing to process.</li>
+<li><strong>Identify Leaves:</strong> Inside the helper function, check if the current node is a leaf. A node is a leaf if both its <code>left</code> and <code>right</code> children are <code>nullptr</code>.</li>
+<li><strong>Collect Leaf Values:</strong> If the node is a leaf, add its value to the list passed as an argument.</li>
+<li><strong>Recurse:</strong> Recursively call the helper function for the left child and then for the right child. This ensures the leaves are collected in a left-to-right order.</li>
+<li><strong>Generate Sequences:</strong> In the main function, declare two separate lists, one for each tree. Call the <code>getLeaves</code> helper function on <code>root1</code> to populate the first list and on <code>root2</code> to populate the second list.</li>
+<li><strong>Compare Sequences:</strong> Finally, compare the two generated lists of leaf values. If they are identical, the trees are leaf-similar; otherwise, they are not.</li>
+</ol>
+<p>This approach requires traversing both trees completely once and storing their leaf sequences. The time complexity is proportional to the total number of nodes in both trees, and the space complexity is proportional to the number of leaves and the recursion depth.</p>
+<pre><code class="language-cpp">/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    // Helper function to perform DFS and collect leaf values
+    void getLeaves(TreeNode* root, std::vector&lt;int&gt;&amp; leaves) {
+        if (!root) {
+            return;
+        }
+        // Check if it's a leaf node
+        if (!root-&gt;left &amp;&amp; !root-&gt;right) {
+            leaves.push_back(root-&gt;val);
+        }
+        // Recurse on left and right children
+        getLeaves(root-&gt;left, leaves);
+        getLeaves(root-&gt;right, leaves);
+    }
+
+    bool leafSimilar(TreeNode* root1, TreeNode* root2) {
+        std::vector&lt;int&gt; leaves1;
+        std::vector&lt;int&gt; leaves2;
+
+        // Collect leaf values for both trees
+        getLeaves(root1, leaves1);
+        getLeaves(root2, leaves2);
+
+        // Compare the two sequences
+        return leaves1 == leaves2;
+    }
+};
+</code></pre>
+<p><strong>Time Complexity:</strong> O(N1 + N2), where N1 and N2 are the number of nodes in the first and second trees, respectively. We must visit every node in both trees.
+<strong>Space Complexity:</strong> O(L1 + L2 + H1 + H2), where L1 and L2 are the number of leaves, and H1 and H2 are the heights of the trees. This space is used to store the leaf sequences and for the recursion call stack. In the worst case, this can be O(N1 + N2).</p>
+<hr />
+<h3>Pythonic Solution</h3>
+<p>This Python solution employs the same DFS logic but in a more functional style. The <code>dfs</code> helper function recursively constructs and returns the list of leaf values for a given subtree. The base cases handle null nodes (returning an empty list) and leaf nodes (returning a list with the node's value). For internal nodes, it concatenates the leaf sequences from its left and right subtrees. Finally, it compares the sequences generated from the two root nodes.</p>
+<pre><code class="language-python"># Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+
+class Solution:
+    def leafSimilar(self, root1: Optional[TreeNode], root2: Optional[TreeNode]) -&gt; bool:
+
+        def dfs(node):
+            # If node is null, there are no leaves
+            if not node:
+                return []
+
+            # If it's a leaf node, return its value in a list
+            if not node.left and not node.right:
+                return [node.val]
+
+            # For an internal node, combine leaves from left and right subtrees
+            return dfs(node.left) + dfs(node.right)
+
+        # Compare the leaf sequences from both trees
+        return dfs(root1) == dfs(root2)
+
+</code></pre></div>

@@ -1,0 +1,197 @@
+<div class='ai-explanation'><h3>List of Approaches</h3>
+<ol>
+<li>Brute Force Approach</li>
+<li>Sorting Approach</li>
+<li>Hash Table (unordered_map) Approach</li>
+<li>Hash Set (Optimal) Approach</li>
+</ol>
+<hr />
+<h3>1. Brute Force Approach</h3>
+<p>This method checks every number in the array to see if it can be the start of a consecutive sequence. For each number, it repeatedly searches for the next consecutive integer (<code>current_num + 1</code>) in the rest of the array. The length of the longest sequence found is tracked and returned.</p>
+<p><strong>Step-by-step explanation:</strong>
+1. Initialize a variable <code>longest_streak</code> to 0.
+2. Iterate through each number <code>num</code> in the input array <code>nums</code>.
+3. For each <code>num</code>, initialize <code>current_num = num</code> and <code>current_streak = 1</code>.
+4. Enter a loop that checks if <code>current_num + 1</code> exists in the array. This requires another full scan of the array.
+5. If <code>current_num + 1</code> is found, increment both <code>current_num</code> and <code>current_streak</code>.
+6. Continue this inner loop until the next consecutive number is not found.
+7. After the inner loop, update <code>longest_streak = max(longest_streak, current_streak)</code>.
+8. After iterating through all numbers in <code>nums</code>, return <code>longest_streak</code>.</p>
+<p>This approach is very inefficient due to the repeated linear scans inside the main loop, leading to a cubic time complexity and will likely result in a "Time Limit Exceeded" error on most platforms. The time complexity is O(N^3) and the space complexity is O(1).</p>
+<p><strong>C++ Code:</strong></p>
+<pre><code class="language-cpp">class Solution {
+private: 
+    bool arrayContains(vector&lt;int&gt;&amp; nums, int target){
+        for(int num : nums){
+            if(num == target){
+                return true;
+            }
+        }
+        return false;
+    }
+public:
+    int longestConsecutive(vector&lt;int&gt;&amp; nums) {
+        int longest_streak = 0;
+        for(int num : nums){
+            int current_num = num;
+            int current_streak = 1;
+            // The while loop condition performs a linear scan (O(N))
+            while(arrayContains(nums, current_num + 1)){
+                current_num += 1;
+                current_streak += 1;
+            }
+            longest_streak = max(longest_streak, current_streak);
+        }
+        return longest_streak;
+    }
+};
+</code></pre>
+<hr />
+<h3>2. Sorting Approach</h3>
+<p>A more efficient approach involves sorting the array first. Once sorted, consecutive numbers will be adjacent to each other. We can then iterate through the sorted array once to find the longest sequence.</p>
+<p><strong>Step-by-step explanation:</strong>
+1. If the input array is empty, return 0.
+2. Sort the input array <code>nums</code> in ascending order.
+3. Initialize <code>longest_streak = 1</code> and <code>current_streak = 1</code>.
+4. Iterate through the sorted array from the second element (<code>i = 1</code>).
+5. Handle duplicates: if the current element <code>nums[i]</code> is the same as the previous one <code>nums[i-1]</code>, continue to the next iteration.
+6. Check for consecutiveness: if <code>nums[i]</code> is equal to <code>nums[i-1] + 1</code>, it's part of the current sequence, so increment <code>current_streak</code>.
+7. If the sequence is broken (i.e., <code>nums[i]</code> is not <code>nums[i-1] + 1</code>), update <code>longest_streak = max(longest_streak, current_streak)</code> and reset <code>current_streak</code> to 1.
+8. After the loop, perform one final check: <code>longest_streak = max(longest_streak, current_streak)</code> to account for the last sequence.
+9. Return <code>longest_streak</code>.</p>
+<p>The time complexity is dominated by the sorting step, making it O(N log N), and the space complexity is O(1) if sorting is done in-place.</p>
+<p><strong>C++ Code:</strong></p>
+<pre><code class="language-cpp">class Solution {
+public:
+    int longestConsecutive(vector&lt;int&gt;&amp; nums) {
+        if (nums.empty()) {
+            return 0;
+        }
+        sort(nums.begin(), nums.end());
+        int longest_streak = 1;
+        int current_streak = 1;
+        for (int i = 1; i &lt; nums.size(); i++) {
+            if (nums[i] != nums[i-1]) {
+                if (nums[i] == nums[i-1] + 1) {
+                    current_streak++;
+                } else {
+                    longest_streak = max(longest_streak, current_streak);
+                    current_streak = 1;
+                }
+            }
+        }
+        return max(longest_streak, current_streak);
+    }
+};
+</code></pre>
+<hr />
+<h3>3. Hash Table (unordered_map) Approach</h3>
+<p>This approach uses a hash map to identify the starting points of consecutive sequences. By marking numbers that have a predecessor (<code>num - 1</code>) in the array, we can avoid redundant checks and only start counting from the true beginning of each sequence.</p>
+<p><strong>Step-by-step explanation:</strong>
+1. Create a hash map and populate it with all numbers from <code>nums</code>. We can map each number to a boolean, e.g., <code>true</code>.
+2. Iterate through <code>nums</code> again. For each number <code>num</code>, if <code>num - 1</code> exists in the hash map, it means <code>num</code> is not a starting point of a sequence. Mark it as such by setting <code>map[num] = false</code>.
+3. Initialize <code>max_len = 0</code>.
+4. Iterate through <code>nums</code> a third time. If a number <code>num</code> is a starting point (<code>map[num] == true</code>), begin counting the length of its sequence.
+5. Use a <code>while</code> loop to check for <code>num + 1</code>, <code>num + 2</code>, etc., in the map and increment a counter.
+6. Update <code>max_len</code> with the maximum count found.
+7. Return <code>max_len</code>.</p>
+<p>This method has three separate passes over the data, but each pass is linear. The time complexity is O(N) and the space complexity is O(N) for the hash map.</p>
+<p><strong>C++ Code:</strong></p>
+<pre><code class="language-cpp">class Solution {
+public:
+    int longestConsecutive(vector&lt;int&gt;&amp; nums) {
+        if (nums.empty()) {
+            return 0;
+        }
+        unordered_map&lt;int, bool&gt; map;
+        for (int num : nums) {
+            map[num] = true;
+        }
+        for (int num : nums) {
+            if (map.count(num - 1)) {
+                map[num] = false;
+            }
+        }
+        int max_len = 0;
+        for (int num : nums) {
+            if (map[num] == true) {
+                int current_len = 0;
+                int current_num = num;
+                while (map.count(current_num)) {
+                    current_len++;
+                    current_num++;
+                }
+                if (current_len &gt; max_len) {
+                    max_len = current_len;
+                }
+            }
+        }
+        return max_len;
+    }
+};
+</code></pre>
+<hr />
+<h3>4. Hash Set (Optimal) Approach</h3>
+<p>This is the most efficient approach, meeting the <code>O(N)</code> time complexity requirement. It's a refined version of the hash map solution. We use a hash set for fast lookups. The key insight is to only start building a sequence from a number if it's the beginning of that sequence (i.e., <code>num - 1</code> is not present).</p>
+<p><strong>Step-by-step explanation:</strong>
+1.  Store all numbers from the input array <code>nums</code> into a hash set for O(1) average time complexity for lookups.
+2.  Initialize a variable <code>longest_streak</code> to 0.
+3.  Iterate through each unique number <code>num</code> in the hash set.
+4.  For each <code>num</code>, check if it's the start of a sequence by verifying that <code>num - 1</code> is <strong>not</strong> in the hash set.
+5.  If <code>num - 1</code> is not present, we have found the start of a potential longest sequence. Initialize <code>current_num = num</code> and <code>current_streak = 1</code>.
+6.  Enter a <code>while</code> loop and check if the next number, <code>current_num + 1</code>, exists in the hash set.
+7.  If it exists, increment <code>current_num</code> and <code>current_streak</code>. Continue this until the sequence breaks.
+8.  After the inner loop, update <code>longest_streak = max(longest_streak, current_streak)</code>.
+9.  After checking all numbers, <code>longest_streak</code> will hold the length of the longest consecutive sequence. Return it.</p>
+<p>Although this approach has a nested loop structure, the inner <code>while</code> loop only executes for numbers that are the start of a sequence. Each number is visited by the inner loop's check at most once, resulting in a linear time complexity. The time complexity is O(N) and the space complexity is O(N).</p>
+<p><strong>C++ Code:</strong></p>
+<pre><code class="language-cpp">class Solution {
+public:
+    int longestConsecutive(vector&lt;int&gt;&amp; nums) {
+        unordered_set&lt;int&gt; num_set(nums.begin(), nums.end());
+        int longest_streak = 0;
+
+        for (int num : num_set) {
+            // Check if it's a start of a sequence
+            if (num_set.find(num - 1) == num_set.end()) {
+                int current_num = num;
+                int current_streak = 1;
+
+                while (num_set.find(current_num + 1) != num_set.end()) {
+                    current_num++;
+                    current_streak++;
+                }
+
+                longest_streak = max(longest_streak, current_streak);
+            }
+        }
+        return longest_streak;
+    }
+};
+</code></pre>
+<hr />
+<h3>Pythonic Solution (Optimal Approach)</h3>
+<pre><code class="language-python">class Solution:
+    def longestConsecutive(self, nums: list[int]) -&gt; int:
+        if not nums:
+            return 0
+
+        num_set = set(nums)
+        longest_streak = 0
+
+        for num in num_set:
+            # Check if the number is the start of a sequence
+            if (num - 1) not in num_set:
+                current_num = num
+                current_streak = 1
+
+                # Count the length of the sequence
+                while (current_num + 1) in num_set:
+                    current_num += 1
+                    current_streak += 1
+
+                longest_streak = max(longest_streak, current_streak)
+
+        return longest_streak
+
+</code></pre></div>

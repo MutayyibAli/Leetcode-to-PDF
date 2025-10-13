@@ -1,0 +1,180 @@
+<div class='ai-explanation'><h3>List of All Approaches</h3>
+<ol>
+<li>Brute Force Approach (Recursion)</li>
+<li>Dynamic Programming Approach (Bottom-Up)</li>
+<li>Greedy Approach (BFS Style)</li>
+</ol>
+<hr />
+<h3>1. Brute Force Approach (Recursion)</h3>
+<p>This approach explores every possible jump combination recursively. We define a function that calculates the minimum jumps from a given <code>currentIndex</code> to the end of the array. For each index, we try jumping to every reachable next index and recursively call the function for each of them. We then take the minimum among all these possibilities and add 1 (for the current jump).</p>
+<h4>Step-by-step Explanation:</h4>
+<ol>
+<li>Create a recursive function, say <code>findMinJumps(currentIndex)</code>.</li>
+<li>The base case: If <code>currentIndex</code> is at or beyond the last index (<code>n-1</code>), no more jumps are needed, so return 0.</li>
+<li>Initialize a variable <code>min_jumps</code> to a very large value (infinity).</li>
+<li>Iterate through all reachable indices from <code>currentIndex</code>. The range of jumps is from 1 to <code>nums[currentIndex]</code>.</li>
+<li>For each possible jump <code>j</code>, make a recursive call <code>findMinJumps(currentIndex + j)</code>.</li>
+<li>Update <code>min_jumps</code> with the minimum value returned by the recursive calls.</li>
+<li>The result for <code>currentIndex</code> is <code>1 + min_jumps</code>.</li>
+<li>This approach is very slow because it recalculates the same subproblems multiple times, leading to an exponential time complexity.</li>
+</ol>
+<p>This approach has a time complexity of <code>O(k^n)</code> where <code>k</code> is the maximum jump value and <code>n</code> is the size of the array, with a space complexity of <code>O(n)</code> for the recursion stack.</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;algorithm&gt;
+#include &lt;climits&gt;
+
+class Solution {
+public:
+    int solve(std::vector&lt;int&gt;&amp; nums, int currentIndex) {
+        // Base case: If we have reached or passed the end
+        if (currentIndex &gt;= nums.size() - 1) {
+            return 0;
+        }
+
+        // If no jumps are possible from the current index
+        if (nums[currentIndex] == 0) {
+            return INT_MAX;
+        }
+
+        int minJumps = INT_MAX;
+        // Explore all possible jumps from the current index
+        for (int j = 1; j &lt;= nums[currentIndex]; ++j) {
+            int result = solve(nums, currentIndex + j);
+            if (result != INT_MAX) {
+                minJumps = std::min(minJumps, result + 1);
+            }
+        }
+        return minJumps;
+    }
+
+    int jump(std::vector&lt;int&gt;&amp; nums) {
+        if (nums.size() &lt;= 1) {
+            return 0;
+        }
+        return solve(nums, 0);
+    }
+};
+</code></pre>
+<hr />
+<h3>2. Dynamic Programming Approach (Bottom-Up)</h3>
+<p>This approach improves upon the brute-force method by storing the results of subproblems to avoid redundant calculations. We use a <code>dp</code> array where <code>dp[i]</code> stores the minimum number of jumps required to reach index <code>i</code> from index 0.</p>
+<h4>Step-by-step Explanation:</h4>
+<ol>
+<li>Create a <code>dp</code> array of size <code>n</code>, and initialize all its elements to infinity, except <code>dp[0]</code>, which is 0 (as we start at index 0 with 0 jumps).</li>
+<li>Iterate through the <code>nums</code> array from <code>i = 0</code> to <code>n-1</code>.</li>
+<li>For each index <code>i</code>, we can jump to any index <code>j</code> from <code>i + 1</code> up to <code>i + nums[i]</code>.</li>
+<li>For each reachable index <code>j</code>, we update its minimum jumps by taking the minimum of its current <code>dp</code> value and <code>dp[i] + 1</code>. That is, <code>dp[j] = min(dp[j], dp[i] + 1)</code>.</li>
+<li>After iterating through all indices, <code>dp[n-1]</code> will hold the minimum number of jumps to reach the last index.</li>
+</ol>
+<p>This approach has a time complexity of <code>O(n^2)</code> due to the nested loops and a space complexity of <code>O(n)</code> for the <code>dp</code> array.</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;algorithm&gt;
+
+class Solution {
+public:
+    int jump(std::vector&lt;int&gt;&amp; nums) {
+        int n = nums.size();
+        if (n &lt;= 1) {
+            return 0;
+        }
+
+        std::vector&lt;int&gt; dp(n, n + 1); // Initialize with a value larger than any possible answer
+        dp[0] = 0;
+
+        for (int i = 0; i &lt; n; ++i) {
+            for (int j = 1; j &lt;= nums[i] &amp;&amp; i + j &lt; n; ++j) {
+                dp[i + j] = std::min(dp[i + j], dp[i] + 1);
+            }
+        }
+
+        return dp[n - 1];
+    }
+};
+</code></pre>
+<hr />
+<h3>3. Greedy Approach (BFS Style)</h3>
+<p>This is the most optimal approach. The idea is to think of the problem as a Breadth-First Search (BFS). Each jump constitutes moving to the next "level" of reachable indices. We greedily try to extend our reach as far as possible with each jump.</p>
+<h4>Step-by-step Explanation:</h4>
+<ol>
+<li>Initialize <code>jumps = 0</code>, <code>current_end = 0</code>, and <code>farthest = 0</code>.</li>
+<li><code>jumps</code>: Counts the minimum jumps needed.</li>
+<li><code>current_end</code>: The farthest index that can be reached with the current number of <code>jumps</code>.</li>
+<li><code>farthest</code>: The maximum reach we can achieve from any index within the current level (from the start up to <code>current_end</code>).</li>
+<li>Iterate through the array from <code>i = 0</code> to <code>n-2</code> (we don't need to jump from the last element).</li>
+<li>In each iteration, update <code>farthest</code> with the maximum possible reach from index <code>i</code>, which is <code>i + nums[i]</code>.</li>
+<li>If the current index <code>i</code> reaches <code>current_end</code>, it means we have explored all indices within the current jump's reach. We must now take another jump.</li>
+<li>When we take another jump, we increment <code>jumps</code> and update <code>current_end</code> to the new <code>farthest</code> point we've found so far.</li>
+<li>The loop continues until we have processed all elements up to <code>n-2</code>. The final <code>jumps</code> count will be the minimum required.</li>
+</ol>
+<p>This approach has a time complexity of <code>O(n)</code> as it involves a single pass through the array, and a space complexity of <code>O(1)</code>.</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;algorithm&gt;
+
+class Solution {
+public:
+    int jump(std::vector&lt;int&gt;&amp; nums) {
+        int n = nums.size();
+        if (n &lt;= 1) {
+            return 0;
+        }
+
+        int jumps = 0;
+        int current_end = 0;
+        int farthest = 0;
+
+        for (int i = 0; i &lt; n - 1; ++i) {
+            // Update the farthest point we can reach
+            farthest = std::max(farthest, i + nums[i]);
+
+            // If we have reached the end of the current jump's range
+            if (i == current_end) {
+                // We must take a new jump
+                jumps++;
+                // The new jump's range ends at the farthest point found so far
+                current_end = farthest;
+                // If the new end already covers the last index, we can stop early
+                if (current_end &gt;= n-1) {
+                    break;
+                }
+            }
+        }
+        return jumps;
+    }
+};
+</code></pre>
+<hr />
+<h3>Pythonic Solution (Best Approach)</h3>
+<p>The pythonic implementation of the Greedy (BFS Style) approach is clean and efficient, mirroring the logic explained above.</p>
+<pre><code class="language-python">from typing import List
+
+class Solution:
+    def jump(self, nums: List[int]) -&gt; int:
+        n = len(nums)
+        if n &lt;= 1:
+            return 0
+
+        jumps = 0
+        # The end of the range that can be reached with the current number of jumps
+        current_end = 0
+        # The farthest index that can be reached from the current level
+        farthest = 0
+
+        for i in range(n - 1):
+            # Update the farthest reachable index
+            farthest = max(farthest, i + nums[i])
+
+            # If we've reached the end of the current jump's range
+            if i == current_end:
+                # We need to make another jump
+                jumps += 1
+                # The new range ends at the farthest point we've found
+                current_end = farthest
+
+                # Optimization: if the new end can reach or pass the last index,
+                # we don't need to continue the loop.
+                if current_end &gt;= n - 1:
+                    break
+
+        return jumps
+
+</code></pre></div>

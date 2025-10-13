@@ -1,0 +1,111 @@
+<div class='ai-explanation'><h3>List of Approaches</h3>
+<ol>
+<li>Brute Force Approach (Linear Search)</li>
+<li>Optimal Approach (Binary Search)</li>
+</ol>
+<hr />
+<h3>1. Brute Force Approach (Linear Search)</h3>
+<p>This approach involves scanning the array to find the first and last occurrences of the target element.</p>
+<p><strong>Step-by-step explanation:</strong>
+1.  Initialize a result vector, say <code>ans</code>, with <code>[-1, -1]</code>. This will be the default return value if the target is not found.
+2.  Iterate through the array from the beginning (left to right). The first time the <code>target</code> is encountered, store its index as the starting position in <code>ans[0]</code> and break the loop.
+3.  If the starting position was not found (i.e., <code>ans[0]</code> is still -1), it means the target doesn't exist in the array, so we can return <code>ans</code> immediately.
+4.  If the target was found, iterate through the array from the end (right to left). The first time the <code>target</code> is encountered, store its index as the ending position in <code>ans[1]</code> and break the loop.
+5.  Return the <code>ans</code> vector.</p>
+<p>This approach has a time complexity of O(N) because, in the worst case, we might scan the entire array twice. The space complexity is O(1) as we only use a few variables to store the indices.</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+
+class Solution {
+public:
+    std::vector&lt;int&gt; searchRange(std::vector&lt;int&gt;&amp; nums, int target) {
+        int startingPosition = -1, endingPosition = -1;
+        int n = nums.size();
+
+        // Find the first occurrence
+        for (int i = 0; i &lt; n; i++) {
+            if (nums[i] == target) {
+                startingPosition = i;
+                break;
+            }
+        }
+
+        // Find the last occurrence
+        for (int i = n - 1; i &gt;= 0; i--) {
+            if (nums[i] == target) {
+                endingPosition = i;
+                break;
+            }
+        }
+
+        return {startingPosition, endingPosition};
+    }
+};
+</code></pre>
+<hr />
+<h3>2. Optimal Approach (Binary Search)</h3>
+<p>Since the array is sorted, we can use binary search to find the start and end positions in logarithmic time. The core idea is to use a modified binary search (or a <code>lower_bound</code> function) to find the first occurrence of the target, and then use a similar search to find the position just after the last occurrence of the target.</p>
+<p><strong>Step-by-step explanation:</strong>
+1.  The problem is broken down into two parts: finding the first position of <code>target</code> and finding the last position of <code>target</code>.
+2.  <strong>Find the First Position:</strong> We can use binary search to find the <em>leftmost</em> index where <code>target</code> could be inserted while maintaining the sorted order. This is commonly known as finding the <code>lower_bound</code> of the <code>target</code>. Let's call this index <code>start</code>.
+3.  <strong>Find the Last Position:</strong> To find the last position, we can cleverly reuse the same <code>lower_bound</code> logic. The last occurrence of <code>target</code> is the element just before the first occurrence of <code>target + 1</code>. So, we find the <code>lower_bound</code> of <code>target + 1</code> and subtract one from its index. Let's call this <code>end</code>.
+4.  <strong>Validate and Return:</strong> After finding <code>start</code> and <code>end</code>, we must verify that <code>target</code> was actually found. We check if <code>start</code> is a valid index within the array's bounds and if the element at <code>nums[start]</code> is indeed our <code>target</code>. If both conditions are met, it means the target exists, and we can return <code>{start, end}</code>. Otherwise, the target is not in the array, and we return <code>{-1, -1}</code>.</p>
+<p>This approach has a time complexity of O(log N) because it performs two binary searches. The space complexity is O(1).</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;algorithm&gt; // For std::lower_bound
+
+class Solution {
+public:
+    std::vector&lt;int&gt; searchRange(std::vector&lt;int&gt;&amp; nums, int target) {
+        // Find the first position of target using lower_bound
+        auto start_it = std::lower_bound(nums.begin(), nums.end(), target);
+        int startingPosition = start_it - nums.begin();
+
+        // Find the first position of an element &gt; target
+        auto end_it = std::lower_bound(nums.begin(), nums.end(), target + 1);
+        int endingPosition = end_it - nums.begin() - 1;
+
+        // Validate if the target was found
+        if (startingPosition &lt; nums.size() &amp;&amp; nums[startingPosition] == target) {
+            return {startingPosition, endingPosition};
+        }
+
+        return {-1, -1};
+    }
+};
+</code></pre>
+<hr />
+<h3>Pythonic Solution (Best Approach)</h3>
+<p>This Python solution implements the optimal binary search approach. It defines a helper function <code>search</code> which is equivalent to a <code>lower_bound</code> search. This function finds the leftmost index for a given value <code>x</code>. It's called once for the <code>target</code> to find the start and once for <code>target + 1</code> to help find the end.</p>
+<pre><code class="language-python">from typing import List
+
+class Solution:
+    def searchRange(self, nums: List[int], target: int) -&gt; List[int]:
+
+        def find_first_occurrence(x: int) -&gt; int:
+            &quot;&quot;&quot;
+            Finds the leftmost index where x should be inserted.
+            This is equivalent to a lower_bound search.
+            &quot;&quot;&quot;
+            low, high = 0, len(nums)
+            while low &lt; high:
+                mid = (low + high) // 2
+                if nums[mid] &lt; x:
+                    low = mid + 1
+                else:
+                    high = mid
+            return low
+
+        # Find the starting position of the target
+        start_pos = find_first_occurrence(target)
+
+        # Find the starting position of target + 1, which helps us find the end_pos
+        # The last occurrence of target is at the index just before this.
+        end_pos = find_first_occurrence(target + 1) - 1
+
+        # Check if the target was actually found
+        if start_pos &lt;= end_pos:
+            return [start_pos, end_pos]
+
+        return [-1, -1]
+
+</code></pre></div>

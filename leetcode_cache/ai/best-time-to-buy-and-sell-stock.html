@@ -1,0 +1,108 @@
+<div class='ai-explanation'><h3>List of all the approaches to solution</h3>
+<ol>
+<li>Brute Force Approach</li>
+<li>One Pass Approach</li>
+</ol>
+<hr />
+<h3>Brute Force Approach</h3>
+<p>This approach considers every possible pair of buying and selling days. We can use two nested loops to iterate through all valid transactions. The outer loop selects the buying day, and the inner loop selects the selling day, which must be after the buying day. For each pair, we calculate the profit and keep track of the maximum profit found.</p>
+<p><strong>Step-by-step explanation:</strong>
+1.  Initialize a variable <code>maxProfit</code> to 0. This will store the maximum profit we can achieve.
+2.  Use a loop to iterate through the <code>prices</code> array with an index <code>i</code> from the first day to the last. This index <code>i</code> represents the day we buy the stock.
+3.  Inside this loop, start another nested loop with an index <code>j</code> from <code>i + 1</code> to the last day. This index <code>j</code> represents the day we sell the stock.
+4.  For each pair of <code>(i, j)</code>, calculate the profit as <code>prices[j] - prices[i]</code>.
+5.  Compare this profit with <code>maxProfit</code>. If it's greater, update <code>maxProfit</code>.
+6.  After the loops complete, <code>maxProfit</code> will hold the highest possible profit. Return <code>maxProfit</code>.</p>
+<p>This method is straightforward but inefficient for large inputs due to the nested loops. The time complexity is O(n²) and the space complexity is O(1).</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;algorithm&gt;
+
+class Solution {
+public:
+    int maxProfit(std::vector&lt;int&gt;&amp; prices) {
+        int maxProfit = 0;
+        int n = prices.size();
+        // Outer loop for the buying day
+        for (int i = 0; i &lt; n; ++i) {
+            // Inner loop for the selling day (must be after buying)
+            for (int j = i + 1; j &lt; n; ++j) {
+                int profit = prices[j] - prices[i];
+                // Update maxProfit if the current profit is higher
+                maxProfit = std::max(maxProfit, profit);
+            }
+        }
+        return maxProfit;
+    }
+};
+</code></pre>
+<hr />
+<h3>One Pass Approach</h3>
+<p>This is a much more efficient approach that solves the problem by iterating through the price list just once. The key idea is to find the maximum profit that can be obtained by selling on the current day. This is achieved by subtracting the minimum stock price encountered <em>before</em> the current day from the current day's price. We maintain two variables: one to track the minimum price seen so far and another to track the maximum profit.</p>
+<p><strong>Step-by-step explanation:</strong>
+1.  Initialize a variable <code>minPrice</code> to a very large value (or the price on the first day) to keep track of the lowest stock price encountered.
+2.  Initialize <code>maxProfit</code> to 0 to store the maximum profit.
+3.  Iterate through the <code>prices</code> array from the first day to the last.
+4.  For each day's price:
+    *   If the current price is less than <code>minPrice</code>, it means we have found a new best day to buy. Update <code>minPrice</code> to the current price.
+    *   Otherwise, calculate the potential profit if we were to sell on the current day: <code>current price - minPrice</code>.
+    *   Compare this potential profit with <code>maxProfit</code> and update <code>maxProfit</code> if the potential profit is greater.
+5.  After iterating through all the prices, <code>maxProfit</code> will contain the final answer.</p>
+<p>This approach finds the optimal solution in a single pass. The time complexity is O(n) and the space complexity is O(1).</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;algorithm&gt;
+
+class Solution {
+public:
+    int maxProfit(std::vector&lt;int&gt;&amp; prices) {
+        // Handle empty or single-element case
+        if (prices.size() &lt; 2) {
+            return 0;
+        }
+
+        int minPrice = prices[0];
+        int maxProfit = 0;
+
+        for (int i = 1; i &lt; prices.size(); ++i) {
+            // If we find a new minimum price, update it
+            if (prices[i] &lt; minPrice) {
+                minPrice = prices[i];
+            } 
+            // Otherwise, check if selling today gives a better profit
+            else if (prices[i] - minPrice &gt; maxProfit) {
+                maxProfit = prices[i] - minPrice;
+            }
+        }
+        return maxProfit;
+    }
+};
+</code></pre>
+<hr />
+<h3>Pythonic solution for best approach</h3>
+<p>The optimal one-pass approach can be implemented concisely in Python. We iterate through the prices, continuously updating the lowest price seen (<code>min_price</code>) and the maximum profit possible (<code>max_profit</code>).</p>
+<pre><code class="language-python">import math
+
+class Solution:
+    def maxProfit(self, prices: list[int]) -&gt; int:
+        &quot;&quot;&quot;
+        Finds the maximum profit that can be achieved.
+
+        This function iterates through the list of stock prices once,
+        keeping track of the minimum price found so far and the maximum
+        profit that could have been achieved.
+        &quot;&quot;&quot;
+        # Initialize min_price to infinity and max_profit to 0
+        min_price = math.inf
+        max_profit = 0
+
+        # Iterate through each price in the list
+        for price in prices:
+            # If the current price is a new minimum, update min_price
+            if price &lt; min_price:
+                min_price = price
+            # Otherwise, calculate profit and update max_profit if it's a new maximum
+            elif price - min_price &gt; max_profit:
+                max_profit = price - min_price
+
+        return max_profit
+
+</code></pre></div>

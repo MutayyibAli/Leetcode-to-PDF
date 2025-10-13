@@ -1,0 +1,162 @@
+<div class='ai-explanation'><h3>List of Approaches</h3>
+<ol>
+<li>Brute Force Approach</li>
+<li>Auxiliary Arrays Approach</li>
+<li>Greedy Approach (Optimal)</li>
+</ol>
+<hr />
+<h3>1. Brute Force Approach</h3>
+<p>This method involves checking every possible triplet of indices <code>(i, j, k)</code> to see if they satisfy the conditions <code>i &lt; j &lt; k</code> and <code>nums[i] &lt; nums[j] &lt; nums[k]</code>.</p>
+<ol>
+<li>Use three nested loops to generate all possible triplets of indices <code>(i, j, k)</code> such that <code>i &lt; j &lt; k</code>.</li>
+<li>The outer loop iterates for the first element <code>i</code> from <code>0</code> to <code>n-3</code>.</li>
+<li>The middle loop iterates for the second element <code>j</code> from <code>i+1</code> to <code>n-2</code>.</li>
+<li>The inner loop iterates for the third element <code>k</code> from <code>j+1</code> to <code>n-1</code>.</li>
+<li>Inside the innermost loop, check if <code>nums[i] &lt; nums[j] &lt; nums[k]</code>. If this condition is met, we have found an increasing triplet, so we return <code>true</code>.</li>
+<li>If the loops complete without finding any such triplet, it means none exists, so we return <code>false</code>.</li>
+</ol>
+<p>This approach is simple to understand but inefficient for large inputs. The time complexity is O(n^3) and space complexity is O(1).</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;limits&gt;
+
+class Solution {
+public:
+    bool increasingTriplet(std::vector&lt;int&gt;&amp; nums) {
+        int n = nums.size();
+        if (n &lt; 3) {
+            return false;
+        }
+
+        for (int i = 0; i &lt; n - 2; ++i) {
+            for (int j = i + 1; j &lt; n - 1; ++j) {
+                for (int k = j + 1; k &lt; n; ++k) {
+                    if (nums[i] &lt; nums[j] &amp;&amp; nums[j] &lt; nums[k]) {
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
+};
+</code></pre>
+<hr />
+<h3>2. Auxiliary Arrays Approach</h3>
+<p>We can optimize the search by pre-calculating the minimum element to the left and the maximum element to the right for each position in the array. An element <code>nums[j]</code> can be the middle element of an increasing triplet if there is a smaller element before it and a larger element after it.</p>
+<ol>
+<li>Create an array <code>left_min</code> of the same size as <code>nums</code>. <code>left_min[i]</code> will store the minimum value in the subarray <code>nums[0...i]</code>. This can be computed in a single pass from left to right.</li>
+<li>Create an array <code>right_max</code> of the same size. <code>right_max[i]</code> will store the maximum value in the subarray <code>nums[i...n-1]</code>. This can be computed in a single pass from right to left.</li>
+<li>Iterate through the <code>nums</code> array from the second element to the second-to-last element (i.e., for index <code>j</code> from <code>1</code> to <code>n-2</code>).</li>
+<li>For each element <code>nums[j]</code>, check if <code>left_min[j-1] &lt; nums[j]</code> and <code>nums[j] &lt; right_max[j+1]</code>.</li>
+<li>If this condition is true for any <code>j</code>, it means we have found a valid triplet, and we can return <code>true</code>.</li>
+<li>If the loop finishes without finding such an element, return <code>false</code>.</li>
+</ol>
+<p>This approach improves the time complexity to O(n) at the cost of using extra space, making the space complexity O(n).</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;algorithm&gt; // For std::min and std::max
+
+class Solution {
+public:
+    bool increasingTriplet(std::vector&lt;int&gt;&amp; nums) {
+        int n = nums.size();
+        if (n &lt; 3) {
+            return false;
+        }
+
+        std::vector&lt;int&gt; left_min(n);
+        left_min[0] = nums[0];
+        for (int i = 1; i &lt; n; ++i) {
+            left_min[i] = std::min(left_min[i - 1], nums[i]);
+        }
+
+        std::vector&lt;int&gt; right_max(n);
+        right_max[n - 1] = nums[n - 1];
+        for (int i = n - 2; i &gt;= 0; --i) {
+            right_max[i] = std::max(right_max[i + 1], nums[i]);
+        }
+
+        for (int j = 1; j &lt; n - 1; ++j) {
+            if (left_min[j - 1] &lt; nums[j] &amp;&amp; nums[j] &lt; right_max[j + 1]) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+};
+</code></pre>
+<hr />
+<h3>3. Greedy Approach (Optimal)</h3>
+<p>This is the most efficient approach, achieving the desired O(n) time and O(1) space complexity. The idea is to maintain two numbers, <code>low</code> and <code>mid</code>, which represent the smallest and second smallest elements of a potential increasing subsequence found so far.</p>
+<ol>
+<li>Initialize two variables, <code>low</code> and <code>mid</code>, to the maximum possible integer value (<code>INT_MAX</code>). These will track the first and second elements of our potential triplet.</li>
+<li>Iterate through each number <code>num</code> in the input array.</li>
+<li>If <code>num</code> is less than or equal to <code>low</code>, we update <code>low</code> to <code>num</code>. This is because we've found a smaller potential first element for a new subsequence.</li>
+<li>If <code>num</code> is greater than <code>low</code> but less than or equal to <code>mid</code>, we update <code>mid</code> to <code>num</code>. This means we've found a better (smaller) candidate for the second element of the subsequence.</li>
+<li>If <code>num</code> is greater than <code>mid</code>, it means we have successfully found a number that is larger than both <code>low</code> and <code>mid</code>. Since <code>mid</code> could only have been updated after <code>low</code> was set, we are guaranteed that an element smaller than <code>mid</code> appeared earlier. Thus, we have found an increasing triplet (<code>low</code> &lt; <code>mid</code> &lt; <code>num</code>) and can return <code>true</code>.</li>
+<li>If the loop completes without the third condition ever being met, no increasing triplet exists, so we return <code>false</code>.</li>
+</ol>
+<p>The time complexity is O(n) as we traverse the array once, and the space complexity is O(1) as we only use two variables.</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;limits&gt;
+
+class Solution {
+public:
+    bool increasingTriplet(std::vector&lt;int&gt;&amp; nums) {
+        int n = nums.size();
+        if (n &lt; 3) {
+            return false;
+        }
+
+        int low = std::numeric_limits&lt;int&gt;::max();
+        int mid = std::numeric_limits&lt;int&gt;::max();
+
+        for (int num : nums) {
+            if (num &gt; mid) {
+                // We found a number greater than both low and mid
+                return true;
+            } else if (num &gt; low &amp;&amp; num &lt; mid) {
+                // Found a better candidate for the middle element
+                mid = num;
+            } else if (num &lt; low) {
+                // Found a new smallest number, a potential start of a new triplet
+                low = num;
+            }
+        }
+
+        return false;
+    }
+};
+</code></pre>
+<hr />
+<h3>Pythonic Solution (Best Approach)</h3>
+<p>The greedy approach is the most optimal. The Python solution uses <code>float('inf')</code> for initialization, which serves the same purpose as <code>INT_MAX</code> in C++. The logic is identical: it iterates through the array, maintaining two variables for the first and second elements of a potential subsequence, and returns <code>True</code> as soon as a third element is found.</p>
+<pre><code class="language-python">import math
+
+class Solution:
+    def increasingTriplet(self, nums: list[int]) -&gt; bool:
+        &quot;&quot;&quot;
+        Finds if an increasing triplet subsequence exists.
+
+        This solution uses a greedy approach with O(1) space. It maintains
+        two variables, `first` and `second`, to keep track of the smallest
+        and second-smallest numbers of a potential increasing subsequence.
+        &quot;&quot;&quot;
+
+        first = second = float('inf')
+
+        for n in nums:
+            if n &lt;= first:
+                # n is a new smallest number
+                first = n
+            elif n &lt;= second:
+                # n is a new second smallest number
+                second = n
+            else:
+                # We have found a number `n` such that first &lt; second &lt; n
+                return True
+
+        return False
+
+</code></pre></div>

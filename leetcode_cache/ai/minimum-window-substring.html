@@ -1,0 +1,212 @@
+<div class='ai-explanation'><h3>List of Approaches</h3>
+<ol>
+<li>Brute Force Approach</li>
+<li>Sliding Window Approach</li>
+</ol>
+<hr />
+<h3>1. Brute Force Approach</h3>
+<h4>Explanation</h4>
+<p>This approach involves checking every possible substring of <code>s</code> to see if it contains all the characters from <code>t</code>.</p>
+<ol>
+<li>First, create a frequency map of characters in the target string <code>t</code>. This map will tell us what characters and how many of each we need to find.</li>
+<li>Iterate through all possible starting positions (<code>i</code>) of a substring in <code>s</code>.</li>
+<li>For each starting position <code>i</code>, iterate through all possible ending positions (<code>j</code>) to form a substring <code>s[i...j]</code>.</li>
+<li>For each substring, create its own character frequency map.</li>
+<li>Compare the substring's frequency map with <code>t</code>'s frequency map. If the substring contains all the required characters (i.e., for every character in <code>t</code>'s map, its count is less than or equal to the count in the substring's map), it's a valid window.</li>
+<li>Keep track of the shortest valid window found so far.</li>
+<li>After checking all substrings, the shortest one found is the answer. If no valid window is found, return an empty string.</li>
+</ol>
+<p>This approach is very inefficient because it repeatedly scans substrings and recalculates frequency maps.
+<strong>Time Complexity: O(m^3)</strong>, where <code>m</code> is the length of <code>s</code>, due to nested loops for substrings and checking each substring. <strong>Space Complexity: O(k)</strong>, where <code>k</code> is the number of unique characters in the character set.</p>
+<h4>C++ Code Snippet</h4>
+<pre><code class="language-cpp">class Solution {
+private:
+    // Helper function to check if a window contains all characters of t
+    bool isValid(const std::string&amp; window, std::unordered_map&lt;char, int&gt;&amp; t_map) {
+        std::unordered_map&lt;char, int&gt; window_map;
+        for (char c : window) {
+            window_map[c]++;
+        }
+        for (auto const&amp; [key, val] : t_map) {
+            if (window_map.find(key) == window_map.end() || window_map[key] &lt; val) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+public:
+    string minWindow(string s, string t) {
+        if (t.length() &gt; s.length()) {
+            return &quot;&quot;;
+        }
+
+        std::unordered_map&lt;char, int&gt; t_map;
+        for (char c : t) {
+            t_map[c]++;
+        }
+
+        int min_len = INT_MAX;
+        std::string result = &quot;&quot;;
+
+        for (int i = 0; i &lt; s.length(); ++i) {
+            for (int j = i; j &lt; s.length(); ++j) {
+                std::string sub = s.substr(i, j - i + 1);
+
+                if (isValid(sub, t_map)) {
+                    if (sub.length() &lt; min_len) {
+                        min_len = sub.length();
+                        result = sub;
+                    }
+                }
+            }
+        }
+        return result;
+    }
+};
+</code></pre>
+<hr />
+<h3>2. Sliding Window Approach</h3>
+<h4>Explanation</h4>
+<p>This optimal approach uses two pointers, <code>begin</code> and <code>end</code>, to define a "sliding window" over the string <code>s</code>. The goal is to efficiently find the smallest window that satisfies the condition.</p>
+<ol>
+<li>
+<p><strong>Initialization:</strong></p>
+<ul>
+<li>Create a frequency map (an array <code>map</code> of size 128 for ASCII characters) for the string <code>t</code>.</li>
+<li>Initialize a <code>counter</code> to the length of <code>t</code>. This <code>counter</code> tracks how many characters from <code>t</code> are still needed in our current window.</li>
+<li>Set two pointers, <code>begin</code> and <code>end</code>, to 0.</li>
+<li>Initialize variables to store the result: <code>minLength</code> to a very large value and <code>head</code> to store the start index of the minimum window.</li>
+</ul>
+</li>
+<li>
+<p><strong>Expand Window:</strong></p>
+<ul>
+<li>Move the <code>end</code> pointer to the right, expanding the window one character at a time.</li>
+<li>For each character <code>s[end]</code>, decrement its count in the <code>map</code>.</li>
+<li>If the count of <code>s[end]</code> in the map was greater than 0 before decrementing, it means this character is one we need for <code>t</code>. So, decrement the <code>counter</code>.</li>
+</ul>
+</li>
+<li>
+<p><strong>Shrink Window:</strong></p>
+<ul>
+<li>When <code>counter</code> becomes 0, it signifies that the current window <code>s[begin...end]</code> contains all the required characters from <code>t</code>.</li>
+<li>Now, we try to shrink the window from the left by moving the <code>begin</code> pointer to the right.</li>
+<li>While <code>counter</code> is 0:<ul>
+<li>If the current window's length (<code>end - begin</code>) is smaller than <code>minLength</code>, update <code>minLength</code> and <code>head</code>.</li>
+<li>Consider the character <code>s[begin]</code>. Increment its count in the <code>map</code> as we are about to remove it from the window.</li>
+<li>If the count of <code>s[begin]</code> becomes greater than 0 after incrementing, it means we've just removed a character that is essential to satisfy the condition. Therefore, we increment <code>counter</code> to indicate that the window is no longer valid.</li>
+<li>Move the <code>begin</code> pointer one step to the right.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>Result:</strong></p>
+<ul>
+<li>Repeat the process of expanding and shrinking until the <code>end</code> pointer reaches the end of <code>s</code>.</li>
+<li>If <code>minLength</code> was never updated, it means no valid window was found; return an empty string. Otherwise, return the substring of <code>s</code> starting at <code>head</code> with length <code>minLength</code>.</li>
+</ul>
+</li>
+</ol>
+<p>This approach is efficient because each character in <code>s</code> is visited at most twice (once by the <code>end</code> pointer and once by the <code>begin</code> pointer).
+<strong>Time Complexity: O(m + n)</strong>, where <code>m</code> is the length of <code>s</code> and <code>n</code> is the length of <code>t</code>. <strong>Space Complexity: O(k)</strong>, where <code>k</code> is the number of unique characters in the character set (constant size, 128 in this case).</p>
+<h4>C++ Code Snippet</h4>
+<pre><code class="language-cpp">class Solution {
+public:
+    string minWindow(string s, string t) {
+        vector&lt;int&gt; map(128, 0);
+        for (char c : t) {
+            map[c]++;
+        }
+
+        int counter = t.size(), begin = 0, end = 0, minLength = INT_MAX, head = 0;
+
+        while (end &lt; s.size()) {
+            // If the character s[end] is needed, decrement counter
+            if (map[s[end++]]-- &gt; 0) {
+                counter--;
+            }
+
+            // When a valid window is found (counter == 0)
+            while (counter == 0) {
+                // Update the minimum window size if the current one is smaller
+                if (end - begin &lt; minLength) {
+                    head = begin;
+                    minLength = end - head;
+                }
+
+                // Try to shrink the window from the left.
+                // If the character s[begin] was essential, its count in map will become &gt; 0.
+                // This means the window is no longer valid, so we increment counter.
+                if (map[s[begin++]]++ == 0) {
+                    counter++;
+                }
+            }  
+        }
+
+        return minLength == INT_MAX ? &quot;&quot; : s.substr(head, minLength);
+    }
+};
+</code></pre>
+<hr />
+<h3>Pythonic Solution (Best Approach)</h3>
+<p>This solution uses <code>collections.Counter</code> for a more readable implementation of the frequency map and sliding window logic.</p>
+<pre><code class="language-python">import collections
+
+class Solution:
+    def minWindow(self, s: str, t: str) -&gt; str:
+        if not t or not s or len(s) &lt; len(t):
+            return &quot;&quot;
+
+        # Frequency map for characters in t
+        t_counts = collections.Counter(t)
+
+        # Number of unique characters in t we need to find
+        required = len(t_counts)
+
+        # `formed` tracks how many unique characters in t are satisfied by the window
+        formed = 0
+
+        # Frequency map for characters in the current window
+        window_counts = collections.defaultdict(int)
+
+        # Pointers for the sliding window and result storage
+        left, right = 0, 0
+        min_len = float('inf')
+        result_start_index = 0
+
+        while right &lt; len(s):
+            # Add one character from the right to the window
+            char = s[right]
+            window_counts[char] += 1
+
+            # If the character is in t and its count in the window matches the required count
+            if char in t_counts and window_counts[char] == t_counts[char]:
+                formed += 1
+
+            # Try to contract the window from the left once it's valid
+            while left &lt;= right and formed == required:
+                current_len = right - left + 1
+
+                # Update the answer if this window is smaller
+                if current_len &lt; min_len:
+                    min_len = current_len
+                    result_start_index = left
+
+                # Remove the character at the left of the window
+                left_char = s[left]
+                window_counts[left_char] -= 1
+
+                # If the removed character was required and its count is now insufficient
+                if left_char in t_counts and window_counts[left_char] &lt; t_counts[left_char]:
+                    formed -= 1
+
+                # Move the left pointer ahead to shrink the window
+                left += 1
+
+            # Expand the window
+            right += 1
+
+        return &quot;&quot; if min_len == float('inf') else s[result_start_index : result_start_index + min_len]
+</code></pre></div>

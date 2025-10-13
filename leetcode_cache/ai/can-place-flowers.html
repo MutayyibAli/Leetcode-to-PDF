@@ -1,0 +1,118 @@
+<div class='ai-explanation'><h3>List of approaches</h3>
+<ol>
+<li>Brute Force Approach</li>
+<li>Optimized Greedy Approach</li>
+</ol>
+<hr />
+<h3>Brute Force Approach</h3>
+<p>This approach simulates the process of planting flowers in a straightforward way. We create a copy of the flowerbed to avoid altering the original input. Then, we iterate through this copied flowerbed, and at each empty plot, we check if it's possible to plant a flower according to the rules. If we can, we "plant" a flower by changing the value in our copied array and increment a counter. Finally, after checking all plots, we compare our count of planted flowers with <code>n</code>.</p>
+<ol>
+<li>Create a copy of the <code>flowerbed</code> array to work with, let's call it <code>temp_bed</code>.</li>
+<li>Initialize a <code>count</code> of newly planted flowers to zero.</li>
+<li>Iterate through each plot <code>i</code> in <code>temp_bed</code>.</li>
+<li>For a plot to be a valid planting spot, it must be empty (<code>temp_bed[i] == 0</code>), and its immediate left and right neighbors must also be empty.<ul>
+<li>The left neighbor is considered empty if we are at the beginning of the array (<code>i == 0</code>) or if <code>temp_bed[i-1] == 0</code>.</li>
+<li>The right neighbor is considered empty if we are at the end of the array (<code>i == temp_bed.size() - 1</code>) or if <code>temp_bed[i+1] == 0</code>.</li>
+</ul>
+</li>
+<li>If the current plot <code>i</code> is a valid spot, place a flower by setting <code>temp_bed[i] = 1</code> and increment the <code>count</code>.</li>
+<li>After the loop finishes, compare the total <code>count</code> with <code>n</code>. If <code>count &gt;= n</code>, it's possible to plant <code>n</code> flowers, so return <code>true</code>. Otherwise, return <code>false</code>.</li>
+</ol>
+<p>This approach is less efficient as it uses extra space for the array copy and always iterates through the entire array. The time complexity is O(N) where N is the number of plots in the flowerbed, and the space complexity is O(N) for the copy of the array.</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;iostream&gt;
+
+class Solution {
+public:
+    bool canPlaceFlowers(std::vector&lt;int&gt;&amp; flowerbed, int n) {
+        if (n == 0) {
+            return true;
+        }
+
+        std::vector&lt;int&gt; temp_bed = flowerbed;
+        int count = 0;
+
+        for (int i = 0; i &lt; temp_bed.size(); ++i) {
+            if (temp_bed[i] == 0) {
+                // Check if left and right plots are empty
+                bool left_empty = (i == 0) || (temp_bed[i - 1] == 0);
+                bool right_empty = (i == temp_bed.size() - 1) || (temp_bed[i + 1] == 0);
+
+                if (left_empty &amp;&amp; right_empty) {
+                    temp_bed[i] = 1; // Plant the flower in the copied bed
+                    count++;
+                }
+            }
+        }
+
+        return count &gt;= n;
+    }
+};
+</code></pre>
+<hr />
+<h3>Optimized Greedy Approach</h3>
+<p>The problem can be solved greedily in a single pass. The optimal strategy is to plant a flower at the earliest possible spot. This choice doesn't prevent us from achieving a maximum number of planted flowers, because planting at index <code>i</code> only affects the availability of index <code>i+1</code>, and we are already past <code>i-1</code>. This approach modifies the input array in-place to save space and returns early as soon as <code>n</code> flowers are planted.</p>
+<ol>
+<li>First, handle the base case: if <code>n</code> is 0, we don't need to plant any flowers, so we can immediately return <code>true</code>.</li>
+<li>Iterate through the <code>flowerbed</code> array from the first plot to the last.</li>
+<li>At each plot <code>i</code>, check if it's a valid spot. The condition is the same as before: the plot itself must be empty (<code>flowerbed[i] == 0</code>), and its neighbors must be empty. The boundary conditions are handled by checking if <code>i</code> is at the start or end of the array.<ul>
+<li>The combined condition is <code>flowerbed[i] == 0 &amp;&amp; (i == 0 || flowerbed[i-1] == 0) &amp;&amp; (i == flowerbed.size()-1 || flowerbed[i+1] == 0)</code>.</li>
+</ul>
+</li>
+<li>If a valid spot is found:<ul>
+<li>Plant a flower by setting <code>flowerbed[i] = 1</code>. This greedily occupies the spot and updates the state for subsequent checks.</li>
+<li>Decrement <code>n</code> as we have successfully planted one flower.</li>
+<li>If <code>n</code> becomes 0, we have planted all the required flowers and can return <code>true</code> immediately, without checking the rest of the flowerbed.</li>
+</ul>
+</li>
+<li>If the loop completes and <code>n</code> is still greater than 0, it means we couldn't find enough spots. The final check <code>n &lt;= 0</code> or simply returning <code>false</code> at the end covers this.</li>
+</ol>
+<p>This approach is optimal as it uses a single pass and constant extra space. The time complexity is O(N) because we iterate through the flowerbed at most once, and the space complexity is O(1) as we modify the array in-place.</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+
+class Solution {
+public:
+    bool canPlaceFlowers(std::vector&lt;int&gt;&amp; flowerbed, int n) {
+        if (n == 0) {
+            return true;
+        }
+        for (int i = 0; i &lt; flowerbed.size(); i++) {
+            if (flowerbed[i] == 0 &amp;&amp; (i == 0 || flowerbed[i-1] == 0) &amp;&amp; (i == flowerbed.size()-1 || flowerbed[i+1] == 0)) {
+                flowerbed[i] = 1;
+                n--;
+                if (n == 0) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+};
+</code></pre>
+<hr />
+<h3>Pythonic Solution (Best Approach)</h3>
+<p>The optimized greedy approach is the most efficient. The Python solution below implements this logic concisely. It iterates through the <code>flowerbed</code>, and for each empty plot, it checks the adjacent plots to see if a flower can be planted. If so, it plants one, decrements <code>n</code>, and checks if the goal has been met.</p>
+<pre><code class="language-python">from typing import List
+
+class Solution:
+    def canPlaceFlowers(self, flowerbed: List[int], n: int) -&gt; bool:
+        if n == 0:
+            return True
+
+        for i in range(len(flowerbed)):
+            # Check if the current plot is empty
+            if flowerbed[i] == 0:
+                # Check if the previous plot is empty (or if it's the first plot)
+                prev_empty = (i == 0) or (flowerbed[i-1] == 0)
+                # Check if the next plot is empty (or if it's the last plot)
+                next_empty = (i == len(flowerbed)-1) or (flowerbed[i+1] == 0)
+
+                if prev_empty and next_empty:
+                    flowerbed[i] = 1
+                    n -= 1
+                    if n == 0:
+                        return True
+
+        return False
+
+</code></pre></div>

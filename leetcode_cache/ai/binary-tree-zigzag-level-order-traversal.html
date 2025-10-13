@@ -1,0 +1,252 @@
+<div class='ai-explanation'><h3>List of Approaches</h3>
+<ol>
+<li>Brute Force Approach (BFS + Reverse)</li>
+<li>Optimized BFS using a Deque for Level Results</li>
+<li>Optimized BFS with In-place Insertion (No Reverse)</li>
+</ol>
+<hr />
+<h3>Brute Force Approach (BFS + Reverse)</h3>
+<p>This approach performs a standard Breadth-First Search (BFS) or level order traversal. For each level, we gather all node values in a temporary list. After processing the entire level, we check if it's a level that requires right-to-left ordering (e.g., level 1, 3, 5...). If so, we reverse the temporary list before adding it to our final result. A boolean flag or the level index can be used to track the direction.</p>
+<ol>
+<li>Initialize an empty list <code>result</code> and a queue with the <code>root</code> node.</li>
+<li>Use a boolean flag <code>leftToRight</code>, initially <code>true</code>.</li>
+<li>Loop while the queue is not empty. In each iteration, we process one level.</li>
+<li>Get the number of nodes in the current level (<code>levelSize</code>).</li>
+<li>Create a temporary list <code>currentLevel</code> to store node values.</li>
+<li>Iterate <code>levelSize</code> times: dequeue a node, add its value to <code>currentLevel</code>, and enqueue its children.</li>
+<li>After the loop, if <code>leftToRight</code> is <code>false</code>, reverse <code>currentLevel</code>.</li>
+<li>Add <code>currentLevel</code> to <code>result</code> and flip the <code>leftToRight</code> flag for the next level.</li>
+</ol>
+<p>This method has a time complexity of O(N), where N is the number of nodes, as each node is visited once and the total cost of reversing all levels is also O(N). The space complexity is O(W) for the queue, where W is the maximum width of the tree, which can be up to O(N) in the worst case.</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;queue&gt;
+#include &lt;algorithm&gt;
+
+// Definition for a binary tree node.
+struct TreeNode {
+    int val;
+    TreeNode *left;
+    TreeNode *right;
+    TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+};
+
+class Solution {
+public:
+    std::vector&lt;std::vector&lt;int&gt;&gt; zigzagLevelOrder(TreeNode* root) {
+        if (!root) {
+            return {};
+        }
+
+        std::vector&lt;std::vector&lt;int&gt;&gt; result;
+        std::queue&lt;TreeNode*&gt; q;
+        q.push(root);
+        bool leftToRight = true;
+
+        while (!q.empty()) {
+            int levelSize = q.size();
+            std::vector&lt;int&gt; currentLevel;
+            for (int i = 0; i &lt; levelSize; ++i) {
+                TreeNode* node = q.front();
+                q.pop();
+                currentLevel.push_back(node-&gt;val);
+
+                if (node-&gt;left) {
+                    q.push(node-&gt;left);
+                }
+                if (node-&gt;right) {
+                    q.push(node-&gt;right);
+                }
+            }
+
+            if (!leftToRight) {
+                std::reverse(currentLevel.begin(), currentLevel.end());
+            }
+
+            result.push_back(currentLevel);
+            leftToRight = !leftToRight;
+        }
+        return result;
+    }
+};
+</code></pre>
+<hr />
+<h3>Optimized BFS using a Deque for Level Results</h3>
+<p>This approach also uses a standard BFS queue for traversing the tree's nodes but avoids the explicit <code>reverse</code> operation. It builds each level's result list using a double-ended queue (deque). Depending on the traversal direction, new values are added to either the front or the back of the deque, ensuring the correct order from the start.</p>
+<ol>
+<li>Initialize an empty list <code>result</code> and a queue with the <code>root</code> node.</li>
+<li>Use a boolean flag <code>leftToRight</code>, initially <code>true</code>.</li>
+<li>Loop while the node queue is not empty.</li>
+<li>For each level, create a <code>deque&lt;int&gt;</code> to store values for that level.</li>
+<li>Process all nodes in the current level. For each node:<ul>
+<li>If <code>leftToRight</code> is <code>true</code>, add its value to the <strong>back</strong> of the deque.</li>
+<li>If <code>leftToRight</code> is <code>false</code>, add its value to the <strong>front</strong> of the deque.</li>
+<li>Add the node's children to the main traversal queue.</li>
+</ul>
+</li>
+<li>After the level is processed, convert the value deque to a vector and add it to the <code>result</code>.</li>
+<li>Flip the <code>leftToRight</code> flag.</li>
+</ol>
+<p>The time complexity is O(N) since each node is processed exactly once. The space complexity is O(W) for the queue, where W is the maximum width of the tree.</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;queue&gt;
+#include &lt;deque&gt;
+
+// Definition for a binary tree node.
+struct TreeNode {
+    int val;
+    TreeNode *left;
+    TreeNode *right;
+    TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+};
+
+class Solution {
+public:
+    std::vector&lt;std::vector&lt;int&gt;&gt; zigzagLevelOrder(TreeNode* root) {
+        if (!root) {
+            return {};
+        }
+
+        std::vector&lt;std::vector&lt;int&gt;&gt; result;
+        std::queue&lt;TreeNode*&gt; nodesQueue;
+        nodesQueue.push(root);
+        bool leftToRight = true;
+
+        while (!nodesQueue.empty()) {
+            int size = nodesQueue.size();
+            std::deque&lt;int&gt; levelDeque;
+            for (int i = 0; i &lt; size; i++) {
+                TreeNode* node = nodesQueue.front();
+                nodesQueue.pop();
+
+                if (leftToRight) {
+                    levelDeque.push_back(node-&gt;val);
+                } else {
+                    levelDeque.push_front(node-&gt;val);
+                }
+
+                if (node-&gt;left) {
+                    nodesQueue.push(node-&gt;left);
+                }
+                if (node-&gt;right) {
+                    nodesQueue.push(node-&gt;right);
+                }
+            }
+            result.push_back(std::vector&lt;int&gt;(levelDeque.begin(), levelDeque.end()));
+            leftToRight = !leftToRight;
+        }
+        return result;
+    }
+};
+</code></pre>
+<hr />
+<h3>Optimized BFS with In-place Insertion (No Reverse)</h3>
+<p>This is the most efficient and elegant approach. It uses a standard BFS queue but cleverly determines the correct position to insert a node's value into the level's result list. This avoids both the overhead of reversing a list and the use of a second deque data structure.</p>
+<ol>
+<li>Initialize an empty list <code>result</code> and a queue with the <code>root</code> node.</li>
+<li>Use a boolean flag <code>leftToRight</code>, initially <code>true</code>.</li>
+<li>Loop while the queue is not empty.</li>
+<li>Before processing the level, get the current queue <code>size</code>.</li>
+<li>Create a vector <code>row</code> for the current level and pre-allocate its size to <code>size</code>.</li>
+<li>Iterate from <code>i = 0</code> to <code>size - 1</code>:<ul>
+<li>Dequeue a node.</li>
+<li>Calculate the insertion index. If <code>leftToRight</code> is <code>true</code>, the index is <code>i</code>. Otherwise, it's <code>size - 1 - i</code>.</li>
+<li>Place the node's value at this <code>index</code> in the <code>row</code> vector.</li>
+<li>Enqueue the node's children.</li>
+</ul>
+</li>
+<li>After the loop, add the perfectly ordered <code>row</code> to the <code>result</code> and flip the <code>leftToRight</code> flag.</li>
+</ol>
+<p>The time complexity is O(N) as each node is visited once. The space complexity is O(W) for the queue, where W is the maximum width of the tree.</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;queue&gt;
+
+// Definition for a binary tree node.
+struct TreeNode {
+    int val;
+    TreeNode *left;
+    TreeNode *right;
+    TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+};
+
+class Solution {
+public:
+    std::vector&lt;std::vector&lt;int&gt;&gt; zigzagLevelOrder(TreeNode* root) {
+        if (root == NULL) {
+            return std::vector&lt;std::vector&lt;int&gt;&gt;();
+        }
+        std::vector&lt;std::vector&lt;int&gt;&gt; result;
+
+        std::queue&lt;TreeNode*&gt; nodesQueue;
+        nodesQueue.push(root);
+        bool leftToRight = true;
+
+        while (!nodesQueue.empty()) {
+            int size = nodesQueue.size();
+            std::vector&lt;int&gt; row(size);
+            for (int i = 0; i &lt; size; i++) {
+                TreeNode* node = nodesQueue.front();
+                nodesQueue.pop();
+
+                // Find position to fill node's value
+                int index = (leftToRight) ? i : (size - 1 - i);
+
+                row[index] = node-&gt;val;
+                if (node-&gt;left) {
+                    nodesQueue.push(node-&gt;left);
+                }
+                if (node-&gt;right) {
+                    nodesQueue.push(node-&gt;right);
+                }
+            }
+            // After this level
+            leftToRight = !leftToRight;
+            result.push_back(row);
+        }
+        return result;
+    }
+};
+</code></pre>
+<hr />
+<h3>Pythonic Solution (Best Approach)</h3>
+<p>The best approach is the Optimized BFS with In-place Insertion. The Python solution below implements this efficiently using <code>collections.deque</code> for the BFS queue and a pre-initialized list for each level's results, placing values at the correct index based on the traversal direction.</p>
+<pre><code class="language-python">import collections
+from typing import List, Optional
+
+# Definition for a binary tree node.
+class TreeNode:
+    def __init__(self, val=0, left=None, right=None):
+        self.val = val
+        self.left = left
+        self.right = right
+
+class Solution:
+    def zigzagLevelOrder(self, root: Optional[TreeNode]) -&gt; List[List[int]]:
+        if not root:
+            return []
+
+        queue = collections.deque([root])
+        result = []
+        left_to_right = True
+
+        while queue:
+            level_size = len(queue)
+            current_level = [0] * level_size
+
+            for i in range(level_size):
+                node = queue.popleft()
+
+                # Determine index for insertion based on direction
+                index = i if left_to_right else level_size - 1 - i
+                current_level[index] = node.val
+
+                if node.left:
+                    queue.append(node.left)
+                if node.right:
+                    queue.append(node.right)
+
+            result.append(current_level)
+            # Flip direction for the next level
+            left_to_right = not left_to_right
+
+        return result
+</code></pre></div>

@@ -1,0 +1,152 @@
+<div class='ai-explanation'><h3>List of Approaches</h3>
+<ol>
+<li>Brute Force Approach</li>
+<li>Binary Search Approach</li>
+<li>Newton's Method Approach</li>
+</ol>
+<hr />
+<h3>Brute Force Approach</h3>
+<p>This approach involves a linear scan from 1 up to <code>x</code>. We check the square of each number <code>i</code> and see if it exceeds <code>x</code>. The integer square root will be the number <code>i-1</code> right before the square <code>i*i</code> becomes larger than <code>x</code>.</p>
+<p><strong>Step-by-step Explanation:</strong>
+1. Handle the edge case where <code>x</code> is 0, returning 0.
+2. Iterate with a number <code>i</code> starting from 1. To prevent integer overflow when calculating <code>i*i</code> for large <code>x</code>, we use a <code>long long</code> type for <code>i</code>.
+3. In each iteration, check if <code>i * i &gt; x</code>.
+4. If it is, <code>i</code> is too large, meaning the previous integer <code>i-1</code> is the largest integer whose square is not greater than <code>x</code>. We return <code>i-1</code>.
+5. If the loop completes (which only happens if <code>x=1</code> in this specific setup, but is a good general practice), it means <code>x</code> itself is the square root. However, the check inside the loop will handle all cases.</p>
+<p>This method is simple to understand but inefficient for large values of <code>x</code>, as it may require up to <code>sqrt(x)</code> iterations. Its time complexity is O(&#8730;x) and space complexity is O(1).</p>
+<pre><code class="language-cpp">#include &lt;iostream&gt;
+
+class Solution {
+public:
+    int mySqrt(int x) {
+        if (x == 0) {
+            return 0;
+        }
+        for (long long i = 1; i &lt;= x; ++i) {
+            if (i * i &gt; x) {
+                return i - 1;
+            }
+        }
+        return 1; // Should not be reached for x &gt; 0 due to the loop condition and check
+    }
+};
+</code></pre>
+<hr />
+<h3>Binary Search Approach</h3>
+<p>This is a much more efficient approach that leverages the sorted nature of numbers. The integer square root of <code>x</code> must lie in the range <code>[0, x]</code>. We can use binary search to find the largest integer <code>m</code> such that <code>m*m &lt;= x</code> in logarithmic time.</p>
+<p><strong>Step-by-step Explanation:</strong>
+1. Handle the base cases: if <code>x</code> is 0 or 1, return <code>x</code>.
+2. Initialize the search space with <code>start = 1</code> and <code>end = x</code>.
+3. Loop as long as <code>start &lt;= end</code>.
+4. Calculate the middle element <code>mid = start + (end - start) / 2</code>. This formula prevents potential integer overflow.
+5. To avoid overflow when checking <code>mid * mid</code>, we can use division: <code>mid &gt; x / mid</code>. This is equivalent to <code>mid * mid &gt; x</code>.
+6.  - If <code>mid &gt; x / mid</code>, it means <code>mid</code> is too large. We need to search in the lower half, so we set <code>end = mid - 1</code>.
+7.  - If <code>mid &lt;= x / mid</code>, <code>mid</code> is a potential candidate for the square root. We should try to find a larger value, so we search in the upper half by setting <code>start = mid + 1</code>. We can add an early exit condition if <code>mid == x / mid</code>, in which case <code>mid</code> is the perfect square root.
+8. When the loop terminates (<code>start &gt; end</code>), <code>end</code> will hold the integer part of the square root.</p>
+<p>This approach significantly reduces the search space in each step, resulting in a time complexity of O(log x) and a space complexity of O(1).</p>
+<pre><code class="language-cpp">#include &lt;iostream&gt;
+
+class Solution {
+public:
+    int mySqrt(int x) {
+        if (x == 0) {
+            return 0;
+        }
+        int start = 1, end = x;
+        while (start &lt;= end) {
+            int mid = start + (end - start) / 2;
+            if (mid &gt; x / mid) {
+                end = mid - 1;
+            } else {
+                if ((mid + 1) &gt; x / (mid + 1)) {
+                    return mid;
+                }
+                start = mid + 1;
+            }
+        }
+        return end;
+    }
+};
+</code></pre>
+<p><em>Note: A slightly cleaner implementation is also common:</em></p>
+<pre><code class="language-cpp">class Solution {
+public:
+    int mySqrt(int x) {
+        if (x == 0) return x;
+        int start = 1, end = x;
+        while (start &lt;= end) {
+            int mid = start + (end - start) / 2;
+            if (mid == x / mid) {
+                return mid;
+            } else if (mid &gt; x / mid) {
+                end = mid - 1;
+            } else {
+                start = mid + 1;
+            }
+        }
+        return end;
+    }
+};
+</code></pre>
+<hr />
+<h3>Newton's Method Approach</h3>
+<p>This is a mathematical approach for finding the roots of a function. To find <code>sqrt(x)</code>, we can find the root of the function <code>f(r) = r^2 - x</code>. Newton's method provides an iterative formula to approximate the root: <code>r_next = (r + x/r) / 2</code>. We start with an initial guess and repeatedly apply this formula until the result converges.</p>
+<p><strong>Step-by-step Explanation:</strong>
+1. Handle the base case for <code>x=0</code>.
+2. Start with an initial guess for the root. A simple and safe choice is <code>r = x</code>. We use <code>long long</code> for <code>r</code> to avoid overflow during intermediate calculations.
+3. Iteratively refine the guess using the formula <code>r = (r + x / r) / 2</code>.
+4. The loop continues as long as <code>r * r &gt; x</code>.
+5. Once <code>r * r &lt;= x</code>, the value of <code>r</code> has converged to the integer square root of <code>x</code>. We can then return <code>r</code>.</p>
+<p>This method converges very quickly (quadratically), making it extremely efficient. The time complexity is effectively O(log x) with a very small constant factor, and the space complexity is O(1).</p>
+<pre><code class="language-cpp">#include &lt;iostream&gt;
+
+class Solution {
+public:
+    int mySqrt(int x) {
+        if (x == 0) {
+            return 0;
+        }
+        long long r = x;
+        while (r * r &gt; x) {
+            r = (r + x / r) / 2;
+        }
+        return r;
+    }
+};
+</code></pre>
+<hr />
+<h3>Pythonic Solution (Binary Search)</h3>
+<p>The Binary Search approach is the most balanced solution in terms of performance, simplicity, and robustness against edge cases, making it ideal for interview settings.</p>
+<pre><code class="language-python">class Solution:
+    def mySqrt(self, x: int) -&gt; int:
+        &quot;&quot;&quot;
+        Computes the integer square root of x using binary search.
+        &quot;&quot;&quot;
+        if x &lt; 2:
+            return x
+
+        # Set up the search range for the square root
+        left, right = 2, x // 2
+
+        while left &lt;= right:
+            # Calculate the mid-point
+            mid = left + (right - left) // 2
+
+            # Calculate the square of mid
+            num = mid * mid
+
+            if num &gt; x:
+                # If square is too big, search in the left half
+                right = mid - 1
+            elif num &lt; x:
+                # If square is too small, search in the right half
+                left = mid + 1
+            else:
+                # Found the perfect square
+                return mid
+
+        # The loop ends when left &gt; right. 
+        # 'right' will be the floor of the square root.
+        return right
+
+</code></pre></div>

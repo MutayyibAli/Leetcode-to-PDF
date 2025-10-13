@@ -1,0 +1,197 @@
+<div class='ai-explanation'><h3>List of Approaches</h3>
+<ol>
+<li>Brute Force Approach</li>
+<li>In-Order Traversal with Extra Space</li>
+<li>In-Order Traversal (Space Optimized)</li>
+</ol>
+<hr />
+<h3>1. Brute Force Approach</h3>
+<h4>Explanation</h4>
+<p>This straightforward approach ignores the properties of a Binary Search Tree. We first traverse the entire tree (using any method like DFS or BFS) and store all the node values in a list. Then, we use a pair of nested loops to iterate through every possible pair of values in the list, calculating the absolute difference for each pair and keeping track of the minimum difference found.</p>
+<ol>
+<li>Create an empty list to store node values.</li>
+<li>Traverse the tree and add each node's value to the list.</li>
+<li>Initialize a variable <code>min_diff</code> to a very large value.</li>
+<li>Use two nested loops to consider every unique pair of values <code>(val1, val2)</code> from the list.</li>
+<li>For each pair, update <code>min_diff = min(min_diff, abs(val1 - val2))</code>.</li>
+<li>After checking all pairs, <code>min_diff</code> will hold the minimum absolute difference.</li>
+</ol>
+<p>This approach is simple to understand but inefficient for large trees due to the O(N²) comparison step. The time complexity is O(N²) and the space complexity is O(N) to store the node values.</p>
+<h4>C++ Code</h4>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;algorithm&gt;
+#include &lt;climits&gt;
+
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    void getAllValues(TreeNode* root, std::vector&lt;int&gt;&amp; values) {
+        if (!root) return;
+        values.push_back(root-&gt;val);
+        getAllValues(root-&gt;left, values);
+        getAllValues(root-&gt;right, values);
+    }
+
+    int getMinimumDifference(TreeNode* root) {
+        std::vector&lt;int&gt; values;
+        getAllValues(root, values);
+
+        int minDiff = INT_MAX;
+        for (size_t i = 0; i &lt; values.size(); ++i) {
+            for (size_t j = i + 1; j &lt; values.size(); ++j) {
+                minDiff = std::min(minDiff, std::abs(values[i] - values[j]));
+            }
+        }
+        return minDiff;
+    }
+};
+</code></pre>
+<hr />
+<h3>2. In-Order Traversal with Extra Space</h3>
+<h4>Explanation</h4>
+<p>This approach leverages a key property of a BST: an in-order traversal visits the nodes in ascending sorted order. The minimum difference between any two numbers in a sorted list will always occur between two adjacent elements.</p>
+<ol>
+<li>Create an empty list to store the sorted node values.</li>
+<li>Perform an in-order traversal of the BST. During the traversal, add each node's value to the list. This will result in a sorted list of all values.</li>
+<li>Initialize a variable <code>min_diff</code> to a very large value.</li>
+<li>Iterate through the sorted list from the second element to the end.</li>
+<li>In each iteration, calculate the difference between the current element and the previous element. Update <code>min_diff</code> with the minimum difference found.</li>
+<li>Return <code>min_diff</code>.</li>
+</ol>
+<p>This approach is much more efficient than the brute force method because it avoids the O(N²) comparisons. The time complexity is O(N) for the traversal and linear scan, and the space complexity is O(N) to store the sorted values.</p>
+<h4>C++ Code</h4>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;algorithm&gt;
+#include &lt;climits&gt;
+
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    void inorderTraversal(TreeNode* root, std::vector&lt;int&gt;&amp; sortedValues) {
+        if (!root) return;
+        inorderTraversal(root-&gt;left, sortedValues);
+        sortedValues.push_back(root-&gt;val);
+        inorderTraversal(root-&gt;right, sortedValues);
+    }
+
+    int getMinimumDifference(TreeNode* root) {
+        std::vector&lt;int&gt; sortedValues;
+        inorderTraversal(root, sortedValues);
+
+        int minDiff = INT_MAX;
+        for (size_t i = 1; i &lt; sortedValues.size(); ++i) {
+            minDiff = std::min(minDiff, sortedValues[i] - sortedValues[i - 1]);
+        }
+        return minDiff;
+    }
+};
+</code></pre>
+<hr />
+<h3>3. In-Order Traversal (Space Optimized)</h3>
+<h4>Explanation</h4>
+<p>This is the optimal approach. It builds upon the in-order traversal idea but optimizes space by not storing all the node values. As we traverse the tree in-order, we only need to remember the value of the immediately preceding node to calculate the difference.</p>
+<ol>
+<li>Initialize <code>min_diff</code> to a very large value and a <code>prev_node</code> pointer to <code>nullptr</code>.</li>
+<li>Define a recursive helper function for in-order traversal.</li>
+<li>Inside the recursive function:
+    a. First, recurse on the left child.
+    b. Then, process the current node. If <code>prev_node</code> is not <code>nullptr</code>, calculate the difference between the current node's value and <code>prev_node</code>'s value. Update <code>min_diff</code> if this difference is smaller.
+    c. Update <code>prev_node</code> to be the current node.
+    d. Finally, recurse on the right child.</li>
+<li>Start the traversal from the root node. The final value of <code>min_diff</code> is the answer.</li>
+</ol>
+<p>This method still visits every node once, so the time complexity is O(N). The space complexity is determined by the depth of the recursion stack, which is O(H) where H is the height of the tree.</p>
+<h4>C++ Code</h4>
+<pre><code class="language-cpp">#include &lt;algorithm&gt;
+#include &lt;climits&gt;
+
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    int min_diff = INT_MAX;
+    TreeNode* prev_node = nullptr;
+
+    void inorder(TreeNode* root) {
+        if (root == nullptr) {
+            return;
+        }
+
+        inorder(root-&gt;left);
+
+        if (prev_node != nullptr) {
+            min_diff = std::min(min_diff, root-&gt;val - prev_node-&gt;val);
+        }
+        prev_node = root;
+
+        inorder(root-&gt;right);
+    }
+
+    int getMinimumDifference(TreeNode* root) {
+        inorder(root);
+        return min_diff;
+    }
+};
+</code></pre>
+<hr />
+<h3>Pythonic Solution (Best Approach)</h3>
+<p>This Python solution implements the space-optimized in-order traversal. A nested function <code>inorder</code> is used, and the <code>nonlocal</code> keyword allows it to modify the <code>min_diff</code> and <code>prev_val</code> variables defined in the outer scope. This avoids using class attributes (<code>self</code>) for state management, leading to a clean and functional style.</p>
+<pre><code class="language-python"># Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+class Solution:
+    def getMinimumDifference(self, root: Optional[TreeNode]) -&gt; int:
+        min_diff = float('inf')
+        prev_val = None
+
+        def inorder(node):
+            nonlocal min_diff, prev_val
+            if not node:
+                return
+
+            # Traverse left subtree
+            inorder(node.left)
+
+            # Process current node (the &quot;in&quot; part of in-order)
+            if prev_val is not None:
+                min_diff = min(min_diff, node.val - prev_val)
+            prev_val = node.val
+
+            # Traverse right subtree
+            inorder(node.right)
+
+        inorder(root)
+        return min_diff
+</code></pre></div>

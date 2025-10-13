@@ -1,0 +1,141 @@
+<div class='ai-explanation'><h3>List of Approaches</h3>
+<ol>
+<li>Brute Force Approach (Using Bitmasking)</li>
+<li>Backtracking Approach</li>
+</ol>
+<hr />
+<h3>Brute Force Approach (Using Bitmasking)</h3>
+<p>This approach iterates through every possible subset of numbers from 1 to 9. For each subset, it checks if it meets the two required conditions: its size is exactly <code>k</code>, and the sum of its elements is equal to <code>n</code>. Bitmasking is a convenient way to generate all subsets. A number <code>mask</code> from <code>0</code> to <code>2^9 - 1</code> can represent a subset, where the <code>j</code>-th bit being set means the number <code>j+1</code> is included in the subset.</p>
+<h4>Steps:</h4>
+<ol>
+<li>Initialize an empty list <code>result</code> to store the valid combinations.</li>
+<li>Loop a variable <code>mask</code> from <code>0</code> to <code>(1 &lt;&lt; 9) - 1</code>. Each <code>mask</code> represents a unique subset of the numbers {1, 2, ..., 9}.</li>
+<li>Inside the loop, for each <code>mask</code>:
+    a. Create a temporary list <code>current_combination</code> and initialize <code>current_sum</code> to 0.
+    b. Iterate from <code>j = 0</code> to <code>8</code>. If the <code>j</code>-th bit is set in <code>mask</code>, it means the number <code>j+1</code> is in the current subset.
+    c. Add <code>j+1</code> to <code>current_combination</code> and to <code>current_sum</code>.</li>
+<li>After building the subset, check if <code>current_combination.size()</code> is equal to <code>k</code> and <code>current_sum</code> is equal to <code>n</code>.</li>
+<li>If both conditions are true, add <code>current_combination</code> to the <code>result</code> list.</li>
+<li>After the loop finishes, return the <code>result</code> list.</li>
+</ol>
+<p>This approach is simple to understand but inefficient as it checks all <code>512</code> subsets, regardless of the values of <code>k</code> and <code>n</code>. Its time complexity is constant <code>O(1)</code> because the input size is fixed to 9 numbers, but it's much slower than backtracking for this specific problem.</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;numeric&gt;
+
+class Solution {
+public:
+    std::vector&lt;std::vector&lt;int&gt;&gt; combinationSum3(int k, int n) {
+        std::vector&lt;std::vector&lt;int&gt;&gt; result;
+        // Iterate through all 2^9 = 512 possible subsets
+        for (int i = 0; i &lt; (1 &lt;&lt; 9); ++i) {
+            std::vector&lt;int&gt; current_combination;
+            int current_sum = 0;
+
+            // Build the subset based on the bits of i
+            for (int j = 0; j &lt; 9; ++j) {
+                // If the j-th bit is set, include number (j+1)
+                if ((i &gt;&gt; j) &amp; 1) {
+                    current_combination.push_back(j + 1);
+                    current_sum += (j + 1);
+                }
+            }
+
+            // Check if the generated combination meets the criteria
+            if (current_combination.size() == k &amp;&amp; current_sum == n) {
+                result.push_back(current_combination);
+            }
+        }
+        return result;
+    }
+};
+</code></pre>
+<p><strong>Time Complexity:</strong> O(2<sup>9</sup> * 9) which is constant time, but explores many unnecessary states.
+<strong>Space Complexity:</strong> O(k) to store the current combination.</p>
+<hr />
+<h3>Backtracking Approach</h3>
+<p>This is a much more efficient approach that builds combinations recursively. It explores potential candidates (numbers 1-9) one by one and abandons a path (backtracks) as soon as it determines that the path cannot lead to a valid solution. This pruning of the search space makes it significantly faster than the brute-force method.</p>
+<h4>Steps:</h4>
+<ol>
+<li>Define a recursive helper function, say <code>findCombinations</code>, that takes the following parameters: the remaining number of elements to find (<code>k</code>), the remaining sum needed (<code>n</code>), a starting number for the current search (<code>start</code>), and the combination built so far (<code>current_combination</code>).</li>
+<li><strong>Base Cases</strong> for the recursion:
+    a. If the <code>current_combination</code> has <code>k</code> numbers and the <code>n</code> (remaining sum) is <code>0</code>, a valid combination has been found. Add a copy of <code>current_combination</code> to the final result list and return.
+    b. If <code>n</code> becomes negative or the size of <code>current_combination</code> exceeds <code>k</code>, this path is invalid, so stop exploring and return.</li>
+<li><strong>Recursive Step</strong>:
+    a. Iterate through numbers from <code>start</code> to <code>9</code>. The <code>start</code> parameter ensures that we only consider numbers greater than the previously chosen one, which prevents duplicate combinations (e.g., <code>[1,2,4]</code> but not <code>[2,1,4]</code>) and ensures numbers are used at most once.
+    b. In each iteration for a number <code>i</code>:
+        i. <strong>Choose</strong>: Add <code>i</code> to <code>current_combination</code>.
+        ii. <strong>Explore</strong>: Make a recursive call: <code>findCombinations(k, n - i, i + 1, current_combination)</code>.
+        iii. <strong>Un-choose (Backtrack)</strong>: Remove <code>i</code> from <code>current_combination</code> to explore other possibilities for the current position.</li>
+<li>Initial call to the function will be <code>findCombinations(k, n, 1, [])</code>.</li>
+</ol>
+<p>This method intelligently constructs only valid or potentially valid paths, avoiding the exhaustive search of the brute-force approach.</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+
+class Solution {
+public:
+    std::vector&lt;std::vector&lt;int&gt;&gt; combinationSum3(int k, int n) {
+        std::vector&lt;std::vector&lt;int&gt;&gt; result;
+        std::vector&lt;int&gt; current_combination;
+        findCombinations(k, n, 1, current_combination, result);
+        return result;
+    }
+
+private:
+    void findCombinations(int k, int n, int start, std::vector&lt;int&gt;&amp; current_combination, std::vector&lt;std::vector&lt;int&gt;&gt;&amp; result) {
+        // Pruning: if remaining sum is negative or we have too many numbers
+        if (n &lt; 0 || current_combination.size() &gt; k) {
+            return;
+        }
+
+        // Base case: a valid combination is found
+        if (n == 0 &amp;&amp; current_combination.size() == k) {
+            result.push_back(current_combination);
+            return;
+        }
+
+        // Explore further combinations
+        for (int i = start; i &lt;= 9; ++i) {
+            // Choose the number i
+            current_combination.push_back(i);
+
+            // Explore the next state
+            findCombinations(k, n - i, i + 1, current_combination, result);
+
+            // Un-choose (backtrack)
+            current_combination.pop_back();
+        }
+    }
+};
+</code></pre>
+<p><strong>Time Complexity:</strong> O(C(9, k) * k), where C(9, k) is the number of combinations. In the worst case, we explore every combination of size <code>k</code>, and copying each valid combination to the result takes <code>O(k)</code> time.
+<strong>Space Complexity:</strong> O(k) for the recursion depth and to store the current combination.</p>
+<hr />
+<h3>Pythonic Solution (Best Approach)</h3>
+<p>The backtracking approach is the most optimal. The Python solution below implements this concisely using a helper (DFS) function. Passing <code>nums[i+1:]</code> in the recursive call elegantly handles the requirement of using larger numbers in subsequent steps, thus avoiding duplicates.</p>
+<pre><code class="language-python">class Solution:
+    def combinationSum3(self, k: int, n: int) -&gt; list[list[int]]:
+        result = []
+
+        def dfs(remaining_k, remaining_n, start_num, path):
+            # Pruning: if we've gone too far
+            if remaining_n &lt; 0 or remaining_k &lt; 0:
+                return
+
+            # Base case: valid combination found
+            if remaining_n == 0 and remaining_k == 0:
+                result.append(list(path))
+                return
+
+            # Explore numbers from start_num to 9
+            for i in range(start_num, 10):
+                # Choose
+                path.append(i)
+                # Explore
+                dfs(remaining_k - 1, remaining_n - i, i + 1, path)
+                # Un-choose (backtrack)
+                path.pop()
+
+        dfs(k, n, 1, [])
+        return result
+
+</code></pre></div>

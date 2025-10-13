@@ -1,0 +1,214 @@
+<div class='ai-explanation'><h3>List of Approaches:</h3>
+<ol>
+<li>Brute Force Approach</li>
+<li>Recursive Approach (DFS)</li>
+<li>Iterative Approach using a Queue (BFS)</li>
+</ol>
+<hr />
+<h3>1. Brute Force Approach</h3>
+<p>This approach involves two main steps. First, we determine the total height of the tree. Then, we iterate from level 1 up to the height, and for each level, we traverse the entire tree from the root to find and collect all the nodes residing at that particular level. This is inefficient because we traverse parts of the tree multiple times.</p>
+<p><strong>Step-by-step explanation:</strong>
+1.  Handle the base case: If the root is <code>null</code>, return an empty list.
+2.  Create a helper function <code>height()</code> to calculate the maximum depth of the tree. This tells us how many levels we need to iterate through.
+3.  Create another helper function, <code>collectNodes(node, level)</code>, which recursively traverses the tree to find all nodes at the given <code>level</code>.
+4.  The main function iterates from <code>i = 1</code> to <code>height</code>. In each iteration, it calls <code>collectNodes(root, i)</code> to get a list of node values for the current level and adds this list to the final result.</p>
+<p>The time complexity is O(N*H) where N is the number of nodes and H is the height, which can be O(N^2) for a skewed tree, and the space complexity is O(H) for the recursion stack.</p>
+<pre><code class="language-cpp">/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+private:
+    // Helper function to calculate the height of the tree
+    int height(TreeNode* node) {
+        if (node == nullptr) {
+            return 0;
+        }
+        return 1 + std::max(height(node-&gt;left), height(node-&gt;right));
+    }
+
+    // Helper function to collect nodes at a specific level
+    void collectNodesAtLevel(TreeNode* node, int level, std::vector&lt;int&gt;&amp; level_nodes) {
+        if (node == nullptr) {
+            return;
+        }
+        if (level == 1) {
+            level_nodes.push_back(node-&gt;val);
+        } else if (level &gt; 1) {
+            collectNodesAtLevel(node-&gt;left, level - 1, level_nodes);
+            collectNodesAtLevel(node-&gt;right, level - 1, level_nodes);
+        }
+    }
+
+public:
+    std::vector&lt;std::vector&lt;int&gt;&gt; levelOrder(TreeNode* root) {
+        if (root == nullptr) {
+            return {};
+        }
+        std::vector&lt;std::vector&lt;int&gt;&gt; result;
+        int h = height(root);
+        for (int i = 1; i &lt;= h; ++i) {
+            std::vector&lt;int&gt; level_nodes;
+            collectNodesAtLevel(root, i, level_nodes);
+            result.push_back(level_nodes);
+        }
+        return result;
+    }
+};
+</code></pre>
+<hr />
+<h3>2. Recursive Approach (DFS)</h3>
+<p>A more optimized approach uses a single pass Depth-First Search (DFS) traversal. We can perform a preorder traversal and keep track of the current level of each node. We use the level number as an index to store the node's value in our result list of lists.</p>
+<p><strong>Step-by-step explanation:</strong>
+1.  Create a recursive helper function, let's call it <code>preorder</code>, that takes a node, its level, and the result list as arguments.
+2.  The base case for the recursion is a <code>null</code> node.
+3.  When visiting a node at a certain <code>level</code>, check if the result list has a sublist for that level yet.
+4.  If <code>result.size() == level</code>, it's the first time we've reached this level. Create a new list, add the node's value, and append it to the result list.
+5.  If a list for <code>level</code> already exists, simply retrieve it at <code>result[level]</code> and add the current node's value.
+6.  Recursively call the helper function for the left child with <code>level + 1</code>, and then for the right child with <code>level + 1</code>.</p>
+<p>The time complexity is O(N) since we visit each node exactly once, and the space complexity is O(H) for the recursion stack, where H is the height of the tree (which can be O(N) in the worst case).</p>
+<pre><code class="language-cpp">/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+private:
+    void preorder(TreeNode* node, int level, std::vector&lt;std::vector&lt;int&gt;&gt;&amp; result) {
+        if (node == nullptr) {
+            return;
+        }
+        // If we are visiting this level for the first time, create a new sublist
+        if (result.size() == level) {
+            result.push_back({});
+        }
+        // Add the current node's value to its corresponding level's list
+        result[level].push_back(node-&gt;val);
+
+        // Recurse for left and right children
+        preorder(node-&gt;left, level + 1, result);
+        preorder(node-&gt;right, level + 1, result);
+    }
+
+public:
+    std::vector&lt;std::vector&lt;int&gt;&gt; levelOrder(TreeNode* root) {
+        std::vector&lt;std::vector&lt;int&gt;&gt; result;
+        preorder(root, 0, result);
+        return result;
+    }
+};
+</code></pre>
+<hr />
+<h3>3. Iterative Approach using a Queue (BFS)</h3>
+<p>The most intuitive and standard way to solve this problem is using Breadth-First Search (BFS). BFS naturally explores the tree level by level. We use a queue to keep track of nodes to visit.</p>
+<p><strong>Step-by-step explanation:</strong>
+1.  Handle the edge case of an empty tree.
+2.  Initialize a queue and add the <code>root</code> node to it.
+3.  Start a loop that continues as long as the queue is not empty.
+4.  Inside the loop, first, determine the number of nodes at the current level by getting the <code>queue.size()</code>.
+5.  Create a new list to store the values for the current level.
+6.  Loop for the number of nodes at the current level. In each iteration:
+    a. Dequeue a node from the front.
+    b. Add its value to the current level's list.
+    c. Enqueue its left and right children if they exist.
+7.  After the inner loop finishes, add the list for the current level to the final result list.
+8.  Repeat until the queue is empty.</p>
+<p>The time complexity is O(N) as each node is processed once, and the space complexity is O(W), where W is the maximum width of the tree, for storing nodes in the queue.</p>
+<pre><code class="language-cpp">/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+#include &lt;vector&gt;
+#include &lt;queue&gt;
+
+class Solution {
+public:
+    std::vector&lt;std::vector&lt;int&gt;&gt; levelOrder(TreeNode* root) {
+        std::vector&lt;std::vector&lt;int&gt;&gt; ans;
+        if (root == nullptr) {
+            return ans;
+        }
+        std::queue&lt;TreeNode*&gt; q;
+        q.push(root);
+        while (!q.empty()) {
+            int levelSize = q.size();
+            std::vector&lt;int&gt; current_level;
+            for (int i = 0; i &lt; levelSize; ++i) {
+                TreeNode *node = q.front();
+                q.pop();
+                current_level.push_back(node-&gt;val);
+                if (node-&gt;left != nullptr) {
+                    q.push(node-&gt;left);
+                }
+                if (node-&gt;right != nullptr) {
+                    q.push(node-&gt;right);
+                }
+            }
+            ans.push_back(current_level);
+        }
+        return ans;
+    }
+};
+</code></pre>
+<hr />
+<h3>Pythonic Solution (Best Approach)</h3>
+<p>The best approach is the iterative BFS method. The Pythonic implementation uses a <code>collections.deque</code> for an efficient queue and a similar logic of processing nodes level by level based on the queue's size at the beginning of each iteration.</p>
+<pre><code class="language-python"># Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+
+from collections import deque
+from typing import List, Optional
+
+class Solution:
+    def levelOrder(self, root: Optional[TreeNode]) -&gt; List[List[int]]:
+        if not root:
+            return []
+
+        result = []
+        q = deque([root])
+
+        while q:
+            # Number of nodes at the current level
+            level_size = len(q)
+            current_level = []
+
+            # Process all nodes for the current level
+            for _ in range(level_size):
+                node = q.popleft()
+                current_level.append(node.val)
+
+                # Add children for the next level
+                if node.left:
+                    q.append(node.left)
+                if node.right:
+                    q.append(node.right)
+
+            result.append(current_level)
+
+        return result
+
+</code></pre></div>

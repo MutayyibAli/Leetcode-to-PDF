@@ -1,0 +1,134 @@
+<div class='ai-explanation'><h3>List of Approaches</h3>
+<ol>
+<li>Brute Force Approach (Collect and Replace)</li>
+<li>Two-Pointers Approach</li>
+</ol>
+<hr />
+<h3>Brute Force Approach (Collect and Replace)</h3>
+<p>This approach involves two main passes over the string. In the first pass, we iterate through the string to identify and collect all the vowels in the order they appear. In the second pass, we replace the vowel characters in the original string with the collected vowels in reversed order.</p>
+<ol>
+<li><strong>Extract Vowels</strong>: Iterate through the input string <code>s</code> from beginning to end. Create a new string or list, let's call it <code>vowels_found</code>, and append every vowel you encounter.</li>
+<li><strong>Reverse Vowels</strong>: Reverse the <code>vowels_found</code> container. Now it holds the vowels in the order required for the final string.</li>
+<li><strong>Replace Vowels</strong>: Create a copy of the input string, <code>s</code>. Iterate through this copied string again. Whenever you encounter a vowel, replace it with the next vowel from the reversed <code>vowels_found</code> container.</li>
+<li><strong>Return Result</strong>: Return the modified string.</li>
+</ol>
+<p>This approach has a time complexity of O(N) because we iterate through the string twice, and a space complexity of O(V) to store the vowels, where V is the number of vowels in the string (O(N) in the worst case).</p>
+<pre><code class="language-cpp">#include &lt;string&gt;
+#include &lt;vector&gt;
+#include &lt;algorithm&gt;
+
+class Solution {
+public:
+    // Helper function to check if a character is a vowel
+    bool isVowel(char c) {
+        c = tolower(c);
+        return c == 'a' || c == 'e' || c == 'i' || c == 'o' || c == 'u';
+    }
+
+    std::string reverseVowels(std::string s) {
+        std::string vowels_found;
+        // 1. Collect all vowels from the string
+        for (char c : s) {
+            if (isVowel(c)) {
+                vowels_found.push_back(c);
+            }
+        }
+
+        // 2. Reverse the collected vowels
+        std::reverse(vowels_found.begin(), vowels_found.end());
+
+        int vowel_index = 0;
+        // 3. Place the reversed vowels back into the string
+        for (int i = 0; i &lt; s.length(); ++i) {
+            if (isVowel(s[i])) {
+                s[i] = vowels_found[vowel_index++];
+            }
+        }
+
+        return s;
+    }
+};
+</code></pre>
+<hr />
+<h3>Two-Pointers Approach</h3>
+<p>A more efficient method is the two-pointers approach. We use one pointer starting from the beginning of the string and another from the end, moving them towards each other. When both pointers land on vowels, we swap them.</p>
+<ol>
+<li><strong>Initialize Pointers</strong>: Set up a <code>left</code> pointer at the start of the string (index 0) and a <code>right</code> pointer at the end of the string (index <code>length - 1</code>).</li>
+<li><strong>Scan for Vowels</strong>: Loop as long as <code>left</code> is less than <code>right</code>.<ul>
+<li>Move the <code>left</code> pointer to the right until it finds a vowel.</li>
+<li>Move the <code>right</code> pointer to the left until it finds a vowel.</li>
+</ul>
+</li>
+<li><strong>Swap Vowels</strong>: Once both pointers have found vowels and <code>left</code> is still less than <code>right</code>, swap the characters at the <code>left</code> and <code>right</code> positions.</li>
+<li><strong>Move Pointers Inward</strong>: After a swap, increment <code>left</code> and decrement <code>right</code> to continue searching for the next pair of vowels.</li>
+<li><strong>Return Result</strong>: The loop terminates when the pointers meet or cross, at which point all vowels have been reversed in place. Return the modified string.</li>
+</ol>
+<p>This approach has a time complexity of O(N) since each pointer traverses the string at most once, and a space complexity of O(1) as the swaps are done in-place (ignoring the space for the output string).</p>
+<pre><code class="language-cpp">#include &lt;string&gt;
+#include &lt;algorithm&gt; // For std::swap
+
+class Solution {
+public:
+    // Helper function to check if a character is a vowel
+    bool isVowel(char c) {
+        std::string vowels = &quot;aeiouAEIOU&quot;;
+        return vowels.find(c) != std::string::npos;
+    }
+
+    std::string reverseVowels(std::string s) {
+        int left = 0;
+        int right = s.length() - 1;
+
+        while (left &lt; right) {
+            // Move left pointer until it points to a vowel
+            while (left &lt; right &amp;&amp; !isVowel(s[left])) {
+                left++;
+            }
+
+            // Move right pointer until it points to a vowel
+            while (left &lt; right &amp;&amp; !isVowel(s[right])) {
+                right--;
+            }
+
+            // If pointers haven't crossed, swap the vowels
+            if (left &lt; right) {
+                std::swap(s[left], s[right]);
+                left++;
+                right--;
+            }
+        }
+        return s;
+    }
+};
+</code></pre>
+<hr />
+<h3>Pythonic Solution (Two-Pointers Approach)</h3>
+<p>The two-pointers approach is the most optimal. A Pythonic implementation would involve converting the immutable string to a list of characters to allow in-place modification, using a set for O(1) average time vowel lookup, and then joining the list back into a string.</p>
+<pre><code class="language-python">class Solution:
+    def reverseVowels(self, s: str) -&gt; str:
+        &quot;&quot;&quot;
+        Reverses the vowels in a string using the two-pointers approach.
+        &quot;&quot;&quot;
+        word = list(s)
+        left, right = 0, len(word) - 1
+        vowels = set(&quot;aeiouAEIOU&quot;)
+
+        while left &lt; right:
+            # Find the leftmost vowel
+            while left &lt; right and word[left] not in vowels:
+                left += 1
+
+            # Find the rightmost vowel
+            while left &lt; right and word[right] not in vowels:
+                right -= 1
+
+            # Swap the vowels if pointers haven't crossed
+            if left &lt; right:
+                word[left], word[right] = word[right], word[left]
+                # Move pointers inward
+                left += 1
+                right -= 1
+
+        return &quot;&quot;.join(word)
+
+</code></pre></div>

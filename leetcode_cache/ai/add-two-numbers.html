@@ -1,0 +1,148 @@
+<div class='ai-explanation'><h3>List of approaches</h3>
+<ol>
+<li>Brute Force Approach (Integer Conversion)</li>
+<li>Elementary Math Simulation Approach</li>
+</ol>
+<h3>1. Brute Force Approach (Integer Conversion)</h3>
+<p>This method involves converting the linked lists into integers, performing the addition, and then converting the result back into a linked list. The primary drawback is that the represented numbers can be very large (up to 100 digits), which will exceed the capacity of standard data types like <code>long long</code> in C++, causing an overflow.</p>
+<p><strong>Step-by-step explanation:</strong>
+1.  Initialize two variables, <code>num1</code> and <code>num2</code>, to store the integer representations of the lists.
+2.  Iterate through <code>l1</code>, constructing <code>num1</code>. Since digits are in reverse order, each digit is multiplied by its corresponding power of 10.
+3.  Repeat the process for <code>l2</code> to construct <code>num2</code>.
+4.  Add the two numbers: <code>sum = num1 + num2</code>.
+5.  Create a new linked list from the <code>sum</code>. Repeatedly get the last digit using the modulo operator (<code>sum % 10</code>), create a new node, and update the sum by integer division (<code>sum / 10</code>) until the sum becomes zero.</p>
+<p>This approach is not robust due to the integer overflow limitation but serves as a basic conceptual starting point. The time complexity is <code>O(max(N, M))</code> and space complexity is <code>O(max(N, M))</code> for the new list, where N and M are the lengths of the input lists.</p>
+<pre><code class="language-cpp">/*
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+
+// NOTE: This approach will fail for large numbers due to integer overflow.
+// It is presented for educational purposes as a &quot;brute force&quot; idea.
+class Solution {
+public:
+    ListNode* addTwoNumbers(ListNode* l1, ListNode* l2) {
+        // This will overflow for numbers with more than ~19 digits.
+        unsigned long long num1 = 0, num2 = 0; 
+        unsigned long long multiplier = 1;
+
+        while(l1 != nullptr) {
+            num1 += l1-&gt;val * multiplier;
+            multiplier *= 10;
+            l1 = l1-&gt;next;
+        }
+
+        multiplier = 1;
+        while(l2 != nullptr) {
+            num2 += l2-&gt;val * multiplier;
+            multiplier *= 10;
+            l2 = l2-&gt;next;
+        }
+
+        unsigned long long sum = num1 + num2;
+
+        if (sum == 0) return new ListNode(0);
+
+        ListNode* dummyHead = new ListNode(0);
+        ListNode* current = dummyHead;
+
+        while (sum &gt; 0) {
+            current-&gt;next = new ListNode(sum % 10);
+            current = current-&gt;next;
+            sum /= 10;
+        }
+
+        return dummyHead-&gt;next;
+    }
+};
+</code></pre>
+<h3>2. Elementary Math Simulation Approach</h3>
+<p>This optimal approach simulates the way we add numbers on paper, digit by digit, while keeping track of a carry value. It iterates through the lists just once and builds the result list on the fly, avoiding any integer overflow issues.</p>
+<p><strong>Step-by-step explanation:</strong>
+1.  Initialize a <code>dummyHead</code> node with value 0. This simplifies handling the start of the result list.
+2.  Initialize a <code>tail</code> pointer to <code>dummyHead</code>. This pointer will be used to append new nodes to the result list.
+3.  Initialize a <code>carry</code> variable to <code>0</code>.
+4.  Start a loop that continues as long as there are nodes in <code>l1</code>, <code>l2</code>, or there is a non-zero <code>carry</code>.
+5.  Inside the loop, retrieve the values of the current nodes. If a list has been fully traversed, its value for the current position is considered <code>0</code>.
+6.  Calculate the <code>sum</code> of the two digits and the <code>carry</code>.
+7.  The value for the new node in the result list is <code>sum % 10</code>.
+8.  The <code>carry</code> for the next iteration is updated to <code>sum / 10</code>.
+9.  Create a new node with the calculated digit and attach it to the result list via <code>tail-&gt;next</code>. Then, move <code>tail</code> to this new node.
+10. Advance <code>l1</code> and <code>l2</code> to their next nodes if they are not null.
+11. After the loop, return <code>dummyHead-&gt;next</code>, which is the head of the final summed list.</p>
+<p>The time complexity is <code>O(max(N, M))</code> because we traverse each list at most once. The space complexity is <code>O(max(N, M))</code> to store the resulting list.</p>
+<pre><code class="language-cpp">/*
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* addTwoNumbers(ListNode* l1, ListNode* l2) {
+        ListNode* dummyHead = new ListNode(0);
+        ListNode* tail = dummyHead;
+        int carry = 0;
+
+        while (l1 != nullptr || l2 != nullptr || carry != 0) {
+            int digit1 = (l1 != nullptr) ? l1-&gt;val : 0;
+            int digit2 = (l2 != nullptr) ? l2-&gt;val : 0;
+
+            int sum = digit1 + digit2 + carry;
+            int digit = sum % 10;
+            carry = sum / 10;
+
+            ListNode* newNode = new ListNode(digit);
+            tail-&gt;next = newNode;
+            tail = tail-&gt;next;
+
+            l1 = (l1 != nullptr) ? l1-&gt;next : nullptr;
+            l2 = (l2 != nullptr) ? l2-&gt;next : nullptr;
+        }
+
+        ListNode* result = dummyHead-&gt;next;
+        delete dummyHead;
+        return result;
+    }
+};
+</code></pre>
+<h3>Pythonic Solution (Elementary Math Simulation Approach)</h3>
+<pre><code class="language-python"># Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, val=0, next=None):
+#         self.val = val
+#         self.next = next
+class Solution:
+    def addTwoNumbers(self, l1: Optional[ListNode], l2: Optional[ListNode]) -&gt; Optional[ListNode]:
+        dummy_head = ListNode(0)
+        tail = dummy_head
+        carry = 0
+
+        while l1 is not None or l2 is not None or carry != 0:
+            digit1 = l1.val if l1 is not None else 0
+            digit2 = l2.val if l2 is not None else 0
+
+            total_sum = digit1 + digit2 + carry
+            digit = total_sum % 10
+            carry = total_sum // 10
+
+            new_node = ListNode(digit)
+            tail.next = new_node
+            tail = tail.next
+
+            l1 = l1.next if l1 is not None else None
+            l2 = l2.next if l2 is not None else None
+
+        result = dummy_head.next
+        return result
+</code></pre></div>

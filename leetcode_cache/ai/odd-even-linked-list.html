@@ -1,0 +1,168 @@
+<div class='ai-explanation'><h3>List of all the approaches to solution</h3>
+<ol>
+<li>Brute Force Approach (Using Extra Space)</li>
+<li>Optimal Approach (In-place Manipulation)</li>
+</ol>
+<hr />
+<h3>Brute Force Approach (Using Extra Space)</h3>
+<p>This approach involves separating the nodes into two distinct lists—one for odd-indexed nodes and one for even-indexed nodes. We then link the end of the odd list to the beginning of the even list.</p>
+<p><strong>Step-by-step explanation:</strong>
+1.  Handle edge cases where the list has 0, 1, or 2 nodes; in these cases, the list is already sorted, so we can return the head.
+2.  Create two dummy nodes, <code>oddHead</code> and <code>evenHead</code>, to act as the starting points for our new odd and even lists. Also, create tail pointers <code>oddTail</code> and <code>evenTail</code> to easily append nodes.
+3.  Initialize a counter or a boolean flag to keep track of whether the current node's index is odd or even.
+4.  Iterate through the original linked list. For each node:
+    *   If its index is odd, append it to the list pointed to by <code>oddTail</code>.
+    *   If its index is even, append it to the list pointed to by <code>evenTail</code>.
+5.  After the loop, terminate the even list by setting <code>evenTail.next = nullptr</code>.
+6.  Connect the tail of the odd list to the head of the even list (<code>oddTail.next = evenHead.next</code>).
+7.  Return the start of the newly formed odd list, which is <code>oddHead.next</code>.</p>
+<p>This approach is straightforward but requires creating new list structures, which uses extra space proportional to the number of nodes. This does not meet the O(1) space complexity requirement of the problem.</p>
+<p>This approach has a time complexity of O(N) because we traverse the list once, and a space complexity of O(N) because we create two new lists.</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+
+// Definition for singly-linked list.
+struct ListNode {
+    int val;
+    ListNode *next;
+    ListNode() : val(0), next(nullptr) {}
+    ListNode(int x) : val(x), next(nullptr) {}
+    ListNode(int x, ListNode *next) : val(x), next(next) {}
+};
+
+class Solution {
+public:
+    ListNode* oddEvenList(ListNode* head) {
+        if (!head) {
+            return nullptr;
+        }
+
+        std::vector&lt;ListNode*&gt; odds;
+        std::vector&lt;ListNode*&gt; evens;
+
+        ListNode* current = head;
+        int index = 1;
+
+        while (current) {
+            if (index % 2 != 0) {
+                odds.push_back(current);
+            } else {
+                evens.push_back(current);
+            }
+            current = current-&gt;next;
+            index++;
+        }
+
+        // Re-link the nodes
+        ListNode* dummy = new ListNode(0);
+        ListNode* tail = dummy;
+
+        for (ListNode* node : odds) {
+            tail-&gt;next = node;
+            tail = tail-&gt;next;
+        }
+        for (ListNode* node : evens) {
+            tail-&gt;next = node;
+            tail = tail-&gt;next;
+        }
+
+        tail-&gt;next = nullptr; // End the list
+
+        ListNode* newHead = dummy-&gt;next;
+        delete dummy;
+        return newHead;
+    }
+};
+</code></pre>
+<hr />
+<h3>Optimal Approach (In-place Manipulation)</h3>
+<p>The most efficient approach is to reorder the list in-place, without using any extra data structures. We can achieve this by maintaining two pointers: one for the tail of the odd-indexed nodes and one for the tail of the even-indexed nodes. We then iterate through the list, rewiring the <code>next</code> pointers to separate the nodes.</p>
+<p><strong>Step-by-step explanation:</strong>
+1.  Handle edge cases: If the list is empty or has only one or two nodes, no reordering is needed, so return the <code>head</code>.
+2.  Initialize two pointers: <code>odd</code> pointing to the <code>head</code> (first node, index 1) and <code>even</code> pointing to <code>head-&gt;next</code> (second node, index 2).
+3.  Create a separate pointer <code>even_start</code> to store the head of the even list (<code>head-&gt;next</code>), as we will need to connect it to the end of the odd list later.
+4.  Iterate through the list as long as <code>even</code> and <code>even-&gt;next</code> are valid nodes. In each iteration:
+    *   Connect the current <code>odd</code> node to the next odd node: <code>odd-&gt;next = even-&gt;next</code>.
+    *   Move the <code>odd</code> pointer forward to this new node: <code>odd = odd-&gt;next</code>.
+    *   Connect the current <code>even</code> node to the next even node: <code>even-&gt;next = odd-&gt;next</code>.
+    *   Move the <code>even</code> pointer forward: <code>even = even-&gt;next</code>.
+5.  After the loop terminates, the <code>odd</code> pointer will be at the last node of the odd-indexed list. Connect this last odd node to the head of the even-indexed list: <code>odd-&gt;next = even_start</code>.
+6.  Return the original <code>head</code>, which is still the head of the reordered list.</p>
+<p>This approach traverses the linked list a single time while only using a few extra pointers. This satisfies the problem constraints of O(N) time and O(1) space complexity.</p>
+<pre><code class="language-cpp">// Definition for singly-linked list.
+struct ListNode {
+    int val;
+    ListNode *next;
+    ListNode() : val(0), next(nullptr) {}
+    ListNode(int x) : val(x), next(nullptr) {}
+    ListNode(int x, ListNode *next) : val(x), next(next) {}
+};
+
+class Solution {
+public:
+    ListNode* oddEvenList(ListNode* head) {
+        // Handle lists with 0, 1, or 2 nodes.
+        if (!head || !head-&gt;next || !head-&gt;next-&gt;next) {
+            return head;
+        }
+
+        ListNode *odd = head;
+        ListNode *even = head-&gt;next;
+        ListNode *even_start = head-&gt;next; // Save the start of the even list
+
+        // Iterate as long as there's a pair of odd/even nodes to link
+        while (odd-&gt;next &amp;&amp; even-&gt;next) {
+            // Link the current odd node to the next odd node
+            odd-&gt;next = even-&gt;next;
+            // Link the current even node to the next even node
+            even-&gt;next = odd-&gt;next-&gt;next;
+
+            // Move pointers to the next odd and even nodes
+            odd = odd-&gt;next;
+            even = even-&gt;next;
+        }
+
+        // Connect the end of the odd list to the start of the even list
+        odd-&gt;next = even_start;
+
+        return head;
+    }
+};
+</code></pre>
+<hr />
+<h3>Pythonic Solution (Best Approach)</h3>
+<pre><code class="language-python"># Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, val=0, next=None):
+#         self.val = val
+#         self.next = next
+
+class Solution:
+    def oddEvenList(self, head: Optional[ListNode]) -&gt; Optional[ListNode]:
+        # If the list is empty or has only one node, no change is needed.
+        if not head:
+            return None
+
+        # 'odd' pointer will traverse the odd-indexed nodes
+        odd = head
+        # 'even' pointer will traverse the even-indexed nodes
+        even = head.next
+        # 'even_head' stores the start of the even list to be appended later
+        even_head = even
+
+        # Loop continues as long as there are even nodes to process.
+        # We need at least two nodes ahead (even and its next) to rewire.
+        while even and even.next:
+            # Link the current odd node to the next odd node
+            odd.next = even.next
+            odd = odd.next
+
+            # Link the current even node to the next even node
+            even.next = odd.next
+            even = even.next
+
+        # After the loop, connect the tail of the odd list to the head of the even list
+        odd.next = even_head
+
+        return head
+
+</code></pre></div>

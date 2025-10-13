@@ -1,0 +1,119 @@
+<div class='ai-explanation'><h3>List of all the approaches to solution</h3>
+<ul>
+<li>Brute Force Approach</li>
+<li>Modified Binary Search Approach</li>
+</ul>
+<h3>Brute Force Approach</h3>
+<p>This is the most straightforward approach. We can simply iterate through the entire array and check if any element matches the target.</p>
+<ol>
+<li>Start a loop from the first element of the array (index 0) to the last element.</li>
+<li>In each iteration, compare the current element <code>nums[i]</code> with the <code>target</code>.</li>
+<li>If they are equal, we have found the target, so we return the current index <code>i</code>.</li>
+<li>If the loop finishes without finding the <code>target</code>, it means the target is not present in the array. In this case, we return -1.</li>
+</ol>
+<p>This approach is simple to implement but does not meet the problem's requirement of <code>O(log n)</code> time complexity. The time complexity is O(n) as we might have to scan the entire array in the worst case, and the space complexity is O(1).</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+
+class Solution {
+public:
+    int search(std::vector&lt;int&gt;&amp; nums, int target) {
+        for (int i = 0; i &lt; nums.size(); ++i) {
+            if (nums[i] == target) {
+                return i;
+            }
+        }
+        return -1;
+    }
+};
+</code></pre>
+<h3>Modified Binary Search Approach</h3>
+<p>Since the problem requires an <code>O(log n)</code> solution, binary search is the way to go. However, a standard binary search won't work because the array is rotated. The key insight is that even in a rotated sorted array, when we divide it at a middle point, at least one of the two halves will remain sorted. We can leverage this property to adapt the binary search algorithm.</p>
+<ol>
+<li>Initialize two pointers, <code>low</code> at the start of the array (index 0) and <code>high</code> at the end of the array (index <code>nums.size() - 1</code>).</li>
+<li>Enter a loop that continues as long as <code>low &lt;= high</code>.</li>
+<li>Calculate the middle index <code>mid</code>. If <code>nums[mid]</code> is equal to the <code>target</code>, we've found it and can return <code>mid</code>.</li>
+<li>Determine which half of the array is sorted. We can do this by checking if <code>nums[low] &lt;= nums[mid]</code>.<ul>
+<li>If <code>nums[low] &lt;= nums[mid]</code>, the left half (<code>[low...mid]</code>) is sorted.</li>
+<li>Otherwise, the right half (<code>[mid...high]</code>) must be sorted.</li>
+</ul>
+</li>
+<li>Once the sorted half is identified, check if the <code>target</code> falls within the range of values in that sorted half.<ul>
+<li>If the left half is sorted: Check if <code>target</code> is between <code>nums[low]</code> and <code>nums[mid]</code> (inclusive of <code>low</code>, exclusive of <code>mid</code>). If it is, we search in the left half by setting <code>high = mid - 1</code>. Otherwise, the <code>target</code> must be in the right, unsorted half, so we set <code>low = mid + 1</code>.</li>
+<li>If the right half is sorted: Check if <code>target</code> is between <code>nums[mid]</code> and <code>nums[high]</code> (exclusive of <code>mid</code>, inclusive of <code>high</code>). If it is, we search in the right half by setting <code>low = mid + 1</code>. Otherwise, the <code>target</code> must be in the left, unsorted half, so we set <code>high = mid - 1</code>.</li>
+</ul>
+</li>
+<li>If the loop terminates (i.e., <code>low &gt; high</code>), it means the <code>target</code> was not found in the array, so we return -1.</li>
+</ol>
+<p>This approach effectively halves the search space in each iteration, leading to a time complexity of O(log n) with a constant space complexity of O(1).</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+
+class Solution {
+public:
+    int search(std::vector&lt;int&gt;&amp; nums, int target) {
+        int low = 0, high = nums.size() - 1;
+
+        while (low &lt;= high) {
+            int mid = low + (high - low) / 2;
+
+            if (nums[mid] == target) {
+                return mid;
+            }
+
+            // Check if the left half [low...mid] is sorted
+            if (nums[low] &lt;= nums[mid]) {
+                // Check if the target is within the sorted left half
+                if (nums[low] &lt;= target &amp;&amp; target &lt; nums[mid]) {
+                    high = mid - 1;
+                } else {
+                    // Target is in the unsorted right half
+                    low = mid + 1;
+                }
+            } 
+            // Otherwise, the right half [mid...high] must be sorted
+            else {
+                // Check if the target is within the sorted right half
+                if (nums[mid] &lt; target &amp;&amp; target &lt;= nums[high]) {
+                    low = mid + 1;
+                } else {
+                    // Target is in the unsorted left half
+                    high = mid - 1;
+                }
+            }
+        }
+
+        return -1;
+    }
+};
+</code></pre>
+<h3>Pythonic solution for best approach</h3>
+<pre><code class="language-python">from typing import List
+
+class Solution:
+    def search(self, nums: List[int], target: int) -&gt; int:
+        left, right = 0, len(nums) - 1
+
+        while left &lt;= right:
+            mid = (left + right) // 2
+
+            if nums[mid] == target:
+                return mid
+
+            # Check if the left half [left...mid] is sorted
+            if nums[left] &lt;= nums[mid]:
+                # Target is in the sorted left half
+                if nums[left] &lt;= target &lt; nums[mid]:
+                    right = mid - 1
+                # Target is in the unsorted right half
+                else:
+                    left = mid + 1
+            # Otherwise, the right half [mid...right] must be sorted
+            else:
+                # Target is in the sorted right half
+                if nums[mid] &lt; target &lt;= nums[right]:
+                    left = mid + 1
+                # Target is in the unsorted left half
+                else:
+                    right = mid - 1
+
+        return -1
+</code></pre></div>

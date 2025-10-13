@@ -1,0 +1,122 @@
+<div class='ai-explanation'><h3>List of Approaches</h3>
+<ol>
+<li>Brute Force Approach</li>
+<li>Sliding Window Approach</li>
+</ol>
+<hr />
+<h3>Brute Force Approach</h3>
+<p>The brute force solution involves examining every possible contiguous subarray. For each subarray, we count the number of zeros. If this count is less than or equal to <code>k</code>, it means we can flip all the zeros to ones, making it a valid subarray. We then compare its length with the maximum length found so far and update it if necessary.</p>
+<p><strong>Step-by-step explanation:</strong>
+1.  Initialize a variable <code>maxLength</code> to 0.
+2.  Use a nested loop to generate all possible subarrays. The outer loop (<code>i</code>) determines the starting point, and the inner loop (<code>j</code>) determines the ending point.
+3.  For each subarray from index <code>i</code> to <code>j</code>, count the number of zeros it contains.
+4.  If the count of zeros is less than or equal to <code>k</code>, the subarray is a valid candidate. Its length is <code>j - i + 1</code>.
+5.  Update <code>maxLength = max(maxLength, j - i + 1)</code>.
+6.  To optimize slightly, if the number of zeros in a subarray starting at <code>i</code> exceeds <code>k</code>, we can stop extending it (break the inner loop) as any longer subarray starting at <code>i</code> will also be invalid.
+7.  After checking all subarrays, <code>maxLength</code> will hold the result.</p>
+<p>This approach is simple to understand but inefficient for large inputs. The time complexity is O(N^2) with the optimization, and the space complexity is O(1).</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;algorithm&gt;
+
+class Solution {
+public:
+    int longestOnes(std::vector&lt;int&gt;&amp; nums, int k) {
+        int maxLength = 0;
+        int n = nums.size();
+        for (int i = 0; i &lt; n; ++i) {
+            int zeroCount = 0;
+            for (int j = i; j &lt; n; ++j) {
+                if (nums[j] == 0) {
+                    zeroCount++;
+                }
+                if (zeroCount &lt;= k) {
+                    maxLength = std::max(maxLength, j - i + 1);
+                } else {
+                    // This subarray is invalid, no need to extend it further
+                    break; 
+                }
+            }
+        }
+        return maxLength;
+    }
+};
+</code></pre>
+<hr />
+<h3>Sliding Window Approach</h3>
+<p>This is a much more efficient approach that avoids re-computation. The core idea is to maintain a "window" (a subarray) that contains at most <code>k</code> zeros. We expand this window by moving a <code>right</code> pointer and shrink it by moving a <code>left</code> pointer. The goal is to find the maximum size this window can achieve.</p>
+<p><strong>Step-by-step explanation:</strong>
+1.  Initialize two pointers, <code>left = 0</code> and <code>right = 0</code>, to define the current window <code>[left, right]</code>.
+2.  Iterate with the <code>right</code> pointer from the beginning to the end of the array to expand the window.
+3.  If the element at the <code>right</code> pointer is a <code>0</code>, it means we need to use one of our <code>k</code> flips. We decrement <code>k</code>.
+4.  If <code>k</code> becomes negative, it means our current window <code>[left, right]</code> has more than <code>k</code> zeros and is invalid. We must shrink the window from the left.
+5.  To shrink the window, we check the element at the <code>left</code> pointer. If <code>nums[left]</code> is a <code>0</code>, it means we are removing a zero that we previously flipped, so we get a flip back. We increment <code>k</code>.
+6.  We then increment the <code>left</code> pointer to complete the shrinking of the window.
+7.  The window size is always <code>right - left</code>. By expanding <code>right</code> and only shrinking <code>left</code> when necessary, we ensure that the window size <code>right - left</code> represents the maximum valid window found so far.
+8.  After the <code>right</code> pointer has traversed the entire array, the final window size <code>right - left</code> (at the end of the loop) is the answer.</p>
+<p>This approach processes each element at most twice (once by the <code>right</code> pointer and once by the <code>left</code> pointer), resulting in a time complexity of O(N) and a space complexity of O(1).</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;algorithm&gt;
+
+class Solution {
+public:
+    int longestOnes(std::vector&lt;int&gt;&amp; nums, int k) {
+        int left = 0;
+        int right = 0;
+        while (right &lt; nums.size()) {
+            // If we encounter a 0, we use one flip
+            if (nums[right] == 0) {
+                k--;
+            }
+            // If k becomes negative, our window is invalid
+            if (k &lt; 0) {
+                // If the element leaving the window is a 0, we regain a flip
+                if (nums[left] == 0) {
+                    k++;
+                }
+                // Shrink the window from the left
+                left++;
+            }
+            // Move the right pointer to expand the window
+            right++;
+        }
+        // The final window size is the maximum length
+        return right - left;
+    }
+};
+</code></pre>
+<hr />
+<h3>Pythonic Solution (Best Approach)</h3>
+<p>The sliding window approach is the most optimal. The Python implementation is concise and follows the same logic. It uses a <code>for</code> loop for the right pointer and maintains a left pointer <code>l</code>. The difference <code>r - l + 1</code> gives the current window size, which implicitly tracks the maximum size found.</p>
+<pre><code class="language-python">from typing import List
+
+class Solution:
+    def longestOnes(self, nums: List[int], k: int) -&gt; int:
+        &quot;&quot;&quot;
+        Finds the maximum number of consecutive 1's with at most k flips.
+        This uses the sliding window technique.
+        &quot;&quot;&quot;
+        left = 0
+
+        # 'right' is the right pointer of our window
+        for right in range(len(nums)):
+            # If we see a 0, we use one of our k flips.
+            if nums[right] == 0:
+                k -= 1
+
+            # If k is negative, it means we have used more than k flips
+            # in the current window [left, right]. We need to shrink the window
+            # from the left.
+            if k &lt; 0:
+                # If the element at the left pointer was a 0, we regain a flip
+                if nums[left] == 0:
+                    k += 1
+                # Shrink the window
+                left += 1
+
+        # The window size is right - left + 1. The loop maintains the maximum
+        # possible valid window size at all times.
+        # After the loop, `right` is len(nums) - 1.
+        # The final window size is (len(nums) - 1) - left + 1 = len(nums) - left.
+        return len(nums) - left
+
+</code></pre></div>

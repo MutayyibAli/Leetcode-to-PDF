@@ -1,0 +1,159 @@
+<div class='ai-explanation'><h3>List of Approaches</h3>
+<ol>
+<li>Brute Force Approach</li>
+<li>Top-Down Recursive Approach with Range</li>
+<li>In-order Traversal Approach</li>
+</ol>
+<hr />
+<h3>Brute Force Approach</h3>
+<h4>Explanation</h4>
+<p>For every node in the tree, this approach recursively validates three properties:
+1.  The node's value is greater than the maximum value in its entire left subtree.
+2.  The node's value is less than the minimum value in its entire right subtree.
+3.  Both its left and right subtrees are themselves valid binary search trees.</p>
+<p>To find the maximum and minimum values for each subtree, we must traverse the entire subtree. This leads to redundant computations, as nodes are visited multiple times.</p>
+<p><em>Time complexity is O(N^2) in the worst-case (for a skewed tree) and O(N log N) for a balanced tree, as for each of the N nodes, we might traverse its entire subtree. Space complexity is O(N) for the recursion stack in the worst case.</em></p>
+<h4>C++ Code</h4>
+<pre><code class="language-cpp">class Solution {
+private:
+    // Helper to find the maximum value in a subtree.
+    long long findMax(TreeNode* node) {
+        if (!node) return LLONG_MIN;
+        return std::max({(long long)node-&gt;val, findMax(node-&gt;left), findMax(node-&gt;right)});
+    }
+
+    // Helper to find the minimum value in a subtree.
+    long long findMin(TreeNode* node) {
+        if (!node) return LLONG_MAX;
+        return std::min({(long long)node-&gt;val, findMin(node-&gt;left), findMin(node-&gt;right)});
+    }
+
+public:
+    bool isValidBST(TreeNode* root) {
+        if (!root) {
+            return true;
+        }
+
+        // 1. Check that the root's value is valid with respect to its subtrees.
+        if (findMax(root-&gt;left) &gt;= root-&gt;val) {
+            return false;
+        }
+        if (findMin(root-&gt;right) &lt;= root-&gt;val) {
+            return false;
+        }
+
+        // 2. Recursively check if the subtrees are also valid BSTs.
+        return isValidBST(root-&gt;left) &amp;&amp; isValidBST(root-&gt;right);
+    }
+};
+</code></pre>
+<hr />
+<h3>Top-Down Recursive Approach with Range</h3>
+<h4>Explanation</h4>
+<p>A much more efficient method is to perform a single top-down traversal while maintaining a valid range <code>(lower_bound, upper_bound)</code> for each node's value.
+1.  Start the traversal from the root. The initial valid range for the root is <code>(-infinity, +infinity)</code>. We use <code>long long</code> for the bounds to handle node values that might be <code>INT_MIN</code> or <code>INT_MAX</code>.
+2.  For any given node, first check if its value falls within its allowed <code>(lower, upper)</code> range. If it doesn't, the tree is invalid.
+3.  When recursing to the left child, its value must be less than the current node's value. So, we update the upper bound to the current node's value. The new range for the left subtree becomes <code>(lower, node-&gt;val)</code>.
+4.  Similarly, when recursing to the right child, its value must be greater than the current node's value. We update the lower bound, and the new range becomes <code>(node-&gt;val, upper)</code>.
+5.  If we encounter a null node, it's considered valid, so we return <code>true</code>.</p>
+<p><em>This approach visits each node only once, resulting in a time complexity of O(N). The space complexity is O(H) for the recursion stack, where H is the height of the tree (O(N) in the worst case).</em></p>
+<h4>C++ Code</h4>
+<pre><code class="language-cpp">class Solution {
+private:
+    bool validate(TreeNode* node, long long lower, long long upper) {
+        // An empty tree is a valid BST.
+        if (node == nullptr) {
+            return true;
+        }
+
+        // The current node's value must be within the valid range.
+        if (node-&gt;val &lt;= lower || node-&gt;val &gt;= upper) {
+            return false;
+        }
+
+        // Recursively validate the subtrees with updated ranges.
+        return validate(node-&gt;left, lower, node-&gt;val) &amp;&amp; 
+               validate(node-&gt;right, node-&gt;val, upper);
+    }
+
+public:
+    bool isValidBST(TreeNode* root) {
+        // Use long long for bounds to correctly handle INT_MIN and INT_MAX node values.
+        return validate(root, LLONG_MIN, LLONG_MAX);
+    }
+};
+</code></pre>
+<hr />
+<h3>In-order Traversal Approach</h3>
+<h4>Explanation</h4>
+<p>This approach leverages a fundamental property of a BST: an in-order traversal (Left -&gt; Root -&gt; Right) visits the nodes in a strictly increasing order.
+1.  We perform a standard in-order traversal of the tree.
+2.  We keep track of the value of the previously visited node in the traversal sequence.
+3.  For each new node we visit, we compare its value with the value of the previous node.
+4.  If the current node's value is less than or equal to the previous node's value, the strictly increasing order is violated, meaning the tree is not a valid BST. We can stop and return <code>false</code>.
+5.  If the entire traversal completes without any such violation, the tree is a valid BST.</p>
+<p><em>This approach also visits each node once, giving a time complexity of O(N). The space complexity is O(H) due to the recursion stack (or an explicit stack for an iterative implementation), which is O(N) in the worst case.</em></p>
+<h4>C++ Code</h4>
+<pre><code class="language-cpp">class Solution {
+private:
+    // A pointer to track the previously visited node in the in-order traversal.
+    TreeNode* prev = nullptr;
+public:
+    bool isValidBST(TreeNode* root) {
+        if (root == nullptr) {
+            return true;
+        }
+
+        // 1. Traverse the left subtree.
+        if (!isValidBST(root-&gt;left)) {
+            return false;
+        }
+
+        // 2. Visit the current node. Check if its value is greater than the previous node's value.
+        if (prev != nullptr &amp;&amp; root-&gt;val &lt;= prev-&gt;val) {
+            return false;
+        }
+        prev = root; // Update the previous node to the current one.
+
+        // 3. Traverse the right subtree.
+        return isValidBST(root-&gt;right);
+    }
+};
+</code></pre>
+<hr />
+<h3>Pythonic Solution (Best Approach: In-order Traversal)</h3>
+<p>The in-order traversal method is both efficient and elegant. The Python solution below uses a nested function and the <code>nonlocal</code> keyword to keep track of the previous value during the recursive traversal. This is a common and clean pattern in Python.</p>
+<pre><code class="language-python"># Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+
+class Solution:
+    def isValidBST(self, root: Optional[TreeNode]) -&gt; bool:
+        # Initialize the previous value to negative infinity.
+        prev_val = float('-inf')
+
+        def inorder(node: Optional[TreeNode]) -&gt; bool:
+            nonlocal prev_val
+            if not node:
+                return True
+
+            # First, traverse the left subtree.
+            # If the left traversal finds an invalid sequence, short-circuit and return False.
+            if not inorder(node.left):
+                return False
+
+            # Then, check the current node against the previous value.
+            if node.val &lt;= prev_val:
+                return False
+
+            # Update the previous value.
+            prev_val = node.val
+
+            # Finally, traverse the right subtree.
+            return inorder(node.right)
+
+        return inorder(root)
+</code></pre></div>

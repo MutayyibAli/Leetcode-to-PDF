@@ -1,0 +1,131 @@
+<div class='ai-explanation'><h3>List of all the approaches to solution</h3>
+<ol>
+<li>Brute Force Approach</li>
+<li>Single Pass with Hash Sets</li>
+</ol>
+<h3>Brute Force Approach</h3>
+<p>This approach validates the board by checking each of the three Sudoku rules separately. It makes three passes over the board data: one to validate all rows, one for all columns, and one for all 3x3 sub-boxes. For each unit (row, column, or box), a hash set is used to detect duplicate digits. While simple to understand, it is less efficient than a single-pass solution. The time complexity is O(N^2) and space complexity is O(N) for an N x N board; since N is fixed at 9, both are effectively O(1).</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;unordered_set&gt;
+
+class Solution {
+public:
+    bool isValidSudoku(std::vector&lt;std::vector&lt;char&gt;&gt;&amp; board) {
+        // 1. Check each row for duplicates
+        for (int i = 0; i &lt; 9; ++i) {
+            std::unordered_set&lt;char&gt; row_set;
+            for (int j = 0; j &lt; 9; ++j) {
+                if (board[i][j] != '.') {
+                    if (row_set.count(board[i][j])) {
+                        return false;
+                    }
+                    row_set.insert(board[i][j]);
+                }
+            }
+        }
+
+        // 2. Check each column for duplicates
+        for (int j = 0; j &lt; 9; ++j) {
+            std::unordered_set&lt;char&gt; col_set;
+            for (int i = 0; i &lt; 9; ++i) {
+                if (board[i][j] != '.') {
+                    if (col_set.count(board[i][j])) {
+                        return false;
+                    }
+                    col_set.insert(board[i][j]);
+                }
+            }
+        }
+
+        // 3. Check each 3x3 box for duplicates
+        for (int box_row = 0; box_row &lt; 9; box_row += 3) {
+            for (int box_col = 0; box_col &lt; 9; box_col += 3) {
+                std::unordered_set&lt;char&gt; box_set;
+                for (int i = box_row; i &lt; box_row + 3; ++i) {
+                    for (int j = box_col; j &lt; box_col + 3; ++j) {
+                        if (board[i][j] != '.') {
+                            if (box_set.count(board[i][j])) {
+                                return false;
+                            }
+                            box_set.insert(board[i][j]);
+                        }
+                    }
+                }
+            }
+        }
+
+        return true;
+    }
+};
+</code></pre>
+<h3>Single Pass with Hash Sets</h3>
+<p>This is a more efficient approach that checks all three Sudoku rules in a single pass through the board. We use three arrays of hash sets: one for rows, one for columns, and one for the 3x3 boxes. As we iterate through each cell <code>(r, c)</code> of the board, we check if the digit at that cell already exists in the corresponding sets for its row <code>r</code>, column <code>c</code>, and its 3x3 box. The box is identified by a calculated index, <code>(r / 3) * 3 + (c / 3)</code>. If a duplicate is found in any of these, the board is invalid. Otherwise, we add the digit to all three sets and continue. This eliminates the need for multiple passes, making the solution very performant. The time and space complexities are both O(1) as the board size is constant (9x9).</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;unordered_set&gt;
+
+class Solution {
+public:
+    bool isValidSudoku(std::vector&lt;std::vector&lt;char&gt;&gt;&amp; board) {
+        std::unordered_set&lt;char&gt; rows[9];
+        std::unordered_set&lt;char&gt; cols[9];
+        std::unordered_set&lt;char&gt; boxes[9];
+
+        for (int r = 0; r &lt; 9; ++r) {
+            for (int c = 0; c &lt; 9; ++c) {
+                if (board[r][c] == '.') {
+                    continue;
+                }
+
+                char value = board[r][c];
+                int boxIndex = (r / 3) * 3 + (c / 3);
+
+                if (rows[r].count(value) || cols[c].count(value) || boxes[boxIndex].count(value)) {
+                    return false;
+                }
+
+                rows[r].insert(value);
+                cols[c].insert(value);
+                boxes[boxIndex].insert(value);
+            }
+        }
+
+        return true;        
+    }
+};
+</code></pre>
+<h3>Pythonic solution for best approach</h3>
+<p>This Python solution implements the single-pass approach using <code>collections.defaultdict(set)</code>. This provides a convenient way to manage the sets for each row, column, and box. The key for the box dictionary is a tuple <code>(r // 3, c // 3)</code>, which clearly represents the 2D index of the 3x3 box. The logic remains the same: iterate once, and for each cell, check for duplicates in its row, column, and box.</p>
+<pre><code class="language-python">import collections
+
+class Solution:
+    def isValidSudoku(self, board: list[list[str]]) -&gt; bool:
+        &quot;&quot;&quot;
+        Validates a Sudoku board using a single pass with hash sets.
+        &quot;&quot;&quot;
+        rows = collections.defaultdict(set)
+        cols = collections.defaultdict(set)
+        boxes = collections.defaultdict(set)
+
+        for r in range(9):
+            for c in range(9):
+                value = board[r][c]
+
+                if value == &quot;.&quot;:
+                    continue
+
+                # Calculate the key for the 3x3 box
+                box_key = (r // 3, c // 3)
+
+                # Check for duplicates
+                if (value in rows[r] or
+                    value in cols[c] or
+                    value in boxes[box_key]):
+                    return False
+
+                # Add the value to the corresponding sets
+                rows[r].add(value)
+                cols[c].add(value)
+                boxes[box_key].add(value)
+
+        return True
+</code></pre></div>

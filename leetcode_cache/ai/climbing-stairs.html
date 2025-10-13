@@ -1,0 +1,152 @@
+<div class='ai-explanation'><h3>List of Approaches</h3>
+<ol>
+<li>Brute Force Approach (Recursion)</li>
+<li>Memoization Approach (Top-Down Dynamic Programming)</li>
+<li>Tabulation Approach (Bottom-Up Dynamic Programming)</li>
+<li>Space Optimized Approach</li>
+</ol>
+<hr />
+<h3>1. Brute Force Approach (Recursion)</h3>
+<p>This approach directly translates the problem's recurrence relation into a recursive function. To reach the <code>n</code>-th step, you must have come from either the <code>(n-1)</code>-th step or the <code>(n-2)</code>-th step. Therefore, the total number of ways to reach step <code>n</code> is the sum of ways to reach <code>n-1</code> and <code>n-2</code>.</p>
+<ol>
+<li><strong>Base Cases:</strong> Define the stopping conditions for the recursion. There is 1 way to be at the start (step 0) and 1 way to reach the first step. So, if <code>n</code> is 0 or 1, return 1.</li>
+<li><strong>Recursive Step:</strong> For any other step <code>n</code>, the function calls itself for <code>n-1</code> and <code>n-2</code> and returns their sum.</li>
+<li><strong>Drawback:</strong> This method is inefficient because it recomputes the same values multiple times, leading to an exponential number of calls. For example, <code>climbStairs(5)</code> will call <code>climbStairs(3)</code> twice.</li>
+</ol>
+<p>This approach has a time complexity of O(2^n) and a space complexity of O(n) due to the recursion stack depth.</p>
+<pre><code class="language-cpp">class Solution {
+public:
+    int climbStairs(int n) {
+        // Base cases for the recursion
+        if (n == 0 || n == 1) {
+            return 1;
+        }
+        // Recursive step: ways(n) = ways(n-1) + ways(n-2)
+        return climbStairs(n - 1) + climbStairs(n - 2);
+    }
+};
+</code></pre>
+<hr />
+<h3>2. Memoization Approach (Top-Down Dynamic Programming)</h3>
+<p>This is a top-down dynamic programming approach that optimizes the recursive solution. It uses a cache (like an array or map) to store the results of subproblems. When the function is called for a step <code>n</code>, it first checks if the result is already computed and stored. If so, it returns the stored value; otherwise, it computes the result, stores it in the cache, and then returns it.</p>
+<ol>
+<li><strong>Initialize Cache:</strong> Create a data structure (e.g., a <code>vector</code> or <code>unordered_map</code>) to store the results of <code>climbStairs(i)</code> for each <code>i</code>.</li>
+<li><strong>Check Cache:</strong> In the recursive function, before any computation, check if the result for the current <code>n</code> is already in the cache. If it is, return it immediately.</li>
+<li><strong>Compute and Store:</strong> If the result is not in the cache, compute it recursively, store it in the cache, and then return it.</li>
+</ol>
+<p>This optimization avoids redundant calculations, reducing the time complexity to O(n) while the space complexity is O(n) for the cache and recursion stack.</p>
+<pre><code class="language-cpp">class Solution {
+private:
+    // Helper function with memoization
+    int solve(int n, unordered_map&lt;int, int&gt;&amp; memo) {
+        // Base cases
+        if (n == 0 || n == 1) {
+            return 1;
+        }
+        // Check if the result is already in the cache
+        if (memo.find(n) != memo.end()) {
+            return memo[n];
+        }
+        // Compute, store, and return the result
+        memo[n] = solve(n - 1, memo) + solve(n - 2, memo);
+        return memo[n];
+    }
+
+public:
+    int climbStairs(int n) {
+        unordered_map&lt;int, int&gt; memo;
+        return solve(n, memo);
+    }
+};
+</code></pre>
+<hr />
+<h3>3. Tabulation Approach (Bottom-Up Dynamic Programming)</h3>
+<p>This is a bottom-up dynamic programming approach. Instead of starting from <code>n</code> and going down (recursively), it starts from the base cases and iteratively computes the solution for each step up to <code>n</code>.</p>
+<ol>
+<li><strong>Initialize DP Table:</strong> Create an array or vector <code>dp</code> of size <code>n + 1</code> to store the number of ways to reach each step.</li>
+<li><strong>Set Base Cases:</strong> Initialize the first few values in the <code>dp</code> table. <code>dp[0] = 1</code> and <code>dp[1] = 1</code>.</li>
+<li><strong>Iterate and Fill Table:</strong> Loop from <code>i = 2</code> to <code>n</code>. In each iteration, calculate <code>dp[i]</code> using the values of the previous two steps: <code>dp[i] = dp[i-1] + dp[i-2]</code>.</li>
+<li><strong>Return Result:</strong> The final answer is the value at <code>dp[n]</code>.</li>
+</ol>
+<p>The time complexity is O(n) due to the single loop, and the space complexity is O(n) for the DP table.</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+
+class Solution {
+public:
+    int climbStairs(int n) {
+        if (n &lt;= 1) {
+            return 1;
+        }
+
+        // DP table to store results for each step
+        std::vector&lt;int&gt; dp(n + 1);
+
+        // Base cases
+        dp[0] = 1;
+        dp[1] = 1;
+
+        // Fill the DP table iteratively
+        for (int i = 2; i &lt;= n; i++) {
+            dp[i] = dp[i - 1] + dp[i - 2];
+        }
+
+        return dp[n];
+    }
+};
+</code></pre>
+<hr />
+<h3>4. Space Optimized Approach</h3>
+<p>This approach further optimizes the tabulation method. We observe that to calculate the number of ways for the current step <code>i</code>, we only need the results for the previous two steps, <code>i-1</code> and <code>i-2</code>. Thus, we don't need to store the entire DP table. We can solve the problem using only two variables.</p>
+<ol>
+<li><strong>Handle Base Cases:</strong> If <code>n</code> is 0 or 1, return 1.</li>
+<li><strong>Initialize Pointers:</strong> Create two variables, <code>prev</code> and <code>curr</code>, to store the number of ways for the two preceding steps. Initialize them based on the base cases: <code>prev = 1</code> (for step <code>i-2</code>) and <code>curr = 1</code> (for step <code>i-1</code>).</li>
+<li><strong>Iterate:</strong> Loop from <code>i = 2</code> to <code>n</code>.</li>
+<li><strong>Update Pointers:</strong> In each iteration, calculate the next value by summing <code>prev</code> and <code>curr</code>. Then, update <code>prev</code> to the old <code>curr</code> value and <code>curr</code> to the new calculated value.</li>
+<li><strong>Return Result:</strong> After the loop, <code>curr</code> will hold the number of ways to reach step <code>n</code>.</li>
+</ol>
+<p>This is the most efficient approach with a time complexity of O(n) and a space complexity of O(1).</p>
+<pre><code class="language-cpp">class Solution {
+public:
+    int climbStairs(int n) {
+        if (n &lt;= 1) {
+            return 1;
+        }
+
+        int prev = 1; // Represents ways to climb i-2 stairs
+        int curr = 1; // Represents ways to climb i-1 stairs
+
+        for (int i = 2; i &lt;= n; i++) {
+            int temp = curr;
+            curr = prev + curr; // Calculate ways for step i
+            prev = temp;
+        }
+
+        return curr;
+    }
+};
+</code></pre>
+<hr />
+<h3>Pythonic Solution (Best Approach)</h3>
+<p>The space-optimized approach is the most efficient. A pythonic implementation can use tuple unpacking to swap variables elegantly, making the code concise and readable.</p>
+<pre><code class="language-python">class Solution:
+    def climbStairs(self, n: int) -&gt; int:
+        &quot;&quot;&quot;
+        Calculates the number of distinct ways to climb n stairs
+        using a space-optimized dynamic programming approach.
+        &quot;&quot;&quot;
+        if n &lt;= 1:
+            return 1
+
+        # prev represents ways to reach (i-2)th step
+        # curr represents ways to reach (i-1)th step
+        prev, curr = 1, 1
+
+        # Iterate from the 2nd step up to n
+        for _ in range(2, n + 1):
+            # The new curr is the sum of the previous two.
+            # The old curr becomes the new prev.
+            prev, curr = curr, prev + curr
+
+        return curr
+
+</code></pre></div>

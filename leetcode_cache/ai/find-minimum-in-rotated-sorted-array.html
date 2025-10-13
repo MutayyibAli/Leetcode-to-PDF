@@ -1,0 +1,109 @@
+<div class='ai-explanation'><h3>List of all the approaches to solution</h3>
+<ol>
+<li>Brute Force Approach</li>
+<li>Binary Search Approach</li>
+</ol>
+<hr />
+<h3>For each approach, give a brief step by step explanation of the approach (with time &amp; space complexity in the last sentence) and code snippet in C++</h3>
+<h4>1. Brute Force Approach</h4>
+<p>The most straightforward way to find the minimum element is to iterate through the entire array and keep track of the smallest value encountered.</p>
+<p><strong>Step-by-step explanation:</strong>
+1.  Initialize a variable, <code>min_element</code>, with the value of the first element in the array.
+2.  Iterate through the array from the second element to the end.
+3.  In each iteration, compare the current element with <code>min_element</code>.
+4.  If the current element is smaller, update <code>min_element</code> to the value of the current element.
+5.  After the loop completes, <code>min_element</code> will hold the minimum value in the array.</p>
+<p>This approach is simple to implement but does not meet the <code>O(log n)</code> time complexity requirement of the problem. The time complexity is <code>O(n)</code> as it requires scanning the entire array, and the space complexity is <code>O(1)</code>.</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;algorithm&gt;
+
+class Solution {
+public:
+    int findMin(std::vector&lt;int&gt;&amp; nums) {
+        int min_element = nums[0];
+        for (size_t i = 1; i &lt; nums.size(); ++i) {
+            if (nums[i] &lt; min_element) {
+                min_element = nums[i];
+            }
+        }
+        return min_element;
+    }
+};
+</code></pre>
+<hr />
+<h4>2. Binary Search Approach</h4>
+<p>Since the array is a rotated version of a sorted array, we can use a modified binary search to find the minimum element in logarithmic time. The key idea is to determine which half of the array contains the pivot point (the minimum element).</p>
+<p>A rotated sorted array has a unique property: it consists of two sorted subarrays. The minimum element is the first element of the second subarray. We can use binary search to efficiently locate this element.</p>
+<p><strong>Step-by-step explanation:</strong>
+1.  Initialize two pointers, <code>low</code> to the start of the array (index 0) and <code>high</code> to the end (index <code>n-1</code>).
+2.  If the array is not rotated at all (i.e., <code>nums[low] &lt;= nums[high]</code>), the minimum element is at the beginning, so we can return <code>nums[low]</code>.
+3.  Enter a loop that continues as long as <code>low</code> is less than <code>high</code>.
+4.  Calculate the middle index <code>mid</code>.
+5.  Compare the middle element <code>nums[mid]</code> with the element at the <code>high</code> index, <code>nums[high]</code>:
+    *   If <code>nums[mid] &gt; nums[high]</code>, it means the pivot (and thus the minimum element) must lie in the right half of the array (from <code>mid + 1</code> to <code>high</code>). So, we discard the left half by setting <code>low = mid + 1</code>.
+    *   If <code>nums[mid] &lt;= nums[high]</code>, it means the subarray from <code>mid</code> to <code>high</code> is sorted. Therefore, the minimum element could be <code>nums[mid]</code> or an element in the left half. We discard the right half by setting <code>high = mid</code>.
+6.  The loop terminates when <code>low</code> and <code>high</code> converge to the same index, which will be the index of the minimum element.
+7.  Return the element at the <code>low</code> index.</p>
+<p>This algorithm effectively halves the search space in each iteration, leading to a time complexity of <code>O(log n)</code> and a space complexity of <code>O(1)</code>.</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+
+class Solution {
+public:
+    int findMin(std::vector&lt;int&gt;&amp; nums) {
+        int low = 0;
+        int high = nums.size() - 1;
+
+        // The loop continues until the search space is narrowed down to one element.
+        while (low &lt; high) {
+            // Optimization: If the current search space is already sorted,
+            // the minimum element is at the 'low' index.
+            if (nums[low] &lt; nums[high]) {
+                return nums[low];
+            }
+
+            int mid = low + (high - low) / 2;
+
+            // If mid element is greater than the high element,
+            // the minimum must be in the right part.
+            if (nums[mid] &gt; nums[high]) {
+                low = mid + 1;
+            } else {
+                // Otherwise, the minimum is in the left part (including mid),
+                // as mid could be the minimum itself.
+                high = mid;
+            }
+        }
+        // When low == high, we have found the minimum element.
+        return nums[low];
+    }
+};
+</code></pre>
+<hr />
+<h3>Lastly provide pythonic solution for best approach only</h3>
+<pre><code class="language-python">from typing import List
+
+class Solution:
+    def findMin(self, nums: List[int]) -&gt; int:
+        &quot;&quot;&quot;
+        Finds the minimum element in a rotated sorted array using binary search.
+        &quot;&quot;&quot;
+        low, high = 0, len(nums) - 1
+
+        while low &lt; high:
+            # If the current window is sorted, the first element is the minimum
+            if nums[low] &lt; nums[high]:
+                return nums[low]
+
+            mid = low + (high - low) // 2
+
+            # The inflection point is in the right half
+            if nums[mid] &gt; nums[high]:
+                low = mid + 1
+            # The inflection point is in the left half (or at mid)
+            else:
+                high = mid
+
+        # The loop terminates when low == high, which points to the minimum element
+        return nums[low]
+
+</code></pre></div>

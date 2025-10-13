@@ -1,0 +1,281 @@
+<div class='ai-explanation'><h3>List of Approaches to Solution</h3>
+<ol>
+<li>Brute Force Approach</li>
+<li>One-by-One Merging</li>
+<li>Using a Min-Heap (Priority Queue)</li>
+<li>Divide and Conquer</li>
+</ol>
+<hr />
+<h3>1. Brute Force Approach</h3>
+<p>This approach involves traversing all the linked lists and collecting all the node values into a single array. Then, we sort this array and, finally, build a new sorted linked list from the sorted values.</p>
+<p><strong>Step-by-step explanation:</strong>
+1.  Create a vector to store the values of all nodes.
+2.  Iterate through each linked list in the input array.
+3.  For each linked list, traverse it from head to tail, adding each node's value to the vector.
+4.  After collecting all values, sort the vector in ascending order.
+5.  Create a new dummy head for the result list.
+6.  Iterate through the sorted vector and create a new node for each value, appending it to the result list.
+7.  Return the <code>next</code> pointer of the dummy head.</p>
+<p>This method is simple to understand but can be inefficient due to the overhead of sorting a potentially very large number of elements and using extra space to store them all. The time complexity is dominated by the sorting step. Let <code>N</code> be the total number of nodes in all lists. The time complexity is <code>O(N log N)</code> and the space complexity is <code>O(N)</code>.</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;algorithm&gt;
+
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* mergeKLists(std::vector&lt;ListNode*&gt;&amp; lists) {
+        std::vector&lt;int&gt; nodes;
+        for (ListNode* list : lists) {
+            ListNode* current = list;
+            while (current) {
+                nodes.push_back(current-&gt;val);
+                current = current-&gt;next;
+            }
+        }
+
+        std::sort(nodes.begin(), nodes.end());
+
+        ListNode dummy_head(0);
+        ListNode* tail = &amp;dummy_head;
+        for (int val : nodes) {
+            tail-&gt;next = new ListNode(val);
+            tail = tail-&gt;next;
+        }
+
+        return dummy_head.next;
+    }
+};
+</code></pre>
+<hr />
+<h3>2. One-by-One Merging</h3>
+<p>In this approach, we merge the lists sequentially. We start with an empty list or the first list and iteratively merge it with the subsequent lists one by one until all lists are merged.</p>
+<p><strong>Step-by-step explanation:</strong>
+1.  If the input list of lists is empty, return <code>nullptr</code>.
+2.  Initialize the result list with the first list (<code>lists[0]</code>).
+3.  Iterate through the rest of the lists, from the second list (<code>lists[1]</code>) to the end.
+4.  In each iteration, merge the current result list with the current list (<code>lists[i]</code>) using a helper function <code>mergeTwoLists</code>.
+5.  Update the result list with the newly merged list.
+6.  After the loop finishes, return the final merged list.</p>
+<p>This approach is simple but inefficient if the number of lists, <code>k</code>, is large. Each merge operation can be costly, and the merged list grows progressively, making subsequent merges slower. Let <code>N</code> be the total number of nodes and <code>k</code> be the number of lists. The time complexity is <code>O(N*k)</code> and the space complexity is <code>O(1)</code> (assuming an iterative <code>mergeTwoLists</code> helper).</p>
+<pre><code class="language-cpp">/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* mergeKLists(std::vector&lt;ListNode*&gt;&amp; lists) {
+        if (lists.empty()) {
+            return nullptr;
+        }
+
+        ListNode* mergedList = lists[0];
+        for (int i = 1; i &lt; lists.size(); ++i) {
+            mergedList = mergeTwoLists(mergedList, lists[i]);
+        }
+
+        return mergedList;
+    }
+
+private:
+    ListNode* mergeTwoLists(ListNode* l1, ListNode* l2) {
+        ListNode dummy_head(0);
+        ListNode* tail = &amp;dummy_head;
+
+        while (l1 &amp;&amp; l2) {
+            if (l1-&gt;val &lt; l2-&gt;val) {
+                tail-&gt;next = l1;
+                l1 = l1-&gt;next;
+            } else {
+                tail-&gt;next = l2;
+                l2 = l2-&gt;next;
+            }
+            tail = tail-&gt;next;
+        }
+
+        tail-&gt;next = l1 ? l1 : l2;
+        return dummy_head.next;
+    }
+};
+</code></pre>
+<hr />
+<h3>3. Using a Min-Heap (Priority Queue)</h3>
+<p>A more efficient approach uses a min-heap to always keep track of the smallest node among the heads of all lists. This way, we can pick the smallest element and add it to our result list in logarithmic time.</p>
+<p><strong>Step-by-step explanation:</strong>
+1.  Create a min-heap (priority queue) that stores <code>ListNode</code> pointers. The comparison for the heap should be based on the node's <code>val</code>.
+2.  Insert the head node of each of the <code>k</code> lists into the min-heap, as long as the list is not empty.
+3.  Create a dummy head for the result list and a <code>tail</code> pointer to build the new list.
+4.  While the heap is not empty:
+    a. Extract the node with the minimum value from the heap. This will be the next node in our sorted list.
+    b. Append this node to the result list by setting <code>tail-&gt;next</code> to it and advancing <code>tail</code>.
+    c. If the extracted node has a next node in its original list, insert that next node into the heap.
+5.  Return the <code>next</code> pointer of the dummy head.</p>
+<p>This approach is efficient because finding the minimum among <code>k</code> nodes takes <code>O(log k)</code> time. We repeat this for all <code>N</code> nodes. The time complexity is <code>O(N log k)</code> and the space complexity is <code>O(k)</code> for storing at most <code>k</code> nodes in the heap.</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;queue&gt;
+
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
+public:
+    struct CompareNodes {
+        bool operator()(const ListNode* a, const ListNode* b) {
+            return a-&gt;val &gt; b-&gt;val;
+        }
+    };
+
+    ListNode* mergeKLists(std::vector&lt;ListNode*&gt;&amp; lists) {
+        std::priority_queue&lt;ListNode*, std::vector&lt;ListNode*&gt;, CompareNodes&gt; pq;
+
+        for (ListNode* list : lists) {
+            if (list) {
+                pq.push(list);
+            }
+        }
+
+        ListNode dummy_head(0);
+        ListNode* tail = &amp;dummy_head;
+
+        while (!pq.empty()) {
+            ListNode* min_node = pq.top();
+            pq.pop();
+
+            tail-&gt;next = min_node;
+            tail = tail-&gt;next;
+
+            if (min_node-&gt;next) {
+                pq.push(min_node-&gt;next);
+            }
+        }
+
+        return dummy_head.next;
+    }
+};
+</code></pre>
+<hr />
+<h3>4. Divide and Conquer</h3>
+<p>This approach is based on the Merge Sort algorithm. We pair up the <code>k</code> lists and merge each pair. We repeat this process, with the number of lists halving in each step, until only one list remains. This is one of the most optimal solutions.</p>
+<p><strong>Step-by-step explanation:</strong>
+1.  The core idea is to recursively split the array of lists into two halves.
+2.  Base cases for recursion:
+    *   If the list array is empty, return <code>nullptr</code>.
+    *   If the list array contains only one list, return that list.
+3.  Find the middle of the list array.
+4.  Recursively call the function for the left half <code>lists[0...mid]</code> and the right half <code>lists[mid+1...end]</code>.
+5.  This will return two sorted linked lists.
+6.  Merge these two sorted lists using the <code>mergeTwoLists</code> helper function and return the result.</p>
+<p>This process builds up the solution by merging increasingly larger sorted lists. The recursion depth is <code>log k</code>, and at each level, we merge a total of <code>N</code> nodes. The time complexity is <code>O(N log k)</code> and the space complexity is <code>O(log k)</code> due to the recursion stack.</p>
+<pre><code class="language-cpp">/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* mergeKLists(std::vector&lt;ListNode*&gt;&amp; lists) {
+        if (lists.empty()) {
+            return nullptr;
+        }
+        return mergeKListsHelper(lists, 0, lists.size() - 1);
+    }
+
+private:
+    ListNode* mergeKListsHelper(std::vector&lt;ListNode*&gt;&amp; lists, int start, int end) {
+        if (start == end) {
+            return lists[start];
+        }
+        if (start &gt; end) {
+            return nullptr;
+        }
+        int mid = start + (end - start) / 2;
+        ListNode* left = mergeKListsHelper(lists, start, mid);
+        ListNode* right = mergeKListsHelper(lists, mid + 1, end);
+        return mergeTwoLists(left, right);
+    }
+
+    ListNode* mergeTwoLists(ListNode* l1, ListNode* l2) {
+        ListNode dummy_head(0);
+        ListNode* tail = &amp;dummy_head;
+
+        while (l1 &amp;&amp; l2) {
+            if (l1-&gt;val &lt; l2-&gt;val) {
+                tail-&gt;next = l1;
+                l1 = l1-&gt;next;
+            } else {
+                tail-&gt;next = l2;
+                l2 = l2-&gt;next;
+            }
+            tail = tail-&gt;next;
+        }
+
+        tail-&gt;next = l1 ? l1 : l2;
+        return dummy_head.next;
+    }
+};
+</code></pre>
+<hr />
+<h3>Pythonic Solution (Divide and Conquer)</h3>
+<p>This Python solution elegantly implements the Divide and Conquer approach recursively. It splits the list of lists into two halves, recursively solves for each half, and then merges the two results.</p>
+<pre><code class="language-python"># Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, val=0, next=None):
+#         self.val = val
+#         self.next = next
+class Solution:
+    def mergeKLists(self, lists: list[Optional[ListNode]]) -&gt; Optional[ListNode]:
+        if not lists:
+            return None
+        if len(lists) == 1:
+            return lists[0]
+
+        mid = len(lists) // 2
+        left_half = self.mergeKLists(lists[:mid])
+        right_half = self.mergeKLists(lists[mid:])
+
+        return self.mergeTwoLists(left_half, right_half)
+
+    def mergeTwoLists(self, l1: Optional[ListNode], l2: Optional[ListNode]) -&gt; Optional[ListNode]:
+        dummy_head = ListNode()
+        tail = dummy_head
+
+        while l1 and l2:
+            if l1.val &lt; l2.val:
+                tail.next = l1
+                l1 = l1.next
+            else:
+                tail.next = l2
+                l2 = l2.next
+            tail = tail.next
+
+        # At least one of l1 and l2 is now None. Append the non-null list.
+        tail.next = l1 or l2
+
+        return dummy_head.next
+</code></pre></div>

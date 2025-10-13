@@ -1,0 +1,126 @@
+<div class='ai-explanation'><h3>List of all the approaches to solution</h3>
+<ol>
+<li>Brute Force Approach (Iterative Replacement)</li>
+<li>Stack-based Approach</li>
+</ol>
+<hr />
+<h3>1. Brute Force Approach (Iterative Replacement)</h3>
+<p>This approach repeatedly scans the string and removes any valid, adjacent pairs of parentheses like "()", "[]", or "{}". We continue this process until no more pairs can be removed. If the final string is empty, it means all parentheses were correctly nested and matched.</p>
+<ol>
+<li>Start a loop that continues as long as we can find and replace a valid pair.</li>
+<li>Inside the loop, check if the string contains "()", "[]", or "{}".</li>
+<li>If a pair is found, replace its first occurrence with an empty string. For example, <code>s.replace("()", "")</code>.</li>
+<li>If no pairs can be found in a full pass through the string, exit the loop.</li>
+<li>After the loop terminates, check if the string is empty. An empty string signifies a valid input, while a non-empty string indicates an invalid one.</li>
+</ol>
+<p>This method is inefficient due to repeated string searching and modification, which can be costly. The time complexity is O(N^2) where N is the length of the string, and the space complexity is O(N) for storing the modified strings.</p>
+<pre><code class="language-cpp">#include &lt;string&gt;
+#include &lt;iostream&gt;
+
+class Solution {
+public:
+    bool isValid(std::string s) {
+        int original_length;
+        do {
+            original_length = s.length();
+            // Replace all occurrences of &quot;()&quot;, &quot;[]&quot;, and &quot;{}&quot;
+            s = replace(s, &quot;()&quot;);
+            s = replace(s, &quot;[]&quot;);
+            s = replace(s, &quot;{}&quot;);
+        } while (s.length() != original_length); // Continue until no more replacements can be made
+
+        return s.empty();
+    }
+
+private:
+    // Helper function to replace first occurrence of a substring
+    std::string replace(std::string str, const std::string&amp; from) {
+        size_t start_pos = str.find(from);
+        if(start_pos != std::string::npos) {
+            str.replace(start_pos, from.length(), &quot;&quot;);
+        }
+        return str;
+    }
+};
+</code></pre>
+<hr />
+<h3>2. Stack-based Approach</h3>
+<p>This is the optimal approach for this problem. The Last-In, First-Out (LIFO) nature of a stack perfectly matches the nesting structure of parentheses. We iterate through the string, pushing opening brackets onto the stack and popping them when we find their corresponding closing bracket.</p>
+<ol>
+<li>Initialize an empty stack of characters.</li>
+<li>Iterate through each character of the input string.</li>
+<li>If the current character is an opening bracket (<code>(</code>, <code>[</code>, or <code>{</code>), push it onto the stack.</li>
+<li>If the current character is a closing bracket (<code>)</code>, <code>]</code>, or <code>}</code>):<ul>
+<li>First, check if the stack is empty. If it is, we have a closing bracket without a matching opening one, so the string is invalid.</li>
+<li>If the stack is not empty, check if the character at the top of the stack is the corresponding opening bracket.</li>
+<li>If it matches (e.g., character is <code>)</code> and stack top is <code>(</code>), pop from the stack.</li>
+<li>If it does not match, the brackets are in the wrong order, so the string is invalid.</li>
+</ul>
+</li>
+<li>After the loop finishes, if the stack is empty, it means every opening bracket was correctly matched and closed. If the stack is not empty, there are unclosed opening brackets, making the string invalid.</li>
+</ol>
+<p>This approach processes each character once, with constant time stack operations. The time complexity is O(N) and the space complexity is O(N) in the worst case, where N is the length of the string.</p>
+<pre><code class="language-cpp">#include &lt;string&gt;
+#include &lt;stack&gt;
+
+class Solution {
+public:
+    bool isValid(std::string s) {
+        std::stack&lt;char&gt; st;
+        for (char c : s) {
+            if (c == '(' || c == '{' || c == '[') {
+                st.push(c);
+            } else {
+                if (st.empty()) {
+                    return false; // Closing bracket with no matching opening bracket
+                }
+                char top = st.top();
+                if ((c == ')' &amp;&amp; top == '(') ||
+                    (c == '}' &amp;&amp; top == '{') ||
+                    (c == ']' &amp;&amp; top == '[')) {
+                    st.pop();
+                } else {
+                    return false; // Mismatched brackets
+                }
+            }
+        }
+        // If stack is empty, all brackets were matched. Otherwise, there are unclosed brackets.
+        return st.empty();
+    }
+};
+</code></pre>
+<hr />
+<h3>Pythonic Solution (Best Approach)</h3>
+<p>The optimal stack-based approach can be implemented cleanly in Python using a dictionary (hash map) to store the mappings between closing and opening brackets. This avoids a long <code>if/elif/else</code> chain and makes the code more readable and scalable.</p>
+<pre><code class="language-python">class Solution:
+    def isValid(self, s: str) -&gt; bool:
+        &quot;&quot;&quot;
+        Determines if the input string of parentheses is valid using a stack.
+        &quot;&quot;&quot;
+        # A stack to keep track of opening brackets
+        stack = []
+
+        # A dictionary to map closing brackets to their corresponding opening ones
+        bracket_map = {&quot;)&quot;: &quot;(&quot;, &quot;}&quot;: &quot;{&quot;, &quot;]&quot;: &quot;[&quot;}
+
+        # Iterate through each character in the string
+        for char in s:
+            # If the character is a closing bracket
+            if char in bracket_map:
+                # Pop the top element from the stack if it's not empty,
+                # otherwise use a dummy value '#' that won't match.
+                top_element = stack.pop() if stack else '#'
+
+                # If the popped element is not the corresponding opening bracket,
+                # the string is invalid.
+                if bracket_map[char] != top_element:
+                    return False
+            else:
+                # If it's an opening bracket, push it onto the stack.
+                stack.append(char)
+
+        # If the stack is empty at the end, all brackets were matched correctly.
+        # Otherwise, there are unmatched opening brackets.
+        return not stack
+
+</code></pre></div>

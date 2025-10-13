@@ -1,0 +1,185 @@
+<div class='ai-explanation'><h3>List of all the approaches to solution</h3>
+<ol>
+<li>Brute Force Approach (Double DFS)</li>
+<li>Optimized Approach using Prefix Sum (Single DFS)</li>
+</ol>
+<hr />
+<h3>Brute Force Approach (Double DFS)</h3>
+<h4>Explanation</h4>
+<p>This approach iterates through every node in the tree. For each node, it calculates how many paths starting from that node sum up to the <code>targetSum</code>. This results in a nested Depth First Search (DFS) structure.</p>
+<ol>
+<li><strong>Outer Traversal (<code>pathSum</code>)</strong>: A primary DFS function traverses the entire tree, visiting each node (<code>root</code>). Its purpose is to treat every node as a potential starting point for a valid path.</li>
+<li><strong>Inner DFS (<code>dfs</code>)</strong>: For each <code>root</code> from the outer traversal, a second helper DFS function (<code>dfs</code>) is called. This function explores all downward paths starting from that <code>root</code>.</li>
+<li><strong>Path Sum Calculation</strong>: The inner <code>dfs</code> function recursively subtracts the current node's value from the remaining <code>sum</code>. If the <code>sum</code> becomes equal to the current node's value, it means a valid path has been found, and a global counter is incremented.</li>
+<li><strong>Aggregation</strong>: The process is repeated for the left and right children of the starting node in the outer traversal. The final result is the total count accumulated from all possible starting nodes.</li>
+</ol>
+<p>This method is straightforward but inefficient because it recomputes sums for overlapping subpaths multiple times. The time complexity is O(N^2) in the worst case (a skewed tree) and O(N log N) for a balanced tree, with a space complexity of O(N) for the recursion stack in the worst case.</p>
+<h4>C++ Code Snippet</h4>
+<pre><code class="language-cpp">/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    int totalPaths = 0;
+
+    // Main function to iterate through all possible starting nodes
+    int pathSum(TreeNode* root, int targetSum) {
+        if (root) {
+            // Find paths starting from the current node
+            findPathsFromNode(root, targetSum);
+            // Recursively check for paths starting from left and right children
+            pathSum(root-&gt;left, targetSum);
+            pathSum(root-&gt;right, targetSum);
+        }
+        return totalPaths;
+    }
+
+    // Helper DFS to find paths starting from a specific node
+    void findPathsFromNode(TreeNode* node, long long currentSum) {
+        if (!node) {
+            return;
+        }
+        // If the current node's value equals the remaining sum, we found a path
+        if (node-&gt;val == currentSum) {
+            totalPaths++;
+        }
+        // Continue the path downwards with the updated sum
+        findPathsFromNode(node-&gt;left, currentSum - node-&gt;val);
+        findPathsFromNode(node-&gt;right, currentSum - node-&gt;val);
+    }
+};
+</code></pre>
+<hr />
+<h3>Optimized Approach using Prefix Sum (Single DFS)</h3>
+<h4>Explanation</h4>
+<p>This highly efficient approach solves the problem in a single pass by adapting the "prefix sum" technique, commonly used for array problems, to a binary tree.</p>
+<ol>
+<li><strong>Prefix Sum Concept</strong>: A prefix sum for a tree path is the sum of values from the root node down to the current node. If the path from an ancestor node <code>A</code> to a descendant node <code>B</code> sums to <code>targetSum</code>, then <code>prefixSum(B) - prefixSum(A) = targetSum</code>. Rearranging this gives <code>prefixSum(A) = prefixSum(B) - targetSum</code>.</li>
+<li><strong>Single DFS Traversal</strong>: We traverse the tree using a single DFS. During the traversal, we maintain the <code>currentSum</code> (the prefix sum from the root to the current node).</li>
+<li><strong>Hash Map for Frequencies</strong>: We use a hash map to store the frequencies of all prefix sums encountered on the current path from the root. The map is keyed by <code>prefix_sum</code> with the value being its <code>count</code>.</li>
+<li><strong>Finding Paths</strong>: At each node, we first calculate its <code>currentSum</code>. Then, we check the hash map for the key <code>currentSum - targetSum</code>. The value associated with this key tells us how many valid paths end at the current node. We add this count to our total result.</li>
+<li><strong>Updating the Map (Forward Pass)</strong>: Before recursing to the children, we increment the count for the <code>currentSum</code> in the map to make it available for its descendants.</li>
+<li><strong>Backtracking (Return Pass)</strong>: After the recursive calls for the children return, we must decrement the count for the <code>currentSum</code>. This backtracking step is crucial because it ensures that prefix sums from one branch do not affect calculations in a sibling branch.</li>
+<li><strong>Initial State</strong>: The hash map is initialized with a prefix sum of <code>0</code> having a count of <code>1</code> (<code>{0: 1}</code>). This handles cases where a path starting from the root itself equals the <code>targetSum</code>.</li>
+</ol>
+<p>This approach visits each node only once. The time complexity is O(N) where N is the number of nodes. The space complexity is O(H) where H is the height of the tree (O(N) in the worst case of a skewed tree) for the recursion stack and the hash map.</p>
+<h4>C++ Code Snippet</h4>
+<pre><code class="language-cpp">/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+#include &lt;unordered_map&gt;
+
+class Solution {
+public:
+    int pathSum(TreeNode* root, int targetSum) {
+        // Map to store prefix sums and their frequencies: {prefix_sum -&gt; count}
+        std::unordered_map&lt;long long, int&gt; prefixSumCount;
+        // Base case for paths starting from the root itself
+        prefixSumCount[0] = 1;
+        return dfs(root, 0, targetSum, prefixSumCount);
+    }
+
+private:
+    int dfs(TreeNode* node, long long currentSum, int targetSum, std::unordered_map&lt;long long, int&gt;&amp; prefixSumCount) {
+        if (!node) {
+            return 0;
+        }
+
+        // Update the current path sum including the current node's value
+        currentSum += node-&gt;val;
+
+        // Calculate the number of paths ending at the current node
+        // We look for a prefix sum 'p' such that currentSum - p = targetSum
+        // which means p = currentSum - targetSum
+        int count = 0;
+        if (prefixSumCount.count(currentSum - targetSum)) {
+            count = prefixSumCount[currentSum - targetSum];
+        }
+
+        // Add the current prefix sum to the map for descendant nodes to use
+        prefixSumCount[currentSum]++;
+
+        // Recurse for left and right children
+        count += dfs(node-&gt;left, currentSum, targetSum, prefixSumCount);
+        count += dfs(node-&gt;right, currentSum, targetSum, prefixSumCount);
+
+        // Backtrack: remove the current prefix sum from the map when moving up
+        // This ensures that it's not used in sibling paths
+        prefixSumCount[currentSum]--;
+
+        return count;
+    }
+};
+</code></pre>
+<hr />
+<h3>Pythonic Solution (Best Approach)</h3>
+<p>The most efficient and Pythonic solution uses the prefix sum technique with a single DFS traversal. A <code>defaultdict</code> is an excellent choice for cleanly handling the frequency map of prefix sums.</p>
+<pre><code class="language-python">from collections import defaultdict
+from typing import Optional
+
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+
+class Solution:
+    def pathSum(self, root: Optional[TreeNode], targetSum: int) -&gt; int:
+        &quot;&quot;&quot;
+        Calculates the number of paths that sum to targetSum using prefix sums.
+        &quot;&quot;&quot;
+        # A dictionary to store prefix sums and their frequencies.
+        # Initialized with {0: 1} to handle paths that start from the root.
+        prefix_sum_count = defaultdict(int)
+        prefix_sum_count[0] = 1
+
+        self.count = 0
+
+        def dfs(node: Optional[TreeNode], current_sum: int):
+            &quot;&quot;&quot;
+            Traverses the tree, updating path sums and counting valid paths.
+            &quot;&quot;&quot;
+            if not node:
+                return
+
+            # Update the prefix sum for the current path
+            current_sum += node.val
+
+            # Check if (current_sum - targetSum) exists in our map.
+            # This difference represents a prefix sum of an ancestor node.
+            # The number of times it appeared is the number of valid paths
+            # ending at the current node.
+            self.count += prefix_sum_count[current_sum - targetSum]
+
+            # Add the current prefix sum to the map for its descendants
+            prefix_sum_count[current_sum] += 1
+
+            # Recurse for children
+            dfs(node.left, current_sum)
+            dfs(node.right, current_sum)
+
+            # Backtrack: remove the current prefix sum from the map
+            # to avoid affecting sibling paths.
+            prefix_sum_count[current_sum] -= 1
+
+        dfs(root, 0)
+        return self.count
+
+</code></pre></div>

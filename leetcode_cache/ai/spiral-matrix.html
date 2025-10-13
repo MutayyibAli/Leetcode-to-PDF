@@ -1,0 +1,224 @@
+<div class='ai-explanation'><h3>List of Approaches</h3>
+<ol>
+<li>Brute Force Approach (Simulation with a Visited Matrix)</li>
+<li>Recursive Approach</li>
+<li>Layer-by-Layer Traversal</li>
+</ol>
+<hr />
+<h3>Brute Force Approach (Simulation with a Visited Matrix)</h3>
+<p>This approach simulates the spiral path directly. We keep track of our current position <code>(row, col)</code> and the current direction (right, down, left, or up). We continue moving in one direction until we hit the matrix boundary or a cell that we have already visited. When that happens, we turn right and continue. To keep track of visited cells, we use an auxiliary <code>visited</code> matrix of the same dimensions.</p>
+<h4>Steps:</h4>
+<ol>
+<li>Initialize an <code>m x n</code> boolean matrix <code>visited</code> to all <code>false</code>.</li>
+<li>Define an array of directions, e.g., <code>{{0, 1}, {1, 0}, {0, -1}, {-1, 0}}</code> for right, down, left, and up.</li>
+<li>Start at <code>(0, 0)</code> with the initial direction as 'right'.</li>
+<li>Loop <code>m * n</code> times to visit every element in the matrix.</li>
+<li>In each iteration, add the current element <code>matrix[row][col]</code> to the result and mark it as visited.</li>
+<li>Calculate the next potential position based on the current direction.</li>
+<li>If the next position is out of bounds or has already been visited, change the direction to the next one in the sequence (turn right).</li>
+<li>Update the current position <code>(row, col)</code> based on the new direction.</li>
+</ol>
+<p>This process continues until all <code>m * n</code> elements are added to the result. The main drawback is the extra space required for the <code>visited</code> matrix.</p>
+<p>The time complexity is O(m * n) as we visit each cell exactly once. The space complexity is O(m * n) for the <code>visited</code> matrix.</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+
+class Solution {
+public:
+    std::vector&lt;int&gt; spiralOrder(std::vector&lt;std::vector&lt;int&gt;&gt;&amp; matrix) {
+        if (matrix.empty() || matrix[0].empty()) {
+            return {};
+        }
+        int m = matrix.size();
+        int n = matrix[0].size();
+        std::vector&lt;int&gt; result;
+        std::vector&lt;std::vector&lt;bool&gt;&gt; visited(m, std::vector&lt;bool&gt;(n, false));
+
+        // Direction vectors: right, down, left, up
+        int dr[] = {0, 1, 0, -1};
+        int dc[] = {1, 0, -1, 0};
+
+        int row = 0, col = 0, dir = 0;
+
+        for (int i = 0; i &lt; m * n; ++i) {
+            result.push_back(matrix[row][col]);
+            visited[row][col] = true;
+
+            int next_row = row + dr[dir];
+            int next_col = col + dc[dir];
+
+            // Check if the next cell is valid
+            if (next_row &gt;= 0 &amp;&amp; next_row &lt; m &amp;&amp; next_col &gt;= 0 &amp;&amp; next_col &lt; n &amp;&amp; !visited[next_row][next_col]) {
+                row = next_row;
+                col = next_col;
+            } else {
+                // Change direction
+                dir = (dir + 1) % 4;
+                row += dr[dir];
+                col += dc[dir];
+            }
+        }
+        return result;
+    }
+};
+</code></pre>
+<hr />
+<h3>Recursive Approach</h3>
+<p>This is a clever approach based on a recursive definition of the spiral traversal. The idea is that a spiral is formed by taking the first row of the matrix, and then appending the spiral traversal of the <em>remaining</em> matrix after it has been rotated 90 degrees counter-clockwise.</p>
+<h4>Steps:</h4>
+<ol>
+<li><strong>Base Case:</strong> If the matrix is empty, return an empty list.</li>
+<li><strong>Recursive Step:</strong>
+    a. Extract the first row from the matrix and add its elements to the result list.
+    b. Create a new matrix consisting of the remaining rows.
+    c. If the new matrix is not empty, rotate it 90 degrees counter-clockwise. A rotation is equivalent to a transpose followed by a reversal of rows.
+    d. Make a recursive call with this new rotated matrix.
+    e. Append the result of the recursive call to the current result list.</li>
+</ol>
+<p>While elegant and concise (especially in languages like Python), this approach can be inefficient due to the overhead of creating new matrix copies and the recursion depth for large matrices.</p>
+<p>The time complexity is O(m * n) as each element is processed once. The space complexity is O(m * n) due to the recursion stack and the creation of new matrices at each recursive call.</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;algorithm&gt;
+
+class Solution {
+public:
+    std::vector&lt;int&gt; spiralOrder(std::vector&lt;std::vector&lt;int&gt;&gt;&amp; matrix) {
+        if (matrix.empty() || matrix[0].empty()) {
+            return {};
+        }
+
+        std::vector&lt;int&gt; result;
+        // Take the first row
+        for (int x : matrix[0]) {
+            result.push_back(x);
+        }
+
+        // Create a new matrix from the remaining rows
+        std::vector&lt;std::vector&lt;int&gt;&gt; remaining_matrix;
+        if (matrix.size() &gt; 1) {
+            remaining_matrix.assign(matrix.begin() + 1, matrix.end());
+        }
+
+        if (remaining_matrix.empty() || remaining_matrix[0].empty()) {
+            return result;
+        }
+
+        // Rotate the remaining matrix counter-clockwise
+        int m_rem = remaining_matrix.size();
+        int n_rem = remaining_matrix[0].size();
+        std::vector&lt;std::vector&lt;int&gt;&gt; rotated_matrix(n_rem, std::vector&lt;int&gt;(m_rem));
+        for (int i = 0; i &lt; m_rem; ++i) {
+            for (int j = 0; j &lt; n_rem; ++j) {
+                rotated_matrix[n_rem - 1 - j][i] = remaining_matrix[i][j];
+            }
+        }
+
+        // Recurse on the rotated matrix
+        std::vector&lt;int&gt; spiral_rest = spiralOrder(rotated_matrix);
+        result.insert(result.end(), spiral_rest.begin(), spiral_rest.end());
+
+        return result;
+    }
+};
+</code></pre>
+<hr />
+<h3>Layer-by-Layer Traversal</h3>
+<p>This is the most common and optimal iterative approach. It works by conceptually peeling the matrix layer by layer from the outside towards the center. We use four pointers to define the boundaries of the current layer: <code>top</code>, <code>bottom</code>, <code>left</code>, and <code>right</code>. In each iteration, we traverse the four sides of the current layer and then shrink the boundaries to move to the next inner layer.</p>
+<h4>Steps:</h4>
+<ol>
+<li>Initialize four boundary pointers: <code>top = 0</code>, <code>bottom = m-1</code>, <code>left = 0</code>, <code>right = n-1</code>.</li>
+<li>Initialize an empty result vector.</li>
+<li>Loop as long as <code>left &lt;= right</code> and <code>top &lt;= bottom</code>.</li>
+<li><strong>Traverse Right:</strong> Add elements from <code>matrix[top][left]</code> to <code>matrix[top][right]</code>. Then, increment <code>top</code> to move the top boundary down.</li>
+<li><strong>Traverse Down:</strong> Add elements from <code>matrix[top][right]</code> to <code>matrix[bottom][right]</code>. Then, decrement <code>right</code> to move the right boundary left.</li>
+<li><strong>Traverse Left:</strong> Check if <code>top &lt;= bottom</code>. If so, add elements from <code>matrix[bottom][right]</code> to <code>matrix[bottom][left]</code>. Then, decrement <code>bottom</code>. This check is crucial for matrices with a single row or column to prevent double counting.</li>
+<li><strong>Traverse Up:</strong> Check if <code>left &lt;= right</code>. If so, add elements from <code>matrix[bottom][left]</code> to <code>matrix[top][left]</code>. Then, increment <code>left</code>. This check is also for handling edge cases.</li>
+<li>Repeat the process until the boundaries cross each other.</li>
+</ol>
+<p>The time complexity is O(m * n) since we visit each element exactly once. The space complexity is O(1), excluding the output vector which does not count as extra space.</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+
+class Solution {
+public:
+    std::vector&lt;int&gt; spiralOrder(std::vector&lt;std::vector&lt;int&gt;&gt;&amp; matrix) {
+        std::vector&lt;int&gt; result;
+        if (matrix.empty() || matrix[0].empty()) {
+            return result;
+        }
+
+        int rows = matrix.size(), cols = matrix[0].size();
+        int left = 0, right = cols - 1, top = 0, bottom = rows - 1;
+
+        while (left &lt;= right &amp;&amp; top &lt;= bottom) {
+            // Traverse Right
+            for (int i = left; i &lt;= right; i++) {
+                result.push_back(matrix[top][i]);
+            }
+            top++;
+
+            // Traverse Down
+            for (int i = top; i &lt;= bottom; i++) {
+                result.push_back(matrix[i][right]);
+            }
+            right--;
+
+            // Traverse Left (check if row still exists)
+            if (top &lt;= bottom) {
+                for (int i = right; i &gt;= left; i--) {
+                    result.push_back(matrix[bottom][i]);
+                }
+                bottom--;
+            }
+
+            // Traverse Up (check if column still exists)
+            if (left &lt;= right) {
+                for (int i = bottom; i &gt;= top; i--) {
+                    result.push_back(matrix[i][left]);
+                }
+                left++;
+            }
+        }
+
+        return result;
+    }
+};
+</code></pre>
+<hr />
+<h3>Pythonic Solution (Best Approach: Layer-by-Layer)</h3>
+<p>The Layer-by-Layer approach is the most efficient. Here is a concise and readable Python implementation following the same logic.</p>
+<pre><code class="language-python">from typing import List
+
+class Solution:
+    def spiralOrder(self, matrix: List[List[int]]) -&gt; List[int]:
+        if not matrix:
+            return []
+
+        rows, cols = len(matrix), len(matrix[0])
+        top, bottom, left, right = 0, rows - 1, 0, cols - 1
+        result = []
+
+        while left &lt;= right and top &lt;= bottom:
+            # Traverse from left to right along the top row
+            for j in range(left, right + 1):
+                result.append(matrix[top][j])
+            top += 1
+
+            # Traverse from top to bottom along the right column
+            for i in range(top, bottom + 1):
+                result.append(matrix[i][right])
+            right -= 1
+
+            if top &lt;= bottom:
+                # Traverse from right to left along the bottom row
+                for j in range(right, left - 1, -1):
+                    result.append(matrix[bottom][j])
+                bottom -= 1
+
+            if left &lt;= right:
+                # Traverse from bottom to top along the left column
+                for i in range(bottom, top - 1, -1):
+                    result.append(matrix[i][left])
+                left += 1
+
+        return result
+
+</code></pre></div>

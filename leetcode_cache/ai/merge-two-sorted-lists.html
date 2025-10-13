@@ -1,0 +1,196 @@
+<div class='ai-explanation'><h3>List of all the approaches to solution</h3>
+<ol>
+<li>Brute Force Approach (Using Extra Space)</li>
+<li>Recursive Approach</li>
+<li>Iterative Approach</li>
+</ol>
+<hr />
+<h3>Brute Force Approach (Using Extra Space)</h3>
+<p>This approach disregards the fact that the lists are already sorted. It first traverses both linked lists to collect all the node values into a single dynamic array (like a C++ <code>vector</code>). Then, it sorts this array. Finally, it builds a new sorted linked list from the elements of the sorted array and returns its head.</p>
+<ol>
+<li>Create a vector to store integer values.</li>
+<li>Iterate through <code>list1</code> and add each node's value to the vector.</li>
+<li>Iterate through <code>list2</code> and add each node's value to the vector.</li>
+<li>Sort the vector in non-decreasing order.</li>
+<li>Create a new dummy head for the result list.</li>
+<li>Iterate through the sorted vector, creating a new node for each value and appending it to the result list.</li>
+<li>Return the <code>next</code> of the dummy head.</li>
+</ol>
+<p>This method is simple to conceptualize but inefficient as it requires extra space for the vector and the time complexity is dominated by the sorting algorithm. The time complexity is O(N log N) where N is the total number of nodes, and the space complexity is O(N) for storing the node values.</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;algorithm&gt;
+
+// Definition for singly-linked list.
+struct ListNode {
+    int val;
+    ListNode *next;
+    ListNode() : val(0), next(nullptr) {}
+    ListNode(int x) : val(x), next(nullptr) {}
+    ListNode(int x, ListNode *next) : val(x), next(next) {}
+};
+
+class Solution {
+public:
+    ListNode* mergeTwoLists(ListNode* list1, ListNode* list2) {
+        // 1. Collect all values from both lists
+        std::vector&lt;int&gt; values;
+        ListNode* p1 = list1;
+        while (p1 != nullptr) {
+            values.push_back(p1-&gt;val);
+            p1 = p1-&gt;next;
+        }
+        ListNode* p2 = list2;
+        while (p2 != nullptr) {
+            values.push_back(p2-&gt;val);
+            p2 = p2-&gt;next;
+        }
+
+        // 2. Sort the collected values
+        std::sort(values.begin(), values.end());
+
+        // 3. Build a new sorted linked list
+        ListNode* dummyHead = new ListNode(0);
+        ListNode* current = dummyHead;
+        for (int val : values) {
+            current-&gt;next = new ListNode(val);
+            current = current-&gt;next;
+        }
+
+        // The merged list is after the dummy head
+        ListNode* result = dummyHead-&gt;next;
+        delete dummyHead; // Clean up the dummy node
+        return result;
+    }
+};
+</code></pre>
+<hr />
+<h3>Recursive Approach</h3>
+<p>This approach leverages recursion to merge the lists. The main idea is that the head of the merged list will be the node with the smaller value between the heads of <code>list1</code> and <code>list2</code>. The rest of the merged list is then constructed by recursively merging the remaining nodes.</p>
+<ol>
+<li><strong>Base Cases:</strong> If either <code>list1</code> or <code>list2</code> is null, there is nothing to merge, so we return the other non-null list. If both are null, null is returned.</li>
+<li><strong>Recursive Step:</strong> Compare the values of the heads of <code>list1</code> and <code>list2</code>.</li>
+<li>If <code>list1-&gt;val</code> is smaller or equal, then <code>list1</code> is the head of the merged list. Its <code>next</code> pointer should point to the result of merging the rest of <code>list1</code> (<code>list1-&gt;next</code>) with <code>list2</code>.</li>
+<li>If <code>list2-&gt;val</code> is smaller, then <code>list2</code> is the head. Its <code>next</code> pointer should point to the result of merging <code>list1</code> with the rest of <code>list2</code> (<code>list2-&gt;next</code>).</li>
+<li>Return the chosen head node from the comparison.</li>
+</ol>
+<p>This solution is elegant and concise, but it uses space on the call stack for recursion. The time complexity is O(N + M) as we visit each node once, and the space complexity is O(N + M) for the recursion stack in the worst case.</p>
+<pre><code class="language-cpp">// Definition for singly-linked list.
+struct ListNode {
+    int val;
+    ListNode *next;
+    ListNode() : val(0), next(nullptr) {}
+    ListNode(int x) : val(x), next(nullptr) {}
+    ListNode(int x, ListNode *next) : val(x), next(next) {}
+};
+
+class Solution {
+public:
+    ListNode* mergeTwoLists(ListNode* list1, ListNode* list2) {
+        // Base case: if one list is empty, return the other.
+        if (list1 == nullptr) {
+            return list2;
+        }
+        if (list2 == nullptr) {
+            return list1;
+        }
+
+        // Recursive step: compare the heads and merge the rest.
+        if (list1-&gt;val &lt;= list2-&gt;val) {
+            list1-&gt;next = mergeTwoLists(list1-&gt;next, list2);
+            return list1;
+        } else {
+            list2-&gt;next = mergeTwoLists(list1, list2-&gt;next);
+            return list2;
+        }
+    }
+};
+</code></pre>
+<hr />
+<h3>Iterative Approach</h3>
+<p>This is the most optimal approach. It involves iterating through both lists simultaneously and building the merged list by picking the smaller node at each step. We use a dummy head node to simplify the logic of adding the first node to the merged list.</p>
+<ol>
+<li>Create a <code>dummy</code> node to serve as a placeholder for the head of the merged list. A <code>current</code> pointer is also created and initialized to <code>dummy</code>.</li>
+<li>Use two pointers, <code>p1</code> for <code>list1</code> and <code>p2</code> for <code>list2</code>.</li>
+<li>While both <code>p1</code> and <code>p2</code> are not null, compare their values.</li>
+<li>Append the node with the smaller value to <code>current-&gt;next</code>, and advance both the <code>current</code> pointer and the pointer of the list from which the node was taken.</li>
+<li>After the loop, one of the lists may still have remaining nodes. Since the lists are sorted, these remaining nodes are all greater than the ones already merged. Append the entire remaining list to <code>current-&gt;next</code>.</li>
+<li>Return <code>dummy-&gt;next</code>, which is the actual head of the sorted merged list.</li>
+</ol>
+<p>This approach modifies the <code>next</code> pointers of the existing nodes ("splicing") without creating new nodes. The time complexity is O(N + M) because we traverse each list once, and the space complexity is O(1) as we only use a few pointers.</p>
+<pre><code class="language-cpp">// Definition for singly-linked list.
+struct ListNode {
+    int val;
+    ListNode *next;
+    ListNode() : val(0), next(nullptr) {}
+    ListNode(int x) : val(x), next(nullptr) {}
+    ListNode(int x, ListNode *next) : val(x), next(next) {}
+};
+
+class Solution {
+public:
+    ListNode* mergeTwoLists(ListNode* list1, ListNode* list2) {
+        // A dummy node to simplify edge cases like an empty result list.
+        ListNode* dummy = new ListNode(0);
+        ListNode* current = dummy;
+
+        // Traverse both lists until one is exhausted.
+        while (list1 != nullptr &amp;&amp; list2 != nullptr) {
+            if (list1-&gt;val &lt;= list2-&gt;val) {
+                current-&gt;next = list1;
+                list1 = list1-&gt;next;
+            } else {
+                current-&gt;next = list2;
+                list2 = list2-&gt;next;
+            }
+            current = current-&gt;next;
+        }
+
+        // Append the remaining nodes from the non-empty list.
+        if (list1 != nullptr) {
+            current-&gt;next = list1;
+        } else {
+            current-&gt;next = list2;
+        }
+
+        // The merged list is after the dummy node.
+        ListNode* result = dummy-&gt;next;
+        delete dummy; // Free the memory for the dummy node
+        return result;
+    }
+};
+</code></pre>
+<hr />
+<h3>Pythonic Solution (Best Approach)</h3>
+<p>The iterative approach is the most efficient in terms of both time and space. The following Python code implements this approach concisely.</p>
+<pre><code class="language-python"># Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, val=0, next=None):
+#         self.val = val
+#         self.next = next
+from typing import Optional
+
+class Solution:
+    def mergeTwoLists(self, list1: Optional[ListNode], list2: Optional[ListNode]) -&gt; Optional[ListNode]:
+        # Create a dummy node to act as the starting point of the merged list.
+        dummy = ListNode()
+        current = dummy
+
+        # Traverse both lists
+        while list1 and list2:
+            if list1.val &lt; list2.val:
+                current.next = list1
+                # Advance list1 pointer and current pointer
+                list1, current = list1.next, list1
+            else:
+                current.next = list2
+                # Advance list2 pointer and current pointer
+                list2, current = list2.next, list2
+
+        # If any list still has nodes left, append it to the end
+        if list1 or list2:
+            current.next = list1 if list1 else list2
+
+        # The merged list starts from the node after the dummy
+        return dummy.next
+
+</code></pre></div>

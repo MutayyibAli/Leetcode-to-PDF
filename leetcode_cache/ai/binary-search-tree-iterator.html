@@ -1,0 +1,176 @@
+<div class='ai-explanation'><h3>List of all the approaches to solution</h3>
+<ol>
+<li>Brute Force Approach (Flattening the BST)</li>
+<li>Controlled In-order Traversal (Using a Stack)</li>
+</ol>
+<hr />
+<h3>Brute Force Approach (Flattening the BST)</h3>
+<p>This approach involves pre-computing the entire in-order traversal of the BST and storing the node values in a list or array. The iterator then simply traverses this pre-computed list.</p>
+<p><strong>Step-by-step explanation:</strong>
+1.  <strong>Constructor (<code>BSTIterator(root)</code>):</strong>
+    *   Create an empty dynamic array (e.g., <code>std::vector</code> in C++).
+    *   Perform a recursive in-order traversal on the BST starting from the <code>root</code>.
+    *   During the traversal, add each visited node's value to the array.
+    *   Initialize a pointer or index to the beginning of the array (e.g., <code>index = 0</code>).
+2.  <strong><code>hasNext()</code>:</strong>
+    *   Check if the current index is less than the total number of elements in the array. If it is, there are more elements to iterate, so return <code>true</code>. Otherwise, return <code>false</code>.
+3.  <strong><code>next()</code>:</strong>
+    *   Return the element at the current index in the array.
+    *   Increment the index to point to the next element for the subsequent call.</p>
+<p>This approach is simple to understand but violates the space complexity constraint suggested in the follow-up question. The constructor's time complexity is also high as it processes the entire tree upfront.</p>
+<p>The constructor takes <code>O(N)</code> time to traverse the tree and <code>O(N)</code> space to store the node values, where <code>N</code> is the number of nodes. The <code>next()</code> and <code>hasNext()</code> methods run in <code>O(1)</code> time.</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+
+// Definition for a binary tree node.
+struct TreeNode {
+    int val;
+    TreeNode *left;
+    TreeNode *right;
+    TreeNode() : val(0), left(nullptr), right(nullptr) {}
+    TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+    TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+};
+
+class BSTIterator {
+private:
+    std::vector&lt;int&gt; nodes;
+    int index;
+
+    void inorderTraversal(TreeNode* root) {
+        if (!root) {
+            return;
+        }
+        inorderTraversal(root-&gt;left);
+        nodes.push_back(root-&gt;val);
+        inorderTraversal(root-&gt;right);
+    }
+
+public:
+    BSTIterator(TreeNode* root) {
+        this-&gt;index = 0;
+        inorderTraversal(root);
+    }
+
+    int next() {
+        return nodes[index++];
+    }
+
+    bool hasNext() {
+        return index &lt; nodes.size();
+    }
+};
+</code></pre>
+<hr />
+<h3>Controlled In-order Traversal (Using a Stack)</h3>
+<p>This is an optimized approach that uses a stack to simulate the in-order traversal in a controlled, step-by-step manner. It avoids traversing the entire tree at once, leading to better space complexity. This method is often called "lazy" evaluation, as it only computes the next smallest element when requested.</p>
+<p><strong>Step-by-step explanation:</strong>
+1.  <strong>Constructor (<code>BSTIterator(root)</code>):</strong>
+    *   Initialize an empty stack to store <code>TreeNode</code> pointers.
+    *   Create a helper function, say <code>pushAllLeft(node)</code>, that pushes a given node and all its subsequent left children onto the stack.
+    *   Call this helper function with the <code>root</code> node. This ensures the stack's top element is the smallest node in the BST.
+2.  <strong><code>hasNext()</code>:</strong>
+    *   The iterator has a next element if and only if the stack is not empty. So, it simply returns <code>!stack.empty()</code>.
+3.  <strong><code>next()</code>:</strong>
+    *   Pop the top node from the stack. This node is the next smallest element in the in-order sequence.
+    *   Before returning its value, check if this popped node has a right child.
+    *   If it does, call the <code>pushAllLeft</code> helper function on its right child. This prepares the stack for the subsequent <code>next()</code> call by adding the next set of nodes in the in-order sequence.
+    *   Return the value of the popped node.</p>
+<p>The <code>next()</code> and <code>hasNext()</code> methods run in average <code>O(1)</code> time. The space complexity is <code>O(h)</code>, where <code>h</code> is the height of the tree, because the stack holds at most <code>h</code> nodes.</p>
+<pre><code class="language-cpp">#include &lt;stack&gt;
+
+// Definition for a binary tree node.
+// struct TreeNode { ... };
+
+class BSTIterator {
+private:
+    std::stack&lt;TreeNode*&gt; st;
+
+    // Helper to push the node and all its left children to the stack
+    void pushAllLeft(TreeNode* node) {
+        while (node != nullptr) {
+            st.push(node);
+            node = node-&gt;left;
+        }
+    }
+
+public:
+    BSTIterator(TreeNode* root) {
+        pushAllLeft(root);
+    }
+
+    /** @return the next smallest number */
+    int next() {
+        TreeNode* topNode = st.top();
+        st.pop();
+
+        // Explore the right subtree of the popped node
+        if (topNode-&gt;right != nullptr) {
+            pushAllLeft(topNode-&gt;right);
+        }
+
+        return topNode-&gt;val;
+    }
+
+    /** @return whether we have a next smallest number */
+    bool hasNext() {
+        return !st.empty();
+    }
+};
+</code></pre>
+<hr />
+<h3>Pythonic Solution (Best Approach)</h3>
+<p>This solution implements the controlled in-order traversal using a list as a stack. A private helper method <code>_push_all_left</code> encapsulates the logic of traversing down the left branches.</p>
+<pre><code class="language-python">from typing import Optional
+
+# Definition for a binary tree node.
+class TreeNode:
+    def __init__(self, val=0, left=None, right=None):
+        self.val = val
+        self.left = left
+        self.right = right
+
+class BSTIterator:
+    &quot;&quot;&quot;
+    Implements an iterator for an in-order traversal of a BST.
+    Uses a stack to achieve O(h) memory, where h is the height of the tree.
+    &quot;&quot;&quot;
+    def __init__(self, root: Optional[TreeNode]):
+        # The stack will store nodes to be visited.
+        self.stack = []
+        # Initialize the stack with the leftmost path from the root.
+        self._push_all_left(root)
+
+    def next(self) -&gt; int:
+        &quot;&quot;&quot;
+        @return the next smallest number
+        &quot;&quot;&quot;
+        # The node at the top of the stack is the next smallest.
+        node = self.stack.pop()
+
+        # If the popped node has a right child, we need to add the
+        # leftmost path of that right child to the stack.
+        if node.right:
+            self._push_all_left(node.right)
+
+        return node.val
+
+    def hasNext(self) -&gt; bool:
+        &quot;&quot;&quot;
+        @return whether we have a next smallest number
+        &quot;&quot;&quot;
+        # If the stack is not empty, there are more elements.
+        return len(self.stack) &gt; 0
+
+    def _push_all_left(self, node: Optional[TreeNode]):
+        &quot;&quot;&quot;
+        A helper function to push a node and all its left children onto the stack.
+        &quot;&quot;&quot;
+        while node:
+            self.stack.append(node)
+            node = node.left
+
+# Your BSTIterator object will be instantiated and called as such:
+# obj = BSTIterator(root)
+# param_1 = obj.next()
+# param_2 = obj.hasNext()
+</code></pre></div>

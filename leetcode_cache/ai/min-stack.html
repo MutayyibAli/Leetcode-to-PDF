@@ -1,0 +1,144 @@
+<div class='ai-explanation'><h3>List of all the approaches to solution</h3>
+<ol>
+<li>Stack of Pairs/Nodes Approach</li>
+<li>Two Stacks Approach</li>
+</ol>
+<h3>Stack of Pairs/Nodes Approach</h3>
+<p>This approach involves using a single stack where each entry stores not just the value, but also the minimum value in the stack up to that point. This can be implemented using a stack of pairs <code>(value, current_minimum)</code> or a custom node structure in a linked list.</p>
+<ol>
+<li><strong>Data Structure</strong>: Implement the stack as a linked list where each <code>node</code> contains three fields: the <code>value</code>, a pointer to the <code>next</code> node, and <code>minUntilNow</code> which stores the minimum element from the bottom of the stack up to the current node.</li>
+<li><strong><code>push(val)</code></strong>: When a new element <code>val</code> is pushed, a new node is created. The <code>minUntilNow</code> for this new node is calculated as the minimum of <code>val</code> and the <code>minUntilNow</code> of the current top node. If the stack is empty, <code>minUntilNow</code> is just <code>val</code>. The new node is then set as the new top of the stack.</li>
+<li><strong><code>pop()</code></strong>: Remove the top node by pointing the head of the list to the next node.</li>
+<li><strong><code>top()</code></strong>: Return the <code>value</code> from the top node.</li>
+<li><strong><code>getMin()</code></strong>: Return the <code>minUntilNow</code> value from the top node. This value represents the minimum element in the entire current stack.</li>
+</ol>
+<p>The time complexity for <code>push</code>, <code>pop</code>, <code>top</code>, and <code>getMin</code> is <code>O(1)</code>. The space complexity is <code>O(n)</code> as we store an extra minimum value for each element in the stack.</p>
+<pre><code class="language-cpp">class MinStack {
+public:
+    struct Node {
+        int val;
+        int min_val;
+        Node* next;
+
+        Node(int v, int m, Node* n) : val(v), min_val(m), next(n) {}
+    };
+
+    Node* head;
+
+    MinStack() {
+        head = nullptr;
+    }
+
+    void push(int val) {
+        if (!head) {
+            head = new Node(val, val, nullptr);
+        } else {
+            int new_min = std::min(val, head-&gt;min_val);
+            head = new Node(val, new_min, head);
+        }
+    }
+
+    void pop() {
+        if (head) {
+            Node* temp = head;
+            head = head-&gt;next;
+            delete temp;
+        }
+    }
+
+    int top() {
+        return head-&gt;val;
+    }
+
+    int getMin() {
+        return head-&gt;min_val;
+    }
+};
+</code></pre>
+<h3>Two Stacks Approach</h3>
+<p>This approach utilizes two stacks: one to store the actual elements and another auxiliary stack to keep track of the minimums. This is often more space-efficient than the previous method.</p>
+<ol>
+<li><strong>Data Structure</strong>: Use two stacks. <code>s1</code> will be the main stack to store all elements. <code>s2</code> will be the "min stack".</li>
+<li><strong><code>push(val)</code></strong>: Always push the <code>val</code> onto the main stack <code>s1</code>. Then, check if the min stack <code>s2</code> is empty or if <code>val</code> is less than or equal to the element at the top of <code>s2</code>. If either condition is true, push <code>val</code> onto <code>s2</code> as well. This ensures <code>s2.top()</code> is always the current minimum.</li>
+<li><strong><code>pop()</code></strong>: Before popping from <code>s1</code>, check if the element at the top of <code>s1</code> is equal to the element at the top of <code>s2</code>. If they are equal, it means the minimum element is being removed, so we must pop from <code>s2</code> as well to reveal the next minimum. Then, pop from <code>s1</code>.</li>
+<li><strong><code>top()</code></strong>: Return the top element of the main stack <code>s1</code>.</li>
+<li><strong><code>getMin()</code></strong>: Return the top element of the min stack <code>s2</code>.</li>
+</ol>
+<p>The time complexity for all operations is <code>O(1)</code>. The space complexity is <code>O(n)</code> in the worst case (e.g., when pushing a sorted, decreasing sequence of numbers), but can be better than <code>O(n)</code> on average.</p>
+<pre><code class="language-cpp">#include &lt;stack&gt;
+
+class MinStack {
+private:
+    std::stack&lt;int&gt; s1; // Main stack
+    std::stack&lt;int&gt; s2; // Min stack
+public:
+    MinStack() {
+
+    }
+
+    void push(int val) {
+        s1.push(val);
+        if (s2.empty() || val &lt;= s2.top()) {
+            s2.push(val);
+        }
+    }
+
+    void pop() {
+        if (s1.top() == s2.top()) {
+            s2.pop();
+        }
+        s1.pop();
+    }
+
+    int top() {
+        return s1.top();
+    }
+
+    int getMin() {
+        return s2.top();
+    }
+};
+</code></pre>
+<h3>Pythonic Solution</h3>
+<p>The best approach provides <code>O(1)</code> time complexity for all operations. Both of the above methods achieve this. The Pythonic solution below implements the "Stack of Pairs" concept using two synchronized lists. This is a very clean and readable way to solve the problem. One list stores the stack values, and the other stores the minimum value seen so far at each level of the stack.</p>
+<pre><code class="language-python">class MinStack:
+
+    def __init__(self):
+        &quot;&quot;&quot;
+        Initializes the stack object.
+        self.stack holds the actual values.
+        self.min_stack holds the minimum value up to the corresponding element in self.stack.
+        &quot;&quot;&quot;
+        self.stack = []
+        self.min_stack = []
+
+    def push(self, val: int) -&gt; None:
+        &quot;&quot;&quot;
+        Pushes the element val onto the stack.
+        &quot;&quot;&quot;
+        self.stack.append(val)
+        # The new minimum is the minimum of the current value and the previous minimum.
+        # If min_stack is empty, the current value is the new minimum.
+        current_min = min(val, self.min_stack[-1] if self.min_stack else val)
+        self.min_stack.append(current_min)
+
+    def pop(self) -&gt; None:
+        &quot;&quot;&quot;
+        Removes the element on the top of the stack.
+        &quot;&quot;&quot;
+        self.stack.pop()
+        self.min_stack.pop()
+
+    def top(self) -&gt; int:
+        &quot;&quot;&quot;
+        Gets the top element of the stack.
+        &quot;&quot;&quot;
+        return self.stack[-1]
+
+    def getMin(self) -&gt; int:
+        &quot;&quot;&quot;
+        Retrieves the minimum element in the stack.
+        &quot;&quot;&quot;
+        return self.min_stack[-1]
+
+</code></pre></div>

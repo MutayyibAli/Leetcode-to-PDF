@@ -1,0 +1,145 @@
+<div class='ai-explanation'><h3>List of all the approaches to solution</h3>
+<ol>
+<li>Brute Force Approach (Using an Extra Matrix)</li>
+<li>Rotate in Layers</li>
+<li>Transpose and Reverse</li>
+</ol>
+<h3>1. Brute Force Approach (Using an Extra Matrix)</h3>
+<p>This approach is the most straightforward but violates the in-place constraint of the problem by using an auxiliary matrix. It's a useful starting point for understanding the mapping of elements during rotation.</p>
+<ol>
+<li>Create a new <code>n x n</code> matrix, let's call it <code>rotated_matrix</code>, initialized with zeros.</li>
+<li>The core logic of a 90-degree clockwise rotation is that an element at <code>matrix[i][j]</code> moves to the position <code>[j][n-1-i]</code>.</li>
+<li>Iterate through each element of the original <code>matrix</code> using nested loops for row <code>i</code> and column <code>j</code>.</li>
+<li>For each element <code>matrix[i][j]</code>, place it in the corresponding new position in the <code>rotated_matrix</code>: <code>rotated_matrix[j][n-1-i] = matrix[i][j]</code>.</li>
+<li>After the <code>rotated_matrix</code> is fully populated, copy all its elements back into the original <code>matrix</code> to satisfy the problem's requirement of modifying the input matrix.</li>
+</ol>
+<p>This approach has a time complexity of O(N^2) for iterating through the matrix twice and a space complexity of O(N^2) for the auxiliary matrix.</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+
+class Solution {
+public:
+    void rotate(std::vector&lt;std::vector&lt;int&gt;&gt;&amp; matrix) {
+        int n = matrix.size();
+        std::vector&lt;std::vector&lt;int&gt;&gt; rotated_matrix(n, std::vector&lt;int&gt;(n));
+
+        for (int i = 0; i &lt; n; ++i) {
+            for (int j = 0; j &lt; n; ++j) {
+                rotated_matrix[j][n - 1 - i] = matrix[i][j];
+            }
+        }
+
+        // Copy the rotated matrix back to the original one
+        matrix = rotated_matrix;
+    }
+};
+</code></pre>
+<h3>2. Rotate in Layers</h3>
+<p>This is an efficient in-place approach that visualizes the matrix as a series of concentric square "layers" or "shells". It rotates the elements of each layer one by one.</p>
+<ol>
+<li>The rotation is performed layer by layer, starting from the outermost layer and moving inwards. An <code>n x n</code> matrix has <code>n / 2</code> such layers.</li>
+<li>We iterate through the layers. The outer loop will run from <code>i = 0</code> to <code>n / 2 - 1</code>. The variable <code>i</code> represents the current layer.</li>
+<li>For each layer, we iterate through its elements. The inner loop will run from <code>j = i</code> to <code>n - 1 - i - 1</code>. This range covers the elements in one side of the current layer (e.g., the top side, excluding the last element which is handled as the first element of the next side).</li>
+<li>A 4-way cyclic swap is performed for each element in the inner loop. The four elements involved in the swap are the corners of a sub-square within the current layer.<ul>
+<li><code>matrix[i][j]</code> (top)</li>
+<li><code>matrix[j][n-1-i]</code> (right)</li>
+<li><code>matrix[n-1-i][n-1-j]</code> (bottom)</li>
+<li><code>matrix[n-1-j][i]</code> (left)</li>
+</ul>
+</li>
+<li>We use a temporary variable to save one element's value, then shift the other three elements into their new positions before placing the saved value in its final spot.</li>
+</ol>
+<p>This approach has a time complexity of O(N^2) as each element is moved exactly once, and a space complexity of O(1) as it only uses a single temporary variable for swaps.</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;algorithm&gt; // for std::swap
+
+class Solution {
+public:
+    void rotate(std::vector&lt;std::vector&lt;int&gt;&gt;&amp; matrix) {
+        int n = matrix.size();
+        for (int i = 0; i &lt; n / 2; ++i) {
+            for (int j = i; j &lt; n - 1 - i; ++j) {
+                // Save the top-left element
+                int temp = matrix[i][j];
+
+                // Move bottom-left to top-left
+                matrix[i][j] = matrix[n - 1 - j][i];
+
+                // Move bottom-right to bottom-left
+                matrix[n - 1 - j][i] = matrix[n - 1 - i][n - 1 - j];
+
+                // Move top-right to bottom-right
+                matrix[n - 1 - i][n - 1 - j] = matrix[j][n - 1 - i];
+
+                // Move saved top-left to top-right
+                matrix[j][n - 1 - i] = temp;
+            }
+        }
+    }
+};
+</code></pre>
+<h3>3. Transpose and Reverse</h3>
+<p>This is a very clever and intuitive in-place solution that breaks down the rotation into two simpler, distinct operations. A 90-degree clockwise rotation is equivalent to transposing the matrix and then reversing each row.</p>
+<ol>
+<li><strong>Step 1: Transpose the matrix.</strong> A transpose operation swaps the elements across the main diagonal (from top-left to bottom-right). An element <code>matrix[i][j]</code> is swapped with <code>matrix[j][i]</code>. To perform this in-place, we iterate through the upper triangle of the matrix (where <code>j &gt; i</code>) and perform the swap.</li>
+<li><strong>Step 2: Reverse each row.</strong> After the matrix is transposed, we iterate through each row and reverse the order of its elements. Most languages provide a standard library function to do this easily.</li>
+</ol>
+<p>This approach has a time complexity of O(N^2) (O(N^2) for the transpose and O(N^2) for reversing all rows) and a space complexity of O(1) as all operations are done in-place.</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;algorithm&gt; // for std::swap and std::reverse
+
+class Solution {
+public:
+    void rotate(std::vector&lt;std::vector&lt;int&gt;&gt;&amp; matrix) {
+        int n = matrix.size();
+
+        // Step 1: Transpose the matrix
+        for (int i = 0; i &lt; n; ++i) {
+            for (int j = i + 1; j &lt; n; ++j) {
+                std::swap(matrix[i][j], matrix[j][i]);
+            }
+        }
+
+        // Step 2: Reverse each row
+        for (int i = 0; i &lt; n; ++i) {
+            std::reverse(matrix[i].begin(), matrix[i].end());
+        }
+    }
+};
+</code></pre>
+<h3>Pythonic Solution (Best Approach)</h3>
+<p>The best approach is "Transpose and Reverse" due to its clarity and efficiency. The Pythonic solution leverages built-in functions and list manipulations to achieve this concisely.</p>
+<pre><code class="language-python">from typing import List
+
+class Solution:
+    def rotate(self, matrix: List[List[int]]) -&gt; None:
+        &quot;&quot;&quot;
+        Do not return anything, modify matrix in-place instead.
+        &quot;&quot;&quot;
+        n = len(matrix)
+
+        # Step 1: Transpose the matrix
+        for i in range(n):
+            for j in range(i + 1, n):
+                # Swap element matrix[i][j] with matrix[j][i]
+                matrix[i][j], matrix[j][i] = matrix[j][i], matrix[i][j]
+
+        # Step 2: Reverse each row
+        for i in range(n):
+            # Use slicing to reverse the row in-place
+            matrix[i][:] = matrix[i][::-1]
+
+# Alternative highly Pythonic one-liner (less explicit about the in-place steps)
+# This works by flipping the matrix upside down and then transposing it using zip.
+# A[:] ensures the original matrix object is modified.
+#
+# class Solution:
+#     def rotate(self, matrix: List[List[int]]) -&gt; None:
+#         matrix.reverse()
+#         matrix[:] = list(zip(*matrix))
+#
+# Another variation:
+#
+# class Solution:
+#     def rotate(self, matrix: List[List[int]]) -&gt; None:
+#         matrix[:] = [list(row) for row in zip(*matrix[::-1])]
+</code></pre></div>

@@ -1,0 +1,297 @@
+<div class='ai-explanation'><h3>List of Approaches</h3>
+<ol>
+<li>Brute Force Recursive Approach</li>
+<li>Top-Down Dynamic Programming (Memoization)</li>
+<li>Bottom-Up Dynamic Programming (Tabulation)</li>
+<li>Space-Optimized Bottom-Up DP (Two Rows)</li>
+<li>Space-Optimized Bottom-Up DP (One Row)</li>
+</ol>
+<hr />
+<h3>Brute Force Recursive Approach</h3>
+<p>This approach solves the problem by exploring all possible sequences of operations (insert, delete, replace) recursively.</p>
+<ol>
+<li>Define a recursive function <code>solve(i, j)</code> which calculates the minimum edit distance between the suffixes <code>word1[i:]</code> and <code>word2[j:]</code>.</li>
+<li><strong>Base Cases:</strong><ul>
+<li>If <code>i</code> reaches the end of <code>word1</code>, we must insert the remaining characters of <code>word2</code>. The cost is <code>word2.length() - j</code>.</li>
+<li>If <code>j</code> reaches the end of <code>word2</code>, we must delete the remaining characters of <code>word1</code>. The cost is <code>word1.length() - i</code>.</li>
+</ul>
+</li>
+<li><strong>Recursive Step:</strong><ul>
+<li>If <code>word1[i]</code> and <code>word2[j]</code> are the same, no operation is needed for these characters. We move to the next characters: <code>solve(i + 1, j + 1)</code>.</li>
+<li>If <code>word1[i]</code> and <code>word2[j]</code> are different, we consider the three possible operations and take the one with the minimum cost:<ul>
+<li><strong>Insert:</strong> <code>1 + solve(i, j + 1)</code> (insert <code>word2[j]</code> into <code>word1</code>).</li>
+<li><strong>Delete:</strong> <code>1 + solve(i + 1, j)</code> (delete <code>word1[i]</code>).</li>
+<li><strong>Replace:</strong> <code>1 + solve(i + 1, j + 1)</code> (replace <code>word1[i]</code> with <code>word2[j]</code>).</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>The function returns the minimum of these three choices. This approach leads to re-computation of the same subproblems, making it inefficient.</li>
+</ol>
+<p>The time complexity is exponential, approximately O(3^(m+n)), and the space complexity is O(m+n) for the recursion stack.</p>
+<pre><code class="language-cpp">#include &lt;string&gt;
+#include &lt;algorithm&gt;
+
+class Solution {
+public:
+    int minDistance(std::string word1, std::string word2) {
+        return solve(word1, word2, 0, 0);
+    }
+
+private:
+    int solve(const std::string&amp; w1, const std::string&amp; w2, int i, int j) {
+        // Base case: if word1 is exhausted, insert remaining chars of word2
+        if (i == w1.length()) {
+            return w2.length() - j;
+        }
+        // Base case: if word2 is exhausted, delete remaining chars of word1
+        if (j == w2.length()) {
+            return w1.length() - i;
+        }
+
+        if (w1[i] == w2[j]) {
+            // Characters match, no operation needed, move to next characters
+            return solve(w1, w2, i + 1, j + 1);
+        } else {
+            // Characters don't match, find the minimum of 3 operations
+            int insert_op = 1 + solve(w1, w2, i, j + 1);
+            int delete_op = 1 + solve(w1, w2, i + 1, j);
+            int replace_op = 1 + solve(w1, w2, i + 1, j + 1);
+            return std::min({insert_op, delete_op, replace_op});
+        }
+    }
+};
+</code></pre>
+<hr />
+<h3>Top-Down Dynamic Programming (Memoization)</h3>
+<p>This approach is an optimization of the brute-force recursion. We use a 2D array (memoization table) to store the results of subproblems that have already been solved, avoiding redundant calculations.</p>
+<ol>
+<li>Create a 2D <code>memo</code> table of size <code>(m+1) x (n+1)</code> initialized with a value indicating that the state has not been computed (e.g., -1).</li>
+<li>The recursive function <code>solve(i, j)</code> first checks if <code>memo[i][j]</code> has a valid stored result. If so, it returns it directly.</li>
+<li>If not, it computes the result as in the brute-force approach.</li>
+<li>Before returning, the computed result for <code>solve(i, j)</code> is stored in <code>memo[i][j]</code>.</li>
+</ol>
+<p>This approach significantly improves performance by ensuring that each subproblem is solved only once. The time complexity is O(m<em>n) and the space complexity is O(m</em>n) for the memoization table and recursion stack.</p>
+<pre><code class="language-cpp">#include &lt;string&gt;
+#include &lt;vector&gt;
+#include &lt;algorithm&gt;
+
+class Solution {
+public:
+    int minDistance(std::string word1, std::string word2) {
+        int m = word1.length();
+        int n = word2.length();
+        std::vector&lt;std::vector&lt;int&gt;&gt; memo(m, std::vector&lt;int&gt;(n, -1));
+        return solve(word1, word2, 0, 0, memo);
+    }
+
+private:
+    int solve(const std::string&amp; w1, const std::string&amp; w2, int i, int j, std::vector&lt;std::vector&lt;int&gt;&gt;&amp; memo) {
+        if (i == w1.length()) return w2.length() - j;
+        if (j == w2.length()) return w1.length() - i;
+
+        if (memo[i][j] != -1) {
+            return memo[i][j];
+        }
+
+        if (w1[i] == w2[j]) {
+            return memo[i][j] = solve(w1, w2, i + 1, j + 1, memo);
+        } else {
+            int insert_op = 1 + solve(w1, w2, i, j + 1, memo);
+            int delete_op = 1 + solve(w1, w2, i + 1, j, memo);
+            int replace_op = 1 + solve(w1, w2, i + 1, j + 1, memo);
+            return memo[i][j] = std::min({insert_op, delete_op, replace_op});
+        }
+    }
+};
+</code></pre>
+<hr />
+<h3>Bottom-Up Dynamic Programming (Tabulation)</h3>
+<p>This approach builds the solution iteratively from the smallest subproblems to the final solution, using a 2D DP table.</p>
+<ol>
+<li>Create a 2D DP table <code>dp</code> of size <code>(m+1) x (n+1)</code>. <code>dp[i][j]</code> stores the minimum operations to convert the first <code>i</code> characters of <code>word1</code> to the first <code>j</code> characters of <code>word2</code>.</li>
+<li><strong>Initialize Base Cases:</strong><ul>
+<li><code>dp[i][0] = i</code>: To convert a string of length <code>i</code> to an empty string, <code>i</code> deletions are needed.</li>
+<li><code>dp[0][j] = j</code>: To convert an empty string to a string of length <code>j</code>, <code>j</code> insertions are needed.</li>
+</ul>
+</li>
+<li><strong>Fill the Table:</strong> Iterate from <code>i = 1</code> to <code>m</code> and <code>j = 1</code> to <code>n</code>.<ul>
+<li>If <code>word1[i-1] == word2[j-1]</code>, the last characters match, so no new operation is required. <code>dp[i][j] = dp[i-1][j-1]</code>.</li>
+<li>If they don't match, <code>dp[i][j]</code> is <code>1 +</code> the minimum of the three possible operations:<ul>
+<li><code>dp[i-1][j]</code> (delete)</li>
+<li><code>dp[i][j-1]</code> (insert)</li>
+<li><code>dp[i-1][j-1]</code> (replace)</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>The final answer is <code>dp[m][n]</code>.</li>
+</ol>
+<p>The time complexity is O(m<em>n) and the space complexity is O(m</em>n).</p>
+<pre><code class="language-cpp">#include &lt;string&gt;
+#include &lt;vector&gt;
+#include &lt;algorithm&gt;
+
+class Solution {
+public:
+    int minDistance(std::string word1, std::string word2) {
+        int m = word1.size();
+        int n = word2.size();
+        std::vector&lt;std::vector&lt;int&gt;&gt; dp(m + 1, std::vector&lt;int&gt;(n + 1, 0));
+
+        for (int i = 0; i &lt;= m; i++) {
+            dp[i][0] = i;
+        }
+        for (int j = 0; j &lt;= n; j++) {
+            dp[0][j] = j;
+        }
+
+        for (int i = 1; i &lt;= m; i++) {
+            for (int j = 1; j &lt;= n; j++) {
+                if (word1[i - 1] == word2[j - 1]) {
+                    dp[i][j] = dp[i - 1][j - 1];
+                } else {
+                    dp[i][j] = 1 + std::min({dp[i - 1][j - 1],   // Replace
+                                             dp[i][j - 1],       // Insert
+                                             dp[i - 1][j]});      // Delete
+                }
+            }
+        }
+        return dp[m][n];
+    }
+};
+</code></pre>
+<hr />
+<h3>Space-Optimized Bottom-Up DP (Two Rows)</h3>
+<p>This approach optimizes the space complexity of the bottom-up DP. We observe that to compute the current row <code>i</code> of the DP table, we only need the values from the previous row <code>i-1</code>.</p>
+<ol>
+<li>Instead of a full <code>(m+1) x (n+1)</code> table, use two 1D vectors, <code>prev</code> and <code>curr</code>, each of size <code>n+1</code>. <code>prev</code> will store the values for row <code>i-1</code>, and <code>curr</code> for row <code>i</code>.</li>
+<li>Initialize <code>prev</code> for the base case (row 0): <code>prev[j] = j</code>.</li>
+<li>Iterate from <code>i = 1</code> to <code>m</code>.<ul>
+<li>Set <code>curr[0] = i</code> for the base case of the current row.</li>
+<li>Iterate from <code>j = 1</code> to <code>n</code> to fill the <code>curr</code> vector using values from <code>prev</code> and <code>curr</code> itself.</li>
+<li>If <code>word1[i-1] == word2[j-1]</code>, <code>curr[j] = prev[j-1]</code>.</li>
+<li>Otherwise, <code>curr[j] = 1 + min(prev[j-1], curr[j-1], prev[j])</code>.</li>
+</ul>
+</li>
+<li>After each outer loop iteration (for <code>i</code>), update <code>prev = curr</code> to prepare for the next row calculation.</li>
+<li>The final answer is in the last element of the <code>prev</code> array (after all loops).</li>
+</ol>
+<p>The time complexity is O(m*n) and the space complexity is O(n).</p>
+<pre><code class="language-cpp">#include &lt;string&gt;
+#include &lt;vector&gt;
+#include &lt;algorithm&gt;
+
+class Solution {
+public:
+    int minDistance(std::string word1, std::string word2) {
+        int m = word1.size();
+        int n = word2.size();
+        std::vector&lt;int&gt; prev(n + 1, 0);
+        std::vector&lt;int&gt; curr(n + 1, 0);
+
+        for (int j = 0; j &lt;= n; j++) {
+            prev[j] = j;
+        }
+
+        for (int i = 1; i &lt;= m; i++) {
+            curr[0] = i;
+            for (int j = 1; j &lt;= n; j++) {
+                if (word1[i - 1] == word2[j - 1]) {
+                    curr[j] = prev[j - 1];
+                } else {
+                    curr[j] = 1 + std::min({prev[j - 1],   // Replace
+                                            curr[j - 1],   // Insert
+                                            prev[j]});     // Delete
+                }
+            }
+            prev = curr;
+        }
+        return prev[n];
+    }
+};
+</code></pre>
+<hr />
+<h3>Space-Optimized Bottom-Up DP (One Row)</h3>
+<p>This is the most space-efficient DP approach. It further optimizes the two-row method by using just one 1D vector and a temporary variable to store the value of <code>dp[i-1][j-1]</code>.</p>
+<ol>
+<li>Use a single 1D vector <code>dp</code> of size <code>n+1</code>. Initialize it with <code>dp[j] = j</code>. This represents the first row of our conceptual DP table.</li>
+<li>Iterate from <code>i = 1</code> to <code>m</code>. Inside this loop, we will compute the <code>i</code>-th row using the <code>(i-1)</code>-th row values currently in <code>dp</code>.</li>
+<li>Before the inner <code>j</code> loop, store <code>dp[0]</code> (which is <code>dp[i-1][0]</code>) in a variable <code>prev_val</code>. Then, update <code>dp[0]</code> to <code>i</code> (which is <code>dp[i][0]</code>).</li>
+<li>Iterate from <code>j = 1</code> to <code>n</code>.<ul>
+<li>Store the current <code>dp[j]</code> (which corresponds to <code>dp[i-1][j]</code>) in a <code>temp</code> variable.</li>
+<li>If <code>word1[i-1] == word2[j-1]</code>, the new <code>dp[j]</code> (for row <code>i</code>) is <code>prev_val</code> (which was <code>dp[i-1][j-1]</code>).</li>
+<li>Otherwise, the new <code>dp[j]</code> is <code>1 + min(prev_val, dp[j-1], dp[j])</code>. Here, <code>prev_val</code> is <code>dp[i-1][j-1]</code>, <code>dp[j-1]</code> is the new <code>dp[i][j-1]</code>, and <code>dp[j]</code> is the old <code>dp[i-1][j]</code>.</li>
+<li>Update <code>prev_val</code> with the <code>temp</code> value for the next <code>j</code> iteration.</li>
+</ul>
+</li>
+<li>The final result is <code>dp[n]</code>.</li>
+</ol>
+<p>The time complexity is O(m*n) and the space complexity is O(n).</p>
+<pre><code class="language-cpp">#include &lt;string&gt;
+#include &lt;vector&gt;
+#include &lt;algorithm&gt;
+
+class Solution {
+public:
+    int minDistance(std::string word1, std::string word2) {
+        int m = word1.size();
+        int n = word2.size();
+        std::vector&lt;int&gt; dp(n + 1, 0);
+
+        for (int j = 0; j &lt;= n; j++) {
+            dp[j] = j;
+        }
+
+        for (int i = 1; i &lt;= m; i++) {
+            int prev_val = dp[0]; // Stores dp[i-1][j-1]
+            dp[0] = i;
+            for (int j = 1; j &lt;= n; j++) {
+                int temp = dp[j]; // Stores dp[i-1][j]
+                if (word1[i - 1] == word2[j - 1]) {
+                    dp[j] = prev_val;
+                } else {
+                    dp[j] = 1 + std::min({prev_val,   // Replace
+                                          dp[j - 1],  // Insert
+                                          dp[j]});    // Delete
+                }
+                prev_val = temp;
+            }
+        }
+        return dp[n];
+    }
+};
+</code></pre>
+<hr />
+<h3>Pythonic Solution (Best Approach)</h3>
+<p>The Bottom-Up DP approach with O(m*n) space is clean, readable, and generally preferred unless space is a critical constraint. It directly translates the recurrence relation into code.</p>
+<pre><code class="language-python">class Solution:
+  def minDistance(self, word1: str, word2: str) -&gt; int:
+    m = len(word1)
+    n = len(word2)
+
+    # dp[i][j] will be the edit distance between word1[:i] and word2[:j]
+    dp = [[0] * (n + 1) for _ in range(m + 1)]
+
+    # Base cases: converting to/from an empty string
+    for i in range(m + 1):
+      dp[i][0] = i
+    for j in range(n + 1):
+      dp[0][j] = j
+
+    # Fill the DP table
+    for i in range(1, m + 1):
+      for j in range(1, n + 1):
+        if word1[i - 1] == word2[j - 1]:
+          # Characters are the same, no operation needed
+          dp[i][j] = dp[i - 1][j - 1]
+        else:
+          # Characters are different, take the minimum of 3 operations
+          replace_cost = dp[i - 1][j - 1]
+          delete_cost = dp[i - 1][j]
+          insert_cost = dp[i][j - 1]
+          dp[i][j] = 1 + min(replace_cost, delete_cost, insert_cost)
+
+    return dp[m][n]
+
+</code></pre></div>

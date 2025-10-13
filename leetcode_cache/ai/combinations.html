@@ -1,0 +1,130 @@
+<div class='ai-explanation'><h3>List of Approaches</h3>
+<ol>
+<li>Brute Force Approach (Generate and Filter Subsets)</li>
+<li>Backtracking Approach</li>
+</ol>
+<hr />
+<h3>1. Brute Force Approach (Generate and Filter Subsets)</h3>
+<p>This approach generates all possible subsets of numbers from the range <code>[1, n]</code> and then filters out the ones that do not have the required size <code>k</code>.</p>
+<p><strong>Step-by-step explanation:</strong>
+1.  Define a recursive function that generates all subsets. This function will explore two choices for each number from <code>1</code> to <code>n</code>: either include it in the current subset or not.
+2.  The recursion proceeds from <code>1</code> to <code>n</code>. When all numbers have been considered (i.e., we've reached the end of the range), we check the size of the generated subset.
+3.  If the subset's size is exactly <code>k</code>, we add a copy of it to our final list of results.
+4.  This method is inefficient because it explores all <code>2^n</code> subsets, even though we only care about those of size <code>k</code>.</p>
+<p>The time complexity is <code>O(k * 2^n)</code> because we generate <code>2^n</code> subsets and copying each valid one takes <code>O(k)</code> time. The space complexity is <code>O(n)</code> for the recursion stack.</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+
+class Solution {
+public:
+    void findSubsets(int start, int n, int k, std::vector&lt;int&gt;&amp; currentSubset, std::vector&lt;std::vector&lt;int&gt;&gt;&amp; results) {
+        // Base case: if we have considered all numbers up to n
+        if (start &gt; n + 1) {
+            return;
+        }
+
+        // If a subset of size k is formed, add it to results
+        if (currentSubset.size() == k) {
+            results.push_back(currentSubset);
+            return;
+        }
+
+        // To avoid generating subsets larger than k
+        if (currentSubset.size() &gt; k) {
+            return;
+        }
+
+        for (int i = start; i &lt;= n; ++i) {
+            // Include the number i
+            currentSubset.push_back(i);
+
+            // Recur for the next numbers
+            findSubsets(i + 1, n, k, currentSubset, results);
+
+            // Backtrack: Do not include the number i
+            currentSubset.pop_back();
+        }
+    }
+
+    std::vector&lt;std::vector&lt;int&gt;&gt; combine(int n, int k) {
+        std::vector&lt;std::vector&lt;int&gt;&gt; results;
+        std::vector&lt;int&gt; currentSubset;
+        findSubsets(1, n, k, currentSubset, results);
+        return results;
+    }
+};
+</code></pre>
+<hr />
+<h3>2. Backtracking Approach</h3>
+<p>This is an optimized approach that builds the combinations directly and prunes the search space. Instead of generating all subsets, it only generates valid combinations of size <code>k</code>.</p>
+<p><strong>Step-by-step explanation:</strong>
+1.  A recursive helper function is used to build the combinations. This function tracks the current combination and the next number to consider.
+2.  <strong>Base Case:</strong> If the current combination has reached the desired size <code>k</code>, it is a valid solution. We add it to our results list and stop exploring this path further.
+3.  <strong>Recursive Step:</strong> We iterate from a starting number <code>idx</code> up to <code>n</code>. In each iteration <code>i</code>:
+    *   <strong>Choose:</strong> Add the number <code>i</code> to the current combination.
+    *   <strong>Explore:</strong> Make a recursive call to continue building the combination, starting the search for the next element from <code>i + 1</code>. This prevents duplicate elements and ensures combinations are sorted (e.g., we generate <code>[1, 2]</code> but not <code>[2, 1]</code>).
+    *   <strong>Unchoose (Backtrack):</strong> After the recursive call returns, remove <code>i</code> from the current combination. This step is crucial as it allows the algorithm to explore other possibilities (e.g., after finding <code>[1, 2]</code>, it backtracks to <code>[1]</code> and then proceeds to find <code>[1, 3]</code>).</p>
+<p>The time complexity is <code>O(k * C(n, k))</code>, where <code>C(n, k)</code> is the number of combinations. We construct <code>C(n, k)</code> combinations, and each takes <code>O(k)</code> time to copy to the result list. The space complexity is <code>O(k)</code> to store the current combination and for the recursion stack depth.</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+
+class Solution {
+public:
+    std::vector&lt;std::vector&lt;int&gt;&gt; ans;
+
+    void helper(int idx, int k, std::vector&lt;int&gt;&amp; current, int n)
+    {
+        if(current.size() == k)    // base case
+        {
+            ans.push_back(current);
+            return;
+        }
+
+        for(int i = idx; i &lt; n + 1; i++)
+        {
+            current.push_back(i);  //consider the current element i
+            helper(i + 1, k, current, n); // generate combinations
+            current.pop_back(); //proceed to next element (backtrack)
+        }
+    }
+
+    std::vector&lt;std::vector&lt;int&gt;&gt; combine(int n, int k) {
+        std::vector&lt;int&gt; current;
+        helper(1, k, current, n);
+        return ans; //return answer
+    }
+};
+</code></pre>
+<hr />
+<h3>Pythonic Solution (Backtracking)</h3>
+<p>The Python solution employs the same efficient backtracking logic. A nested helper function <code>backtrack</code> is defined to encapsulate the recursive state, making the code clean and readable. The parameters <code>remain</code>, <code>comb</code>, and <code>nex</code> track the number of elements left to choose, the current combination, and the next candidate number to start from, respectively.</p>
+<pre><code class="language-python">from typing import List
+
+class Solution:
+    def combine(self, n: int, k: int) -&gt; List[List[int]]:
+        sol = []
+
+        def backtrack(remain: int, comb: List[int], nex: int):
+            # Solution found: if the combination is of the desired size k
+            if remain == 0:
+                sol.append(comb.copy())
+                return
+
+            # Pruning: if remaining numbers are not enough to form a combination
+            # We need 'remain' more numbers, and there are 'n - nex + 1' numbers left.
+            if remain &gt; n - nex + 1:
+                return
+
+            # Iterate through all possible candidates
+            for i in range(nex, n + 1):
+                # Add candidate
+                comb.append(i)
+
+                # Backtrack
+                backtrack(remain - 1, comb, i + 1)
+
+                # Remove candidate to explore other paths
+                comb.pop()
+
+        backtrack(k, [], 1)
+        return sol
+
+</code></pre></div>

@@ -1,0 +1,134 @@
+<div class='ai-explanation'><h3>List of Approaches</h3>
+<ol>
+<li><strong>Brute Force Approach: Backtracking with a <code>visited</code> array</strong></li>
+<li><strong>Optimized Approach: In-place Backtracking with Swapping</strong></li>
+</ol>
+<hr />
+<h3>1. Brute Force Approach: Backtracking with a <code>visited</code> array</h3>
+<p>This approach uses a classic backtracking template. We build a permutation one element at a time. A helper function explores all possibilities, and we use an auxiliary <code>visited</code> array to keep track of which numbers from the input have already been included in the current permutation to avoid duplicates.</p>
+<p><strong>Step-by-step explanation:</strong>
+1.  Create a recursive helper function <code>backtrack(currentPermutation, visited)</code>.
+2.  <strong>Base Case:</strong> If the <code>currentPermutation</code> has the same size as the input <code>nums</code>, we have found a complete permutation. Add a copy of it to our final result list and return.
+3.  <strong>Recursive Step:</strong> Iterate through all numbers in the input <code>nums</code> from index 0 to n-1.
+4.  If the number at the current index <code>i</code> has not been visited yet:
+    a.  Add <code>nums[i]</code> to the <code>currentPermutation</code>.
+    b.  Mark <code>nums[i]</code> as visited.
+    c.  Make a recursive call: <code>backtrack(currentPermutation, visited)</code>.
+    d.  <strong>Backtrack:</strong> After the call returns, undo the choice. Remove <code>nums[i]</code> from <code>currentPermutation</code> and un-mark it as visited. This allows the number to be used in different positions in other permutations.
+5.  The initial call to the function will be with an empty permutation and a <code>visited</code> array initialized to all <code>false</code>.</p>
+<p>The time complexity is O(N! * N) because there are N! permutations, and for each one, we perform N operations to build it and copy it to the result. The space complexity is O(N) for the recursion stack and the <code>visited</code> array, plus O(N! * N) to store the result.</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;iostream&gt;
+
+class Solution {
+public:
+    std::vector&lt;std::vector&lt;int&gt;&gt; permute(std::vector&lt;int&gt;&amp; nums) {
+        std::vector&lt;std::vector&lt;int&gt;&gt; result;
+        std::vector&lt;int&gt; currentPermutation;
+        std::vector&lt;bool&gt; visited(nums.size(), false);
+        backtrack(nums, currentPermutation, visited, result);
+        return result;
+    }
+
+private:
+    void backtrack(const std::vector&lt;int&gt;&amp; nums, std::vector&lt;int&gt;&amp; currentPermutation, std::vector&lt;bool&gt;&amp; visited, std::vector&lt;std::vector&lt;int&gt;&gt;&amp; result) {
+        // Base case: a complete permutation is found
+        if (currentPermutation.size() == nums.size()) {
+            result.push_back(currentPermutation);
+            return;
+        }
+
+        // Explore choices for the next element
+        for (int i = 0; i &lt; nums.size(); ++i) {
+            if (!visited[i]) {
+                // Choose
+                visited[i] = true;
+                currentPermutation.push_back(nums[i]);
+
+                // Explore
+                backtrack(nums, currentPermutation, visited, result);
+
+                // Unchoose (Backtrack)
+                currentPermutation.pop_back();
+                visited[i] = false;
+            }
+        }
+    }
+};
+</code></pre>
+<hr />
+<h3>2. Optimized Approach: In-place Backtracking with Swapping</h3>
+<p>This approach is a more space-efficient variation of backtracking. Instead of using extra space for a <code>visited</code> array and a <code>currentPermutation</code> vector, we perform the permutations in-place within the <code>nums</code> array itself. The idea is to fix one element at a time at the current starting position and then recursively generate permutations for the rest of the array.</p>
+<p><strong>Step-by-step explanation:</strong>
+1.  Create a recursive helper function <code>backtrack(index)</code> which generates permutations for the subarray starting at <code>index</code>.
+2.  <strong>Base Case:</strong> If the <code>index</code> reaches the end of the array, it means all elements have been placed. The current state of <code>nums</code> is a complete permutation, so we add it to our result list.
+3.  <strong>Recursive Step:</strong> Iterate from the current <code>index</code> to the end of the array (let's say with a variable <code>j</code>).
+4.  For each <code>j</code>, swap the elements at <code>index</code> and <code>j</code>. This places the element <code>nums[j]</code> at the starting position of the current subproblem.
+5.  Make a recursive call for the next position: <code>backtrack(index + 1)</code>.
+6.  <strong>Backtrack:</strong> After the recursive call returns, swap the elements at <code>index</code> and <code>j</code> back to their original positions. This undoes the previous swap, allowing us to explore other possibilities by placing a different element at the <code>index</code> position in the next iteration of the loop.
+7.  The initial call is <code>backtrack(0)</code>.</p>
+<p>The time complexity is O(N! * N) as we generate N! permutations and copying each to the result takes O(N). The auxiliary space complexity is O(N) for the recursion stack depth, which is an improvement over the previous approach.</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;algorithm&gt; // for std::swap
+
+class Solution {
+public:
+    std::vector&lt;std::vector&lt;int&gt;&gt; permute(std::vector&lt;int&gt;&amp; nums) {
+        std::vector&lt;std::vector&lt;int&gt;&gt; result;
+        backtrack(nums, 0, result);
+        return result;
+    }
+
+private:
+    void backtrack(std::vector&lt;int&gt;&amp; nums, int start, std::vector&lt;std::vector&lt;int&gt;&gt;&amp; result) {
+        // Base case: if we've processed all positions
+        if (start == nums.size()) {
+            result.push_back(nums);
+            return;
+        }
+
+        // Explore choices for the current 'start' position
+        for (int i = start; i &lt; nums.size(); ++i) {
+            // Choose: place the i-th element at the 'start' position
+            std::swap(nums[start], nums[i]);
+
+            // Explore: generate permutations for the rest of the array
+            backtrack(nums, start + 1, result);
+
+            // Unchoose (Backtrack): undo the swap
+            std::swap(nums[start], nums[i]);
+        }
+    }
+};
+</code></pre>
+<hr />
+<h3>Pythonic Solution (In-place Backtracking)</h3>
+<p>The in-place swapping approach is generally preferred due to its lower auxiliary space usage. Below is a Pythonic implementation of this method. It defines a nested <code>backtrack</code> function to encapsulate the logic and directly modify the <code>result</code> list from the outer scope.</p>
+<pre><code class="language-python">from typing import List
+
+class Solution:
+    def permute(self, nums: List[int]) -&gt; List[List[int]]:
+        result = []
+
+        def backtrack(start_index):
+            # Base case: if a full permutation is formed
+            if start_index == len(nums):
+                # Add a copy of the current permutation to the result
+                result.append(nums[:])
+                return
+
+            # Iterate through the remaining elements to place at start_index
+            for i in range(start_index, len(nums)):
+                # Place the i-th element at the current start_index position
+                nums[start_index], nums[i] = nums[i], nums[start_index]
+
+                # Recursively generate permutations for the rest of the list
+                backtrack(start_index + 1)
+
+                # Backtrack: swap back to restore the original order for the next iteration
+                nums[start_index], nums[i] = nums[i], nums[start_index]
+
+        backtrack(0)
+        return result
+
+</code></pre></div>

@@ -1,0 +1,144 @@
+<div class='ai-explanation'><h3>List of all the approaches to solution</h3>
+<ol>
+<li>Brute Force Approach (String Conversion)</li>
+<li>Bit-by-Bit Manipulation</li>
+<li>Optimized Approach: Byte-by-Byte Swapping with Memoization</li>
+</ol>
+<hr />
+<h3>Brute Force Approach (String Conversion)</h3>
+<p>This approach converts the integer to its binary string representation, reverses the string, and then converts it back to an integer. It's intuitive but often less performant than direct bit manipulation due to the overhead of string operations.</p>
+<ol>
+<li>Convert the input integer <code>n</code> into a 32-bit binary string. Padding with leading zeros is necessary to ensure the string is always 32 characters long.</li>
+<li>Reverse this 32-character binary string.</li>
+<li>Convert the reversed binary string back into a 32-bit unsigned integer.</li>
+</ol>
+<p>The time and space complexity are both O(1) because the operations are performed on a fixed-size 32-bit representation.</p>
+<pre><code class="language-cpp">#include &lt;string&gt;
+#include &lt;algorithm&gt;
+#include &lt;bitset&gt;
+
+class Solution {
+public:
+    uint32_t reverseBits(uint32_t n) {
+        // Create a 32-bit bitset from the integer
+        std::bitset&lt;32&gt; bits(n);
+
+        // Convert the bitset to a string
+        std::string s = bits.to_string();
+
+        // Reverse the string
+        std::reverse(s.begin(), s.end());
+
+        // Convert the reversed string back to a bitset
+        std::bitset&lt;32&gt; reversed_bits(s);
+
+        // Return the integer representation
+        return reversed_bits.to_ulong();
+    }
+};
+</code></pre>
+<hr />
+<h3>Bit-by-Bit Manipulation</h3>
+<p>This is a classic and efficient method that builds the reversed number bit by bit without any type conversions. We iterate 32 times, extracting the last bit of the input number and placing it into our result.</p>
+<ol>
+<li>Initialize a result variable, <code>reversed_n</code>, to 0.</li>
+<li>Loop 32 times, once for each bit of the integer.</li>
+<li>In each iteration, first, left-shift <code>reversed_n</code> by one (<code>reversed_n &lt;&lt;= 1</code>). This makes space for the next bit.</li>
+<li>Extract the least significant bit (LSB) from the input <code>n</code> using the bitwise AND operator (<code>n &amp; 1</code>).</li>
+<li>Add this extracted bit to <code>reversed_n</code> using the bitwise OR operator (<code>|</code>).</li>
+<li>Right-shift the input <code>n</code> by one (<code>n &gt;&gt;= 1</code>) to process its next bit in the following iteration.</li>
+<li>After 32 iterations, <code>reversed_n</code> will contain the bits of the original <code>n</code> in reverse order.</li>
+</ol>
+<p>The time complexity is O(1) as the loop runs a fixed 32 times, and the space complexity is O(1).</p>
+<pre><code class="language-cpp">class Solution {
+public:
+    uint32_t reverseBits(uint32_t n) {
+        uint32_t reversed_n = 0;
+        for (int i = 0; i &lt; 32; ++i) {
+            // 1. Make space for the next bit in the result
+            reversed_n &lt;&lt;= 1;
+
+            // 2. Get the last bit of n
+            uint32_t last_bit = n &amp; 1;
+
+            // 3. Add this bit to the result
+            reversed_n |= last_bit;
+
+            // 4. Move to the next bit of n
+            n &gt;&gt;= 1;
+        }
+        return reversed_n;
+    }
+};
+</code></pre>
+<hr />
+<h3>Optimized Approach: Byte-by-Byte Swapping with Memoization</h3>
+<p>This approach is highly optimized for the follow-up question: "If this function is called many times, how would you optimize it?". It uses a lookup table (caching/memoization) to reverse 8-bit chunks (bytes) at a time, trading space for speed.</p>
+<ol>
+<li><strong>Preprocessing (One-time cost):</strong> Create a cache (e.g., an array) that stores the reversed bit pattern for all 256 possible 8-bit numbers. This cache is populated only once.</li>
+<li><strong>Execution:</strong> To reverse the 32-bit integer <code>n</code>:
+    a. Divide <code>n</code> into four 8-bit bytes using bitwise shifts and masks.
+    b. For each byte, look up its reversed value in the pre-computed cache.
+    c. Combine the reversed bytes in the opposite order to form the final 32-bit reversed integer. For example, the reversed last byte of <code>n</code> becomes the first byte of the result.</li>
+</ol>
+<p>After the one-time setup, each call has a time complexity of O(1). The space complexity is O(1) because the cache size (256 entries) is constant.</p>
+<pre><code class="language-cpp">class Solution {
+public:
+    uint32_t reverseBits(uint32_t n) {
+        // A static cache to store reversed bytes. It's initialized only once.
+        static uint8_t cache[256] = {0};
+        static bool initialized = false;
+
+        if (!initialized) {
+            for (int i = 0; i &lt; 256; ++i) {
+                cache[i] = reverse_byte_helper(i);
+            }
+            initialized = true;
+        }
+
+        // Look up each byte from the cache and place it in the reversed position.
+        return (uint32_t(cache[n &amp; 0xff]) &lt;&lt; 24) |
+               (uint32_t(cache[(n &gt;&gt; 8) &amp; 0xff]) &lt;&lt; 16) |
+               (uint32_t(cache[(n &gt;&gt; 16) &amp; 0xff]) &lt;&lt; 8) |
+               (uint32_t(cache[(n &gt;&gt; 24) &amp; 0xff]));
+    }
+private:
+    // Helper to reverse an 8-bit byte
+    uint8_t reverse_byte_helper(uint8_t byte) {
+        uint8_t reversed_byte = 0;
+        for (int i = 0; i &lt; 8; ++i) {
+            reversed_byte = (reversed_byte &lt;&lt; 1) | (byte &amp; 1);
+            byte &gt;&gt;= 1;
+        }
+        return reversed_byte;
+    }
+};
+</code></pre>
+<hr />
+<h3>Pythonic Solution (Best Approach)</h3>
+<p>The best general-purpose approach is <strong>Bit-by-Bit Manipulation</strong> due to its optimal balance of simplicity, speed, and memory usage without requiring any pre-computation.</p>
+<pre><code class="language-python">class Solution:
+    # @param n, an integer
+    # @return an integer
+    def reverseBits(self, n: int) -&gt; int:
+        &quot;&quot;&quot;
+        Reverses the bits of a 32-bit unsigned integer.
+        &quot;&quot;&quot;
+        reversed_n = 0
+        # Iterate 32 times for 32 bits
+        for i in range(32):
+            # 1. Left shift the result to make room for the next bit
+            reversed_n &lt;&lt;= 1
+
+            # 2. Get the least significant bit of n
+            last_bit = n &amp; 1
+
+            # 3. Add this bit to our result using OR
+            reversed_n |= last_bit
+
+            # 4. Right shift n to process the next bit in the next iteration
+            n &gt;&gt;= 1
+
+        return reversed_n
+
+</code></pre></div>

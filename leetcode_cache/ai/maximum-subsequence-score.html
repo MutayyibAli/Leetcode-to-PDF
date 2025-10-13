@@ -1,0 +1,156 @@
+<div class='ai-explanation'><h3>List of all the approaches to solution</h3>
+<ol>
+<li>Brute Force Approach</li>
+<li>Greedy Approach with Sorting and Priority Queue</li>
+</ol>
+<h3>Brute Force Approach</h3>
+<p>The brute force method involves generating every possible subsequence of <code>k</code> indices from the given <code>n</code> indices. For each of these subsequences, we calculate the score by summing the corresponding elements from <code>nums1</code> and multiplying by the minimum of the corresponding elements from <code>nums2</code>. We keep track of the maximum score found across all subsequences. This can be implemented using recursion or backtracking.</p>
+<ol>
+<li>Define a recursive function that explores all combinations of <code>k</code> indices.</li>
+<li>The function will take the current index, the count of elements chosen so far, the current sum of <code>nums1</code> elements, and the current minimum of <code>nums2</code> elements as parameters.</li>
+<li>In the recursive function, for each index, we have two choices: either include the element at this index in our subsequence or skip it.</li>
+<li>The recursion stops when we have chosen <code>k</code> elements. At this point, we calculate the score and update our global maximum score.</li>
+<li>Another base case is when we have traversed all <code>n</code> indices.</li>
+<li>This approach is too slow for the given constraints because the number of combinations, C(n, k), can be very large.</li>
+</ol>
+<p>This approach is computationally expensive and will exceed the time limit for the given constraints. The time complexity is <code>O(C(n, k) * k)</code> and space complexity is <code>O(k)</code> for the recursion depth.</p>
+<pre><code class="language-cpp">// This solution will result in a Time Limit Exceeded (TLE) error.
+class Solution {
+public:
+    long long max_score = 0;
+    int n, k_val;
+    vector&lt;int&gt; n1, n2;
+
+    void findMaxScore(int index, int count, long long current_sum, int min_n2) {
+        // If we have selected k elements, calculate score and update max_score
+        if (count == k_val) {
+            max_score = max(max_score, current_sum * min_n2);
+            return;
+        }
+        // If we have traversed all elements, stop
+        if (index == n) {
+            return;
+        }
+
+        // --- Option 1: Include the element at the current index ---
+        findMaxScore(index + 1, count + 1, current_sum + n1[index], min(min_n2, n2[index]));
+
+        // --- Option 2: Exclude the element at the current index ---
+        // We can only skip if we still have enough elements left to form a subsequence of size k
+        if (n - (index + 1) &gt;= k_val - count) {
+            findMaxScore(index + 1, count, current_sum, min_n2);
+        }
+    }
+
+    long long maxScore(vector&lt;int&gt;&amp; nums1, vector&lt;int&gt;&amp; nums2, int k) {
+        n = nums1.size();
+        k_val = k;
+        n1 = nums1;
+        n2 = nums2;
+        findMaxScore(0, 0, 0, INT_MAX);
+        return max_score;
+    }
+};
+</code></pre>
+<h3>Greedy Approach with Sorting and Priority Queue</h3>
+<p>A more optimal approach uses a greedy strategy. The score is <code>(sum of k elements from nums1) * (min of k elements from nums2)</code>. The minimum element from <code>nums2</code> acts as a bottleneck. Let's try to fix this minimum value.</p>
+<p>If we decide that <code>nums2[i]</code> is the minimum element for a potential best subsequence, it implies that all other <code>k-1</code> elements must be chosen from indices <code>j</code> where <code>nums2[j] &gt;= nums2[i]</code>. To maximize the score for this fixed minimum <code>nums2[i]</code>, we should choose <code>nums1[i]</code> and the <code>k-1</code> largest <code>nums1</code> values from the available pool.</p>
+<p>This logic can be implemented efficiently by sorting.</p>
+<ol>
+<li>Combine <code>nums1</code> and <code>nums2</code> into pairs <code>(nums2[i], nums1[i])</code>.</li>
+<li>Sort these pairs in descending order based on the <code>nums2</code> values. This ensures that as we iterate through the sorted pairs, the <code>nums2</code> value of the current pair is the minimum among all pairs considered so far in the iteration.</li>
+<li>Iterate through the sorted pairs. We need to maintain the sum of the <code>k</code> largest <code>nums1</code> values seen so far. A min-priority queue (min-heap) of size <code>k</code> is perfect for this.</li>
+<li>For each pair <code>(n2, n1)</code>:
+    a. Add the <code>nums1</code> value (<code>n1</code>) to a running sum and push it into the min-heap.
+    b. If the heap size exceeds <code>k</code>, we have more than <code>k</code> elements. To keep only the <code>k</code> largest, we remove the smallest element (the top of the min-heap) and subtract it from the running sum.
+    c. If the heap size is exactly <code>k</code>, we have a valid subsequence. The current sum is the sum of the <code>k</code> largest <code>nums1</code> values, and the current <code>n2</code> is the minimum <code>nums2</code> value for this group. Calculate the score <code>sum * n2</code> and update the maximum score found so far.</li>
+<li>After iterating through all pairs, the maximum score will be the answer.</li>
+</ol>
+<p>The time complexity is dominated by sorting, <code>O(n log n)</code>, and the space complexity is <code>O(n)</code> to store the pairs.</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;queue&gt;
+#include &lt;algorithm&gt;
+
+class Solution {
+public:
+    long long maxScore(std::vector&lt;int&gt;&amp; nums1, std::vector&lt;int&gt;&amp; nums2, int k) {
+        int n = nums1.size();
+        std::vector&lt;std::pair&lt;int, int&gt;&gt; pairs(n);
+        for (int i = 0; i &lt; n; ++i) {
+            pairs[i] = {nums2[i], nums1[i]};
+        }
+
+        // Sort pairs in descending order based on nums2 values
+        sort(pairs.rbegin(), pairs.rend());
+
+        long long current_sum = 0;
+        long long max_score = 0;
+        // Min-heap to keep track of the k largest elements from nums1
+        std::priority_queue&lt;int, std::vector&lt;int&gt;, std::greater&lt;int&gt;&gt; pq;
+
+        for (int i = 0; i &lt; n; ++i) {
+            int n2_val = pairs[i].first;
+            int n1_val = pairs[i].second;
+
+            pq.push(n1_val);
+            current_sum += n1_val;
+
+            if (pq.size() &gt; k) {
+                current_sum -= pq.top();
+                pq.pop();
+            }
+
+            if (pq.size() == k) {
+                max_score = std::max(max_score, current_sum * n2_val);
+            }
+        }
+        return max_score;
+    }
+};
+</code></pre>
+<h3>Pythonic Solution (Best Approach)</h3>
+<pre><code class="language-python">import heapq
+from typing import List
+
+class Solution:
+    def maxScore(self, nums1: List[int], nums2: List[int], k: int) -&gt; int:
+        &quot;&quot;&quot;
+        Calculates the maximum possible subsequence score.
+
+        The approach is to iterate through all possible minimum values from nums2
+        in an efficient way. By sorting pairs of (nums1[i], nums2[i]) based on
+        nums2[i] in descending order, we can iterate through them. For each
+        element `(n1, n2)`, `n2` becomes a candidate for the minimum value.
+
+        We use a min-heap to maintain the `k` largest `n1` values seen so far.
+        When the heap size reaches `k`, we calculate a potential score with the
+        current sum of `n1` values and the current `n2` as the multiplier.
+        &quot;&quot;&quot;
+
+        # Create pairs and sort them by nums2 values in descending order
+        pairs = sorted(zip(nums1, nums2), key=lambda p: p[1], reverse=True)
+
+        # Min-heap to keep track of the k largest elements from nums1
+        min_heap = []
+        current_sum = 0
+        max_score = 0
+
+        for n1, n2 in pairs:
+            # Add current n1 to the heap and sum
+            heapq.heappush(min_heap, n1)
+            current_sum += n1
+
+            # If heap size exceeds k, remove the smallest element
+            if len(min_heap) &gt; k:
+                smallest_n1 = heapq.heappop(min_heap)
+                current_sum -= smallest_n1
+
+            # If heap size is exactly k, we have a valid subsequence
+            # Calculate score and update max_score
+            if len(min_heap) == k:
+                score = current_sum * n2
+                max_score = max(max_score, score)
+
+        return max_score
+
+</code></pre></div>

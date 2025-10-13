@@ -1,0 +1,182 @@
+<div class='ai-explanation'><h3>List of all the approaches to solution</h3>
+<ul>
+<li>Brute Force Approach</li>
+<li>Hash Set Approach</li>
+<li>Two Pointers Approach</li>
+</ul>
+<h3>Brute Force Approach</h3>
+<p>This approach iterates through every possible unique combination of three numbers in the array. To ensure uniqueness of triplets in the result, we can store them in a set data structure.</p>
+<ol>
+<li>Initialize a <code>set</code> to store the unique triplets.</li>
+<li>Use three nested loops to generate all possible combinations of three distinct indices <code>i</code>, <code>j</code>, and <code>k</code>.</li>
+<li>For each combination, check if <code>nums[i] + nums[j] + nums[k]</code> equals 0.</li>
+<li>If the sum is 0, create a temporary vector with these three numbers, sort it (to handle permutations like <code>[-1, 0, 1]</code> and <code>[0, 1, -1]</code> as the same triplet), and insert it into the set.</li>
+<li>Finally, convert the set of triplets into a vector and return it.</li>
+</ol>
+<p>This method is simple to understand but highly inefficient for larger inputs. The time complexity is O(N³ log K) due to the three nested loops and set insertion, where K is the number of triplets, and space complexity is O(K) for the set.</p>
+<pre><code class="language-cpp">class Solution {
+public:
+    vector&lt;vector&lt;int&gt;&gt; threeSum(vector&lt;int&gt;&amp; nums) {
+        int n = nums.size();
+        if (n &lt; 3) return {};
+
+        set&lt;vector&lt;int&gt;&gt; resultSet;
+
+        for (int i = 0; i &lt; n; ++i) {
+            for (int j = i + 1; j &lt; n; ++j) {
+                for (int k = j + 1; k &lt; n; ++k) {
+                    if (nums[i] + nums[j] + nums[k] == 0) {
+                        vector&lt;int&gt; triplet = {nums[i], nums[j], nums[k]};
+                        sort(triplet.begin(), triplet.end());
+                        resultSet.insert(triplet);
+                    }
+                }
+            }
+        }
+
+        return vector&lt;vector&lt;int&gt;&gt;(resultSet.begin(), resultSet.end());
+    }
+};
+</code></pre>
+<h3>Hash Set Approach</h3>
+<p>This approach improves upon the brute-force method by reducing one of the nested loops. We fix one number and then try to find the other two numbers that sum up to the negative of the fixed number. This is a variation of the "Two Sum" problem.</p>
+<ol>
+<li>Sort the input array <code>nums</code>. This helps in skipping duplicate elements and makes it easier to handle result uniqueness.</li>
+<li>Initialize a <code>set</code> to store the unique result triplets.</li>
+<li>Iterate through the array with a loop, fixing the first element <code>nums[i]</code>.</li>
+<li>To avoid duplicate triplets, if the current element is the same as the previous one, skip it.</li>
+<li>For each <code>nums[i]</code>, the problem is reduced to finding two numbers in the subarray <code>nums[i+1...]</code> that sum up to <code>-nums[i]</code>.</li>
+<li>Use a hash set (<code>unordered_set</code>) to solve this "Two Sum" subproblem. Iterate from <code>j = i + 1</code> to the end of the array. For each <code>nums[j]</code>, calculate the required <code>complement = -nums[i] - nums[j]</code>.</li>
+<li>If the <code>complement</code> exists in the hash set, a triplet is found. Insert <code>{nums[i], nums[j], complement}</code> into the result set.</li>
+<li>Add the current element <code>nums[j]</code> to the hash set for subsequent checks.</li>
+</ol>
+<p>The time complexity is O(N²) because of the nested loops, and the space complexity is O(N) for the hash set.</p>
+<pre><code class="language-cpp">class Solution {
+public:
+    vector&lt;vector&lt;int&gt;&gt; threeSum(vector&lt;int&gt;&amp; nums) {
+        int n = nums.size();
+        if (n &lt; 3) return {};
+
+        set&lt;vector&lt;int&gt;&gt; resultSet;
+        sort(nums.begin(), nums.end());
+
+        for (int i = 0; i &lt; n; ++i) {
+            // Skip duplicates for the first element
+            if (i &gt; 0 &amp;&amp; nums[i] == nums[i-1]) continue;
+
+            unordered_set&lt;int&gt; seen;
+            for (int j = i + 1; j &lt; n; ++j) {
+                int complement = -nums[i] - nums[j];
+                if (seen.count(complement)) {
+                    resultSet.insert({nums[i], complement, nums[j]});
+                }
+                seen.insert(nums[j]);
+            }
+        }
+
+        return vector&lt;vector&lt;int&gt;&gt;(resultSet.begin(), resultSet.end());
+    }
+};
+</code></pre>
+<h3>Two Pointers Approach</h3>
+<p>This is the most optimal approach. It combines sorting with the two-pointer technique to find triplets efficiently while handling duplicates gracefully without extra space for a set.</p>
+<ol>
+<li>First, sort the input array <code>nums</code>.</li>
+<li>Iterate through the array with an index <code>i</code> from the start. This <code>nums[i]</code> will be the first element of a potential triplet.</li>
+<li>To avoid duplicate triplets, if <code>i &gt; 0</code> and <code>nums[i]</code> is the same as <code>nums[i-1]</code>, skip the current iteration.</li>
+<li>For each <code>nums[i]</code>, initialize two pointers: <code>left = i + 1</code> and <code>right = n - 1</code>. These pointers will scan the rest of the array.</li>
+<li>In a <code>while</code> loop (while <code>left &lt; right</code>), calculate the sum <code>nums[i] + nums[left] + nums[right]</code>.<ul>
+<li>If the <code>sum</code> is 0, a valid triplet is found. Add it to the result list. Then, to avoid duplicates, move the <code>left</code> pointer forward as long as it points to a duplicate element, and do the same for the <code>right</code> pointer backward. Finally, move both pointers one step inward to continue the search.</li>
+<li>If the <code>sum</code> is less than 0, it means we need a larger sum. Since the array is sorted, increment the <code>left</code> pointer to consider a larger number.</li>
+<li>If the <code>sum</code> is greater than 0, it means we need a smaller sum. Decrement the <code>right</code> pointer to consider a smaller number.</li>
+</ul>
+</li>
+<li>Repeat until the pointers <code>left</code> and <code>right</code> cross.</li>
+</ol>
+<p>The time complexity is O(N²) due to the main loop and the nested two-pointer scan. The space complexity is O(log N) to O(N) depending on the sorting algorithm implementation, not counting the output list.</p>
+<pre><code class="language-cpp">class Solution {
+public:
+    vector&lt;vector&lt;int&gt;&gt; threeSum(vector&lt;int&gt;&amp; num) {
+        vector&lt;vector&lt;int&gt;&gt; res;
+        sort(num.begin(), num.end());
+        int n = num.size();
+
+        for (int i = 0; i &lt; n; i++) {
+            // Skip duplicates for the first number
+            if (i &gt; 0 &amp;&amp; num[i] == num[i-1]) {
+                continue;
+            }
+
+            int left = i + 1;
+            int right = n - 1;
+
+            while (left &lt; right) {
+                int sum = num[i] + num[left] + num[right];
+
+                if (sum &lt; 0) {
+                    left++;
+                } else if (sum &gt; 0) {
+                    right--;
+                } else {
+                    res.push_back({num[i], num[left], num[right]});
+
+                    // Skip duplicates for the second number
+                    while (left &lt; right &amp;&amp; num[left] == num[left+1]) left++;
+
+                    // Skip duplicates for the third number
+                    while (left &lt; right &amp;&amp; num[right] == num[right-1]) right--;
+
+                    left++;
+                    right--;
+                }
+            }
+        }
+        return res;
+    }
+};
+</code></pre>
+<h3>Pythonic solution for best approach</h3>
+<pre><code class="language-python">from typing import List
+
+class Solution:
+    def threeSum(self, nums: List[int]) -&gt; List[List[int]]:
+        res = []
+        nums.sort()
+        n = len(nums)
+
+        for i in range(n - 2):
+            # If the current value is positive, no triplet can sum to 0
+            # as the rest of the elements are also positive (or same).
+            if nums[i] &gt; 0:
+                break
+
+            # Skip duplicate for the first element
+            if i &gt; 0 and nums[i] == nums[i-1]:
+                continue
+
+            # Use two pointers for the rest of the array
+            left, right = i + 1, n - 1
+            while left &lt; right:
+                current_sum = nums[i] + nums[left] + nums[right]
+
+                if current_sum &lt; 0:
+                    left += 1
+                elif current_sum &gt; 0:
+                    right -= 1
+                else:
+                    # Found a triplet
+                    res.append([nums[i], nums[left], nums[right]])
+
+                    # Skip duplicates for the second element
+                    while left &lt; right and nums[left] == nums[left + 1]:
+                        left += 1
+                    # Skip duplicates for the third element
+                    while left &lt; right and nums[right] == nums[right - 1]:
+                        right -= 1
+
+                    # Move pointers to find other potential triplets
+                    left += 1
+                    right -= 1
+
+        return res
+</code></pre></div>

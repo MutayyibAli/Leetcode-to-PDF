@@ -1,0 +1,104 @@
+<div class='ai-explanation'><h3>List of all the approaches to solution</h3>
+<ol>
+<li>Brute Force Approach</li>
+<li>Hash Map Approach</li>
+</ol>
+<hr />
+<h3>Brute Force Approach</h3>
+<p>This method involves checking every possible pair of elements in the array. We use two nested loops to compare each element <code>nums[i]</code> with every subsequent element <code>nums[j]</code>. For each pair, we check if the values are equal and if the absolute difference of their indices is less than or equal to <code>k</code>.</p>
+<p><strong>Step-by-step explanation:</strong>
+1.  Use an outer loop to iterate through the array from index <code>i = 0</code> to <code>n-1</code>, where <code>n</code> is the size of the array.
+2.  Use an inner loop to iterate from index <code>j = i + 1</code> to <code>n-1</code>.
+3.  Inside the inner loop, check for two conditions:
+    *   <code>nums[i] == nums[j]</code> (the elements are duplicates).
+    *   <code>j - i &lt;= k</code> (the distance between their indices is within the allowed range).
+4.  If both conditions are met, a valid pair is found, and we return <code>true</code>.
+5.  If the loops complete without finding any such pair, we return <code>false</code>.</p>
+<p>This approach is straightforward but inefficient for large inputs due to its quadratic time complexity. The time complexity is O(n^2) and the space complexity is O(1).</p>
+<pre><code class="language-cpp">class Solution {
+public:
+    bool containsNearbyDuplicate(vector&lt;int&gt;&amp; nums, int k) {
+        int n = nums.size();
+        for (int i = 0; i &lt; n; ++i) {
+            for (int j = i + 1; j &lt; n; ++j) {
+                // To avoid integer overflow and going beyond array bounds with the condition 'j - i &lt;= k',
+                // we can limit the inner loop's range.
+                if (j - i &gt; k) {
+                    break;
+                }
+                if (nums[i] == nums[j]) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+};
+</code></pre>
+<hr />
+<h3>Hash Map Approach</h3>
+<p>This optimized approach avoids the nested loops by using a hash map (or dictionary) to keep track of the most recent index of each number we've encountered. This allows us to check the distance constraint in a single pass.</p>
+<p><strong>Step-by-step explanation:</strong>
+1.  Initialize an empty hash map, <code>mp</code>, to store numbers from the array as keys and their most recently seen indices as values.
+2.  Iterate through the <code>nums</code> array from left to right, with index <code>i</code>.
+3.  For each element <code>nums[i]</code>:
+    *   Check if <code>nums[i]</code> already exists in the hash map.
+    *   If it does, it means we've seen this number before. Let its previously stored index be <code>mp[nums[i]]</code>.
+    *   Calculate the distance between the current index <code>i</code> and the stored index: <code>i - mp[nums[i]]</code>.
+    *   If this distance is less than or equal to <code>k</code>, we have found a pair that satisfies the conditions, so we return <code>true</code>.
+4.  After the check, update the hash map with the current number and its index: <code>mp[nums[i]] = i</code>. This is crucial because we need the most recent index for future comparisons to check the smallest possible distance.
+5.  If the loop completes without finding any such pair, return <code>false</code>.</p>
+<p>This method reduces the time complexity to a single pass through the array. The time complexity is O(n) and the space complexity is O(n) in the worst case where all elements are distinct.</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;unordered_map&gt;
+#include &lt;cmath&gt;
+
+class Solution {
+public:
+    bool containsNearbyDuplicate(std::vector&lt;int&gt;&amp; nums, int k) {
+        std::unordered_map&lt;int, int&gt; mp;
+        int n = nums.size();
+
+        for (int i = 0; i &lt; n; i++) {
+            // Check if we have seen the element nums[i] before.
+            if (mp.count(nums[i])) {
+                // If we have, check if the distance between the current index and the last seen index is within k.
+                if (abs(i - mp[nums[i]]) &lt;= k) {
+                    return true;
+                }
+            }
+            // Update the map with the current element's most recent index.
+            mp[nums[i]] = i;
+        }
+
+        // If the loop finishes, no such pair was found.
+        return false;
+    }
+};
+</code></pre>
+<hr />
+<h3>Pythonic Solution (Best Approach)</h3>
+<p>The most efficient approach is using a dictionary (hash map) to store the last seen index of each number. Python's dictionary and <code>enumerate</code> function make the implementation clean and concise.</p>
+<pre><code class="language-python">class Solution:
+    def containsNearbyDuplicate(self, nums: list[int], k: int) -&gt; bool:
+        &quot;&quot;&quot;
+        Checks for duplicate numbers within a distance k using a dictionary.
+
+        The dictionary 'last_seen_index' stores the most recent index of each number encountered.
+        As we iterate through the list with enumerate to get both index 'i' and value 'num':
+        1. We check if 'num' is already in our dictionary.
+        2. If it is, we check if the difference between the current index 'i' and the
+           stored index 'last_seen_index[num]' is less than or equal to k.
+        3. If this condition is true, we've found our pair and return True.
+        4. Otherwise, or if the number wasn't in the dictionary, we update the dictionary
+           with the current index for that number: last_seen_index[num] = i.
+        5. If we finish the loop without returning, no such pair exists, so we return False.
+        &quot;&quot;&quot;
+        last_seen_index = {}
+        for i, num in enumerate(nums):
+            if num in last_seen_index and i - last_seen_index[num] &lt;= k:
+                return True
+            last_seen_index[num] = i
+        return False
+
+</code></pre></div>

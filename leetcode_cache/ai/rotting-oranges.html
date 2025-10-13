@@ -1,0 +1,176 @@
+<div class='ai-explanation'><h3>List of approaches to solution</h3>
+<ol>
+<li><a href="#breadth-first-search-bfs">Breadth-First Search (BFS)</a></li>
+</ol>
+<hr />
+<h3>Breadth-First Search (BFS)</h3>
+<p>The problem asks for the minimum time to rot all fresh oranges. The rotting process spreads from existing rotten oranges to their adjacent fresh neighbors simultaneously. This parallel, layer-by-layer spread is a classic scenario for a Breadth-First Search (BFS) algorithm. Each level in the BFS traversal corresponds to one minute of time passing.</p>
+<p>The approach involves a multi-source BFS, where all initially rotten oranges act as the starting sources.</p>
+<h4>Step-by-step explanation:</h4>
+<ol>
+<li>
+<p><strong>Initialization</strong>:</p>
+<ul>
+<li>Create a queue to store the coordinates of rotten oranges.</li>
+<li>Iterate through the grid to:<ul>
+<li>Find all initially rotten oranges (value <code>2</code>) and add their coordinates to the queue.</li>
+<li>Count the total number of fresh oranges (value <code>1</code>). This count helps us determine if all oranges eventually rot.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>Edge Cases</strong>:</p>
+<ul>
+<li>If there are no fresh oranges to begin with (<code>fresh_orange_count == 0</code>), no time is needed. Return <code>0</code>.</li>
+<li>If there are fresh oranges but no rotten ones (<code>queue</code> is empty), the fresh oranges can never rot. Return <code>-1</code>.</li>
+</ul>
+</li>
+<li>
+<p><strong>BFS Traversal (Simulating Time)</strong>:</p>
+<ul>
+<li>Initialize a <code>minutes</code> counter. A common pattern is to start at <code>-1</code> because the first batch of oranges is already rotten at minute 0.</li>
+<li>While the queue is not empty:<ul>
+<li>Process all oranges at the current level (all oranges that became rotten in the same minute). The number of such oranges is the current <code>size</code> of the queue.</li>
+<li>Increment <code>minutes</code>.</li>
+<li>Loop <code>size</code> times to dequeue each rotten orange from the current level.</li>
+<li>For each dequeued orange, check its four adjacent cells (up, down, left, right).</li>
+<li>If an adjacent cell contains a fresh orange (<code>1</code>):<ul>
+<li>Mark it as rotten (change its value to <code>2</code>).</li>
+<li>Decrement the <code>fresh_orange_count</code>.</li>
+<li>Enqueue the coordinates of this newly rotten orange. It will be processed in the next minute (the next level of the BFS).</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>Final Check</strong>:</p>
+<ul>
+<li>After the BFS completes (the queue is empty), check if <code>fresh_orange_count</code> is zero.</li>
+<li>If it is, all fresh oranges were successfully rotted. Return the <code>minutes</code> elapsed.</li>
+<li>If <code>fresh_orange_count</code> is greater than zero, it means some fresh oranges were unreachable. Return <code>-1</code>.</li>
+</ul>
+</li>
+</ol>
+<p>This approach processes the grid layer by layer, guaranteeing that we find the minimum time required for the rotting process to complete.</p>
+<p>The time complexity is <strong>O(m * n)</strong> since each cell is visited at most once. The space complexity is <strong>O(m * n)</strong> for the queue, which in the worst case could hold all oranges.</p>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;queue&gt;
+
+class Solution {
+public:
+    int orangesRotting(std::vector&lt;std::vector&lt;int&gt;&gt;&amp; grid) {
+        int m = grid.size();
+        int n = grid[0].size();
+
+        // Queue for BFS, storing coordinates {row, col}
+        std::queue&lt;std::pair&lt;int, int&gt;&gt; q;
+        int countFreshOrange = 0;
+
+        // 1. Initialization: Find initial rotten oranges and count fresh ones
+        for (int i = 0; i &lt; m; i++) {
+            for (int j = 0; j &lt; n; j++) {
+                if (grid[i][j] == 2) {
+                    q.push({i, j});
+                } else if (grid[i][j] == 1) {
+                    countFreshOrange++;
+                }
+            }
+        }
+
+        // 2. Edge Case: No fresh oranges initially
+        if (countFreshOrange == 0) {
+            return 0;
+        }
+
+        // 2. Edge Case: Fresh oranges exist, but no rotten ones
+        if (q.empty()) {
+            return -1;
+        }
+
+        int minutes = -1;
+        // Directions for 4-directional check: up, down, left, right
+        std::vector&lt;std::pair&lt;int, int&gt;&gt; dirs = {{1, 0}, {-1, 0}, {0, -1}, {0, 1}};
+
+        // 3. BFS Traversal
+        while (!q.empty()) {
+            int levelSize = q.size();
+            for (int k = 0; k &lt; levelSize; k++) {
+                auto [r, c] = q.front();
+                q.pop();
+
+                for (auto [dr, dc] : dirs) {
+                    int newRow = r + dr;
+                    int newCol = c + dc;
+
+                    // Check boundaries and if the adjacent orange is fresh
+                    if (newRow &gt;= 0 &amp;&amp; newRow &lt; m &amp;&amp; newCol &gt;= 0 &amp;&amp; newCol &lt; n &amp;&amp; grid[newRow][newCol] == 1) {
+                        grid[newRow][newCol] = 2; // Rot the fresh orange
+                        countFreshOrange--;
+                        q.push({newRow, newCol});
+                    }
+                }
+            }
+            minutes++;
+        }
+
+        // 4. Final Check: See if all fresh oranges were rotted
+        if (countFreshOrange == 0) {
+            return minutes;
+        }
+
+        return -1;
+    }
+};
+</code></pre>
+<hr />
+<h3>Pythonic Solution (Best Approach)</h3>
+<p>This Python solution implements the same BFS logic. It uses a <code>deque</code> for an efficient queue implementation. The logic for counting minutes is slightly different but yields the same result: it increments the time at the beginning of each level's processing loop.</p>
+<pre><code class="language-python">from collections import deque
+
+class Solution:
+    def orangesRotting(self, grid: list[list[int]]) -&gt; int:
+        rows, cols = len(grid), len(grid[0])
+        fresh_count = 0
+        rotten_q = deque()
+
+        # Step 1: Initialization - Find rotten/fresh oranges
+        for r in range(rows):
+            for c in range(cols):
+                if grid[r][c] == 1:
+                    fresh_count += 1
+                elif grid[r][c] == 2:
+                    rotten_q.append((r, c))
+
+        # Step 2: Edge Case - No fresh oranges
+        if fresh_count == 0:
+            return 0
+
+        minutes_passed = 0
+        # Directions for neighbors
+        directions = [(0, 1), (0, -1), (1, 0), (-1, 0)]
+
+        # Step 3: BFS Traversal
+        # Loop until all reachable oranges are rotten or no fresh oranges are left
+        while rotten_q and fresh_count &gt; 0:
+            # Process one level (one minute)
+            minutes_passed += 1
+            # Process all oranges that were rotten at the start of this minute
+            for _ in range(len(rotten_q)):
+                r, c = rotten_q.popleft()
+
+                for dr, dc in directions:
+                    nr, nc = r + dr, c + dc
+
+                    # Check for valid and fresh orange neighbor
+                    if 0 &lt;= nr &lt; rows and 0 &lt;= nc &lt; cols and grid[nr][nc] == 1:
+                        grid[nr][nc] = 2  # Rot the orange
+                        fresh_count -= 1
+                        rotten_q.append((nr, nc))
+
+        # Step 4: Final Check
+        return minutes_passed if fresh_count == 0 else -1
+
+</code></pre></div>
