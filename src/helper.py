@@ -43,7 +43,13 @@ def highlight_code_blocks(html):
     soup = BeautifulSoup(html, "html.parser")
 
     # Create a Pygments formatter (with CSS classes)
-    formatter = formatters.HtmlFormatter(style="colorful", cssclass="codehilite")
+    formatter = formatters.HtmlFormatter(
+        style="friendly",  # Good readability on white paper
+        cssclass="codehilite",  # CSS class wrapper
+        hl_lines=[
+            i for i in range(2, 100, 2)
+        ],  # You can highlight specific lines if needed
+    )
 
     for code_tag in soup.find_all("code"):
         code_text = code_tag.get_text().strip()

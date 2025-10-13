@@ -426,6 +426,13 @@ def make_pdf(option, data):
 
     PrintHelper.print_info("Saving HTML...")
 
+    # # Save HTML (for debugging)
+    # if not os.path.exists(".output"):
+    #     os.makedirs(".output")
+    # filename = f"{State.file_name}_{'_'.join(option)}.html"
+    # with open(os.path.join(".output", filename), "w", encoding="utf-8") as f:
+    #     f.write(finalHtml)
+
     # Generate PDF
     PrintHelper.print_info("Generating PDF...")
     pdf = weasyprint.HTML(string=finalHtml).write_pdf()
