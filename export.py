@@ -424,8 +424,6 @@ def make_pdf(option, data):
     finalHtml += bodyHtml
     finalHtml += "</body></html>"
 
-    PrintHelper.print_info("Saving HTML...")
-
     # # Save HTML (for debugging)
     # if not os.path.exists(".output"):
     #     os.makedirs(".output")
